@@ -1,0 +1,27 @@
+# Dependencies and build output
+node_modules/
+.svelte-kit/
+build/
+dist/
+.wrangler/
+.venv/
+__pycache__/
+*.pyc
+
+# Runtime artifacts never live in git
+*.wasm
+*.cwasm
+*.zip
+
+# Secrets
+.env
+.env.*
+!.env.example
+.dev.vars
+
+# Prior art is studied, never committed
+context/prior_art/*
+!context/prior_art/README.md
+!context/prior_art/.gitignore
+
+.DS_Store
