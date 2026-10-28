@@ -25,3 +25,9 @@ context/prior_art/*
 !context/prior_art/.gitignore
 
 .DS_Store
+
+# Generated registry and test output
+static/r/
+static/v*/
+test-results/
+playwright-report/

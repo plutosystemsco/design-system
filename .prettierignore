@@ -1,0 +1,9 @@
+context/
+build/
+.svelte-kit/
+static/r/
+static/v*/
+node_modules/
+test-results/
+playwright-report/
+bun.lock

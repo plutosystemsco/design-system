@@ -1,0 +1,207 @@
+<script lang="ts">
+  import Eyebrow from "#lib/preview/eyebrow.svelte";
+  import InstallCommand from "#lib/preview/install-command.svelte";
+  import ContrastTable from "#lib/preview/contrast-table.svelte";
+  import type { PageProps } from "./$types";
+
+  let { data }: PageProps = $props();
+
+  // Class names are written out so Tailwind finds them in this file.
+  const sizes: Record<string, { cls: string; font: string }> = {
+    xs: {
+      cls: "text-xs",
+      font: "font-mono font-medium lowercase tracking-eyebrow",
+    },
+    sm: { cls: "text-sm", font: "font-mono" },
+    base: { cls: "text-base", font: "font-sans" },
+    "2xl": { cls: "text-2xl", font: "font-heading font-bold tracking-section" },
+    "5xl": { cls: "text-5xl", font: "font-heading font-bold tracking-display" },
+  };
+  const padding = [
+    "p-1",
+    "p-2",
+    "p-3",
+    "p-4",
+    "p-6",
+    "p-8",
+    "p-12",
+    "p-16",
+    "p-24",
+  ];
+  const radii = [
+    "rounded",
+    "rounded-xs",
+    "rounded-sm",
+    "rounded-md",
+    "rounded-lg",
+    "rounded-xl",
+    "rounded-2xl",
+    "rounded-3xl",
+    "rounded-4xl",
+    "rounded-full",
+  ];
+</script>
+
+<svelte:head
+  ><title>Pluto theme · Pluto Systems design system</title></svelte:head
+>
+
+<Eyebrow>registry:theme · pluto-theme</Eyebrow>
+<h1 class="mt-2 text-5xl font-bold tracking-display">Pluto theme</h1>
+<p class="mt-4 max-w-prose text-muted-foreground">
+  Every colour and size the brand uses, for light and dark, from one token file.
+  Installing it brings the three font items too.
+</p>
+<div class="mt-6"><InstallCommand name="pluto-theme" /></div>
+
+<section class="mt-16" aria-labelledby="colours">
+  <h2 id="colours" class="text-2xl font-bold tracking-section">Colours</h2>
+  <p class="mt-2 text-muted-foreground">
+    The {data.swatches.length} semantic tokens in the current theme. Components use
+    only these.
+  </p>
+  <ul class="mt-6 grid gap-x-6 gap-y-3 sm:grid-cols-2 lg:grid-cols-3">
+    {#each data.swatches as swatch (swatch.name)}
+      <li class="flex items-center gap-3">
+        <span
+          aria-hidden="true"
+          class="size-8 shrink-0 rounded border border-input"
+          style="background-color: var(--{swatch.name})"
+        ></span>
+        <span class="flex flex-col">
+          <code class="text-sm">{swatch.name}</code>
+          <span class="font-mono text-xs text-muted-foreground">
+            <span class="dark:hidden">{swatch.light}</span>
+            <span class="hidden dark:inline">{swatch.dark}</span>
+          </span>
+        </span>
+      </li>
+    {/each}
+  </ul>
+</section>
+
+<section class="mt-16" aria-labelledby="contrast">
+  <h2 id="contrast" class="text-2xl font-bold tracking-section">Contrast</h2>
+  <p class="mt-2 max-w-prose text-muted-foreground">
+    WCAG 2.2 ratios, truncated to two decimals. Text needs 4.5, non-text 3.
+    Tints composite at 10% in light and 20% in dark. Amber is the one recorded
+    exception: an amber series is labelled directly.
+  </p>
+  <div class="mt-6 dark:hidden">
+    <ContrastTable rows={data.contrast.light} caption="Light theme" />
+  </div>
+  <div class="mt-6 hidden dark:block">
+    <ContrastTable rows={data.contrast.dark} caption="Dark theme" />
+  </div>
+  <h3 class="mt-8 text-base font-bold">Forbidden: state tints on muted</h3>
+  <ul class="mt-2 grid gap-1 text-sm">
+    {#each data.forbidden as row (row.theme + row.label)}
+      <li>
+        <code>{row.theme}</code> · {row.label} · <code>{row.bg}</code> · {row.ratio.toFixed(
+          2,
+        )}
+      </li>
+    {/each}
+  </ul>
+</section>
+
+<section class="mt-16" aria-labelledby="type">
+  <h2 id="type" class="text-2xl font-bold tracking-section">Type</h2>
+  <ul class="mt-6 grid gap-6">
+    {#each data.scale as step (step.step)}
+      <li class="groove pt-3">
+        <p class="font-mono text-xs text-muted-foreground">
+          text-{step.step} · {step.px}px / {step.lineHeight}
+        </p>
+        <p
+          data-token="text-{step.step}"
+          class="mt-1 {sizes[step.step].cls} {sizes[step.step].font}"
+        >
+          Pluto Systems
+        </p>
+      </li>
+    {/each}
+  </ul>
+  <p class="mt-6 text-sm text-muted-foreground">
+    Tracking: display {data.tracking.display} em, section {data.tracking
+      .section} em, eyebrow {data.tracking.eyebrow} em, mark {data.tracking
+      .mark} em.
+  </p>
+</section>
+
+<section class="mt-16" aria-labelledby="spacing">
+  <h2 id="spacing" class="text-2xl font-bold tracking-section">Spacing</h2>
+  <p class="mt-2 text-muted-foreground">
+    A {data.spacing.atom} px atom; the ladder is {data.spacing.ladder.join(
+      ", ",
+    )}. Each square is padded by one step on every side.
+  </p>
+  <ul class="mt-6 flex flex-wrap items-end gap-6">
+    {#each padding as cls, i (cls)}
+      <li class="flex flex-col items-start gap-2">
+        <span data-token={cls} class="block bg-primary {cls}" aria-hidden="true"
+        ></span>
+        <code class="text-xs">{cls} · {data.spacing.ladder[i]}px</code>
+      </li>
+    {/each}
+  </ul>
+</section>
+
+<section class="mt-16" aria-labelledby="radius">
+  <h2 id="radius" class="text-2xl font-bold tracking-section">Radius</h2>
+  <p class="mt-2 text-muted-foreground">
+    One case radius of {data.radius} px for every rounded class, and full round for
+    dot-derived shapes.
+  </p>
+  <ul class="mt-6 flex flex-wrap gap-6">
+    {#each radii as cls (cls)}
+      <li class="flex flex-col items-start gap-2">
+        <span
+          data-token={cls}
+          class="block size-12 border border-input bg-card {cls}"
+          aria-hidden="true"
+        ></span>
+        <code class="text-xs">{cls}</code>
+      </li>
+    {/each}
+  </ul>
+</section>
+
+<section class="mt-16" aria-labelledby="groove">
+  <h2 id="groove" class="text-2xl font-bold tracking-section">Groove</h2>
+  <p class="mt-2 text-muted-foreground">
+    The one line primitive: a hairline with a 1 px highlight beneath it on
+    paper, a plain hairline on ink.
+  </p>
+  <div class="groove mt-6 pt-4 text-sm text-muted-foreground">
+    Content below a groove.
+  </div>
+</section>
+
+<section class="mt-16" aria-labelledby="motion">
+  <h2 id="motion" class="text-2xl font-bold tracking-section">Motion</h2>
+  <dl class="mt-6 grid gap-2 text-sm">
+    <div class="flex flex-wrap gap-2">
+      <dt class="text-muted-foreground">Entrance</dt>
+      <dd><code>--motion-entrance</code> · {data.motion.entranceMs} ms</dd>
+    </div>
+    <div class="flex flex-wrap gap-2">
+      <dt class="text-muted-foreground">Micro-feedback</dt>
+      <dd><code>--motion-micro</code> · {data.motion.microMs} ms</dd>
+    </div>
+    <div class="flex flex-wrap gap-2">
+      <dt class="text-muted-foreground">Entrance curve</dt>
+      <dd>
+        <code>ease-entrance</code> · cubic-bezier({data.motion.easeEntrance.join(
+          ", ",
+        )})
+      </dd>
+    </div>
+  </dl>
+  <p
+    data-token="transition"
+    class="mt-6 inline-block rounded border border-input bg-card px-3 py-2 text-sm transition hover:bg-accent"
+  >
+    A transition at the micro budget.
+  </p>
+</section>

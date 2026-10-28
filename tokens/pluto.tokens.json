@@ -1,0 +1,292 @@
+{
+  "primitives": {
+    "ink": "#14161C",
+    "ink-soft": "#4A4F5C",
+    "paper": "#F7F7F4",
+    "raised": "#FFFFFF",
+    "blue": "#2456E6",
+    "red": "#E23A2E",
+    "amber": "#F0AE12",
+    "green": "#1E9E56",
+    "red-text": "#C42A1F",
+    "green-text": "#136E3E",
+    "wash": "#EAEAE7",
+    "line": "#14161C1A",
+    "line-input": "#7C808B",
+    "ink-raised": "#1E2129",
+    "ink-wash": "#2B2D32",
+    "paper-soft": "#A9ADB8",
+    "paper-line": "#F7F7F41A",
+    "paper-line-input": "#787C8A",
+    "blue-lifted": "#7A9BFF",
+    "red-lifted": "#FF7D73",
+    "green-lifted": "#4CC982",
+    "clear": "#00000000"
+  },
+  "themes": {
+    "light": {
+      "background": "paper",
+      "foreground": "ink",
+      "card": "raised",
+      "card-foreground": "ink",
+      "popover": "raised",
+      "popover-foreground": "ink",
+      "primary": "blue",
+      "primary-foreground": "raised",
+      "secondary": "raised",
+      "secondary-foreground": "ink",
+      "muted": "wash",
+      "muted-foreground": "ink-soft",
+      "accent": "wash",
+      "accent-foreground": "ink",
+      "destructive": "red-text",
+      "border": "line",
+      "input": "line-input",
+      "ring": "blue",
+      "chart-1": "blue",
+      "chart-2": "red",
+      "chart-3": "amber",
+      "chart-4": "green",
+      "chart-5": "ink-soft",
+      "sidebar": "paper",
+      "sidebar-foreground": "ink",
+      "sidebar-primary": "blue",
+      "sidebar-primary-foreground": "raised",
+      "sidebar-accent": "wash",
+      "sidebar-accent-foreground": "ink",
+      "sidebar-border": "line",
+      "sidebar-ring": "blue",
+      "destructive-foreground": "raised",
+      "destructive-fill": "red",
+      "success": "green-text",
+      "success-foreground": "raised",
+      "success-fill": "green",
+      "caution": "amber",
+      "caution-foreground": "ink",
+      "raised": "raised",
+      "mark-1": "blue",
+      "mark-2": "red",
+      "mark-3": "amber",
+      "mark-4": "green",
+      "groove-line": "line",
+      "groove-light": "raised"
+    },
+    "dark": {
+      "background": "ink",
+      "foreground": "paper",
+      "card": "ink-raised",
+      "card-foreground": "paper",
+      "popover": "ink-raised",
+      "popover-foreground": "paper",
+      "primary": "blue-lifted",
+      "primary-foreground": "ink",
+      "secondary": "ink-raised",
+      "secondary-foreground": "paper",
+      "muted": "ink-wash",
+      "muted-foreground": "paper-soft",
+      "accent": "ink-wash",
+      "accent-foreground": "paper",
+      "destructive": "red-lifted",
+      "border": "paper-line",
+      "input": "paper-line-input",
+      "ring": "blue-lifted",
+      "chart-1": "blue-lifted",
+      "chart-2": "red-lifted",
+      "chart-3": "amber",
+      "chart-4": "green-lifted",
+      "chart-5": "paper-soft",
+      "sidebar": "ink",
+      "sidebar-foreground": "paper",
+      "sidebar-primary": "blue-lifted",
+      "sidebar-primary-foreground": "ink",
+      "sidebar-accent": "ink-wash",
+      "sidebar-accent-foreground": "paper",
+      "sidebar-border": "paper-line",
+      "sidebar-ring": "blue-lifted",
+      "destructive-foreground": "ink",
+      "destructive-fill": "red-lifted",
+      "success": "green-lifted",
+      "success-foreground": "ink",
+      "success-fill": "green-lifted",
+      "caution": "amber",
+      "caution-foreground": "ink",
+      "raised": "ink-raised",
+      "mark-1": "paper",
+      "mark-2": "paper",
+      "mark-3": "paper",
+      "mark-4": "paper",
+      "groove-line": "paper-line",
+      "groove-light": "clear"
+    }
+  },
+  "radius": { "case": 8 },
+  "spacing": { "atom": 4, "ladder": [4, 8, 12, 16, 24, 32, 48, 64, 96] },
+  "type": {
+    "families": {
+      "sans": {
+        "variable": "--font-sans",
+        "family": "'Geist Variable', system-ui, sans-serif",
+        "package": "@fontsource-variable/geist",
+        "item": "font-geist",
+        "import": "Geist"
+      },
+      "heading": {
+        "variable": "--font-heading",
+        "family": "'IBM Plex Sans Variable', system-ui, sans-serif",
+        "package": "@fontsource-variable/ibm-plex-sans",
+        "item": "font-heading-ibm-plex-sans",
+        "import": "IBM_Plex_Sans"
+      },
+      "mono": {
+        "variable": "--font-mono",
+        "family": "'JetBrains Mono Variable', ui-monospace, monospace",
+        "package": "@fontsource-variable/jetbrains-mono",
+        "item": "font-jetbrains-mono",
+        "import": "JetBrains_Mono",
+        "selector": "code, kbd, samp, pre"
+      }
+    },
+    "scale": {
+      "xs": { "px": 12, "lineHeight": 1.5 },
+      "sm": { "px": 13.5, "lineHeight": 1.6 },
+      "base": { "px": 16, "lineHeight": 1.6 },
+      "2xl": { "px": 28, "lineHeight": 1.2 },
+      "5xl": { "px": 44, "lineHeight": 1.15 }
+    },
+    "tracking": {
+      "display": -0.03,
+      "section": -0.02,
+      "eyebrow": 0.08,
+      "mark": -0.04
+    },
+    "weight": { "normal": 400, "medium": 500, "bold": 700 },
+    "leading": { "none": 1 }
+  },
+  "motion": {
+    "entranceMs": 900,
+    "microMs": 200,
+    "easeEntrance": [0.2, 0.7, 0.3, 1]
+  },
+  "mark": { "dot": 0.3, "gap": 0.08, "rise": 0.38, "lockupGap": 0.16 },
+  "line": { "width": 1 },
+  "focus": { "width": 2, "offset": 2 },
+  "contrast": {
+    "text": [
+      ["foreground", "background"],
+      ["card-foreground", "card"],
+      ["popover-foreground", "popover"],
+      ["secondary-foreground", "secondary"],
+      ["foreground", "muted"],
+      ["accent-foreground", "accent"],
+      ["muted-foreground", "background"],
+      ["muted-foreground", "card"],
+      ["muted-foreground", "muted"],
+      ["primary-foreground", "primary"],
+      ["primary", "background"],
+      ["primary", "card"],
+      ["primary", "muted"],
+      ["destructive", "background"],
+      ["destructive", "card"],
+      ["destructive", "muted"],
+      ["destructive-foreground", "destructive"],
+      ["success", "background"],
+      ["success", "card"],
+      ["success", "muted"],
+      ["success-foreground", "success"],
+      ["caution-foreground", "caution"],
+      ["sidebar-foreground", "sidebar"],
+      ["sidebar-primary-foreground", "sidebar-primary"],
+      ["sidebar-accent-foreground", "sidebar-accent"],
+      ["sidebar-primary", "sidebar"]
+    ],
+    "tints": [
+      {
+        "text": "destructive",
+        "tint": "destructive",
+        "over": "background",
+        "alpha": { "light": 0.1, "dark": 0.2 }
+      },
+      {
+        "text": "destructive",
+        "tint": "destructive",
+        "over": "card",
+        "alpha": { "light": 0.1, "dark": 0.2 }
+      },
+      {
+        "text": "success",
+        "tint": "success",
+        "over": "background",
+        "alpha": { "light": 0.1, "dark": 0.2 }
+      },
+      {
+        "text": "success",
+        "tint": "success",
+        "over": "card",
+        "alpha": { "light": 0.1, "dark": 0.2 }
+      }
+    ],
+    "nonText": [
+      ["input", "background"],
+      ["input", "card"],
+      ["input", "muted"],
+      ["ring", "background"],
+      ["ring", "card"],
+      ["sidebar-ring", "sidebar"],
+      ["destructive-fill", "background"],
+      ["destructive-fill", "card"],
+      ["success-fill", "background"],
+      ["success-fill", "card"],
+      ["chart-1", "background"],
+      ["chart-1", "card"],
+      ["chart-2", "background"],
+      ["chart-2", "card"],
+      ["chart-3", "background"],
+      ["chart-3", "card"],
+      ["chart-4", "background"],
+      ["chart-4", "card"],
+      ["chart-5", "background"],
+      ["chart-5", "card"]
+    ],
+    "exceptions": [
+      {
+        "theme": "light",
+        "pair": ["chart-3", "background"],
+        "why": "amber series are labelled directly (v2 §03; WCAG 1.4.11)"
+      },
+      {
+        "theme": "light",
+        "pair": ["chart-3", "card"],
+        "why": "amber series are labelled directly (v2 §03; WCAG 1.4.11)"
+      }
+    ],
+    "forbidden": [
+      {
+        "theme": "light",
+        "text": "destructive",
+        "tint": "destructive",
+        "over": "muted",
+        "alpha": 0.1,
+        "ratio": 4.06,
+        "why": "no state tint on muted (decision 8)"
+      },
+      {
+        "theme": "dark",
+        "text": "destructive",
+        "tint": "destructive",
+        "over": "muted",
+        "alpha": 0.2,
+        "ratio": 3.96,
+        "why": "no state tint on muted (decision 8)"
+      },
+      {
+        "theme": "dark",
+        "text": "success",
+        "tint": "success",
+        "over": "muted",
+        "alpha": 0.2,
+        "ratio": 4.44,
+        "why": "no state tint on muted (decision 8)"
+      }
+    ]
+  }
+}
