@@ -5,33 +5,32 @@
 
 ## State
 
-Specification `002`, the primitives (forms, surfaces and feedback), is **built** and committed, in the commit that carries this handoff, tagged `v0.2.0` (the owner's decision of 2026-10-28). `001` is `33e94de`, tagged `v0.1.0`. The commit holds `002`'s 26 restyled items, the two new tokens, the stronger lint, 32 preview pages, the 0.2.0 release, and the five `context/` documents of this session (three research memos, the specification, its two reviews), all green under Bun 1.3.14: `bun run check` 1045 files 0/0, `bun run lint` pass, `bun run build` 33 + 33 + 33 pages, `bun run test` unit 348, browser 330, smoke 36 (`specifications/002-the-primitives-forms-surfaces-and-feedback.md`, Landing notes). Nothing is pushed; `plutosystemsco/design-system` does not exist on GitHub yet.
+Specification `003`, the first blocks, is **built** and committed, in the commit that carries this handoff, tagged `v0.3.0` (the owner's decision of 2026-10-28). `002` is `7857ea4` (`v0.2.0`); `001` is `33e94de` (`v0.1.0`). The commit holds `003`'s five blocks (`hero`, `sign-in`, `sign-up`, `page-states`, `settings`), two new items (`status`, `error-summary`), the block viewer, 58 prerendered pages, the 0.3.0 release, and this session's `context/` documents for `003` (the specification, its two reviews, the decisions), all green under Bun 1.3.14: `bun run check` 1120 files 0/0, `bun run lint` and the literal lint pass, `bun run build` 40 + 40 registry files and 58 pages, `bun run test` unit 384, browser 716, smoke 52, twice in a row (`specifications/003-the-first-blocks.md`, Landing notes). Nothing is pushed; `plutosystemsco/design-system` does not exist on GitHub.
 
 ## Done this session
 
-- `001` shown running (preview pages in both themes, a live `add` into a scratch app), then committed and tagged at the owner's request.
-- The owner asked for pages and components to show: blocks. Decided with the owner (`decisions.md`, "Blocks, and they shape `002`"): blocks shape `002`, then both are built; the first set is the app shell, hero and call to action, sign in and sign up, the chat pane, plus page states and a settings form added by the session as design lead.
-- Three research memos (`research/2026-10-28-*`): how blocks are declared, installed and previewed (a bare dependency never falls back to shadcn-svelte's own registry); the primitives the blocks and the home page need (41 stock items, the lint's gaps, bits-ui 2.20.2); the blocks' patterns and accessibility rules (the stock blocks' gaps; WCAG 2.2 by number; where the design book is silent).
-- The split and the design calls (`decisions.md`, "The primitives split in two, and the design calls for `002`"): `002` to `006` scoped; thirteen design calls, then five after the spec review and four after the change review, all recorded with reasons. The owner may overturn any of them.
-- `002` written, reviewed (15 findings, all dispositioned), amended, built with a checkpoint after the first three items, reviewed again (12 findings, all dispositioned), re-verified by the orchestrator, with two fixes of its own in the review's addendum (a flaky animation wait; a development-only error on the table page).
+- `001` shown running, committed and tagged. `002` (26 primitives, two tokens, the stronger lint, 0.2.0) specified, reviewed twice, built, verified and committed and tagged, all at the owner's request. See `decisions.md` for the owner's and the design lead's calls.
+- `003` specified from the three memos of 2026-10-28, reviewed (14 findings), amended, built with a checkpoint after the viewer and sign-in, reviewed again (7 findings), fixed, re-verified by the orchestrator (two full runs, a dev-mode walk of 80 page loads with 0 errors, and a visual pass of the views at 360, 768 and 1280 in both themes).
+- Design-lead calls for `003` are in `decisions.md` ("The design calls for `003`, the first blocks"), including those made after each review: the password minimum of 15, the 32 px code cells on phones, `error-summary` as one item, honest copy, failures named per form, the caret on the details toggle, heading ranks, the settings delete as `secondary`, the inverted pressed preset.
+- Blocks install without `-o` (`003` decision 3); the site, the README and the block pages say so.
 
 ## Waiting on the owner
 
-- **Deployment** to `ui.plutosystems.co`: unchanged from `001`; the owner runs the deploy under a deployment specification.
-- **Still open from the design book:** the doc-ID scheme (`006`, the footer) and coloured dots on ink for the icon (whichever specification ships the icon files). `mode-watcher` is `005`'s question.
-- **An upstream report to bits-ui** that a tooltip closes on the scroll that keyboard focus causes (`002` review finding 3), if the owner wants to file it.
+- **Deployment** to `ui.plutosystems.co`: unchanged; the owner runs the deploy under a deployment specification. Note that a real 404 status on the host needs `not_found_handling` in `wrangler.jsonc` and the adapter's fallback, which that specification decides (`003` decision 13).
+- **Still open from the design book:** the doc-ID scheme (`006`, the footer) and coloured dots on ink for the icon. `mode-watcher` is `005`'s question.
+- **`wasi-python-dev`:** whether `/admin` is gated by Cloudflare Access or by the `sign-in` block is that app's call (`003` decision 25).
+- **An upstream report to bits-ui** about tooltips closing on keyboard-caused scroll (`002`), if wanted.
 
 ## Known risks
 
-- The browser suites run against the production build, so a development-only error (Svelte's dev checks) is invisible to them; the orchestrator walked every page on the dev server by hand. A later specification should make that walk a test (`002` Landing notes, note 8).
-- The smoke harness's intermittent hang from `001` has not recurred (every run since the hardening clean, including all of this session's).
-- Playwright's shared browser cache changed in the `001` session; other projects on an older Playwright re-download.
+- The browser suites run against the production build and cannot see a development-only Svelte error; the orchestrator walked every page on the dev server by hand after `002` and `003`. A later specification should make that walk a test (`002` Landing note 8).
+- A screen-reader pass (VoiceOver, NVDA) of the blocks has not been done; `003` leaves it as a placeholder memo. axe and the keyboard suites pass; they are not a screen-reader test.
+- The smoke harness's intermittent hang from `001` has not recurred.
 - `native-select`'s live stock JSON differs from the prior-art clone by one type line; provenance records the live hash.
 
 ## Next
 
-1. **`003`, the first blocks:** hero and call to action with a feature grid, sign in, sign up, page states (empty, error, not found, loading), the settings form, and the block viewer (`/view/<block>` route with no chrome, an iframe with pixel-width presets, light and dark, a code view of the built item). Its research exists (the three memos of 2026-10-28); the blocks memo §5 lists the eight decisions it must make (item shape, page target rule, import rule, naming rule, where block source lives, `meta`, the preview route, the smoke test). The patterns memo §8 gives per-block structure, states and open questions. The `status` live-region component goes here (`002` decision 24).
-2. **`004`, code and data:** `code-block` with the groove and a token highlight palette (needs a memo on Shiki's CSS-variables theme), `tabs` is done, chart, popover, accordion, toggle, toggle-group, scroll-area; the editor needs its own memo (CodeMirror 6 under Svelte 5). `wasi-python-dev`'s home page waits on this.
-3. **`005`, overlays and navigation:** dropdown-menu, sheet, sidebar with `is-mobile`, breadcrumb, sonner (and the `mode-watcher` call), the chat primitives (`message-scroller` or our own).
-4. **`006`, the app shell and the chat pane**, with the doc-ID owner call for the footer.
-5. **`wasi-python-dev`'s home-page specification** closes `001` criterion 24 and `002` criterion 25.
+1. **`004`, code and data:** `code-block` with the groove and a token highlight palette (a memo on Shiki's CSS-variables theme first), chart, popover, accordion, toggle, toggle-group, scroll-area; the editor needs its own memo (CodeMirror 6 under Svelte 5). `wasi-python-dev`'s home page waits on this.
+2. **`005`, overlays and navigation:** dropdown-menu, sheet, sidebar with `is-mobile`, breadcrumb, sonner (and `mode-watcher`), the chat primitives (`message-scroller` or our own), a `field-sizing` support memo for the composer.
+3. **`006`, the app shell and the chat pane:** the lockup and the orbit-assemble entrance live here; the footer needs the doc-ID owner call. The hero (`003`) lands at `/hero` and the error page under `/page-states`; the app moves them to its root.
+4. **`wasi-python-dev`'s home-page specification** closes `001` criterion 24, `002` criterion 25 and `003` criterion 28.

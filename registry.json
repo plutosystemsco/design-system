@@ -1022,6 +1022,50 @@
       }
     },
     {
+      "name": "status",
+      "type": "registry:ui",
+      "title": "Status",
+      "description": "An empty polite live region, present from the first render, whose text the app sets.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": ["utils", "pluto-theme"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/status/status.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/status/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.3.0",
+        "group": "feedback"
+      }
+    },
+    {
+      "name": "error-summary",
+      "type": "registry:ui",
+      "title": "Error summary",
+      "description": "The box a failed submit puts at the top of a form: a heading, the form's message and a link to each invalid field, focused when it appears.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": ["utils", "pluto-theme", "alert"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/error-summary/error-summary.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/error-summary/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.3.0",
+        "group": "feedback"
+      }
+    },
+    {
       "name": "label",
       "type": "registry:ui",
       "title": "Label",
@@ -1403,6 +1447,180 @@
           "date": "2026-10-28",
           "sha256": "2c28b30a1aee5778c114092ff18626560b84dd1430dd826583f7459baf9e0b45"
         }
+      }
+    },
+    {
+      "name": "hero",
+      "type": "registry:block",
+      "title": "Hero",
+      "description": "A page's opening: an optional eyebrow, the one heading, a sentence, one call to action, and a feature grid divided by grooves.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": ["utils", "pluto-theme", "button"],
+      "files": [
+        {
+          "path": "src/lib/registry/blocks/hero/+page.svelte",
+          "type": "registry:page"
+        },
+        {
+          "path": "src/lib/registry/components/hero-section.svelte",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/lib/registry/components/hero-features.svelte",
+          "type": "registry:component"
+        }
+      ],
+      "meta": {
+        "since": "0.3.0",
+        "group": "blocks"
+      }
+    },
+    {
+      "name": "sign-in",
+      "type": "registry:block",
+      "title": "Sign in",
+      "description": "Email and password in one step, with an error summary that takes focus, a password you can show, and a button that goes busy.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": [
+        "utils",
+        "pluto-theme",
+        "card",
+        "field",
+        "input",
+        "input-group",
+        "button",
+        "error-summary",
+        "status"
+      ],
+      "files": [
+        {
+          "path": "src/lib/registry/blocks/sign-in/+page.svelte",
+          "type": "registry:page"
+        },
+        {
+          "path": "src/lib/registry/components/sign-in-form.svelte",
+          "type": "registry:component"
+        }
+      ],
+      "meta": {
+        "since": "0.3.0",
+        "group": "blocks"
+      }
+    },
+    {
+      "name": "sign-up",
+      "type": "registry:block",
+      "title": "Sign up",
+      "description": "Email and a password with its rules written first, then a six-digit code on its own step, with resend.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": [
+        "utils",
+        "pluto-theme",
+        "card",
+        "field",
+        "input",
+        "input-group",
+        "input-otp",
+        "button",
+        "error-summary",
+        "status"
+      ],
+      "files": [
+        {
+          "path": "src/lib/registry/blocks/sign-up/+page.svelte",
+          "type": "registry:page"
+        },
+        {
+          "path": "src/lib/registry/components/sign-up-form.svelte",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/lib/registry/components/sign-up-verify.svelte",
+          "type": "registry:component"
+        }
+      ],
+      "meta": {
+        "since": "0.3.0",
+        "group": "blocks"
+      }
+    },
+    {
+      "name": "page-states",
+      "type": "registry:block",
+      "title": "Page states",
+      "description": "Empty, loading, error and not found as one family, with an error page for SvelteKit's error route.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": [
+        "utils",
+        "pluto-theme",
+        "empty",
+        "button",
+        "skeleton",
+        "status"
+      ],
+      "files": [
+        {
+          "path": "src/lib/registry/blocks/page-states/+page.svelte",
+          "type": "registry:page"
+        },
+        {
+          "path": "src/lib/registry/blocks/page-states/+error.svelte",
+          "type": "registry:page"
+        },
+        {
+          "path": "src/lib/registry/components/page-states-message.svelte",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/lib/registry/components/page-states-error.svelte",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/lib/registry/components/page-states-loading.svelte",
+          "type": "registry:component"
+        }
+      ],
+      "meta": {
+        "since": "0.3.0",
+        "group": "blocks"
+      }
+    },
+    {
+      "name": "settings",
+      "type": "registry:block",
+      "title": "Settings",
+      "description": "One column of sections divided by grooves, saved by one button, with an inline Saved message and a confirmed delete.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": [
+        "utils",
+        "pluto-theme",
+        "field",
+        "input",
+        "native-select",
+        "checkbox",
+        "radio-group",
+        "button",
+        "alert-dialog",
+        "error-summary",
+        "status"
+      ],
+      "files": [
+        {
+          "path": "src/lib/registry/blocks/settings/+page.svelte",
+          "type": "registry:page"
+        },
+        {
+          "path": "src/lib/registry/components/settings-form.svelte",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/lib/registry/components/settings-delete.svelte",
+          "type": "registry:component"
+        }
+      ],
+      "meta": {
+        "since": "0.3.0",
+        "group": "blocks"
       }
     }
   ]

@@ -27,6 +27,9 @@
         "icon-sm": "size-8",
       },
     },
+    // A link sits flush with the text around it, at every size: no side
+    // padding. Its height, and so its target, stay.
+    compoundVariants: [{ variant: "link", class: "px-0" }],
     defaultVariants: {
       variant: "default",
       size: "default",

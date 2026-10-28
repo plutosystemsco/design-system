@@ -1,5 +1,14 @@
 import { expect, test, type Page } from "@playwright/test";
-import { hexToRgb, ITEMS, open } from "./pages.ts";
+import {
+  BLOCKS,
+  hexToRgb,
+  ITEMS,
+  open,
+  openView,
+  VIEW_STOPS,
+  VIEWS,
+} from "./pages.ts";
+import { BLOCK_VIEWS } from "../../src/lib/preview/blocks.ts";
 
 type Stop = { tag: string; href: string | null; name: string };
 
@@ -54,7 +63,7 @@ test.describe("the catalogue", () => {
     await open(page, "/");
   });
 
-  test("Tab visits the 34 stops in order, each with the solid ring outline", async ({
+  test("Tab visits the 41 stops in order, each with the solid ring outline", async ({
     page,
   }) => {
     const colour = await ring(page);
@@ -66,7 +75,7 @@ test.describe("the catalogue", () => {
       stops.push(stop!);
       await expectRingOutline(page, colour);
     }
-    expect(stops).toHaveLength(34);
+    expect(stops).toHaveLength(41);
     expect(stops.map((s) => [s.tag, s.href])).toEqual([
       ["a", "/"],
       ["button", null],
@@ -75,7 +84,7 @@ test.describe("the catalogue", () => {
     expect(stops[0].name).toBe("Pluto Systems design system");
     expect(stops[1].name).toBe("Dark theme");
 
-    // No 35th stop: the catalogue has no other focusable element.
+    // No 42nd stop: the catalogue has no other focusable element.
     await page.keyboard.press("Tab");
     expect(await focused(page)).toBeNull();
   });
@@ -181,6 +190,12 @@ const FIXTURES: [item: string, stops: string[]][] = [
   ["switch", ["switch:Notifications", "switch:Public profile"]],
   ["input-otp", ["input:Code from your authenticator"]],
   ["alert-dialog", ["button:Delete project"]],
+  // 003 decisions 8 and 9.
+  ["status", ["button:Announce", "button:Clear"]],
+  [
+    "error-summary",
+    ["input:Project name", "input:Owner email", "button:Create project"],
+  ],
 ];
 
 /** Where a container draws the ring for its focused child (002 decision 8). */
@@ -197,9 +212,9 @@ function drawnBy(
 const TABBABLE =
   'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
-test("the 15 fixtures hold 34 stops", () => {
-  expect(FIXTURES).toHaveLength(15);
-  expect(FIXTURES.reduce((n, [, stops]) => n + stops.length, 0)).toBe(34);
+test("the 17 fixtures hold 39 stops", () => {
+  expect(FIXTURES).toHaveLength(17);
+  expect(FIXTURES.reduce((n, [, stops]) => n + stops.length, 0)).toBe(39);
 });
 
 for (const [item, expected] of FIXTURES) {
@@ -247,7 +262,7 @@ for (const [item, expected] of FIXTURES) {
   });
 }
 
-/** 002 decision 23: 9 behaviours. */
+/** 002 decision 23's 9 behaviours and 003 decision 20's 2. */
 test.describe("behaviours", () => {
   test("the busy button ignores Enter and clicks, keeps focus and aria-busy", async ({
     page,
@@ -408,4 +423,132 @@ test.describe("behaviours", () => {
     await expect(content).toHaveCount(0);
     await expect(trigger).toBeFocused();
   });
+  test("Space on Announce sets the status text", async ({ page }) => {
+    await open(page, "/items/status/");
+    const announce = fixture(page).getByRole("button", { name: "Announce" });
+    await announce.focus();
+    await page.keyboard.press("Space");
+    const regions = page.getByTestId("status-specimens").getByRole("status");
+    await expect(regions).toHaveCount(2);
+    for (const region of await regions.all())
+      await expect(region).toHaveText("Copied to the clipboard");
+  });
+
+  test("Enter on Create project inserts the error summary and focuses it; Enter on its first link focuses the field", async ({
+    page,
+  }) => {
+    await open(page, "/items/error-summary/");
+    const submit = fixture(page).getByRole("button", {
+      name: "Create project",
+    });
+    await submit.focus();
+    await page.keyboard.press("Enter");
+    const summary = fixture(page).locator('[data-slot="error-summary"]');
+    await expect(summary).toBeFocused();
+    await expect(summary).toHaveAttribute("role", "alert");
+    await page.keyboard.press("Tab");
+    await expect(summary.getByRole("link").first()).toBeFocused();
+    await page.keyboard.press("Enter");
+    await expect(fixture(page).getByLabel("Project name")).toBeFocused();
+  });
+});
+
+/** The signature of the focused element: its role and its name. */
+async function signature(page: Page): Promise<string | null> {
+  return page.evaluate(() => {
+    const el = document.activeElement as
+      (HTMLElement & { labels?: NodeListOf<HTMLLabelElement> }) | null;
+    if (!el || el === document.body) return null;
+    const role = el.getAttribute("role") ?? el.tagName.toLowerCase();
+    const name = (
+      el.getAttribute("aria-label") ??
+      el.labels?.[0]?.textContent ??
+      el.textContent ??
+      ""
+    )
+      .trim()
+      .replace(/\s+/g, " ");
+    return `${role}:${name}`;
+  });
+}
+
+/** Where a control's ring is drawn by a container (002 decision 8). */
+async function drawnByContainer(page: Page): Promise<string | undefined> {
+  const slot = await page.evaluate(() =>
+    document.activeElement?.getAttribute("data-slot"),
+  );
+  if (slot === "input-group-control") return '[data-slot="input-group"]';
+  const inOtp = await page.evaluate(
+    () => !!document.activeElement?.closest('[data-slot="input-otp"]'),
+  );
+  return inOtp ? '[data-slot="input-otp"]' : undefined;
+}
+
+test("the 18 views hold 83 stops", () => {
+  expect(VIEWS.map((v) => v.path)).toEqual(Object.keys(VIEW_STOPS));
+  expect(
+    Object.values(VIEW_STOPS).reduce((n, stops) => n + stops.length, 0),
+  ).toBe(83);
+});
+
+test.describe("block views at 1280", () => {
+  test.use({ viewport: { width: 1280, height: 900 } });
+  for (const view of VIEWS) {
+    const expected = VIEW_STOPS[view.path] ?? [];
+    test(`${view.path}: ${expected.length} stops in order, each with the ring, then out of the document`, async ({
+      page,
+    }) => {
+      await openView(page, view.path);
+      const colour = await ring(page);
+      for (let i = 0; i < expected.length; i++) {
+        await page.keyboard.press("Tab");
+        expect(await signature(page), `stop ${i + 1}`).toBe(expected[i]);
+        await expectRingOutline(page, colour, await drawnByContainer(page));
+      }
+      await page.keyboard.press("Tab");
+      expect(await signature(page), "the next Tab leaves the document").toBe(
+        null,
+      );
+    });
+  }
+});
+
+/** 003 decision 20: the viewer toolbar's stops on each block's item page. */
+test.describe("viewer toolbars", () => {
+  for (const block of BLOCKS) {
+    const views = BLOCK_VIEWS[block] ?? [];
+    const expected = [
+      ...(views.length > 1 ? views.map((v) => `button:${v.label}`) : []),
+      "button:360 px",
+      "button:768 px",
+      "button:1280 px",
+      "a:Open alone",
+      "region:Preview frame",
+    ];
+    test(`${block}: ${expected.length} toolbar stops in order, each with the ring`, async ({
+      page,
+    }) => {
+      await open(page, `/items/${block}/`);
+      const colour = await ring(page);
+      await page
+        .getByTestId("viewer-toolbar")
+        .locator("button, a")
+        .first()
+        .focus();
+      for (let i = 0; i < expected.length; i++) {
+        if (i > 0) await page.keyboard.press("Tab");
+        expect(await signature(page), `stop ${i + 1}`).toBe(expected[i]);
+        await expectRingOutline(page, colour);
+      }
+    });
+  }
+});
+
+test("the 5 viewer toolbars hold 42 stops", () => {
+  const counts = BLOCKS.map((b) => {
+    const n = (BLOCK_VIEWS[b] ?? []).length;
+    return (n > 1 ? n : 0) + 5;
+  });
+  expect(counts).toEqual([5, 9, 9, 10, 9]);
+  expect(counts.reduce((a, b) => a + b, 0)).toBe(42);
 });

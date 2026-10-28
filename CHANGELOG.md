@@ -2,6 +2,20 @@
 
 Each release of the registry, newest first. A change to an item's interface is marked **interface change**.
 
+## 0.3.0 — 2026-10-28
+
+The first blocks: whole pages an app installs with one `add` and then owns, and the two components they share.
+
+- `status`: new. An empty polite live region, present from the first render, whose text the app sets.
+- `error-summary`: new. The box a failed submit puts at the top of a form, focused, with a link to each invalid field, and `titleFor` for the page's "Error: " title.
+- `hero`: new block. An eyebrow, the one heading, a sentence, one call to action and a feature grid divided by grooves.
+- `sign-in`: new block. Email and password in one step, with an error summary, a password you can show and a busy button.
+- `sign-up`: new block. Email and a password of at least 15 characters, then a six-digit code on its own step, with resend.
+- `page-states`: new block. Empty, loading, error and not found as one family, with an error page for SvelteKit's error route.
+- `settings`: new block. Sections saved by one button, an inline "Saved", and a confirmed delete.
+- `button`: changed, not an interface change. The `link` variant has no side padding at any size, so a link-styled button lines up with the text around it. Its height is unchanged. No other existing item changed.
+- Install blocks without `-o`: without it, the CLI lists the files that already exist and asks before it overwrites any. Use `-o` only for a first install into an app with nothing to lose.
+
 ## 0.2.0 — 2026-10-28
 
 The first primitives: forms, surfaces and feedback, restyled from shadcn-svelte's maia items to the tokens.

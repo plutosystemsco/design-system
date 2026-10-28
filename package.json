@@ -1,6 +1,6 @@
 {
   "name": "pluto-design-system",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "description": "The Pluto Systems design system: tokens, styles and Svelte components, served as a shadcn-svelte registry.",
   "type": "module",
@@ -26,7 +26,7 @@
     "lint": "bun --bun prettier --check .",
     "test:unit": "bun test ./tests/unit",
     "test:e2e": "bun --bun playwright test",
-    "test:smoke": "bun test ./tests/smoke --timeout 300000",
+    "test:smoke": "SMOKE_BLOCKS= bun test ./tests/smoke --timeout 300000",
     "test": "bun run test:unit && bun run test:e2e && bun run test:smoke"
   },
   "devDependencies": {

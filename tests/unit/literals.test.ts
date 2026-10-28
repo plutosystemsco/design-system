@@ -9,13 +9,13 @@ import {
 
 const rules = loadRules();
 
-/** 002 decision 6: the files of the 32 items, from registry.json. */
+/** 003 decision 5: the files of the 39 items, from registry.json. */
 describe("the item files", () => {
   const files = itemFiles();
 
-  test("are the 133 files items carry, with no repeats", () => {
-    expect(files).toHaveLength(133);
-    expect(new Set(files).size).toBe(133);
+  test("are the 153 files items carry, with no repeats", () => {
+    expect(files).toHaveLength(153);
+    expect(new Set(files).size).toBe(153);
     for (const file of files) expect(readFileSync(file, "utf8")).toBeTruthy();
   });
 
@@ -165,8 +165,15 @@ const GOOD_REVIEW: Sample[] = [
   { cls: "inset-0" },
 ];
 
+// 003 decision 19: three block strings, each linted as a class.
+const GOOD_003: Sample[] = [
+  { cls: "Enter an email address like name@example.com" },
+  { cls: "That code is not right. Check the email, or send a new code." },
+  { cls: "Go to the home page" },
+];
+
 const BAD = [...BAD_001, ...BAD_002, ...BAD_REVIEW];
-const GOOD = [...GOOD_001, ...GOOD_002, ...GOOD_REVIEW];
+const GOOD = [...GOOD_001, ...GOOD_002, ...GOOD_REVIEW, ...GOOD_003];
 
 describe("the lint itself", () => {
   test("reads the palette from tailwindcss/theme.css", () => {
@@ -186,9 +193,9 @@ describe("the lint itself", () => {
     },
   );
 
-  test("64 bad samples flagged and 0 of 39 good ones", () => {
+  test("64 bad samples flagged and 0 of 42 good ones", () => {
     expect(BAD).toHaveLength(64);
-    expect(GOOD).toHaveLength(39);
+    expect(GOOD).toHaveLength(42);
     expect(BAD.filter((s) => lintSample(s).length > 0)).toHaveLength(64);
     expect(GOOD.filter((s) => lintSample(s).length > 0)).toHaveLength(0);
   });

@@ -553,3 +553,111 @@ test.describe("alert roles", () => {
     ]);
   });
 });
+
+/** Fetches a page's prerendered HTML and loads it with scripts off. */
+async function rawPage(
+  browser: import("@playwright/test").Browser,
+  request: import("@playwright/test").APIRequestContext,
+  path: string,
+): Promise<{ raw: Page; close: () => Promise<void> }> {
+  const response = await request.get(path);
+  expect(response.status()).toBe(200);
+  const html = await response.text();
+  const context = await browser.newContext({ javaScriptEnabled: false });
+  const raw = await context.newPage();
+  await raw.setContent(html);
+  return { raw, close: () => context.close() };
+}
+
+/** 003 decision 8: the status item. */
+test.describe("status", () => {
+  test("S1. the raw prerendered HTML holds 2 empty regions with role, aria-live and aria-atomic", async ({
+    browser,
+    request,
+  }) => {
+    const { raw, close } = await rawPage(browser, request, "/items/status/");
+    const regions = await raw
+      .locator('[data-testid="status-specimens"] [data-slot="status"]')
+      .evaluateAll((all) =>
+        all.map((r) => [
+          r.getAttribute("role"),
+          r.getAttribute("aria-live"),
+          r.getAttribute("aria-atomic"),
+          (r.textContent ?? "").trim(),
+        ]),
+      );
+    expect(regions).toEqual([
+      ["status", "polite", "true", ""],
+      ["status", "polite", "true", ""],
+    ]);
+    await close();
+  });
+
+  test("S2. Announce sets the text in both regions, and Clear empties both", async ({
+    page,
+  }) => {
+    await open(page, "/items/status/");
+    const regions = page
+      .getByTestId("status-specimens")
+      .locator('[data-slot="status"]');
+    await page.getByRole("button", { name: "Announce" }).click();
+    for (const r of await regions.all())
+      await expect(r).toHaveText("Copied to the clipboard");
+    await page.getByRole("button", { name: "Clear" }).click();
+    for (const r of await regions.all()) await expect(r).toHaveText("");
+  });
+
+  test("S3. the hidden region is a 1 × 1 px clip, and the visible one is wider", async ({
+    page,
+  }) => {
+    await open(page, "/items/status/");
+    await page.getByRole("button", { name: "Announce" }).click();
+    const hidden = page.getByTestId("status-hidden");
+    const visible = page.getByTestId("status-visible");
+    const h = await box(hidden);
+    expect(near(h.width, 1) && near(h.height, 1)).toBe(true);
+    await expect(hidden).toHaveCSS("overflow", "hidden");
+    expect((await box(visible)).width).toBeGreaterThan(1);
+  });
+});
+
+/** 003 decision 9: the error-summary item. */
+test.describe("error summary", () => {
+  test("E1. the raw prerendered HTML holds 3 specimens with no role", async ({
+    browser,
+    request,
+  }) => {
+    const { raw, close } = await rawPage(
+      browser,
+      request,
+      "/items/error-summary/",
+    );
+    const roles = await raw
+      .locator('[data-testid="summary-specimens"] [data-slot="error-summary"]')
+      .evaluateAll((all) => all.map((s) => s.getAttribute("role")));
+    expect(roles).toEqual([null, null, null]);
+    await close();
+  });
+
+  test("E2. the inserted summary has role alert, tabindex -1, its heading, and 2 links at least 24 px tall", async ({
+    page,
+  }) => {
+    await open(page, "/items/error-summary/");
+    const fixture = page.getByTestId("keyboard-fixture");
+    await fixture.getByRole("button", { name: "Create project" }).click();
+    const summary = fixture.locator('[data-slot="error-summary"]');
+    await expect(summary).toBeFocused();
+    await expect(summary).toHaveAttribute("role", "alert");
+    await expect(summary).toHaveAttribute("tabindex", "-1");
+    await expect(
+      summary.getByRole("heading", { name: "There is a problem" }),
+    ).toHaveCount(1);
+    const links = summary.getByRole("link");
+    await expect(links).toHaveText([
+      "Enter a project name",
+      "Enter the owner's email address",
+    ]);
+    for (const link of await links.all())
+      expect((await box(link)).height).toBeGreaterThanOrEqual(24);
+  });
+});
