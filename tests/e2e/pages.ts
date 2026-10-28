@@ -1,14 +1,48 @@
 import type { Page } from "@playwright/test";
 
-/** The 7 prerendered pages (decision 24). */
+/** The 32 items in 002 decision 6's order: 33 prerendered pages with the catalogue. */
 export const ITEMS = [
+  // foundation
   "pluto-theme",
   "font-geist",
   "font-heading-ibm-plex-sans",
   "font-jetbrains-mono",
   "utils",
   "four-dot",
+  // actions
+  "button",
+  "tooltip",
+  "kbd",
+  // surfaces
+  "card",
+  "separator",
+  "item",
+  "table",
+  "tabs",
+  "collapsible",
+  "avatar",
+  // feedback
+  "alert",
+  "alert-dialog",
+  "badge",
+  "empty",
+  "skeleton",
+  "spinner",
+  // forms
+  "label",
+  "field",
+  "input",
+  "textarea",
+  "input-group",
+  "native-select",
+  "checkbox",
+  "radio-group",
+  "switch",
+  "input-otp",
 ];
+
+/** The 26 items 002 adds. */
+export const NEW_ITEMS = ITEMS.slice(6);
 export const PAGES = ["/", ...ITEMS.map((name) => `/items/${name}/`)];
 
 /** The grounds, as Chromium computes them. */
@@ -40,4 +74,29 @@ export function hexToRgb(hex: string): string {
   }
   const n = parseInt(digits.slice(0, 6), 16);
   return `rgb(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255})`;
+}
+
+/** The value of a CSS custom property on <html>, as written. */
+export async function cssVar(page: Page, name: string): Promise<string> {
+  return page.evaluate(
+    (n) =>
+      getComputedStyle(document.documentElement).getPropertyValue(n).trim(),
+    name,
+  );
+}
+
+/**
+ * Waits for the page's animations to end. A cancelled animation rejects its
+ * `finished` promise (an AbortError), which is not a failure here: the element
+ * left before its animation ended. An infinite animation, such as a spinner,
+ * never finishes and is skipped.
+ */
+export async function settled(page: Page): Promise<void> {
+  await page.evaluate(async () => {
+    const finite = document.getAnimations().filter((a) => {
+      const timing = a.effect?.getComputedTiming();
+      return timing ? timing.iterations !== Infinity : true;
+    });
+    await Promise.all(finite.map((a) => a.finished.catch(() => undefined)));
+  });
 }

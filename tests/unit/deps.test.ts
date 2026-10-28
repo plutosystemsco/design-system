@@ -10,7 +10,7 @@ const lock = JSON.parse(
   readFileSync("bun.lock", "utf8").replace(/,(\s*[}\]])/g, "$1"),
 );
 
-// Decision 4: the 19 packages, the version bun.lock pins and the specifier package.json holds.
+// 001 decision 4's 19 packages and 002 decision 2's 4: the version bun.lock pins and the specifier package.json holds.
 const PACKAGES: [name: string, version: string, specifier: string][] = [
   ["shadcn-svelte", "1.7.1", "^1.7.1"],
   ["@sveltejs/kit", "3.1.0", "3.1.0"],
@@ -31,6 +31,10 @@ const PACKAGES: [name: string, version: string, specifier: string][] = [
   ["@axe-core/playwright", "4.14.0", "4.14.0"],
   ["prettier", "3.9.10", "3.9.10"],
   ["prettier-plugin-svelte", "4.1.1", "4.1.1"],
+  ["bits-ui", "2.20.2", "^2.20.2"],
+  ["@internationalized/date", "3.12.4", "^3.12.4"],
+  ["tailwind-variants", "3.3.1", "^3.3.1"],
+  ["phosphor-svelte", "3.1.1", "^3.1.1"],
 ];
 
 function split(dep: string): { name: string; range?: string } {
@@ -40,7 +44,8 @@ function split(dep: string): { name: string; range?: string } {
 }
 
 describe("package.json and bun.lock", () => {
-  test("name exactly the 19 packages of decision 4, all devDependencies", () => {
+  test("name exactly the 23 packages, all devDependencies", () => {
+    expect(PACKAGES).toHaveLength(23);
     expect(pkg.dependencies ?? {}).toEqual({});
     expect(Object.keys(pkg.devDependencies).sort()).toEqual(
       PACKAGES.map(([n]) => n).sort(),
@@ -73,6 +78,13 @@ describe("package.json and bun.lock", () => {
 describe("the npm packages items name", () => {
   let out: string;
   const named = new Map<string, string | undefined>();
+  /** Every range any item states for each package, to catch two items that disagree. */
+  const ranges = new Map<string, Set<string | undefined>>();
+  const note = (name: string, range: string | undefined) => {
+    named.set(name, range);
+    if (!ranges.has(name)) ranges.set(name, new Set());
+    ranges.get(name)!.add(range);
+  };
 
   beforeAll(async () => {
     out = mkdtempSync(path.join(tmpdir(), "pluto-deps-"));
@@ -90,9 +102,9 @@ describe("the npm packages items name", () => {
         ...(item.devDependencies ?? []),
       ]) {
         const { name, range } = split(dep);
-        named.set(name, range);
+        note(name, range);
       }
-      if (item.font?.dependency) named.set(item.font.dependency, undefined);
+      if (item.font?.dependency) note(item.font.dependency, undefined);
     }
   }, 60_000);
 
@@ -100,7 +112,7 @@ describe("the npm packages items name", () => {
     if (out) rmSync(out, { recursive: true, force: true });
   });
 
-  test("are 5: shadcn-svelte, cn and the 3 fonts", () => {
+  test("are 9: shadcn-svelte, cn, the 3 fonts and decision 2's 4", () => {
     expect([...named.keys()].sort()).toEqual(
       [
         "@fontsource-variable/geist",
@@ -108,8 +120,22 @@ describe("the npm packages items name", () => {
         "@fontsource-variable/jetbrains-mono",
         "cn",
         "shadcn-svelte",
+        "bits-ui",
+        "@internationalized/date",
+        "tailwind-variants",
+        "phosphor-svelte",
       ].sort(),
     );
+  });
+
+  test("every item that names a package states the same range for it", () => {
+    for (const [name, set] of ranges)
+      expect([...set], `${name} has one range across items`).toHaveLength(1);
+  });
+
+  test("no item names tailwind-merge or tw-animate-css", () => {
+    expect(named.has("tailwind-merge")).toBe(false);
+    expect(named.has("tw-animate-css")).toBe(false);
   });
 
   test("each has a range in package.json", () => {
@@ -119,10 +145,16 @@ describe("the npm packages items name", () => {
 
   test("where the item states a range, package.json's specifier equals it", () => {
     const stated = [...named].filter(([, range]) => range !== undefined);
-    expect(stated.map(([name]) => name).sort()).toEqual([
-      "cn",
-      "shadcn-svelte",
-    ]);
+    expect(stated.map(([name]) => name).sort()).toEqual(
+      [
+        "cn",
+        "shadcn-svelte",
+        "bits-ui",
+        "@internationalized/date",
+        "tailwind-variants",
+        "phosphor-svelte",
+      ].sort(),
+    );
     for (const [name, range] of stated)
       expect(pkg.devDependencies[name]).toBe(range);
   });

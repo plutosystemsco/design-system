@@ -1,6 +1,6 @@
 # 001 — Tokens and the registry
 
-- **Status:** **built**, 2026-10-27, uncommitted at the time of writing (see Landing notes). Drafted 2026-10-27; amended 2026-10-27 after review ([`../reviews/001-tokens-and-the-registry-spec-2026-10-27.md`](../reviews/001-tokens-and-the-registry-spec-2026-10-27.md)), amended again 2026-10-27 after the change review ([`../reviews/001-tokens-and-the-registry-pr-2026-10-27.md`](../reviews/001-tokens-and-the-registry-pr-2026-10-27.md)). It lands as **built** when acceptance criteria 1 to 23 hold. It is **done** when `wasi-python-dev`'s home-page specification installs `pluto-theme` and `four-dot` from this registry and passes that app's checks (criterion 24).
+- **Status:** **built**, 2026-10-27; committed 2026-10-28 as `33e94de`, tagged `v0.1.0` (see Landing notes). Drafted 2026-10-27; amended 2026-10-27 after review ([`../reviews/001-tokens-and-the-registry-spec-2026-10-27.md`](../reviews/001-tokens-and-the-registry-spec-2026-10-27.md)), amended again 2026-10-27 after the change review ([`../reviews/001-tokens-and-the-registry-pr-2026-10-27.md`](../reviews/001-tokens-and-the-registry-pr-2026-10-27.md)). It lands as **built** when acceptance criteria 1 to 23 hold. It is **done** when `wasi-python-dev`'s home-page specification installs `pluto-theme` and `four-dot` from this registry and passes that app's checks (criterion 24).
 - **Date:** 2026-10-27
 - **Owner:** Clay Gendron
 - **Author:** an agent (Claude), sub-agent of the orchestrating session

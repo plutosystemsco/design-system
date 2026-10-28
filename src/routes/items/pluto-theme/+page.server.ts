@@ -1,4 +1,8 @@
-import { contrastTable, forbiddenRows } from "../../../../scripts/contrast.ts";
+import {
+  contrastTable,
+  forbiddenRows,
+  scrimRows,
+} from "../../../../scripts/contrast.ts";
 import { readTokens, resolveColor } from "../../../../scripts/tokens.ts";
 import type { PageServerLoad } from "./$types";
 
@@ -15,6 +19,8 @@ export const load: PageServerLoad = () => {
       dark: contrastTable(tokens, "dark"),
     },
     forbidden: forbiddenRows(tokens),
+    scrim: scrimRows(tokens),
+    elevation: tokens.elevation,
     scale: Object.entries(tokens.type.scale).map(([step, value]) => ({
       step,
       ...value,

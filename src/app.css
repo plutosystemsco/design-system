@@ -54,6 +54,9 @@
   --mark-4: #1e9e56;
   --groove-line: #14161c1a;
   --groove-light: #ffffff;
+  --elevation-line: #14161c1a;
+  --elevation-shadow: #14161c29;
+  --scrim: #14161c80;
   --mark-dot: 0.3em;
   --mark-gap: 0.08em;
   --mark-rise: 0.38em;
@@ -113,6 +116,9 @@
   --mark-4: #f7f7f4;
   --groove-line: #f7f7f41a;
   --groove-light: #00000000;
+  --elevation-line: #787c8a;
+  --elevation-shadow: #00000000;
+  --scrim: #14161c99;
   color-scheme: dark;
 }
 
@@ -147,6 +153,13 @@
   --leading-none: 1;
   --ease-entrance: cubic-bezier(0.2, 0.7, 0.3, 1);
   --default-transition-duration: 200ms;
+  --shadow-elevation:
+    0 0 0 var(--line-width) var(--elevation-line),
+    0 0.75rem 2rem 0 var(--elevation-shadow);
+  --animate-enter: pluto-enter var(--motion-micro)
+    cubic-bezier(0.2, 0.7, 0.3, 1);
+  --animate-exit: pluto-exit var(--motion-micro) cubic-bezier(0.2, 0.7, 0.3, 1)
+    forwards;
   --font-sans: "Geist Variable", system-ui, sans-serif;
   --font-heading: "IBM Plex Sans Variable", system-ui, sans-serif;
   --font-mono: "JetBrains Mono Variable", ui-monospace, monospace;
@@ -195,6 +208,19 @@
   --color-mark-4: var(--mark-4);
   --color-groove-line: var(--groove-line);
   --color-groove-light: var(--groove-light);
+  --color-elevation-line: var(--elevation-line);
+  --color-elevation-shadow: var(--elevation-shadow);
+  --color-scrim: var(--scrim);
+  @keyframes pluto-enter {
+    from {
+      opacity: 0;
+    }
+  }
+  @keyframes pluto-exit {
+    to {
+      opacity: 0;
+    }
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -215,6 +241,15 @@
 @utility groove {
   border-top: var(--line-width) solid var(--groove-line);
   box-shadow: inset 0 var(--line-width) 0 var(--groove-light);
+}
+
+@utility focus-ring {
+  outline: var(--focus-width) solid var(--ring);
+  outline-offset: var(--focus-offset);
+}
+
+@utility focus-ring-none {
+  outline: none;
 }
 
 @layer base {

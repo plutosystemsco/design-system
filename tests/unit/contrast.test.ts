@@ -4,6 +4,7 @@ import {
   contrastRatio,
   contrastTable,
   forbiddenRows,
+  scrimRows,
 } from "../../scripts/contrast.ts";
 import { readTokens } from "../../scripts/tokens.ts";
 
@@ -322,5 +323,50 @@ describe("the forbidden pairs", () => {
       expect(row.ratio).toBeLessThan(4.5);
       expect(row.ratio).toBe(row.stated);
     }
+  });
+});
+
+// 002 decision 7: the elevated surface's edge against each ground under the scrim.
+const SCRIM: [
+  theme: string,
+  edge: string,
+  edgeHex: string,
+  over: string,
+  scrimmed: string,
+  ratio: number,
+][] = [
+  ["light", "popover", "#FFFFFF", "background", "#858688", 3.64],
+  ["light", "popover", "#FFFFFF", "card", "#898A8D", 3.45],
+  ["light", "popover", "#FFFFFF", "muted", "#7F8081", 3.95],
+  ["dark", "elevation-line", "#787C8A", "background", "#14161C", 4.34],
+  ["dark", "elevation-line", "#787C8A", "card", "#181A21", 4.17],
+  ["dark", "elevation-line", "#787C8A", "muted", "#1D1F25", 3.95],
+];
+
+describe("edges over the scrim", () => {
+  const rows = scrimRows(tokens);
+
+  test("6 rows", () => {
+    expect(rows).toHaveLength(6);
+  });
+
+  test.each(SCRIM.map((row, i) => [i + 1, ...row] as const))(
+    "row %d: %s %s over %s",
+    (n, theme, edge, edgeHex, over, scrimmed, ratio) => {
+      const row = rows[n - 1];
+      expect([row.theme, row.edge, row.edgeHex, row.over]).toEqual([
+        theme,
+        edge,
+        edgeHex,
+        over,
+      ]);
+      expect(row.scrimmed).toBe(scrimmed);
+      expect(row.ratio).toBe(ratio);
+    },
+  );
+
+  test("6 of 6 meet 3:1", () => {
+    expect(rows.filter((r) => r.ratio >= r.min)).toHaveLength(6);
+    for (const row of rows) expect(row.min).toBe(3);
   });
 });

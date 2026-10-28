@@ -1,33 +1,37 @@
 # Handoff
 
 - **Status:** replaced at each session's end.
-- **Date:** 2026-10-27
+- **Date:** 2026-10-28
 
 ## State
 
-Specification `001`, the tokens and the registry, is **built** and uncommitted. The working tree holds the whole scaffold, the token file, the six registry items, the preview app, 15 test files and the two smoke fixtures, all green under Bun 1.3.14 (`specifications/001-tokens-and-the-registry.md`, Landing notes). The repository is still local only; `plutosystemsco/design-system` does not exist on GitHub. Nothing has been committed since `634ab09`. **The owner has not asked for a commit.** When asked, the commit should take the `context/` changes and the code together, as one landing of `001`.
+Specification `002`, the primitives (forms, surfaces and feedback), is **built** and committed, in the commit that carries this handoff, tagged `v0.2.0` (the owner's decision of 2026-10-28). `001` is `33e94de`, tagged `v0.1.0`. The commit holds `002`'s 26 restyled items, the two new tokens, the stronger lint, 32 preview pages, the 0.2.0 release, and the five `context/` documents of this session (three research memos, the specification, its two reviews), all green under Bun 1.3.14: `bun run check` 1045 files 0/0, `bun run lint` pass, `bun run build` 33 + 33 + 33 pages, `bun run test` unit 348, browser 330, smoke 36 (`specifications/002-the-primitives-forms-surfaces-and-feedback.md`, Landing notes). Nothing is pushed; `plutosystemsco/design-system` does not exist on GitHub yet.
 
 ## Done this session
 
-- Specification `001` written, reviewed (`reviews/001-…-spec-2026-10-27.md`, 19 findings, all dispositioned), amended, built, reviewed again (`reviews/001-…-pr-2026-10-27.md`, 11 findings, all fixed), and re-verified by the orchestrating session.
-- Two research memos: `research/2026-10-27-the-foundation-run-kit-3-fonts-and-the-theme-item.md` (SvelteKit 3 and `#lib`, font items, what a theme item can carry, the contrast arithmetic) and `research/2026-10-27-the-toolchain-under-bun.md` (every tool runs under Bun with `--bun`).
-- Three owner decisions recorded in `decisions.md`: Bun is the runtime; a fourth ground for `muted`, insets only (delegated to the session as design lead); and, from before, the design book's open calls.
-- The registry serves six items: `pluto-theme`, three font items, `utils`, `four-dot`. In development it is at `http://localhost:5173/r/styles/maia/` after `bun run dev`. An app installs with `REGISTRY_URL=http://localhost:5173/r bunx --bun shadcn-svelte@1.7.1 add four-dot -y -o`.
+- `001` shown running (preview pages in both themes, a live `add` into a scratch app), then committed and tagged at the owner's request.
+- The owner asked for pages and components to show: blocks. Decided with the owner (`decisions.md`, "Blocks, and they shape `002`"): blocks shape `002`, then both are built; the first set is the app shell, hero and call to action, sign in and sign up, the chat pane, plus page states and a settings form added by the session as design lead.
+- Three research memos (`research/2026-10-28-*`): how blocks are declared, installed and previewed (a bare dependency never falls back to shadcn-svelte's own registry); the primitives the blocks and the home page need (41 stock items, the lint's gaps, bits-ui 2.20.2); the blocks' patterns and accessibility rules (the stock blocks' gaps; WCAG 2.2 by number; where the design book is silent).
+- The split and the design calls (`decisions.md`, "The primitives split in two, and the design calls for `002`"): `002` to `006` scoped; thirteen design calls, then five after the spec review and four after the change review, all recorded with reasons. The owner may overturn any of them.
+- `002` written, reviewed (15 findings, all dispositioned), amended, built with a checkpoint after the first three items, reviewed again (12 findings, all dispositioned), re-verified by the orchestrator, with two fixes of its own in the review's addendum (a flaky animation wait; a development-only error on the table page).
 
 ## Waiting on the owner
 
-- **A commit**, if wanted. Suggested message: "001: the tokens and the registry, built".
-- **Deployment** to `ui.plutosystems.co` (constitution §2.2 asks for a published registry). `wrangler.jsonc` is ready as an assets-only Worker; the deploy command, domain and route are a deployment specification's work, and the owner runs the deploy.
-- **Two design-book calls still open**, to be asked when a specification needs them: the doc-ID scheme (`003`, the footer) and coloured dots on ink for the icon (whichever specification ships the icon files). The in-page mark already goes all paper in dark, per v2's written rule.
+- **Deployment** to `ui.plutosystems.co`: unchanged from `001`; the owner runs the deploy under a deployment specification.
+- **Still open from the design book:** the doc-ID scheme (`006`, the footer) and coloured dots on ink for the icon (whichever specification ships the icon files). `mode-watcher` is `005`'s question.
+- **An upstream report to bits-ui** that a tooltip closes on the scroll that keyboard focus causes (`002` review finding 3), if the owner wants to file it.
 
 ## Known risks
 
-- An intermittent hang in the smoke harness's dev-server poll was seen 3 times early in verification and not since (13 clean runs after hardening). Root cause unknown. Any recurrence now prints the server log (`001` Landing notes, item 1).
-- The Playwright browser cache in `~/Library/Caches/ms-playwright/` changed during this session (Chromium 1248 replaced 1234). Another project on an older Playwright will re-download its build.
-- SvelteKit 3.1.0 is three weeks old and the registry feature is labelled experimental upstream. Both are pinned.
+- The browser suites run against the production build, so a development-only error (Svelte's dev checks) is invisible to them; the orchestrator walked every page on the dev server by hand. A later specification should make that walk a test (`002` Landing notes, note 8).
+- The smoke harness's intermittent hang from `001` has not recurred (every run since the hardening clean, including all of this session's).
+- Playwright's shared browser cache changed in the `001` session; other projects on an older Playwright re-download.
+- `native-select`'s live stock JSON differs from the prior-art clone by one type line; provenance records the live hash.
 
 ## Next
 
-1. **`002`, the primitives:** button, badge, card, input, tabs, table, scroll-area, accordion, separator, code-block, skeleton, spinner. Research first: which stock maia items `wasi-python-dev`'s home page needs, their classes against the token rules in `001` decision 29 (`ring-ring/50`, `bg-input/30`, off-ladder spacing, translucent menus), and `bits-ui`'s current version. Then the spec, reviewed before build. The lint and the contrast test hold each restyled item to the tokens.
-2. **`wasi-python-dev`'s home-page specification** installs `pluto-theme` and `four-dot` from localhost. Its commit closes `001` criterion 24 and makes `001` done.
-3. **A deployment specification** when the owner wants the registry public: Cloudflare assets-only Worker, the versioned path, retaining older versions.
+1. **`003`, the first blocks:** hero and call to action with a feature grid, sign in, sign up, page states (empty, error, not found, loading), the settings form, and the block viewer (`/view/<block>` route with no chrome, an iframe with pixel-width presets, light and dark, a code view of the built item). Its research exists (the three memos of 2026-10-28); the blocks memo §5 lists the eight decisions it must make (item shape, page target rule, import rule, naming rule, where block source lives, `meta`, the preview route, the smoke test). The patterns memo §8 gives per-block structure, states and open questions. The `status` live-region component goes here (`002` decision 24).
+2. **`004`, code and data:** `code-block` with the groove and a token highlight palette (needs a memo on Shiki's CSS-variables theme), `tabs` is done, chart, popover, accordion, toggle, toggle-group, scroll-area; the editor needs its own memo (CodeMirror 6 under Svelte 5). `wasi-python-dev`'s home page waits on this.
+3. **`005`, overlays and navigation:** dropdown-menu, sheet, sidebar with `is-mobile`, breadcrumb, sonner (and the `mode-watcher` call), the chat primitives (`message-scroller` or our own).
+4. **`006`, the app shell and the chat pane**, with the doc-ID owner call for the footer.
+5. **`wasi-python-dev`'s home-page specification** closes `001` criterion 24 and `002` criterion 25.

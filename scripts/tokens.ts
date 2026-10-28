@@ -40,6 +40,15 @@ export type Forbidden = {
   why: string;
 };
 
+/** An elevated surface's edge against a ground under the scrim (002 decision 7). */
+export type ScrimRow = {
+  theme: Theme;
+  edge: string;
+  over: string;
+  scrim: string;
+  min: number;
+};
+
 export type Tokens = {
   primitives: Record<string, string>;
   themes: Record<Theme, Record<string, string>>;
@@ -60,12 +69,14 @@ export type Tokens = {
   mark: { dot: number; gap: number; rise: number; lockupGap: number };
   line: { width: number };
   focus: { width: number; offset: number };
+  elevation: { y: number; blur: number };
   contrast: {
     text: [string, string][];
     tints: TintPair[];
     nonText: [string, string][];
     exceptions: Exception[];
     forbidden: Forbidden[];
+    scrim: ScrimRow[];
   };
 };
 
@@ -144,6 +155,7 @@ export function validateTokens(raw: unknown): Tokens {
     "mark",
     "line",
     "focus",
+    "elevation",
     "contrast",
   ]) {
     if (!(key in root)) throw new TokenError(key, "is missing");
@@ -252,6 +264,15 @@ export function validateTokens(raw: unknown): Tokens {
   positive(focus.width, "focus.width");
   number(focus.offset, "focus.offset");
 
+  // elevation: the shadow's offset and blur, each a ladder step (002 decision 7).
+  const ladder = new Set(spacing.ladder as number[]);
+  const elevation = object(root.elevation, "elevation");
+  for (const field of ["y", "blur"]) {
+    const n = positive(elevation[field], `elevation.${field}`);
+    if (!ladder.has(n))
+      throw new TokenError(`elevation.${field}`, "must be a ladder step");
+  }
+
   // contrast: every name it uses must be a semantic token.
   const contrast = object(root.contrast, "contrast");
   const semanticName = (value: Json, key: string) => {
@@ -293,6 +314,14 @@ export function validateTokens(raw: unknown): Tokens {
     tenths(forbidden.alpha, `${key}.alpha`);
     positive(forbidden.ratio, `${key}.ratio`);
     string(forbidden.why, `${key}.why`);
+  });
+  array(contrast.scrim, "contrast.scrim").forEach((value, i) => {
+    const key = `contrast.scrim[${i}]`;
+    const row = object(value, key);
+    theme(row.theme, `${key}.theme`);
+    for (const field of ["edge", "over", "scrim"])
+      semanticName(row[field], `${key}.${field}`);
+    positive(row.min, `${key}.min`);
   });
 
   return root as unknown as Tokens;

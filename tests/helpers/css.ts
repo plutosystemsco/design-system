@@ -64,10 +64,46 @@ export function normaliseValue(value: string): string {
     .replace(/#[0-9a-fA-F]{3,8}\b/g, (hex) => hex.toLowerCase());
 }
 
-/** The declarations of a block body that holds no nested block. */
+/** A block body with its nested blocks (such as `@keyframes` inside `@theme inline`) removed. */
+function withoutNestedBlocks(body: string): string {
+  let out = "";
+  let depth = 0;
+  let quote: string | null = null;
+  let segment = "";
+  for (let i = 0; i < body.length; i++) {
+    const ch = body[i];
+    if (quote) {
+      if (depth === 0) segment += ch;
+      if (ch === "\\") {
+        if (depth === 0) segment += body[i + 1] ?? "";
+        i++;
+      } else if (ch === quote) quote = null;
+      continue;
+    }
+    if (ch === '"' || ch === "'") {
+      quote = ch;
+      if (depth === 0) segment += ch;
+    } else if (ch === "{") {
+      // The text since the last ";" was the nested block's prelude: drop it.
+      if (depth === 0) segment = "";
+      depth++;
+    } else if (ch === "}") {
+      depth--;
+    } else if (depth === 0) {
+      segment += ch;
+      if (ch === ";") {
+        out += segment;
+        segment = "";
+      }
+    }
+  }
+  return out + segment;
+}
+
+/** The declarations of a block body; nested blocks are skipped. */
 export function declarations(body: string): Map<string, string> {
   const map = new Map<string, string>();
-  for (const part of stripComments(body).split(";")) {
+  for (const part of withoutNestedBlocks(stripComments(body)).split(";")) {
     const index = part.indexOf(":");
     if (index === -1) continue;
     const prop = part.slice(0, index).trim();

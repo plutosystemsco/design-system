@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+import { readFileSync } from "node:fs";
 import {
   itemFiles,
   lintFiles,
@@ -8,18 +9,14 @@ import {
 
 const rules = loadRules();
 
+/** 002 decision 6: the files of the 32 items, from registry.json. */
 describe("the item files", () => {
   const files = itemFiles();
 
-  test("are the 4 files items carry", () => {
-    expect(files.sort()).toEqual(
-      [
-        "src/lib/registry/ui/four-dot/four-dot.svelte",
-        "src/lib/registry/ui/four-dot/index.ts",
-        "src/lib/registry/ui/four-dot/lockup.svelte",
-        "src/lib/utils.ts",
-      ].sort(),
-    );
+  test("are the 133 files items carry, with no repeats", () => {
+    expect(files).toHaveLength(133);
+    expect(new Set(files).size).toBe(133);
+    for (const file of files) expect(readFileSync(file, "utf8")).toBeTruthy();
   });
 
   test("hold 0 literal colours or sizes", () => {
@@ -27,71 +24,172 @@ describe("the item files", () => {
   });
 });
 
-describe("the lint itself", () => {
-  const BAD = [
-    "#14161C",
-    "#abc",
-    "oklch(0.5 0.2 264)",
-    "rgb(0 0 0)",
-    '<span class="bg-red-500"></span>',
-    '<span class="text-white"></span>',
-    '<span class="p-[13px]"></span>',
-    '<span class="text-[#fff]"></span>',
-    "<style>\n\tp { color: red; }\n</style>",
-    '<span style="margin: 4px"></span>',
-    '<span class="p-5"></span>',
-    '<span class="gap-1.5"></span>',
-    '<span class="mt-px"></span>',
-    '<span class="hover:-mx-7"></span>',
-    '<span class="font-black"></span>',
-    '<span class="leading-7"></span>',
-    '<span class="[margin:13px]"></span>',
-    '<span class="[color:red]"></span>',
-    '<span class="bg-[red]"></span>',
-    '<span class="bg-[color-mix(in_srgb,red,blue)]"></span>',
-    '<span class="bg-black/[.5]"></span>',
-    '<span {...{ style: "margin: 13px" }}></span>',
-    'el.style.margin = "13px";',
-    '<span class="inset-shadow-red-500"></span>',
-    '<span class="text-shadow-black"></span>',
-    '<span class="duration-300"></span>',
-    '<span class="delay-150"></span>',
-  ];
-  const GOOD = [
-    '<span class="p-4"></span>',
-    '<span class="gap-(--mark-gap)"></span>',
-    '<span class="mx-auto"></span>',
-    '<span class="bg-mark-1"></span>',
-    '<span class="bg-current"></span>',
-    '<span class="size-(--mark-dot)"></span>',
-    '<span class="font-bold"></span>',
-    '<span class="leading-none"></span>',
-    'import { cn } from "#lib/utils";',
-    "{#each items as item}{item}{/each}",
-    '<span class="space-x-reverse"></span>',
-    '<span class="duration-(--motion-micro)"></span>',
-  ];
+/** A sample: raw text, or a class linted inside `<span class="…">`, with a file name. */
+type Sample = string | { cls: string; file?: string } | { text: string };
 
+function lintSample(sample: Sample) {
+  if (typeof sample === "string")
+    return lintText(sample, "sample.svelte", rules);
+  if ("text" in sample) return lintText(sample.text, "sample.svelte", rules);
+  return lintText(
+    `<span class="${sample.cls}"></span>`,
+    sample.file ?? "sample.svelte",
+    rules,
+  );
+}
+
+function label(sample: Sample): string {
+  if (typeof sample === "string") return sample;
+  if ("text" in sample) return sample.text;
+  return sample.file ? `${sample.cls} in ${sample.file}` : sample.cls;
+}
+
+// 001 decision 25: 27 bad and 12 good.
+const BAD_001: Sample[] = [
+  "#14161C",
+  "#abc",
+  "oklch(0.5 0.2 264)",
+  "rgb(0 0 0)",
+  { cls: "bg-red-500" },
+  { cls: "text-white" },
+  { cls: "p-[13px]" },
+  { cls: "text-[#fff]" },
+  "<style>\n\tp { color: red; }\n</style>",
+  '<span style="margin: 4px"></span>',
+  { cls: "p-5" },
+  { cls: "gap-1.5" },
+  { cls: "mt-px" },
+  { cls: "hover:-mx-7" },
+  { cls: "font-black" },
+  { cls: "leading-7" },
+  { cls: "[margin:13px]" },
+  { cls: "[color:red]" },
+  { cls: "bg-[red]" },
+  { cls: "bg-[color-mix(in_srgb,red,blue)]" },
+  { cls: "bg-black/[.5]" },
+  '<span {...{ style: "margin: 13px" }}></span>',
+  'el.style.margin = "13px";',
+  { cls: "inset-shadow-red-500" },
+  { cls: "text-shadow-black" },
+  { cls: "duration-300" },
+  { cls: "delay-150" },
+];
+const GOOD_001: Sample[] = [
+  { cls: "p-4" },
+  { cls: "gap-(--mark-gap)" },
+  { cls: "mx-auto" },
+  { cls: "bg-mark-1" },
+  { cls: "bg-current" },
+  { cls: "size-(--mark-dot)" },
+  { cls: "font-bold" },
+  { cls: "leading-none" },
+  { text: 'import { cn } from "#lib/utils";' },
+  { text: "{#each items as item}{item}{/each}" },
+  { cls: "space-x-reverse" },
+  { cls: "duration-(--motion-micro)" },
+];
+
+// 002 decision 21: 32 new bad and 24 new good.
+const BAD_002: Sample[] = [
+  { cls: "focus-visible:ring-ring/50" },
+  { cls: "bg-input/30" },
+  { cls: "hover:bg-primary/80" },
+  { cls: "text-foreground/60" },
+  { cls: "border-destructive/50" },
+  { cls: "dark:text-muted-foreground" },
+  { cls: "dark:bg-destructive/10" },
+  { cls: "bg-destructive/20" },
+  { cls: "ring-1" },
+  { cls: "ring-offset-2" },
+  { cls: "outline-none" },
+  { cls: "outline-hidden" },
+  { cls: "shadow-2xl" },
+  { cls: "shadow-sm" },
+  { cls: "drop-shadow-md" },
+  { cls: "supports-backdrop-filter:backdrop-blur-xs" },
+  { cls: "h-9" },
+  { cls: "size-3.5" },
+  { cls: "min-w-36" },
+  { cls: "w-px" },
+  { cls: "text-lg" },
+  { cls: "tracking-tight" },
+  { cls: "animate-pulse" },
+  { cls: "data-open:animate-in" },
+  { cls: "zoom-in-95" },
+  { cls: "animate-caret-blink" },
+  { cls: "rounded-full", file: "card.svelte" },
+  { cls: "cn-font-heading" },
+  { cls: "focus-visible:focus-ring-none", file: "input.svelte" },
+  { cls: "border-l-4" },
+  { cls: "border-2" },
+  { cls: "w-11" },
+];
+const GOOD_002: Sample[] = [
+  { cls: "bg-destructive/10" },
+  { cls: "dark:bg-destructive/20" },
+  { cls: "bg-success/10" },
+  { cls: "dark:bg-success/20" },
+  { cls: "shadow-elevation" },
+  { cls: "bg-scrim" },
+  { cls: "has-[:focus-visible]:focus-ring", file: "input-otp.svelte" },
+  { cls: "focus-visible:focus-ring-none", file: "input-group-input.svelte" },
+  { cls: "h-lh" },
+  { cls: "size-4" },
+  { cls: "min-h-16" },
+  { cls: "max-w-xs" },
+  { cls: "w-full" },
+  { cls: "text-5xl" },
+  { cls: "tracking-section" },
+  { cls: "data-open:animate-enter" },
+  { cls: "data-closed:animate-exit" },
+  { cls: "animate-spin" },
+  { cls: "rounded-full", file: "four-dot.svelte" },
+  { cls: "aria-invalid:border-destructive" },
+  { cls: "text-destructive" },
+  { cls: "h-(--line-width)" },
+  { cls: "border-b-(length:--focus-width)" },
+  { cls: "border-0" },
+];
+
+// The review of the built change, finding 10: 5 more bad and 3 more good.
+const BAD_REVIEW: Sample[] = [
+  { cls: "focus-visible:focus-ring", file: "button.svelte" },
+  { cls: "inset-x-3.5" },
+  { cls: "bg-(--color-red-500)" },
+  { text: '<svg><path fill="red" /></svg>' },
+  { cls: "data-open:scale-95" },
+];
+const GOOD_REVIEW: Sample[] = [
+  { cls: "active:translate-y-px" },
+  { cls: "top-1/2" },
+  { cls: "inset-0" },
+];
+
+const BAD = [...BAD_001, ...BAD_002, ...BAD_REVIEW];
+const GOOD = [...GOOD_001, ...GOOD_002, ...GOOD_REVIEW];
+
+describe("the lint itself", () => {
   test("reads the palette from tailwindcss/theme.css", () => {
     expect(rules.palettes).toContain("red");
     expect(rules.palettes).toContain("slate");
     expect(rules.palettes.length).toBeGreaterThanOrEqual(22);
   });
 
-  test.each(BAD)("flags %s", (sample) => {
-    expect(lintText(sample, "<sample>", rules).length).toBeGreaterThan(0);
+  test.each(BAD.map((s) => [label(s), s] as const))("flags %s", (_, sample) => {
+    expect(lintSample(sample).length).toBeGreaterThan(0);
   });
 
-  test.each(GOOD)("passes %s", (sample) => {
-    expect(lintText(sample, "<sample>", rules)).toEqual([]);
-  });
+  test.each(GOOD.map((s) => [label(s), s] as const))(
+    "passes %s",
+    (_, sample) => {
+      expect(lintSample(sample)).toEqual([]);
+    },
+  );
 
-  test("27 bad samples and 12 good ones", () => {
-    expect(
-      BAD.filter((s) => lintText(s, "<sample>", rules).length > 0),
-    ).toHaveLength(27);
-    expect(
-      GOOD.filter((s) => lintText(s, "<sample>", rules).length > 0),
-    ).toHaveLength(0);
+  test("64 bad samples flagged and 0 of 39 good ones", () => {
+    expect(BAD).toHaveLength(64);
+    expect(GOOD).toHaveLength(39);
+    expect(BAD.filter((s) => lintSample(s).length > 0)).toHaveLength(64);
+    expect(GOOD.filter((s) => lintSample(s).length > 0)).toHaveLength(0);
   });
 });

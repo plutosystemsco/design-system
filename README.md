@@ -5,7 +5,7 @@ The tokens, styles and Svelte components of Pluto Systems applications, served a
 ## What is here
 
 - `tokens/pluto.tokens.json`: the one source of every colour and size, light and dark.
-- `registry.json` and `src/lib/registry/`: the registry's items. Today: `pluto-theme`, three font items, `utils` and `four-dot` (the mark and its lockup).
+- `registry.json` and `src/lib/registry/`: the registry's items. Today 32, in five groups: foundation (`pluto-theme`, three font items, `utils`, `four-dot`), actions, surfaces, feedback and forms. Every colour and size in them comes from the token file.
 - `src/routes/`: a preview app, one page per item, in both themes. It is not a website.
 - `context/`: the research, specifications, reviews and decisions this code is built from. Read [`context/README.md`](context/README.md) first.
 
@@ -26,6 +26,9 @@ With `bun run dev` running, an app installs an item from this machine:
 
 ```
 REGISTRY_URL=http://localhost:5173/r bunx --bun shadcn-svelte@1.7.1 add four-dot -y -o
+REGISTRY_URL=http://localhost:5173/r bunx --bun shadcn-svelte@1.7.1 add button field alert-dialog -y
 ```
+
+The first `add` brings the theme and the fonts with it. An item's dependencies, such as `field`'s `label` and `separator`, come from this registry too; nothing is fetched from shadcn-svelte's own.
 
 The registry is not published yet. `wrangler.jsonc` is ready for an assets-only Cloudflare Worker; the owner runs the deploy.

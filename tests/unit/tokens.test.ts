@@ -15,9 +15,9 @@ describe("the token file", () => {
     expect(() => validateTokens(raw)).not.toThrow();
   });
 
-  test("holds 22 primitives, each #RRGGBB or #RRGGBBAA", () => {
+  test("holds 25 primitives, each #RRGGBB or #RRGGBBAA", () => {
     const primitives = Object.entries(tokens.primitives);
-    expect(primitives).toHaveLength(22);
+    expect(primitives).toHaveLength(25);
     for (const [, hex] of primitives) expect(hex).toMatch(HEX);
   });
 
@@ -27,16 +27,16 @@ describe("the token file", () => {
   });
 
   test.each(["light", "dark"] as const)(
-    "%s holds 45 names, each naming a primitive",
+    "%s holds 48 names, each naming a primitive",
     (theme) => {
       const entries = Object.entries(tokens.themes[theme]);
-      expect(entries).toHaveLength(45);
+      expect(entries).toHaveLength(48);
       for (const [, primitive] of entries)
         expect(Object.keys(tokens.primitives)).toContain(primitive);
     },
   );
 
-  test("both themes name the same 45 tokens", () => {
+  test("both themes name the same 48 tokens", () => {
     expect(Object.keys(tokens.themes.dark).sort()).toEqual(
       Object.keys(tokens.themes.light).sort(),
     );
@@ -74,5 +74,53 @@ describe("the token file", () => {
       rise: 0.38,
       lockupGap: 0.16,
     });
+  });
+
+  test("holds the elevation and scrim colours of 002 decision 7", () => {
+    expect(tokens.primitives["ink-shadow"]).toBe("#14161C29");
+    expect(tokens.primitives["ink-scrim"]).toBe("#14161C80");
+    expect(tokens.primitives["ink-scrim-deep"]).toBe("#14161C99");
+    expect(
+      ["elevation-line", "elevation-shadow", "scrim"].map((n) => [
+        tokens.themes.light[n],
+        tokens.themes.dark[n],
+      ]),
+    ).toEqual([
+      ["line", "paper-line-input"],
+      ["ink-shadow", "clear"],
+      ["ink-scrim", "ink-scrim-deep"],
+    ]);
+  });
+
+  test("elevation holds 2 ladder steps", () => {
+    expect(tokens.elevation).toEqual({ y: 12, blur: 32 });
+    for (const px of [tokens.elevation.y, tokens.elevation.blur])
+      expect(tokens.spacing.ladder).toContain(px);
+  });
+
+  test("contrast.scrim names only semantic colours", () => {
+    const names = new Set(Object.keys(tokens.themes.light));
+    expect(tokens.contrast.scrim).toHaveLength(6);
+    for (const row of tokens.contrast.scrim) {
+      for (const name of [row.edge, row.over, row.scrim])
+        expect(names.has(name)).toBe(true);
+      expect(row.min).toBe(3);
+    }
+  });
+
+  test("rejects an elevation off the ladder and a scrim row with a raw colour", () => {
+    const offLadder = structuredClone(raw);
+    offLadder.elevation.y = 10;
+    expect(() => validateTokens(offLadder)).toThrow(/elevation\.y/);
+    const missing = structuredClone(raw);
+    delete missing.elevation;
+    expect(() => validateTokens(missing)).toThrow(/elevation/);
+    const badScrim = structuredClone(raw);
+    badScrim.contrast.scrim[0].edge = "raised";
+    expect(() => validateTokens(badScrim)).not.toThrow();
+    badScrim.contrast.scrim[0].edge = "ink";
+    expect(() => validateTokens(badScrim)).toThrow(
+      /contrast\.scrim\[0\]\.edge/,
+    );
   });
 });

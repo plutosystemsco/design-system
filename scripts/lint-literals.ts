@@ -11,6 +11,11 @@
  *   - a literal duration or delay (`duration-300`); the token form is allowed;
  *   - a spacing utility off the ladder (decision 10);
  *   - a `font-<name>` or `leading-<name>` the token file does not hold.
+ * 002 decision 21 adds fourteen class rules, L1 to L14: translucent tints,
+ * `dark:`, rings, outlines, shadows, backdrops, sizes off the ladder, type
+ * steps and tracking off the token scale, animations, `rounded-full` and
+ * `focus-ring-none` outside their allowlists, `cn-` markers, and numeric
+ * border widths.
  * The CSS-variable form `-(--token)` is always allowed: its value is a token.
  */
 import { readFileSync } from "node:fs";
@@ -30,7 +35,60 @@ export type Rules = {
   families: Set<string>;
   weights: Set<string>;
   leadings: Set<string>;
+  /** The semantic colour names, for L1. */
+  colours: Set<string>;
+  /** The type scale's keys, for L8. */
+  textSteps: Set<string>;
+  /** The tracking names, for L9. */
+  tracking: Set<string>;
 };
+
+/** L11 and L13: the files, by name, in which one otherwise forbidden class is allowed. */
+export const ALLOWLISTS = {
+  "rounded-full": ["four-dot.svelte", "radio-group-item.svelte"],
+  "focus-ring-none": [
+    "input-group-input.svelte",
+    "input-group-textarea.svelte",
+  ],
+  // The review of the built change, finding 10: R2's "only as decision 8 says".
+  "focus-ring": ["input-group.svelte", "input-otp.svelte"],
+} as const;
+
+/** L1: the four sanctioned state tints, and the one variant each may carry. */
+const SANCTIONED_TINTS: Record<string, string> = {
+  "bg-destructive/10": "",
+  "bg-success/10": "",
+  "bg-destructive/20": "dark",
+  "bg-success/20": "dark",
+};
+
+/** L7: the size keywords allowed besides ladder steps, fractions and the token form. */
+const SIZE_KEYWORDS = new Set([
+  "auto",
+  "full",
+  "screen",
+  "svh",
+  "lvh",
+  "dvh",
+  "min",
+  "max",
+  "fit",
+  "lh",
+  "prose",
+  "3xs",
+  "2xs",
+  "xs",
+  "sm",
+  "md",
+  "lg",
+  "xl",
+  "2xl",
+  "3xl",
+  "4xl",
+  "5xl",
+  "6xl",
+  "7xl",
+]);
 
 const COLOUR_UTILITIES = [
   "bg",
@@ -98,6 +156,9 @@ const STYLE_BLOCK = /<style[\s>]/g;
 const STYLE_ATTRIBUTE = /(?:^|\s)style(?::[\w-]+)?\s*=/g;
 /** `{ style: … }` as an object key, which a spread turns into the attribute. */
 const STYLE_KEY = /[{,]\s*["']?style["']?\s*:/g;
+/** A named colour in an SVG paint attribute, such as `fill="red"` (finding 10). */
+const PAINT_ATTRIBUTE =
+  /\b(?:fill|stroke|stop-color|flood-color|lighting-color|color)\s*=\s*["']([a-zA-Z]+)["']/g;
 /** `el.style.margin = …`, `el.style.cssText`, `setAttribute("style", …)`. */
 const STYLE_PROPERTY = /\.style\b|setAttribute\(\s*["'`]style["'`]/g;
 
@@ -160,6 +221,9 @@ export function loadRules(root: string = process.cwd()): Rules {
     families: new Set(Object.keys(tokens.type.families)),
     weights: new Set(Object.keys(tokens.type.weight)),
     leadings: new Set(Object.keys(tokens.type.leading)),
+    colours: new Set(Object.keys(tokens.themes.light)),
+    textSteps: new Set(Object.keys(tokens.type.scale)),
+    tracking: new Set(Object.keys(tokens.type.tracking)),
   };
 }
 
@@ -173,25 +237,165 @@ export function itemFiles(root: string = process.cwd()): string[] {
   );
 }
 
-/** Strips variant prefixes (`hover:`, `dark:`, `md:`) and the important and negative marks. */
-function utilityOf(token: string): string {
+/**
+ * Splits a class token into its variant prefixes (`hover:`, `dark:`, `md:`)
+ * and its utility, without the important and negative marks. A bracket that
+ * closes with none open (the token began inside an arbitrary variant that the
+ * tokeniser split at `=`) resets the depth, so the utility is still found.
+ */
+function splitClass(token: string): { variants: string[]; utility: string } {
   let depth = 0;
-  let last = -1;
+  const colons: number[] = [];
   for (let i = 0; i < token.length; i++) {
     const ch = token[i];
     if (ch === "[" || ch === "(") depth++;
-    else if (ch === "]" || ch === ")") depth--;
-    else if (ch === ":" && depth === 0) last = i;
+    else if (ch === "]" || ch === ")") depth = Math.max(0, depth - 1);
+    else if (ch === ":" && depth === 0) colons.push(i);
   }
-  return token
-    .slice(last + 1)
+  const variants: string[] = [];
+  let start = 0;
+  for (const colon of colons) {
+    variants.push(token.slice(start, colon));
+    start = colon + 1;
+  }
+  const utility = token
+    .slice(start)
     .replace(/^!/, "")
     .replace(/!$/, "")
     .replace(/^-/, "");
+  return { variants, utility };
 }
 
-function classViolation(token: string, rules: Rules): string | undefined {
-  const utility = utilityOf(token);
+/** 002 decision 21's fourteen class rules. */
+function classRule002(
+  variants: string[],
+  utility: string,
+  file: string,
+  rules: Rules,
+): string | undefined {
+  const base = path.basename(file);
+
+  // L1, translucent tint: a colour utility on a token colour with an opacity modifier.
+  const tint = new RegExp(
+    `^(?:${COLOUR_UTILITIES.join("|")})-([a-z][a-z0-9-]*)/(.+)$`,
+  ).exec(utility);
+  if (tint && rules.colours.has(tint[1])) {
+    const allowed = SANCTIONED_TINTS[utility];
+    if (allowed === undefined || variants.join(":") !== allowed)
+      return "translucent tint";
+    return undefined;
+  }
+
+  // L2, a dark: variant, outside the two sanctioned dark tints.
+  if (variants.includes("dark")) return "dark variant";
+
+  // L3, ring.
+  if (/^(?:ring|inset-ring)(?:-|$)/.test(utility)) return "ring";
+
+  // L4, outline.
+  if (/^outline(?:-|$)/.test(utility)) return "outline";
+
+  // L5, shadow: only shadow-elevation.
+  if (
+    /^(?:shadow|inset-shadow|drop-shadow|text-shadow)(?:-|$)/.test(utility) &&
+    utility !== "shadow-elevation"
+  )
+    return "shadow";
+
+  // L6, backdrop.
+  if (/^backdrop-/.test(utility)) return "backdrop";
+
+  // L7, size off the ladder.
+  const size = /^(?:min-h|min-w|max-h|max-w|size|h|w)-(.+)$/.exec(utility);
+  if (size) {
+    const value = size[1];
+    const allowed =
+      rules.spacingSteps.has(value) ||
+      SIZE_KEYWORDS.has(value) ||
+      /^\d+\/\d+$/.test(value) ||
+      VAR_FORM.test(value) ||
+      value.startsWith("[");
+    if (!allowed) return "size off the ladder";
+  }
+
+  // L8, type step.
+  const text = /^text-(xs|sm|base|lg|xl|\d+xl)$/.exec(utility);
+  if (text && !rules.textSteps.has(text[1])) return "type step";
+
+  // L9, tracking.
+  const tracking = /^tracking-(.+)$/.exec(utility);
+  if (
+    tracking &&
+    !rules.tracking.has(tracking[1]) &&
+    !VAR_FORM.test(tracking[1])
+  )
+    return "tracking";
+
+  // L10, animation.
+  const animate = /^animate-(.+)$/.exec(utility);
+  if (animate && !["enter", "exit", "spin"].includes(animate[1]))
+    return "animation";
+  if (/^(?:fade|zoom|slide|spin)-(?:in|out)(?:-|$)/.test(utility))
+    return "animation";
+
+  // L11, rounded-full outside its allowlist.
+  if (
+    /^rounded(?:-[trblsexy]{1,2})?-full$/.test(utility) &&
+    !(ALLOWLISTS["rounded-full"] as readonly string[]).includes(base)
+  )
+    return "rounded-full";
+
+  // L12, a maia cn- marker.
+  if (/^cn-/.test(utility)) return "cn- marker";
+
+  // L13, focus-ring-none outside its allowlist.
+  if (
+    utility === "focus-ring-none" &&
+    !(ALLOWLISTS["focus-ring-none"] as readonly string[]).includes(base)
+  )
+    return "focus-ring-none";
+
+  // L14, a numeric border width.
+  const border = /^border(?:-[xytrblse])?-(\d+)$/.exec(utility);
+  if (border && border[1] !== "0") return "border width";
+
+  // The review of the built change, finding 10:
+  // L15, focus-ring outside its allowlist.
+  if (
+    utility === "focus-ring" &&
+    !(ALLOWLISTS["focus-ring"] as readonly string[]).includes(base)
+  )
+    return "focus-ring";
+
+  // L16, a position or translate offset off the ladder (px, the hairline, is allowed).
+  const offset =
+    /^(?:inset-x|inset-y|inset|top|right|bottom|left|start|end|translate-x|translate-y)-(.+)$/.exec(
+      utility,
+    );
+  // Only a number can be off the ladder; a word such as "left" in prose is not a value.
+  if (
+    offset &&
+    /^[\d.]+$/.test(offset[1]) &&
+    !rules.spacingSteps.has(offset[1])
+  )
+    return "offset off the ladder";
+
+  // L17, a palette colour through the variable form.
+  if (new RegExp(`\\(--color-(?:${rules.palettes.join("|")})-`).test(utility))
+    return "palette colour";
+
+  // L18, scale: the zoom "fake depth" decision 3 removed.
+  if (/^scale(?:-[xyz])?-/.test(utility)) return "scale";
+
+  return undefined;
+}
+
+function classViolation(
+  token: string,
+  rules: Rules,
+  file: string,
+): string | undefined {
+  const { variants, utility } = splitClass(token);
 
   // A whole-token arbitrary property, such as `[margin:13px]`.
   const property = /^\[([\w-]+):(.+)\]$/.exec(utility);
@@ -233,7 +437,7 @@ function classViolation(token: string, rules: Rules): string | undefined {
   const leading = /^leading-(.+)$/.exec(utility);
   if (leading && !rules.leadings.has(leading[1])) return "line height";
 
-  return undefined;
+  return classRule002(variants, utility, file, rules);
 }
 
 function lineOf(text: string, index: number): number {
@@ -263,10 +467,15 @@ export function lintText(
       add(rule, match.index ?? 0, match[0]);
   }
 
+  PAINT_ATTRIBUTE.lastIndex = 0;
+  for (const match of text.matchAll(PAINT_ATTRIBUTE))
+    if (NAMED_COLOURS.has(match[1].toLowerCase()))
+      add("named colour attribute", match.index ?? 0, match[0]);
+
   // Class-like tokens: split on whitespace, quotes and markup punctuation.
   const tokenPattern = /[^\s"'`{}<>=,;]+/g;
   for (const match of text.matchAll(tokenPattern)) {
-    const rule = classViolation(match[0], rules);
+    const rule = classViolation(match[0], rules, file);
     if (rule) add(rule, match.index ?? 0, match[0]);
   }
   return found;

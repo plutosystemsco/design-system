@@ -21,7 +21,10 @@
     "blue-lifted": "#7A9BFF",
     "red-lifted": "#FF7D73",
     "green-lifted": "#4CC982",
-    "clear": "#00000000"
+    "clear": "#00000000",
+    "ink-shadow": "#14161C29",
+    "ink-scrim": "#14161C80",
+    "ink-scrim-deep": "#14161C99"
   },
   "themes": {
     "light": {
@@ -69,7 +72,10 @@
       "mark-3": "amber",
       "mark-4": "green",
       "groove-line": "line",
-      "groove-light": "raised"
+      "groove-light": "raised",
+      "elevation-line": "line",
+      "elevation-shadow": "ink-shadow",
+      "scrim": "ink-scrim"
     },
     "dark": {
       "background": "ink",
@@ -116,7 +122,10 @@
       "mark-3": "paper",
       "mark-4": "paper",
       "groove-line": "paper-line",
-      "groove-light": "clear"
+      "groove-light": "clear",
+      "elevation-line": "paper-line-input",
+      "elevation-shadow": "clear",
+      "scrim": "ink-scrim-deep"
     }
   },
   "radius": { "case": 8 },
@@ -170,6 +179,7 @@
   "mark": { "dot": 0.3, "gap": 0.08, "rise": 0.38, "lockupGap": 0.16 },
   "line": { "width": 1 },
   "focus": { "width": 2, "offset": 2 },
+  "elevation": { "y": 12, "blur": 32 },
   "contrast": {
     "text": [
       ["foreground", "background"],
@@ -286,6 +296,50 @@
         "alpha": 0.2,
         "ratio": 4.44,
         "why": "no state tint on muted (decision 8)"
+      }
+    ],
+    "scrim": [
+      {
+        "theme": "light",
+        "edge": "popover",
+        "over": "background",
+        "scrim": "scrim",
+        "min": 3
+      },
+      {
+        "theme": "light",
+        "edge": "popover",
+        "over": "card",
+        "scrim": "scrim",
+        "min": 3
+      },
+      {
+        "theme": "light",
+        "edge": "popover",
+        "over": "muted",
+        "scrim": "scrim",
+        "min": 3
+      },
+      {
+        "theme": "dark",
+        "edge": "elevation-line",
+        "over": "background",
+        "scrim": "scrim",
+        "min": 3
+      },
+      {
+        "theme": "dark",
+        "edge": "elevation-line",
+        "over": "card",
+        "scrim": "scrim",
+        "min": 3
+      },
+      {
+        "theme": "dark",
+        "edge": "elevation-line",
+        "over": "muted",
+        "scrim": "scrim",
+        "min": 3
       }
     ]
   }

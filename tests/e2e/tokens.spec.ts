@@ -4,6 +4,29 @@ import { GROUND, open, type ThemeName } from "./pages.ts";
 const PAGE = "/items/pluto-theme/";
 const token = (name: string) => `[data-token="${name}"]`;
 
+/**
+ * True when a computed CSS value holds a token's colour: the same channels,
+ * and an alpha within 0.01 (Chromium writes alpha to two decimals). The
+ * production minifier may shorten the token's hex.
+ */
+function holdsColour(computed: string, hex: string): boolean {
+  let d = hex.replace("#", "");
+  if (d.length <= 4) d = [...d].map((c) => c + c).join("");
+  const n = parseInt(d.slice(0, 6), 16);
+  const want = [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  const alpha = d.length === 8 ? parseInt(d.slice(6), 16) / 255 : 1;
+  return [...computed.matchAll(/rgba?\(([^)]*)\)/g)].some((m) => {
+    const parts = m[1].split(",").map((x) => parseFloat(x));
+    const a = parts.length === 4 ? parts[3] : 1;
+    return (
+      parts[0] === want[0] &&
+      parts[1] === want[1] &&
+      parts[2] === want[2] &&
+      Math.abs(a - alpha) < 0.01
+    );
+  });
+}
+
 /** The two motion tokens, in milliseconds. The production CSS minifier writes 900ms as .9s. */
 async function motionMs(page: Page): Promise<number[]> {
   const values = await page.evaluate(() => {
@@ -116,6 +139,34 @@ test.describe("tokens in the browser", () => {
       expect(await loaded("No Such Font")).toBe(false);
     });
   }
+
+  test("shadow-elevation holds --elevation-line's colour", async ({ page }) => {
+    const [shadow, line] = await page
+      .locator(token("shadow-elevation"))
+      .evaluate((el) => [
+        getComputedStyle(el).boxShadow,
+        getComputedStyle(document.documentElement)
+          .getPropertyValue("--elevation-line")
+          .trim(),
+      ]);
+    expect(holdsColour(shadow, line), `${shadow} holds ${line}`).toBe(true);
+  });
+
+  test("bg-scrim computes --scrim's colour with its alpha", async ({
+    page,
+  }) => {
+    const [background, scrim] = await page
+      .locator(token("bg-scrim"))
+      .evaluate((el) => [
+        getComputedStyle(el).backgroundColor,
+        getComputedStyle(document.documentElement)
+          .getPropertyValue("--scrim")
+          .trim(),
+      ]);
+    expect(holdsColour(background, scrim), `${background} is ${scrim}`).toBe(
+      true,
+    );
+  });
 
   test("motion reads its budgets by default", async ({ page }) => {
     expect(await motionMs(page)).toEqual([900, 200]);

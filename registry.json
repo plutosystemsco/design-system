@@ -24,7 +24,8 @@
       "devDependencies": ["shadcn-svelte@^1.7.1"],
       "files": [],
       "meta": {
-        "since": "0.1.0"
+        "since": "0.1.0",
+        "group": "foundation"
       },
       "cssVars": {
         "light": {
@@ -73,7 +74,10 @@
           "mark-3": "#F0AE12",
           "mark-4": "#1E9E56",
           "groove-line": "#14161C1A",
-          "groove-light": "#FFFFFF"
+          "groove-light": "#FFFFFF",
+          "elevation-line": "#14161C1A",
+          "elevation-shadow": "#14161C29",
+          "scrim": "#14161C80"
         },
         "dark": {
           "background": "#14161C",
@@ -120,7 +124,10 @@
           "mark-3": "#F7F7F4",
           "mark-4": "#F7F7F4",
           "groove-line": "#F7F7F41A",
-          "groove-light": "#00000000"
+          "groove-light": "#00000000",
+          "elevation-line": "#787C8A",
+          "elevation-shadow": "#00000000",
+          "scrim": "#14161C99"
         },
         "theme": {
           "radius": "0.5rem",
@@ -152,7 +159,10 @@
           "font-weight-bold": "700",
           "leading-none": "1",
           "ease-entrance": "cubic-bezier(0.2, 0.7, 0.3, 1)",
-          "default-transition-duration": "200ms"
+          "default-transition-duration": "200ms",
+          "shadow-elevation": "0 0 0 var(--line-width) var(--elevation-line), 0 0.75rem 2rem 0 var(--elevation-shadow)",
+          "animate-enter": "pluto-enter var(--motion-micro) cubic-bezier(0.2, 0.7, 0.3, 1)",
+          "animate-exit": "pluto-exit var(--motion-micro) cubic-bezier(0.2, 0.7, 0.3, 1) forwards"
         }
       },
       "css": {
@@ -188,6 +198,23 @@
           "border-top": "var(--line-width) solid var(--groove-line)",
           "box-shadow": "inset 0 var(--line-width) 0 var(--groove-light)"
         },
+        "@utility focus-ring": {
+          "outline": "var(--focus-width) solid var(--ring)",
+          "outline-offset": "var(--focus-offset)"
+        },
+        "@utility focus-ring-none": {
+          "outline": "none"
+        },
+        "@keyframes pluto-enter": {
+          "from": {
+            "opacity": "0"
+          }
+        },
+        "@keyframes pluto-exit": {
+          "to": {
+            "opacity": "0"
+          }
+        },
         "@layer base": {
           "body": {
             "@apply bg-background text-foreground": {}
@@ -211,7 +238,8 @@
       "registryDependencies": [],
       "files": [],
       "meta": {
-        "since": "0.1.0"
+        "since": "0.1.0",
+        "group": "foundation"
       },
       "font": {
         "family": "'Geist Variable', system-ui, sans-serif",
@@ -231,7 +259,8 @@
       "registryDependencies": [],
       "files": [],
       "meta": {
-        "since": "0.1.0"
+        "since": "0.1.0",
+        "group": "foundation"
       },
       "font": {
         "family": "'IBM Plex Sans Variable', system-ui, sans-serif",
@@ -251,7 +280,8 @@
       "registryDependencies": [],
       "files": [],
       "meta": {
-        "since": "0.1.0"
+        "since": "0.1.0",
+        "group": "foundation"
       },
       "font": {
         "family": "'JetBrains Mono Variable', ui-monospace, monospace",
@@ -277,7 +307,8 @@
         }
       ],
       "meta": {
-        "since": "0.1.0"
+        "since": "0.1.0",
+        "group": "foundation"
       }
     },
     {
@@ -302,7 +333,1076 @@
         }
       ],
       "meta": {
-        "since": "0.1.0"
+        "since": "0.1.0",
+        "group": "foundation"
+      }
+    },
+    {
+      "name": "button",
+      "type": "registry:ui",
+      "title": "Button",
+      "description": "An action: the surface's one blue primary, a bordered secondary, ghost, destructive or link, at 48 or 32 px, with a busy state that keeps focus.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": ["utils", "pluto-theme", "spinner"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/button/button.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/button/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.2.0",
+        "group": "actions",
+        "stock": {
+          "registry": "https://shadcn-svelte.com/registry/styles/maia",
+          "item": "button",
+          "cli": "1.7.1",
+          "date": "2026-10-28",
+          "sha256": "2460d16c3fe61ce9cd6c495820d1e51f2bf3ec4d9a2c5c5bdfd858003f0988d5"
+        }
+      }
+    },
+    {
+      "name": "tooltip",
+      "type": "registry:ui",
+      "title": "Tooltip",
+      "description": "A short inverted label that opens on hover and focus, closes on Escape, and repeats an icon button's name.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": ["utils", "pluto-theme"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/tooltip/tooltip-content.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/tooltip/tooltip-portal.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/tooltip/tooltip-provider.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/tooltip/tooltip-trigger.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/tooltip/tooltip.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/tooltip/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.2.0",
+        "group": "actions",
+        "stock": {
+          "registry": "https://shadcn-svelte.com/registry/styles/maia",
+          "item": "tooltip",
+          "cli": "1.7.1",
+          "date": "2026-10-28",
+          "sha256": "ba0609f62c4f5f01033532467a9252c5cc03316ad49ce4ed58ff1165b9218b68"
+        }
+      }
+    },
+    {
+      "name": "kbd",
+      "type": "registry:ui",
+      "title": "Kbd",
+      "description": "A keyboard key, or a group of keys, set in the mono face on an inset.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": ["utils", "pluto-theme"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/kbd/kbd-group.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/kbd/kbd.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/kbd/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.2.0",
+        "group": "actions",
+        "stock": {
+          "registry": "https://shadcn-svelte.com/registry/styles/maia",
+          "item": "kbd",
+          "cli": "1.7.1",
+          "date": "2026-10-28",
+          "sha256": "63bc69ecd4aed29655a9213e211965dd728876b91701b39b3d039b663f94dd07"
+        }
+      }
+    },
+    {
+      "name": "card",
+      "type": "registry:ui",
+      "title": "Card",
+      "description": "A raised surface with a header, content, footer and an action, whose title is a real heading.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": ["utils", "pluto-theme"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/card/card-action.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/card/card-content.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/card/card-description.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/card/card-footer.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/card/card-header.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/card/card-title.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/card/card.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/card/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.2.0",
+        "group": "surfaces",
+        "stock": {
+          "registry": "https://shadcn-svelte.com/registry/styles/maia",
+          "item": "card",
+          "cli": "1.7.1",
+          "date": "2026-10-28",
+          "sha256": "afb96a575a67cd4a0dc60f29592aca1c8c16efa3154adeec9c07e5d4e1a1d229"
+        }
+      }
+    },
+    {
+      "name": "separator",
+      "type": "registry:ui",
+      "title": "Separator",
+      "description": "The groove between sections, decorative by default, or a plain vertical hairline.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": ["utils", "pluto-theme"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/separator/separator.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/separator/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.2.0",
+        "group": "surfaces",
+        "stock": {
+          "registry": "https://shadcn-svelte.com/registry/styles/maia",
+          "item": "separator",
+          "cli": "1.7.1",
+          "date": "2026-10-28",
+          "sha256": "6f53e106cb04597615e9f28d1cd1a34e04e9f81b7ceea1787935dd0e79b1521e"
+        }
+      }
+    },
+    {
+      "name": "item",
+      "type": "registry:ui",
+      "title": "Item",
+      "description": "A row of media, content and actions, plain or outlined, that can be one link.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": ["utils", "pluto-theme", "separator"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/item/item-actions.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/item/item-content.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/item/item-description.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/item/item-footer.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/item/item-group.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/item/item-header.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/item/item-media.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/item/item-separator.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/item/item-title.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/item/item.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/item/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.2.0",
+        "group": "surfaces",
+        "stock": {
+          "registry": "https://shadcn-svelte.com/registry/styles/maia",
+          "item": "item",
+          "cli": "1.7.1",
+          "date": "2026-10-28",
+          "sha256": "f28bb7b37d943d71d420e3e4f4dd005d5b3cdcbd596081eea302bbfd2d0e4f28"
+        }
+      }
+    },
+    {
+      "name": "table",
+      "type": "registry:ui",
+      "title": "Table",
+      "description": "A data table with a caption, header, selectable rows and a footer, scrolling inside itself when it must.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": ["utils", "pluto-theme"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/table/table-body.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/table/table-caption.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/table/table-cell.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/table/table-footer.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/table/table-head.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/table/table-header.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/table/table-row.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/table/table.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/table/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.2.0",
+        "group": "surfaces",
+        "stock": {
+          "registry": "https://shadcn-svelte.com/registry/styles/maia",
+          "item": "table",
+          "cli": "1.7.1",
+          "date": "2026-10-28",
+          "sha256": "eccb4422df8ee16988d55e72d85c3c0f2c5bab9f357e3235c7ee9555237bac2c"
+        }
+      }
+    },
+    {
+      "name": "tabs",
+      "type": "registry:ui",
+      "title": "Tabs",
+      "description": "Tabbed panels as a pill strip on an inset or as underlined triggers, moved by the arrow keys.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": ["utils", "pluto-theme"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/tabs/tabs-content.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/tabs/tabs-list.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/tabs/tabs-trigger.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/tabs/tabs.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/tabs/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.2.0",
+        "group": "surfaces",
+        "stock": {
+          "registry": "https://shadcn-svelte.com/registry/styles/maia",
+          "item": "tabs",
+          "cli": "1.7.1",
+          "date": "2026-10-28",
+          "sha256": "4cf7419805fc4b3a1b4b988ddffdae3cae81d5d2ed9833cec69e2f4eb8021fbe"
+        }
+      }
+    },
+    {
+      "name": "collapsible",
+      "type": "registry:ui",
+      "title": "Collapsible",
+      "description": "A button that shows and hides a region, with its state in aria-expanded.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": ["utils", "pluto-theme"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/collapsible/collapsible-content.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/collapsible/collapsible-trigger.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/collapsible/collapsible.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/collapsible/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.2.0",
+        "group": "surfaces",
+        "stock": {
+          "registry": "https://shadcn-svelte.com/registry/styles/maia",
+          "item": "collapsible",
+          "cli": "1.7.1",
+          "date": "2026-10-28",
+          "sha256": "d6ad641928024c72609982bf73a335163926ade283f4e9f8b8dbf600cc02b136"
+        }
+      }
+    },
+    {
+      "name": "avatar",
+      "type": "registry:ui",
+      "title": "Avatar",
+      "description": "A person's image or initials at the case radius, alone or in an overlapping group.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": ["utils", "pluto-theme"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/avatar/avatar-fallback.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/avatar/avatar-group-count.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/avatar/avatar-group.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/avatar/avatar-image.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/avatar/avatar.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/avatar/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.2.0",
+        "group": "surfaces",
+        "stock": {
+          "registry": "https://shadcn-svelte.com/registry/styles/maia",
+          "item": "avatar",
+          "cli": "1.7.1",
+          "date": "2026-10-28",
+          "sha256": "080843f688905b9ed48c2e7de4c35569340d6827e853efc9af0b8534459a4cd8"
+        }
+      }
+    },
+    {
+      "name": "alert",
+      "type": "registry:ui",
+      "title": "Alert",
+      "description": "A message in default, destructive, success or caution, whose role matches how urgent it is.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": ["utils", "pluto-theme"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/alert/alert-action.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/alert/alert-description.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/alert/alert-title.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/alert/alert.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/alert/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.2.0",
+        "group": "feedback",
+        "stock": {
+          "registry": "https://shadcn-svelte.com/registry/styles/maia",
+          "item": "alert",
+          "cli": "1.7.1",
+          "date": "2026-10-28",
+          "sha256": "6011e26ccac50e5bb4a2eabd155126212175a4042682a13986f7b067990258a1"
+        }
+      }
+    },
+    {
+      "name": "alert-dialog",
+      "type": "registry:ui",
+      "title": "Alert dialog",
+      "description": "A modal confirm on the scrim that traps focus, starts on Cancel and closes on Escape.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": ["utils", "pluto-theme", "button"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/alert-dialog/alert-dialog-action.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/alert-dialog/alert-dialog-cancel.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/alert-dialog/alert-dialog-content.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/alert-dialog/alert-dialog-description.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/alert-dialog/alert-dialog-footer.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/alert-dialog/alert-dialog-header.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/alert-dialog/alert-dialog-media.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/alert-dialog/alert-dialog-overlay.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/alert-dialog/alert-dialog-portal.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/alert-dialog/alert-dialog-title.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/alert-dialog/alert-dialog-trigger.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/alert-dialog/alert-dialog.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/alert-dialog/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.2.0",
+        "group": "feedback",
+        "stock": {
+          "registry": "https://shadcn-svelte.com/registry/styles/maia",
+          "item": "alert-dialog",
+          "cli": "1.7.1",
+          "date": "2026-10-28",
+          "sha256": "16aa45cb9ff091c8ebfce9acb0b7fcb2c74f20c7e20e27486fd80f3e2c7f158e"
+        }
+      }
+    },
+    {
+      "name": "badge",
+      "type": "registry:ui",
+      "title": "Badge",
+      "description": "A small mono label that names a state in words, outlined in its state colour.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": ["utils", "pluto-theme"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/badge/badge.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/badge/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.2.0",
+        "group": "feedback",
+        "stock": {
+          "registry": "https://shadcn-svelte.com/registry/styles/maia",
+          "item": "badge",
+          "cli": "1.7.1",
+          "date": "2026-10-28",
+          "sha256": "25ef11b96934fbffe94a822a42146d8241888d9b9a26bb1ebc51aa7ad3ed5e76"
+        }
+      }
+    },
+    {
+      "name": "empty",
+      "type": "registry:ui",
+      "title": "Empty",
+      "description": "An empty state: an icon tile, a heading, a sentence and the next action.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": ["utils", "pluto-theme"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/empty/empty-content.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/empty/empty-description.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/empty/empty-header.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/empty/empty-media.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/empty/empty-title.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/empty/empty.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/empty/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.2.0",
+        "group": "feedback",
+        "stock": {
+          "registry": "https://shadcn-svelte.com/registry/styles/maia",
+          "item": "empty",
+          "cli": "1.7.1",
+          "date": "2026-10-28",
+          "sha256": "b99cf98c30eea08caeef03e3694be76cbb6fb16aae3c4afb98a9be02f560ad96"
+        }
+      }
+    },
+    {
+      "name": "skeleton",
+      "type": "registry:ui",
+      "title": "Skeleton",
+      "description": "A static, hidden placeholder on an inset where content is loading.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": ["utils", "pluto-theme"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/skeleton/skeleton.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/skeleton/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.2.0",
+        "group": "feedback",
+        "stock": {
+          "registry": "https://shadcn-svelte.com/registry/styles/maia",
+          "item": "skeleton",
+          "cli": "1.7.1",
+          "date": "2026-10-28",
+          "sha256": "10a593b567aa8fb15a9027a8e52dee8bad8d93b1a9a9c5f1239a1ae68f9cab08"
+        }
+      }
+    },
+    {
+      "name": "spinner",
+      "type": "registry:ui",
+      "title": "Spinner",
+      "description": "A turning icon for the one control that is busy, decorative by default or announced with a label.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": ["utils", "pluto-theme"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/spinner/spinner.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/spinner/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.2.0",
+        "group": "feedback",
+        "stock": {
+          "registry": "https://shadcn-svelte.com/registry/styles/maia",
+          "item": "spinner",
+          "cli": "1.7.1",
+          "date": "2026-10-28",
+          "sha256": "bdd31b9901948d74eb3f303ea7b2f5ac4fc1708e7dfc893b4948c9f543a6f4ba"
+        }
+      }
+    },
+    {
+      "name": "label",
+      "type": "registry:ui",
+      "title": "Label",
+      "description": "A form label in sentence case, dimmed with its disabled control.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": ["utils", "pluto-theme"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/label/label.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/label/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.2.0",
+        "group": "forms",
+        "stock": {
+          "registry": "https://shadcn-svelte.com/registry/styles/maia",
+          "item": "label",
+          "cli": "1.7.1",
+          "date": "2026-10-28",
+          "sha256": "2518649ae021483bcdf1ce6db76010ddcbb08a78c1adcf0f72bc432c6371abc5"
+        }
+      }
+    },
+    {
+      "name": "field",
+      "type": "registry:ui",
+      "title": "Field",
+      "description": "A label, control, description and error, wired to the control by id, aria-describedby and aria-invalid.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": ["utils", "pluto-theme", "label", "separator"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/field/field-content.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/field/field-context.svelte.ts",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/field/field-description.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/field/field-error.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/field/field-group.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/field/field-label.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/field/field-legend.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/field/field-separator.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/field/field-set.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/field/field-title.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/field/field.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/field/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.2.0",
+        "group": "forms",
+        "stock": {
+          "registry": "https://shadcn-svelte.com/registry/styles/maia",
+          "item": "field",
+          "cli": "1.7.1",
+          "date": "2026-10-28",
+          "sha256": "74258fe1f1f769b829b09581d11016507901704f05279e5b0d75205ea8256adc"
+        }
+      }
+    },
+    {
+      "name": "input",
+      "type": "registry:ui",
+      "title": "Input",
+      "description": "A 48 px text input on the raised ground with a visible border and a red one when invalid.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": ["utils", "pluto-theme"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/input/input.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/input/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.2.0",
+        "group": "forms",
+        "stock": {
+          "registry": "https://shadcn-svelte.com/registry/styles/maia",
+          "item": "input",
+          "cli": "1.7.1",
+          "date": "2026-10-28",
+          "sha256": "6488fa56b28dfe363577c9d858cb1645f8882962dbce519fcf523343df7f1ff4"
+        }
+      }
+    },
+    {
+      "name": "textarea",
+      "type": "registry:ui",
+      "title": "Textarea",
+      "description": "A multi-line text input that grows with its text where the browser can.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": ["utils", "pluto-theme"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/textarea/textarea.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/textarea/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.2.0",
+        "group": "forms",
+        "stock": {
+          "registry": "https://shadcn-svelte.com/registry/styles/maia",
+          "item": "textarea",
+          "cli": "1.7.1",
+          "date": "2026-10-28",
+          "sha256": "a4f6ad90806eacd9114389931b0a4f939fac0d96c56cb8ff267b2119a5cb40e6"
+        }
+      }
+    },
+    {
+      "name": "input-group",
+      "type": "registry:ui",
+      "title": "Input group",
+      "description": "An input or textarea with text or button addons, one focus ring around the group, and a password toggle.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": [
+        "utils",
+        "pluto-theme",
+        "button",
+        "input",
+        "textarea"
+      ],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/input-group/input-group-addon.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/input-group/input-group-button.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/input-group/input-group-input.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/input-group/input-group-password.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/input-group/input-group-text.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/input-group/input-group-textarea.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/input-group/input-group.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/input-group/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.2.0",
+        "group": "forms",
+        "stock": {
+          "registry": "https://shadcn-svelte.com/registry/styles/maia",
+          "item": "input-group",
+          "cli": "1.7.1",
+          "date": "2026-10-28",
+          "sha256": "219ae922d1c0bbf72cb9fc52b057b6cc1bd369b58f72c8f0580a4451574d8a34"
+        }
+      }
+    },
+    {
+      "name": "native-select",
+      "type": "registry:ui",
+      "title": "Native select",
+      "description": "The browser's own select, styled as an input, with a caret.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": ["utils", "pluto-theme"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/native-select/native-select-opt-group.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/native-select/native-select-option.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/native-select/native-select.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/native-select/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.2.0",
+        "group": "forms",
+        "stock": {
+          "registry": "https://shadcn-svelte.com/registry/styles/maia",
+          "item": "native-select",
+          "cli": "1.7.1",
+          "date": "2026-10-28",
+          "sha256": "d2dc5b873f275cf341fa027a03f1e59882a902afccfa73de14749465e504ccbe"
+        }
+      }
+    },
+    {
+      "name": "checkbox",
+      "type": "registry:ui",
+      "title": "Checkbox",
+      "description": "A 24 px checkbox that tells checked and mixed by shape as well as colour.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": ["utils", "pluto-theme"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/checkbox/checkbox.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/checkbox/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.2.0",
+        "group": "forms",
+        "stock": {
+          "registry": "https://shadcn-svelte.com/registry/styles/maia",
+          "item": "checkbox",
+          "cli": "1.7.1",
+          "date": "2026-10-28",
+          "sha256": "ea812220df060e41c2c02655e4c4d63d0a18dc56edc61333423e1bf48c9d92c9"
+        }
+      }
+    },
+    {
+      "name": "radio-group",
+      "type": "registry:ui",
+      "title": "Radio group",
+      "description": "Round radios in a group with one stop, moved and chosen by the arrow keys.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": ["utils", "pluto-theme"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/radio-group/radio-group-item.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/radio-group/radio-group.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/radio-group/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.2.0",
+        "group": "forms",
+        "stock": {
+          "registry": "https://shadcn-svelte.com/registry/styles/maia",
+          "item": "radio-group",
+          "cli": "1.7.1",
+          "date": "2026-10-28",
+          "sha256": "def4422105d63b776c7f8104c83ba85426e84a0b97a65856a56df56fb512cab7"
+        }
+      }
+    },
+    {
+      "name": "switch",
+      "type": "registry:ui",
+      "title": "Switch",
+      "description": "An on and off setting: a blue track with a thumb that moves to the end.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": ["utils", "pluto-theme"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/switch/switch.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/switch/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.2.0",
+        "group": "forms",
+        "stock": {
+          "registry": "https://shadcn-svelte.com/registry/styles/maia",
+          "item": "switch",
+          "cli": "1.7.1",
+          "date": "2026-10-28",
+          "sha256": "1668514c6a437712b065b450da9f7243d5074bf63722236fc34b1861794f19e9"
+        }
+      }
+    },
+    {
+      "name": "input-otp",
+      "type": "registry:ui",
+      "title": "Input OTP",
+      "description": "A six-digit code in 48 px cells over one real input that accepts a pasted code.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": ["utils", "pluto-theme"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/input-otp/input-otp-group.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/input-otp/input-otp-separator.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/input-otp/input-otp-slot.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/input-otp/input-otp.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/input-otp/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.2.0",
+        "group": "forms",
+        "stock": {
+          "registry": "https://shadcn-svelte.com/registry/styles/maia",
+          "item": "input-otp",
+          "cli": "1.7.1",
+          "date": "2026-10-28",
+          "sha256": "2c28b30a1aee5778c114092ff18626560b84dd1430dd826583f7459baf9e0b45"
+        }
       }
     }
   ]

@@ -208,3 +208,37 @@ export function forbiddenRows(tokens: Tokens): ForbiddenRow[] {
     };
   });
 }
+
+export type ScrimContrastRow = {
+  theme: Theme;
+  edge: string;
+  edgeHex: string;
+  over: string;
+  scrimmed: string;
+  ratio: number;
+  min: number;
+};
+
+/**
+ * 002 decision 7: each elevated surface's edge against a ground with the
+ * scrim composited over it, by the eight-digit rule (alpha byte ÷ 255).
+ */
+export function scrimRows(tokens: Tokens): ScrimContrastRow[] {
+  return tokens.contrast.scrim.map((row) => {
+    const over = opaque(tokens, row.theme, row.over);
+    const scrimmed = compositeAlphaByte(
+      resolveColor(tokens, row.theme, row.scrim),
+      over,
+    );
+    const edgeHex = opaque(tokens, row.theme, row.edge, scrimmed);
+    return {
+      theme: row.theme,
+      edge: row.edge,
+      edgeHex,
+      over: row.over,
+      scrimmed,
+      ratio: contrastRatio(edgeHex, scrimmed),
+      min: row.min,
+    };
+  });
+}

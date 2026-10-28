@@ -88,3 +88,43 @@ describe("pluto-theme's css", () => {
     expect(offending).toEqual([]);
   });
 });
+
+describe("002's additions to pluto-theme", () => {
+  const theme = () =>
+    items(readFileSync("registry.json", "utf8")).get("pluto-theme") as Item & {
+      cssVars: { theme: Record<string, string> };
+      css: CssTree;
+    };
+
+  test.each([
+    [
+      "@utility focus-ring",
+      {
+        outline: "var(--focus-width) solid var(--ring)",
+        "outline-offset": "var(--focus-offset)",
+      },
+    ],
+    ["@utility focus-ring-none", { outline: "none" }],
+    ["@keyframes pluto-enter", { from: { opacity: "0" } }],
+    ["@keyframes pluto-exit", { to: { opacity: "0" } }],
+  ] as const)("css holds %s", (key, value) => {
+    expect(theme().css[key]).toEqual(value);
+  });
+
+  test.each([
+    [
+      "shadow-elevation",
+      "0 0 0 var(--line-width) var(--elevation-line), 0 0.75rem 2rem 0 var(--elevation-shadow)",
+    ],
+    [
+      "animate-enter",
+      "pluto-enter var(--motion-micro) cubic-bezier(0.2, 0.7, 0.3, 1)",
+    ],
+    [
+      "animate-exit",
+      "pluto-exit var(--motion-micro) cubic-bezier(0.2, 0.7, 0.3, 1) forwards",
+    ],
+  ])("cssVars.theme holds %s", (key, value) => {
+    expect(theme().cssVars.theme[key]).toBe(value);
+  });
+});
