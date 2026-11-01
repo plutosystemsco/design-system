@@ -7,6 +7,8 @@
       /** The link's accessible name, when `href` makes the lockup a link. It contains the visible word. */
       label?: string;
       tone?: FourDotTone;
+      /** Passed to the mark: the page's one entrance (006 decision 5). */
+      entrance?: boolean;
     };
 </script>
 
@@ -20,6 +22,7 @@
     rel,
     label = "Pluto Systems",
     tone = "brand",
+    entrance = false,
     class: className,
     ...rest
   }: LockupProps = $props();
@@ -33,7 +36,7 @@
 </script>
 
 {#snippet content()}
-  pluto<FourDot {tone} class="-translate-y-(--mark-lift)" />
+  pluto<FourDot {tone} {entrance} class="-translate-y-(--mark-lift)" />
 {/snippet}
 
 {#if href}

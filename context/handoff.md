@@ -13,7 +13,7 @@ REGISTRY_URL=https://raw.githubusercontent.com/plutosystemsco/design-system/v0.4
 
 Nothing is deployed to `ui.plutosystems.co`; the owner does not want that.
 
-**`005` is building in the working tree** (uncommitted). Run 1 (steps 1 to 4: the `theme` item, dropdown-menu, sheet, dialog, sidebar, is-mobile, breadcrumb, `groove-s`) reached its checkpoint green in both themes (1018 browser tests, 340 axe scans at 0); the design calls from the checkpoint are in `decisions.md`. Run 2 (the chat items, the registry and catalogue, the full suites, the changelog, the walk) was launched the same day. Then: a fresh change review, its fixes, the Landing notes, version 0.5.0. **Commit and tag only when the owner asks.**
+**`005` is built, reviewed, committed and tagged** `v0.5.0` (`616b8a0`), pushed on 2026-11-01: the eleven items, the change review's nine findings fixed, the Landing notes written. `REGISTRY_URL=https://raw.githubusercontent.com/plutosystemsco/design-system/v0.5.0/static/r` installs them.
 
 **`006` and `007` are specified and reviewed**, both "fit to build" once their predecessor is built: `006` (the app shell and the chat pane, the mark's entrance, the footer's furniture; 18 review findings fixed) and `007` (the full highlight palette of 21 slots across 26 languages, `code-languages`, the ink surface; 11 findings fixed). Their design calls are in `decisions.md`. The owner's rulings of 2026-11-01 bind `007`: syntax highlighting is a function outside the colour budget, across every major language.
 
@@ -29,7 +29,7 @@ The review checklist gained R23 (copy says what happens) and R24 (furniture carr
 
 ## Waiting on the owner
 
-- **Commit and tag `v0.5.0`** once `005`'s change review lands; then `v0.6.0` and `v0.7.0` in turn. The app pins the tag it needs; it asked for `006`'s and `007`'s work "in a tagged release".
+- **Commit and tag `v0.6.0` and `v0.7.0`** in turn when each lands; asked each time. The app pins the tag it needs; it asked for `006`'s and `007`'s work "in a tagged release".
 - **Deployment** to `ui.plutosystems.co`: not wanted now.
 - **The design book §03** gains one line for the highlighting ruling (the book's repository, the owner's).
 - **Coloured dots on ink** for the icon (`006` leaves the favicon to the app's `app.html`).
@@ -46,7 +46,6 @@ The review checklist gained R23 (copy says what happens) and R24 (furniture carr
 
 ## Next
 
-1. **`005` run 2's report**: screenshots and bends; then a fresh change review (`reviews/005-…-pr-2026-11-01.md`), fixes, Landing notes, 0.5.0; ask the owner to commit and tag.
-2. **Build `006`** in two runs with a checkpoint after step 3 (the entrance and the shell's header); change review; landing; 0.6.0.
-3. **Build `007`** per its build order with the checkpoint after step 3 (the gallery's teal against cyan; the surface); change review; landing; 0.7.0.
-4. **Placeholder memos when there is time:** Firefox and Safari over the code surfaces and the ink surface; a screen-reader pass; `ansi`.
+1. **Build `006`** in two runs with a checkpoint after step 3 (the entrance and the shell's header); change review; landing; 0.6.0.
+2. **Build `007`** per its build order with the checkpoint after step 3 (the gallery's teal against cyan; the surface); change review; landing; 0.7.0.
+3. **Placeholder memos when there is time:** Firefox and Safari over the code surfaces and the ink surface; a screen-reader pass; `ansi`.

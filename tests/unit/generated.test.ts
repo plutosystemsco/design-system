@@ -70,11 +70,21 @@ describe("pluto-theme's css", () => {
     expect(offending).toEqual([]);
   });
 
-  test("the reduced-motion block holds exactly html:root and *, ::before, ::after", () => {
+  // 001 criterion 5's two selectors, and 006 decision 4's third: the
+  // entrance's dots carry no animation under reduce, so they are the
+  // composed mark before any frame.
+  test("the reduced-motion block holds exactly html:root, *, ::before, ::after, and the entrance's animation: none", () => {
     const block = theme().css![
       "@media (prefers-reduced-motion: reduce)"
     ] as CssTree;
-    expect(Object.keys(block)).toEqual(["html:root", "*, ::before, ::after"]);
+    expect(Object.keys(block)).toEqual([
+      "html:root",
+      "*, ::before, ::after",
+      '.mark-entrance [data-slot="four-dot-dot"]',
+    ]);
+    expect(block['.mark-entrance [data-slot="four-dot-dot"]']).toEqual({
+      animation: "none",
+    });
   });
 
   test("src/app.css nests no :root or .dark inside an at-rule either", () => {
@@ -259,5 +269,102 @@ describe("005's addition to pluto-theme", () => {
     expect(css).toContain(
       "box-shadow: inset var(--line-width) 0 0 var(--groove-light);",
     );
+  });
+});
+
+/** 006 decision 4: the orbit token, the entrance's three numbers, its keyframes and utility, and groove-b. */
+describe("006's additions to pluto-theme", () => {
+  const theme = () =>
+    items(readFileSync("registry.json", "utf8")).get("pluto-theme") as Item & {
+      css: CssTree;
+    };
+  const root = () => theme().css[":root"] as CssTree;
+
+  test(":root holds --mark-orbit: 0.5em beside the mark's em tokens, and the three unitless entrance numbers", () => {
+    expect(root()["--mark-orbit"]).toBe("0.5em");
+    expect(root()["--motion-entrance-dot"]).toBe("0.55");
+    expect(root()["--motion-entrance-start"]).toBe("0.15");
+    expect(root()["--motion-entrance-stagger"]).toBe("0.1");
+    const keys = Object.keys(root());
+    expect(keys.indexOf("--mark-orbit")).toBeGreaterThan(
+      keys.indexOf("--mark-dot"),
+    );
+    expect(keys.indexOf("--mark-orbit")).toBeLessThan(
+      keys.indexOf("--motion-entrance"),
+    );
+  });
+
+  test("css holds @keyframes pluto-mark-dock with a from frame and no to", () => {
+    expect(theme().css["@keyframes pluto-mark-dock"]).toEqual({
+      from: {
+        opacity: "0",
+        transform:
+          "translate(calc(var(--mark-orbit) * var(--_ox)), calc(var(--mark-orbit) * var(--_oy))) scale(0.4)",
+      },
+    });
+  });
+
+  test("css holds @utility mark-entrance: the dots' animation from the tokens, then 4 nth-child rules with the book's offsets and staggered delays", () => {
+    const utility = theme().css["@utility mark-entrance"] as CssTree;
+    const keys = Object.keys(utility);
+    expect(keys).toHaveLength(5);
+    expect(utility['& > [data-slot="four-dot-dot"]']).toEqual({
+      animation:
+        "pluto-mark-dock calc(var(--motion-entrance) * var(--motion-entrance-dot)) var(--ease-entrance) both",
+    });
+    const offsets = [
+      ["-1", "0.6"],
+      ["0.8", "-0.8"],
+      ["-0.6", "-1"],
+      ["1", "0.8"],
+    ];
+    const nth = keys.filter((k) => k.includes(":nth-child("));
+    expect(nth).toHaveLength(4);
+    nth.forEach((key, i) => {
+      expect(key).toBe(`& > [data-slot="four-dot-dot"]:nth-child(${i + 1})`);
+      expect(utility[key]).toEqual({
+        "--_ox": offsets[i]![0],
+        "--_oy": offsets[i]![1],
+        "animation-delay": `calc(var(--motion-entrance) * (var(--motion-entrance-start) + ${i} * var(--motion-entrance-stagger)))`,
+      });
+    });
+  });
+
+  test("css holds @utility groove-b: the hairline on the bottom edge, then the light below it", () => {
+    expect(theme().css["@utility groove-b"]).toEqual({
+      "border-bottom": "var(--line-width) solid var(--groove-line)",
+      "box-shadow": "0 var(--line-width) 0 var(--groove-light)",
+    });
+    expect(Object.keys(theme().css["@utility groove-b"] as CssTree)).toEqual([
+      "border-bottom",
+      "box-shadow",
+    ]);
+  });
+
+  test("src/app.css carries the token, the numbers, the keyframes inside @theme inline, both utilities once, and the reduce rule", () => {
+    const css = readFileSync("src/app.css", "utf8");
+    expect(css).toContain("--mark-orbit: 0.5em;");
+    expect(css).toContain("--motion-entrance-dot: 0.55;");
+    expect(css).toContain("--motion-entrance-start: 0.15;");
+    expect(css).toContain("--motion-entrance-stagger: 0.1;");
+    expect(css.match(/@keyframes pluto-mark-dock \{/g)).toHaveLength(1);
+    const theme = blocks(css).find((b) => b.prelude === "@theme inline")!;
+    expect(theme.children.map((c) => c.prelude)).toContain(
+      "@keyframes pluto-mark-dock",
+    );
+    expect(css.match(/@utility mark-entrance \{/g)).toHaveLength(1);
+    expect(css.match(/:nth-child\([1-4]\)/g)).toHaveLength(4);
+    expect(css.match(/@utility groove-b \{/g)).toHaveLength(1);
+    expect(css).toContain(
+      "box-shadow: 0 var(--line-width) 0 var(--groove-light);",
+    );
+    const reduce = blocks(css).find(
+      (b) => b.prelude === "@media (prefers-reduced-motion: reduce)",
+    )!;
+    expect(reduce.children.map((c) => c.prelude)).toEqual([
+      "html:root",
+      "*, ::before, ::after",
+      '.mark-entrance [data-slot="four-dot-dot"]',
+    ]);
   });
 });

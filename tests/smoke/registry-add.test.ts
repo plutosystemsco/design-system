@@ -206,11 +206,14 @@ describe.each([
     expect(r.cssAfterSecond).toBe(r.cssAfterFirst);
   });
 
-  test("8. the reduced-motion block holds only html:root and *, ::before, ::after", () => {
+  // 006 decision 4 adds the third selector: the entrance's dots carry no
+  // animation under reduce.
+  test("8. the reduced-motion block holds only html:root, *, ::before, ::after, and the entrance's rule", () => {
     const prelude = "@media (prefers-reduced-motion: reduce)";
     expect(childPreludes(r.cssAfterSecond, prelude)).toEqual([
       "html:root",
       "*, ::before, ::after",
+      '.mark-entrance [data-slot="four-dot-dot"]',
     ]);
     const block = blocks(r.cssAfterSecond).find((b) => b.prelude === prelude)!;
     for (const child of block.children) {

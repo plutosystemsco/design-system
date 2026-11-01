@@ -188,9 +188,18 @@
   "motion": {
     "entranceMs": 900,
     "microMs": 200,
-    "easeEntrance": [0.2, 0.7, 0.3, 1]
+    "easeEntrance": [0.2, 0.7, 0.3, 1],
+    "entranceDot": 0.55,
+    "entranceStart": 0.15,
+    "entranceStagger": 0.1
   },
-  "mark": { "dot": 0.3, "gap": 0.08, "rise": 0.38, "lockupGap": 0.16 },
+  "mark": {
+    "dot": 0.3,
+    "gap": 0.08,
+    "rise": 0.38,
+    "lockupGap": 0.16,
+    "orbit": 0.5
+  },
   "line": { "width": 1 },
   "focus": { "width": 2, "offset": 2 },
   "elevation": { "y": 12, "blur": 32 },

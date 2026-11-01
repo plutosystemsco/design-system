@@ -73,6 +73,7 @@ describe("the token file", () => {
       gap: 0.08,
       rise: 0.38,
       lockupGap: 0.16,
+      orbit: 0.5,
     });
   });
 
@@ -171,5 +172,43 @@ describe("the code map", () => {
     const missing = structuredClone(raw);
     delete missing.code;
     expect(() => validateTokens(missing)).toThrow(/code/);
+  });
+});
+
+/** 006 decision 4: the orbit, in em, and the entrance's three shares of the budget. */
+describe("the entrance", () => {
+  test("mark.orbit is a number of em, the book's largest offset", () => {
+    expect(typeof tokens.mark.orbit).toBe("number");
+    expect(tokens.mark.orbit).toBe(0.5);
+  });
+
+  test("the three entrance numbers are fractions of the budget, and the last dot ends at exactly 1", () => {
+    const { entranceDot, entranceStart, entranceStagger } = tokens.motion;
+    for (const n of [entranceDot, entranceStart, entranceStagger]) {
+      expect(n).toBeGreaterThan(0);
+      expect(n).toBeLessThan(1);
+    }
+    expect(entranceStart + 3 * entranceStagger + entranceDot).toBeCloseTo(1, 9);
+    // 495 ms per dot, delays 135 to 405, the last ending at 900 ms.
+    expect(tokens.motion.entranceMs * entranceDot).toBeCloseTo(495, 9);
+    expect(
+      [0, 1, 2, 3].map((n) =>
+        Math.round(
+          tokens.motion.entranceMs * (entranceStart + n * entranceStagger),
+        ),
+      ),
+    ).toEqual([135, 225, 315, 405]);
+  });
+
+  test("rejects a missing orbit, a share of 1 or more, and an entrance past the budget", () => {
+    const noOrbit = structuredClone(raw);
+    delete noOrbit.mark.orbit;
+    expect(() => validateTokens(noOrbit)).toThrow(/mark\.orbit/);
+    const whole = structuredClone(raw);
+    whole.motion.entranceDot = 1;
+    expect(() => validateTokens(whole)).toThrow(/motion\.entranceDot/);
+    const over = structuredClone(raw);
+    over.motion.entranceStagger = 0.2;
+    expect(() => validateTokens(over)).toThrow(/budget/);
   });
 });

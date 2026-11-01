@@ -29,3 +29,4 @@ context/prior_art/*
 # Generated registry and test output
 test-results/
 playwright-report/
+.claude/worktrees/

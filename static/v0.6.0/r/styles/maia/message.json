@@ -1,0 +1,63 @@
+{
+	"$schema": "https://shadcn-svelte.com/schema/registry-item.json",
+	"name": "message",
+	"title": "Message",
+	"type": "registry:ui",
+	"author": "Pluto Systems <https://plutosystems.co>",
+	"description": "One turn of a conversation: a heading that says who, the content as full-width prose or a bubble on the muted inset, and a footer.",
+	"devDependencies": [
+		"tailwind-variants@^3.3.1"
+	],
+	"registryDependencies": [
+		"utils",
+		"pluto-theme"
+	],
+	"meta": {
+		"since": "0.5.0",
+		"group": "chat",
+		"stock": {
+			"registry": "https://shadcn-svelte.com/registry/styles/maia",
+			"item": "message",
+			"cli": "1.7.1",
+			"date": "2026-11-01",
+			"sha256": "f1a6680127b3506f22fd5ca973aac55c1f59b019749aea6abdedf091786b3e0d"
+		}
+	},
+	"files": [
+		{
+			"content": "<script lang=\"ts\">\n  import { cn, type WithElementRef } from \"$UTILS$\";\n  import type { HTMLAttributes } from \"svelte/elements\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    align = \"start\",\n    children,\n    ...restProps\n  }: WithElementRef<HTMLAttributes<HTMLDivElement>> & {\n    /** `end` reverses the row: a user turn sits at the end, its avatar outside. */\n    align?: \"start\" | \"end\";\n  } = $props();\n</script>\n\n<!-- One turn: a row of an avatar slot and a group (header, content, footer). -->\n<div\n  bind:this={ref}\n  data-slot=\"message\"\n  data-align={align}\n  class={cn(\n    \"group/message relative flex w-full min-w-0 gap-2 text-sm data-[align=end]:flex-row-reverse\",\n    className,\n  )}\n  {...restProps}\n>\n  {@render children?.()}\n</div>\n",
+			"type": "registry:ui",
+			"target": "message/message.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import { cn, type WithElementRef } from \"$UTILS$\";\n  import type { HTMLAttributes } from \"svelte/elements\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    children,\n    ...restProps\n  }: WithElementRef<HTMLAttributes<HTMLDivElement>> = $props();\n</script>\n\n<!-- The column of a turn: header, content, footer. In an end-aligned turn it lines them up at the end. -->\n<div\n  bind:this={ref}\n  data-slot=\"message-group\"\n  class={cn(\n    \"flex min-w-0 flex-1 flex-col gap-2 group-data-[align=end]/message:items-end\",\n    className,\n  )}\n  {...restProps}\n>\n  {@render children?.()}\n</div>\n",
+			"type": "registry:ui",
+			"target": "message/message-group.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import { cn, type WithElementRef } from \"$UTILS$\";\n  import type { HTMLAttributes } from \"svelte/elements\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    children,\n    ...restProps\n  }: WithElementRef<HTMLAttributes<HTMLDivElement>> = $props();\n</script>\n\n<!-- A slot with no ground and no radius: the avatar item inside it has both. -->\n<div\n  bind:this={ref}\n  data-slot=\"message-avatar\"\n  class={cn(\"flex shrink-0 self-end\", className)}\n  {...restProps}\n>\n  {@render children?.()}\n</div>\n",
+			"type": "registry:ui",
+			"target": "message/message-avatar.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\" module>\n  import { tv, type VariantProps } from \"tailwind-variants/lite\";\n\n  /**\n   * `plain`: the assistant's prose, full width, no ground. `bubble`: a user\n   * turn on the muted inset, 80% wide at most, at the end of its column. One\n   * inset and no other ground: a tint fails the token rule, a primary fill\n   * spends the accent the send button owns, and red is the alert's.\n   */\n  export const messageContentVariants = tv({\n    base: \"min-w-0 wrap-break-word\",\n    variants: {\n      variant: {\n        plain: \"flex w-full flex-col gap-2\",\n        bubble: \"w-fit max-w-4/5 self-end rounded bg-muted px-3 py-2\",\n      },\n    },\n    defaultVariants: {\n      variant: \"plain\",\n    },\n  });\n\n  export type MessageContentVariant = VariantProps<\n    typeof messageContentVariants\n  >[\"variant\"];\n</script>\n\n<script lang=\"ts\">\n  import { cn, type WithElementRef } from \"$UTILS$\";\n  import type { HTMLAttributes } from \"svelte/elements\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    variant = \"plain\",\n    children,\n    ...restProps\n  }: WithElementRef<HTMLAttributes<HTMLDivElement>> & {\n    variant?: MessageContentVariant;\n  } = $props();\n</script>\n\n<div\n  bind:this={ref}\n  data-slot=\"message-content\"\n  data-variant={variant}\n  class={cn(messageContentVariants({ variant }), className)}\n  {...restProps}\n>\n  {@render children?.()}\n</div>\n",
+			"type": "registry:ui",
+			"target": "message/message-content.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import { cn, type WithElementRef } from \"$UTILS$\";\n  import type { HTMLAttributes } from \"svelte/elements\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    level = 3,\n    children,\n    ...restProps\n  }: WithElementRef<HTMLAttributes<HTMLHeadingElement>> & {\n    /** The heading level, so a reader can walk the turns. Default 3. */\n    level?: 1 | 2 | 3 | 4 | 5 | 6;\n  } = $props();\n</script>\n\n<!--\n  Who spoke, as a heading in mono: the book's lowercase eyebrow. tabindex=\"-1\"\n  so a \"Latest reply\" control can focus it, and Tab does not stop on it.\n-->\n<svelte:element\n  this={`h${level}`}\n  bind:this={ref}\n  data-slot=\"message-header\"\n  tabindex=\"-1\"\n  class={cn(\n    \"font-mono text-xs tracking-eyebrow text-muted-foreground lowercase\",\n    className,\n  )}\n  {...restProps}\n>\n  {@render children?.()}\n</svelte:element>\n",
+			"type": "registry:ui",
+			"target": "message/message-header.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import { cn, type WithElementRef } from \"$UTILS$\";\n  import type { HTMLAttributes } from \"svelte/elements\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    children,\n    ...restProps\n  }: WithElementRef<HTMLAttributes<HTMLDivElement>> = $props();\n</script>\n\n<!-- A line under the turn (a time, a cost), in the same mono eyebrow, not a heading. -->\n<div\n  bind:this={ref}\n  data-slot=\"message-footer\"\n  class={cn(\n    \"flex min-w-0 max-w-full items-center gap-2 font-mono text-xs tracking-eyebrow text-muted-foreground lowercase\",\n    className,\n  )}\n  {...restProps}\n>\n  {@render children?.()}\n</div>\n",
+			"type": "registry:ui",
+			"target": "message/message-footer.svelte"
+		},
+		{
+			"content": "import Avatar from \"./message-avatar.svelte\";\nimport Content, {\n  messageContentVariants,\n  type MessageContentVariant,\n} from \"./message-content.svelte\";\nimport Footer from \"./message-footer.svelte\";\nimport Group from \"./message-group.svelte\";\nimport Header from \"./message-header.svelte\";\nimport Root from \"./message.svelte\";\n\nexport {\n  Root,\n  Group,\n  Avatar,\n  Content,\n  Header,\n  Footer,\n  messageContentVariants,\n  type MessageContentVariant,\n  //\n  Root as Message,\n  Group as MessageGroup,\n  Avatar as MessageAvatar,\n  Content as MessageContent,\n  Header as MessageHeader,\n  Footer as MessageFooter,\n};\n",
+			"type": "registry:ui",
+			"target": "message/index.ts"
+		}
+	]
+}

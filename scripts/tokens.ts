@@ -67,8 +67,19 @@ export type Tokens = {
     entranceMs: number;
     microMs: number;
     easeEntrance: [number, number, number, number];
+    /** 006 decision 4: the entrance's shares of the budget, unitless. */
+    entranceDot: number;
+    entranceStart: number;
+    entranceStagger: number;
   };
-  mark: { dot: number; gap: number; rise: number; lockupGap: number };
+  /** 006 decision 4: `orbit` is how far a dot travels before it docks, in em. */
+  mark: {
+    dot: number;
+    gap: number;
+    rise: number;
+    lockupGap: number;
+    orbit: number;
+  };
   line: { width: number };
   focus: { width: number; offset: number };
   elevation: { y: number; blur: number };
@@ -272,9 +283,25 @@ export function validateTokens(raw: unknown): Tokens {
   if (ease.length !== 4)
     throw new TokenError("motion.easeEntrance", "must hold 4 numbers");
   ease.forEach((n, i) => number(n, `motion.easeEntrance[${i}]`));
+  // 006 decision 4: each share is a fraction of the budget, and the last
+  // dot's end (start + 3 staggers + one dot) must not pass it.
+  for (const field of ["entranceDot", "entranceStart", "entranceStagger"]) {
+    const n = positive(motion[field], `motion.${field}`);
+    if (n >= 1)
+      throw new TokenError(`motion.${field}`, "must be a fraction below 1");
+  }
+  const entranceEnd =
+    (motion.entranceStart as number) +
+    3 * (motion.entranceStagger as number) +
+    (motion.entranceDot as number);
+  if (entranceEnd > 1 + 1e-9)
+    throw new TokenError(
+      "motion.entranceDot",
+      "the last dot ends past the entrance budget (start + 3 × stagger + dot > 1)",
+    );
 
   const mark = object(root.mark, "mark");
-  for (const field of ["dot", "gap", "rise", "lockupGap"])
+  for (const field of ["dot", "gap", "rise", "lockupGap", "orbit"])
     positive(mark[field], `mark.${field}`);
 
   positive(object(root.line, "line").width, "line.width");

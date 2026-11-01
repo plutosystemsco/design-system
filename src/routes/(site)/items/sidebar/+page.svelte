@@ -94,7 +94,7 @@ export const load: LayoutServerLoad = ({ cookies }) => ({
                     <span>Mine</span>
                     <CaretRight
                       aria-hidden="true"
-                      class="ms-auto transition group-data-open/collapsible:rotate-90"
+                      class="ms-auto transition group-data-[state=open]/collapsible:rotate-90"
                     />
                   </Sidebar.MenuButton>
                 {/snippet}

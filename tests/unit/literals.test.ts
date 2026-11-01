@@ -10,11 +10,10 @@ import {
 const rules = loadRules();
 
 /**
- * 005 decision 17: 286 files, 004's 193 plus the 93 of theme (4),
- * dropdown-menu (17), sheet (11), dialog (11), breadcrumb (8), sidebar (25),
- * is-mobile (1), message-log (3), message (7), marker (4) and composer (2).
+ * 006 decision 13: 300 files, 005's 286 plus the 14 of app-shell (9) and
+ * chat (5).
  */
-const FILE_COUNT = 286;
+const FILE_COUNT = 300;
 
 describe("the item files", () => {
   const files = itemFiles();
@@ -213,13 +212,20 @@ const GOOD_004: Sample[] = [
   { cls: "focus-visible:focus-ring-none", file: "code-block-content.svelte" },
 ];
 
-const BAD = [...BAD_001, ...BAD_002, ...BAD_REVIEW, ...BAD_004];
+// 006 decision 4: R14's list gains `mark-entrance`, a @utility of its own
+// name, which the animate-* rule does not see; an animate-* spelling of the
+// dock is still flagged.
+const BAD_006: Sample[] = [{ cls: "animate-mark-dock" }];
+const GOOD_006: Sample[] = [{ cls: "mark-entrance", file: "four-dot.svelte" }];
+
+const BAD = [...BAD_001, ...BAD_002, ...BAD_REVIEW, ...BAD_004, ...BAD_006];
 const GOOD = [
   ...GOOD_001,
   ...GOOD_002,
   ...GOOD_REVIEW,
   ...GOOD_003,
   ...GOOD_004,
+  ...GOOD_006,
 ];
 
 describe("the lint itself", () => {
@@ -240,10 +246,10 @@ describe("the lint itself", () => {
     },
   );
 
-  test("70 bad samples flagged and 0 of 47 good ones", () => {
-    expect(BAD).toHaveLength(70);
-    expect(GOOD).toHaveLength(47);
-    expect(BAD.filter((s) => lintSample(s).length > 0)).toHaveLength(70);
+  test("71 bad samples flagged and 0 of 48 good ones", () => {
+    expect(BAD).toHaveLength(71);
+    expect(GOOD).toHaveLength(48);
+    expect(BAD.filter((s) => lintSample(s).length > 0)).toHaveLength(71);
     expect(GOOD.filter((s) => lintSample(s).length > 0)).toHaveLength(0);
   });
 });

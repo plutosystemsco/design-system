@@ -32,8 +32,8 @@ const ITEMS_001: [string, string][] = [
 ];
 
 /**
- * 003 decision 5's 39 items, 004 decision 4's 10 and 005 decision 4's 11, in
- * order, each with its group: 60 items in 10 groups.
+ * 003 decision 5's 39 items, 004 decision 4's 10, 005 decision 4's 11 and 006
+ * decision 3's 2, in order, each with its group: 62 items in 10 groups.
  */
 const GROUPS: [group: string, names: string[]][] = [
   ["foundation", [...ITEMS_001.map(([n]) => n), "theme"]],
@@ -90,7 +90,23 @@ const GROUPS: [group: string, names: string[]][] = [
     ["dropdown-menu", "sheet", "dialog", "breadcrumb", "sidebar", "is-mobile"],
   ],
   ["chat", ["message-log", "message", "marker", "composer"]],
-  ["blocks", ["hero", "sign-in", "sign-up", "page-states", "settings"]],
+  [
+    "blocks",
+    [
+      "hero",
+      "sign-in",
+      "sign-up",
+      "page-states",
+      "settings",
+      "app-shell",
+      "chat",
+    ],
+  ],
+];
+/** 006 decision 3: the two blocks, with their titles. */
+const ITEMS_006: [name: string, title: string][] = [
+  ["app-shell", "App shell"],
+  ["chat", "Chat"],
 ];
 /** 005 decision 4: the eleven items, with their types and titles. */
 const ITEMS_005: [name: string, type: string, title: string][] = [
@@ -173,14 +189,19 @@ const TARGETS_004: Record<string, string> = {
   highlighter: "highlighter.ts",
   "use-highlighted-code": "use-highlighted-code.svelte.ts",
 };
-/** 003 decision 5: the 2 new components and the 5 blocks. */
-const BLOCKS = ["hero", "sign-in", "sign-up", "page-states", "settings"];
-const ITEMS_003 = ["status", "error-summary", ...BLOCKS];
+/** 003 decision 5: the 2 new components and the 5 blocks; 006's 2 join BLOCKS. */
+const BLOCKS_003 = ["hero", "sign-in", "sign-up", "page-states", "settings"];
+const BLOCKS = [...BLOCKS_003, ...ITEMS_006.map(([n]) => n)];
+const ITEMS_003 = ["status", "error-summary", ...BLOCKS_003];
 /** The 26 items 002 added. */
 const NEW_ITEMS = GROUPS.slice(1)
   .flatMap(([, names]) => names)
   .filter(
-    (n) => !ITEMS_003.includes(n) && !TYPE_004.has(n) && !TYPE_005.has(n),
+    (n) =>
+      !ITEMS_003.includes(n) &&
+      !TYPE_004.has(n) &&
+      !TYPE_005.has(n) &&
+      !ITEMS_006.some(([name]) => name === n),
   );
 const ITEMS: [string, string][] = [
   ...ITEMS_001,
@@ -233,6 +254,26 @@ const BLOCK_FILES: Record<string, { pages: string[]; components: string[] }> = {
     pages: ["+page.svelte"],
     components: ["settings-form.svelte", "settings-delete.svelte"],
   },
+  "app-shell": {
+    pages: ["+layout.svelte", "+layout.server.ts", "+page.svelte"],
+    components: [
+      "app-shell-skip-link.svelte",
+      "app-shell-header.svelte",
+      "app-shell-nav.svelte",
+      "app-shell-user-menu.svelte",
+      "app-shell-sidebar.svelte",
+      "app-shell-footer.svelte",
+    ],
+  },
+  chat: {
+    pages: ["+page.svelte"],
+    components: [
+      "chat-pane.svelte",
+      "chat-turn.svelte",
+      "chat-text.svelte",
+      "chat-types.ts",
+    ],
+  },
 };
 const GROUP_OF = new Map(
   GROUPS.flatMap(([group, names]) => names.map((n) => [n, group] as const)),
@@ -261,8 +302,8 @@ describe("registry.json", () => {
     expect(() => registrySchema.parse(registry)).not.toThrow();
   });
 
-  test("holds the 60 items of 005 decision 4, in order, with their types (1, 3, 2, 2, 47, 5)", () => {
-    expect(ITEMS).toHaveLength(60);
+  test("holds the 62 items of 006 decision 3, in order, with their types (1, 3, 2, 2, 47, 7)", () => {
+    expect(ITEMS).toHaveLength(62);
     const types = ITEMS.map(([, t]) => t);
     expect(
       [
@@ -273,7 +314,7 @@ describe("registry.json", () => {
         "registry:ui",
         "registry:block",
       ].map((t) => types.filter((x) => x === t).length),
-    ).toEqual([1, 3, 2, 2, 47, 5]);
+    ).toEqual([1, 3, 2, 2, 47, 7]);
     expect(
       registry.items.map((i: { name: string; type: string }) => [
         i.name,
@@ -325,9 +366,22 @@ describe("registry.json", () => {
         "is-mobile",
         "tooltip",
         "kbd",
+        // 006 decision 3's 12.
+        "four-dot",
+        "theme",
+        "sidebar",
+        "breadcrumb",
+        "dropdown-menu",
+        "avatar",
+        "collapsible",
+        "message-log",
+        "message",
+        "marker",
+        "composer",
+        "code-block",
       ].sort(),
     );
-    expect(deps.size).toBe(31);
+    expect(deps.size).toBe(43);
     for (const dep of deps) {
       expect(dep).not.toMatch(/^local:/);
       expect(dep).not.toMatch(/^[a-z][a-z0-9+.-]*:/i);
@@ -344,7 +398,7 @@ describe("registry.json", () => {
     for (const item of ui) expect(item.files.length).toBeGreaterThanOrEqual(2);
   });
 
-  test("60 of 60 items carry a meta.group among the 10, as decisions 5, 4 and 4 order them", () => {
+  test("62 of 62 items carry a meta.group among the 10, as decisions 5, 4, 4 and 3 order them", () => {
     expect(GROUPS).toHaveLength(10);
     const groups = new Set(GROUPS.map(([g]) => g));
     for (const item of registry.items as {
@@ -477,7 +531,36 @@ describe("registry.json", () => {
     }
   });
 
-  test("6 of 6 page files carry no target in registry.json", () => {
+  test("2 of 2 006 blocks carry meta.since 0.6.0, decision 3's titles, the blocks group, no meta.stock, and utils then pluto-theme first", () => {
+    const byName = new Map(
+      (
+        registry.items as {
+          name: string;
+          title: string;
+          type: string;
+          meta: any;
+          registryDependencies: string[];
+        }[]
+      ).map((i) => [i.name, i]),
+    );
+    expect(ITEMS_006).toHaveLength(2);
+    for (const [name, title] of ITEMS_006) {
+      const item = byName.get(name)!;
+      expect(item.type).toBe("registry:block");
+      expect(item.title).toBe(title);
+      expect(item.meta?.since).toBe("0.6.0");
+      expect(item.meta?.group).toBe("blocks");
+      expect(item.meta?.stock).toBeUndefined();
+      expect(Object.keys(item.meta).sort()).toEqual(["group", "since"]);
+      expect(item.registryDependencies.slice(0, 2)).toEqual([
+        "utils",
+        "pluto-theme",
+      ]);
+    }
+    expect(byName.get("four-dot")?.meta.since).toBe("0.1.0");
+  });
+
+  test("10 of 10 page files carry no target in registry.json", () => {
     const pages = (
       registry.items as {
         type: string;
@@ -487,7 +570,7 @@ describe("registry.json", () => {
       .filter((i) => i.type === "registry:block")
       .flatMap((i) => i.files)
       .filter((f) => f.type === "registry:page");
-    expect(pages).toHaveLength(6);
+    expect(pages).toHaveLength(10);
     expect(pages.filter((f) => f.target !== undefined)).toEqual([]);
   });
 });
@@ -511,12 +594,12 @@ describe("the built registry", () => {
     if (out) rmSync(out, { recursive: true, force: true });
   });
 
-  test("61 files under r/styles/maia and 61 byte-identical files under the versioned path", () => {
+  test("63 files under r/styles/maia and 63 byte-identical files under the versioned path", () => {
     const files = readdirSync(latest()).sort();
     expect(files).toEqual(
       ["index.json", ...ITEMS.map(([n]) => `${n}.json`)].sort(),
     );
-    expect(files).toHaveLength(61);
+    expect(files).toHaveLength(63);
     expect(readdirSync(versioned()).sort()).toEqual(files);
     for (const file of files) {
       expect(readFileSync(path.join(versioned(), file))).toEqual(
@@ -530,7 +613,7 @@ describe("the built registry", () => {
     expect(existsSync(path.join(versioned(), "stale.json"))).toBe(false);
   });
 
-  test("each of the 60 built items parses with registryItemSchema", () => {
+  test("each of the 62 built items parses with registryItemSchema", () => {
     for (const [name] of ITEMS) {
       const item = JSON.parse(
         readFileSync(path.join(latest(), `${name}.json`), "utf8"),
@@ -672,7 +755,8 @@ describe("the built registry", () => {
     }
   });
 
-  test("6 of 6 page files build to <block>/<base name>, 10 of 10 components to bare <block>- names, and 0 targets begin ~/ or src/", () => {
+  // 006 decision 3 wrote 19 components (10 + 9); the shell's 6 and the chat's 4 make 20.
+  test("10 of 10 page files build to <block>/<base name>, 20 of 20 components to bare <block>- names, and 0 targets begin ~/ or src/", () => {
     let pages = 0;
     let components = 0;
     const rooted: string[] = [];
@@ -697,14 +781,14 @@ describe("the built registry", () => {
         }
       }
     }
-    expect([pages, components]).toEqual([6, 10]);
+    expect([pages, components]).toEqual([10, 20]);
     expect(rooted).toEqual([]);
   });
 
-  test("2 of 2 icon-importing new items name phosphor-svelte@^3.1.1; the other 5 name no package", () => {
+  test("4 of 4 icon-importing block items name phosphor-svelte@^3.1.1; the other 5 of 003 name no package", () => {
     const built = (name: string) =>
       JSON.parse(readFileSync(path.join(latest(), `${name}.json`), "utf8"));
-    for (const name of ["error-summary", "page-states"]) {
+    for (const name of ["error-summary", "page-states", "app-shell", "chat"]) {
       const item = built(name);
       expect([
         ...(item.dependencies ?? []),
@@ -760,7 +844,7 @@ describe("the built registry", () => {
     expect(built("composer").files).toHaveLength(2);
   });
 
-  test("0 of 61 built files carry $UTILS$.js or an /index.js import", () => {
+  test("0 of 63 built files carry $UTILS$.js or an /index.js import", () => {
     const offending: string[] = [];
     for (const file of readdirSync(latest())) {
       const text = readFileSync(path.join(latest(), file), "utf8");
@@ -812,6 +896,18 @@ describe("CHANGELOG.md", () => {
     expect(match).not.toBeNull();
     return match![1];
   };
+
+  // 006 decision 15: app-shell, chat, pluto-theme (additive) and four-dot (changed, not an interface change).
+  test("has a 0.6.0 entry naming the 2 blocks, pluto-theme and four-dot (4 of 4), the entrance and groove-b", () => {
+    const body = entry("0.6.0");
+    const names = [...ITEMS_006.map(([n]) => n), "pluto-theme", "four-dot"];
+    expect(names).toHaveLength(4);
+    for (const name of names) expect(body).toContain(`\`${name}\``);
+    expect(body).toContain("`mark-entrance`");
+    expect(body).toContain("`groove-b`");
+    expect(body).toContain("`entrance`");
+    expect(body).toContain("not an interface change");
+  });
 
   test("has a 0.5.0 entry naming pluto-theme and the 11 new items (12 of 12), the sonner line and the bubble line, with the older entries unchanged", () => {
     const body = entry("0.5.0");

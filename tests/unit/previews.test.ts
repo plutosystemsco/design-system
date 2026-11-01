@@ -5,8 +5,8 @@ const registry = JSON.parse(readFileSync("registry.json", "utf8"));
 const names: string[] = registry.items.map((i: { name: string }) => i.name);
 const page = (name: string) => `src/routes/(site)/items/${name}/+page.svelte`;
 
-// 005 decision 17: 60 items.
-const COUNT = 60;
+// 006 decision 3: 62 items.
+const COUNT = 62;
 
 test(`the registry has ${COUNT} items`, () => {
   expect(names).toHaveLength(COUNT);

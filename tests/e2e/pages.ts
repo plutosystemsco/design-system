@@ -74,6 +74,8 @@ export const ITEMS = [
   "sign-up",
   "page-states",
   "settings",
+  "app-shell",
+  "chat",
 ];
 
 /** 004's 10 items, and their pages. */
@@ -103,7 +105,9 @@ export const ITEMS_005 = [
   "marker",
   "composer",
 ];
-/** The 26 items 002 adds: every item after the foundation that 003, 004 and 005 did not. */
+/** 006's 2 blocks (decision 3), and their pages. */
+export const ITEMS_006 = ["app-shell", "chat"];
+/** The 26 items 002 adds: every item after the foundation that 003, 004, 005 and 006 did not. */
 export const ITEMS_002 = ITEMS.slice(7).filter(
   (name) =>
     ![
@@ -116,7 +120,8 @@ export const ITEMS_002 = ITEMS.slice(7).filter(
       "settings",
     ].includes(name) &&
     !ITEMS_004.includes(name) &&
-    !ITEMS_005.includes(name),
+    !ITEMS_005.includes(name) &&
+    !ITEMS_006.includes(name),
 );
 /** Kept for 002's checks: the 26 items 002 added. */
 export const NEW_ITEMS = ITEMS_002;
@@ -130,13 +135,22 @@ export const ITEMS_003 = [
   "page-states",
   "settings",
 ];
-/** The 5 blocks, in registry order. */
-export const BLOCKS = ["hero", "sign-in", "sign-up", "page-states", "settings"];
+/** The 7 blocks, in registry order. */
+export const BLOCKS = [
+  "hero",
+  "sign-in",
+  "sign-up",
+  "page-states",
+  "settings",
+  ...ITEMS_006,
+];
 /** The 7 new item pages of 003. */
 export const NEW_PAGES = ITEMS_003.map((name) => `/items/${name}/`);
 export const NEW_PAGES_004 = ITEMS_004.map((name) => `/items/${name}/`);
 /** The 11 new item pages of 005. */
 export const NEW_PAGES_005 = ITEMS_005.map((name) => `/items/${name}/`);
+/** The 2 new item pages of 006. */
+export const NEW_PAGES_006 = ITEMS_006.map((name) => `/items/${name}/`);
 /** The site pages: the catalogue and one page per item. */
 export const PAGES = ["/", ...ITEMS.map((name) => `/items/${name}/`)];
 /** The catalogue and 002's 32 item pages. */
@@ -144,10 +158,11 @@ export const PAGES_002 = PAGES.filter(
   (p) =>
     !NEW_PAGES.includes(p) &&
     !NEW_PAGES_004.includes(p) &&
-    !NEW_PAGES_005.includes(p),
+    !NEW_PAGES_005.includes(p) &&
+    !NEW_PAGES_006.includes(p),
 );
 
-/** The 17 views (003 decision 16), each with its block and label. */
+/** The views (003 decision 16; 006 decision 12), each with its block and label. */
 export const VIEWS = BLOCKS.flatMap((block) =>
   (BLOCK_VIEWS[block] ?? []).map((view) => ({
     block,
@@ -183,6 +198,26 @@ const SETTINGS_CONTROLS = [
   "checkbox:When a run fails",
   "checkbox:A weekly summary",
   "radio:Match the system",
+];
+/** 006 decision 14: the shell's stops. The sidebar's Preferences group is closed, so its sub-items are not stops. */
+const SHELL_TOP = ["a:Skip to main content", "a:Pluto app"];
+const SHELL_NAV = ["a:Overview", "a:Activity", "a:Members"];
+const SHELL_END = [
+  "a:Open the catalogue",
+  "a:github.com/plutosystemsco/design-system",
+];
+/** 006 decision 14: the chat's stops; the pre inside the thread's code block is a stop (004 decision 8). */
+const CHAT_READY = [
+  "button:New chat",
+  "region:Messages",
+  "textarea:Message",
+  "button:Send message",
+];
+const CHAT_BUSY = [
+  "button:New chat",
+  "region:Messages",
+  "textarea:Message",
+  "button:Stop response",
 ];
 export const VIEW_STOPS: Record<string, string[]> = {
   "/view/hero/": ["a:Browse the components", "a:See what is included"],
@@ -239,15 +274,73 @@ export const VIEW_STOPS: Record<string, string[]> = {
     "button:Save changes",
     "button:Delete account",
   ],
+  "/view/app-shell/": [
+    ...SHELL_TOP,
+    ...SHELL_NAV,
+    "button:Dark theme",
+    ...SHELL_END,
+  ],
+  "/view/app-shell/sidebar/": [
+    ...SHELL_TOP,
+    "button:Toggle sidebar",
+    "button:Dark theme",
+    "input:Search",
+    ...SHELL_NAV,
+    "button:Preferences",
+    "button:Ada Lovelace",
+    "a:Home",
+    ...SHELL_END,
+  ],
+  "/view/app-shell/sidebar-icon/": [
+    ...SHELL_TOP,
+    "button:Toggle sidebar",
+    "button:Dark theme",
+    ...SHELL_NAV,
+    "button:Preferences",
+    "button:Ada Lovelace",
+    "a:Home",
+    ...SHELL_END,
+  ],
+  "/view/app-shell/signed-in/": [
+    ...SHELL_TOP,
+    ...SHELL_NAV,
+    "button:Dark theme",
+    "button:Account menu",
+    ...SHELL_END,
+  ],
+  "/view/chat/": CHAT_READY,
+  "/view/chat/thread/": [
+    "button:New chat",
+    "region:Messages",
+    "button:Copy code",
+    'pre:def add(a, b): """Add two numbers.""" return a + b',
+    "button:Latest reply",
+    "textarea:Message",
+    "button:Send message",
+  ],
+  "/view/chat/submitted/": CHAT_BUSY,
+  "/view/chat/streaming/": CHAT_BUSY,
+  "/view/chat/stopped/": CHAT_READY,
+  "/view/chat/error/": [
+    "button:New chat",
+    "region:Messages",
+    "button:Retry",
+    "textarea:Message",
+    "button:Send message",
+  ],
 };
 
 /** The three widths the viewer and the tests use. */
 export const WIDTHS = [360, 768, 1280] as const;
 
-/** Opens a view and waits until it has hydrated (its <main> marks itself ready). */
+/**
+ * Opens a view and waits until it has hydrated: the (view) layout marks its
+ * <main>, the (shell) layout its <body> (006 decision 12).
+ */
+export const VIEW_READY = "main[data-view-ready], body[data-view-ready]";
 export async function openView(page: Page, path: string): Promise<void> {
   await page.goto(path);
-  await page.locator("main[data-view-ready]").waitFor();
+  await page.locator(VIEW_READY).waitFor();
 }
 
 /** The grounds, as Chromium computes them. */

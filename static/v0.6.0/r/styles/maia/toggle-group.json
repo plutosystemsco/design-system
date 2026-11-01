@@ -1,0 +1,46 @@
+{
+	"$schema": "https://shadcn-svelte.com/schema/registry-item.json",
+	"name": "toggle-group",
+	"title": "Toggle group",
+	"type": "registry:ui",
+	"author": "Pluto Systems <https://plutosystems.co>",
+	"description": "A row of toggles, one stop for the row, moved by the arrow keys, for one choice or several.",
+	"devDependencies": [
+		"bits-ui@^2.20.2",
+		"@internationalized/date@^3.12.4",
+		"tailwind-variants@^3.3.1"
+	],
+	"registryDependencies": [
+		"utils",
+		"pluto-theme",
+		"toggle"
+	],
+	"meta": {
+		"since": "0.4.0",
+		"group": "actions",
+		"stock": {
+			"registry": "https://shadcn-svelte.com/registry/styles/maia",
+			"item": "toggle-group",
+			"cli": "1.7.1",
+			"date": "2026-10-31",
+			"sha256": "684978bfa7ad3ce2a7915e267682afe7df7bb7c2f9813d9718e6f7990e7daa11"
+		}
+	},
+	"files": [
+		{
+			"content": "<script lang=\"ts\" module>\n  import { getContext, setContext } from \"svelte\";\n  import type { VariantProps } from \"tailwind-variants/lite\";\n  import type { toggleVariants } from \"$UI$/toggle\";\n\n  type ToggleVariants = VariantProps<typeof toggleVariants>;\n\n  interface ToggleGroupContext extends ToggleVariants {\n    orientation?: \"horizontal\" | \"vertical\";\n  }\n\n  export function setToggleGroupCtx(props: ToggleGroupContext) {\n    setContext(\"toggleGroup\", props);\n  }\n\n  export function getToggleGroupCtx() {\n    return getContext<Required<ToggleGroupContext>>(\"toggleGroup\");\n  }\n</script>\n\n<script lang=\"ts\">\n  import { ToggleGroup as ToggleGroupPrimitive } from \"bits-ui\";\n  import { cn } from \"$UTILS$\";\n\n  let {\n    ref = $bindable(null),\n    value = $bindable(),\n    class: className,\n    size = \"default\",\n    orientation = \"horizontal\",\n    variant = \"default\",\n    ...restProps\n  }: ToggleGroupPrimitive.RootProps &\n    ToggleVariants & {\n      orientation?: \"horizontal\" | \"vertical\";\n    } = $props();\n\n  setToggleGroupCtx({\n    get variant() {\n      return variant;\n    },\n    get size() {\n      return size;\n    },\n    get orientation() {\n      return orientation;\n    },\n  });\n</script>\n\n<!--\n  A row of joined toggles (004 decision 13): one stop for the row, the arrow\n  keys browse, Space or Enter selects. bits-ui renders role=\"group\" with\n  role=\"radio\" items in single mode, and that stays: a preset strip that\n  selected on arrow would fire a query per key press. Separate toggles are\n  Toggle components in a flex row; there is no spacing prop.\n\n  Discriminated unions and destructuring (required for bindable) do not get\n  along, so `value` is cast to `never`.\n-->\n<ToggleGroupPrimitive.Root\n  bind:value={value as never}\n  bind:ref\n  {orientation}\n  data-slot=\"toggle-group\"\n  data-variant={variant}\n  data-size={size}\n  class={cn(\n    \"group/toggle-group inline-flex w-fit items-center rounded data-vertical:flex-col data-vertical:items-stretch\",\n    className,\n  )}\n  {...restProps}\n/>\n",
+			"type": "registry:ui",
+			"target": "toggle-group/toggle-group.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import { ToggleGroup as ToggleGroupPrimitive } from \"bits-ui\";\n  import { toggleVariants, type ToggleVariants } from \"$UI$/toggle\";\n  import { cn } from \"$UTILS$\";\n  import { getToggleGroupCtx } from \"./toggle-group.svelte\";\n\n  let {\n    ref = $bindable(null),\n    value = $bindable(),\n    class: className,\n    size,\n    variant,\n    ...restProps\n  }: ToggleGroupPrimitive.ItemProps & ToggleVariants = $props();\n\n  const ctx = getToggleGroupCtx();\n</script>\n\n<!--\n  Items join: the inner radii go and only the row's ends are rounded; in the\n  bordered variant, neighbours share one hairline. A selected item is\n  inverted, as a pressed toggle is.\n-->\n<ToggleGroupPrimitive.Item\n  bind:ref\n  data-slot=\"toggle-group-item\"\n  data-variant={ctx.variant || variant}\n  data-size={ctx.size || size}\n  class={cn(\n    toggleVariants({\n      variant: ctx.variant || variant,\n      size: ctx.size || size,\n    }),\n    \"shrink-0 rounded-none focus-visible:z-10 group-data-horizontal/toggle-group:first:rounded-s group-data-horizontal/toggle-group:last:rounded-e group-data-vertical/toggle-group:first:rounded-t group-data-vertical/toggle-group:last:rounded-b group-data-horizontal/toggle-group:not-first:data-[variant=outline]:border-s-0 group-data-vertical/toggle-group:not-first:data-[variant=outline]:border-t-0\",\n    className,\n  )}\n  {value}\n  {...restProps}\n/>\n",
+			"type": "registry:ui",
+			"target": "toggle-group/toggle-group-item.svelte"
+		},
+		{
+			"content": "import Item from \"./toggle-group-item.svelte\";\nimport Root from \"./toggle-group.svelte\";\n\nexport {\n  Root,\n  Item,\n  //\n  Root as ToggleGroup,\n  Item as ToggleGroupItem,\n};\n",
+			"type": "registry:ui",
+			"target": "toggle-group/index.ts"
+		}
+	]
+}

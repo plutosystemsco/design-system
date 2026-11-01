@@ -2,6 +2,16 @@
 
 Each release of the registry, newest first. A change to an item's interface is marked **interface change**.
 
+## 0.6.0 — 2026-11-01
+
+The app shell and the chat pane: the frame every page sits in, with the mark's one entrance and the footer's furniture, and the first conversation surface.
+
+- `app-shell`: new. A layout and its parts, shipped under `/app-shell` and moved to an app's root by hand: a skip link first in `body`; a 64 px header grooved on its bottom edge with the lockup's entrance, a primary nav that folds into a start sheet below `md`, the theme toggle and an account menu on an avatar; an optional sidebar (off-canvas or icons) composed from `sidebar`, with a server load that reads its cookie, under a header that is then sticky; the `main`; and a footer with the brand line and mono rows `commit`, `built`, `doc` and `source`, each only when given, plus an optional statement. The commit comes from SvelteKit's `version.name` and the date from the commit's own date, through guarded lines in the app's `vite.config.ts`.
+- `chat`: new. A conversation pane over `005`'s items: a log named "Messages" that follows new replies, turns headed "you" and "assistant" in mono, a user turn as a bubble on the muted inset and a reply as prose, fenced code as a small `code-block` through a fifteen-line splitter (no markdown renderer), a static "Responding" line, an error alert with Retry inside the log, "Latest reply" that moves the reader, and the composer on the card ground behind a groove. No avatars.
+- `pluto-theme`: additive, not an interface change. Adds the token `--mark-orbit` (0.5 em), the three unitless entrance numbers (`--motion-entrance-dot`, `-start`, `-stagger`), `@keyframes pluto-mark-dock`, the `mark-entrance` utility (four dots docking over the entrance budget, staggered, the last ending at 900 ms), the `groove-b` utility (the groove as a bottom edge), and a third rule in the reduce block so the entrance's dots are the composed mark before any frame.
+- `four-dot`: changed, not an interface change. `FourDot` and `Lockup` take an optional `entrance` prop that plays the mark's one entrance; the default is unchanged.
+- The preview site's header carries the entrance and the groove, and its footer is the shell's, with this repository's commit and date.
+
 ## 0.5.0 — 2026-11-01
 
 Overlays, navigation and the chat primitives: what the app shell and the chat pane compose.

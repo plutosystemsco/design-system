@@ -4,7 +4,9 @@ import {
   NEW_PAGES,
   NEW_PAGES_004,
   NEW_PAGES_005,
+  NEW_PAGES_006,
   PAGES_002,
+  VIEW_READY,
   VIEWS,
   WIDTHS,
   open,
@@ -44,12 +46,17 @@ test.describe("at 1280", () => {
   }
 });
 
-// 003's 7 new item pages, 004's and 005's new item pages and the 18 views at
-// 360, 768 and 1280 (005 decision 17: NEW_PAGES_005 joins the width loop).
+// 003's 7 new item pages, 004's, 005's and 006's new item pages and the 28
+// views at 360, 768 and 1280 (006 decision 14: NEW_PAGES_006 joins the loop).
 for (const width of WIDTHS) {
   test.describe(`at ${width}`, () => {
     test.use({ viewport: { width, height: 900 } });
-    for (const path of [...NEW_PAGES, ...NEW_PAGES_004, ...NEW_PAGES_005]) {
+    for (const path of [
+      ...NEW_PAGES,
+      ...NEW_PAGES_004,
+      ...NEW_PAGES_005,
+      ...NEW_PAGES_006,
+    ]) {
       test(`axe finds 0 violations on ${path}`, async ({ page }) => {
         await open(page, path);
         // A block's page holds the viewer; let its frame hydrate first.
@@ -57,7 +64,7 @@ for (const width of WIDTHS) {
           await page
             .frameLocator("iframe")
             .first()
-            .locator("main[data-view-ready]")
+            .locator(VIEW_READY)
             .waitFor();
         // The frame is scanned at its own URL, as a view, at each width; here
         // its <main> would be a second main landmark of the item page.
@@ -124,6 +131,31 @@ test.describe("at 360", () => {
     await settled(page);
     await expectNoViolations(page);
   });
+});
+
+// 006 decision 14: the shell's nav sheet open at 360, and its account menu
+// open on the signed-in view (the menu renders in place, inside the banner).
+test.describe("at 360", () => {
+  test.use({ viewport: { width: 360, height: 700 } });
+  test("axe finds 0 violations on /view/app-shell/ with the nav sheet open", async ({
+    page,
+  }) => {
+    await openView(page, "/view/app-shell/");
+    await page.getByRole("button", { name: "Menu" }).click();
+    await page.getByRole("dialog", { name: "Pluto app" }).waitFor();
+    await settled(page);
+    await expectNoViolations(page);
+  });
+});
+
+test("axe finds 0 violations on /view/app-shell/signed-in/ with the account menu open", async ({
+  page,
+}) => {
+  await openView(page, "/view/app-shell/signed-in/");
+  await page.getByRole("button", { name: "Account menu" }).click();
+  await page.getByRole("menu").waitFor();
+  await settled(page);
+  await expectNoViolations(page);
 });
 
 // 002 decision 23: the alert-dialog page again, with its dialog open.

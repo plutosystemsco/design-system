@@ -33,6 +33,21 @@ export const BLOCK_VIEWS: Record<string, BlockView[]> = {
     { path: "saved", label: "Saved" },
     { path: "failed", label: "Callback failed" },
   ],
+  // 006 decision 12: the shell's views live under the (shell) group.
+  "app-shell": [
+    { path: "", label: "Default" },
+    { path: "sidebar", label: "Sidebar" },
+    { path: "sidebar-icon", label: "Sidebar as icons" },
+    { path: "signed-in", label: "Signed in" },
+  ],
+  chat: [
+    { path: "", label: "Empty" },
+    { path: "thread", label: "Thread" },
+    { path: "submitted", label: "Submitted" },
+    { path: "streaming", label: "Streaming" },
+    { path: "stopped", label: "Stopped" },
+    { path: "error", label: "Error" },
+  ],
 };
 
 /** A view's URL: `/view/<block>/` or `/view/<block>/<state>/`. */

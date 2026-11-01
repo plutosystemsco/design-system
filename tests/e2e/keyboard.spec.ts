@@ -69,26 +69,33 @@ test.describe("the catalogue", () => {
     await open(page, "/");
   });
 
-  test(`Tab visits the ${2 + ITEMS.length} stops in order, each with the solid ring outline`, async ({
+  // 006 decision 16: the site's footer adds one stop after the items, the
+  // source link; its lockup is not a link.
+  const SOURCE = "https://github.com/plutosystemsco/design-system";
+  test(`Tab visits the ${3 + ITEMS.length} stops in order, each with the solid ring outline`, async ({
     page,
   }) => {
     const colour = await ring(page);
     const stops: Stop[] = [];
-    for (let i = 0; i < 2 + ITEMS.length; i++) {
+    for (let i = 0; i < 3 + ITEMS.length; i++) {
       await page.keyboard.press("Tab");
       const stop = await focused(page);
       expect(stop).not.toBeNull();
       stops.push(stop!);
       await expectRingOutline(page, colour);
     }
-    expect(stops).toHaveLength(2 + ITEMS.length);
+    expect(stops).toHaveLength(3 + ITEMS.length);
     expect(stops.map((s) => [s.tag, s.href])).toEqual([
       ["a", "/"],
       ["button", null],
       ...ITEMS.map((name) => ["a", `/items/${name}/`]),
+      ["a", SOURCE],
     ]);
     expect(stops[0].name).toBe("Pluto Systems design system");
     expect(stops[1].name).toBe("Dark theme");
+    expect(stops[stops.length - 1].name).toBe(
+      "github.com/plutosystemsco/design-system",
+    );
 
     // No further stop: the catalogue has no other focusable element.
     await page.keyboard.press("Tab");
@@ -1032,18 +1039,26 @@ test.describe("behaviours", () => {
   });
 });
 
-/** The signature of the focused element: its role and its name. */
+/**
+ * The signature of the focused element: its role and its name. Text under
+ * aria-hidden is left out, as the accessible name leaves it out (006: the
+ * sidebar's account row carries the avatar's initials, hidden).
+ */
 async function signature(page: Page): Promise<string | null> {
   return page.evaluate(() => {
     const el = document.activeElement as
       (HTMLElement & { labels?: NodeListOf<HTMLLabelElement> }) | null;
     if (!el || el === document.body) return null;
     const role = el.getAttribute("role") ?? el.tagName.toLowerCase();
+    const visibleText = () => {
+      const clone = el.cloneNode(true) as HTMLElement;
+      clone.querySelectorAll('[aria-hidden="true"]').forEach((n) => n.remove());
+      return clone.textContent ?? "";
+    };
     const name = (
       el.getAttribute("aria-label") ??
       el.labels?.[0]?.textContent ??
-      el.textContent ??
-      ""
+      visibleText()
     )
       .trim()
       .replace(/\s+/g, " ");
@@ -1057,17 +1072,153 @@ async function drawnByContainer(page: Page): Promise<string | undefined> {
     document.activeElement?.getAttribute("data-slot"),
   );
   if (slot === "input-group-control") return '[data-slot="input-group"]';
+  // 004 decision 8: the code block's root draws the ring for its pre (006: the chat's blocks).
+  if (slot === "code-block-content") return '[data-slot="code-block"]';
   const inOtp = await page.evaluate(
     () => !!document.activeElement?.closest('[data-slot="input-otp"]'),
   );
   return inOtp ? '[data-slot="input-otp"]' : undefined;
 }
 
-test("the 18 views hold 83 stops", () => {
+// 003's 83 stops over 18 views, and 006 decision 14's 70 over the shell's 4 and the chat's 6.
+test("the 28 views hold 153 stops", () => {
   expect(VIEWS.map((v) => v.path)).toEqual(Object.keys(VIEW_STOPS));
   expect(
     Object.values(VIEW_STOPS).reduce((n, stops) => n + stops.length, 0),
-  ).toBe(83);
+  ).toBe(153);
+});
+
+/** 006 decision 14: the chat's four keyboard behaviours (5 to 8). */
+test.describe("the chat", () => {
+  const composerStatus = (page: Page) =>
+    page.locator('[data-slot="composer"] [data-slot="status"]');
+
+  test('5. Enter on Latest reply moves focus to the last h3 reading "assistant"', async ({
+    page,
+  }) => {
+    await openView(page, "/view/chat/thread/");
+    await page.getByRole("button", { name: "Latest reply" }).focus();
+    await page.keyboard.press("Enter");
+    const focused = page.locator(":focus");
+    await expect(focused).toHaveText("assistant");
+    expect(await focused.evaluate((el) => el.tagName.toLowerCase())).toBe("h3");
+    expect(
+      await focused.evaluate(
+        (el) =>
+          el ===
+          [...document.querySelectorAll('[data-role="assistant"] h3')].at(-1),
+      ),
+    ).toBe(true);
+  });
+
+  test('6. typing and Enter appends a user turn and the status reads "Responding"; 7. Escape stops: a marker "Stopped" and the status "Stopped"', async ({
+    page,
+  }) => {
+    await openView(page, "/view/chat/");
+    await page.getByRole("textbox", { name: "Message" }).focus();
+    await page.keyboard.type("Add two numbers for me.");
+    await page.keyboard.press("Enter");
+    const turns = page.locator('[data-chat="turn"]');
+    await expect(turns).toHaveCount(1);
+    await expect(turns.first()).toHaveAttribute("data-role", "user");
+    await expect(turns.first()).toContainText("Add two numbers for me.");
+    await expect(composerStatus(page)).toHaveText("Responding");
+    await expect(page.locator('[data-chat="responding"]')).toHaveText(
+      "Responding",
+    );
+    await expect(page.getByRole("textbox", { name: "Message" })).toBeFocused();
+    await page.keyboard.press("Escape");
+    await expect(page.locator('[data-chat="marker"]')).toHaveText("Stopped");
+    await expect(composerStatus(page)).toHaveText("Stopped");
+    await expect(
+      page.getByRole("button", { name: "Send message" }),
+    ).toHaveCount(1);
+    await expect(page.getByRole("textbox", { name: "Message" })).toBeFocused();
+  });
+
+  test('8. Enter on Retry sets the status "Responding"', async ({ page }) => {
+    await openView(page, "/view/chat/error/");
+    await page.getByRole("button", { name: "Retry" }).focus();
+    await page.keyboard.press("Enter");
+    await expect(composerStatus(page)).toHaveText("Responding");
+    await expect(page.locator('[data-chat="error"]')).toHaveCount(0);
+    await expect(
+      page.getByRole("button", { name: "Stop response" }),
+    ).toHaveCount(1);
+  });
+});
+
+/** 006 decision 14: the shell's four keyboard behaviours. */
+test.describe("the shell", () => {
+  test("1. Enter on the skip link focuses main#main", async ({ page }) => {
+    await openView(page, "/view/app-shell/");
+    await page.keyboard.press("Tab");
+    expect(await signature(page)).toBe("a:Skip to main content");
+    const link = page.locator('[data-slot="app-shell-skip-link"]');
+    await expect(link).toBeFocused();
+    await expect(link).toBeVisible();
+    await page.keyboard.press("Enter");
+    await expect(page.locator("main#main")).toBeFocused();
+    expect(await page.locator("main#main").getAttribute("tabindex")).toBe("-1");
+  });
+
+  test.describe("at 360", () => {
+    test.use({ viewport: { width: 360, height: 700 } });
+    test('2. Enter on the menu button opens the sheet named "Pluto app" with focus on its first link; Escape returns focus', async ({
+      page,
+    }) => {
+      await openView(page, "/view/app-shell/");
+      const menu = page.getByRole("button", { name: "Menu" });
+      await expect(menu).toHaveAttribute("aria-haspopup", "dialog");
+      await expect(menu).toHaveAttribute("aria-expanded", "false");
+      await menu.focus();
+      await page.keyboard.press("Enter");
+      const sheet = page.getByRole("dialog", { name: "Pluto app" });
+      await expect(sheet).toBeVisible();
+      await expect(menu).toHaveAttribute("aria-expanded", "true");
+      await expect(sheet.getByRole("link").first()).toBeFocused();
+      expect(await signature(page)).toBe("a:Overview");
+      await page.keyboard.press("Escape");
+      await expect(sheet).toHaveCount(0);
+      await expect(menu).toBeFocused();
+    });
+  });
+
+  test("3. Enter on the account menu opens it with focus on its first item; Escape returns focus", async ({
+    page,
+  }) => {
+    await openView(page, "/view/app-shell/signed-in/");
+    const trigger = page.getByRole("button", { name: "Account menu" });
+    await trigger.focus();
+    await page.keyboard.press("Enter");
+    const menu = page.getByRole("menu");
+    await expect(menu).toBeVisible();
+    const items = menu.getByRole("menuitem");
+    await expect(items).toHaveCount(2);
+    await expect(items.first()).toBeFocused();
+    expect(await signature(page)).toBe("menuitem:Settings");
+    await page.keyboard.press("Escape");
+    await expect(menu).toHaveCount(0);
+    await expect(trigger).toBeFocused();
+  });
+
+  test('4. Enter on the trigger sets aria-expanded="false" and makes the nav inert; Enter again restores', async ({
+    page,
+  }) => {
+    await openView(page, "/view/app-shell/sidebar/");
+    const trigger = page.getByRole("button", { name: "Toggle sidebar" });
+    const nav = page.locator('nav[aria-label="Main"]');
+    await expect(trigger).toHaveAttribute("aria-expanded", "true");
+    expect(await nav.getAttribute("inert")).toBeNull();
+    await trigger.focus();
+    await page.keyboard.press("Enter");
+    await expect(trigger).toHaveAttribute("aria-expanded", "false");
+    await expect(nav).toHaveAttribute("inert", "");
+    await expect(trigger).toBeFocused();
+    await page.keyboard.press("Enter");
+    await expect(trigger).toHaveAttribute("aria-expanded", "true");
+    expect(await nav.getAttribute("inert")).toBeNull();
+  });
 });
 
 test.describe("block views at 1280", () => {
@@ -1123,11 +1274,14 @@ test.describe("viewer toolbars", () => {
   }
 });
 
-test("the 5 viewer toolbars hold 42 stops", () => {
+// 003's 42, plus app-shell (4 states, 3 widths, Open alone, the frame: 9) and
+// chat (6 states and the same 5: 11): 62. (006 decision 14 wrote 58, adding
+// 7 and 9; the frame and Open alone are stops on every toolbar.)
+test("the 7 viewer toolbars hold 62 stops", () => {
   const counts = BLOCKS.map((b) => {
     const n = (BLOCK_VIEWS[b] ?? []).length;
     return (n > 1 ? n : 0) + 5;
   });
-  expect(counts).toEqual([5, 9, 9, 10, 9]);
-  expect(counts.reduce((a, b) => a + b, 0)).toBe(42);
+  expect(counts).toEqual([5, 9, 9, 10, 9, 9, 11]);
+  expect(counts.reduce((a, b) => a + b, 0)).toBe(62);
 });

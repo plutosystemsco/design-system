@@ -2,6 +2,61 @@
 
 The owner's answers and decisions, newest first. A decision that changes the constitution is also recorded in its Status line.
 
+### After the `006` change review (2026-11-01)
+
+From `reviews/006-the-app-shell-and-the-chat-pane-pr-2026-11-01.md` (3 Medium, 5 Low; "does not land yet"). The calls among the fixes:
+
+- **A block never overwrites an item's `data-slot`** (R20): the shell's parts carry `data-shell` attributes, as the chat's carry `data-chat`. Four shell parts had passed a second slot.
+- **The fence splitter takes any info string**, reads the first word as the language, closes only on a bare fence, strips carriage returns, and keeps an unclosed fence as a block. A unit test file covers the cases.
+- **No "unknown" commit.** When neither the CI variable nor git answers, `version.name` is Kit's own timestamp, which the layout already treats as no commit: the footer shows no commit row and no built row. A row reading "unknown" is furniture carrying nothing (R24).
+- **bits-ui writes `data-state`, not `data-open`**: the caret turns on `group-data-[state=open]`. `005`'s sidebar files are checked for the same habit.
+- **The "Latest reply" row keeps its height** whether or not the button shows, so the log does not resize when a reply ends.
+
+### After the `006` build's run 2 (2026-11-01)
+
+From the builder's final report (`scratchpad/build-006/bends.md` 18 to 32), the chat views and the fixed sidebar shell read.
+
+- **The sidebar's offset under the sticky header is `md:top-16 md:pb-16`**, prefixed, so the sheet's nav below `md` is untouched: an unprefixed `pb-16` would lift the sheet's account row.
+- **A sticky sidebar holds only while the page is taller than it.** The example page is shorter, so the test lengthens `main` before scrolling, as an app page would be. Not a defect of the shell.
+- **The chat pane's parts are `data-chat` attributes**, not second `data-slot`s, so each root keeps its stock slot (R20).
+- **The streaming view's half-written reply is prose**, since an open fence would add two stops to the view's count; the fence splitter still handles an open fence in the pane.
+- Counts corrected from the spec: 20 components (6 + 4 on `003`'s 10, not 19); 62 toolbar stops (the spec's 58 left out Open alone and the frame on each new toolbar).
+- Both deferrable views (`sidebar-icon`, the chat `error`) were built; nothing is deferred.
+- The one smoke flake, `001`'s dev-loop watcher under the seven-block install's load, passed alone and in an earlier full run; recorded, not chased.
+
+### After the `007` change review (2026-11-01)
+
+From `reviews/007-the-full-highlight-palette-and-the-ink-surface-pr-2026-11-01.md` (3 Medium, 6 Low; "does not land yet"; all three Mediums in the editor's roles plugin). The calls among the fixes:
+
+- **The roles plugin follows the parse tree**, not only the document and the viewport: text parsed after the first chunk took its roles only once something moved. It now rebuilds when the tree changes, as CodeMirror's own highlighter does.
+- **A docstring is the first statement, whatever comments precede it**: a shebang, a licence comment or a same-line comment on the `def` line had turned it back into a string.
+- **A keyword argument named like a built-in stays in the body** (`f(type="x")`), as decision 2 says for both engines.
+- **The shell's `$*`, `$@` and `$?` are keys, not `self`**: Shiki scopes them `variable.language.special`, which now goes to `property`; `self`, `this` and `super` keep `variable.language`.
+- **One id for the shell, `bash`**, with `shellscript`, `sh`, `shell` and `zsh` as aliases, in the highlighter, the languages table and the page.
+- The token file keeps its own formatting; a tool that rewrites it must preserve the untouched lines.
+
+### After the `006` build's checkpoint (2026-11-01)
+
+Made by the orchestrating session as design lead from the builder's checkpoint report (steps 1 to 3; `scratchpad/build-006/`), the entrance frames, the sidebar shell and the footer read.
+
+- **The entrance is right**: at 300 ms the blue and red dots are mid-dock and the amber and green not yet begun; at 900 ms the mark is composed; under reduce the mark is composed at load; a client-side navigation replays nothing. The footer at 360 wraps to one column with the source link broken at a slash.
+- **With a sidebar, the shell's header is sticky.** The checkpoint showed the sidebar's account row cut off by the header's height at load: `005`'s sidebar is `sticky top-0 h-svh`, and under a header that scrolls away it is only whole once the page has scrolled 64 px. A sticky sidebar beside a scrolling header is two scroll behaviours on one screen. So the header is `sticky top-0 z-20` whenever the sidebar is on, and the sidebar is offset under it with `top-16 pb-16` through its `class` prop: the box keeps `h-svh`, its last 64 px are padding below the viewport, and the account row sits at the viewport's bottom. No new utility, no arbitrary value. Without a sidebar the header is not sticky by default, as `006` decision 6 says; the one line is the app's. Decision 6 reads so.
+- The checkpoint's bends are accepted as the least that works: the validator caps the entrance at the budget; `mark-entrance` targets child dots; the header's box is 65 px with its hairline; with a sidebar the account lives in the sidebar's footer and the header shows no account menu; the Preferences group is closed by default; the account trigger is named by `sr-only` text (axe's label-content-name-mismatch); the nav sheet closes after navigation; the shipped `sourceHref` is this registry's repository, with a comment; the three state views share one preview component; the footer's source link wraps at 320 px.
+- Housekeeping: `.claude/worktrees/` (the `007` build's worktree) is ignored by git and Prettier so the main tree's lint stays clean while the two build in parallel.
+
+### After the `007` build's checkpoint (2026-11-01)
+
+Made by the orchestrating session as design lead from the builder's checkpoint report (steps 1 to 3 on the `007-palette` branch; `scratchpad/build-007/`), the gallery and surface screenshots read.
+
+- **Cyan stays for `property`.** On the Python class sample at 2× and at native size, teal type names and cyan attributes read as two colours (teal the greener), and cyan sits well apart from the keywords' blue. The magenta fallback of `007` decision 3 is not taken. A type and an attribute never share a syntactic position, so the closest pair costs the least.
+- **The surface reads as specified**: ink on paper with the editor and the block flush, the pill strip and the meter's track on the wash inset, the popover dark inside the panel, the dialog white over the page's scrim.
+- The checkpoint's bends are accepted as the least that works: C2 rewritten with the theme (the old assertions broke at once); the keyboard ring helper reads `--ring` where the element sits, so the dark ring inside a surface on a light page passes; the surface's two tab panels carry `tabindex={-1}` so the fixture counts 7 stops (bits-ui's panel is a stop); the gallery's blocks keep their `pre` stop; `@property` tokenises as a decorator mark plus a teal `property`, and `int(c)` and `str(d)` are types to Shiki, not built-ins, so C2 reads `builtin` on `divmod`, `all`, `range` and `print`; the samples are 10 to 15 lines.
+- The suites ran on a second port because the `006` build held 4173 in the main tree; a git-ignored config copy, nothing tracked.
+
+### `007` builds in parallel with `006` (2026-11-01)
+
+Asked whether the highlighting pieces were built: not yet, specified and reviewed, queued behind `006` in one working tree. **The owner:** "start working on 0.7.0 in parallel." So `007` builds on its own branch, `007-palette`, in a git worktree over `v0.5.0` (`616b8a0`), while `006` builds on `main`. `007`'s counts stand on `005`'s landed numbers, not `006`'s predicted ones; its Landing notes say so. Whichever lands second rebases onto the other before its change review; the expected overlaps are `registry.json`, `pages.ts`, the axe and keyboard counts, `package.json`'s version and the changelog. The surface fixture composes `005`'s dialog and dropdown menu, which `v0.5.0` holds, so `007` does not need `006` to build.
+
 ### Two writing and furniture rules join the checklist (2026-11-01)
 
 The owner asked whether the `frontend-design` skill (a brief for designing one page from a blank brief) helps this work. Assessed: its palette, type and layout passes do not apply, because the design book fixes them; three parts transfer. Its motion rule (one page-load moment; otherwise motion answers a person's action) is already `006`'s entrance and the overlays' enter and exit. Its writing rules and its list of templated "tells" were worth keeping. **Answered:** "yes, add them to the checklist."

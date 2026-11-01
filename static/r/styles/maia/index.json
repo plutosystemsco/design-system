@@ -1305,5 +1305,54 @@
 			"group": "blocks"
 		},
 		"relativeUrl": "settings.json"
+	},
+	{
+		"name": "app-shell",
+		"title": "App shell",
+		"type": "registry:block",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "The frame every page sits in: a skip link, a header with the lockup's one entrance and a theme toggle, an optional sidebar, the main area, and a footer that states the build.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme",
+			"four-dot",
+			"theme",
+			"button",
+			"sheet",
+			"sidebar",
+			"breadcrumb",
+			"dropdown-menu",
+			"avatar",
+			"collapsible"
+		],
+		"meta": {
+			"since": "0.6.0",
+			"group": "blocks"
+		},
+		"relativeUrl": "app-shell.json"
+	},
+	{
+		"name": "chat",
+		"title": "Chat",
+		"type": "registry:block",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "A conversation: a log that follows new replies, turns with code, a composer that sends and stops, and the words a screen reader hears.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme",
+			"message-log",
+			"message",
+			"marker",
+			"composer",
+			"code-block",
+			"empty",
+			"alert",
+			"button"
+		],
+		"meta": {
+			"since": "0.6.0",
+			"group": "blocks"
+		},
+		"relativeUrl": "chat.json"
 	}
 ]

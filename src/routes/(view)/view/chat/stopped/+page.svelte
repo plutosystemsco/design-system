@@ -1,0 +1,15 @@
+<script lang="ts">
+  import ChatView from "#lib/preview/chat-view.svelte";
+</script>
+
+<ChatView
+  messages={[
+    {
+      id: "m1",
+      role: "user",
+      text: "Show me a function that adds two numbers.",
+    },
+    { id: "m2", role: "assistant", text: "Here is one, with a" },
+    { id: "m3", role: "marker", text: "Stopped" },
+  ]}
+/>

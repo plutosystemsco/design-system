@@ -354,7 +354,10 @@ function classRule002(
   )
     return "tracking";
 
-  // L10, animation.
+  // L10, animation. R14's motion list: animate-enter, animate-exit, the
+  // spinner's animate-spin, and (006 decision 4) the mark's `mark-entrance`,
+  // a @utility of its own name that this rule does not see: four delays and
+  // four offsets fit no single animate-* utility.
   const animate = /^animate-(.+)$/.exec(utility);
   if (animate && !["enter", "exit", "spin"].includes(animate[1]))
     return "animation";

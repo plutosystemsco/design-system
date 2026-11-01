@@ -16,10 +16,13 @@
     name,
     files,
     accessibility,
+    setup,
   }: {
     name: string;
     files: { appPath: string; text: string }[];
     accessibility: Snippet;
+    /** What an app does after `add`, as a list (006: moving the shell's layout, the footer's values). */
+    setup?: Snippet;
   } = $props();
 
   const title = $derived(
@@ -45,6 +48,14 @@
     {@render accessibility()}
   </ul>
 </PreviewSection>
+
+{#if setup}
+  <PreviewSection id="setup" title="Set up">
+    <ul class="grid max-w-prose list-disc gap-2 pl-6">
+      {@render setup()}
+    </ul>
+  </PreviewSection>
+{/if}
 
 <PreviewSection
   id="code"

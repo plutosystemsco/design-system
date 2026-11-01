@@ -12,6 +12,7 @@ import {
 import {
   ITEMS_004,
   ITEMS_005,
+  ITEMS_006,
   NEW_ITEMS,
   cssVar,
   open,
@@ -413,11 +414,16 @@ test.describe("elevation on the menu and the scrim on the sheet", () => {
 });
 
 test.describe("motion", () => {
-  test("0 infinitely looping animations outside a spinner on 002's 26 pages, 004's and 005's", async ({
+  test("0 infinitely looping animations outside a spinner on 002's 26 pages, 004's, 005's and 006's", async ({
     page,
   }) => {
     const loops: string[] = [];
-    for (const item of [...NEW_ITEMS, ...ITEMS_004, ...ITEMS_005]) {
+    for (const item of [
+      ...NEW_ITEMS,
+      ...ITEMS_004,
+      ...ITEMS_005,
+      ...ITEMS_006,
+    ]) {
       await open(page, `/items/${item}/`);
       const found = await page.evaluate(() =>
         [...document.querySelectorAll("*")]

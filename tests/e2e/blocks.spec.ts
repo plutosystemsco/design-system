@@ -569,7 +569,8 @@ async function load(page: Page, path: string): Promise<void> {
 }
 
 test.describe("all blocks", () => {
-  test("24. no infinite animation outside a spinner on the 18 views and 7 new item pages", async ({
+  // 006: 28 views (the shell's 4 and the chat's 6 join) and 7 item pages: 35.
+  test("24. no infinite animation outside a spinner on the 28 views and 7 new item pages", async ({
     page,
   }) => {
     const loops: string[] = [];
@@ -586,11 +587,11 @@ test.describe("all blocks", () => {
       );
       for (const f of found) loops.push(`${path}: ${f}`);
     }
-    expect(PAGES_24).toHaveLength(25);
+    expect(PAGES_24).toHaveLength(35);
     expect(loops).toEqual([]);
   });
 
-  test("25. reflow: no horizontal scroll at 320 px on 25 of 25 pages", async ({
+  test("25. reflow: no horizontal scroll at 320 px on 35 of 35 pages", async ({
     page,
   }) => {
     await page.setViewportSize({ width: 320, height: 900 });
@@ -605,7 +606,7 @@ test.describe("all blocks", () => {
     expect(wide).toEqual([]);
   });
 
-  test("26. targets: each of the 83 view stops is at least 24 × 24 px at 360", async ({
+  test("26. targets: each of the 153 view stops is at least 24 × 24 px at 360", async ({
     page,
   }) => {
     await page.setViewportSize({ width: 360, height: 900 });
@@ -626,7 +627,7 @@ test.describe("all blocks", () => {
       }
     }
     expect(small).toEqual([]);
-    expect(counted).toBe(83);
+    expect(counted).toBe(153);
   });
 
   test("27. rings are not clipped: 40 of 40 sign-in and sign-up stops at 360", async ({
@@ -784,5 +785,526 @@ test.describe("a callback that rejects", () => {
     await expect(section.locator('[data-slot="status"]')).toHaveText(
       FAILED.remove,
     );
+  });
+});
+
+/**
+ * 006 decision 14, A1 to A7: the app shell, in both themes. A1 landmarks;
+ * A2 the header's 64 px row and its grooved bottom edge, read as computed
+ * style and as pixels; A3 the footer's rows; A4 the tagline once; A5 the
+ * phone's menu; A6 one h1 and one theme script; A7 the current link's
+ * underline.
+ */
+test.describe("the app shell", () => {
+  const SHELL = "/view/app-shell/";
+
+  test("A1. landmarks: 1 banner, 1 nav Primary, 1 main#main tabindex -1, 1 contentinfo; with a sidebar 1 nav Main and 0 Primary", async ({
+    page,
+  }) => {
+    await openView(page, SHELL);
+    await expect(page.getByRole("banner")).toHaveCount(1);
+    await expect(page.getByRole("navigation", { name: "Primary" })).toHaveCount(
+      1,
+    );
+    const main = page.getByRole("main");
+    await expect(main).toHaveCount(1);
+    await expect(main).toHaveAttribute("id", "main");
+    await expect(main).toHaveAttribute("tabindex", "-1");
+    await expect(page.getByRole("contentinfo")).toHaveCount(1);
+    expect(
+      await page
+        .locator("body [data-slot='app-shell-skip-link']")
+        .evaluate((el) =>
+          el.compareDocumentPosition(document.querySelector("header")!),
+        ),
+    ).toBe(4); // Node.DOCUMENT_POSITION_FOLLOWING: the header follows the skip link.
+
+    await openView(page, "/view/app-shell/sidebar/");
+    await expect(page.getByRole("navigation", { name: "Main" })).toHaveCount(1);
+    await expect(page.getByRole("navigation", { name: "Primary" })).toHaveCount(
+      0,
+    );
+    await expect(page.getByRole("main")).toHaveAttribute("id", "main");
+  });
+
+  // The checkpoint's call (decisions.md, "After the 006 build's checkpoint"):
+  // with a sidebar the header is sticky and the sidebar sits under it, its
+  // foot padded by the header's height, so the account row ends at the
+  // viewport's bottom at load, and both stay put when the page scrolls.
+  for (const width of [768, 1280] as const) {
+    test(`A1b. with a sidebar at ${width}: the header is sticky (z-20), the sidebar starts 64 px down with 64 px of padding at its foot, the account row ends at or above the viewport's bottom at load, and both hold after a 400 px scroll`, async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await openView(page, "/view/app-shell/sidebar/");
+      const header = page.locator("header");
+      const nav = page.locator('nav[aria-label="Main"]');
+      await expect(header).toHaveCSS("position", "sticky");
+      await expect(header).toHaveCSS("top", "0px");
+      await expect(header).toHaveCSS("z-index", "20");
+      await expect(nav).toHaveCSS("position", "sticky");
+      await expect(nav).toHaveCSS("top", "64px");
+      await expect(nav).toHaveCSS("padding-bottom", "64px");
+      expect((await box(nav)).height).toBe(900);
+      const account = nav.locator('[data-sidebar="menu-button"]', {
+        hasText: "Ada Lovelace",
+      });
+      const row = await box(account);
+      expect(row.y + row.height).toBeLessThanOrEqual(900);
+      expect(row.y + row.height).toBeGreaterThan(900 - 64);
+      // Nothing of the shell is covered: the sidebar's top meets the header's bottom.
+      expect(Math.round((await box(nav)).y)).toBe(
+        Math.round((await box(header)).y + (await box(header)).height),
+      );
+      // A sticky child holds only while its row is taller than it (005: a
+      // sticky flex child, never fixed); the example page is shorter than
+      // the sidebar, so the main is lengthened here as an app's page would.
+      await page.evaluate(() => {
+        const spacer = document.createElement("div");
+        spacer.style.height = "2000px";
+        document.querySelector("main")!.append(spacer);
+      });
+      await page.evaluate(() => window.scrollTo(0, 400));
+      await expect
+        .poll(() => page.evaluate(() => window.scrollY))
+        .toBeGreaterThanOrEqual(400);
+      expect((await box(header)).y).toBe(0);
+      expect(Math.round((await box(nav)).y)).toBe(64);
+      const after = await box(account);
+      expect(after.y + after.height).toBeLessThanOrEqual(900);
+      // The focused skip link (fixed, z-50) sits above the sticky header
+      // (z-20): its computed z-index, and the element at its centre.
+      await page.evaluate(() => window.scrollTo(0, 0));
+      await page.keyboard.press("Tab");
+      const skip = page.locator('[data-slot="app-shell-skip-link"]');
+      await expect(skip).toBeFocused();
+      await expect(skip).toHaveCSS("z-index", "50");
+      await expect(skip).toHaveCSS("position", "fixed");
+      expect(
+        await skip.evaluate((el) => {
+          const r = el.getBoundingClientRect();
+          return (
+            document
+              .elementFromPoint(r.left + r.width / 2, r.top + r.height / 2)
+              ?.closest('[data-slot="app-shell-skip-link"]') === el
+          );
+        }),
+      ).toBe(true);
+    });
+  }
+
+  // Review finding 4: the Preferences caret turns with the group's state.
+  test("A1c. the sidebar's Preferences caret is upright while the group is closed and rotated 90 degrees once it is open", async ({
+    page,
+  }) => {
+    await openView(page, "/view/app-shell/sidebar/");
+    const trigger = page.getByRole("button", { name: "Preferences" });
+    const caret = trigger.locator("svg").last();
+    // Tailwind's rotate-* sets the `rotate` property, not `transform`.
+    await expect(trigger).toHaveAttribute("data-state", "closed");
+    await expect(caret).toHaveCSS("rotate", "none");
+    await trigger.click();
+    await expect(trigger).toHaveAttribute("data-state", "open");
+    await expect(page.getByRole("link", { name: "Profile" })).toBeVisible();
+    await expect(caret).toHaveCSS("rotate", "90deg");
+  });
+
+  for (const width of [360, 1280] as const) {
+    test(`A2. at ${width}: the header row is 64 px; its bottom edge is the hairline, then the light below it in light and alone in dark`, async ({
+      page,
+    }, info) => {
+      await page.setViewportSize({ width, height: 900 });
+      await openView(page, SHELL);
+      const header = page.locator("header");
+      const row = header.locator("> div").first();
+      expect((await box(row)).height).toBe(64);
+      await expect(header).toHaveCSS("border-bottom-width", "1px");
+      const line = hexToRgb(await cssVar(page, "--groove-line"));
+      // The hairline is a translucent ink: its computed colour carries the
+      // token's channels with its alpha.
+      const colour = await header.evaluate(
+        (el) => getComputedStyle(el).borderBottomColor,
+      );
+      expect(
+        colour
+          .replace(/rgba?\(|\)/g, "")
+          .split(",")
+          .slice(0, 3)
+          .map((c) => c.trim())
+          .join(", "),
+      ).toBe(line.replace(/rgb\(|\)/g, ""));
+      await expect(header).toHaveCSS(
+        "box-shadow",
+        `${hexToRgb(await cssVar(page, "--groove-light"))
+          .replace("rgb(", info.project.name === "dark" ? "rgba(" : "rgb(")
+          .replace(
+            ")",
+            info.project.name === "dark" ? ", 0)" : ")",
+          )} 0px 1px 0px 0px`,
+      );
+      // The pixels: the row under the header's box is the hairline over the
+      // ground (#dfdfde light, #2a2c32 dark: the sidebar memo's seam), then
+      // the light (#ffffff) in light, the ground again in dark.
+      // @ts-expect-error playwright-core ships no types for its bundled PNG.
+      const bundle = await import("playwright-core/lib/utilsBundle");
+      const PNG = bundle.PNG as {
+        sync: { read(buffer: Buffer): { data: Uint8Array } };
+      };
+      const edge = Math.round(
+        (await box(header)).y + (await box(header)).height,
+      );
+      const png = PNG.sync.read(
+        await page.screenshot({
+          clip: { x: 8, y: edge - 2, width: 1, height: 4 },
+        }),
+      );
+      const px = (i: number) =>
+        "#" +
+        [png.data[i * 4], png.data[i * 4 + 1], png.data[i * 4 + 2]]
+          .map((c: number) => c.toString(16).padStart(2, "0"))
+          .join("");
+      const ground = info.project.name === "dark" ? "#14161c" : "#f7f7f4";
+      expect([px(0), px(1), px(2), px(3)]).toEqual(
+        info.project.name === "dark"
+          ? [ground, "#2a2c32", ground, ground]
+          : [ground, "#dfdfde", "#ffffff", ground],
+      );
+    });
+  }
+
+  test("A3. the footer: a time with a datetime, the commit in a code and not all digits, the source link's href, 0 statements, the lockup not a link; the views' doc row reads PS-DS-0006 and the shipped layout shows none", async ({
+    page,
+  }) => {
+    await openView(page, SHELL);
+    const footer = page.getByRole("contentinfo");
+    const time = footer.locator("time");
+    await expect(time).toHaveCount(1);
+    expect(await time.getAttribute("datetime")).toMatch(/^\d{4}-\d{2}-\d{2}T/);
+    await expect(time).toHaveText(
+      (await time.getAttribute("datetime"))!.slice(0, 10),
+    );
+    const commit = footer.locator("dd code");
+    await expect(commit).toHaveCount(1);
+    expect(await commit.textContent()).toMatch(/^[0-9a-f]{7,40}$/);
+    expect(await commit.textContent()).not.toMatch(/^\d+$/);
+    await expect(footer.locator("dt")).toHaveText([
+      "commit",
+      "built",
+      "source",
+    ]);
+    await expect(footer.getByRole("link")).toHaveCount(1);
+    await expect(footer.getByRole("link")).toHaveAttribute(
+      "href",
+      "https://github.com/plutosystemsco/design-system",
+    );
+    await expect(footer.getByRole("link")).toHaveText(
+      "github.com/plutosystemsco/design-system",
+    );
+    await expect(
+      footer.locator("p").filter({ hasText: /corporation/ }),
+    ).toHaveCount(0);
+    await expect(footer.locator('[data-slot="lockup"]')).toHaveCount(1);
+    expect(
+      await footer.locator('[data-slot="lockup"]').evaluate((el) => el.tagName),
+    ).toBe("SPAN");
+
+    await openView(page, "/view/app-shell/signed-in/");
+    const signedIn = page.getByRole("contentinfo");
+    await expect(signedIn.locator("dt")).toHaveText([
+      "commit",
+      "built",
+      "doc",
+      "source",
+    ]);
+    await expect(signedIn.locator("dd").nth(2)).toHaveText("PS-DS-0006");
+  });
+
+  test('A4. the tagline reads "Work runs on data." once, beside a lockup that is not a link', async ({
+    page,
+  }) => {
+    await openView(page, SHELL);
+    const footer = page.getByRole("contentinfo");
+    const text = (await footer.textContent()) ?? "";
+    expect(text.match(/Work runs on data\./g)).toHaveLength(1);
+    await expect(footer.getByText("Work runs on data.")).toHaveCSS(
+      "font-size",
+      "13.5px",
+    );
+  });
+
+  test('A5. at 360 the primary nav is hidden and the menu button opens a dialog named "Pluto app" holding the 3 links', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 360, height: 700 });
+    await openView(page, SHELL);
+    await expect(page.locator('header nav[aria-label="Primary"]')).toBeHidden();
+    const menu = page.getByRole("button", { name: "Menu" });
+    expect(await box(menu)).toMatchObject({ width: 32, height: 32 });
+    await menu.click();
+    const dialog = page.getByRole("dialog", { name: "Pluto app" });
+    await expect(dialog).toBeVisible();
+    await expect(
+      dialog.getByRole("navigation", { name: "Primary" }).getByRole("link"),
+    ).toHaveText(["Overview", "Activity", "Members"]);
+  });
+
+  test("A6. the shipped page has exactly one h1, and the head holds one theme script", async ({
+    page,
+    request,
+  }) => {
+    await openView(page, SHELL);
+    await expect(page.locator("h1")).toHaveCount(1);
+    await expect(page.locator("h1")).toHaveText("Projects");
+    const html = await (await request.get(SHELL)).text();
+    const head = html.slice(0, html.indexOf("</head>"));
+    expect(head.match(/localStorage\.getItem\("pluto-theme"\)/g)).toHaveLength(
+      1,
+    );
+  });
+
+  test("A7. the link with aria-current=page computes an underline and the others do not", async ({
+    page,
+  }) => {
+    await openView(page, `${SHELL}#overview`);
+    const links = page.locator('header nav[aria-label="Primary"] a');
+    await expect(links).toHaveCount(3);
+    await expect(links.first()).toHaveAttribute("aria-current", "page");
+    await expect(links.first()).toHaveCSS("text-decoration-line", "underline");
+    for (const i of [1, 2]) {
+      expect(await links.nth(i).getAttribute("aria-current")).toBeNull();
+      await expect(links.nth(i)).toHaveCSS("text-decoration-line", "none");
+    }
+    await expect(links.first()).toHaveCSS(
+      "color",
+      hexToRgb(await cssVar(page, "--foreground")),
+    );
+  });
+});
+
+/**
+ * 006 decision 14, C1 to C5 and C9: the chat pane, in both themes. C6 to C8
+ * are tests 24 to 26 above, widened to the 28 views.
+ */
+test.describe("the chat", () => {
+  const log = (page: Page) => page.locator('[role="log"]');
+  const sendButton = (page: Page) =>
+    page.locator('[data-slot="composer-send"]');
+
+  test("C1. empty: the Empty text, the hidden h1 Chat, the h2 New conversation, New chat, and the composer", async ({
+    page,
+  }) => {
+    await openView(page, "/view/chat/");
+    const empty = page.locator('[data-slot="empty"]');
+    await expect(empty).toHaveCount(1);
+    await expect(empty.locator("h3")).toHaveText("No messages yet");
+    await expect(empty).toContainText("Write a message below to start.");
+    await expect(empty.locator("svg")).toHaveCount(0);
+    const h1 = page.locator("h1");
+    await expect(h1).toHaveCount(1);
+    await expect(h1).toHaveText("Chat");
+    expect(await h1.evaluate((el) => getComputedStyle(el).position)).toBe(
+      "absolute",
+    );
+    await expect(page.locator("h2")).toHaveText("New conversation");
+    await expect(page.getByRole("button", { name: "New chat" })).toHaveCount(1);
+    await expect(page.locator('[data-slot="composer"]')).toHaveCount(1);
+    await expect(sendButton(page)).toHaveAccessibleName("Send message");
+    await expect(page.getByRole("region", { name: "Messages" })).toHaveCount(1);
+    await expect(log(page)).toHaveAccessibleName("Conversation");
+  });
+
+  test("C2. thread: 4 h3 reading you and assistant; the second reply holds one sm code-block with text-code- spans and 0 style; the bubble on muted; the column at most 75 ch; at 360 × 640 the region scrolls and the composer ends at the viewport", async ({
+    page,
+  }) => {
+    await openView(page, "/view/chat/thread/");
+    const headings = page.locator('[data-chat="turn"] h3');
+    await expect(headings).toHaveText(["you", "assistant", "you", "assistant"]);
+    const replies = page.locator('[data-role="assistant"]');
+    await expect(
+      replies.first().locator('[data-slot="code-block"]'),
+    ).toHaveCount(0);
+    const block = replies.nth(1).locator('[data-slot="code-block"]');
+    await expect(block).toHaveCount(1);
+    await expect(block).toHaveAttribute("data-size", "sm");
+    await expect(block.locator('[data-slot="code-block-title"]')).toHaveText(
+      "python",
+    );
+    await expect
+      .poll(() => block.locator('[class*="text-code-"]').count())
+      .toBeGreaterThan(0);
+    await expect(block.locator("[style]")).toHaveCount(0);
+    await expect(block.getByRole("button", { name: "Copy code" })).toHaveCount(
+      1,
+    );
+    const bubble = page
+      .locator('[data-slot="message-content"][data-variant="bubble"]')
+      .first();
+    await expect(bubble).toHaveCSS(
+      "background-color",
+      hexToRgb(await cssVar(page, "--muted")),
+    );
+    const column = page.locator('[data-slot="chat-column"]');
+    const [width, ch] = await column.evaluate((el) => {
+      const probe = document.createElement("span");
+      probe.textContent = "0";
+      probe.style.position = "absolute";
+      el.append(probe);
+      const w = probe.getBoundingClientRect().width;
+      probe.remove();
+      return [el.getBoundingClientRect().width, w];
+    });
+    expect(width / ch).toBeLessThanOrEqual(75);
+    expect(width / ch).toBeGreaterThanOrEqual(60);
+
+    await page.setViewportSize({ width: 360, height: 640 });
+    await openView(page, "/view/chat/thread/");
+    const region = page.getByRole("region", { name: "Messages" });
+    const state = await region.evaluate((el) => [
+      el.scrollHeight,
+      el.clientHeight,
+    ]);
+    expect(state[0]).toBeGreaterThan(state[1]!);
+    const composer = page.locator('[data-slot="composer"]');
+    const bottom = await composer.evaluate(
+      (el) => el.closest(".groove")!.getBoundingClientRect().bottom,
+    );
+    expect(Math.round(bottom)).toBe(640);
+    expect(
+      await page.evaluate(() => document.documentElement.scrollHeight),
+    ).toBe(640);
+  });
+
+  test("C3. streaming: aria-busy on the log, the button Stop response, no Latest reply; submitted: the marker Responding with no icon, the button's spinner", async ({
+    page,
+  }) => {
+    await openView(page, "/view/chat/streaming/");
+    await expect(log(page)).toHaveAttribute("aria-busy", "true");
+    await expect(sendButton(page)).toHaveAccessibleName("Stop response");
+    await expect(
+      page.getByRole("button", { name: "Latest reply" }),
+    ).toHaveCount(0);
+    await expect(page.locator('[data-chat="responding"]')).toHaveCount(0);
+
+    await openView(page, "/view/chat/submitted/");
+    expect(await log(page).getAttribute("aria-busy")).toBeNull();
+    const marker = page.locator('[data-chat="responding"]');
+    await expect(marker).toHaveText("Responding");
+    await expect(marker.locator("svg")).toHaveCount(0);
+    await expect(sendButton(page)).toHaveAccessibleName("Stop response");
+    await expect(sendButton(page).locator('[data-slot="spinner"]')).toHaveCount(
+      1,
+    );
+  });
+
+  test("C4. stopped: a marker reading Stopped and the button Send message", async ({
+    page,
+  }) => {
+    await openView(page, "/view/chat/stopped/");
+    const marker = page.locator('[data-chat="marker"]');
+    await expect(marker).toHaveCount(1);
+    await expect(marker).toHaveText("Stopped");
+    await expect(marker).toHaveAttribute("data-variant", "separator");
+    await expect(sendButton(page)).toHaveAccessibleName("Send message");
+  });
+
+  test("C5. error: an alert with the title, no role, and a Retry button", async ({
+    page,
+  }) => {
+    await openView(page, "/view/chat/error/");
+    const alert = page.locator('[data-chat="error"]');
+    await expect(alert).toHaveCount(1);
+    expect(await alert.getAttribute("role")).toBeNull();
+    await expect(alert).toHaveAttribute("data-variant", "destructive");
+    await expect(alert.locator('[data-slot="alert-title"]')).toHaveText(
+      "The reply could not be finished",
+    );
+    await expect(alert).toContainText("Try again, or write a new message.");
+    await expect(alert.getByRole("button", { name: "Retry" })).toHaveCount(1);
+    expect(await alert.evaluate((el) => !!el.closest('[role="log"]'))).toBe(
+      true,
+    );
+    await expect(sendButton(page)).toHaveAccessibleName("Send message");
+  });
+
+  // Review finding 8 (a call): the "Latest reply" row keeps its height, so
+  // the log does not resize when the button appears.
+  test("C10. the log's height is the same before a send and after the reply ends, when Latest reply appears", async ({
+    page,
+  }) => {
+    await openView(page, "/view/chat/");
+    const region = page.getByRole("region", { name: "Messages" });
+    const latest = page.getByRole("button", { name: "Latest reply" });
+    await expect(latest).toBeHidden();
+    const before = (await box(region)).height;
+    await page
+      .getByRole("textbox", { name: "Message" })
+      .fill("Add two numbers.");
+    await page.keyboard.press("Enter");
+    await expect(latest).toBeVisible({ timeout: 10_000 });
+    expect((await box(region)).height).toBe(before);
+    await expect(
+      page.locator('[data-slot="composer"] [data-slot="status"]'),
+    ).toHaveText("Response complete");
+  });
+
+  test("C9. rings are not clipped on the 10 views of 006 at 360", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 360, height: 900 });
+    const clipped: string[] = [];
+    let counted = 0;
+    for (const view of VIEWS.filter((v) =>
+      ["app-shell", "chat"].includes(v.block),
+    )) {
+      const stops = VIEW_STOPS[view.path] ?? [];
+      await openView(page, view.path);
+      for (let i = 0; i < stops.length; i++) {
+        await page.keyboard.press("Tab");
+        const problem = await page.evaluate(() => {
+          const focused = document.activeElement as HTMLElement;
+          // The code block's root draws the ring for its pre (004 decision 8).
+          const ringed = (
+            focused.getAttribute("data-slot") === "code-block-content"
+              ? focused.closest('[data-slot="code-block"]')
+              : focused
+          ) as HTMLElement;
+          const r = ringed.getBoundingClientRect();
+          const grown = {
+            left: r.left - 4,
+            right: r.right + 4,
+            top: r.top - 4,
+            bottom: r.bottom + 4,
+          };
+          for (
+            let el = ringed.parentElement;
+            el && el !== document.body;
+            el = el.parentElement
+          ) {
+            const s = getComputedStyle(el);
+            const clips = [s.overflowX, s.overflowY].some(
+              (o) =>
+                o === "hidden" ||
+                o === "clip" ||
+                o === "auto" ||
+                o === "scroll",
+            );
+            if (!clips) continue;
+            const a = el.getBoundingClientRect();
+            const fits =
+              grown.left >= a.left - 0.5 &&
+              grown.right <= a.right + 0.5 &&
+              grown.top >= a.top - 0.5 &&
+              grown.bottom <= a.bottom + 0.5;
+            if (!fits)
+              return `${el.getAttribute("data-slot") ?? el.tagName} clips it`;
+          }
+          return null;
+        });
+        counted++;
+        if (problem) clipped.push(`${view.path} ${stops[i]}: ${problem}`);
+      }
+    }
+    expect(clipped).toEqual([]);
+    expect(counted).toBe(70);
   });
 });

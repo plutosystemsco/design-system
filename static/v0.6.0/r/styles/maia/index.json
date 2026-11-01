@@ -1,0 +1,1358 @@
+[
+	{
+		"name": "pluto-theme",
+		"title": "Pluto theme",
+		"type": "registry:theme",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "The Pluto Systems tokens for light and dark: colour, radius, spacing, type, motion, focus and the groove.",
+		"devDependencies": [
+			"shadcn-svelte@^1.7.1"
+		],
+		"registryDependencies": [
+			"font-geist",
+			"font-heading-ibm-plex-sans",
+			"font-jetbrains-mono"
+		],
+		"meta": {
+			"since": "0.1.0",
+			"group": "foundation"
+		},
+		"relativeUrl": "pluto-theme.json"
+	},
+	{
+		"name": "font-geist",
+		"title": "Geist",
+		"type": "registry:font",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "Geist, the body face, self-hosted through Fontsource.",
+		"registryDependencies": [],
+		"meta": {
+			"since": "0.1.0",
+			"group": "foundation"
+		},
+		"relativeUrl": "font-geist.json"
+	},
+	{
+		"name": "font-heading-ibm-plex-sans",
+		"title": "IBM Plex Sans",
+		"type": "registry:font",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "IBM Plex Sans, the heading face, self-hosted through Fontsource.",
+		"registryDependencies": [],
+		"meta": {
+			"since": "0.1.0",
+			"group": "foundation"
+		},
+		"relativeUrl": "font-heading-ibm-plex-sans.json"
+	},
+	{
+		"name": "font-jetbrains-mono",
+		"title": "JetBrains Mono",
+		"type": "registry:font",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "JetBrains Mono, the face for labels, code and data, self-hosted through Fontsource.",
+		"registryDependencies": [],
+		"meta": {
+			"since": "0.1.0",
+			"group": "foundation"
+		},
+		"relativeUrl": "font-jetbrains-mono.json"
+	},
+	{
+		"name": "utils",
+		"title": "Utils",
+		"type": "registry:lib",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "The cn class-merging helper and the prop-type helpers that components import.",
+		"registryDependencies": [],
+		"meta": {
+			"since": "0.1.0",
+			"group": "foundation"
+		},
+		"relativeUrl": "utils.json"
+	},
+	{
+		"name": "four-dot",
+		"title": "Four-dot mark",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "The Pluto Systems four-dot mark and the wordmark lockup, sized by the text around them.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme"
+		],
+		"meta": {
+			"since": "0.1.0",
+			"group": "foundation"
+		},
+		"relativeUrl": "four-dot.json"
+	},
+	{
+		"name": "theme",
+		"title": "Theme",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "The light and dark switch: a head script that sets the theme before paint, a store that follows the system until a choice is made, and a toggle button.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme",
+			"button"
+		],
+		"meta": {
+			"since": "0.5.0",
+			"group": "foundation"
+		},
+		"relativeUrl": "theme.json"
+	},
+	{
+		"name": "button",
+		"title": "Button",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "An action: the surface's one blue primary, a bordered secondary, ghost, destructive or link, at 48 or 32 px, with a busy state that keeps focus.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme",
+			"spinner"
+		],
+		"meta": {
+			"since": "0.2.0",
+			"group": "actions",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "button",
+				"cli": "1.7.1",
+				"date": "2026-10-28",
+				"sha256": "2460d16c3fe61ce9cd6c495820d1e51f2bf3ec4d9a2c5c5bdfd858003f0988d5"
+			}
+		},
+		"relativeUrl": "button.json"
+	},
+	{
+		"name": "tooltip",
+		"title": "Tooltip",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "A short inverted label that opens on hover and focus, closes on Escape, and repeats an icon button's name.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme"
+		],
+		"meta": {
+			"since": "0.2.0",
+			"group": "actions",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "tooltip",
+				"cli": "1.7.1",
+				"date": "2026-10-28",
+				"sha256": "ba0609f62c4f5f01033532467a9252c5cc03316ad49ce4ed58ff1165b9218b68"
+			}
+		},
+		"relativeUrl": "tooltip.json"
+	},
+	{
+		"name": "kbd",
+		"title": "Kbd",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "A keyboard key, or a group of keys, set in the mono face on an inset.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme"
+		],
+		"meta": {
+			"since": "0.2.0",
+			"group": "actions",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "kbd",
+				"cli": "1.7.1",
+				"date": "2026-10-28",
+				"sha256": "63bc69ecd4aed29655a9213e211965dd728876b91701b39b3d039b663f94dd07"
+			}
+		},
+		"relativeUrl": "kbd.json"
+	},
+	{
+		"name": "toggle",
+		"title": "Toggle",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "A two-state button that says whether it is pressed, inverted when it is.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme"
+		],
+		"meta": {
+			"since": "0.4.0",
+			"group": "actions",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "toggle",
+				"cli": "1.7.1",
+				"date": "2026-10-31",
+				"sha256": "52a50310423259c847984631df3ca1f6bce00745c0df6d86ea13878411bc454c"
+			}
+		},
+		"relativeUrl": "toggle.json"
+	},
+	{
+		"name": "toggle-group",
+		"title": "Toggle group",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "A row of toggles, one stop for the row, moved by the arrow keys, for one choice or several.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme",
+			"toggle"
+		],
+		"meta": {
+			"since": "0.4.0",
+			"group": "actions",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "toggle-group",
+				"cli": "1.7.1",
+				"date": "2026-10-31",
+				"sha256": "684978bfa7ad3ce2a7915e267682afe7df7bb7c2f9813d9718e6f7990e7daa11"
+			}
+		},
+		"relativeUrl": "toggle-group.json"
+	},
+	{
+		"name": "card",
+		"title": "Card",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "A raised surface with a header, content, footer and an action, whose title is a real heading.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme"
+		],
+		"meta": {
+			"since": "0.2.0",
+			"group": "surfaces",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "card",
+				"cli": "1.7.1",
+				"date": "2026-10-28",
+				"sha256": "afb96a575a67cd4a0dc60f29592aca1c8c16efa3154adeec9c07e5d4e1a1d229"
+			}
+		},
+		"relativeUrl": "card.json"
+	},
+	{
+		"name": "separator",
+		"title": "Separator",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "The groove between sections, decorative by default, or a plain vertical hairline.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme"
+		],
+		"meta": {
+			"since": "0.2.0",
+			"group": "surfaces",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "separator",
+				"cli": "1.7.1",
+				"date": "2026-10-28",
+				"sha256": "6f53e106cb04597615e9f28d1cd1a34e04e9f81b7ceea1787935dd0e79b1521e"
+			}
+		},
+		"relativeUrl": "separator.json"
+	},
+	{
+		"name": "item",
+		"title": "Item",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "A row of media, content and actions, plain or outlined, that can be one link.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme",
+			"separator"
+		],
+		"meta": {
+			"since": "0.2.0",
+			"group": "surfaces",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "item",
+				"cli": "1.7.1",
+				"date": "2026-10-28",
+				"sha256": "f28bb7b37d943d71d420e3e4f4dd005d5b3cdcbd596081eea302bbfd2d0e4f28"
+			}
+		},
+		"relativeUrl": "item.json"
+	},
+	{
+		"name": "table",
+		"title": "Table",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "A data table with a caption, header, selectable rows and a footer, scrolling inside itself when it must.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme"
+		],
+		"meta": {
+			"since": "0.2.0",
+			"group": "surfaces",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "table",
+				"cli": "1.7.1",
+				"date": "2026-10-28",
+				"sha256": "eccb4422df8ee16988d55e72d85c3c0f2c5bab9f357e3235c7ee9555237bac2c"
+			}
+		},
+		"relativeUrl": "table.json"
+	},
+	{
+		"name": "tabs",
+		"title": "Tabs",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "Tabbed panels as a pill strip on an inset or as underlined triggers, moved by the arrow keys.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme"
+		],
+		"meta": {
+			"since": "0.2.0",
+			"group": "surfaces",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "tabs",
+				"cli": "1.7.1",
+				"date": "2026-10-28",
+				"sha256": "4cf7419805fc4b3a1b4b988ddffdae3cae81d5d2ed9833cec69e2f4eb8021fbe"
+			}
+		},
+		"relativeUrl": "tabs.json"
+	},
+	{
+		"name": "collapsible",
+		"title": "Collapsible",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "A button that shows and hides a region, with its state in aria-expanded.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme"
+		],
+		"meta": {
+			"since": "0.2.0",
+			"group": "surfaces",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "collapsible",
+				"cli": "1.7.1",
+				"date": "2026-10-28",
+				"sha256": "d6ad641928024c72609982bf73a335163926ade283f4e9f8b8dbf600cc02b136"
+			}
+		},
+		"relativeUrl": "collapsible.json"
+	},
+	{
+		"name": "avatar",
+		"title": "Avatar",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "A person's image or initials at the case radius, alone or in an overlapping group.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme"
+		],
+		"meta": {
+			"since": "0.2.0",
+			"group": "surfaces",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "avatar",
+				"cli": "1.7.1",
+				"date": "2026-10-28",
+				"sha256": "080843f688905b9ed48c2e7de4c35569340d6827e853efc9af0b8534459a4cd8"
+			}
+		},
+		"relativeUrl": "avatar.json"
+	},
+	{
+		"name": "popover",
+		"title": "Popover",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "A small dialog anchored to its button, raised by the elevation shadow, that returns focus when it closes.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme"
+		],
+		"meta": {
+			"since": "0.4.0",
+			"group": "surfaces",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "popover",
+				"cli": "1.7.1",
+				"date": "2026-10-31",
+				"sha256": "04fedc3e4d903c6e1c0454211a79a9bd0c88827dbab3fab1d4e56ac82b8ef609"
+			}
+		},
+		"relativeUrl": "popover.json"
+	},
+	{
+		"name": "accordion",
+		"title": "Accordion",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "Headings that each open a section, divided by grooves, moved by the arrow keys.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme"
+		],
+		"meta": {
+			"since": "0.4.0",
+			"group": "surfaces",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "accordion",
+				"cli": "1.7.1",
+				"date": "2026-10-31",
+				"sha256": "4c77b3993546acfdb3ea5e0d7e268d4a53f2655856881b9909798fb3cdf1cf7e"
+			}
+		},
+		"relativeUrl": "accordion.json"
+	},
+	{
+		"name": "alert",
+		"title": "Alert",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "A message in default, destructive, success or caution, whose role matches how urgent it is.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme"
+		],
+		"meta": {
+			"since": "0.2.0",
+			"group": "feedback",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "alert",
+				"cli": "1.7.1",
+				"date": "2026-10-28",
+				"sha256": "6011e26ccac50e5bb4a2eabd155126212175a4042682a13986f7b067990258a1"
+			}
+		},
+		"relativeUrl": "alert.json"
+	},
+	{
+		"name": "alert-dialog",
+		"title": "Alert dialog",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "A modal confirm on the scrim that traps focus, starts on Cancel and closes on Escape.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme",
+			"button"
+		],
+		"meta": {
+			"since": "0.2.0",
+			"group": "feedback",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "alert-dialog",
+				"cli": "1.7.1",
+				"date": "2026-10-28",
+				"sha256": "16aa45cb9ff091c8ebfce9acb0b7fcb2c74f20c7e20e27486fd80f3e2c7f158e"
+			}
+		},
+		"relativeUrl": "alert-dialog.json"
+	},
+	{
+		"name": "badge",
+		"title": "Badge",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "A small mono label that names a state in words, outlined in its state colour.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme"
+		],
+		"meta": {
+			"since": "0.2.0",
+			"group": "feedback",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "badge",
+				"cli": "1.7.1",
+				"date": "2026-10-28",
+				"sha256": "25ef11b96934fbffe94a822a42146d8241888d9b9a26bb1ebc51aa7ad3ed5e76"
+			}
+		},
+		"relativeUrl": "badge.json"
+	},
+	{
+		"name": "empty",
+		"title": "Empty",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "An empty state: an icon tile, a heading, a sentence and the next action.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme"
+		],
+		"meta": {
+			"since": "0.2.0",
+			"group": "feedback",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "empty",
+				"cli": "1.7.1",
+				"date": "2026-10-28",
+				"sha256": "b99cf98c30eea08caeef03e3694be76cbb6fb16aae3c4afb98a9be02f560ad96"
+			}
+		},
+		"relativeUrl": "empty.json"
+	},
+	{
+		"name": "skeleton",
+		"title": "Skeleton",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "A static, hidden placeholder on an inset where content is loading.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme"
+		],
+		"meta": {
+			"since": "0.2.0",
+			"group": "feedback",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "skeleton",
+				"cli": "1.7.1",
+				"date": "2026-10-28",
+				"sha256": "10a593b567aa8fb15a9027a8e52dee8bad8d93b1a9a9c5f1239a1ae68f9cab08"
+			}
+		},
+		"relativeUrl": "skeleton.json"
+	},
+	{
+		"name": "spinner",
+		"title": "Spinner",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "A turning icon for the one control that is busy, decorative by default or announced with a label.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme"
+		],
+		"meta": {
+			"since": "0.2.0",
+			"group": "feedback",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "spinner",
+				"cli": "1.7.1",
+				"date": "2026-10-28",
+				"sha256": "bdd31b9901948d74eb3f303ea7b2f5ac4fc1708e7dfc893b4948c9f543a6f4ba"
+			}
+		},
+		"relativeUrl": "spinner.json"
+	},
+	{
+		"name": "status",
+		"title": "Status",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "An empty polite live region, present from the first render, whose text the app sets.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme"
+		],
+		"meta": {
+			"since": "0.3.0",
+			"group": "feedback"
+		},
+		"relativeUrl": "status.json"
+	},
+	{
+		"name": "error-summary",
+		"title": "Error summary",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "The box a failed submit puts at the top of a form: a heading, the form's message and a link to each invalid field, focused when it appears.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme",
+			"alert"
+		],
+		"meta": {
+			"since": "0.3.0",
+			"group": "feedback"
+		},
+		"relativeUrl": "error-summary.json"
+	},
+	{
+		"name": "label",
+		"title": "Label",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "A form label in sentence case, dimmed with its disabled control.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme"
+		],
+		"meta": {
+			"since": "0.2.0",
+			"group": "forms",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "label",
+				"cli": "1.7.1",
+				"date": "2026-10-28",
+				"sha256": "2518649ae021483bcdf1ce6db76010ddcbb08a78c1adcf0f72bc432c6371abc5"
+			}
+		},
+		"relativeUrl": "label.json"
+	},
+	{
+		"name": "field",
+		"title": "Field",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "A label, control, description and error, wired to the control by id, aria-describedby and aria-invalid.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme",
+			"label",
+			"separator"
+		],
+		"meta": {
+			"since": "0.2.0",
+			"group": "forms",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "field",
+				"cli": "1.7.1",
+				"date": "2026-10-28",
+				"sha256": "74258fe1f1f769b829b09581d11016507901704f05279e5b0d75205ea8256adc"
+			}
+		},
+		"relativeUrl": "field.json"
+	},
+	{
+		"name": "input",
+		"title": "Input",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "A 48 px text input on the raised ground with a visible border and a red one when invalid.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme"
+		],
+		"meta": {
+			"since": "0.2.0",
+			"group": "forms",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "input",
+				"cli": "1.7.1",
+				"date": "2026-10-28",
+				"sha256": "6488fa56b28dfe363577c9d858cb1645f8882962dbce519fcf523343df7f1ff4"
+			}
+		},
+		"relativeUrl": "input.json"
+	},
+	{
+		"name": "textarea",
+		"title": "Textarea",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "A multi-line text input that grows with its text where the browser can.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme"
+		],
+		"meta": {
+			"since": "0.2.0",
+			"group": "forms",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "textarea",
+				"cli": "1.7.1",
+				"date": "2026-10-28",
+				"sha256": "a4f6ad90806eacd9114389931b0a4f939fac0d96c56cb8ff267b2119a5cb40e6"
+			}
+		},
+		"relativeUrl": "textarea.json"
+	},
+	{
+		"name": "input-group",
+		"title": "Input group",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "An input or textarea with text or button addons, one focus ring around the group, and a password toggle.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme",
+			"button",
+			"input",
+			"textarea"
+		],
+		"meta": {
+			"since": "0.2.0",
+			"group": "forms",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "input-group",
+				"cli": "1.7.1",
+				"date": "2026-10-28",
+				"sha256": "219ae922d1c0bbf72cb9fc52b057b6cc1bd369b58f72c8f0580a4451574d8a34"
+			}
+		},
+		"relativeUrl": "input-group.json"
+	},
+	{
+		"name": "native-select",
+		"title": "Native select",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "The browser's own select, styled as an input, with a caret.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme"
+		],
+		"meta": {
+			"since": "0.2.0",
+			"group": "forms",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "native-select",
+				"cli": "1.7.1",
+				"date": "2026-10-28",
+				"sha256": "d2dc5b873f275cf341fa027a03f1e59882a902afccfa73de14749465e504ccbe"
+			}
+		},
+		"relativeUrl": "native-select.json"
+	},
+	{
+		"name": "checkbox",
+		"title": "Checkbox",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "A 24 px checkbox that tells checked and mixed by shape as well as colour.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme"
+		],
+		"meta": {
+			"since": "0.2.0",
+			"group": "forms",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "checkbox",
+				"cli": "1.7.1",
+				"date": "2026-10-28",
+				"sha256": "ea812220df060e41c2c02655e4c4d63d0a18dc56edc61333423e1bf48c9d92c9"
+			}
+		},
+		"relativeUrl": "checkbox.json"
+	},
+	{
+		"name": "radio-group",
+		"title": "Radio group",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "Round radios in a group with one stop, moved and chosen by the arrow keys.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme"
+		],
+		"meta": {
+			"since": "0.2.0",
+			"group": "forms",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "radio-group",
+				"cli": "1.7.1",
+				"date": "2026-10-28",
+				"sha256": "def4422105d63b776c7f8104c83ba85426e84a0b97a65856a56df56fb512cab7"
+			}
+		},
+		"relativeUrl": "radio-group.json"
+	},
+	{
+		"name": "switch",
+		"title": "Switch",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "An on and off setting: a blue track with a thumb that moves to the end.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme"
+		],
+		"meta": {
+			"since": "0.2.0",
+			"group": "forms",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "switch",
+				"cli": "1.7.1",
+				"date": "2026-10-28",
+				"sha256": "1668514c6a437712b065b450da9f7243d5074bf63722236fc34b1861794f19e9"
+			}
+		},
+		"relativeUrl": "switch.json"
+	},
+	{
+		"name": "input-otp",
+		"title": "Input OTP",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "A six-digit code in 48 px cells over one real input that accepts a pasted code.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme"
+		],
+		"meta": {
+			"since": "0.2.0",
+			"group": "forms",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "input-otp",
+				"cli": "1.7.1",
+				"date": "2026-10-28",
+				"sha256": "2c28b30a1aee5778c114092ff18626560b84dd1430dd826583f7459baf9e0b45"
+			}
+		},
+		"relativeUrl": "input-otp.json"
+	},
+	{
+		"name": "code-block",
+		"title": "Code block",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "Code, output or a diff on the muted inset, highlighted from the code tokens, with line numbers, a copy button and a header divided by the groove.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme",
+			"use-highlighted-code",
+			"button",
+			"status"
+		],
+		"meta": {
+			"since": "0.4.0",
+			"group": "code",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "code-block",
+				"cli": "1.7.1",
+				"date": "2026-10-31",
+				"sha256": "ac3d7e22ea0b93771761faa852ef44e0d9993af0adf801404d51db108cfeff62"
+			}
+		},
+		"relativeUrl": "code-block.json"
+	},
+	{
+		"name": "code-editor",
+		"title": "Code editor",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "A CodeMirror 6 editor themed from the tokens, with line numbers and Python, that prerenders as plain code and leaves Tab unbound.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme"
+		],
+		"meta": {
+			"since": "0.4.0",
+			"group": "code"
+		},
+		"relativeUrl": "code-editor.json"
+	},
+	{
+		"name": "highlighter",
+		"title": "Highlighter",
+		"type": "registry:lib",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "Shiki with the JavaScript engine and a theme whose every colour is a code token, for the server or the browser.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme"
+		],
+		"meta": {
+			"since": "0.4.0",
+			"group": "code",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "highlighter",
+				"cli": "1.7.1",
+				"date": "2026-10-31",
+				"sha256": "9072ce3941fbf079fa5ea85ef36982772a2e1a55e603024726e1ac679079335c"
+			}
+		},
+		"relativeUrl": "highlighter.json"
+	},
+	{
+		"name": "use-highlighted-code",
+		"title": "Use highlighted code",
+		"type": "registry:hook",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "A hook that highlights a changing string line by line as it grows.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme",
+			"highlighter"
+		],
+		"meta": {
+			"since": "0.4.0",
+			"group": "code",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "use-highlighted-code",
+				"cli": "1.7.1",
+				"date": "2026-10-31",
+				"sha256": "9a7f2378f1881afd300b4ead2bf9790ec7e5d63fb835186e44895127e1306cca"
+			}
+		},
+		"relativeUrl": "use-highlighted-code.json"
+	},
+	{
+		"name": "chart",
+		"title": "Chart",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "A figure for layerchart with a name and a table of its data, series coloured by token classes, and a tooltip on the elevation shadow.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme"
+		],
+		"meta": {
+			"since": "0.4.0",
+			"group": "data",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "chart",
+				"cli": "1.7.1",
+				"date": "2026-10-31",
+				"sha256": "dccff6d1f478d5469fdd93e3ddca5eb8c42732ae1ca494da79028c5cdc422d51"
+			}
+		},
+		"relativeUrl": "chart.json"
+	},
+	{
+		"name": "meter",
+		"title": "Meter",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "A measurement within a known range, as the native meter on the muted track with a primary fill, its numbers written beside it.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme"
+		],
+		"meta": {
+			"since": "0.4.0",
+			"group": "data"
+		},
+		"relativeUrl": "meter.json"
+	},
+	{
+		"name": "dropdown-menu",
+		"title": "Dropdown menu",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "A menu opened from a button, on the elevation shadow, moved by the arrow keys, with check and radio items and a shortcut written in words.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme"
+		],
+		"meta": {
+			"since": "0.5.0",
+			"group": "navigation",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "dropdown-menu",
+				"cli": "1.7.1",
+				"date": "2026-11-01",
+				"sha256": "b49ccd52aa8afaaf6628947b4b59321966d12770d4c27a7c75d0087bb467ca6a"
+			}
+		},
+		"relativeUrl": "dropdown-menu.json"
+	},
+	{
+		"name": "sheet",
+		"title": "Sheet",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "A modal panel fixed to one edge of the screen, named by its title, behind the scrim, that returns focus when it closes.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme",
+			"button"
+		],
+		"meta": {
+			"since": "0.5.0",
+			"group": "navigation",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "sheet",
+				"cli": "1.7.1",
+				"date": "2026-11-01",
+				"sha256": "f40ceed7ea0fd3c5f0f719fcd0893c7aa54916e3a11fe7e599ac49e2dc7dbb06"
+			}
+		},
+		"relativeUrl": "sheet.json"
+	},
+	{
+		"name": "dialog",
+		"title": "Dialog",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "A modal window named by its title, behind the scrim, for a task that must finish before the page goes on.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme",
+			"button"
+		],
+		"meta": {
+			"since": "0.5.0",
+			"group": "navigation",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "dialog",
+				"cli": "1.7.1",
+				"date": "2026-11-01",
+				"sha256": "e187867550d50216118f7dc711bb1920daeddb54f4f73af9bc081142dbe9803a"
+			}
+		},
+		"relativeUrl": "dialog.json"
+	},
+	{
+		"name": "breadcrumb",
+		"title": "Breadcrumb",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "The path to the current page as a list of links, the current page marked and not a link.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme"
+		],
+		"meta": {
+			"since": "0.5.0",
+			"group": "navigation",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "breadcrumb",
+				"cli": "1.7.1",
+				"date": "2026-11-01",
+				"sha256": "28861bae3610cabae2215a953f1e236792dbb2baa04ca2d35655c4f402741ac8"
+			}
+		},
+		"relativeUrl": "breadcrumb.json"
+	},
+	{
+		"name": "sidebar",
+		"title": "Sidebar",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "A navigation landmark on the paper ground, set apart by a vertical groove, that collapses off-canvas or to icons and becomes a sheet on a phone.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme",
+			"is-mobile",
+			"sheet",
+			"input",
+			"tooltip",
+			"skeleton",
+			"separator",
+			"button",
+			"kbd"
+		],
+		"meta": {
+			"since": "0.5.0",
+			"group": "navigation",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "sidebar",
+				"cli": "1.7.1",
+				"date": "2026-11-01",
+				"sha256": "dc3cee148f49114d285fd01659c8bbb72a297b161e6526f20cdeaa02e2d92e2a"
+			}
+		},
+		"relativeUrl": "sidebar.json"
+	},
+	{
+		"name": "is-mobile",
+		"title": "Is mobile",
+		"type": "registry:hook",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "A media-query store that is true below 768 px and false on the server.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme"
+		],
+		"meta": {
+			"since": "0.5.0",
+			"group": "navigation",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "is-mobile",
+				"cli": "1.7.1",
+				"date": "2026-11-01",
+				"sha256": "f4a286715fe4b3a1610b94e75565422e0a8cae30d7d05463b7c5c3d909f677b5"
+			}
+		},
+		"relativeUrl": "is-mobile.json"
+	},
+	{
+		"name": "message-log",
+		"title": "Message log",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "A scroll box named \"Messages\" holding a named log, that follows new content until the reader scrolls away, with a button back to the end.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme",
+			"button"
+		],
+		"meta": {
+			"since": "0.5.0",
+			"group": "chat"
+		},
+		"relativeUrl": "message-log.json"
+	},
+	{
+		"name": "message",
+		"title": "Message",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "One turn of a conversation: a heading that says who, the content as full-width prose or a bubble on the muted inset, and a footer.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme"
+		],
+		"meta": {
+			"since": "0.5.0",
+			"group": "chat",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "message",
+				"cli": "1.7.1",
+				"date": "2026-11-01",
+				"sha256": "f1a6680127b3506f22fd5ca973aac55c1f59b019749aea6abdedf091786b3e0d"
+			}
+		},
+		"relativeUrl": "message.json"
+	},
+	{
+		"name": "marker",
+		"title": "Marker",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "A line in a conversation that is not a turn: a status, a divider, a note.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme"
+		],
+		"meta": {
+			"since": "0.5.0",
+			"group": "chat",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "marker",
+				"cli": "1.7.1",
+				"date": "2026-11-01",
+				"sha256": "a902b81be24f183f68b9bc260b9991c98794586ac5a2f2543be32673650e0b3e"
+			}
+		},
+		"relativeUrl": "marker.json"
+	},
+	{
+		"name": "composer",
+		"title": "Composer",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "The form a person writes a message in: a textarea that grows, Enter to send, a send button that becomes Stop while a reply runs, and never a disabled control.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme",
+			"field",
+			"input-group",
+			"button",
+			"kbd",
+			"status",
+			"spinner"
+		],
+		"meta": {
+			"since": "0.5.0",
+			"group": "chat"
+		},
+		"relativeUrl": "composer.json"
+	},
+	{
+		"name": "hero",
+		"title": "Hero",
+		"type": "registry:block",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "A page's opening: an optional eyebrow, the one heading, a sentence, one call to action, and a feature grid divided by grooves.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme",
+			"button"
+		],
+		"meta": {
+			"since": "0.3.0",
+			"group": "blocks"
+		},
+		"relativeUrl": "hero.json"
+	},
+	{
+		"name": "sign-in",
+		"title": "Sign in",
+		"type": "registry:block",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "Email and password in one step, with an error summary that takes focus, a password you can show, and a button that goes busy.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme",
+			"card",
+			"field",
+			"input",
+			"input-group",
+			"button",
+			"error-summary",
+			"status"
+		],
+		"meta": {
+			"since": "0.3.0",
+			"group": "blocks"
+		},
+		"relativeUrl": "sign-in.json"
+	},
+	{
+		"name": "sign-up",
+		"title": "Sign up",
+		"type": "registry:block",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "Email and a password with its rules written first, then a six-digit code on its own step, with resend.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme",
+			"card",
+			"field",
+			"input",
+			"input-group",
+			"input-otp",
+			"button",
+			"error-summary",
+			"status"
+		],
+		"meta": {
+			"since": "0.3.0",
+			"group": "blocks"
+		},
+		"relativeUrl": "sign-up.json"
+	},
+	{
+		"name": "page-states",
+		"title": "Page states",
+		"type": "registry:block",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "Empty, loading, error and not found as one family, with an error page for SvelteKit's error route.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme",
+			"empty",
+			"button",
+			"skeleton",
+			"status"
+		],
+		"meta": {
+			"since": "0.3.0",
+			"group": "blocks"
+		},
+		"relativeUrl": "page-states.json"
+	},
+	{
+		"name": "settings",
+		"title": "Settings",
+		"type": "registry:block",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "One column of sections divided by grooves, saved by one button, with an inline Saved message and a confirmed delete.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme",
+			"field",
+			"input",
+			"native-select",
+			"checkbox",
+			"radio-group",
+			"button",
+			"alert-dialog",
+			"error-summary",
+			"status"
+		],
+		"meta": {
+			"since": "0.3.0",
+			"group": "blocks"
+		},
+		"relativeUrl": "settings.json"
+	},
+	{
+		"name": "app-shell",
+		"title": "App shell",
+		"type": "registry:block",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "The frame every page sits in: a skip link, a header with the lockup's one entrance and a theme toggle, an optional sidebar, the main area, and a footer that states the build.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme",
+			"four-dot",
+			"theme",
+			"button",
+			"sheet",
+			"sidebar",
+			"breadcrumb",
+			"dropdown-menu",
+			"avatar",
+			"collapsible"
+		],
+		"meta": {
+			"since": "0.6.0",
+			"group": "blocks"
+		},
+		"relativeUrl": "app-shell.json"
+	},
+	{
+		"name": "chat",
+		"title": "Chat",
+		"type": "registry:block",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "A conversation: a log that follows new replies, turns with code, a composer that sends and stops, and the words a screen reader hears.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme",
+			"message-log",
+			"message",
+			"marker",
+			"composer",
+			"code-block",
+			"empty",
+			"alert",
+			"button"
+		],
+		"meta": {
+			"since": "0.6.0",
+			"group": "blocks"
+		},
+		"relativeUrl": "chat.json"
+	}
+]

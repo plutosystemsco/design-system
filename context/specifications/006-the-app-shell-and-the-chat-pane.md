@@ -1,6 +1,6 @@
 # 006 — The app shell and the chat pane
 
-- **Status:** draft, 2026-11-01, amended the same day after its specification review ([`../reviews/006-the-app-shell-and-the-chat-pane-spec-2026-11-01.md`](../reviews/006-the-app-shell-and-the-chat-pane-spec-2026-11-01.md), 18 findings, all fixed here), fit to build once `005` is built
+- **Status:** **built**, 2026-11-01, in the working tree over `616b8a0` (`v0.5.0`); amended the same day after its specification review ([`../reviews/006-the-app-shell-and-the-chat-pane-spec-2026-11-01.md`](../reviews/006-the-app-shell-and-the-chat-pane-spec-2026-11-01.md), 18 findings, all fixed here), fit to build once `005` is built
 - **Date:** 2026-11-01
 - **Owner:** Clay Gendron (written by an agent, Claude, the orchestrating session, as design lead under the owner's delegation of 2026-10-27)
 - **Kind:** two registry blocks (`app-shell`, `chat`); the orbit-assemble entrance as a prop of `four-dot`; one token and three additions to `pluto-theme`; the preview site's own footer and entrance; tests; the 0.6.0 release
@@ -111,7 +111,7 @@ Each decision gives its reason. A reviewer checks the reason as much as the rule
 - **The one line the item page says about moving the files** (decision 2), written here: "Move `+layout.svelte` and `+layout.server.ts` to `src/routes/`, and first replace `LINKS` and the sidebar's hrefs with your own routes: an anchor such as `#overview` in a root layout fails the prerender of every page that has no such id" (review finding 16, EXECUTED: `prerender_missing_id`).
 - **Landmarks:** `banner` (the `header`), `navigation` ×1 or ×2 (the header's "Primary" without a sidebar; the sidebar's "Main" with one: with `SIDEBAR` set the header renders no primary nav, since the navigation lives in the sidebar), `main` ×1, `contentinfo` ×1. The shell renders no `h1`; the page does (patterns memo §1.2).
 - **`ThemeScript`** (`005` decision 6) is rendered by the layout, in `<svelte:head>`, so the theme is right before paint on every page of the app. The preview's own `ThemeScript` lives in its `(site)` and `(view)` layouts, not the root, so a `(shell)` view holds exactly one (review finding 17; `005` decision 16 amended with this specification).
-- **Not sticky by default.** A `STICKY` constant, **for the shell without a sidebar**, adds `sticky top-0 z-40 bg-background` to the header, and the item page gives the one line the app adds to its `app.css`: `html { scroll-padding-top: 4rem }` (SC 2.4.11, C43; the memo §3.2). *Why not in the block:* `scroll-padding-top` lives on the scrolling element, which no component reaches without a `<style>` block (`001` decision 25). *Why not with a sidebar:* `005`'s sidebar is `sticky top-0 h-svh`; under a sticky header its top 64 px would be covered (review finding 17). `z-40` sits under every overlay's `z-50`.
+- **Not sticky by default, except beside a sidebar.** With `SIDEBAR` set, the header is always `sticky top-0 z-20 bg-background`, and the sidebar is offset under it with `top-16 pb-16` through its `class` prop (its box keeps `h-svh`; the last 64 px are padding below the viewport, so the account row sits at the viewport's bottom). *Why:* `005`'s sidebar is sticky; beside a header that scrolls away its foot was cut by the header's height at load, and a sticky sidebar next to a scrolling header is two scroll behaviours on one screen (the build's checkpoint, decisions.md). Without a sidebar, a `STICKY` constant adds `sticky top-0 z-40 bg-background` to the header, and the item page gives the one line the app adds to its `app.css`: `html { scroll-padding-top: 4rem }` (SC 2.4.11, C43; the memo §3.2). *Why not in the block:* `scroll-padding-top` lives on the scrolling element, which no component reaches without a `<style>` block (`001` decision 25). *Why not with a sidebar:* `005`'s sidebar is `sticky top-0 h-svh`; under a sticky header its top 64 px would be covered (review finding 17). `z-40` sits under every overlay's `z-50`.
 
 ### 7. The header
 
@@ -346,4 +346,67 @@ Each is a count, checked by the command named. Criteria 1 to 23 make `006` *buil
 
 ## Landing notes
 
-*Pending the build.*
+- **Built:** 2026-11-01, in the working tree over `616b8a0` (`005`, `v0.5.0`); committed and tagged by the owner. The change review is [`../reviews/006-the-app-shell-and-the-chat-pane-pr-2026-11-01.md`](../reviews/006-the-app-shell-and-the-chat-pane-pr-2026-11-01.md): "Does not land yet" on 3 Medium and 5 Low findings; all 8 dispositioned, 7 fixed in the tree and 1 (the Landing notes) this. The design calls are in `decisions.md` ("The design calls for `006`", "After the `006` spec review", "After the `006` build's checkpoint", "After the `006` build's run 2", "After the `006` change review").
+- **Done:** *pending.* Criterion 24 waits on `wasi-python-dev`.
+
+**What the orchestrating session saw, under Bun 1.3.14, 2026-11-01** (EXECUTED by the builder after the fixes; the reviewer re-ran the suites before the fixes at the same counts less the tests the fixes added):
+
+| Check | Result |
+|---|---|
+| `bun run check` | 1642 files, 0 errors, 0 warnings |
+| `bun run lint`, `bun scripts/lint-literals.ts` | exit 0; 0 literals in 300 item files |
+| `bun run build:tokens`, twice | the second run changes 0 files |
+| `bun run build:registry`, `bun run build` | 63 + 63 byte-identical registry files; 91 prerendered pages (63 site, 28 views); `build/index.html` holds `616b8a0` and its commit date |
+| `bun run test` | unit 493 pass (10 files); browser 1274 passed, 0 failed (11 files × 2 projects); smoke 90 pass (6 files; `blocks-add` 22 of 22 after the fixes) |
+
+**Criteria, as counted at landing:**
+
+| # | Count |
+|---|---|
+| 1 | frozen install no changes; 32 packages |
+| 2 | 0 errors, 0 warnings; lint exit 0 |
+| 3 | second `build:tokens` changes 0 files; `mark.orbit` 0.5 and the three numbers (0.55, 0.15, 0.1; 495 ms, delays 135/225/315/405); the reduce block's 3 selectors |
+| 4 | 62 items, types 1, 3, 2, 2, 47, 7; 43 of 43 dependency names; 2 of 2 `since` `0.6.0`; 42 `meta.stock` |
+| 5 | 63 + 63 byte-identical; 62 of 62 parse; 0 `#lib`; 0 rooted targets |
+| 6 | 91 pages; the footer with this repository's commit and date |
+| 7 | 200 with 62 items |
+| 8 | 62 of 62 |
+| 9 | 300 files, 0 violations; 71 of 71 bad, 0 of 48 good; 30 of 30 block files clean |
+| 10 | checks 1 to 11 at 7 blocks, 30 block files (10 pages + **20** components; decision 3's 19 was a slip) |
+| 11 | 440 scans, 0 violations |
+| 12 | 182 of 182 |
+| 13 | 4 of 4 animations, 495 ms, the last ending at 900.0 ms; 0 under reduce with 4 dots composed at load; 0 replays after a client-side navigation |
+| 14 | 65 catalogue stops; 70 view stops over the 10 new views (153 over 28), rings unclipped; **62** toolbar stops over 7 pages (decision 14's 58 left out Open alone and the frame); 8 behaviours |
+| 15 | A1 to A7 in 2 of 2 themes, plus A1b (the sticky header and the sidebar under it) and A1c (the caret) |
+| 16 | C1 to C5 in 2 of 2 themes, plus C10 (the log's height holds when "Latest reply" appears) |
+| 17 | C6 12 of 12 at 320; C7 0 loops; C8 0 stops under 24 × 24; C9 rings unclipped |
+| 18 | 7 pages: 27 state buttons, 21 theme follows, 30 code summaries |
+| 19 | `blocks-add` 22 of 22 (231 files); the older five files pass (one `dev-loop` watcher flake in one full run, green alone and in the other runs) |
+| 20 | 10, 11 and 6 files; exit 0 |
+| 21 | `0.6.0`; the changelog names app-shell, chat, pluto-theme (additive) and four-dot (changed, not an interface change) |
+| 22 | notes 1 and 3 |
+| 23 | the site's lockup runs the entrance once per load; its footer shows the commit, in 2 of 2 themes |
+| 24 | open: `wasi-python-dev` |
+
+**Notes:**
+
+1. **The checkpoint after build step 3.** The builder stopped with the token, the theme additions, the entrance prop, the site's adoption and the shell built, 1148 browser tests green, and 60 screenshots. The orchestrator's reading: at 300 ms the blue and red dots are mid-dock and the amber and green not yet begun; at 900 ms the mark is composed; under reduce the composed mark at load; the header's groove reads the sidebar memo's seam pixels turned to the bottom edge; the footer at 360 wraps to one column. One fault: with a sidebar, the account row at the sidebar's foot was cut by the header's height at load. The call (decisions.md): beside a sidebar the header is sticky, and the sidebar sits under it with `md:top-16 md:pb-16`.
+2. **The change review's findings applied.** `data-shell` attributes; the fence splitter rewritten with its unit file; no "unknown" commit; `data-[state=open]` for the caret, here and in two `005` files; A1b's assertion; three lines of copy; the "Latest reply" row at a held height.
+3. **The development walk.** 91 pages on `vite dev` in both themes, every page warmed first, a fresh page per load: 0 of 182 loads with a page error or a console error or warning.
+4. **Provenance.** No stock file: the 14 block files are composed from this registry's items. `four-dot` keeps `since 0.1.0`; `pluto-theme` is additive.
+5. **Where the build bends a decision, and who allowed it.** Each the least that works; all seen by the review and judged sound. The design calls are in `decisions.md`; the rest, by the builder:
+   1. *The validator caps the entrance at the budget (≤ 1) and the test pins the sum at 1*; *`mark-entrance`'s nested rules target child dots*; *the header's box is 65 px with its hairline*, A2 reads the row.
+   2. *With a sidebar the header shows no account menu*: the account lives in the sidebar's footer and opens the same menu through a `trigger` snippet; *the Preferences group is closed by default*; *the account trigger is named by `sr-only` text* (axe's label-content-name-mismatch); *the nav sheet closes in `afterNavigate`*.
+   3. *The shipped `sourceHref` is this registry's repository, with a comment*; *A3's doc row is asserted on the signed-in view* (the shipped layout passes none).
+   4. *The three shell state views share one preview component*; *`signature()` ignores aria-hidden text*; *the footer's source link wraps at 320 px*; *under reduce, `getAnimations()` holds three 0.01 ms `max-width` transitions from `001`'s catch-all, so the test counts `pluto-mark-dock` animations*.
+   5. *A sticky sidebar holds only while the page is taller than it*: the example page is shorter, so A1b lengthens `main` before scrolling.
+   6. *The chat's parts are `data-chat` attributes*; *the message log's wrapper is sized through `*:min-h-0 *:flex-1` on the pane's row*; *the stub's fence is three lines*; *the streaming view's half-written reply is prose* (an open fence would add two stops); *the chat state views carry a `<title>`* (axe `document-title`).
+   7. *The viewer's theme shim keeps the real `MediaQueryList`* (its spread dropped `addEventListener`, which the shell view's theme store needs); *exact state labels* ("Sidebar" is a prefix of "Sidebar as icons").
+   8. *The smoke's `landed()` learns hooks and libraries; assertion 9 reads the merged `app.css` through a CSS helper*; *the unit test for the splitter extracts the module script from the `.svelte` file*, since bun cannot load one and the script is pure.
+   9. *The sticky header beside a sidebar; the sidebar under it; `data-shell`; no "unknown"; the held "Latest reply" row.* The design lead.
+6. **For `007` and the app.**
+   - The shell is a layout the app moves to its root by hand; its constants sit at the top; the `vite.config.ts` lines are guarded and a build without git shows no commit and no built row.
+   - With a sidebar the header is sticky and the sidebar sits under it; an app with a sticky header and no sidebar adds the `scroll-padding-top` line to its `app.css`.
+   - The chat pane takes turns and a status and gives back `onsend`, `onstop`, `onnew`, `onretry`; fenced code becomes `code-block` at `sm`; the splitter is exported as `splitFences`.
+   - bits-ui writes `data-state`, never `data-open`; a variant on the latter is dead.
+   - The reduce block now holds three rules; an app that re-adds `pluto-theme` gets the third.

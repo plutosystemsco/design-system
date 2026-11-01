@@ -6,7 +6,7 @@ import { expect, test, type Page } from "@playwright/test";
 import { BLOCK_VIEWS, viewPath } from "../../src/lib/preview/blocks.ts";
 import { readFileSync } from "node:fs";
 import { toAppFiles } from "../../src/lib/server/built-item.ts";
-import { BLOCKS, open } from "./pages.ts";
+import { BLOCKS, open, VIEW_READY } from "./pages.ts";
 
 /** Decision 5's titles. */
 const TITLES: Record<string, string> = {
@@ -15,6 +15,8 @@ const TITLES: Record<string, string> = {
   "sign-up": "Sign up",
   "page-states": "Page states",
   settings: "Settings",
+  "app-shell": "App shell",
+  chat: "Chat",
 };
 
 /** Where each block's files land in an app (decision 17), in the item's order. */
@@ -45,6 +47,24 @@ const APP_PATHS: Record<string, string[]> = {
     "src/lib/components/settings-form.svelte",
     "src/lib/components/settings-delete.svelte",
   ],
+  "app-shell": [
+    "src/routes/app-shell/+layout.svelte",
+    "src/routes/app-shell/+layout.server.ts",
+    "src/routes/app-shell/+page.svelte",
+    "src/lib/components/app-shell-skip-link.svelte",
+    "src/lib/components/app-shell-header.svelte",
+    "src/lib/components/app-shell-nav.svelte",
+    "src/lib/components/app-shell-user-menu.svelte",
+    "src/lib/components/app-shell-sidebar.svelte",
+    "src/lib/components/app-shell-footer.svelte",
+  ],
+  chat: [
+    "src/routes/chat/+page.svelte",
+    "src/lib/components/chat-pane.svelte",
+    "src/lib/components/chat-turn.svelte",
+    "src/lib/components/chat-text.svelte",
+    "src/lib/components/chat-types.ts",
+  ],
 };
 
 const frame = (page: Page) => page.locator('[data-testid="viewer"] iframe');
@@ -53,7 +73,7 @@ async function openBlock(page: Page, block: string): Promise<void> {
   await open(page, `/items/${block}/`);
   await page
     .frameLocator('[data-testid="viewer"] iframe')
-    .locator("main[data-view-ready]")
+    .locator(VIEW_READY)
     .waitFor();
 }
 
@@ -73,14 +93,15 @@ const frameIsDark = (page: Page) =>
 const parentIsDark = (page: Page) =>
   page.evaluate(() => document.documentElement.classList.contains("dark"));
 
-test("the tables cover the 5 blocks: 16 files, 17 state switches", () => {
+// 006 decision 14: 7 blocks, 30 files, 17 + 4 + 6 = 27 state switches.
+test("the tables cover the 7 blocks: 30 files, 27 state switches", () => {
   expect(Object.keys(APP_PATHS)).toEqual(BLOCKS);
-  expect(Object.values(APP_PATHS).flat()).toHaveLength(16);
+  expect(Object.values(APP_PATHS).flat()).toHaveLength(30);
   expect(
     BLOCKS.map((b) => BLOCK_VIEWS[b]!.length)
       .filter((n) => n > 1)
       .reduce((a, b) => a + b, 0),
-  ).toBe(17);
+  ).toBe(27);
 });
 
 for (const block of BLOCKS) {
@@ -144,11 +165,14 @@ for (const block of BLOCKS) {
         await openBlock(page, block);
         const group = page.getByRole("group", { name: "State" });
         for (const view of [...views.slice(1), views[0]!]) {
-          await group.getByRole("button", { name: view.label }).click();
+          // exact: "Sidebar" is a prefix of "Sidebar as icons" (006).
+          const button = group.getByRole("button", {
+            name: view.label,
+            exact: true,
+          });
+          await button.click();
           const path = viewPath(block, view.path);
-          await expect(
-            group.getByRole("button", { name: view.label }),
-          ).toHaveAttribute("aria-pressed", "true");
+          await expect(button).toHaveAttribute("aria-pressed", "true");
           await expect(frame(page)).toHaveAttribute("src", path);
           await expect(page.getByTestId("open-alone")).toHaveAttribute(
             "href",
@@ -168,11 +192,16 @@ for (const block of BLOCKS) {
         if (window === window.top) return;
         const query = "(prefers-color-scheme: dark)";
         const dark = !window.matchMedia(query).matches;
+        // The real list, with `matches` inverted: a spread copy would drop
+        // the prototype's addEventListener, which the shell view's theme
+        // store needs (006).
         const real = window.matchMedia.bind(window);
-        window.matchMedia = (q: string) =>
-          q === query
-            ? ({ ...real(q), matches: dark, media: q } as MediaQueryList)
-            : real(q);
+        window.matchMedia = (q: string) => {
+          const list = real(q);
+          if (q === query)
+            Object.defineProperty(list, "matches", { get: () => dark });
+          return list;
+        };
         Object.defineProperty(window, "localStorage", {
           get() {
             throw new Error("storage blocked in the frame");

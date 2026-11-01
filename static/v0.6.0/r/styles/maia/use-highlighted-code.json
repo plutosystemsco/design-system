@@ -1,0 +1,31 @@
+{
+	"$schema": "https://shadcn-svelte.com/schema/registry-item.json",
+	"name": "use-highlighted-code",
+	"title": "Use highlighted code",
+	"type": "registry:hook",
+	"author": "Pluto Systems <https://plutosystems.co>",
+	"description": "A hook that highlights a changing string line by line as it grows.",
+	"registryDependencies": [
+		"utils",
+		"pluto-theme",
+		"highlighter"
+	],
+	"meta": {
+		"since": "0.4.0",
+		"group": "code",
+		"stock": {
+			"registry": "https://shadcn-svelte.com/registry/styles/maia",
+			"item": "use-highlighted-code",
+			"cli": "1.7.1",
+			"date": "2026-10-31",
+			"sha256": "9a7f2378f1881afd300b4ead2bf9790ec7e5d63fb835186e44895127e1306cca"
+		}
+	},
+	"files": [
+		{
+			"content": "import {\n  loadHighlighter,\n  type Highlighter,\n  type HighlightedLine,\n} from \"$LIB$/highlighter\";\n\n/** The grammar state a highlight run ends in, as the highlighter returns it. */\ntype GrammarState = ReturnType<Highlighter[\"highlight\"]>[\"state\"];\n\n/**\n * Highlights `code` in `language`. `current` holds one entry per line: a plain\n * string until the highlighter loads, then the line's tokens, each\n * `{ content, class }`. Pass each one to the `code` prop of a `CodeBlock.Line`.\n *\n * ```svelte\n * <script lang=\"ts\">\n *   const lines = useHighlightedCode(() => code, () => \"json\");\n * </script>\n *\n * {#each lines.current as line, index (index)}\n *   <CodeBlock.Line code={line} />\n * {/each}\n * ```\n */\nexport function useHighlightedCode(\n  value: () => string,\n  language: () => string,\n) {\n  let loaded = $state.raw<{\n    language: string;\n    highlighter: Highlighter | null;\n  } | null>(null);\n\n  $effect(() => {\n    const lang = language();\n    let cancelled = false;\n\n    loadHighlighter(lang)\n      .then((next) => {\n        if (!cancelled) {\n          loaded = { language: lang, highlighter: next };\n        }\n      })\n      .catch(() => {});\n\n    return () => {\n      cancelled = true;\n    };\n  });\n\n  // The complete lines, highlighted. While the code streams, only the new\n  // lines are tokenized, starting from the grammar state of the last one.\n  let done: {\n    highlighter: Highlighter | null;\n    text: string;\n    lines: HighlightedLine[];\n    state?: GrammarState;\n  } = { highlighter: null, text: \"\", lines: [] };\n\n  const lines = $derived.by((): HighlightedLine[] => {\n    const raw = value();\n    // A trailing newline would render as an extra empty line.\n    const code = raw.endsWith(\"\\n\") ? raw.slice(0, -1) : raw;\n    const lang = language();\n    const highlighter = loaded?.language === lang ? loaded.highlighter : null;\n\n    if (!highlighter) {\n      return code.split(\"\\n\");\n    }\n\n    let next = done;\n\n    if (next.highlighter !== highlighter || !code.startsWith(next.text)) {\n      next = { highlighter, text: \"\", lines: [] };\n    }\n\n    const end = code.lastIndexOf(\"\\n\") + 1;\n\n    if (end > next.text.length) {\n      const result = highlighter.highlight(\n        code.slice(next.text.length, end - 1),\n        next.state,\n      );\n\n      next = {\n        highlighter,\n        text: code.slice(0, end),\n        lines: [...next.lines, ...result.lines],\n        state: result.state,\n      };\n    }\n\n    done = next;\n\n    // The last line is still being written, so it is tokenized every time.\n    const tail = code.slice(end);\n\n    return [...next.lines, highlighter.highlight(tail, next.state).lines[0]];\n  });\n\n  return {\n    get current() {\n      return lines;\n    },\n  };\n}\n",
+			"type": "registry:hook",
+			"target": "use-highlighted-code.svelte.ts"
+		}
+	]
+}

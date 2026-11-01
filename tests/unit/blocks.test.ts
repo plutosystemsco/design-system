@@ -1,7 +1,8 @@
 /**
  * 003 decision 20, unit file 5: the blocks, statically, over registry.json,
  * the block and error-summary sources, and a registry built into a temporary
- * folder.
+ * folder. 006 decision 14 widens it to 7 blocks and 30 files, with page files
+ * that may be layouts or server loads, and components that may be .ts.
  */
 import { afterAll, beforeAll, describe, expect, test } from "bun:test";
 import {
@@ -27,7 +28,15 @@ type Item = {
 
 const registry = JSON.parse(readFileSync("registry.json", "utf8"));
 const items = registry.items as Item[];
-const BLOCKS = ["hero", "sign-in", "sign-up", "page-states", "settings"];
+const BLOCKS = [
+  "hero",
+  "sign-in",
+  "sign-up",
+  "page-states",
+  "settings",
+  "app-shell",
+  "chat",
+];
 const blocks = items.filter((i) => i.type === "registry:block");
 const blockFiles = blocks.flatMap((b) =>
   b.files.map((f) => ({ block: b.name, ...f })),
@@ -49,9 +58,9 @@ afterAll(() => {
   if (out) rmSync(out, { recursive: true, force: true });
 });
 
-test("the registry holds the 5 blocks, in order, with 16 files", () => {
+test("the registry holds the 7 blocks, in order, with 30 files", () => {
   expect(blocks.map((b) => b.name)).toEqual(BLOCKS);
-  expect(blockFiles).toHaveLength(16);
+  expect(blockFiles).toHaveLength(30);
 });
 
 describe("1. dependencies suffice", () => {
@@ -61,6 +70,8 @@ describe("1. dependencies suffice", () => {
       const item = blocks.find((b) => b.name === name)!;
       const files = built(name).files;
       const own = new Set(files.map((f) => f.target));
+      // A .ts component (chat-types) is imported without its extension.
+      const shipped = (c: string) => own.has(c) || own.has(`${c}.ts`);
       const missing: string[] = [];
       for (const file of files) {
         const text = file.content ?? "";
@@ -68,7 +79,7 @@ describe("1. dependencies suffice", () => {
           if (!item.registryDependencies.includes(ui!))
             missing.push(`${file.target}: $UI$/${ui}`);
         for (const [, c] of text.matchAll(/\$COMPONENTS\$\/([^"'`\s]+)/g))
-          if (!own.has(c!)) missing.push(`${file.target}: $COMPONENTS$/${c}`);
+          if (!shipped(c!)) missing.push(`${file.target}: $COMPONENTS$/${c}`);
       }
       expect(missing).toEqual([]);
     },
@@ -104,7 +115,7 @@ describe("2. no block uses another", () => {
   });
 });
 
-test("3. no unshipped file: 0 <img and 0 asset paths in the 16 block files", () => {
+test("3. no unshipped file: 0 <img and 0 asset paths in the 30 block files", () => {
   const found: string[] = [];
   const asset =
     /(["'`])[^"'`\n]*\.(svg|png|jpg|jpeg|webp|gif|avif|ico|woff|woff2)\1/gi;
@@ -116,7 +127,7 @@ test("3. no unshipped file: 0 <img and 0 asset paths in the 16 block files", () 
   expect(found).toEqual([]);
 });
 
-test('4. the link rule: every quoted string beginning with / in the 16 block files is "/"', () => {
+test('4. the link rule: every quoted string beginning with / in the 30 block files is "/"', () => {
   const found: string[] = [];
   for (const f of blockFiles)
     for (const m of read(f.path).matchAll(/(["'`])(\/[^"'`\n]*)\1/g))
@@ -128,20 +139,23 @@ describe("5. the naming rule", () => {
   const components = blockFiles.filter((f) => f.type === "registry:component");
   const pages = blockFiles.filter((f) => f.type === "registry:page");
 
-  test("10 of 10 component files are src/lib/registry/components/<block>-*.svelte", () => {
-    expect(components).toHaveLength(10);
+  // 006 decision 3 wrote 19 (10 + 9); the shell's 6 and the chat's 4 make 20.
+  test("20 of 20 component files are src/lib/registry/components/<block>-*.(svelte|ts)", () => {
+    expect(components).toHaveLength(20);
     for (const f of components)
       expect(f.path).toMatch(
-        new RegExp(`^src/lib/registry/components/${f.block}-[a-z-]+\\.svelte$`),
+        new RegExp(
+          `^src/lib/registry/components/${f.block}-[a-z-]+\\.(svelte|ts)$`,
+        ),
       );
   });
 
-  test("6 of 6 page files are src/lib/registry/blocks/<block>/<file>", () => {
-    expect(pages).toHaveLength(6);
+  test("10 of 10 page files are src/lib/registry/blocks/<block>/+(page|error|layout)(.server)?.(svelte|ts)", () => {
+    expect(pages).toHaveLength(10);
     for (const f of pages)
       expect(f.path).toMatch(
         new RegExp(
-          `^src/lib/registry/blocks/${f.block}/\\+(page|error)\\.svelte$`,
+          `^src/lib/registry/blocks/${f.block}/\\+(page|error|layout)(\\.server)?\\.(svelte|ts)$`,
         ),
       );
   });
@@ -152,20 +166,20 @@ describe("5. the naming rule", () => {
   });
 });
 
-test("6. the lint: 16 of 16 block files with 0 violations", () => {
+test("6. the lint: 30 of 30 block files with 0 violations", () => {
   const files = blockFiles.map((f) => f.path);
-  expect(files).toHaveLength(16);
+  expect(files).toHaveLength(30);
   expect(lintFiles(files, loadRules())).toEqual([]);
 });
 
-test("7. the voice: 0 banned words in the 16 block files and the 2 error-summary files", () => {
+test("7. the voice: 0 banned words in the 30 block files and the 2 error-summary files", () => {
   const banned =
     /\b(sorry|oops|whoops|something went wrong|on our side|signed in as|meets wcag)\b/i;
   const files = [
     ...blockFiles.map((f) => f.path),
     ...items.find((i) => i.name === "error-summary")!.files.map((f) => f.path),
   ];
-  expect(files).toHaveLength(18);
+  expect(files).toHaveLength(32);
   expect(files.filter((f) => banned.test(read(f)))).toEqual([]);
 });
 
@@ -173,26 +187,29 @@ describe("8. the views", () => {
   const views = Object.entries(BLOCK_VIEWS).flatMap(([block, list]) =>
     list.map((v) => ({ block, ...v })),
   );
+  // 006 decision 12: the shell's views live in the (shell) group, since the
+  // shell renders its own main; every other view in (view).
+  const GROUP: Record<string, string> = { "app-shell": "(shell)" };
   const routeFile = (block: string, state: string) =>
     path.join(
-      "src/routes/(view)/view",
+      `src/routes/${GROUP[block] ?? "(view)"}/view`,
       block,
       ...(state ? [state] : []),
       "+page.svelte",
     );
 
-  test("BLOCK_VIEWS lists the 5 blocks in registry order, with 18 views", () => {
+  test("BLOCK_VIEWS lists the 7 blocks in registry order, with 28 views", () => {
     expect(Object.keys(BLOCK_VIEWS)).toEqual(BLOCKS);
-    expect(views).toHaveLength(18);
+    expect(views).toHaveLength(28);
   });
 
-  test("18 of 18 views have their route file", () => {
+  test("28 of 28 views have their route file, under (view) or (shell)", () => {
     expect(
       views.filter((v) => existsSync(routeFile(v.block, v.path))),
-    ).toHaveLength(18);
+    ).toHaveLength(28);
   });
 
-  test("0 other +page.svelte files under src/routes/(view)/view/", () => {
+  test("0 other +page.svelte files under src/routes/(view)/view/ or src/routes/(shell)/view/", () => {
     const expected = new Set(views.map((v) => routeFile(v.block, v.path)));
     const found: string[] = [];
     const walk = (dir: string) => {
@@ -204,16 +221,17 @@ describe("8. the views", () => {
       }
     };
     walk("src/routes/(view)/view");
+    walk("src/routes/(shell)/view");
     expect(found.filter((f) => !expected.has(f))).toEqual([]);
   });
 });
 
-test("9. the code view maps 16 of 16 block files to an app path and leaves 0 placeholders", () => {
+test("9. the code view maps 30 of 30 block files to an app path and leaves 0 placeholders", () => {
   const mapped = BLOCKS.flatMap((name) => toAppFiles(built(name).files));
-  expect(mapped).toHaveLength(16);
+  expect(mapped).toHaveLength(30);
   for (const file of mapped) {
     expect(file.appPath).toMatch(
-      /^(src\/routes\/[a-z-]+\/\+(page|error)\.svelte|src\/lib\/components\/[a-z-]+\.svelte)$/,
+      /^(src\/routes\/[a-z-]+\/\+(page|error|layout)(\.server)?\.(svelte|ts)|src\/lib\/components\/[a-z-]+\.(svelte|ts))$/,
     );
     expect(file.text).not.toMatch(/\$(COMPONENTS|UI|UTILS|HOOKS|LIB)\$/);
   }
@@ -223,4 +241,19 @@ test("10. the password floor: Math.max(15, in sign-up-form.svelte, and no maxlen
   const text = read("src/lib/registry/components/sign-up-form.svelte");
   expect(text).toContain("Math.max(15,");
   expect(text).not.toMatch(/maxlength/i);
+});
+
+// 006 decision 14, check 11: the shell's layout files as an app gets them.
+test("11. app-shell's +layout.server.ts imports nothing from ./$types, and +layout.svelte reads data.sidebarOpen", () => {
+  const server = read("src/lib/registry/blocks/app-shell/+layout.server.ts");
+  expect(server).not.toContain("./$types");
+  expect(server).toContain("ServerLoadEvent");
+  expect(server).toContain("sidebar_state");
+  const layout = read("src/lib/registry/blocks/app-shell/+layout.svelte");
+  expect(layout).toContain("data.sidebarOpen");
+  expect(layout).not.toContain("./$types");
+  // Every block page file stays free of ./$types (003 decision 2).
+  expect(blockFiles.filter((f) => read(f.path).includes("./$types"))).toEqual(
+    [],
+  );
 });

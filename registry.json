@@ -196,8 +196,12 @@
           "--mark-rise": "0.38em",
           "--mark-lockup-gap": "0.16em",
           "--mark-lift": "calc(var(--mark-rise) + var(--mark-dot) + var(--mark-gap))",
+          "--mark-orbit": "0.5em",
           "--motion-entrance": "900ms",
           "--motion-micro": "200ms",
+          "--motion-entrance-dot": "0.55",
+          "--motion-entrance-start": "0.15",
+          "--motion-entrance-stagger": "0.1",
           "--line-width": "1px",
           "--focus-width": "2px",
           "--focus-offset": "2px",
@@ -216,6 +220,9 @@
             "animation-iteration-count": "1 !important",
             "transition-duration": "0.01ms !important",
             "scroll-behavior": "auto !important"
+          },
+          ".mark-entrance [data-slot=\"four-dot-dot\"]": {
+            "animation": "none"
           }
         },
         "@utility groove": {
@@ -237,6 +244,35 @@
           "border-inline-start": "var(--line-width) solid var(--groove-line)",
           "box-shadow": "inset var(--line-width) 0 0 var(--groove-light)"
         },
+        "@utility groove-b": {
+          "border-bottom": "var(--line-width) solid var(--groove-line)",
+          "box-shadow": "0 var(--line-width) 0 var(--groove-light)"
+        },
+        "@utility mark-entrance": {
+          "& > [data-slot=\"four-dot-dot\"]": {
+            "animation": "pluto-mark-dock calc(var(--motion-entrance) * var(--motion-entrance-dot)) var(--ease-entrance) both"
+          },
+          "& > [data-slot=\"four-dot-dot\"]:nth-child(1)": {
+            "--_ox": "-1",
+            "--_oy": "0.6",
+            "animation-delay": "calc(var(--motion-entrance) * (var(--motion-entrance-start) + 0 * var(--motion-entrance-stagger)))"
+          },
+          "& > [data-slot=\"four-dot-dot\"]:nth-child(2)": {
+            "--_ox": "0.8",
+            "--_oy": "-0.8",
+            "animation-delay": "calc(var(--motion-entrance) * (var(--motion-entrance-start) + 1 * var(--motion-entrance-stagger)))"
+          },
+          "& > [data-slot=\"four-dot-dot\"]:nth-child(3)": {
+            "--_ox": "-0.6",
+            "--_oy": "-1",
+            "animation-delay": "calc(var(--motion-entrance) * (var(--motion-entrance-start) + 2 * var(--motion-entrance-stagger)))"
+          },
+          "& > [data-slot=\"four-dot-dot\"]:nth-child(4)": {
+            "--_ox": "1",
+            "--_oy": "0.8",
+            "animation-delay": "calc(var(--motion-entrance) * (var(--motion-entrance-start) + 3 * var(--motion-entrance-stagger)))"
+          }
+        },
         "@keyframes pluto-enter": {
           "from": {
             "opacity": "0"
@@ -245,6 +281,12 @@
         "@keyframes pluto-exit": {
           "to": {
             "opacity": "0"
+          }
+        },
+        "@keyframes pluto-mark-dock": {
+          "from": {
+            "opacity": "0",
+            "transform": "translate(calc(var(--mark-orbit) * var(--_ox)), calc(var(--mark-orbit) * var(--_oy))) scale(0.4)"
           }
         },
         "@layer base": {
@@ -2640,6 +2682,113 @@
       ],
       "meta": {
         "since": "0.3.0",
+        "group": "blocks"
+      }
+    },
+    {
+      "name": "app-shell",
+      "type": "registry:block",
+      "title": "App shell",
+      "description": "The frame every page sits in: a skip link, a header with the lockup's one entrance and a theme toggle, an optional sidebar, the main area, and a footer that states the build.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": [
+        "utils",
+        "pluto-theme",
+        "four-dot",
+        "theme",
+        "button",
+        "sheet",
+        "sidebar",
+        "breadcrumb",
+        "dropdown-menu",
+        "avatar",
+        "collapsible"
+      ],
+      "files": [
+        {
+          "path": "src/lib/registry/blocks/app-shell/+layout.svelte",
+          "type": "registry:page"
+        },
+        {
+          "path": "src/lib/registry/blocks/app-shell/+layout.server.ts",
+          "type": "registry:page"
+        },
+        {
+          "path": "src/lib/registry/blocks/app-shell/+page.svelte",
+          "type": "registry:page"
+        },
+        {
+          "path": "src/lib/registry/components/app-shell-skip-link.svelte",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/lib/registry/components/app-shell-header.svelte",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/lib/registry/components/app-shell-nav.svelte",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/lib/registry/components/app-shell-user-menu.svelte",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/lib/registry/components/app-shell-sidebar.svelte",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/lib/registry/components/app-shell-footer.svelte",
+          "type": "registry:component"
+        }
+      ],
+      "meta": {
+        "since": "0.6.0",
+        "group": "blocks"
+      }
+    },
+    {
+      "name": "chat",
+      "type": "registry:block",
+      "title": "Chat",
+      "description": "A conversation: a log that follows new replies, turns with code, a composer that sends and stops, and the words a screen reader hears.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": [
+        "utils",
+        "pluto-theme",
+        "message-log",
+        "message",
+        "marker",
+        "composer",
+        "code-block",
+        "empty",
+        "alert",
+        "button"
+      ],
+      "files": [
+        {
+          "path": "src/lib/registry/blocks/chat/+page.svelte",
+          "type": "registry:page"
+        },
+        {
+          "path": "src/lib/registry/components/chat-pane.svelte",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/lib/registry/components/chat-turn.svelte",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/lib/registry/components/chat-text.svelte",
+          "type": "registry:component"
+        },
+        {
+          "path": "src/lib/registry/components/chat-types.ts",
+          "type": "registry:component"
+        }
+      ],
+      "meta": {
+        "since": "0.6.0",
         "group": "blocks"
       }
     }

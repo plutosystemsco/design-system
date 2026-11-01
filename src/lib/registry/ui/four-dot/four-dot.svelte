@@ -8,6 +8,12 @@
     tone?: FourDotTone;
     /** Names a mark that stands alone. Without it, the mark is decoration. */
     label?: string;
+    /**
+     * The page's one hello: the four dots dock over the entrance budget,
+     * once per full document load. Set it on one mark per page, the shell's
+     * header; under reduced motion the composed mark shows before any frame.
+     */
+    entrance?: boolean;
   };
 </script>
 
@@ -17,6 +23,7 @@
   let {
     tone = "brand",
     label,
+    entrance = false,
     class: className,
     ...rest
   }: FourDotProps = $props();
@@ -30,7 +37,11 @@
   role={label ? "img" : undefined}
   aria-label={label}
   aria-hidden={label ? undefined : "true"}
-  class={cn("inline-grid grid-cols-2 gap-(--mark-gap)", className)}
+  class={cn(
+    "inline-grid grid-cols-2 gap-(--mark-gap)",
+    entrance && "mark-entrance",
+    className,
+  )}
   {...rest}
 >
   {#each brand as colour, i (i)}

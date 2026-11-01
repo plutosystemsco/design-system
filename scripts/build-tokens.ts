@@ -35,6 +35,18 @@ type FontObject = {
 
 const RADIUS_STEPS = ["xs", "sm", "md", "lg", "xl", "2xl", "3xl", "4xl"];
 
+/**
+ * 006 decision 4: where each dot starts, as multiples of `--mark-orbit`, in
+ * the book's directions and reading order: blue from the lower left, red
+ * from the upper right, amber from the upper left, green from the lower right.
+ */
+const ENTRANCE_OFFSETS: [x: number, y: number][] = [
+  [-1, 0.6],
+  [0.8, -0.8],
+  [-0.6, -1],
+  [1, 0.8],
+];
+
 /** Pixels become rem at the default 16 px root (decision 9). */
 const rem = (px: number) => `${px / 16}rem`;
 const em = (n: number) => `${n}em`;
@@ -113,8 +125,15 @@ export function themeCss(tokens: Tokens): CssTree {
       "--mark-lockup-gap": em(mark.lockupGap),
       "--mark-lift":
         "calc(var(--mark-rise) + var(--mark-dot) + var(--mark-gap))",
+      // 006 decision 4: how far a dot travels before it docks.
+      "--mark-orbit": em(mark.orbit),
       "--motion-entrance": ms(motion.entranceMs),
       "--motion-micro": ms(motion.microMs),
+      // 006 decision 4: the entrance's shares of the budget, unitless. The
+      // last dot ends at start + 3 × stagger + dot = 1.00 of the budget.
+      "--motion-entrance-dot": String(motion.entranceDot),
+      "--motion-entrance-start": String(motion.entranceStart),
+      "--motion-entrance-stagger": String(motion.entranceStagger),
       "--line-width": px(line.width),
       "--focus-width": px(focus.width),
       "--focus-offset": px(focus.offset),
@@ -133,6 +152,12 @@ export function themeCss(tokens: Tokens): CssTree {
         "animation-iteration-count": "1 !important",
         "transition-duration": "0.01ms !important",
         "scroll-behavior": "auto !important",
+      },
+      // 006 decision 4: with no animation the dots show their own style, the
+      // composed mark, before any frame. Under the 0.01 ms catch-all alone,
+      // `fill: both` would hold the first frame (hidden) for one paint.
+      '.mark-entrance [data-slot="four-dot-dot"]': {
+        animation: "none",
       },
     },
     "@utility groove": {
@@ -160,9 +185,45 @@ export function themeCss(tokens: Tokens): CssTree {
       "border-inline-start": "var(--line-width) solid var(--groove-line)",
       "box-shadow": "inset var(--line-width) 0 0 var(--groove-light)",
     },
+    // 006 decision 4: the groove as a bottom edge, for the shell's header:
+    // the hairline, then the light just below it onto the next ground. In
+    // dark the light is clear and the hairline alone remains.
+    "@utility groove-b": {
+      "border-bottom": "var(--line-width) solid var(--groove-line)",
+      "box-shadow": "0 var(--line-width) 0 var(--groove-light)",
+    },
+    // 006 decision 4: the mark's one entrance, the four dots docking. Each
+    // dot glides from its orbit offset at 0.4 scale over a share of the
+    // budget, staggered; the end state is the dot's own style. A plain
+    // animate-* utility cannot carry four delays and four offsets (R14).
+    "@utility mark-entrance": {
+      '& > [data-slot="four-dot-dot"]': {
+        animation:
+          "pluto-mark-dock calc(var(--motion-entrance) * var(--motion-entrance-dot)) var(--ease-entrance) both",
+      },
+      ...Object.fromEntries(
+        ENTRANCE_OFFSETS.map(([ox, oy], i) => [
+          `& > [data-slot="four-dot-dot"]:nth-child(${i + 1})`,
+          {
+            "--_ox": String(ox),
+            "--_oy": String(oy),
+            "animation-delay": `calc(var(--motion-entrance) * (var(--motion-entrance-start) + ${i} * var(--motion-entrance-stagger)))`,
+          },
+        ]),
+      ),
+    },
     // 002 decision 3: the keyframes behind animate-enter and animate-exit.
     "@keyframes pluto-enter": { from: { opacity: "0" } },
     "@keyframes pluto-exit": { to: { opacity: "0" } },
+    // 006 decision 4: a dot's start, hidden and small at its orbit offset. No
+    // `to`: the end state is the composed mark.
+    "@keyframes pluto-mark-dock": {
+      from: {
+        opacity: "0",
+        transform:
+          "translate(calc(var(--mark-orbit) * var(--_ox)), calc(var(--mark-orbit) * var(--_oy))) scale(0.4)",
+      },
+    },
     "@layer base": {
       body: { "@apply bg-background text-foreground": {} },
       "h1, h2, h3, h4, h5, h6": { "@apply font-heading": {} },
