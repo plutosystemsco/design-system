@@ -40,10 +40,9 @@
 <!--
   The account menu: a 24 px avatar with the person's initials, hidden from
   the name, in a 32 px ghost button whose hidden text names it "Account
-  menu". Inside, a group
-  headed by the name and email, then Settings and Sign out, each a link
-  through the item's child snippet so the role stays menuitem. No
-  destructive styling on Sign out: leaving is not destroying.
+  menu". Inside, a group headed by the name and email, then Settings and
+  Sign out, each a link through the item's child snippet so the role stays
+  menuitem. No destructive styling on Sign out: leaving is not destroying.
 -->
 <DropdownMenu.Root>
   <DropdownMenu.Trigger>

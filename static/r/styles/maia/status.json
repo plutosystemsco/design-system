@@ -3,7 +3,7 @@
 	"name": "status",
 	"title": "Status",
 	"type": "registry:ui",
-	"author": "Pluto Systems <https://plutosystems.co>",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 	"description": "An empty polite live region, present from the first render, whose text the app sets.",
 	"registryDependencies": [
 		"utils",

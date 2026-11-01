@@ -23,7 +23,7 @@ function git(args: string): string | undefined {
   }
 }
 
-// The footer's commit: the host's variable, else the short hash. With
+// The footer's commit: a CI build's variable, else the short hash. With
 // neither, the version name is left to SvelteKit's default, a timestamp,
 // which the footer reads as "no commit" (all digits): no row, no word. The
 // commit's own date, so a rebuild of one commit is byte-identical; it reaches

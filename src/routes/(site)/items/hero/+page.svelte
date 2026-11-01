@@ -16,7 +16,9 @@
       label names where it goes.
     </li>
     <li>
-      No landmark of its own: the app's layout gives the <code>main</code>.
+      No landmark of its own: the consuming app's layout gives the <code
+        >main</code
+      >.
     </li>
     <li>
       The feature grid is a list with <code>role="list"</code>, kept by every

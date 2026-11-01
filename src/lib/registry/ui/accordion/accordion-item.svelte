@@ -2,7 +2,7 @@
   import { getContext, setContext } from "svelte";
 
   /**
-   * The wiring bits-ui leaves out (004 decision 12): one id per item, made
+   * The wiring bits-ui leaves out: one id per item, made
    * here and shared, so the trigger says `aria-controls` and the content is a
    * `region` labelled by the trigger.
    */

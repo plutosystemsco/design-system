@@ -22,7 +22,7 @@ import { styleTags, tags } from "@lezer/highlight";
 import { codeHighlight } from "./code-editor-theme";
 
 /**
- * Python's grammar, taught the four roles it lacks (007 decision 6): a
+ * Python's grammar, taught the four roles it lacks: a
  * decorator's name, an annotation, a parameter and an f-string's braces.
  * `styleTags` matches a node by its ancestry, and the rules combine with the
  * grammar's own, so a call's or a definition's name keeps its tag and a brace
@@ -132,7 +132,7 @@ const docstringMark = Decoration.mark({ class: "text-code-comment" });
 const TAGGED_PARENTS = new Set(["ParamList", "TypeDef", "Decorator"]);
 
 /**
- * The roles plugin (007 decision 6): marks what no tag can name. `self` and
+ * The roles plugin: marks what no tag can name. `self` and
  * `cls`, callee or bare, take `text-code-self`; a built-in's name, callee or
  * bare, `text-code-builtin`; a string that is the first statement of the
  * script, a class body or a function body is a docstring and reads as a
@@ -234,7 +234,7 @@ type SyntaxNodeLike = {
 };
 
 /**
- * The Python preset (004 decision 9): line numbers, history, the default
+ * The Python preset: line numbers, history, the default
  * keys, the configured language, the roles plugin, bracket closing and
  * matching, indent on input, the active line and the highlight from the code
  * tokens. About 130 KB gzipped with the component.

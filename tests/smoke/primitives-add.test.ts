@@ -2,7 +2,7 @@
  * 002 decision 23, smoke: `add field alert-dialog input-otp tabs` into each of
  * 001's two scratch apps, against this repository's `vite dev`, with the
  * locked CLI under Bun. Together the four pull label, separator, button,
- * spinner, utils, pluto-theme and the fonts, and all four of decision 2's
+ * spinner, utils, pluto-theme and the fonts, and all four of 002 decision 2's
  * packages.
  */
 import { afterAll, beforeAll, describe, expect, test } from "bun:test";
@@ -215,7 +215,7 @@ describe.each([
     );
   });
 
-  test("4. package.json names decision 2's 4 packages, and no tailwind-merge", () => {
+  test("4. package.json names 002 decision 2's 4 packages, and no tailwind-merge", () => {
     const pkg = JSON.parse(
       readFileSync(path.join(r.app, "package.json"), "utf8"),
     );

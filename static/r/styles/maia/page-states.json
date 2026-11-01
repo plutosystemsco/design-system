@@ -3,7 +3,7 @@
 	"name": "page-states",
 	"title": "Page states",
 	"type": "registry:block",
-	"author": "Pluto Systems <https://plutosystems.co>",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 	"description": "Empty, loading, error and not found as one family, with an error page for SvelteKit's error route.",
 	"devDependencies": [
 		"phosphor-svelte@^3.1.1"

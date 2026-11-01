@@ -1,10 +1,12 @@
 # Review of 006 — The app shell and the chat pane
 
-- **Status:** complete; awaiting the author's disposition
+Reviews [`specifications/006-the-app-shell-and-the-chat-pane.md`](../specifications/006-the-app-shell-and-the-chat-pane.md).
+
+- **Status:** dispositioned; fit to build
 - **Date:** 2026-11-01
-- **Reviewer:** an agent (Claude), a fresh sub-agent of the orchestrating session; not the author
-- **Reviewed:** the specification as drafted, 2026-11-01 (`specifications/006-the-app-shell-and-the-chat-pane.md`, 320 lines, untracked). Checked against the constitution, every entry of `decisions.md` dated 2026-11-01 and the `003` and `002` calls, `005` **as it stands on disk at review time** (amended after its own review the same morning; its status line now reads "fit to build"), `003` decisions 2 to 6, 15 to 17 and 20 and its Landing notes, `001` decisions 10, 13, 14, 16, 22 and 25, `002` decisions 3, 9, 10 and 25, `004` decisions 8 and 19, the five memos the header names, and the code at `b3d2a8e`.
-- **Re-ran:** under Bun 1.3.14. Scratch files went in the session scratchpad, folder `review-006-spec/`. Nothing in this repository was written except this file.
+- **Reviewer:** a reviewer; not the author
+- **Reviewed:** the specification as drafted, 2026-11-01 (`specifications/006-the-app-shell-and-the-chat-pane.md`, 320 lines, untracked). Checked against the constitution, every entry of `decisions.md` dated 2026-11-01 and the `003` and `002` calls, `005` as amended on 2026-11-01 (after its own review the same morning; its status line then read "fit to build"), `003` decisions 2 to 6, 15 to 17 and 20 and its Landing notes, `001` decisions 10, 13, 14, 16, 22 and 25, `002` decisions 3, 9, 10 and 25, `004` decisions 8 and 19, the five memos the header names, and the code at `b3d2a8e`.
+- **Re-ran:** under Bun 1.3.14. Scratch files were kept outside the repository. Nothing in this repository was written except this file.
   - **A scratch SvelteKit 3.1.0 app** (`app/`, a copy of `tests/smoke/fixtures/kit3` with its pinned packages installed, 66 packages) holding: `src/lib/x/+layout.server.ts` and `src/routes/x/+layout.server.ts`, each typed with `ServerLoadEvent` from `@sveltejs/kit`; `src/lib/shell/+layout.svelte` taking `children` and `data` and reading `version` from `$app/env` and `import.meta.env.VITE_BUILT_AT`; `src/routes/(shell)/view/app-shell/+page.svelte` rendering that layout as `<Layout data={{ sidebarOpen: true }}>{#snippet children()}…{/snippet}</Layout>`; `(view)/view/a` and `(shell)/view/b`; and `src/app.css` with the spec's `--mark-orbit`, the three entrance numbers, `@keyframes pluto-mark-dock` inside `@theme inline`, `@utility mark-entrance` with its four nested `:nth-child` rules, `@utility groove-b`, and the third reduce rule (EXECUTED):
     - `vite.config.ts` with the five lines **as decision 8 writes them** (`execSync("git rev-parse --short HEAD")`, unguarded): `git` answers "fatal: not a git repository" in the scratch folder and `vite build` exits 1 (finding 1).
     - The same config **guarded** (`try`/`catch`, `WORKERS_CI_COMMIT_SHA` first, a fallback value) and `process.env.VITE_BUILT_AT` set before `defineConfig`: `vite build` exits 0 and prerenders `index.html`, `x.html`, `view/a.html`, `view/b.html`, `view/app-shell.html`. The shell view's HTML holds the skip link first, `<main id="main" tabindex="-1" data-open="true">`, `<dd data-commit="">unknown</dd>` and `<time datetime="2026-11-01T00:00:00Z">`. So a layout component renders from a page with `data` and `children`, `$app/env`'s `version` and the `process.env` route both reach the prerendered HTML, and two groups may both hold a `view/` folder.
@@ -48,7 +50,7 @@ Does not land yet: not fit to build. Findings 1 and 2 are High: the five lines f
 21. **Release:** countable (4 of 4 recompute).
 22. **The checkpoint and the walk, 180 loads:** 90 × 2 (READ).
 23. **The site:** countable once finding 1 is fixed.
-24. **In the app:** not checkable here, by design.
+24. **Released:** tag `v0.6.0`.
 
 ## Findings table
 
@@ -80,7 +82,7 @@ Does not land yet: not fit to build. Findings 1 and 2 are High: the five lines f
      - The smoke test copies a fixture to a temporary folder outside the repository (`001` decision 25). `git rev-parse` there prints "fatal: not a git repository" and the config throws before Vite starts: `vite build` exits 1. The entrance memo saw this and ran `git` in this repository instead (§4.2, "the scratch copy has no commits").
      - The kit3 fixture holds no `@types/node` or `@types/bun`, and its `tsconfig` includes `*.ts`. `svelte-check` reports 3 errors: `process` twice and `node:child_process`. Criterion 19's "`svelte-check` 0 errors" cannot pass.
      - `dev-loop.test.ts` copies **this** repository's tracked files, with no `.git`, and starts `vite dev` in the copy (READ, lines 33 to 40). Decision 16 puts the unguarded lines in this repository's `vite.config.ts`, so that server fails to start and `001`'s smoke file breaks. Criterion 19's "`001`'s to `005`'s smoke files pass" cannot pass.
-   - **Why it matters:** a named fallback is written in the item page, not in the lines; the lines themselves have none. Every build outside a clone, including the app's CI image when `git` is missing, dies at config time.
+   - **Why it matters:** a named fallback is written in the item page, not in the lines; the lines themselves have none. Every build outside a clone, including an app's CI image when `git` is missing, dies at config time.
    - **Fix:**
      - Make the lines guarded, and show the guarded form on the item page: `const git = (args) => { try { return execSync(…).toString().trim() } catch { return undefined } }`; `name` is `WORKERS_CI_COMMIT_SHA?.slice(0, 7) ?? git("rev-parse --short HEAD") ?? "unknown"`; `VITE_BUILT_AT` is `git("log -1 --format=%cI")`, else unset. The footer already omits a row with no value; say that `commit` "unknown" is shown as given, or omitted too. This form built and prerendered in the scratch (EXECUTED, "Re-ran").
      - Do not give the smoke scratch app the lines. Assert instead that the shell builds with Kit's default `version` and no `built` row. If the smoke test must see a commit, add `@types/node` to both fixtures' pinned packages and say so (a fixture change, with its `bun.lock`).
@@ -123,7 +125,7 @@ Does not land yet: not fit to build. Findings 1 and 2 are High: the five lines f
 
 9. **Medium — A `min-h-dvh` column never scrolls its log** (decision 10, "renders a column `flex min-h-dvh flex-col`…; `MessageLog`… `class="flex-1"`"; "Phones: full-bleed, `min-h-dvh`, the composer at the bottom").
    - **What is wrong (INFERRED from CSS):** `min-height` lets the column grow with its content. A `flex-1` child of a column with no fixed height takes its content height, so the log's `overflow-y-auto` box never overflows. The page scrolls instead. Then follow-bottom never engages, "Scroll to end" is never shown, `scroll-pb-24` protects nothing, and the composer is not at the viewport's bottom but at the page's. `005`'s L1 proved the log on its own page with a bounded box; C1 to C5 never check the pane's scrolling.
-   - **Fix:** the pane is `h-dvh` (or `h-full` under a shell whose `main` sizes it), the log is `min-h-0 flex-1` (a flex child's default `min-height: auto` also stops it shrinking), and the composer keeps `shrink-0`. Add to C2: on `/view/chat/thread/` at 360 × 640 the region's `scrollHeight` exceeds its `clientHeight` and the composer's bottom equals the viewport's. Keep the iOS placeholder.
+   - **Fix:** the pane is `h-dvh` (or `h-full` under a shell whose `main` sizes it), the log is `min-h-0 flex-1` (a flex child's default `min-height: auto` also stops it shrinking), and the composer keeps `shrink-0`. Add to C2: on `/view/chat/thread/` at 360 × 640 the region's `scrollHeight` exceeds its `clientHeight` and the composer's bottom equals the viewport's. iOS Safari's keyboard stays outside this release's checks (decision 20).
 
 10. **Medium — The chat page's `h1` is unwritten, and `level` 1 skips a rank** (decision 10, "the title as `<h2 …>` by default, with `level` (1 for a page that is the conversation)"; decision 14, "`build/chat.html` with one `h1`"; the turns are `MessageHeader level={3}`).
     - The smoke test asserts one `h1` in the prerendered chat page, but no decision gives that heading's text, and the copy table has none.
@@ -169,7 +171,7 @@ Does not land yet: not fit to build. Findings 1 and 2 are High: the five lines f
     - **The `submitted` state** has no view, so the marker and the composer's spinner are never seen by C1 to C9 or axe. Add `/view/chat/submitted/` or say why not.
 
 18. **Low — Citations and wording.**
-    - Decision 10: "decision 21's placeholder" — there is no decision 21; the placeholder is decision 20.
+    - Decision 10 cites decision 21 for iOS Safari's keyboard; there is no decision 21; the limit is decision 20.
     - Decision 14, unit file 3: "`003`'s 6 plus …: **10**" lists four names after "plus"; fine, but "the changelog's `0.6.0` entry naming 4 of 4" belongs with decision 15's list, which it matches.
     - Decision 8: "The memo ran `define`; `import.meta.env` is its mechanism 3, documented and not run" is now run (this review); relabel.
     - Decision 4: the memo's selector is `.mark-entrance > [data-slot…]` (child); the specification's is a descendant. Either works; say the descendant form was chosen for the lockup's nesting.
@@ -179,17 +181,17 @@ Does not land yet: not fit to build. Findings 1 and 2 are High: the five lines f
 ## Constitution checks
 
 - **§4.1 source, not a package:** holds. The layout reads `$app/env` and `import.meta.env`, which are the app's framework, not this repository. The footer's values are the app's. The five lines are the app's, once guarded (finding 1).
-- **§4.2 in tandem:** holds. Criterion 24 is in `wasi-python-dev`.
-- **§4.3 tokens are the one source:** holds. Every class string in the specification lints clean (EXECUTED); the entrance's numbers become tokens; `--_ox`/`--_oy` are unitless multipliers, which L16 passes.
+- **§4.2 driven by need:** holds. Criterion 24 is the release, tag `v0.6.0`.
+- **§4.3 tokens are the one source:** holds. Every class string in the specification lints clean (EXECUTED); the entrance's numbers become tokens; `--_ox`/`--_oy` are unitless multipliers, which L21 passes.
 - **§4.4 accessible by default:** findings 2, 6, 8, 9 and 10 are defects; finding 17's alert role is a choice to write down. The skip link, landmarks, two `nav` labels, the sheet's name, the log's names and the `tabindex="-1"` heading match the patterns memo.
 - **§4.5, §4.6:** hold. No new package; `phosphor-svelte` is named.
 - **§6, break an installed app silently:** finding 7 (`collapsible` missing) and finding 16 (the anchors after the move) are the two ways an installed app breaks; both are fixable in the specification. `four-dot`'s optional prop is correctly "not an interface change".
-- **`decisions.md`, the `006` calls:** six of seven match (the entrance from tokens with the third reduce rule; the layout as the page file with the cookie load; the 64 px grooved header; the footer's rows and tagline; no avatar and no markdown; the `(shell)` group). The seventh, "the shell's header is the one place that sets" the entrance, holds. The `005` call "the sidebar is a `nav` landmark… the trigger is a disclosure" is bent by finding 6 until the DOM is written.
+- **`decisions.md`, the `006` calls:** six of seven match (the entrance from tokens with the third reduce rule; the layout as the page file with the cookie load; the 64 px grooved header; the footer's rows and tagline; no avatar and no markdown; the `(shell)` group). The seventh, "the shell's header is the one place that sets" the entrance, holds. The `005` call "the sidebar is a `nav` landmark… the trigger is a disclosure" is at odds with finding 6 until the DOM is written.
 - **`005`'s decisions, as amended:** `theme`, `sheet`, `breadcrumb`, `message-log`, `message`, `marker` and `composer` are used as defined. `sidebar` is used as defined except finding 6. `dropdown-menu` except finding 17's naming. No `005` item is edited.
 
 ## Disposition
 
-Written by the author (the orchestrating session, as design lead), 2026-11-01. Every finding is fixed in the specification; two reach back into `005` (findings 6 and 17), whose text was amended the same day and whose builder was told mid-run.
+Written by the author, the design lead, 2026-11-01. Every finding is fixed in the specification; two reach back into `005` (findings 6 and 17), whose text was amended the same day, during its build.
 
 | # | Disposition |
 |---|---|
@@ -212,4 +214,4 @@ Written by the author (the orchestrating session, as design lead), 2026-11-01. E
 | 17 | Fixed. The trigger names the menu; link items through `child`; the alert is `role={null}`; `STICKY` is for the shell without a sidebar; the preview's `ThemeScript` moves to the `(site)` and `(view)` layouts (`005` decision 16 amended); "Latest reply" follows a `newReply` flag the app sets; a `submitted` view is added (decisions 6, 7, 10, 12). |
 | 18 | Fixed: decision 20; the mechanism relabelled; the descendant selector explained; the stop and behaviour lists separated. |
 
-**Verdict after disposition: fit to build, once `005` is built.**
+**Verdict after disposition: fit to build, on `005` as built (`616b8a0`, `v0.5.0`).**

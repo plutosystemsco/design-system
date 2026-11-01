@@ -1,5 +1,5 @@
 /**
- * 006 decision 10, review finding 2: the fence splitter, `splitFences` in
+ * 006 decision 10: the fence splitter, `splitFences` in
  * `chat-text.svelte`'s module script, run as it is written: the script is
  * pure, so it is extracted and imported here without compiling the component.
  */

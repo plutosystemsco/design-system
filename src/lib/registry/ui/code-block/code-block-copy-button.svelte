@@ -49,8 +49,7 @@
 <!--
   A 32 px ghost button whose name says what it does, then "Copied" for two
   seconds. The status region beside it is in the page from the first render,
-  so the announcement is heard (003 decision 8's rule); a refused write says
-  "Could not copy" there.
+  so the announcement is heard; a refused write says "Could not copy" there.
 -->
 <Button
   bind:ref

@@ -145,7 +145,10 @@ function theme(value: Json, key: string): Theme {
   return value;
 }
 
-/** A tint alpha must be a whole number of tenths, so compositing stays exact (decision 12). */
+/**
+ * A tint alpha must be a whole number of tenths, so compositing stays exact
+ * (001 decision 12).
+ */
 function tenths(value: Json, key: string): number {
   const n = positive(value, key);
   const k = n * 10;

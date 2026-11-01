@@ -148,7 +148,7 @@ test.describe("the code block", () => {
         "font-weight",
       ),
     ).toBe("400");
-    // The checkpoint's call: a string's quotes take the string colour, so the
+    // A string's quotes take the string colour, so the
     // quoted literal is one span, quotes included (Shiki merges tokens of one
     // style). The puzzle string is the block's second line.
     const quoted = block.locator("span.text-code-string", {
@@ -370,8 +370,7 @@ test.describe("the gallery", () => {
         ).toBeGreaterThanOrEqual(2);
     }
     expect(await gallery.locator("[style]").count()).toBe(0);
-    // The change review's finding 4: the shell's special parameters are
-    // properties, never a self.
+    // The shell's special parameters are properties, never a self.
     const shell = gallery.locator(
       '[data-slot="code-block"][data-language="bash"]',
     );
@@ -379,7 +378,7 @@ test.describe("the gallery", () => {
     await expect(
       shell.locator("span.text-code-property", { hasText: /^\*$/ }).first(),
     ).toHaveCount(1);
-    // The gallery's 21-row slot table: foreground, the 20 classed slots, bold, underline.
+    // The gallery's 23-row slot table: foreground, the 20 classed slots, bold, underline.
     await expect(
       page.getByTestId("slot-table").locator("tbody tr"),
     ).toHaveCount(23);
@@ -676,7 +675,7 @@ test.describe("the code editor", () => {
     await expect(print).toHaveCount(1);
     expect(await computed(print, "color")).toBe(purple);
     expect(await computed(print, "font-weight")).toBe("400");
-    // The mechanism (review finding 1): the plugin's mark is the innermost
+    // The mechanism: the plugin's mark is the innermost
     // span, so its class decides the colour; it holds no child span.
     expect(await print.locator("span").count()).toBe(0);
     const self = editor.locator(".cm-line span.text-code-self").first();
@@ -755,8 +754,52 @@ test.describe("the code editor", () => {
     }
   });
 
-  // The change review's findings 1 to 3: the roles plugin rebuilds when the
-  // tree grows, a docstring after a comment, and a keyword argument's name.
+  test("E4. editing and run: typing updates the bound value; Reset clears history; 2 of 2 run keys; readonly", async ({
+    page,
+  }) => {
+    await open(page, EDITOR_PAGE);
+    const c = content(page);
+    const readout = page.getByTestId("bound-value");
+    const runs = page.getByTestId("run-count");
+    const lines = () => main(page).locator(".cm-line").count();
+    const before = await lines();
+
+    await c.focus();
+    // To the document's end: Cmd-ArrowDown on a Mac, Ctrl-End elsewhere.
+    await page.keyboard.press("Meta+ArrowDown");
+    await page.keyboard.press("Control+End");
+    await page.keyboard.press("End");
+    await page.keyboard.type("\nx = 1");
+    await expect(readout).toContainText("x = 1");
+    expect(await lines()).toBe(before + 1);
+
+    await page.getByRole("button", { name: "Reset" }).click();
+    await expect(readout).not.toContainText("x = 1");
+    expect(await lines()).toBe(before);
+    await c.focus();
+    await page.keyboard.press("Meta+z");
+    await page.keyboard.press("Control+z");
+    expect(await lines()).toBe(before);
+    await expect(readout).not.toContainText("x = 1");
+
+    await expect(runs).toHaveText(/Ran 0 times/);
+    await page.keyboard.press("Control+Enter");
+    await expect(runs).toHaveText(/Ran 1 time\b/);
+    await page.keyboard.press("Meta+Enter");
+    await expect(runs).toHaveText(/Ran 2 times/);
+    expect(await lines()).toBe(before);
+    await page.getByRole("button", { name: "Run" }).click();
+    await expect(runs).toHaveText(/Ran 3 times/);
+
+    const readonly = page.getByTestId("editor-readonly").locator(".cm-content");
+    const text = await readonly.textContent();
+    await readonly.focus();
+    await page.keyboard.type("zzz");
+    expect(await readonly.textContent()).toBe(text);
+  });
+
+  // The roles plugin rebuilds when the tree grows; a docstring after a
+  // comment; a keyword argument's name.
   test("E5. the roles plugin on a long file and on the edge cases: line 30's print is a built-in after the idle parse; docstrings after a shebang and a def-line comment read as comments; keyword arguments named like built-ins stay in the body", async ({
     page,
   }) => {
@@ -808,50 +851,6 @@ test.describe("the code editor", () => {
     const key = sortedLine.locator("span", { hasText: /^key$/ });
     await expect(key).toHaveCount(1);
     expect(await computed(key, "color")).toBe(body);
-  });
-
-  test("E4. editing and run: typing updates the bound value; Reset clears history; 2 of 2 run keys; readonly", async ({
-    page,
-  }) => {
-    await open(page, EDITOR_PAGE);
-    const c = content(page);
-    const readout = page.getByTestId("bound-value");
-    const runs = page.getByTestId("run-count");
-    const lines = () => main(page).locator(".cm-line").count();
-    const before = await lines();
-
-    await c.focus();
-    // To the document's end: Cmd-ArrowDown on a Mac, Ctrl-End elsewhere.
-    await page.keyboard.press("Meta+ArrowDown");
-    await page.keyboard.press("Control+End");
-    await page.keyboard.press("End");
-    await page.keyboard.type("\nx = 1");
-    await expect(readout).toContainText("x = 1");
-    expect(await lines()).toBe(before + 1);
-
-    await page.getByRole("button", { name: "Reset" }).click();
-    await expect(readout).not.toContainText("x = 1");
-    expect(await lines()).toBe(before);
-    await c.focus();
-    await page.keyboard.press("Meta+z");
-    await page.keyboard.press("Control+z");
-    expect(await lines()).toBe(before);
-    await expect(readout).not.toContainText("x = 1");
-
-    await expect(runs).toHaveText(/Ran 0 times/);
-    await page.keyboard.press("Control+Enter");
-    await expect(runs).toHaveText(/Ran 1 time\b/);
-    await page.keyboard.press("Meta+Enter");
-    await expect(runs).toHaveText(/Ran 2 times/);
-    expect(await lines()).toBe(before);
-    await page.getByRole("button", { name: "Run" }).click();
-    await expect(runs).toHaveText(/Ran 3 times/);
-
-    const readonly = page.getByTestId("editor-readonly").locator(".cm-content");
-    const text = await readonly.textContent();
-    await readonly.focus();
-    await page.keyboard.type("zzz");
-    expect(await readonly.textContent()).toBe(text);
   });
 
   // The caret is the browser's own (no drawSelection), so CodeMirror draws no

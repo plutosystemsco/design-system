@@ -26,9 +26,9 @@
   const STICKY = false;
   const USER: { name: string; email: string } | null = null;
   const FOOTER = {
-    // SvelteKit's version name: the commit when vite.config.ts sets it (the
-    // item page shows the lines); its default is a timestamp, all digits,
-    // which means no commit: no row.
+    // SvelteKit's version name: the commit when vite.config.ts sets it to
+    // one; its default is a timestamp, all digits, which means no commit: no
+    // row.
     commit: /^\d+$/.test(version) ? undefined : version,
     // The commit's own date, set by vite.config.ts; without it, no row.
     builtAt: import.meta.env.VITE_BUILT_AT as string | undefined,

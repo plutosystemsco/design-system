@@ -2,6 +2,17 @@
 
 Each release of the registry, newest first. A change to an item's interface is marked **interface change**.
 
+## 0.7.1 — 2026-11-01
+
+Ready to read in public. No item's interface changes.
+
+- The documents under `context/` are rewritten so each stands alone; none names an app. The source is licensed under Apache-2.0 (`LICENSE`).
+- `code-languages`: its preview page's table shows Shell's known gaps. They were keyed by the alias `shellscript`, not the id `bash`, so the row said none were found.
+- `pluto-theme`: the generated stylesheet writes the twenty-one `--color-code-*` lines once in `@theme inline`, not twice. The item itself is unchanged.
+- `settings`: two lines of copy change. The notifications checkbox reads "When something fails" and the delete section says "your data and settings". `meter`'s documented `valuetext` example changes. No class or prop changes.
+- Every item's comments stop citing this repository's documents; the reason each comment gave now stands in words.
+- The lint's rules are numbered once, L1 to L21. The injected-stylesheet rule and the theme-file rule, which shared L15 and L16 with two others, are now L20 and L21.
+
 ## 0.7.0 — 2026-11-01
 
 The full highlight palette and the ink surface: editor-grade highlighting across twenty-six languages, and a sanctioned dark panel inside any page.
@@ -38,13 +49,13 @@ Overlays, navigation and the chat primitives: what the app shell and the chat pa
 - `is-mobile`: new. A media-query store, true below 768 px and false on the server.
 - `message-log`: new. A scroll box named "Messages" with a stop, holding a log named "Conversation", that follows new content until the reader scrolls away and offers a button back to the end.
 - `message`: new. One turn: an avatar slot, a mono heading that says who, the content as plain prose or a bubble on the muted inset, and a footer. `bubble` is folded into `message` as the one `bubble` variant: its seven stock variants were tints and a primary fill.
-- `marker`: new. A line in a conversation that is not a turn: plain, a separator, or underlined; no role unless the app passes one.
+- `marker`: new. A line in a conversation that is not a turn: plain, a separator, or underlined; no role unless an app passes one.
 - `composer`: new. The form a person writes a message in: a textarea that grows from 64 to 256 px by `field-sizing`, Enter to send and Shift Enter for a line, a 48 px send button that becomes Stop while a reply runs, a status that says "Responding", "Stopped" and "Response complete", and never a disabled control.
 - `sonner` is not served. A timed toast with a tab stop at the end of the page fails the rules every accessibility source agrees on; the pattern is a `status` region present at render for the announcement and an inline `alert` where the action was taken.
 
 ## 0.4.0 — 2026-10-31
 
-Code and data: the items that show code or a number, a highlight palette that is tokens, and the first app's editor and fuel meter.
+Code and data: the items that show code or a number, a highlight palette that is tokens, and an editor and a meter.
 
 - `pluto-theme`: additive, not an interface change. Adds the twelve code tokens (`--code-foreground`, `--code-background`, `--code-keyword`, `--code-string`, `--code-constant`, `--code-function`, `--code-comment`, `--code-link`, `--code-inserted`, `--code-deleted`, `--code-changed`, `--code-active-line`, each a semantic colour, with their `text-code-*` and `bg-code-*` utilities), the `scrollbar` utility (`scrollbar-color` from `input` on `muted`, thin), the `[data-slot="meter"]` rules that paint the native meter from the tokens, and `font-variant-ligatures: none` on code.
 - `code-block`: new. Code, output or a diff on the muted inset, highlighted from the code tokens as classes, with line numbers, a copy button that announces "Copied", emphasised lines by an opaque step and a marker, and a header divided by the groove.
@@ -52,7 +63,7 @@ Code and data: the items that show code or a number, a highlight palette that is
 - `highlighter`: new. Shiki with the JavaScript engine and a theme whose every colour is a code token; `highlightCode` for a server load and `tokenClass` for the class a token takes.
 - `use-highlighted-code`: new. A hook that highlights a changing string line by line as it grows.
 - `chart`: new. A figure for layerchart named by its caption, with its data as a table behind "Show as table", series coloured by token classes or `var()` props, and a tooltip on the elevation shadow. No injected stylesheet, no motion.
-- `meter`: new. The native meter on the muted track with a primary fill and square ends, for a measurement in a known range such as fuel; the app names it and writes its numbers beside it.
+- `meter`: new. The native meter on the muted track with a primary fill and square ends, for a measurement in a known range such as storage used; an app names it and writes its numbers beside it.
 - `popover`: new. A small dialog anchored to its button, 256 px wide, on the elevation shadow alone, named by its title or a `label`, that returns focus when it closes.
 - `accordion`: new. Headings that each open a labelled region, wired with `aria-controls`, divided by grooves, with one caret that turns, moved by the arrow keys.
 - `toggle`: new. A two-state button, inverted when pressed, at 48 and 32 px.
@@ -63,7 +74,7 @@ Code and data: the items that show code or a number, a highlight palette that is
 
 The first blocks: whole pages an app installs with one `add` and then owns, and the two components they share.
 
-- `status`: new. An empty polite live region, present from the first render, whose text the app sets.
+- `status`: new. An empty polite live region, present from the first render, whose text an app sets.
 - `error-summary`: new. The box a failed submit puts at the top of a form, focused, with a link to each invalid field, and `titleFor` for the page's "Error: " title.
 - `hero`: new block. An eyebrow, the one heading, a sentence, one call to action and a feature grid divided by grooves.
 - `sign-in`: new block. Email and password in one step, with an error summary, a password you can show and a busy button.

@@ -2,19 +2,19 @@
 
 - **Status:** complete
 - **Date:** 2026-10-27
-- **Owner:** Clay Gendron (research executed by an agent, Claude, sub-agent of the orchestrating session)
+- **Author:** the design lead
 - **Question:** Which of the tools specification `001` needs run under Bun 1.3.14 instead of Node, and how each is invoked. The tools are Vite 8.3.5 with SvelteKit 3.1.0, Tailwind 4.3.3 and adapter-static 4.0.0; svelte-check 4.7.7; Vitest 5.0.5 or Bun's own test runner; Playwright 1.64.1 with @axe-core/playwright 4.14.0; the shadcn-svelte 1.7.1 CLI; prettier 3.9.10 with prettier-plugin-svelte 4.1.1; and Bun scripts that spawn the CLI.
-- **What it blocks:** the amendment of specification 001 after the owner's decision that Bun is the runtime.
+- **What it blocks:** the amendment of specification `001` after the decision that Bun is the runtime (decisions.md, "Bun is the runtime, not Node", 2026-10-27).
 
 ## How to read this memo
 
 Every claim carries a label.
 
-- **EXECUTED**: we ran it and saw the result, on 2026-10-27, macOS (Darwin 25.5.0, arm64), Bun 1.3.14. The default `node` on `PATH` is 22.14.0 (nvm). Node 24.9.0 (Homebrew, `/opt/homebrew/opt/node@24/bin`) was used only for comparison runs.
+- **EXECUTED**: we ran it and saw the result, on 2026-10-27, macOS (Darwin 25.5.0, arm64), Bun 1.3.14. The default `node` on `PATH` is 22.14.0. A second install, Node 24.9.0, was used only for comparison runs.
 - **READ**: a source says so. Each source is linked, and each was read on 2026-10-27.
 - **INFERRED**: our reasoning.
 
-All runs were in the session scratchpad, in a throwaway project named `bun-run` with the versions above pinned by its `bun.lock`. Nothing was written to this repository except this memo. We call that project **the scratch project** below.
+All runs were in a throwaway project outside this repository, named `bun-run`, with the versions above pinned by its `bun.lock`. Nothing was written to this repository except this memo. We call that project **the scratch project** below.
 
 Because the default `node` (22.14.0) is older than SvelteKit 3.1.0's `engines` (`>=22.17`), it was always visible which runtime ran. A small Vite plugin in `vite.config.ts` printed `process.versions.bun`, `process.version` and `process.execPath` each time Vite loaded its config. Tests printed the same from inside their workers.
 
@@ -36,12 +36,12 @@ This section applies to every tool below.
 
 **Under `--bun`, Bun reports itself as Node 24.3.0.**
 
-- EXECUTED: every `--bun` run printed `process.version=v24.3.0`, `process.versions.node=24.3.0`, `process.versions.bun=1.3.14` and `execPath=/Users/claygendron/.bun/bin/bun`.
+- EXECUTED: every `--bun` run printed `process.version=v24.3.0`, `process.versions.node=24.3.0`, `process.versions.bun=1.3.14`, and `execPath` was the bun binary.
 - INFERRED: any version check a tool makes against `process.versions.node` sees 24.3.0. That satisfies every `engines` range in the set.
 
 **`bun --bun run <script>` and `bun --bun <bin>` put a `node` shim first on `PATH`.**
 
-- EXECUTED: under both, `PATH` began with `/private/tmp/bun-node-0d9b296af`. That folder held two symlinks, `node` and `bun`, both pointing at `/Users/claygendron/.bun/bin/bun`.
+- EXECUTED: under both, `PATH` began with a temporary folder, `/private/tmp/bun-node-<hash>`. That folder held two symlinks, `node` and `bun`, both pointing at the bun binary.
 - So every child process that calls `node`, or runs a bin with a `node` shebang, also runs under Bun (EXECUTED, section 9).
 - `bun --bun file.ts`, `bun test` and `bun --bun test` do **not** add the shim (EXECUTED, section 9).
 
@@ -54,7 +54,7 @@ This section applies to every tool below.
 **`bunx pkg@version` ignores the local install.**
 
 - READ ([bunx](https://bun.com/docs/pm/bunx)): with a version, `bunx` "does not use the local package" and installs that version into Bun's global cache.
-- EXECUTED: `bunx --bun shadcn-svelte@1.7.1 add`, run in an app with `shadcn-svelte` 1.7.1 installed, ran from `/private/var/folders/.../T/bunx-501-shadcn-svelte@1.7.1/node_modules/shadcn-svelte/dist/` (seen in a stack trace).
+- EXECUTED: `bunx --bun shadcn-svelte@1.7.1 add`, run in an app with `shadcn-svelte` 1.7.1 installed, ran from `$TMPDIR/bunx-<uid>-shadcn-svelte@1.7.1/node_modules/shadcn-svelte/dist/` (seen in a stack trace).
 - INFERRED: a copy run from the global cache is not pinned by the project's `bun.lock` (constitution §4.5). `bun --bun shadcn-svelte ...` runs the local, locked bin (section 7).
 
 ## 2. `bun install` and `engines`
@@ -85,7 +85,7 @@ The scratch project: Kit config in `vite.config.ts` as `sveltekit({ adapter: ada
 All EXECUTED. The first lines of `bun --bun vite build`:
 
 ```
-[runtime] command=build bun=1.3.14 process.version=v24.3.0 versions.node=24.3.0 execPath=/Users/claygendron/.bun/bin/bun
+[runtime] command=build bun=1.3.14 process.version=v24.3.0 versions.node=24.3.0 execPath=<the bun binary>
 vite v8.3.5 building ssr environment for production...
 transforming...
 ✓ 139 modules transformed.
@@ -125,7 +125,7 @@ All EXECUTED. What the runs found:
    - **B.** Give the `imports` pattern fallback targets: `"#lib": "./src/lib/index.ts"`, `"#lib/*": ["./src/lib/*", "./src/lib/*.ts", "./src/lib/*/index.ts"]`. With extensionless `#lib/utils`: svelte-check 0 errors in the scratch project; `vite build` exited 0; `registry build` still wrote a clean `$UTILS$`; and in a scratch Kit 3 app with the same `imports`, `add` exited 0, placed files correctly, and both svelte-check (0 errors) and `vite build` passed.
    - **Limit of B.** Bun's and Node's own module resolvers do not use the fallbacks. Under fix B, `bun -e "import('#lib/utils')"` failed with `Cannot find module '#lib/utils'`, and Node 24.9.0 failed with `ERR_MODULE_NOT_FOUND`. `#lib/utils.ts` loaded under Bun (EXECUTED). Only Vite and TypeScript read the array (INFERRED).
 
-INFERRED: this is the first run of svelte-check against Kit 3 with `#lib`, which the run memo left unknown (its §10). Acceptance criterion 2 (`bun run check` reports 0 errors) cannot pass with decision 2's `imports` shape and extensionless `#lib` imports. It is a specification question, not a runtime one.
+INFERRED: this is the first run of svelte-check against Kit 3 with `#lib`, which the foundation memo of the same day ([`2026-10-27-the-foundation-run-kit-3-fonts-and-the-theme-item.md`](2026-10-27-the-foundation-run-kit-3-fonts-and-the-theme-item.md)) left unknown (its §10). Acceptance criterion 2 (`bun run check` reports 0 errors) cannot pass with decision 2's `imports` shape and extensionless `#lib` imports. It is a specification question, not a runtime one. `001` decision 2 took fix B, and criterion 2 passes.
 
 ## 5. Tests: Vitest 5.0.5 and `bun test`
 
@@ -194,7 +194,7 @@ All EXECUTED. The first lines of `bun --bun playwright test`:
 
 ```
 [runtime] playwright-config bun=1.3.14 node=v24.3.0
-[WebServer] [runtime] command=serve bun=1.3.14 process.version=v24.3.0 versions.node=24.3.0 execPath=/Users/claygendron/.bun/bin/bun
+[WebServer] [runtime] command=serve bun=1.3.14 process.version=v24.3.0 versions.node=24.3.0 execPath=<the bun binary>
 [WebServer]   ➜  Local:   http://localhost:4173/
 Running 4 tests using 2 workers
 [runtime] worker bun=1.3.14 node=v24.3.0
@@ -212,7 +212,7 @@ The setup (EXECUTED):
 
 One of our tests was wrong at first, not Bun. Planting the image into the live page with `page.evaluate` gave an empty violation list, and sometimes did not, under Bun **and under Node 24.9.0** (EXECUTED). INFERRED: Svelte's hydration replaced the planted node. `page.setContent` fixed it.
 
-**A side effect on the owner's machine.** `playwright install` removed `chromium-1234`, `chromium_headless_shell-1234` and `ffmpeg-1011` from the shared cache, `~/Library/Caches/ms-playwright/`, as unused (EXECUTED: its first output lines). The cache now holds `chromium-1248`, `chromium_headless_shell-1248` and `ffmpeg-1013`. INFERRED: another project on an older Playwright would download its browsers again.
+**A side effect on the shared browser cache.** `playwright install` removed `chromium-1234`, `chromium_headless_shell-1234` and `ffmpeg-1011` from the shared cache, `~/Library/Caches/ms-playwright/`, as unused (EXECUTED: its first output lines). The cache now holds `chromium-1248`, `chromium_headless_shell-1248` and `ffmpeg-1013`. INFERRED: another project on an older Playwright would download its browsers again.
 
 ## 7. The shadcn-svelte 1.7.1 CLI
 
@@ -235,12 +235,12 @@ It comes from `typeof Bun<"u"||typeof Deno<"u"` in the CLI's start-up banner (RE
 | `bunx shadcn-svelte@1.7.1 registry build -o static/r/styles/maia` | 0 | Node 22.14.0 (no warning) |
 
 - Both wrote `index.json`, `hello.json` and `utils.json`, and `diff -r` found the Bun and Node outputs identical.
-- `#lib/utils` became `$UTILS$`, and `cn` was listed as `cn@^0.5.0` from the scratch project's `package.json`, as the run memo found under Node.
+- `#lib/utils` became `$UTILS$`, and `cn` was listed as `cn@^0.5.0` from the scratch project's `package.json`, as the foundation memo found under Node.
 
 **`add`, against a dev server running under Bun** (EXECUTED):
 
 - The registry project ran `bun --bun vite dev --port 5310`. `GET /r/styles/maia/index.json` answered 200.
-- The scratch app was Kit 3.1.0 with `#lib` imports and aliases, a `components.json` naming the published URL `https://ui.plutosystems.co/r`, and `shadcn-svelte` 1.7.1 installed.
+- The scratch app was Kit 3.1.0 with `#lib` imports and aliases, a `components.json` naming a published registry URL, and `shadcn-svelte` 1.7.1 installed.
 - The first attempt failed, exit 1: `CLI Error: Failed to fetch registry from http://localhost:5310/r/styles/nova/index.json: 404 Not Found`. **The CLI's default style is `nova`.** Adding `"style": "maia"` to `components.json` fixed it. That is configuration, not Bun.
 - `REGISTRY_URL=http://localhost:5310/r bunx --bun shadcn-svelte@1.7.1 add hello -y -o` then exited 0:
   ```
@@ -333,21 +333,21 @@ This memo commits to nothing. These are the options it supports for amending spe
   - Write `bun --bun run <script>` in each composite script and in the docs. Children then inherit Bun through the shim (section 9).
   - Or commit a `bunfig.toml` with `[run]` `bun = true`. Then `bun run dev` and `bun run test` run Bun everywhere. It does not cover `bunx`, so `bunx` calls still need `--bun` (section 1).
   - Either way, a child spawned from a script started as `bun file.ts`, or from `bun test`, still needs `--bun` in its argv (section 9).
-- **Run the CLI from the local bin, not `bunx pkg@version`.** `bun --bun shadcn-svelte ...`, or `[process.execPath, '--bun', 'node_modules/.bin/shadcn-svelte']` from a script, uses the copy `bun.lock` pins. `bunx shadcn-svelte@1.7.1` uses a copy outside it (section 1). Apps such as `wasi-python-dev` keep using `bunx --bun shadcn-svelte@1.7.1 add`, as decision 23 says, with `--bun` added.
+- **Run the CLI from the local bin, not `bunx pkg@version`.** `bun --bun shadcn-svelte ...`, or `[process.execPath, '--bun', 'node_modules/.bin/shadcn-svelte']` from a script, uses the copy `bun.lock` pins. `bunx shadcn-svelte@1.7.1` uses a copy outside it (section 1). Apps keep using `bunx --bun shadcn-svelte@1.7.1 add`, as decision 23 says, with `--bun` added.
 - **Vitest or `bun test`.** Both worked.
   - `bun test` drops one dependency (`vitest`, 20 packages become 19). It runs the unit and smoke files, takes `--timeout`, and has `beforeAll`, `test.each` and the matchers decision 25 uses. Its costs: unit tests must import `#lib/x.ts` or relative paths; a bare `bun test` picks up the Playwright specs, so the scripts must pass `./tests/unit` and `./tests/smoke`, or set `pathIgnorePatterns`; and a smoke config file becomes a folder plus a `--timeout` flag.
   - Vitest keeps Vite's resolver (extensionless `#lib/...` works, INFERRED) and decision 25 as written, at the cost of one dependency and the `--bun` flag.
   - On fewer dependencies, `bun test` wins. On compatibility with what decision 25 already says, Vitest wins. Both are supported by evidence.
-- **Decision 2 needs its own amendment, whatever the runtime.** With `"#lib/*": "./src/lib/*"`, extensionless `#lib/...` imports fail svelte-check, and the CLI writes extensionless imports. Fix B, fallback targets in `imports`, passed svelte-check, `vite build`, `registry build` and `add` (section 4). This is a finding for the spec's author, not a choice made here.
+- **Decision 2 needs its own amendment, whatever the runtime.** With `"#lib/*": "./src/lib/*"`, extensionless `#lib/...` imports fail svelte-check, and the CLI writes extensionless imports. Fix B, fallback targets in `imports`, passed svelte-check, `vite build`, `registry build` and `add` (section 4). This is a finding for the specification, not a choice made here. `001` decision 2 took fix B.
 - **Small things for the spec.** `components.json` needs `"style": "maia"` (section 7). `tsconfig.json` needs an `include` and `"types": ["$app/types", ...]` (sections 3 and 4). `"engines"` and `"packageManager"` name Bun but enforce nothing (section 2). `@types/bun` 1.3.14 typed `Bun.spawn` and `Bun.sleep` in our scripts (EXECUTED: it installed and svelte-check reported no errors in `scripts/` or `tests/`).
 
-## 12. What is still unknown
+## 12. What this memo does not settle
 
-- Whether `bun test`'s mapping of `vitest` imports is intended. Bun's docs that we read name only `@jest/globals`.
-- Whether `bun test` can load `.svelte` through a Bun plugin (`--preload`). Not tried; decision 25 does not need it.
-- Whether a Kit 2.70.3 app (decision 25's scratch app B) installs and builds the same under `bunx --bun add`. Only Kit 3 apps were run under Bun.
-- Whether fix B's array targets work with every `add` path: items with nested `#lib/components/...` imports, hooks, or a bare `#lib` import. Only `#lib/utils` and `#lib/components/ui` were exercised.
-- Whether an item whose source says `#lib/utils.js` (fix A, which travels as `$UTILS$.js`) builds in a Kit 2 app with `$lib/utils.js`.
-- The dev loop's Vite-plugin watcher (decision 23) under Bun. Vite's own file watcher was not exercised beyond dev start-up.
-- Speed. No timing comparison of Bun and Node was made beyond the durations printed.
-- Whether the `node` shim folder (`/private/tmp/bun-node-<hash>`) behaves the same in CI on Linux.
+- **Whether `bun test`'s mapping of `vitest` imports is intended.** Not settled; Bun's docs that we read name only `@jest/globals`. The tests import from `bun:test` (`001` decision 25), so nothing depends on it.
+- **Whether `bun test` can load `.svelte` through a Bun plugin (`--preload`).** Not tried. Unit tests import `.ts` files only (`001` decision 25).
+- **Whether a Kit 2.70.3 app installs and builds the same under Bun.** Answered: `001`'s smoke test installs into a Kit 2.70.3 app (`tests/smoke/fixtures/kit2`) with the CLI under Bun, and its checks pass (`001` criterion 19).
+- **Whether fix B's array targets work with every `add` path.** Answered for nested imports and hooks: the later smoke suites install items whose files import `#lib/components/ui/...` and the `is-mobile` hook into the Kit 3 app, and its `svelte-check` reports 0 errors (`tests/smoke/primitives-add.test.ts`, `tests/smoke/navigation-add.test.ts`). No item imports a bare `#lib`.
+- **Whether fix A's `#lib/utils.js` builds in a Kit 2 app.** Not pursued: `001` decision 2 rejects fix A, so no item's source carries the extension.
+- **The dev loop's Vite-plugin watcher under Bun.** Answered: `dev-loop.test.ts` sees the registry and the tokens rebuilt within 10 s under Bun (`001` criterion 20).
+- **Speed.** No timing comparison of Bun and Node was made beyond the durations printed.
+- **Linux.** The suites run on macOS. This repository has no CI, so the `node` shim folder was not run on Linux.

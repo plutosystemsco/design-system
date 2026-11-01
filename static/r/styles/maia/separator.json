@@ -3,7 +3,7 @@
 	"name": "separator",
 	"title": "Separator",
 	"type": "registry:ui",
-	"author": "Pluto Systems <https://plutosystems.co>",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 	"description": "The groove between sections, decorative by default, or a plain vertical hairline.",
 	"devDependencies": [
 		"bits-ui@^2.20.2",

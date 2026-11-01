@@ -1,7 +1,7 @@
 import { readTokens } from "../../../../../scripts/tokens.ts";
 import type { PageServerLoad } from "./$types";
 
-/** The scale steps this face is set at (decision 11). */
+/** The scale steps this face is set at (001 decision 11). */
 const STEPS = ["2xl", "5xl"] as const;
 
 export const load: PageServerLoad = () => {

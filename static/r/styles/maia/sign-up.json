@@ -3,7 +3,7 @@
 	"name": "sign-up",
 	"title": "Sign up",
 	"type": "registry:block",
-	"author": "Pluto Systems <https://plutosystems.co>",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 	"description": "Email and a password with its rules written first, then a six-digit code on its own step, with resend.",
 	"registryDependencies": [
 		"utils",

@@ -1,7 +1,8 @@
 /**
  * The code view's source (003 decision 17): a block's built item, the exact
- * files `add` writes, mapped to where they land in an app with scratch app A's
- * aliases. Server-only: `node:fs` never reaches the browser.
+ * files `add` writes, mapped to where they land in an app with `#lib`
+ * aliases, as the smoke test's first scratch app has. Server-only: `node:fs`
+ * never reaches the browser.
  */
 import { readFileSync } from "node:fs";
 import path from "node:path";
@@ -15,7 +16,7 @@ export type BuiltFile = {
 
 export type AppFile = { appPath: string; text: string };
 
-/** Scratch app A's aliases, for the placeholders `registry build` writes. */
+/** The first scratch app's `#lib` aliases, for the placeholders `registry build` writes. */
 export const APP_ALIASES: Record<string, string> = {
   $COMPONENTS$: "#lib/components",
   $UI$: "#lib/components/ui",

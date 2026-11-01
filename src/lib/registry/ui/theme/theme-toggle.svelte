@@ -26,7 +26,7 @@
 <!--
   One control, one state: a pressed button named "Dark theme", pressed when
   dark is in force. A tri-state choice (light, dark, system) is an app's to
-  compose from dropdown-menu and theme.set; the item page shows it.
+  compose from dropdown-menu and theme.set.
 -->
 <Button
   variant="ghost"

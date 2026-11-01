@@ -2,7 +2,7 @@
 
 ## What this is
 
-The Pluto Systems design system: tokens, styles and Svelte components, delivered as a shadcn-svelte registry that apps copy source from. Its first app is `plutosystemsco/wasi-python-dev` (`../wasi-python-dev`), built in tandem.
+The Pluto Systems design system: tokens, styles and Svelte components, delivered as a shadcn-svelte registry that apps copy source from.
 
 Read `context/constitution.md` first. It governs this file. Then read `context/README.md` and `context/handoff.md`.
 
@@ -15,7 +15,7 @@ Read `context/constitution.md` first. It governs this file. Then read `context/R
 - **Prior art is studied, never copied.**
 - **Commit or push only when asked.**
 - **All project knowledge lives in this repository**, under `context/`. Never save a memory outside it.
-- **Anything waiting on the owner is asked with the AskUserQuestion tool**, with concrete options and the recommended one first.
+- **Anything waiting on the owner is asked as a question** with concrete options, the recommended one first, and recorded in `context/decisions.md` once answered.
 
 ## Explaining things
 

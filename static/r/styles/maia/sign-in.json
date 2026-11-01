@@ -3,7 +3,7 @@
 	"name": "sign-in",
 	"title": "Sign in",
 	"type": "registry:block",
-	"author": "Pluto Systems <https://plutosystems.co>",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 	"description": "Email and password in one step, with an error summary that takes focus, a password you can show, and a button that goes busy.",
 	"registryDependencies": [
 		"utils",

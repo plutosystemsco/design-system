@@ -9,7 +9,7 @@
   }: DropdownMenuPrimitive.SeparatorProps = $props();
 </script>
 
-<!-- The hairline (R22), across the panel's padding. -->
+<!-- The hairline, across the panel's padding. -->
 <DropdownMenuPrimitive.Separator
   bind:ref
   data-slot="dropdown-menu-separator"

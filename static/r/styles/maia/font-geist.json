@@ -3,7 +3,7 @@
 	"name": "font-geist",
 	"title": "Geist",
 	"type": "registry:font",
-	"author": "Pluto Systems <https://plutosystems.co>",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 	"description": "Geist, the body face, self-hosted through Fontsource.",
 	"meta": {
 		"since": "0.1.0",

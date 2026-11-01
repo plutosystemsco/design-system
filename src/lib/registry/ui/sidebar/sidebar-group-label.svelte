@@ -13,7 +13,7 @@
     child?: Snippet<[{ props: Record<string, unknown> }]>;
   } = $props();
 
-  // Mono furniture (v2 §04): a caption, lowercase, in the muted ink. As
+  // Mono furniture: a caption, lowercase, in the muted ink. As
   // icons it folds away over the micro budget.
   const mergedProps = $derived({
     class: cn(

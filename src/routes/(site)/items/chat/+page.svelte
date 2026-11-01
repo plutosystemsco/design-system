@@ -37,8 +37,8 @@
     </li>
     <li>
       A fixed height (<code>fill="screen"</code> is the viewport; "parent" fills a
-      box the app sizes), so the log overflows and scrolls. On a phone the pane is
-      full-bleed with the composer at the bottom; iOS Safari's keyboard is untested.
+      box the consuming app sizes), so the log overflows and scrolls. On a phone the
+      pane is full-bleed with the composer at the bottom. Checked in Chromium.
     </li>
   {/snippet}
   {#snippet setup()}

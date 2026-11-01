@@ -1,10 +1,12 @@
 # Review of 003 — The first blocks
 
-- **Status:** complete; awaiting the author's disposition
+Reviews [`specifications/003-the-first-blocks.md`](../specifications/003-the-first-blocks.md).
+
+- **Status:** dispositioned; fit to build
 - **Date:** 2026-10-28
-- **Reviewer:** an agent, Claude, sub-agent of the orchestrating session, fresh to the specification; not the author
+- **Reviewer:** a reviewer; not the author
 - **Reviewed:** the specification as drafted, 2026-10-28 (`specifications/003-the-first-blocks.md`, 878 lines, untracked). Checked against the constitution, every entry of `decisions.md` (the uncommitted top entry "The design calls for `003`" included), `002`'s decisions 9 to 24 and Landing notes, `001`'s decisions 2, 3, 13, 14, 18 to 25 and 29, the three memos of 2026-10-28, and the code it extends.
-- **Re-ran:** under Bun 1.3.14. Scratch files went in the session scratchpad (`review-003/`). Nothing in this repository was written except this file.
+- **Re-ran:** under Bun 1.3.14. Scratch files were kept outside the repository. Nothing in this repository was written except this file.
   - Every string in decisions 9 to 13, plus the stub comment, the example data and the IANA values, linted with `lintText` and `loadRules` from `scripts/lint-literals.ts` → 102 strings, 0 violations. Decision 14's claim holds (EXECUTED).
   - `registry.json` summarised → 32 items, 133 files, the per-item file counts and dependencies decision 5 and smoke assertion 2 assume (EXECUTED). Every count in the spec, recomputed from its own tables, agrees: 38 items (1, 3, 1, 28, 5); 151 item files; 23 dependency names; 39 and 39 built files; 55 pages; 202 axe scans (66 + 36 + 96 + 2 + 2); 110 theme checks; 40 catalogue stops; 36 fixture stops; 71 view stops; 40 toolbar stops; 15, 10, 15, 16 viewer checks; 84 + 16 = 100 smoke files; 16 smoke assertions; 64 bad and 42 good lint samples.
   - SvelteKit 3.1.0 source in `node_modules/@sveltejs/kit` (READ):
@@ -39,7 +41,7 @@ Does not land yet (ready after fixes). Nothing is High. Findings 1 to 7 are Medi
 - the password default sits below NIST's single-factor minimum;
 - shipped copy promises what the blocks cannot keep.
 
-Findings 6 and 8, and the wording calls in 7, need the design lead. Finding 11 needs the author or the design lead. Nothing needs the owner before build: the `/admin` question (decision 22) is `wasi-python-dev`'s and blocks nothing here.
+Findings 6 and 8, and the wording calls in 7, need the design lead. Finding 11 needs the author or the design lead. Nothing needs the owner before build.
 
 ## Acceptance criteria against evidence
 
@@ -71,7 +73,7 @@ Findings 6 and 8, and the wording calls in 7, need the design lead. Finding 11 n
 25. **Release:** countable (READ).
 26. **Checkpoint:** countable (READ).
 27. **Development walk:** countable (55 × 2 = 110) (READ).
-28. **In the app:** not checkable here, by design.
+28. **Released:** tag `v0.3.0`.
 
 ## Findings, most severe first
 
@@ -84,7 +86,7 @@ Findings 6 and 8, and the wording calls in 7, need the design lead. Finding 11 n
 
 2. **Medium — `-o` still silently replaces an app's routes, and the block names invite it** (decision 3; decision 22; `001` decision 23).
    - **What is wrong:** decision 3 picks the default target because "the default can only touch a folder named after the block". But the names are chosen to be "the natural one": `/sign-in`, `/sign-up`, `/settings`. Those are exactly the folders an app is likely to have already. `001` decision 23 tells apps to install with `add … -y -o`. With `-o`, `add` overwrites without asking. Without it, `add` lists the existing items and asks first (READ, `add-registry-items.ts:91-143`). Decision 3 calls this INFERRED; it is readable. A block also pulls up to 13 owned primitives (`settings` pulls `field`, `alert-dialog` and more). An app that has customised its `button` loses those changes under `-o` too.
-   - **Why it matters:** this is constitution §6, "Break an installed app silently". `wasi-python-dev` installs from a dev server with exactly that command.
+   - **Why it matters:** this is constitution §6, "Break an installed app silently". An app that follows `001` decision 23 installs with exactly that command.
    - **Fix:**
      - Make the CLI fact READ in decision 3.
      - State the rule: blocks are added **without** `-o`, so the CLI asks about every file that already exists. Say so on each block's item page, beside the install command (which already omits `-o`), and amend `001` decision 23's guidance for blocks.
@@ -111,7 +113,7 @@ Findings 6 and 8, and the wording calls in 7, need the design lead. Finding 11 n
      - Add a check: press Discard by keyboard, and the focused element is the named one.
 
 6. **Medium — The default minimum password length sits below NIST's floor for a password that is the only factor** (decision 11, `passwordMinLength` default 12, "a design default, not research").
-   - **What is wrong:** the first set's sign-in is email and password, with no second factor. NIST SP 800-63B-4 §3.1.1.2 requires at least 15 characters for a password that is the only factor. It allows 8 only when the password is part of multi-factor sign-in (READ today). 12 meets neither reading. AGENTS.md says no specification without its research, and this default ships into every app that does not override it.
+   - **What is wrong:** the first set's sign-in is email and password, with no second factor. NIST SP 800-63B-4 §3.1.1.2 requires at least 15 characters for a password that is the only factor. It allows 8 only when the password is part of multi-factor sign-in (READ today). 12 meets neither reading. The constitution's §5 puts research before every specification, and this default ships into every app that does not override it.
    - **Fix (the design lead's call):**
      - Default `passwordMinLength` to 15, cite §3.1.1.2, and let the copy and the error follow the prop. This is recommended.
      - Or keep 12, with a written reason that meets the citation.
@@ -125,7 +127,7 @@ Findings 6 and 8, and the wording calls in 7, need the design lead. Finding 11 n
      - Sign-up, done step: "You are signed in as {email}." No block signs anyone in.
      - Sign-up, consent: the sentence names "the terms of service and the privacy notice" even when no `termsHref` or `privacyHref` is given. That asks agreement to documents the page does not offer.
      - Settings, after deleting: "We are deleting your account. We will email you when it is done." This is the app's promise.
-     - Hero, feature 3: "meets WCAG 2.2 AA in both themes." This is a conformance claim that axe cannot establish. The spec's own placeholder (decision 24) admits that screen reader behaviour is unknown.
+     - Hero, feature 3: "meets WCAG 2.2 AA in both themes." This is a conformance claim that axe cannot establish. The spec itself says no screen reader has been run (decision 24).
      - Error page: "The problem is on our side, not yours." A client-side load that fails offline also renders the 500 copy.
      - Every 4xx reads "Page not found". That is wrong for 401 (sign in) and 429 (wait).
    - **Fix (the author; the design lead for wording):**
@@ -139,7 +141,7 @@ Findings 6 and 8, and the wording calls in 7, need the design lead. Finding 11 n
      - Error page: "The page could not load. Try again in a moment."
      - Map only 404 and 410 to the not-found copy. Every other status below 500 gets the error copy, unless the app passes its own.
 
-8. **Low — The 32 px code cells bend a design-lead decision, not only `002` decision 10** (decision 11, "Below `sm`, the cells are 32 px squares").
+8. **Low — The 32 px code cells depart from a design-lead decision, not only `002` decision 10** (decision 11, "Below `sm`, the cells are 32 px squares").
    - The arithmetic holds (READ: 6 × 48 + 2 × 12 + 16 = 328 against 272). 32 px is the only ladder step between 24 and 48 that fits.
    - Two things are missing:
      - `decisions.md` itself says "The code-input cells are 48 px squares" ("Control heights sit on the ladder"). So the design lead records the exception there.
@@ -159,7 +161,7 @@ Findings 6 and 8, and the wording calls in 7, need the design lead. Finding 11 n
 10. **Low — The loading status is announced only if the region is already in place** (decision 12, `PageStatesLoading`).
     - On a full load the text appears after hydration, so it is announced.
     - In an app, `PageStatesLoading` is usually mounted when loading starts, on a client-side navigation. The region is then inserted and filled one tick apart. Nothing shows that one tick is enough (INFERRED; patterns memo §0.1: "include them in the initial markup").
-    - Fix: state the precondition in the component's comment and the item page. Mount `PageStatesLoading` before loading starts, and drive `loading`. Add it to decision 24's placeholder memo.
+    - Fix: state the precondition in the component's comment and the item page. Mount `PageStatesLoading` before loading starts, and drive `loading`. Add it to decision 24's list of what no screen reader has checked.
 
 11. **Low — The error summary is written four times for a reason the spec gave itself** (decision 24).
     - "The scope adds one component" is this specification's own choice. No binding document limits `003` to one item. The patterns memo §8.8 lists "an error-summary / alert" among the primitives the blocks need.
@@ -188,7 +190,7 @@ Findings 6 and 8, and the wording calls in 7, need the design lead. Finding 11 n
 - **§4.1 source, not a package:** holds.
   - Blocks link only to `/` and to fragments on their own page (decision 4, READ against Kit's crawler).
   - Stubs live in the page files, marked for replacement.
-- **§4.2 in tandem:** holds. Criterion 28 is in `wasi-python-dev`.
+- **§4.2 driven by need:** holds. Criterion 28 is the release, tag `v0.3.0`.
 - **§4.3 tokens are the one source:** holds.
   - Every block class is a token or ladder class.
   - The viewer's `w-90`, `w-192`, `w-320` and `h-180` are preview code, outside the lint by `001` decision 24.
@@ -197,10 +199,10 @@ Findings 6 and 8, and the wording calls in 7, need the design lead. Finding 11 n
 - **§6, break an installed app silently:** finding 2.
 - **`decisions.md`, the `003` calls:**
   - Seven match: hero, sign in, sign up, page states, settings, status and viewer.
-  - One is bent, the 48 px code cells (finding 8).
+  - One takes an exception, the 48 px code cells (finding 8).
   - The summary's `role={null}` from initial props departs from the letter of "an `alert` with `role="alert"`". It is reasoned on `002`'s precondition 2, and it holds.
 - **`002`'s decisions:** no item is edited.
-  - Decision 10 is bent and named (finding 8).
+  - Decision 10 takes the same exception, named (finding 8).
   - Decision 11's description order is moved by CSS and named.
   - Decision 24's preconditions are honoured, except finding 4.
 
@@ -217,10 +219,12 @@ By the author, 2026-10-28. Four findings were design calls, decided by the desig
 | 5 | Medium | Discard drops focus | **Fixed.** Decision 14: after a discard, focus moves to the first field, Name, and the status says "Changes discarded." `blocks.spec.ts` check 17. |
 | 6 | Medium | Password default below NIST's single-factor minimum | **Fixed, by the design lead's call.** Decision 12: `passwordMinLength` defaults to 15 (NIST SP 800-63B-4 §3.1.1.2), applied as `Math.max(15, …)` so an app may raise it, never lower it; no `maxlength`, no composition rule. Rules copy and error read 15. `blocks.spec.ts` check 6 (14 refused, 15 accepted, no `maxlength`); unit check 10. |
 | 7 | Medium | Shipped strings that mislead | **Fixed, by the design lead's call.** Dropped "We never send marketing email."; email description "Notices about your account go here."; theme description "The colour scheme for this device.", the app applies it; done step "The account for {email} is ready to use."; consent renders only with `termsHref`; deletion line "Account deletion requested.", marked the app's to replace; hero feature 3 "Built for the keyboard", no conformance claim; the error page names no fault ("Try again in a moment."); only 404 says "Page not found", another status below 500 says "This page cannot be shown" with the status in mono, with a new view `/view/page-states/cannot-show/` (status 403) and check 22. Decision 15 states the rule. All new strings lint clean (EXECUTED). |
-| 8 | Low | 32 px cells bend a `decisions.md` entry | **Fixed.** Decision 12 cites the design lead's recorded exception in `decisions.md` as well as `002` decision 10, and gives the 376 px threshold (fails at 360, 375 and 320). |
+| 8 | Low | 32 px cells depart from a `decisions.md` entry | **Fixed.** Decision 12 cites the design lead's recorded exception in `decisions.md` as well as `002` decision 10, and gives the 376 px threshold (fails at 360, 375 and 320). |
 | 9 | Low | Builder questions left open | **Fixed.** Every view sets its page file's `<title>`, with "Error: " where a summary shows (decisions 11 to 14, 16). Decision 5 gives the 7 new items' titles and descriptions; registry check asserts the titles. "Forgot your password?" goes in `footer` (decision 4). `SignUpForm` gains `focusOnMount` (decision 12). Each settings `FieldSet` takes `*:data-[slot=field-description]:order-first`, and the legend's `h2` its classes (decision 14). The "Technical details" summary is `inline-flex min-h-6` (decision 13; check 21). The viewer toolbar is `flex flex-wrap gap-2` (decision 17). `SettingsForm` keeps a private saved copy (decision 14). |
-| 10 | Low | Loading status timing on a client-side mount | **Fixed.** Decision 13 states the precondition (mount `PageStatesLoading` before loading starts), in the component's comment and on the item page; decision 8 states it for `Status`; decision 25's placeholder memo now covers it. |
+| 10 | Low | Loading status timing on a client-side mount | **Fixed.** Decision 13 states the precondition (mount `PageStatesLoading` before loading starts), in the component's comment and on the item page; decision 8 states it for `Status`; decision 25's screen-reader limit now names it. |
 | 11 | Low | Error summary written four times | **Fixed, by the design lead's call.** New decision 9: `error-summary`, a `registry:ui` item (`role="alert"` when inserted on a failed submit, focusable, a heading, links to the invalid fields, `titleFor` for the "Error: " prefix), with a preview page and a 3-stop keyboard fixture. The design lead's "four blocks" are four components in three blocks (`sign-in-form`, `sign-up-form`, `sign-up-verify`, `settings-form`). Recounted: 39 items (29 `registry:ui`), 153 item files, 24 dependency names, 40 + 40 built files, 57 pages, 214 axe scans, 114 theme checks, 41 catalogue stops, 39 fixture stops over 17 items, 11 behaviours, 102 smoke files. `alert` is now a dependency of `error-summary`, not of the blocks; `phosphor-svelte` moves from three blocks to `error-summary`. |
 | 12 | Low | Missing states; app slots never rendered | **Fixed.** House wording for "too many attempts" (`sign-in`, `sign-up`'s code step) and "email cannot be used" (`sign-up`), exported as `MESSAGES`, with the safer don't-tell flow noted (decisions 11 and 12). `/view/sign-in/credentials/` renders a `footer` link and `/view/sign-up/errors/` the consent links, all to `/` (decision 4); view stops become 5 and 8; checks 4 and 11. Consent text is `text-base`, so its inline links are 25.6 px. |
 | 13 | Low | Citations and small corrections | **Fixed.** Decision 4's `prerender.js` lines corrected (handler 101 to 110 and 184 to 206; called 630 to 636; missing ids 731 to 744). Decision 13: the installed `+error.svelte` handles only errors thrown by `/page-states`; unmatched URLs render the root error page. Decision 2 names the departure from `001` decision 29. Decision 17 drops the untested claim about Tab inside the iframe, and copies the theme class on mount when the iframe has already loaded. Decision 16 notes that a link leaving a view navigates the frame. |
 | 14 | Low | Size | **Accepted.** Nothing cut. The checkpoint after step 3 now also inspects `error-summary` and check 27's rings at 360 (decision 24; criterion 26). |
+
+After the disposition: fit to build.

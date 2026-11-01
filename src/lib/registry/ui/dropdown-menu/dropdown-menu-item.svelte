@@ -11,7 +11,7 @@
   }: DropdownMenuPrimitive.ItemProps & {
     /** Starts the text where a checked item's does, 32 px in, so a mixed menu lines up. */
     inset?: boolean;
-    /** A destructive item is red text on the same accent, with an icon or a telling word beside it (R19). */
+    /** A destructive item is red text on the same accent, with an icon or a telling word beside it: colour is never the only sign. */
     variant?: "default" | "destructive";
   } = $props();
 </script>
@@ -19,8 +19,8 @@
 <!--
   A 32 px row (the sm control height). Hover and focus are one state, on the
   accent inset: bits-ui focuses an item under the pointer and marks it
-  highlighted. The global focus mark (001 decision 13) stays on the focused item above the accent, so
-  keyboard focus is told from pointer hover (R2).
+  highlighted. The global focus mark stays on the focused item above the
+  accent, so keyboard focus is told from pointer hover.
 -->
 <DropdownMenuPrimitive.Item
   bind:ref

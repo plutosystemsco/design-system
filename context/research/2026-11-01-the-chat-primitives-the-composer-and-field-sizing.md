@@ -2,19 +2,19 @@
 
 - **Status:** complete
 - **Date:** 2026-11-01
-- **Owner:** Clay Gendron (research executed by an agent, Claude, sub-agent of the orchestrating session)
+- **Author:** the design lead
 - **Question:** For the chat primitives of `005` and the chat pane of `006`: what are the stock `message-scroller`, `message`, `bubble` and `marker` made of, what does the scroller depend on, what in each must change to meet our rules; what must a composer of ours do; does `field-sizing: content` work in the three engines; how is a streamed reply announced; and how does a message render fenced code from a streaming string?
-- **What it blocks:** specification `005` (the chat primitives) and `006` (the chat pane); through them `wasi-python-dev`'s chat page. It closes `002` decision 13's placeholder on `field-sizing`.
+- **What it blocks:** specification `005` (the chat primitives), released as `v0.5.0`, and `006` (the chat pane), released as `v0.6.0`. It settles the question `002` decision 13 left on `field-sizing`.
 
 ## How to read this memo
 
 Every claim carries a label.
 
-- **EXECUTED**: we ran it and saw the result, on 2026-11-01, macOS (Darwin 25.5.0, arm64), Bun 1.3.14. `bun pm view` ran at 12:27 UTC. Browser checks ran in Playwright 1.64.1's Chromium 156.0.8078.4 (build 1248), WebKit 27.2 (build 2370) and Firefox 157.0 (build 1555). Firefox was installed into the user's Playwright cache for this memo (`bunx --bun playwright install firefox`, 105.7 MiB, exit 0); the repository was not touched.
+- **EXECUTED**: we ran it and saw the result, on 2026-11-01, macOS (Darwin 25.5.0, arm64), Bun 1.3.14. Browser checks ran in Playwright 1.64.1's Chromium 156.0.8078.4 (build 1248), WebKit 27.2 (build 2370) and Firefox 157.0 (build 1555); the repository was not touched.
 - **READ**: a source says so. Each source was read on 2026-11-01. Paths in the prior-art clone are relative to `context/prior_art/shadcn-svelte/`, at commit `6149e14` (MIT). `ui/<item>/` means `docs/src/lib/registry/ui/<item>/`. `primitive/` means `packages/primitives/src/lib/message-scroller/`. Paths in this repository are relative to its root.
 - **INFERRED**: our reasoning.
 
-Scratch work lives in the session scratchpad, folder `research-005-chat/`: `app/` (a copy of `tests/smoke/fixtures/kit3` with the four stock items added), `live/` (the live registry JSON), `lint-stock.ts` and `lint-stock.txt` (the lint run), `static/` (two probe pages), `probes/` (the three Playwright scripts), `*.out` (their output), `shots/` (screenshots), `view/` (`bun pm view`, and `marked`, `micromark`, `svelte-exmarkdown` installed for measuring), `bcd/` (MDN's compat data), `downloads/` (ARIA 1.2). Nothing was written to this repository except this memo.
+Scratch work was done in a throwaway folder outside this repository, not kept: `app/` (a copy of `tests/smoke/fixtures/kit3` with the four stock items added), `live/` (the live registry JSON), `lint-stock.ts` and `lint-stock.txt` (the lint run), `static/` (two probe pages), `probes/` (the three Playwright scripts), `*.out` (their output), `shots/` (screenshots), `view/` (`bun pm view`, and `marked`, `micromark`, `svelte-exmarkdown` installed for measuring), `bcd/` (MDN's compat data), `downloads/` (ARIA 1.2). Nothing was written to this repository except this memo.
 
 Terms of art.
 
@@ -46,7 +46,7 @@ Terms of art.
 
 READ, the clone. Seven files: `index.ts`, `message-scroller.svelte` (Root), `-provider`, `-viewport`, `-content`, `-item`, `-button`. Each component is a thin wrapper: it imports `MessageScroller as MessageScrollerPrimitive` from `@shadcn-svelte/primitives/message-scroller` (line 2 of each `.svelte` file), renders the primitive's part with a `data-slot` and classes, and passes the rest through. `index.ts` lines 8 to 12 re-export three hooks straight from the package: `useMessageScroller`, `useMessageScrollerScrollable`, `useMessageScrollerVisibility`. So the item's public API includes the package's.
 
-EXECUTED, the live JSON (`https://shadcn-svelte.com/registry/styles/maia/message-scroller.json`, 6,886 bytes, fetched 12:14 UTC): `dependencies: null`, `devDependencies: ["@shadcn-svelte/primitives@^0.0.1"]`, `registryDependencies: ["button"]`, seven files with targets `message-scroller/<file>`. The primitive is **not inlined**. The other three live files: `message` (4,892 bytes, no dependencies), `bubble` (7,490, `tailwind-variants@^3.3.0`), `marker` (3,704, `tailwind-variants@^3.3.0`).
+EXECUTED, the live JSON (`https://shadcn-svelte.com/registry/styles/maia/message-scroller.json`, 6,886 bytes, fetched 2026-11-01): `dependencies: null`, `devDependencies: ["@shadcn-svelte/primitives@^0.0.1"]`, `registryDependencies: ["button"]`, seven files with targets `message-scroller/<file>`. The primitive is **not inlined**. The other three live files: `message` (4,892 bytes, no dependencies), `bubble` (7,490, `tailwind-variants@^3.3.0`), `marker` (3,704, `tailwind-variants@^3.3.0`).
 
 EXECUTED, the install. `REGISTRY_URL=https://shadcn-svelte.com/registry bun --bun …/shadcn-svelte add message-scroller message bubble marker -y -o` in a copy of `tests/smoke/fixtures/kit3` wrote `src/lib/components/ui/{message-scroller,button,message,bubble,marker}` and exited 0 (the CLI 1.7.1 warned "unsupported runtime", as `001` recorded). `bun.lock` grew from 119 to 130 package entries. The 11 added: `@lucide/svelte` 1.66.0 (35 MB on disk), `@shadcn-svelte/primitives` 0.0.1 (468 KB), `@tanstack/virtual-core`, `runed` 0.37.1, `svelte-toolbelt` 0.10.6 (and its nested `runed`), `tailwind-variants` 3.3.1, `dequal`, `inline-style-parser`, `lz-string`, `style-to-object`. The package's `dist/message-scroller/` is 55,274 bytes of JavaScript, 44,352 in `message-scroller.svelte.js`. `add` did not write `src/lib/utils.ts` (that is `init`'s job); the scratch app got a two-line `cn` from `clsx` for the build.
 
@@ -96,7 +96,7 @@ READ, the primitive's size: `message-scroller.svelte.ts` 1,528 lines, `geometry.
 
 - READ: the viewport carries `scroll-fade-b` (`ui/message-scroller/message-scroller-viewport.svelte` line 16). The utility lives in the CLI package's stylesheet, `packages/cli/src/tailwind.css`: `@utility scroll-fade-b` (lines 323 to 328) sets a mask from `linear-gradient(to bottom, transparent 0, #000 …, #000 calc(100% - …), transparent 100%)` (the shared block, lines 173 to 180), driven by scroll-timeline animations where supported (lines 187 to 200). An app receives it through `@import "shadcn-svelte/tailwind.css"`, which `init` writes (`packages/cli/src/utils/css.ts` line 12; the CLI changelog lines 19 and 89; `docs/src/app.css` line 3).
 - EXECUTED: the scratch app was never `init`ed, so its `src/app.css` holds only `@import "tailwindcss"`. The built CSS has **0** `mask-image` rules, and the viewport's computed `mask-image` is `none`. `add` alone does not deliver the fade; the class is dead in an app that did not `init` from shadcn.
-- INFERRED: the fade is a decorative gradient, which v2 §05 bans (patterns memo §5.3). Our registry does not ship shadcn's stylesheet, so the class would be dead here too. A groove at the composer's top edge is the replacement the patterns memo proposed. The same stylesheet's `scrollbar-thin` and `scrollbar-gutter-stable` resolved without it (Tailwind 4.3.3's own utilities, EXECUTED: the computed values above), so those two classes are not shadcn's.
+- INFERRED: the fade is a decorative gradient, which the design book §05 bans (patterns memo §5.3). Our registry does not ship shadcn's stylesheet, so the class would be dead here too. A groove at the composer's top edge is the replacement the patterns memo proposed. The same stylesheet's `scrollbar-thin` and `scrollbar-gutter-stable` resolved without it (Tailwind 4.3.3's own utilities, EXECUTED: the computed values above), so those two classes are not shadcn's.
 
 ### 1.6 What the checklist rejects (EXECUTED lint; the rest READ)
 
@@ -113,7 +113,7 @@ The lint ran over the files `add` wrote (`lint-stock.ts`, rules loaded from this
 Beyond the lint, by the checklist:
 
 - `ease-[cubic-bezier(0.7,0,0.84,0)]` and `ease-[cubic-bezier(0.23,1,0.32,1)]` on the button (R14: motion only through tokens; the lint sees no length in them).
-- `scroll-fade-b` (§1.5; v2 §05) and `data-autoscrolling:scrollbar-thumb-transparent` plus `scrollbar-track-transparent`, which hide the scrollbar while the scroller animates: a control hidden from the reader (R21's spirit; `004`'s `scrollbar` decision).
+- `scroll-fade-b` (§1.5; the design book §05) and `data-autoscrolling:scrollbar-thumb-transparent` plus `scrollbar-track-transparent`, which hide the scrollbar while the scroller animates: a control hidden from the reader (R21's spirit; `004`'s `scrollbar` decision).
 - `ArrowDownIcon` from `@lucide/svelte` (R15: `phosphor-svelte`). `add` resolved the `IconPlaceholder` to lucide and added the 35 MB package.
 - The button's `border-border bg-background hover:bg-muted` restyles our `button`'s own variant (R8: `background` is a page ground; a control on the log takes the `secondary` variant as it is).
 - `[content-visibility:auto]` on every item: passes the lint (no length), but with `contain-intrinsic-size` gone it would make off-screen rows measure 0 px and the scrollbar jump. The two go together or not at all (INFERRED).
@@ -127,9 +127,9 @@ Three ways to serve a conversation view.
 
 1. **Install the stock item and pin `@shadcn-svelte/primitives` 0.0.1 as a named dependency.** Constitution §4.6 allows it. Cost: a 28-day-old package at version 0.0.1 with two releases, four transitive packages, 44 KB of scroller JavaScript, and our `index.ts` re-exporting the package's hooks, so the item's API is the package's. Benefit: turn anchoring, prepend preservation, `scrollToMessage`, visibility tracking, the server-side `data-pending-scroll`, and 2,564 lines of tests we did not write.
 2. **Write our own scroller**, as `004` did for `scroll-area`: a native `overflow-auto` viewport (`role="region"`, a label, `tabindex="0"`, the `scrollbar` utility), a content `div` with `role="log"` and a name, follow-bottom in about sixty lines (a scroll listener with the 8 px threshold; release on `wheel`, `touchmove`, the seven keys and a falling `scrollTop`; a `ResizeObserver` on the content, coalesced into a frame; re-arm at the bottom), and a button that is `hidden` at the bottom. No anchoring, no prepend, no virtualisation.
-3. **Both:** our own now, the package later if a thread outgrows it.
+3. **Both:** our own first, the package if a thread outgrows it.
 
-The behaviours to keep from the stock, whichever way: never move the reader against a gesture (§1.3's intent list, and a falling `scrollTop`), re-arm only at the bottom, coalesce resize into a frame, suppress the button while following, keep the button out of the tab order when there is nothing to scroll to, and open at the end. `wasi-python-dev`'s pane is one short thread with code output; what it needs is follow-bottom and a stop (patterns memo §8.5). The recommendation is 2, with the stock's state machine as the studied reference and its test names (§1.2's cited lines) as the list of cases to prove. `005` decides.
+The behaviours to keep from the stock, whichever way: never move the reader against a gesture (§1.3's intent list, and a falling `scrollTop`), re-arm only at the bottom, coalesce resize into a frame, suppress the button while following, keep the button out of the tab order when there is nothing to scroll to, and open at the end. A chat pane for a code-running product is one short thread with code output; what it needs is follow-bottom and a stop (patterns memo §8.5). The recommendation is 2, with the stock's state machine as the studied reference and its test names (§1.2's cited lines) as the list of cases to prove. `005` decision 11 takes 2: `message-log`, written fresh with the stock's rules as the reference.
 
 ## 2. `message`, `bubble`, `marker`
 
@@ -173,14 +173,14 @@ Root base: `gap-1 data-[align=end]:self-end max-w-[80%] data-[variant=ghost]:max
 
 Either passes R6 and R7. `default`'s solid `primary` on every user turn spends the one accent the send button owns (decisions, "State colour is outside the one-accent budget"; the accent itself is one per surface), so it is not a user turn's ground. `destructive` is a tint, which R7 forbids inside an inset and `002` reserves for `alert`; an error reply is an `Alert variant="destructive"` with a retry, not a bubble (patterns memo §5.3). `outline`'s `bg-background` is a page ground (R8) and becomes `bg-card`. `ghost` is the assistant's full-width prose and stays.
 
-**Radii.** `rounded-3xl` on the content measured 24 px (§1.4). In our theme every `rounded-*` draws the 8 px case radius (`001` decision 9), so the class is written `rounded` (R9). `rounded-full` on `bubble-reactions` and on `message-avatar` is outside decision 19's allowlist (`four-dot.svelte`, `radio-group-item.svelte`; `scripts/lint-literals.ts` line 53). A reaction pill is not dot-derived. INFERRED: reactions belong to a chat between people, not to a chat with an agent; `005` can drop the part. `message-avatar` becomes a slot with no radius and no ground, because our `avatar` is already `size-8 rounded` with a hairline (`src/lib/registry/ui/avatar/avatar.svelte` line 22) and sizes `sm` 24 px and `lg` 48 px.
+**Radii.** `rounded-3xl` on the content measured 24 px (§1.4). In our theme every `rounded-*` draws the 8 px case radius (`001` decision 9), so the class is written `rounded` (R9). `rounded-full` on `bubble-reactions` and on `message-avatar` is outside decision 19's allowlist (`four-dot.svelte`, `radio-group-item.svelte`; `scripts/lint-literals.ts` line 53). A reaction pill is not dot-derived. INFERRED: reactions belong to a chat between people, not to a chat with an assistant. `005` decision 12 drops the part. `message-avatar` becomes a slot with no radius and no ground, because our `avatar` is already `size-8 rounded` with a hairline (`src/lib/registry/ui/avatar/avatar.svelte` line 22) and sizes `sm` 24 px and `lg` 48 px.
 
 ### 2.3 `marker` (READ)
 
 Four files. Root `marker` (`data-variant`: `default`, `separator`, `border`), `marker-icon` with `aria-hidden="true"` written in (`marker-icon.svelte` line 16), `marker-content`. Base: `gap-2 text-sm text-muted-foreground [a]:hover:text-foreground [a]:underline-offset-3 [a]:underline [&_svg:not([class*='size-'])]:size-4 min-h-4 text-left group/marker relative flex w-full items-center`; `separator`: `before:h-px before:flex-1 before:bg-border after:…`; `border`: `border-b border-border pb-2`.
 
 - **Role.** "`Marker` is presentational by default… choose the role based on intent" (`marker.md` line 178). For "streaming or progress markers such as 'Thinking...'", the docs say `role="status"` with a `Spinner` (lines 104, 182 to 187; `examples/marker-status.svelte`). INFERRED: a marker inserted at the moment it is needed is a region created with its text, which is the silent case `003` decision 8 records ("a region announces only if it was in the page before its text changed"). Our status line is content in the log (an added node, which `additions` announces, §5.1) and the state is told by the `status` item. A marker of ours carries no role; an app may pass one.
-- **`shimmer`.** The docs pair the marker with the `shimmer` utility "for an animated streaming-text effect" (line 114). It is a `tw-shimmer` keyframe sliding a `linear-gradient` with `oklch(from currentColor …)` and `color-mix` (`packages/cli/src/tailwind.css` lines 518 to 557): a looping gradient, banned twice (R14; v2 §06; R1).
+- **`shimmer`.** The docs pair the marker with the `shimmer` utility "for an animated streaming-text effect" (line 114). It is a `tw-shimmer` keyframe sliding a `linear-gradient` with `oklch(from currentColor …)` and `color-mix` (`packages/cli/src/tailwind.css` lines 518 to 557): a looping gradient, banned twice (R14; the design book §06; R1).
 - **The separator lines** `before:h-px` and `after:h-px` are 1 px sizes off the ladder; the hairline is a border (R22): `before:border-t before:border-border`.
 
 ### 2.4 `textarea` and `input-group`, as ours stand (READ)
@@ -193,7 +193,7 @@ Four files. Root `marker` (`data-variant`: `default`, `separator`, `border`), `m
 
 | Item | Files | Lint | Files failing | What the lint found | Beyond the lint (R-rule) |
 |---|---|---|---|---|---|
-| `message-scroller` | 7 | 5 | 2 | `duration-200`, `duration-400`, `scale-95`, `scale-100`, `[contain-intrinsic-size:auto_10rem]` | two `cubic-bezier` easings (R14); `scroll-fade-b` (v2 §05); scrollbar hidden on autoscroll; lucide icon (R15); `bg-background` on a control (R8) |
+| `message-scroller` | 7 | 5 | 2 | `duration-200`, `duration-400`, `scale-95`, `scale-100`, `[contain-intrinsic-size:auto_10rem]` | two `cubic-bezier` easings (R14); `scroll-fade-b` (the design book §05); scrollbar hidden on autoscroll; lucide icon (R15); `bg-background` on a control (R8) |
 | `message` | 7 | 4 | 4 | `px-3.5` ×2, `gap-2.5`, `rounded-full` | the avatar part's own ground and radius (R8, R9); no heading or focus target per turn (§5.4) |
 | `bubble` | 5 | 31 | 3 | `color-mix(` ×2, `oklch(` ×4, four `oklch` arbitrary values, `max-w-[80%]`, `bg-primary/80`, `bg-input/30`, `bg-muted/50`, `bg-destructive/10` `/20` `/20` `/30`, `dark:` ×2, `px-3.5`, `py-2.5`, `leading-relaxed`, `outline-none`, `ring-[3px]`, `ring-ring/50`, `rounded-full`, `ring-3`, `ring-card`, `px-1.5`, `py-0.5` | `rounded-3xl` (R9); `tinted` as a fifth ground; `default` spends the accent; `destructive` tint (R7); `outline` on `bg-background` (R8); reactions |
 | `marker` | 4 | 2 | 1 | `before:h-px`, `after:h-px` | `shimmer` pattern (R14, R1); `role="status"` pattern (`003` decision 8) |
@@ -243,7 +243,7 @@ So the clone's handler sends the message when an IME confirms a candidate, in al
 ### 3.5 Growth, minimum and maximum (INFERRED from §4)
 
 - **Minimum.** Our `textarea`'s `min-h-16` is 64 px; at `text-base` (25.6 px line box) one line with `py-2` is 41.6 px and two lines are 67.2 px, so 64 px shows one line with room and grows at the second. AI Elements uses the same 64 px.
-- **Maximum.** AI Elements caps at 192 px (`max-h-48`). On the ladder, 48 is not a step (the steps run to 24, which is 96 px), so `max-h-48` fails R5. The measured cap that passes is a container size: `max-h-3xs` is 256 px, about nine lines; or a theme variable in `pluto-theme`, read as `max-h-(--composer-max)`, which the lint allows in the token form. Six lines is 169.6 px (`6 × 25.6 + 16`, the value §4 measured with a `calc`), which no allowed class names. The specification picks the variable or the 256 px keyword.
+- **Maximum.** AI Elements caps at 192 px (`max-h-48`). On the ladder, 48 is not a step (the steps run to 24, which is 96 px), so `max-h-48` fails R5. The measured cap that passes is a container size: `max-h-3xs` is 256 px, about nine lines; or a theme variable in `pluto-theme`, read as `max-h-(--composer-max)`, which the lint allows in the token form. Six lines is 169.6 px (`6 × 25.6 + 16`, the value §4 measured with a `calc`), which no allowed class names. `005` decision 13 takes the variable form, `max-h-(--container-3xs)`, 256 px: `max-h-3xs` emits nothing, since Tailwind 4.3.3's container keywords are width-only.
 - **Inner scroll** past the maximum: `overflow-y-auto` with the `scrollbar` utility, which §4 shows working with `field-sizing`.
 - `input-group-textarea` already sets `resize-none`, so the person does not drag it; growth is the browser's.
 
@@ -257,7 +257,7 @@ So the clone's handler sends the message when an IME confirms a candidate, in al
 
 ### 3.7 The eleven behaviours a `chat-composer` item needs (INFERRED)
 
-1. A `form` whose `onsubmit` calls the app's `onsend(text)` and clears the draft.
+1. A `form` whose `onsubmit` calls an app's `onsend(text)` and clears the draft.
 2. A textarea with a name, growing from 64 px to a maximum, then scrolling inside (§3.5).
 3. A visible send button, `type="submit"`, 48 px, named, never disabled.
 4. The same control as Stop while `submitted` or `streaming`, `type="button"`, named, calling `onstop`.
@@ -285,7 +285,7 @@ So the element grows with its text in all three: one line sits at the 64 px mini
 
 ### 4.2 Support (READ)
 
-- **MDN's compat data**, `@mdn/browser-compat-data` 8.1.7 (EXECUTED: installed into the scratchpad and read `css.properties.field-sizing`): Chrome 123, Chrome Android 123, Edge 123, Firefox 152, Firefox Android 152, Opera 109, Safari 26.2, Safari iOS 26.2, Samsung Internet 27.0, WebView Android 123, WebView iOS 26.2; no flags; standard track; not experimental.
+- **MDN's compat data**, `@mdn/browser-compat-data` 8.1.7 (EXECUTED: installed into the scratch folder and read `css.properties.field-sizing`): Chrome 123, Chrome Android 123, Edge 123, Firefox 152, Firefox Android 152, Opera 109, Safari 26.2, Safari iOS 26.2, Samsung Internet 27.0, WebView Android 123, WebView iOS 26.2; no flags; standard track; not experimental.
 - **MDN's page** (`developer.mozilla.org/…/field-sizing`): "Baseline 2026. Newly available. Since June 2026, this feature works across the latest devices and browser versions. This feature might not work in older devices or browsers." The value `content`: "Allows the element to adjust its size to fit its contents."
 - **caniuse** (`caniuse.com/mdn-css_properties_field-sizing`): global usage 87.2%; supported Chrome 123 to 159, Edge 123 to 155, Firefox 152 to 162, Safari 26.2 to 27.1, iOS Safari 26.2 to 27.2, Samsung 27 to 30; not supported Firefox 2 to 151, Safari 3.1 to 26.1, iOS 3.2 to 26.1.
 - The three engines run here are all past the first supporting version, so this run cannot show the unsupported behaviour; the `#plain` row (a fixed `rows` box) is what an older engine shows for every textarea.
@@ -298,7 +298,7 @@ Where `field-sizing` is absent (Safari before 26.2, Firefox before 152, and 12.8
 2. **A `rows` auto-grow in script.** On `input`: set `rows = 1`, read `scrollHeight`, compute `ceil((scrollHeight − padding) / lineHeight)`, clamp to the maximum, set `rows`. About twelve lines, guarded by `CSS.supports("field-sizing", "content")` so supporting engines skip it. No `ResizeObserver` is needed unless the width changes re-wrap long lines; a `resize` listener adds three lines. It must write the `rows` attribute, not `style.height`: the lint bans a `style` attribute and `.style.` access (`001` decision 25), so a height-in-pixels fallback is not open to an item.
 3. **The person's own resize.** `resize-y` on the control, as `textarea` has. Inside `input-group` the control is `resize-none` and the handle would sit on the group's edge; not for the composer.
 
-What the composer should do: `field-sizing-content`, `min-h-16`, the maximum of §3.5, `overflow-y-auto`, and option 1. Option 2 is one guarded function if `wasi-python-dev`'s audience turns out to need it; the specification can name it as a later refinement. This closes `002` decision 13's placeholder: `field-sizing` is Baseline 2026, supported in the three engines the repository tests, and the composer's maximum height is a CSS cap that works with it (§4.1's `#cap`).
+What the composer should do: `field-sizing-content`, `min-h-16`, the maximum of §3.5, `overflow-y-auto`, and option 1. Option 2 is one guarded function; `005` decision 13 does not write it. This settles the question `002` decision 13 left: `field-sizing` is Baseline 2026, supported in the three engines the repository tests, and the composer's maximum height is a CSS cap that works with it (§4.1's `#cap`).
 
 ## 5. The stream announcer
 
@@ -309,14 +309,14 @@ What the composer should do: `field-sizing-content`, `min-h-16`, the maximum of 
 - `log`: "A type of live region where new information is added in meaningful order and old information may disappear… Examples include chat logs, messaging history". "Elements with the role log have an implicit aria-live value of polite." MDN adds: "The `log` is required to have an accessible name. Use `aria-labelledby` if a visible label is present, otherwise use `aria-label`." and the implicit `aria-atomic` is `false`.
 - `aria-busy`: "When aria-busy is true for an element, assistive technologies MAY ignore changes to content owned by that element and then process all changes made during the busy period as a single, atomic update when aria-busy becomes false." "if multiple changes to a live region should be spoken as a single unit of speech, authors MAY set aria-busy to true while the changes are being made and then set it to false when the changes are complete and ready to be spoken." MDN: assistive technology "should wait until the modifications or changes are complete before exposing the content to the user."
 
-INFERRED from the definitions. A streamed reply is one element node inserted empty, then text appended to it. Under `additions`, the insertion is relevant and the text is not. So the log announces the node once, when it is empty, and says nothing of the words. Under the default `additions text`, each appended chunk is relevant, which is the clipped-fragment problem the patterns memo reports (§5.2). `aria-busy="true"` on the streaming node asks the reader to hold the chunks and speak them as one unit when it turns `false`, but only under a relevance that includes `text`, and only as a MAY. No screen reader was run; what one says is still unheard (`003`'s placeholder).
+INFERRED from the definitions. A streamed reply is one element node inserted empty, then text appended to it. Under `additions`, the insertion is relevant and the text is not. So the log announces the node once, when it is empty, and says nothing of the words. Under the default `additions text`, each appended chunk is relevant, which is the clipped-fragment problem the patterns memo reports (§5.2). `aria-busy="true"` on the streaming node asks the reader to hold the chunks and speak them as one unit when it turns `false`, but only under a relevance that includes `text`, and only as a MAY. No screen reader has been run; the tests prove the DOM contract (`decisions.md`, "After the public-readiness review").
 
 EXECUTED, what is observable: Chromium's tree computed `live: polite`, `atomic: false`, `relevant: additions` on the log, and the log's name was empty (§1.4). The announcement itself is not in the tree; Playwright drives no screen reader.
 
 ### 5.2 Two designs (INFERRED)
 
 - **A.** Log with the default `additions text`, `aria-busy="true"` on the reply while it streams, `false` when done. Tokens are held; the reply may be read once at the end, by readers that honour the MAY. The stop and complete states still need words.
-- **B.** Log with `additions` (the stock default), a reply node that is never announced by the log, and a separate polite `status` that says "Responding", "Stopped", "Response complete". The reply is read by the person moving to it (§5.4), or by the status if the app sets the whole text into it. This is the pattern accessibility.build describes: "let the text appear silently while it streams and to announce the finished message once", "When the stream finishes, write to that region once."; and the patterns memo §8.5's proposal.
+- **B.** Log with `additions` (the stock default), a reply node that is never announced by the log, and a separate polite `status` that says "Responding", "Stopped", "Response complete". The reply is read by the person moving to it (§5.4), or by the status if an app sets the whole text into it. This is the pattern accessibility.build describes: "let the text appear silently while it streams and to announce the finished message once", "When the stream finishes, write to that region once."; and the patterns memo §8.5's proposal.
 
 B depends on nothing a reader MAY do, and the log still announces what is added whole: a user turn, a marker line ("Stopped: out of fuel"), an error alert. A is a refinement an app can layer on by passing `aria-relevant` and `aria-busy`.
 
@@ -326,14 +326,14 @@ It renders `role="status" aria-live="polite" aria-atomic="true"` from the first 
 
 - Mount one `Status` in the pane at render, before any reply.
 - Set "Responding" at `submitted`, "Response complete" at `ready`, "Stopped" on stop. Each pair differs, and "Responding" sits between results, so the "never the same text twice in a row" rule holds.
-- With `visible`, the same element can be the pane's static streaming indicator beside the composer ("Responding"), which v2 §06 allows because it does not move. No loop, no dots, no shimmer.
+- With `visible`, the same element can be the pane's static streaming indicator beside the composer ("Responding"), which the design book §06 allows because it does not move. No loop, no dots, no shimmer.
 - To read the finished reply aloud, an app sets the reply's text into a second `Status` once; a long reply becomes one long utterance, which is the trade the patterns memo names. The item needs no change for either.
 
 ### 5.4 "Jump to latest reply" (INFERRED; READ where cited)
 
 accessibility.build: a "Go to latest response" button that moves focus to the newest message, triggered by the user; "Do not steal focus". The stock scroller's button scrolls; it does not move focus (`handleClick`, lines 1448 to 1465, calls `blur()` then scrolls). The two differ: one moves the view, the other the reader.
 
-- The target is the last assistant turn's heading. `message-header` becomes a heading (an `h2` or the level the app passes, as `CardTitle` and `EmptyTitle` take `level` in `002`), mono eyebrow in style (v2 §04: mono furniture), text "assistant" or the agent's name, with `tabindex="-1"` so script can focus it and Tab does not stop on it. Heading navigation then walks the turns, which the patterns memo wanted ("navigable by heading").
+- The target is the last assistant turn's heading. `message-header` becomes a heading (an `h2` or the level an app passes, as `CardTitle` and `EmptyTitle` take `level` in `002`), mono eyebrow in style (the design book §04: mono furniture), text "assistant" or the name an app gives the assistant, with `tabindex="-1"` so script can focus it and Tab does not stop on it. Heading navigation then walks the turns, which the patterns memo wanted ("navigable by heading").
 - The control is a `secondary` button, "Latest reply", shown while the last reply is not the one in view, that calls `heading.focus({ preventScroll: false })`. Focus moves the view with it. `scroll-padding-bottom` on the viewport keeps the heading above a sticky composer (patterns memo §5.2, C43).
 - One `h1` stays the page's; reply headings rendered from markdown are demoted below the turn heading (patterns memo §5.2).
 
@@ -353,7 +353,7 @@ So a message renders a streamed fence as `<CodeBlock.Root size="sm"><CodeBlock.C
 - User text is plain: `getMessageText(message)` concatenates the text parts (`docs/src/lib/ai-sdk.ts` lines 8 to 10; demo line 271).
 - The demo's scripted replies hold markdown: bold, lists, fenced `ts` and `svelte` blocks (lines 55 to 67, 85 to 92).
 
-### 6.3 The options (EXECUTED, `bun pm view` at 12:27 UTC, and the scratch install)
+### 6.3 The options (EXECUTED, `bun pm view` on 2026-11-01, and the scratch install)
 
 | Package | Version | Licence | Last release | Unpacked | Dependencies | Notes |
 |---|---|---|---|---|---|---|
@@ -371,30 +371,30 @@ EXECUTED, `marked.lexer` on a streaming string: `"Here is code:\n\n```python\npr
 
 ### 6.4 Recommendation (INFERRED)
 
-- **The registry does not need a markdown renderer to show streamed code.** A `message-text` part that splits a string on fence lines (a regular expression over `^```(\w*)$ … ^```$`, with an open fence running to the end of the string) renders prose as paragraphs and each fence as `code-block` at `sm` with the hook. About fifteen lines, no dependency. It gives `006`'s pane and `wasi-python-dev`'s chat (text and Python output) what they need.
-- **If an app wants markdown in replies**, `marked` is the route: MIT, no dependencies, 14 KB gzipped, a lexer whose tokens map to our parts (`heading` demoted, `paragraph`, `list`, `code` to `code-block`, `codespan` to inline `code`, `link`, `strong`, `em`), with an incomplete fence already handled. That is a `markdown` item of its own, a later specification, with `marked` pinned by it. `svelte-streamdown` would add KaTeX and `@tanstack/highlight` beside Shiki, two renderers for one job; `svelte-exmarkdown` is fourteen months unreleased; `markdown-it` returns HTML, which needs `{@html}` and a sanitiser.
-- So: markdown is the app's until an app asks; fenced code is ours now.
+- **The registry does not need a markdown renderer to show streamed code.** A `message-text` part that splits a string on fence lines (a regular expression over `^```(\w*)$ … ^```$`, with an open fence running to the end of the string) renders prose as paragraphs and each fence as `code-block` at `sm` with the hook. About fifteen lines, no dependency. It gives `006`'s pane and a consuming app's chat (text and code output) what they need. `006` decision 10 builds it as `ChatText`.
+- **If an app wants markdown in replies**, `marked` is the route: MIT, no dependencies, 14 KB gzipped, a lexer whose tokens map to our parts (`heading` demoted, `paragraph`, `list`, `code` to `code-block`, `codespan` to inline `code`, `link`, `strong`, `em`), with an incomplete fence already handled. That would be a `markdown` item of its own, with `marked` pinned by it; this registry serves none (`005` decision 21). `svelte-streamdown` would add KaTeX and `@tanstack/highlight` beside Shiki, two renderers for one job; `svelte-exmarkdown` is fourteen months unreleased; `markdown-it` returns HTML, which needs `{@html}` and a sanitiser.
+- So: markdown is an app's own; fenced code is ours.
 
-## 7. What is still unknown
+## 7. What this memo does not settle
 
-- **No screen reader was heard.** `aria-relevant`, `aria-busy` and the `status` wording are reasoned from ARIA 1.2 and Chromium's computed tree; what VoiceOver or NVDA say of a streamed reply, of a `log` with no name, or of a `Status` set to a long reply, is still `003`'s placeholder, now wider.
+- **Speech.** `aria-relevant`, `aria-busy` and the `status` wording are reasoned from ARIA 1.2 and Chromium's computed tree. No screen reader has been run; the tests prove the DOM contract. Screen readers are outside this release's checks (`decisions.md`, "After the public-readiness review"; `005` decision 21).
 - **A real IME was not driven.** The guard was proved against synthetic `isComposing` and `keyCode` events in three engines, not against a Japanese or Chinese input method confirming a candidate.
-- **`rows` under `field-sizing: content`:** whether `rows` still sets the minimum when the property is on was not measured; the probe used `min-height`.
-- **Engines without `field-sizing`** were not run: Safari 26.1 and Firefox 151 are not in Playwright's cache. §4.3's fallback is reasoned from the `#plain` row.
-- **Reduced motion** in the stock scroller: it reads no preference, and its smooth scrolls were not checked under `prefers-reduced-motion`; a scroller of ours uses `behavior: "auto"` when the query matches (patterns memo §5.2).
-- **The dynamic viewport** (`dvh`, the on-screen keyboard on iOS) for a full-bleed pane was not tested; the patterns memo §5.4 named it.
-- **`content-visibility: auto`** on long threads: the stock's performance claim was not measured; the probe had 15 rows.
-- **The primitive package's future:** two releases in a month; whether it stays at `0.0.x` or breaks is unknown. Option 1 of §1.7 would pin `0.0.1` exactly.
-- **The live stock registry** may have moved since; the four JSON files fetched today are in `live/` for `005`'s provenance step.
+- **`rows` under `field-sizing: content`:** whether `rows` still sets the minimum when the property is on was not measured; the probe used `min-height`. `005` decision 13 sets both `rows={1}` and `min-h-16`.
+- **Engines without `field-sizing`** were not run: Safari 26.1 and Firefox 151 are not in Playwright's cache. §4.3's fallback is reasoned from the `#plain` row. `005` decision 13 takes option 1: there the box keeps its minimum and scrolls inside.
+- **Reduced motion** in the stock scroller: it reads no preference, and its smooth scrolls were not checked under `prefers-reduced-motion`. `005` decision 11's log scrolls with `behavior: "auto"` when the query matches.
+- **The dynamic viewport** (`dvh`, the on-screen keyboard on iOS) for a full-bleed pane was not tested; the patterns memo §5.4 named it. iOS Safari is outside this release's checks (`decisions.md`, "After the public-readiness review").
+- **`content-visibility: auto`** on long threads: the stock's performance claim was not measured; the probe had 15 rows. `005`'s `message-log` does not use it.
+- **The primitive package's future:** two releases in a month. `005` does not take the package (decisions 2 and 11), so its versions do not touch this registry.
+- **The live stock registry** may have moved since `6149e14`; the four JSON files fetched that day served `005`'s provenance step (decision 3).
 
-**In one line:** `field-sizing: content` grows a textarea in Chromium 156, WebKit 27.2 and Firefox 157 and caps with `max-height`, closing `002`'s placeholder; the four stock chat items fail the lint 42 times in 10 of 23 files and carry a gradient fade, a looping shimmer and `oklch` tints that our tokens answer with `muted` or `card`; the stock scroller is a wrapper over a 28-day-old `@shadcn-svelte/primitives` 0.0.1 whose follow-bottom works but is off by default and whose log has no name; a composer of ours is eleven behaviours with the IME guard proved and nothing ever disabled; `aria-relevant="additions"` announces an added node and not its words, so `003`'s `status` is the announcer as it is; and streamed fenced code renders through `code-block` at `sm` and the hook today, with `marked` the route if an app wants markdown.
+**In one line:** `field-sizing: content` grows a textarea in Chromium 156, WebKit 27.2 and Firefox 157 and caps with `max-height`, settling the question `002` decision 13 left; the four stock chat items fail the lint 42 times in 10 of 23 files and carry a gradient fade, a looping shimmer and `oklch` tints that our tokens answer with `muted` or `card`; the stock scroller is a wrapper over a 28-day-old `@shadcn-svelte/primitives` 0.0.1 whose follow-bottom works but is off by default and whose log has no name; a composer of ours is eleven behaviours with the IME guard proved and nothing ever disabled; `aria-relevant="additions"` announces an added node and not its words, so `003`'s `status` is the announcer as it is; and streamed fenced code renders through `code-block` at `sm` and the hook today, with `marked` the route if an app wants markdown.
 
 ## Sources
 
 Read on 2026-11-01 unless the memo says otherwise.
 
 **This repository**
-- `context/constitution.md`; `context/README.md`; `context/decisions.md`; `context/handoff.md` (2026-10-31).
+- `context/constitution.md`; `context/README.md`; `context/decisions.md`.
 - `context/research/2026-10-28-the-blocks-patterns-and-accessibility.md` §0.1, §5, §8.5.
 - `context/research/2026-10-28-the-primitives-the-blocks-and-the-home-page-need.md` §3, §6.4, §7.
 - `context/research/2026-10-31-the-data-items-chart-popover-accordion-toggles-scroll-area-and-a-meter.md` (format; §4.5 the native scroll box).
@@ -413,8 +413,8 @@ Read on 2026-11-01 unless the memo says otherwise.
 - `packages/cli/src/tailwind.css` (scroll-fade lines 91 to 200 and 323 to 328; shimmer lines 518 to 557); `packages/cli/src/utils/css.ts`; `packages/cli/CHANGELOG.md`.
 
 **Live registry and packages** (EXECUTED)
-- `https://shadcn-svelte.com/registry/styles/maia/{message-scroller,message,bubble,marker,textarea}.json`, 12:14 UTC.
-- `bun pm view` 12:27 UTC: `@shadcn-svelte/primitives`, `marked`, `micromark`, `markdown-it`, `svelte-exmarkdown`, `svelte-streamdown`, `streamdown`, `carta-md`, `ai`, `@ai-sdk/svelte`.
+- `https://shadcn-svelte.com/registry/styles/maia/{message-scroller,message,bubble,marker,textarea}.json`, 2026-11-01.
+- `bun pm view`, 2026-11-01: `@shadcn-svelte/primitives`, `marked`, `micromark`, `markdown-it`, `svelte-exmarkdown`, `svelte-streamdown`, `streamdown`, `carta-md`, `ai`, `@ai-sdk/svelte`.
 - `@mdn/browser-compat-data` 8.1.7, `css.properties.field-sizing`.
 
 **The web**

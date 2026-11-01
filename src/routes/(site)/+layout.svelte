@@ -3,8 +3,7 @@
   import { version } from "$app/env";
   import AppShellFooter from "#lib/registry/components/app-shell-footer.svelte";
   import { Lockup } from "#lib/registry/ui/four-dot";
-  import { ThemeScript } from "#lib/registry/ui/theme";
-  import ThemeToggle from "#lib/preview/theme-toggle.svelte";
+  import { ThemeScript, ThemeToggle } from "#lib/registry/ui/theme";
 
   let { children }: { children: Snippet } = $props();
 

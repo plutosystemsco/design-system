@@ -2,7 +2,7 @@ import { getContext, setContext, type Component } from "svelte";
 import type { Tooltip } from "layerchart";
 
 /**
- * What a chart says about each of its series (004 decision 10): a label, an
+ * What a chart says about each of its series: a label, an
  * optional icon, and an optional `swatch`, a token class such as `bg-chart-1`
  * that the tooltip's indicator takes. A series' colour lives on its mark, as a
  * class or a `var()` prop, never in this config and never in a stylesheet.

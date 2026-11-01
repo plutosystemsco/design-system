@@ -249,7 +249,7 @@ describe("004's additions to pluto-theme", () => {
     expect(JSON.stringify(layer)).not.toContain("radius");
   });
 
-  // The checkpoint's call (decisions.md, "No ligatures on code surfaces").
+  // No ligatures on code surfaces.
   test("css's @layer base turns ligatures off for code, kbd, samp, pre; app.css carries the rule once, beside font-mono", () => {
     const base = theme().css["@layer base"] as CssTree;
     expect(base["code, kbd, samp, pre"]).toEqual({
@@ -389,7 +389,7 @@ describe("006's additions to pluto-theme", () => {
     });
   });
 
-  test("css holds @utility mark-entrance: the dots' animation from the tokens, then 4 nth-child rules with the book's offsets and staggered delays", () => {
+  test("css holds @utility mark-entrance: the dots' animation from the tokens, then 4 nth-child rules with the design book's offsets and staggered delays", () => {
     const utility = theme().css["@utility mark-entrance"] as CssTree;
     const keys = Object.keys(utility);
     expect(keys).toHaveLength(5);

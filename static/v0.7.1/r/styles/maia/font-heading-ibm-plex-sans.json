@@ -1,0 +1,23 @@
+{
+	"$schema": "https://shadcn-svelte.com/schema/registry-item.json",
+	"name": "font-heading-ibm-plex-sans",
+	"title": "IBM Plex Sans",
+	"type": "registry:font",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+	"description": "IBM Plex Sans, the heading face, self-hosted through Fontsource.",
+	"meta": {
+		"since": "0.1.0",
+		"group": "foundation"
+	},
+	"files": [],
+	"font": {
+		"family": "'IBM Plex Sans Variable', system-ui, sans-serif",
+		"provider": "google",
+		"import": "IBM_Plex_Sans",
+		"variable": "--font-heading",
+		"subsets": [
+			"latin"
+		],
+		"dependency": "@fontsource-variable/ibm-plex-sans"
+	}
+}

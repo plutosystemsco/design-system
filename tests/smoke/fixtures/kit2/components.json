@@ -9,6 +9,6 @@
     "lib": "$lib"
   },
   "typescript": true,
-  "registry": "https://ui.plutosystems.co/r",
+  "registry": "https://raw.githubusercontent.com/plutosystemsco/design-system/main/static/r",
   "style": "maia"
 }

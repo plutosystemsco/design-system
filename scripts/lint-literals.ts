@@ -1,5 +1,5 @@
 /**
- * The literal lint (decision 25). It flags, in a registry item's files, any
+ * The literal lint (001 decision 25). It flags, in a registry item's files, any
  * colour or size that does not come from a token:
  *   - a hex colour, or a colour function;
  *   - a Tailwind palette colour class (`bg-red-500`, `text-white`), with the
@@ -9,22 +9,22 @@
  *   - a `<style>` block, a `style` attribute, or style set another way
  *     (`{ style: … }` spread as props, `.style.` access, `setAttribute("style")`);
  *   - a literal duration or delay (`duration-300`); the token form is allowed;
- *   - a spacing utility off the ladder (decision 10);
+ *   - a spacing utility off the ladder (001 decision 10);
  *   - a `font-<name>` or `leading-<name>` the token file does not hold.
  * 002 decision 21 adds fourteen class rules, L1 to L14: translucent tints,
  * `dark:`, rings, outlines, shadows, backdrops, sizes off the ladder, type
  * steps and tracking off the token scale, animations, `rounded-full` and
  * `focus-ring-none` outside their allowlists, `cn-` markers, and numeric
- * border widths. The review of 002's built change added four more (a
- * `focus-ring` allowlist, offsets off the ladder, palette colours through the
- * variable form, and `scale`). 004 decision 15 adds its L15 and L16: an
- * injected stylesheet (`<svelte:element this="style">`), and a CSS length or
- * named colour inside a quoted string of a `.ts` or `.svelte.ts` item file,
- * such as a CodeMirror theme object. 007 decision 3 adds L19, a text rule: a
+ * border widths. 002 adds four more, L15 to L18: a `focus-ring` allowlist,
+ * offsets off the ladder, palette colours through the variable form, and
+ * `scale`. 007 decision 3 adds L19, a text rule: a
  * `syntax-<hue>` name anywhere in an item file. The five syntax colours exist
  * for the code slots alone; Tailwind also emits `text-(--syntax-orange)` and
  * `text-(--color-syntax-orange)`, and a `.ts` theme string may write
- * `var(--syntax-teal)`, so a class rule would miss them.
+ * `var(--syntax-teal)`, so a class rule would miss them. 004 decision 15 adds
+ * L20 and L21: an injected stylesheet (`<svelte:element this="style">`), and a
+ * CSS length or named colour inside a quoted string of a `.ts` or `.svelte.ts`
+ * item file, such as a CodeMirror theme object.
  * The CSS-variable form `-(--token)` is always allowed: its value is a token.
  */
 import { readFileSync } from "node:fs";
@@ -61,7 +61,7 @@ export const ALLOWLISTS = {
     "input-group-textarea.svelte",
     "code-block-content.svelte",
   ],
-  // The review of the built change, finding 10: R2's "only as decision 8 says".
+  // 002 decision 8: containers that draw the ring for a child.
   "focus-ring": ["input-group.svelte", "input-otp.svelte", "code-block.svelte"],
 } as const;
 
@@ -167,20 +167,20 @@ const STYLE_BLOCK = /<style[\s>]/g;
 const STYLE_ATTRIBUTE = /(?:^|\s)style(?::[\w-]+)?\s*=/g;
 /** `{ style: … }` as an object key, which a spread turns into the attribute. */
 const STYLE_KEY = /[{,]\s*["']?style["']?\s*:/g;
-/** A named colour in an SVG paint attribute, such as `fill="red"` (finding 10). */
+/** A named colour in an SVG paint attribute, such as `fill="red"`. */
 const PAINT_ATTRIBUTE =
   /\b(?:fill|stroke|stop-color|flood-color|lighting-color|color)\s*=\s*["']([a-zA-Z]+)["']/g;
 /** `el.style.margin = …`, `el.style.cssText`, `setAttribute("style", …)`. */
 const STYLE_PROPERTY = /\.style\b|setAttribute\(\s*["'`]style["'`]/g;
 /**
- * 004 decision 15, L15: a `<style>` element written past the STYLE_BLOCK
+ * 004 decision 15, L20: a `<style>` element written past the STYLE_BLOCK
  * pattern as `<svelte:element this="style">` or `this={"style"}`, the way
  * stock's `chart-style.svelte` injected a stylesheet.
  */
 const INJECTED_STYLE =
   /<svelte:element\b[^>]*\bthis\s*=\s*(?:["']style["']|\{\s*["']style["']\s*\})/g;
 /**
- * 004 decision 15, L16: inside a quoted string of a `.ts` item file, a number
+ * 004 decision 15, L21: inside a quoted string of a `.ts` item file, a number
  * followed by a length unit. `0`, `var(--…)`, `calc(…)` with unitless numbers
  * and keywords such as `solid` or `wavy` carry no unit and pass.
  */
@@ -295,7 +295,7 @@ function splitClass(token: string): { variants: string[]; utility: string } {
   return { variants, utility };
 }
 
-/** 002 decision 21's fourteen class rules. */
+/** 002's class rules, L1 to L18. */
 function classRule002(
   variants: string[],
   utility: string,
@@ -360,10 +360,10 @@ function classRule002(
   )
     return "tracking";
 
-  // L10, animation. R14's motion list: animate-enter, animate-exit, the
-  // spinner's animate-spin, and (006 decision 4) the mark's `mark-entrance`,
-  // a @utility of its own name that this rule does not see: four delays and
-  // four offsets fit no single animate-* utility.
+  // L10, animation. 002 decision 9's motion list (R14): animate-enter,
+  // animate-exit, the spinner's animate-spin, and (006 decision 4) the mark's
+  // `mark-entrance`, a @utility of its own name that this rule does not see:
+  // four delays and four offsets fit no single animate-* utility.
   const animate = /^animate-(.+)$/.exec(utility);
   if (animate && !["enter", "exit", "spin"].includes(animate[1]))
     return "animation";
@@ -391,7 +391,6 @@ function classRule002(
   const border = /^border(?:-[xytrblse])?-(\d+)$/.exec(utility);
   if (border && border[1] !== "0") return "border width";
 
-  // The review of the built change, finding 10:
   // L15, focus-ring outside its allowlist.
   if (
     utility === "focus-ring" &&
@@ -416,7 +415,7 @@ function classRule002(
   if (new RegExp(`\\(--color-(?:${rules.palettes.join("|")})-`).test(utility))
     return "palette colour";
 
-  // L18, scale: the zoom "fake depth" decision 3 removed.
+  // L18, scale: the zoom "fake depth" 002 decision 3 removed.
   if (/^scale(?:-[xyz])?-/.test(utility)) return "scale";
 
   return undefined;
@@ -504,7 +503,7 @@ export function lintText(
     if (NAMED_COLOURS.has(match[1].toLowerCase()))
       add("named colour attribute", match.index ?? 0, match[0]);
 
-  // L15 (004): an injected stylesheet.
+  // L20 (004): an injected stylesheet.
   INJECTED_STYLE.lastIndex = 0;
   for (const match of text.matchAll(INJECTED_STYLE))
     add("injected stylesheet", match.index ?? 0, match[0]);
@@ -514,7 +513,7 @@ export function lintText(
   for (const match of text.matchAll(SYNTAX_COLOUR))
     add("syntax colour", match.index ?? 0, match[0]);
 
-  // L16 (004): CSS values in a theme file. Only a `.ts` or `.svelte.ts` file;
+  // L21 (004): CSS values in a theme file. Only a `.ts` or `.svelte.ts` file;
   // a `.svelte` file's classes are read by the class rules below.
   if (/\.ts$/.test(file)) {
     TS_STRING.lastIndex = 0;

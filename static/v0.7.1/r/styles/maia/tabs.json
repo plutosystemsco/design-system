@@ -1,0 +1,55 @@
+{
+	"$schema": "https://shadcn-svelte.com/schema/registry-item.json",
+	"name": "tabs",
+	"title": "Tabs",
+	"type": "registry:ui",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+	"description": "Tabbed panels as a pill strip on an inset or as underlined triggers, moved by the arrow keys.",
+	"devDependencies": [
+		"bits-ui@^2.20.2",
+		"@internationalized/date@^3.12.4",
+		"tailwind-variants@^3.3.1"
+	],
+	"registryDependencies": [
+		"utils",
+		"pluto-theme"
+	],
+	"meta": {
+		"since": "0.2.0",
+		"group": "surfaces",
+		"stock": {
+			"registry": "https://shadcn-svelte.com/registry/styles/maia",
+			"item": "tabs",
+			"cli": "1.7.1",
+			"date": "2026-10-28",
+			"sha256": "4cf7419805fc4b3a1b4b988ddffdae3cae81d5d2ed9833cec69e2f4eb8021fbe"
+		}
+	},
+	"files": [
+		{
+			"content": "<script lang=\"ts\">\n  import { Tabs as TabsPrimitive } from \"bits-ui\";\n  import { cn } from \"$UTILS$\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    ...restProps\n  }: TabsPrimitive.ContentProps = $props();\n</script>\n\n<TabsPrimitive.Content\n  bind:ref\n  data-slot=\"tabs-content\"\n  class={cn(\"flex-1 text-sm\", className)}\n  {...restProps}\n/>\n",
+			"type": "registry:ui",
+			"target": "tabs/tabs-content.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\" module>\n  import { tv, type VariantProps } from \"tailwind-variants/lite\";\n\n  export const tabsListVariants = tv({\n    base: \"group/tabs-list inline-flex w-fit items-center justify-center rounded text-muted-foreground group-data-vertical/tabs:h-fit group-data-vertical/tabs:flex-col data-[variant=line]:rounded-none\",\n    variants: {\n      variant: {\n        default: \"bg-muted p-1\",\n        line: \"gap-1 bg-transparent\",\n      },\n    },\n    defaultVariants: {\n      variant: \"default\",\n    },\n  });\n\n  export type TabsListVariant = VariantProps<\n    typeof tabsListVariants\n  >[\"variant\"];\n</script>\n\n<script lang=\"ts\">\n  import { Tabs as TabsPrimitive } from \"bits-ui\";\n  import { cn } from \"$UTILS$\";\n\n  let {\n    ref = $bindable(null),\n    variant = \"default\",\n    class: className,\n    ...restProps\n  }: TabsPrimitive.ListProps & {\n    variant?: TabsListVariant;\n  } = $props();\n</script>\n\n<TabsPrimitive.List\n  bind:ref\n  data-slot=\"tabs-list\"\n  data-variant={variant}\n  class={cn(tabsListVariants({ variant }), className)}\n  {...restProps}\n/>\n",
+			"type": "registry:ui",
+			"target": "tabs/tabs-list.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import { Tabs as TabsPrimitive } from \"bits-ui\";\n  import { cn } from \"$UTILS$\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    ...restProps\n  }: TabsPrimitive.TriggerProps = $props();\n</script>\n\n<!--\n  In the pill strip the active tab is a raised pill with an input border, so\n  the state is a 3:1 boundary and a text change, not the fill alone. In the\n  line variant it is a 2 px underline in the foreground colour.\n-->\n<TabsPrimitive.Trigger\n  bind:ref\n  data-slot=\"tabs-trigger\"\n  class={cn(\n    \"relative inline-flex flex-1 items-center justify-center gap-2 rounded border border-transparent px-3 text-sm font-medium whitespace-nowrap text-muted-foreground transition-[color,background-color,border-color] group-data-vertical/tabs:w-full group-data-vertical/tabs:justify-start hover:text-foreground disabled:pointer-events-none disabled:opacity-50 data-active:text-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4\",\n    \"group-data-[variant=default]/tabs-list:h-8 group-data-[variant=default]/tabs-list:data-active:border-input group-data-[variant=default]/tabs-list:data-active:bg-card\",\n    \"group-data-[variant=line]/tabs-list:h-12 group-data-[variant=line]/tabs-list:rounded-none group-data-[variant=line]/tabs-list:border-x-0 group-data-[variant=line]/tabs-list:border-t-0 group-data-[variant=line]/tabs-list:border-b-(length:--focus-width) group-data-[variant=line]/tabs-list:data-active:border-b-foreground\",\n    className,\n  )}\n  {...restProps}\n/>\n",
+			"type": "registry:ui",
+			"target": "tabs/tabs-trigger.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import { Tabs as TabsPrimitive } from \"bits-ui\";\n  import { cn } from \"$UTILS$\";\n\n  let {\n    ref = $bindable(null),\n    value = $bindable(\"\"),\n    class: className,\n    ...restProps\n  }: TabsPrimitive.RootProps = $props();\n</script>\n\n<TabsPrimitive.Root\n  bind:ref\n  bind:value\n  data-slot=\"tabs\"\n  class={cn(\"group/tabs flex gap-2 data-horizontal:flex-col\", className)}\n  {...restProps}\n/>\n",
+			"type": "registry:ui",
+			"target": "tabs/tabs.svelte"
+		},
+		{
+			"content": "import Content from \"./tabs-content.svelte\";\nimport Trigger from \"./tabs-trigger.svelte\";\nimport Root from \"./tabs.svelte\";\nimport List, {\n  tabsListVariants,\n  type TabsListVariant,\n} from \"./tabs-list.svelte\";\n\nexport {\n  Root,\n  Content,\n  List,\n  Trigger,\n  tabsListVariants,\n  type TabsListVariant,\n  //\n  Root as Tabs,\n  Content as TabsContent,\n  List as TabsList,\n  Trigger as TabsTrigger,\n};\n",
+			"type": "registry:ui",
+			"target": "tabs/index.ts"
+		}
+	]
+}

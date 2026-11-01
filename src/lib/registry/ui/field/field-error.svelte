@@ -36,8 +36,8 @@
 </script>
 
 <!--
-	Not a live region (decision 16): errors appear on submit, and the error is
-	reached through the control's aria-describedby when focus lands on it.
+  Not a live region: errors appear on submit, and the error is reached
+  through the control's aria-describedby when focus lands on it.
 -->
 {#if hasContent}
   <div

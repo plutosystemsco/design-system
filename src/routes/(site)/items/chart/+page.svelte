@@ -14,7 +14,7 @@
   import PreviewSection from "#lib/preview/preview-section.svelte";
   import Specimen from "#lib/preview/specimen.svelte";
 
-  // Last week's visitors, as /admin would show them (data memo §7).
+  // Last week's visitors, by day.
   const week = [
     { day: "Mon", visitors: 412, views: 1240 },
     { day: "Tue", visitors: 538, views: 1612 },

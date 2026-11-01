@@ -5,10 +5,14 @@
 import { expect, test, type Page } from "@playwright/test";
 import { BLOCK_VIEWS, viewPath } from "../../src/lib/preview/blocks.ts";
 import { readFileSync } from "node:fs";
+
+const { version } = JSON.parse(readFileSync("package.json", "utf8")) as {
+  version: string;
+};
 import { toAppFiles } from "../../src/lib/server/built-item.ts";
 import { BLOCKS, open, VIEW_READY } from "./pages.ts";
 
-/** Decision 5's titles. */
+/** 003 decision 5's titles. */
 const TITLES: Record<string, string> = {
   hero: "Hero",
   "sign-in": "Sign in",
@@ -19,7 +23,7 @@ const TITLES: Record<string, string> = {
   chat: "Chat",
 };
 
-/** Where each block's files land in an app (decision 17), in the item's order. */
+/** Where each block's files land in an app (003 decision 17), in the item's order. */
 const APP_PATHS: Record<string, string[]> = {
   hero: [
     "src/routes/hero/+page.svelte",
@@ -120,8 +124,7 @@ for (const block of BLOCKS) {
         "true",
       );
       expect((await frame(page).boundingBox())?.width).toBe(360);
-      // Each group is named by its visible mono label (the orchestrator's call
-      // after the change review); a label is not a stop.
+      // Each group is named by its visible mono label; a label is not a stop.
       const groups =
         BLOCK_VIEWS[block]!.length > 1 ? ["state", "width"] : ["width"];
       for (const name of groups) {
@@ -256,7 +259,7 @@ for (const block of BLOCKS) {
       await expect(commands).toHaveCount(2);
       for (const command of await commands.all()) {
         await expect(command).toHaveText(
-          `bunx --bun shadcn-svelte@1.7.1 add ${block}`,
+          `REGISTRY_URL=https://raw.githubusercontent.com/plutosystemsco/design-system/v${version}/static/r bunx --bun shadcn-svelte@1.7.1 add ${block} -y`,
         );
         const note = await command.evaluate(
           (el) =>

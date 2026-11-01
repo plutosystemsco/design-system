@@ -69,7 +69,7 @@
     svelte: "Lezer grammar, @replit/codemirror-lang-svelte",
     legacy: "legacy mode",
   };
-  // The gaps the palette memo found per language, where there is one.
+  // Known gaps per language, where there is one.
   const gaps: Record<string, string> = {
     python: "self, the built-ins and docstrings come from the roles plugin",
     css: "selectors are className to Lezer, so they take the type colour, not tag; var() and calc() are keywords",
@@ -82,11 +82,11 @@
     java: "@Override is untagged",
     cpp: "[[nodiscard]] takes the body colour",
     php: "#[Attribute] and $this take the body colour",
-    shellscript: "keywords, strings, numbers, comments and $variables; no tree",
+    bash: "keywords, strings, numbers, comments and $variables; no tree",
     toml: "a [table] reads as a constant; no tree",
     diff: "the @@ line reads as a decorator; headers are untagged; no tree",
     docker: "keywords, strings and comments; no tree",
-    ruby: "Shop::Item reads as a tag; no tree",
+    ruby: "Sandbox::Run reads as a tag; no tree",
     swift: "no decorator, no calls; no tree",
     kotlin: "no calls, no ${} parts; no tree",
     csharp:
@@ -138,7 +138,7 @@
 <PreviewSection
   id="states"
   title="The twenty-six"
-  intro="Eighteen languages come with a Lezer grammar (Svelte's from a third-party package, four years old), eight as legacy modes: CodeMirror 5 tokenisers with no syntax tree, so no bracket matching or indentation by syntax, and a coarser palette."
+  intro="Eighteen languages come with a Lezer grammar (Svelte's from a third-party package, released in 2022), eight as legacy modes: CodeMirror 5 tokenisers with no syntax tree, so no bracket matching or indentation by syntax, and a coarser palette."
 >
   <table class="w-full text-sm" data-testid="kinds-table">
     <thead>

@@ -1,5 +1,5 @@
 /**
- * The dev loop (decision 23), on a temporary copy of this repository, so a
+ * The dev loop (001 decision 23), on a temporary copy of this repository, so a
  * crash never leaves this repository's files modified.
  */
 import { afterAll, beforeAll, expect, test } from "bun:test";

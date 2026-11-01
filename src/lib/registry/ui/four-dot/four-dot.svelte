@@ -28,7 +28,8 @@
     ...rest
   }: FourDotProps = $props();
 
-  // v2's order, never changed: top-left, top-right, bottom-left, bottom-right.
+  // The brand's dot order, never changed: top-left, top-right, bottom-left,
+  // bottom-right.
   const brand = ["bg-mark-1", "bg-mark-2", "bg-mark-3", "bg-mark-4"];
 </script>
 

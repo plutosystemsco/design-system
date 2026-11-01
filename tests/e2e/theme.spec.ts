@@ -20,7 +20,7 @@ async function expectTheme(page: Page, theme: ThemeName): Promise<void> {
   );
 }
 
-// 003 decision 20: 001's two checks on the 40 site pages and the 17 views.
+// 003 decision 20: 001's two checks on the 64 site pages and the 28 views.
 for (const path of PAGES) {
   test(`${path} takes the theme from the system`, async ({ page }, info) => {
     await open(page, path);
@@ -85,9 +85,9 @@ test.describe("the head script", () => {
     expect(appHtml).not.toContain("pluto-preview-theme");
   });
 
-  // Review finding 13: an app with a Content Security Policy passes `nonce`.
-  // The item is rendered on the server here, outside the preview app, since
-  // the app passes none.
+  // An app with a Content Security Policy passes `nonce`. The item is
+  // rendered on the server here, outside the preview site, since the site
+  // passes none.
   test("a nonce passed to ThemeScript is written once onto the script in the rendered head", async () => {
     const { compile } = await import("svelte/compiler");
     const source = readFileSync(

@@ -49,10 +49,10 @@
 </script>
 
 <!--
-  A row of joined toggles (004 decision 13): one stop for the row, the arrow
-  keys browse, Space or Enter selects. bits-ui renders role="group" with
-  role="radio" items in single mode, and that stays: a preset strip that
-  selected on arrow would fire a query per key press. Separate toggles are
+  A row of joined toggles: one stop for the row, the arrow keys browse, Space
+  or Enter selects. bits-ui renders role="group" with role="radio" items in
+  single mode, and that stays: selecting on arrow would fire the change
+  handler on every key press. Separate toggles are
   Toggle components in a flex row; there is no spacing prop.
 
   Discriminated unions and destructuring (required for bindable) do not get

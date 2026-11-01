@@ -21,7 +21,7 @@
         {#if media}
           <AlertDialog.Media><Trash aria-hidden="true" /></AlertDialog.Media>
         {/if}
-        <AlertDialog.Title>Delete wasi-python-dev?</AlertDialog.Title>
+        <AlertDialog.Title>Delete pluto-sandbox?</AlertDialog.Title>
         <AlertDialog.Description>
           Its 412 runs and their logs are deleted. This cannot be undone.
         </AlertDialog.Description>

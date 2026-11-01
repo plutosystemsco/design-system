@@ -16,7 +16,7 @@
     showOnHover?: boolean;
   } = $props();
 
-  // A 32 px target (R21) at the row's end, centred on a 48 px row (top-2) or a 32 px one (top-0).
+  // A 32 px target at the row's end, centred on a 48 px row (top-2) or a 32 px one (top-0).
   const mergedProps = $derived({
     class: cn(
       "absolute end-1 top-2 flex size-8 items-center justify-center rounded text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground peer-hover/menu-button:text-sidebar-accent-foreground peer-data-[size=sm]/menu-button:top-0 group-data-[collapsible=icon]:hidden [&>svg]:size-4 [&>svg]:shrink-0",

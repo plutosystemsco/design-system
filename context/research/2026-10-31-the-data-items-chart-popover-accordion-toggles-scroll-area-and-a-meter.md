@@ -2,19 +2,19 @@
 
 - **Status:** complete
 - **Date:** 2026-10-31
-- **Owner:** Clay Gendron (research executed by an agent, Claude, sub-agent of the orchestrating session)
+- **Author:** the design lead
 - **Question:** For the data and disclosure items of `004`: what are the stock `chart`, `popover`, `accordion`, `toggle`, `toggle-group` and `scroll-area` made of, what in each must change to meet our rules, what does `layerchart` 2.x cost and how are its colours set without a literal, what accessibility contract does each carry, and what should a fuel meter be?
-- **What it blocks:** specification `004`, code and data; through it `wasi-python-dev`'s home page (the fuel meter, the fuel popover, the security accordion) and `/admin` (the charts and the time-range presets).
+- **What it blocks:** specification `004`, code and data, released as `v0.4.0`. Its needs are a code-running product's home page (a fuel meter, a popover on "Fuel", a security accordion) and an analytics admin page (charts and time-range presets).
 
 ## How to read this memo
 
 Every claim carries a label.
 
-- **EXECUTED**: we ran it and saw the result, on 2026-10-31, macOS (Darwin 25.5.0, arm64), Bun 1.3.14. `bun pm view` ran at 23:06 UTC. Browser checks ran in Playwright 1.64.1's Chromium (build 1248) and WebKit 27.2 (build 2370), installed into the user's Playwright cache for this memo; the repository was not touched.
-- **READ**: a source says so. Each source was read on 2026-10-31. Paths in the prior-art clone are relative to `context/prior_art/shadcn-svelte/`, at commit `6149e14`. Paths starting `bits-ui/` are relative to `node_modules/bits-ui/dist/` (bits-ui 2.20.2, MIT). Paths starting `layerchart/` are relative to `node_modules/layerchart/dist/` in the scratch project (layerchart 2.9.2, MIT). Paths in the first app are relative to `/Users/claygendron/Git/Repos/wasi-python-dev/context/`, read only.
+- **EXECUTED**: we ran it and saw the result, on 2026-10-31, macOS (Darwin 25.5.0, arm64), Bun 1.3.14. Browser checks ran in Playwright 1.64.1's Chromium (build 1248) and WebKit 27.2 (build 2370); the repository was not touched.
+- **READ**: a source says so. Each source was read on 2026-10-31. Paths in the prior-art clone are relative to `context/prior_art/shadcn-svelte/`, at commit `6149e14`. Paths starting `bits-ui/` are relative to `node_modules/bits-ui/dist/` (bits-ui 2.20.2, MIT). Paths starting `layerchart/` are relative to `node_modules/layerchart/dist/` in the scratch project (layerchart 2.9.2, MIT).
 - **INFERRED**: our reasoning.
 
-Scratch work lives in the session scratchpad, folder `research-data/`: `stock/` (the six items' built maia files), `extract.ts`, `app/` (a SvelteKit project on the repository's pins: Svelte 5.57.3, Vite 8.3.5, Tailwind 4.3.3, adapter-static 4.0.0, bits-ui 2.20.2, layerchart 2.9.2), `app/probe.ts` and `app/aria.ts` (the Playwright runs), `app/shots/` (screenshots), `app-base/` (the same project without layerchart, for the install delta), `view/` (`bun pm view`), `downloads/` (the ARIA 1.2 HTML). Nothing was written to this repository except this memo.
+Scratch work was done in a throwaway project outside this repository, not kept: `stock/` (the six items' built maia files), `extract.ts`, `app/` (a SvelteKit project on the repository's pins: Svelte 5.57.3, Vite 8.3.5, Tailwind 4.3.3, adapter-static 4.0.0, bits-ui 2.20.2, layerchart 2.9.2), `app/probe.ts` and `app/aria.ts` (the Playwright runs), `app/shots/` (screenshots), `app-base/` (the same project without layerchart, for the install delta), `view/` (`bun pm view`), `downloads/` (the ARIA 1.2 HTML). Nothing was written to this repository except this memo.
 
 Terms of art.
 
@@ -40,7 +40,7 @@ Terms of art.
 
 ### 1.1 What was done
 
-EXECUTED: `extract.ts` wrote each item's files from `docs/static/registry/styles/maia/<item>.json` into `research-data/stock/<item>/`, then `lintText` from `scripts/lint-literals.ts` ran on every file with the rules `loadRules` reads from this repository. Line numbers below are of those extracted files, which match the source files under `docs/src/lib/registry/ui/<item>/` line for line, with maia's classes inlined where the source holds a `cn-*` marker. The maia classes are cited by `docs/src/lib/registry/styles/style-maia.css` line.
+EXECUTED: `extract.ts` wrote each item's files from `docs/static/registry/styles/maia/<item>.json` into `stock/<item>/`, then `lintText` from `scripts/lint-literals.ts` ran on every file with the rules `loadRules` reads from this repository. Line numbers below are of those extracted files, which match the source files under `docs/src/lib/registry/ui/<item>/` line for line, with maia's classes inlined where the source holds a `cn-*` marker. The maia classes are cited by `docs/src/lib/registry/styles/style-maia.css` line.
 
 ### 1.2 The table
 
@@ -84,11 +84,11 @@ The lint's rule name, then the class.
 ### 1.5 What the docs pages say (READ: `docs/content/components/<item>.md`)
 
 - `popover.md`: "Displays rich content in a portal, triggered by a button"; examples basic, align, with form (lines 3, 74 to 102).
-- `accordion.md`: "A vertically stacked set of interactive headings that each reveal a section of content"; `type="single"` or `"multiple"`; `disabled` per item; borders and a card wrapper are the app's classes (lines 3, 97 to 135).
+- `accordion.md`: "A vertically stacked set of interactive headings that each reveal a section of content"; `type="single"` or `"multiple"`; `disabled` per item; borders and a card wrapper are an app's classes (lines 3, 97 to 135).
 - `toggle.md`: "A two-state button that can be either on or off"; `variant="outline"`, sizes, disabled (lines 3, 71 to 105).
 - `toggle-group.md`: "A set of two-state buttons"; `type="single"`; outline, size, `spacing`, `orientation="vertical"`, disabled (lines 3, 75 to 131).
 - `scroll-area.md`: "Augments native scroll functionality for custom, cross-browser styling"; its usage example sets `h-[200px] w-[350px]`, two arbitrary sizes (lines 3, 68).
-- `chart.md`: "We do not wrap LayerChart"; the app composes layerchart's own components and brings in `Chart.Container` and `Chart.Tooltip` (lines 38 to 63). Colours go in a `chartConfig` as `color: "var(--chart-1)"` or a `theme: { light, dark }` pair, and marks reference them as `var(--color-KEY)` or the class `fill-(--color-desktop)` (lines 350 to 463). The manual install writes the five `--chart-*` variables in oklch into `:root` and `.dark` (lines 88 to 111); ours already exist (`001` decision 8).
+- `chart.md`: "We do not wrap LayerChart"; an app composes layerchart's own components and brings in `Chart.Container` and `Chart.Tooltip` (lines 38 to 63). Colours go in a `chartConfig` as `color: "var(--chart-1)"` or a `theme: { light, dark }` pair, and marks reference them as `var(--color-KEY)` or the class `fill-(--color-desktop)` (lines 350 to 463). The manual install writes the five `--chart-*` variables in oklch into `:root` and `.dark` (lines 88 to 111); ours already exist (`001` decision 8).
 
 ### 1.6 `chart`'s four files in detail (READ)
 
@@ -127,7 +127,7 @@ layerchart has two layers. The **simplified charts** (`charts/BarChart`, `LineCh
 - **`Axis`** (`Axis/Axis.shared.svelte.d.ts` lines 38 to 102): `placement`, `rule`, `grid`, `format`, `tickLabelProps`; tick labels carry the class `lc-axis-tick-label`.
 - **`Legend`** (`Legend.svelte` lines 545 to 563): with `variant="swatches"`, one `<button type="button" class="lc-legend-swatch-button">` per item holding a `div.lc-legend-swatch` with `style:background-color={item.color}` and a label; click toggles the series; the `ramp` variant draws an SVG gradient.
 - **`Tooltip`** (`tooltip/Tooltip.svelte`, `TooltipContext.svelte`): modes `bisect-x`, `bisect-y`, `bisect-band`, `band`, `facet`, `bounds`, `voronoi`, `quadtree`, `quadtree-x`, `quadtree-y`, `manual` (`TooltipContext.svelte` lines 346 to 372, 711, 855); `variant` `default` | `invert` | `none` (`Tooltip.svelte` line 101). The hit layer is a `div` with pointer handlers and `onkeydown={() => {}}` (line 928): **no keyboard interaction**. The tooltip is portaled; a comment notes that one shown "programmatically — keyboard navigation, a chart group, `locked`" must follow the chart on scroll (lines 348 to 350), so a programmatic `show` exists for an app to drive.
-- **`Bin`** (`Bin/Bin.shared.svelte.d.ts` lines 8 to 40): a 2-D grid binner (cells with `count`, optional `weight`), not a 1-D histogram. A histogram on log buckets is `d3-array`'s `bin` over the data and `Bars` on the result, or the app's own bucketing (INFERRED).
+- **`Bin`** (`Bin/Bin.shared.svelte.d.ts` lines 8 to 40): a 2-D grid binner (cells with `count`, optional `weight`), not a 1-D histogram. A histogram on log buckets is `d3-array`'s `bin` over the data and `Bars` on the result, or an app's own bucketing (INFERRED).
 
 How a series colour is given, in order of resolution (READ: `utils/dataProp.js` lines 103 to 120, `Spline.shared.svelte.d.ts` lines 100 to 104): a `fill`/`stroke` string that `isCSSColor` accepts is used as is; a function returns a colour or a domain value for `cScale`; a plain string names a data field. The simplified charts' `series[].color` is a string placed on the mark's `fill` or `stroke`; the default series is `color: 'var(--color-primary)'` and `cRange={['var(--color-primary, currentColor)']}` (`charts/BarChart/BarChart.shared.svelte.d.ts` line 22, `BarChart.base.svelte` line 89). So the library itself expects CSS variables in presentation attributes.
 
@@ -144,7 +144,7 @@ The scratch page `/chart` rendered six figures. `probe.ts` read each first mark'
 | E | as A with `props={{ bars: { motion: "tween" } }}` and `chart-4` | `fill="var(--chart-4)"` | `rgb(30, 158, 86)` = `#1E9E56` |
 | F | `BarChart` with no colour | `fill="var(--color-primary, currentColor)"` | `rgb(36, 86, 230)` = `primary` |
 
-Both routes work. **A token class on the mark** (`fill-chart-1`, `stroke-chart-2`; Tailwind 4 generates `fill-*` and `stroke-*` from `--color-*`, which `001` emits for the five chart tokens, `src/app.css` lines 184 to 188) and **a `var()` string in the `fill`/`stroke` prop** both paint the token's colour, with no `style` attribute anywhere in our markup. The class route needs no `ChartConfig` colour and no injected stylesheet; the prop route is what the simplified charts' `series[].color` takes. A screenshot of A (`shots/chart-tooltip.png`) shows blue bars with a thin black outline: the simplified `BarChart` passes `strokeWidth={1}` with the `Bars` default `stroke='black'` (`BarChart.base.svelte` line 140, `Bars.base.svelte` line 27), a literal our wrapper would override with `stroke-card` or `strokeWidth 0` (INFERRED).
+Both routes work. **A token class on the mark** (`fill-chart-1`, `stroke-chart-2`; Tailwind 4 generates `fill-*` and `stroke-*` from `--color-*`, which `001` emits for the five chart tokens, `src/app.css` at `v0.3.0` lines 184 to 188) and **a `var()` string in the `fill`/`stroke` prop** both paint the token's colour, with no `style` attribute anywhere in our markup. The class route needs no `ChartConfig` colour and no injected stylesheet; the prop route is what the simplified charts' `series[].color` takes. A screenshot of A (`shots/chart-tooltip.png`) shows blue bars with a thin black outline: the simplified `BarChart` passes `strokeWidth={1}` with the `Bars` default `stroke='black'` (`BarChart.base.svelte` line 140, `Bars.base.svelte` line 27), a literal our wrapper would override with `stroke-card` or `strokeWidth 0` (INFERRED).
 
 The page logged no errors or warnings. The console was watched for both.
 
@@ -161,11 +161,11 @@ The page logged no errors or warnings. The console was watched for both.
 | `/chart-simple` | `BarChart`, `LineChart` (tooltip on by default) | 45 | 519.8 KB | 171.3 KB | **+131.2 KB** |
 | `/chart` | both of the above plus a legend and a tweened chart | 46 | 531.4 KB | 175.8 KB | +135.7 KB |
 
-The chart routes pull 28 to 32 more chunks than the baseline. For scale, `/admin` is behind Cloudflare Access for one owner (analytics memo §6), so this weight lands on no visitor; the home page needs no chart (INFERRED from the primitives memo lines 347 to 358, where `chart` is `/admin`-only).
+The chart routes pull 28 to 32 more chunks than the baseline. For scale, an admin page is seen by its owners alone, so this weight lands on no public visitor; a product home page needs no chart (INFERRED).
 
 ### 2.5 Server rendering (EXECUTED)
 
-`vite build` with adapter-static prerendered every route with no error. `build/chart.html` is 6,098 bytes and holds **no `<svg>`, no `<rect>` and no `<path>`**: each chart's container holds only Svelte's hydration comments. layerchart measures its container to size the SVG, so on the server it draws nothing, and the figure appears after hydration. A prerendered `/admin` therefore shows empty chart boxes until the JavaScript runs; the data table alternative of §3.2 would be the only server-rendered content (INFERRED).
+`vite build` with adapter-static prerendered every route with no error. `build/chart.html` is 6,098 bytes and holds **no `<svg>`, no `<rect>` and no `<path>`**: each chart's container holds only Svelte's hydration comments. layerchart measures its container to size the SVG, so on the server it draws nothing, and the figure appears after hydration. A prerendered admin page therefore shows empty chart boxes until the JavaScript runs; the data table alternative of §3.2 would be the only server-rendered content (INFERRED).
 
 ### 2.6 Motion (READ, EXECUTED)
 
@@ -217,7 +217,7 @@ Every series passes 3:1 on `card` except light amber (`001`'s exception). **No t
 
 ### 3.4 The data table alternative (INFERRED)
 
-The WAI tutorial's `figure` plus `figcaption` with a table is the one placement that carries structure. For `/admin`, where the data is already a query result, a `<table>` of the same rows beside or under each chart costs nothing to produce, is the only content a prerender would show (§2.5), and gives keyboard and screen-reader users the numbers the tooltip gives pointer users. Whether it is visible, visually hidden (`sr-only`), or behind a toggle ("Show as table") is a `004` decision; visually hidden tables are read by screen readers but help no sighted keyboard user, and a toggle serves both.
+The WAI tutorial's `figure` plus `figcaption` with a table is the one placement that carries structure. For an admin page, where the data is already a query result, a `<table>` of the same rows beside or under each chart costs nothing to produce, is the only content a prerender would show (§2.5), and gives keyboard and screen-reader users the numbers the tooltip gives pointer users. Whether it is visible, visually hidden (`sr-only`), or behind a toggle ("Show as table") was left to `004`; visually hidden tables are read by screen readers but help no sighted keyboard user, and a toggle serves both. `004` decision 10 chose the toggle: a `details` "Show as table" after the chart.
 
 ### 3.5 Motion (READ)
 
@@ -238,7 +238,7 @@ READ from bits-ui 2.20.2's source, then EXECUTED on the scratch page `/bits` and
 | Portal | `Popover.Portal` renders to `body` by default | the content's wrapper was a child of `<body>` |
 | Presence | `PresenceManager` keeps the node while `data-closed` transition attributes run, so `animate-exit` can play (33 to 39, 328) | not timed |
 
-INFERRED: the trigger promises a dialog and the content delivers none. APG's non-modal dialog is `role="dialog"` with `aria-labelledby` the title; the stock `PopoverTitle` is a plain `div`. Our item can set `role="dialog"` on `Content` when a `Title` is present and wire the ids, or keep bits-ui's plain content for a popover that holds one sentence (the fuel note), where a dialog role would be heavier than the content. `004` decides; both are a prop away.
+INFERRED: the trigger promises a dialog and the content delivers none. APG's non-modal dialog is `role="dialog"` with `aria-labelledby` the title; the stock `PopoverTitle` is a plain `div`. Our item can set `role="dialog"` on `Content` when a `Title` is present and wire the ids, or keep bits-ui's plain content for a popover that holds one sentence (the fuel note), where a dialog role would be heavier than the content. `004` decision 11 chose the dialog for every popover: `role="dialog"`, named by its title when one is rendered, else by a `label` prop.
 
 ### 4.2 `accordion`
 
@@ -250,13 +250,13 @@ INFERRED: the trigger promises a dialog and the content delivers none. APG's non
 | Keyboard among triggers | `RovingFocusGroup` over `[data-accordion-trigger]:not([data-disabled])`: Down and Up (vertical), Home, End, looping by default (`internal/roving-focus-group.js` 43 to 83) | ArrowDown: one, two, three, one; End: three; Enter opened the third: contents `closed/hidden, closed/hidden, open/shown` |
 | Single and multiple | `single` holds a string and toggles to `""` (so every item can close); `multiple` holds an array (39 to 72) | Tab stops: each of the three triggers is a stop (`tabindex="0"` on all; roving affects arrows, not Tab) |
 
-APG's accordion pattern (not re-read here; its requirements are well known) asks for `aria-controls` on the button and makes `region` optional (it advises against it with more than six panels). INFERRED: our `AccordionTrigger` and `AccordionContent` can share an id from `$props.id()` inside `AccordionItem` and set `aria-controls` and, if wanted, `role="region" aria-labelledby`, by passing `id` and the attribute through bits-ui's `restProps`. Heading level stays a prop; the stock default 3 suits a section under an `h2`.
+APG's accordion pattern asks for `aria-controls` on the button and makes `region` optional (it advises against it with more than six panels) (INFERRED: the pattern was not re-read for this memo). INFERRED: our `AccordionTrigger` and `AccordionContent` can share an id from `$props.id()` inside `AccordionItem` and set `aria-controls` and, if wanted, `role="region" aria-labelledby`, by passing `id` and the attribute through bits-ui's `restProps`. Heading level stays a prop; the stock default 3 suits a section under an `h2`. `004` decision 12 does this: `aria-controls`, and a `region` labelled by its trigger.
 
 ### 4.3 `toggle`
 
 READ: `<button>` with `aria-pressed="true|false"`, `data-state="on|off"`, `disabled`, toggled on click (`toggle.svelte.js` 18 to 35; `components/toggle.svelte` line 44); a native button, so Space and Enter work without a key handler. EXECUTED: Space set `aria-pressed="true"`, `data-state="on"`; the ARIA snapshot reads `button "Bold"` (Chromium's snapshot does not print the pressed state, but the attribute was read directly).
 
-INFERRED on the visual state: stock's pressed look is `bg-muted`, which measures 1.20:1 against light `card` and 1.12 against light `background`, 1.16 and 1.31 in dark (EXECUTED with `scripts/contrast.ts`). As the only sign of "on", that is state by a faint tint (R19). A pressed toggle needs a second cue: a `border-foreground` edge, inverted `bg-foreground text-background` (the tooltip's recipe, 16.84), or a check icon. `004` chooses; R8 allows `muted` as a selected inset, so `bg-muted` may stay alongside the cue.
+INFERRED on the visual state: stock's pressed look is `bg-muted`, which measures 1.20:1 against light `card` and 1.12 against light `background`, 1.16 and 1.31 in dark (EXECUTED with `scripts/contrast.ts`). As the only sign of "on", that is state by a faint tint (R19). A pressed toggle needs a second cue: a `border-foreground` edge, inverted `bg-foreground text-background` (the tooltip's recipe, 16.84), or a check icon. R8 allows `muted` as a selected inset, so `bg-muted` may stay alongside the cue. `004` decision 13 chose the inverted pair.
 
 ### 4.4 `toggle-group`
 
@@ -267,7 +267,7 @@ INFERRED on the visual state: stock's pressed look is `bg-muted`, which measures
 | Items, `multiple` | `<button aria-pressed>`, no `role` | `button "a"`, `aria-pressed="false"`; also roving (one Tab stop for the group) |
 | Keys | Enter and Space toggle; arrows, Home and End move focus through the roving group (126 to 137); selecting an item makes it the tab stop (46 to 54) | from "7d", ArrowRight moved focus to "30d" without selecting it; Space then made "30d" checked and the stop, and "7d" unchecked. Tab stops on the page: one per group |
 
-INFERRED: for a time-range preset, `single` with roving focus is the right shape (one stop, arrows to browse, Space to apply). Two things differ from APG's radio group: the root is `group` rather than `radiogroup`, and arrows move without selecting. Our `Root` can pass `role="radiogroup"` through `restProps` when `type="single"`; arrow-selects would need our own key handler, which is not worth it when selection changes a whole page's query (a user browsing presets should not fire a fetch per arrow press). Selected state needs the same second cue as the toggle (§4.3): a preset strip with only `bg-muted` on the active item tells by a 1.20:1 tint.
+INFERRED: for a time-range preset, `single` with roving focus is the right shape (one stop, arrows to browse, Space to apply). Two things differ from APG's radio group: the root is `group` rather than `radiogroup`, and arrows move without selecting. Our `Root` can pass `role="radiogroup"` through `restProps` when `type="single"`; arrow-selects would need our own key handler, which is not worth it when selection changes a whole page's query (a user browsing presets should not fire a fetch per arrow press). Selected state needs the same second cue as the toggle (§4.3): a preset strip with only `bg-muted` on the active item tells by a 1.20:1 tint. `004` decision 13 keeps bits-ui's `group` role and its browse-then-select keys, and inverts the checked item.
 
 ### 4.5 `scroll-area`
 
@@ -277,7 +277,7 @@ INFERRED: for a time-range preset, `single` with roving focus is the right shape
 | Scrollbar | `type` `hover` (default), `scroll`, `auto`, `always`; with `hover` the bar mounts on pointer enter and unmounts after `scrollHideDelay` 600 ms (123 to 160); the thumb is dragged by pointer, with the ratio from viewport and content sizes (124 to 190) | not in the DOM at rest; on hover a 10 × 190 px bar (stock `w-2.5` plus `p-px`) with an 8 × 37 px thumb |
 | Native alternative | — | a `div.overflow-auto` with `[scrollbar-color:var(--input)_var(--muted)] [scrollbar-width:thin]` and `tabindex="0"` computed `scrollbar-color: rgb(124, 128, 139) rgb(234, 234, 231)` and `scrollbar-width: thin`, and scrolled 52 px on two ArrowDowns |
 
-Against our rules: the hover-only 10 px bar with an 8 px thumb is a pointer target far under R21's 24 px, and it is invisible until hovered, so touch and keyboard users never see where they are (INFERRED). The native box's thumb `input` on track `muted` measures 3.27:1 in light and 3.31 in dark (EXECUTED), meeting SC 1.4.11 for a control, and the arbitrary properties hold no literal, so the lint accepts them (the `holdsLiteral` test finds no length, hex, colour function or named colour in `var(--input)`); a `@utility` in `pluto-theme` would read better. `scrollbar-color` and `scrollbar-width` are supported in Chromium (121+), Firefox and Safari 18.2+ (INFERRED from memory, not checked; §9). The primitives memo already marked `scroll-area` "may be dropped" (line 356).
+Against our rules: the hover-only 10 px bar with an 8 px thumb is a pointer target far under R21's 24 px, and it is invisible until hovered, so touch and keyboard users never see where they are (INFERRED). The native box's thumb `input` on track `muted` measures 3.27:1 in light and 3.31 in dark (EXECUTED), meeting SC 1.4.11 for a control, and the arbitrary properties hold no literal, so the lint accepts them (the `holdsLiteral` test finds no length, hex, colour function or named colour in `var(--input)`); a `@utility` in `pluto-theme` would read better. `scrollbar-color` and `scrollbar-width` computed as set in Chromium (EXECUTED, above); Firefox and Safari were not checked for this memo (§9). The primitives memo already marked `scroll-area` "may be dropped" (line 356).
 
 ## 5. Popover's chrome
 
@@ -287,7 +287,7 @@ Stock `PopoverContent` (§1.3): `bg-popover text-popover-foreground … ring-for
 
 Ours, by `002` decisions 3, 7 and 8 and the primitives memo line 142: `bg-popover text-popover-foreground border border-elevation-line shadow-elevation rounded p-4 gap-4 text-sm z-50`, entrance `animate-enter` (and `data-closed:animate-exit` if the exit is wanted; bits-ui keeps the node while `data-closed` runs), no outline classes (the global `:focus-visible` rule), a ladder width.
 
-Decision 7's `shadow-elevation` is `0 0 0 var(--line-width) var(--elevation-line), 0 0.75rem 2rem 0 var(--elevation-shadow)`; it already draws the hairline as a spread shadow, so a `border border-elevation-line` on top would draw it twice, once inside the box and once outside (INFERRED from `src/app.css` lines 156 to 158). The scratch panel used both and looked like one edge in the screenshots; `004` should pick one, and decision 7's reasoning ("the edge then sits outside the surface's box") points to the shadow alone.
+Decision 7's `shadow-elevation` is `0 0 0 var(--line-width) var(--elevation-line), 0 0.75rem 2rem 0 var(--elevation-shadow)`; it already draws the hairline as a spread shadow, so a `border border-elevation-line` on top would draw it twice, once inside the box and once outside (INFERRED from `src/app.css` at `v0.3.0` lines 156 to 158). The scratch panel used both and looked like one edge in the screenshots; decision 7's reasoning ("the edge then sits outside the surface's box") points to the shadow alone. `004` decision 11 takes the shadow alone, with no border.
 
 ### 5.2 Elevation seen in Chromium (EXECUTED)
 
@@ -320,9 +320,9 @@ So a popover's width is `w-3xs` (256 px, close to stock's 288) or `w-xs` (320 px
 - **APG meter pattern** (`https://www.w3.org/WAI/ARIA/apg/patterns/meter/`): "A meter is a graphical display of a numeric value that varies within a defined range", with a battery or fuel level as the example; "The meter should not be used to indicate progress, such as loading or percent completion of a task. To communicate progress, use the progressbar role instead." Keyboard: "Not applicable." `aria-valuetext` when "a percentage alone would not be clear"; name by `aria-labelledby` from a visible label, else `aria-label`.
 - **MDN `<meter>`** (`https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/meter`): attributes `value`, `min` (0), `max` (1), `low`, `high`, `optimum`; implicit role `meter`, no other role permitted; it is labelable, so `<label for>` names it. WebKit pseudo-elements `::-webkit-meter-bar`, `::-webkit-meter-inner-element`, `::-webkit-meter-optimum-value`, `::-webkit-meter-suboptimum-value`, `::-webkit-meter-even-less-good-value`; Firefox's `::-moz-meter-bar` is not on that page but is documented elsewhere on MDN (not re-read; §9).
 - **a11ysupport.io**: `/tech/aria/meter_role` and `/tests/tech__aria__meter_role` returned 404, and the `/tech/aria/` index page held one link and no role list when fetched without JavaScript (EXECUTED: curl). Assistive-technology support for `meter` is therefore **unknown** from that source.
-- **bits-ui `Meter`** (`bits-ui/bits/meter/meter.svelte.js` 17 to 28): a `div` with `role="meter"`, `aria-valuemin`, `aria-valuemax`, `aria-valuenow`, `data-value`, `data-min`, `data-max`; no `aria-valuetext`, no name, no fill element. It is 29 lines; the app would add the name, the text and the bar.
+- **bits-ui `Meter`** (`bits-ui/bits/meter/meter.svelte.js` 17 to 28): a `div` with `role="meter"`, `aria-valuemin`, `aria-valuemax`, `aria-valuenow`, `data-value`, `data-min`, `data-max`; no `aria-valuetext`, no name, no fill element. It is 29 lines; an app would add the name, the text and the bar.
 
-Fuel used of a cap is a measurement in a known range, so the role is `meter` (READ, both sources). The first app's panel writes it as "Fuel: 4.81 billion instructions of 30 billion" with a tooltip or popover on "Fuel" (run-reports memo §6 rows 2 and 6, §1.6).
+Fuel used of a cap is a measurement in a known range, so the role is `meter` (READ, both sources). A run panel writes it as "Fuel: 4.81 billion instructions of 30 billion", with a tooltip or popover on "Fuel" (INFERRED: the need as put to this memo).
 
 ### 6.2 Styling with tokens (EXECUTED: `/meter` in Chromium and WebKit)
 
@@ -338,42 +338,44 @@ Both engines honoured `appearance: none` and painted the pseudo-elements with ou
 
 A `<meter>` lets the lint pass: its value is an attribute, not a style; a `div` meter needs a `style` width. `h-2` is on the ladder. R21 does not apply: a meter is not a pointer target. The amber `caution` colour is not needed: a run near its cap is a number, not a warning; `002`'s `alert` handles the "Stopped: out of fuel" outcome (INFERRED).
 
-## 7. The `/admin` needs mapped to parts (INFERRED)
+## 7. An analytics page's needs mapped to parts (INFERRED)
 
-From the analytics memo §7 and its time-range and filter paragraphs (lines 292 to 319).
+The general need: an admin page that reports a product's traffic and its runs, filtered by a time range and by any row, beside a home page that shows one run's fuel and a security section.
 
 | Need | Parts | Owner |
 |---|---|---|
-| Visitors and page views per hour or per day (§7.2) | one `chart` figure per measure, or bars for one and a line for the other so the two series differ by mark, not colour (§3.3); `Axis` with a time scale; a table alternative (§3.4) | `004` gives the figure and table recipe; the app composes |
-| Outcomes (§7.7: ok, error, fuel cap, …) | a horizontal bar chart of categories, one colour, each bar labelled with its count (`Labels`) | the app, on `004`'s recipe |
-| Fuel, memory and wall-time histograms on log buckets (§7.7) | the app bins (`d3-array` `bin` with log thresholds, or SQL buckets), `Bars` draws; axis tick format for the log buckets | the app |
-| Time-range presets (today, yesterday, 7 d, 30 d, this month, 12 months, custom) | `toggle-group` `single`, `role="radiogroup"` (§4.4), one Tab stop; custom range is `native-select` or a later `range-calendar` (primitives memo, deferred) | `004` gives the item; the app the presets |
-| Click any row to filter the page (§7, "Filters") | `table` rows as buttons or links with `aria-pressed`/`aria-current`, a visible "Filtered by: Hacker News" chip with a remove button (`badge` carries no action; a `button` `secondary sm`, `002` decision 19) | the app; no new item |
-| Sources expand to hosts and paths (§7.3) | `collapsible` rows (primitives memo line 14), not `accordion` | `002` already serves it |
-| The "now" tile (§7, real-time) | text, `role="status"` polite | the app |
-| The fuel note on the home page | `popover` on "Fuel" (§4.1), or `tooltip` for two sentences without a link | `004` gives `popover` |
-| Security detail on the home page | `accordion` with `level` matching the page outline (§4.2) | `004` gives `accordion` |
-| Long run output | `code-block`'s own scroll, or a native `overflow-auto` with the scrollbar tokens (§4.5) | `004` decides whether `scroll-area` is served at all |
+| Visitors and page views per hour or per day | one `chart` figure per measure, or bars for one and a line for the other so the two series differ by mark, not colour (§3.3); `Axis` with a time scale; a table alternative (§3.4) | `004` gives the figure and table recipe; a consuming app composes |
+| Outcomes (ok, error, fuel cap, …) | a horizontal bar chart of categories, one colour, each bar labelled with its count (`Labels`) | a consuming app, on `004`'s recipe |
+| Fuel, memory and wall-time histograms on log buckets | an app bins (`d3-array` `bin` with log thresholds, or SQL buckets), `Bars` draws; axis tick format for the log buckets | a consuming app |
+| Time-range presets (today, yesterday, 7 d, 30 d, this month, 12 months, custom) | `toggle-group` `single` (§4.4), one Tab stop; a custom range is `native-select`, since this registry serves no `range-calendar` | `004` gives the item; a consuming app the presets |
+| Click any row to filter the page | `table` rows as buttons or links with `aria-pressed`/`aria-current`, a visible "Filtered by" chip naming the value, with a remove button (`badge` carries no action; a `button` `secondary sm`, `002` decision 19) | a consuming app; no new item |
+| Sources expand to hosts and paths | `collapsible` rows, not `accordion` | `002` already serves it |
+| A real-time "now" tile | text, `role="status"` polite | a consuming app |
+| A fuel note on a home page | `popover` on "Fuel" (§4.1), or `tooltip` for two sentences without a link | `004` gives `popover` |
+| Security detail on a home page | `accordion` with `level` matching the page outline (§4.2) | `004` gives `accordion` |
+| Long run output | `code-block`'s own scroll, or a native `overflow-auto` with the scrollbar tokens (§4.5) | `004` decision 1 does not serve `scroll-area` |
 
 ## 8. Recommendation (INFERRED)
 
-This commits us to nothing; `004` makes the choices.
+This committed us to nothing; `004` made the choices (decisions 10 to 14).
 
 1. **Serve `chart` as a container plus a tooltip, colours by token class or `var()` prop, never by an injected `<style>`.** Drop `chart-style.svelte` and the `color`/`theme` half of `ChartConfig`; keep `label` and `icon`. The container sets `[&_.lc-axis-tick-label]:fill-muted-foreground`, `[&_.lc-text]:text-xs`, `[&_.lc-rect]:stroke-0` (against the black stroke), and wraps a `<figure>` with a required `label` (as `aria-label` on the `<svg>` or a visible `<figcaption>`) and a slot or prop for the data table. The tooltip panel is `bg-popover text-popover-foreground border border-elevation-line shadow-elevation rounded px-3 py-2 text-xs min-w-24`, its indicator a `size-2` token-class square per series. Pin `layerchart` 2.9.2 in the item's dependencies.
 2. **No chart motion.** Leave `motion` undefined; a figure appears complete. If `004` wants a tween on data change, it reads `prefers-reduced-motion` itself and caps the duration at `--motion-micro`'s 200 ms.
 3. **Series by mark or label, not colour alone.** One series per figure where the data allows; otherwise bars against a line, or `Labels` on the marks; amber labelled directly in light (`001`).
 4. **`popover`**: decision 7's chrome, `w-3xs` default, `animate-enter`, `sideOffset={4}`; `role="dialog"` with `aria-labelledby` when a `Title` is rendered. **`accordion`**: add `aria-controls`; heading level a prop; `bg-muted` on the open item dropped (R8); icons `CaretDown`/`CaretUp` from `phosphor-svelte` at `size-4`. **`toggle`** and **`toggle-group`**: `h-12`/`h-8` with `min-w-12`/`min-w-8`, `rounded`, pressed state with a second cue; `role="radiogroup"` for `single`. **`scroll-area`**: drop it; give `pluto-theme` a `scrollbar` utility (`scrollbar-color: var(--input) var(--muted); scrollbar-width: thin`) and document `overflow-auto` plus `tabindex="0"` with a label as the pattern (as `002`'s `table` already does).
-5. **The fuel meter is a native `<meter>`** item: `appearance-none`, the track `bg-muted`, the fill `primary` through the WebKit and Gecko pseudo-elements in `pluto-theme` CSS (tokens through `var()`), `h-2 rounded w-full`, named by a visible `<label>`, with the numbers written beside it and `aria-valuetext` passed through when the app gives one. A `MeterText` or the `label` prop renders "4.81 billion instructions of 30 billion". bits-ui's `Meter` adds nothing a `<meter>` lacks.
+5. **The fuel meter is a native `<meter>`** item: `appearance-none`, the track `bg-muted`, the fill `primary` through the WebKit and Gecko pseudo-elements in `pluto-theme` CSS (tokens through `var()`), `h-2 rounded w-full`, named by a visible `<label>`, with the numbers written beside it and `aria-valuetext` passed through when an app gives one. A `MeterText` or the `label` prop renders "4.81 billion instructions of 30 billion". bits-ui's `Meter` adds nothing a `<meter>` lacks.
 
-## 9. What is still unknown
+Where `004` differs from these five: neither panel has a border (decision 11, §5.1); the accordion turns one `CaretRight` (decision 12); the toggle group keeps bits-ui's `group` role (decision 13); and the meter has square ends (decision 14).
 
-- **Assistive-technology support** for `role="meter"`, `<meter>`, the Graphics ARIA roles and `role="figure"` on an SVG: a11ysupport.io could not be read, and no screen reader was run. Chromium's and WebKit's accessibility trees expose the meter correctly; what VoiceOver or NVDA say was not heard.
-- **Firefox**: `::-moz-meter-bar` with tokens, `scrollbar-color`, and whether an unfocusable scroll viewport is reachable by keyboard; Playwright's Firefox was not installed.
-- **Safari's keyboard-focusable scrollers** and its support for `scrollbar-color` (Safari 18.2 from memory, unchecked).
-- **layerchart's canvas layer** (`Canvas` instead of `Svg`) for large series: its colour handling would differ (no classes on canvas) and was not run.
-- **Whether `fill="var(--chart-1)"` as a presentation attribute resolves in Firefox and WebKit** as it did in Chromium; the class route (`fill-chart-1`) is plain CSS and carries no such doubt.
-- **A formal contrast rule for a shadow's edge** in light, where the hairline is 10% ink and the plume a gradient; decision 28 asked for the test and §5.2 gives pixel samples, not a ratio.
-- **The live stock registry** may have moved since `6149e14`; the built JSON in the clone was read, as the primitives memo did.
-- **`hidden="until-found"`** on accordion content (find-in-page opens the item): useful for the security section, support across engines unchecked.
+## 9. What this memo does not settle
+
+- **Assistive-technology support** for `role="meter"`, `<meter>`, the Graphics ARIA roles and `role="figure"` on an SVG. a11ysupport.io could not be read. Chromium's and WebKit's accessibility trees expose the meter correctly. No screen reader has been run; the tests prove the DOM contract. Screen readers are outside this release's checks (`decisions.md`, "After the public-readiness review").
+- **Firefox**: `::-moz-meter-bar` with tokens, `scrollbar-color`, and whether an unfocusable scroll viewport is reachable by keyboard. Firefox was not run for this memo, and it is outside this release's checks (the same entry).
+- **Safari**: its keyboard-focusable scrollers and its support for `scrollbar-color` were not checked. Safari is outside this release's checks (the same entry).
+- **layerchart's canvas layer** (`Canvas` instead of `Svg`) for large series: its colour handling would differ (no classes on canvas). It was not run; `004`'s chart page composes the `Svg` layer only.
+- **`fill="var(--chart-1)"` as a presentation attribute** resolved in Chromium. This release checks Chromium only. The class route (`fill-chart-1`) is plain CSS and carries no such doubt.
+- **A formal contrast rule for a shadow's edge** in light, where the hairline is 10% ink and the plume a gradient. None is defined. `002` decision 28 asked for the test; §5.2 gives pixel samples, and `004` criterion 21 reads the computed shadow layers in both themes.
+- **The live stock registry** against the clone at `6149e14`: answered at build. 0 of the 8 live JSON files differed on 2026-10-31 (`004` Landing notes, item 4).
+- **`hidden="until-found"`** on accordion content (find-in-page opens the item): `004` decision 12 does not use it, and its support across engines was not checked.
 
 **In one line:** the six stock items fail the lint 63 times and all take `002`'s recipes, with `popover` taking decision 7's elevation (seen working in both themes) and `scroll-area` better replaced by a native box with scrollbar tokens; layerchart 2.9.2 paints series from token classes or `var()` props with no `style` attribute, costs about 125 KB gzipped on a two-chart page, draws nothing on the server and animates only when asked, and leaves a chart's data invisible to keyboard and screen-reader users, so `004` owes each figure a name and a table; and the fuel meter is a native `<meter>` on `muted` and `primary` with its numbers written beside it.

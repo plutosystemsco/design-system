@@ -4,7 +4,7 @@
   /**
    * `plain`: the assistant's prose, full width, no ground. `bubble`: a user
    * turn on the muted inset, 80% wide at most, at the end of its column. One
-   * inset and no other ground: a tint fails the token rule, a primary fill
+   * inset and no other ground: a tint is a literal colour that no token names, a primary fill
    * spends the accent the send button owns, and red is the alert's.
    */
   export const messageContentVariants = tv({

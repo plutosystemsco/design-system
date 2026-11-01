@@ -16,7 +16,8 @@
     index?: number;
   } = $props();
 
-  // Four widths by index, in place of stock's random style attribute, which
+  // Four widths by index, in place of shadcn-svelte's random style attribute,
+  // which
   // differed between the server's render and the client's.
   const WIDTHS = ["max-w-1/2", "max-w-2/3", "max-w-3/4", "max-w-full"];
   const width = $derived(WIDTHS[Math.abs(index) % WIDTHS.length]);

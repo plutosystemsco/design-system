@@ -2,7 +2,7 @@
 
 - **Status:** complete
 - **Date:** 2026-10-27
-- **Owner:** Clay Gendron (research executed by an agent, Claude, sub-agent of the orchestrating session, while drafting specification `001`)
+- **Author:** the design lead
 - **Question:** What specification `001` needs that [the first memo](2026-10-27-a-shadcn-svelte-registry-and-what-pluto-already-has.md) does not record. Which versions are current. Whether shadcn-svelte 1.7.1 works with the current SvelteKit. How a `registry:font` item installs. How a `registry:theme` item can carry non-colour tokens. Which proposed colours pass WCAG 2.2 AA.
 - **What it blocks:** specification `001`.
 
@@ -10,11 +10,11 @@
 
 Every claim carries a label, as in the first memo.
 
-- **EXECUTED**: we ran it and saw the result, on 2026-10-27, macOS, Bun 1.3.14, Node 22.14.0 (the default `node`) and Node 24.9.0 (Homebrew, `/opt/homebrew/opt/node@24/bin`).
+- **EXECUTED**: we ran it and saw the result, on 2026-10-27, macOS, Bun 1.3.14, Node 22.14.0 (the default `node`) and Node 24.9.0 (a second install).
 - **READ**: a source says so. Paths that start `cli/` mean `context/prior_art/shadcn-svelte/packages/cli/` at commit `6149e14`. Paths that start `docs/` mean `context/prior_art/shadcn-svelte/docs/`.
 - **INFERRED**: our reasoning.
 
-All runs were in the session scratchpad. Nothing was written to this repository except this memo.
+All runs were in scratch projects outside this repository. Nothing was written to this repository except this memo.
 
 The run built a registry project with six items (`pluto-theme`, three font items, `utils`, `four-dot`), served it, and ran the real `add` into scratch apps. We call it **the run** below.
 
@@ -68,7 +68,7 @@ INFERRED: what a registry serves does not depend on the registry project's Kit v
 
 ## 3. `bunx` runs the CLI under Node, and the CLI uses Bun to install
 
-- The stack traces from `bunx shadcn-svelte@1.7.1` show `node:internal/process/task_queues` (EXECUTED). The CLI runs under the `node` on `PATH`. This answers an unknown in the first memo (§7, "Whether bunx runs the CLI under Node").
+- The stack traces from `bunx shadcn-svelte@1.7.1` show `node:internal/process/task_queues` (EXECUTED). The CLI runs under the `node` on `PATH`. This answers an unknown in the first memo (its last section, "Whether `bunx` runs the CLI under Node").
 - The CLI printed "Installing dependencies with bun..." (EXECUTED). It detected Bun from the app's lockfile.
 - With the default Node 22.14.0, Kit 3.1.0's `engines` (`>=22.17`) is not met. We ran Kit 3 under Node 24.9.0. Kit 2.70.3, Vite 8.3.5 and the CLI ran under 22.14.0 (EXECUTED).
 
@@ -125,15 +125,15 @@ READ: the built maia items in `docs/static/registry/styles/maia/` for button, ba
 - `bg-input/30` fills inputs, outline buttons and badges with 30% of `--input`.
 - `bg-muted` is used by skeleton, tabs, table and code-block.
 - The 1.7.x `utils` item re-exports `cn` from the `cn` package (`cn@^0.5.0`, a devDependency) and declares four type helpers: `WithoutChild`, `WithoutChildren`, `WithoutChildrenOrChild` and `WithElementRef`. Stock components import these names from the `utils` alias.
-- `menuColor: "default-translucent"` (which `hq/web/components.json` uses) inlines `bg-popover/70` and `before:backdrop-blur-2xl` into menus at install (READ: `TRANSLUCENT_CLASSES` in `cli/src/utils/transformers/transform-menu.ts`). INFERRED: that is the frosted glass v2 §09 bans.
+- `menuColor: "default-translucent"` (which the brand's earlier website used) inlines `bg-popover/70` and `before:backdrop-blur-2xl` into menus at install (READ: `TRANSLUCENT_CLASSES` in `cli/src/utils/transformers/transform-menu.ts`). INFERRED: that is the frosted glass the design book §09 bans.
 
 ## 8. Contrast of the proposed colours
 
-EXECUTED: a Node script in the scratchpad implementing WCAG 2.2 relative luminance (sRGB channels linearised at the 0.04045 threshold; L = 0.2126 R + 0.7152 G + 0.0722 B; ratio (L1 + 0.05) / (L2 + 0.05)), with alpha composited over the ground before measuring. Ratios are truncated to two decimals, never rounded up.
+EXECUTED: a Node script in a scratch project implementing WCAG 2.2 relative luminance (sRGB channels linearised at the 0.04045 threshold; L = 0.2126 R + 0.7152 G + 0.0722 B; ratio (L1 + 0.05) / (L2 + 0.05)), with alpha composited over the ground before measuring. Ratios are truncated to two decimals, never rounded up.
 
 Two derived neutrals were computed for `--muted`: ink at 6% over paper is `#EAEAE7`; paper at 10% over ink is `#2B2D32`.
 
-Failures found among the canvas's proposals:
+Failures found among the proposed colours (drafted from the design book's tokens before `001`):
 
 | Proposal | Failing pair | Ratio | Needed |
 |---|---|---|---|
@@ -180,9 +180,9 @@ EXECUTED: `cn(...)` from `cn` 0.5.0, under Node 24.9.0.
 
 INFERRED: size tokens should reuse Tailwind's own size names. Custom colour names merge correctly. Custom tracking names do not merge, so a component should never set two tracking classes on one element.
 
-## 10. What is still unknown
+## 10. What this memo does not settle
 
-- Whether `svelte-check` 4.7.7 type-checks a Kit 3 project that uses `#lib` and `$app/tsconfig` without errors. Not run.
-- Whether Playwright 1.64.1's bundled Chromium measures the four-dot geometry to sub-pixel precision at 100 px. Not run.
-- The status of the W3C Design Tokens Community Group format. Not read today.
-- Whether adapter-static 4.0.0 empties `build/` before writing. Not checked; the run wrote the registry into `static/` instead.
+- **Whether `svelte-check` 4.7.7 type-checks a Kit 3 project that uses `#lib` and `$app/tsconfig`.** Answered by the toolchain memo of the same day (§4): extensionless `#lib/...` imports fail until `imports` gives fallback targets. `001` decision 2 takes that fix, and `bun run check` reports 0 errors (`001` criterion 2).
+- **Whether Playwright 1.64.1's bundled Chromium measures the four-dot geometry precisely.** Answered: `001`'s `four-dot.spec.ts` measures the dot sizes, gaps, width and rise in Chromium and passes 20 of 20 (`001` criterion 16).
+- **The status of the W3C Design Tokens Community Group format.** Not read for this memo. The token file is plain JSON of this repository's own shape (`001` decision 6).
+- **Whether adapter-static 4.0.0 empties `build/` before writing.** Not checked. The registry is generated into `static/`, which `vite build` copies into `build/` (`001` decision 18), so nothing depends on it.

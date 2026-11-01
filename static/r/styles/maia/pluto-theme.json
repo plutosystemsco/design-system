@@ -3,7 +3,7 @@
 	"name": "pluto-theme",
 	"title": "Pluto theme",
 	"type": "registry:theme",
-	"author": "Pluto Systems <https://plutosystems.co>",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 	"description": "The Pluto Systems tokens for light and dark: colour, radius, spacing, type, motion, focus and the groove.",
 	"devDependencies": [
 		"shadcn-svelte@^1.7.1"

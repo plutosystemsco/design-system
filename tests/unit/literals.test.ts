@@ -9,6 +9,9 @@ import {
 
 const rules = loadRules();
 
+// L1 to L21 are the lint's rules, numbered in scripts/lint-literals.ts. R14 is
+// a row of 002's rule table.
+
 /**
  * 007 decision 7: 301 files, 006's 300 plus code-languages (1).
  * 006 decision 13: 300 files, 005's 286 plus the 14 of app-shell (9) and
@@ -159,15 +162,15 @@ const GOOD_002: Sample[] = [
   { cls: "border-0" },
 ];
 
-// The review of the built change, finding 10: 5 more bad and 3 more good.
-const BAD_REVIEW: Sample[] = [
+// 5 more bad and 3 more good.
+const BAD_ADDED: Sample[] = [
   { cls: "focus-visible:focus-ring", file: "button.svelte" },
   { cls: "inset-x-3.5" },
   { cls: "bg-(--color-red-500)" },
   { text: '<svg><path fill="red" /></svg>' },
   { cls: "data-open:scale-95" },
 ];
-const GOOD_REVIEW: Sample[] = [
+const GOOD_ADDED: Sample[] = [
   { cls: "active:translate-y-px" },
   { cls: "top-1/2" },
   { cls: "inset-0" },
@@ -180,7 +183,7 @@ const GOOD_003: Sample[] = [
   { cls: "Go to the home page" },
 ];
 
-// 004 decision 15: L15, an injected stylesheet; L16, CSS values in a theme
+// 004 decision 15: L20, an injected stylesheet; L21, CSS values in a theme
 // file; and the two allowlist additions for code-block's ring.
 const BAD_004: Sample[] = [
   { text: '<svelte:element this="style" />' },
@@ -213,7 +216,7 @@ const GOOD_004: Sample[] = [
   { cls: "focus-visible:focus-ring-none", file: "code-block-content.svelte" },
 ];
 
-// 006 decision 4: R14's list gains `mark-entrance`, a @utility of its own
+// 006 decision 4: 002's R14 list gains `mark-entrance`, a @utility of its own
 // name, which the animate-* rule does not see; an animate-* spelling of the
 // dock is still flagged.
 const BAD_006: Sample[] = [{ cls: "animate-mark-dock" }];
@@ -231,7 +234,7 @@ const GOOD_007: Sample[] = [{ cls: "text-code-number" }];
 const BAD = [
   ...BAD_001,
   ...BAD_002,
-  ...BAD_REVIEW,
+  ...BAD_ADDED,
   ...BAD_004,
   ...BAD_006,
   ...BAD_007,
@@ -239,7 +242,7 @@ const BAD = [
 const GOOD = [
   ...GOOD_001,
   ...GOOD_002,
-  ...GOOD_REVIEW,
+  ...GOOD_ADDED,
   ...GOOD_003,
   ...GOOD_004,
   ...GOOD_006,

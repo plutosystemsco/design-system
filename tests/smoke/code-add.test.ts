@@ -3,9 +3,9 @@
  * toggle-group meter code-languages` into each of 001's two scratch apps,
  * against this repository's `vite dev`, with the locked CLI under Bun.
  * Together the eight pull use-highlighted-code, highlighter, status, button,
- * spinner, toggle, utils and pluto-theme, all 9 packages of decision 2 and
+ * spinner, toggle, utils and pluto-theme, all 9 packages of 004 decision 2 and
  * the 2 of 007 decision 7. Then the app's prerendered build, its
- * svelte-check, our lint, the theme's by-product (decision 5), and 007
+ * svelte-check, our lint, the theme's by-product (004 decision 5), and 007
  * decision 10's checks: one `@lezer/highlight` in the lock, the surface's two
  * rules in order, 21 `.dark` lines, 21 by-product lines, and a second
  * `add pluto-theme` that leaves app.css byte-identical.
@@ -198,7 +198,7 @@ export const load = async () => ({
   ];
   const python = pythonSetup();
   const rust = loadLanguage("rust");
-  const unknown = loadLanguage("brainfuck");
+  const unknown = loadLanguage("cobol");
 </script>
 
 <CodeEditor value={"print(1)"} label="Python" extensions={python} />
@@ -325,7 +325,7 @@ export const load = async () => ({
     expect(hook).toMatch(new RegExp(`from ["']\\${alias}/highlighter["']`));
   });
 
-  test("4. package.json names the 9 packages of decision 2, 002's 4 and 007's 2 at their ranges; no codemirror, no tailwind-merge", () => {
+  test("4. package.json names the 9 packages of 004 decision 2, 002's 4 and 007's 2 at their ranges; no codemirror, no tailwind-merge", () => {
     const pkg = JSON.parse(
       readFileSync(path.join(r.app, "package.json"), "utf8"),
     );

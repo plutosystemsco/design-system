@@ -139,7 +139,7 @@ describe("5. the naming rule", () => {
   const components = blockFiles.filter((f) => f.type === "registry:component");
   const pages = blockFiles.filter((f) => f.type === "registry:page");
 
-  // 006 decision 3 wrote 19 (10 + 9); the shell's 6 and the chat's 4 make 20.
+  // 10 from 003's blocks, 6 from app-shell, 4 from chat: 20.
   test("20 of 20 component files are src/lib/registry/components/<block>-*.(svelte|ts)", () => {
     expect(components).toHaveLength(20);
     for (const f of components)

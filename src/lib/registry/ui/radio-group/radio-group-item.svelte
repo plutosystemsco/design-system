@@ -11,7 +11,7 @@
 
 <!--
   Round: the radio's mark is a dot, so it is dot-derived, and the circle tells
-  one of many from a checkbox's square (decisions.md, "Radio buttons are round").
+  one of many from a checkbox's square.
 -->
 <RadioGroupPrimitive.Item
   bind:ref

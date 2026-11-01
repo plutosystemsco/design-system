@@ -3,7 +3,7 @@
 	"name": "use-highlighted-code",
 	"title": "Use highlighted code",
 	"type": "registry:hook",
-	"author": "Pluto Systems <https://plutosystems.co>",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 	"description": "A hook that highlights a changing string line by line as it grows.",
 	"registryDependencies": [
 		"utils",

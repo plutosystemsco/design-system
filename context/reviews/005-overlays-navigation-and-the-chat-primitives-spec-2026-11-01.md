@@ -1,7 +1,10 @@
 # Review of 005 — Overlays, navigation and the chat primitives
 
+Reviews [`specifications/005-overlays-navigation-and-the-chat-primitives.md`](../specifications/005-overlays-navigation-and-the-chat-primitives.md).
+
+- **Status:** dispositioned; fit to build
 - **Date:** 2026-11-01
-- **Reviewer:** an agent (Claude), a fresh sub-agent of the orchestrating session; not the author
+- **Reviewer:** a reviewer; not the author
 - **Reviewed:** the specification as drafted (`specifications/005-overlays-navigation-and-the-chat-primitives.md`, status "draft, 2026-11-01, for review")
 - **Re-ran:**
   - `registry.json` summarised: 49 items (1 theme, 3 font, 2 lib, 1 hook, 37 ui, 5 block), 193 item files, 34 `meta.stock`, 27 distinct registry dependency names; 11 items import `tailwind-variants` (13 files). `package.json` `version` `0.4.0`.
@@ -42,7 +45,7 @@
 23. **Smoke, 8 of 8 × 2** — **not derivable**: decision 17 lists 7 assertions (finding 10).
 24. **9, 11, 6 files; 0.5.0; 12 of 12** — met (INFERRED).
 25. **Checkpoint and walk** — the walk's 158 = 79 × 2 is right (INFERRED).
-26. **In `006`** — pending by design.
+26. **Released** — tag `v0.5.0`.
 
 ## Findings, most severe first
 
@@ -115,12 +118,12 @@
     - Decision 20: "two parts may be deferred": deferring `dialog` shifts 1 item, 11 files, 1 page, 6 axe scans, 2 theme checks, 1 fixture stop and the smoke's file list; say the counts move with it so the Landing notes can reconcile.
     - Decision 10: `SidebarMenuSkeleton`'s random `style` width (sidebar memo §1.4, §1.5) is removed by the lint but replaced by nothing the spec names; say "one width, `max-w-3/4`" or the memo's set by index.
     - Decision 10: `SidebarMenuSub`'s `border-l` keeps a colour the spec does not name; decision 5's rule asks for one (`border-groove-line`, the memo's choice).
-    - Decision 11: two names, "Messages" on the region and "Conversation" on the log, are both right and will be read one after the other by a screen reader entering the box; consider one visible heading the log is `aria-labelledby`, or say the doubling is accepted until the screen-reader placeholder is run.
+    - Decision 11: two names, "Messages" on the region and "Conversation" on the log, are both right and will be read one after the other by a screen reader entering the box; consider one visible heading the log is `aria-labelledby`, or accept the doubling and say so, since no screen reader has been run.
 
 ## Constitution checks
 
 - §4.1 source, not a package: `theme`, `message-log` and `composer` are written here; `mode-watcher`, `svelte-sonner` and `@shadcn-svelte/primitives` are refused with reasons the memos support. The head script travels as source and prerenders into the app's own HTML (EXECUTED). Nothing reaches back.
-- §4.2 in tandem: every item is named by `006`'s shell or pane (decision 19); `dialog` is the one item with no named consumer, and decision 1 says so and makes it deferrable.
+- §4.2 driven by need: every item is named by `006`'s shell or pane (decision 19); `dialog` is the one item with no named consumer, and decision 1 says so and makes it deferrable.
 - §4.3 tokens are the one source: holds in every class table once findings 1 and 2 are fixed; `groove-s` is a utility built from the groove tokens; the sidebar's widths are container keywords and a ladder step, with no `style`; no new token. `max-h-(--container-3xs)` reads a Tailwind theme value, which is the mechanism `004` recorded, not a literal.
 - §4.4 accessible by default: the contracts (a named menu, a named sheet and dialog, a breadcrumb that is not a disabled link, a sidebar that is a landmark and `inert` when hidden, a named log, a composer that never disables) are the strongest yet; findings 3, 5 and 7 are where the page or the item would contradict them at landing.
 - §4.5, §4.6 pinned and named: no package changes; finding 9 is two registry names, not packages.
@@ -132,7 +135,7 @@ Does not land yet: the two lint-failing carets (1), the dead composer cap (2), t
 
 ## Disposition
 
-Written by the author (the orchestrating session, as design lead), 2026-11-01. Every finding is fixed in the specification, none answered in writing only.
+Written by the author, the design lead, 2026-11-01. Every finding is fixed in the specification, none answered in writing only.
 
 | # | Disposition |
 |---|---|
@@ -152,6 +155,6 @@ Written by the author (the orchestrating session, as design lead), 2026-11-01. E
 | 14 | Fixed. The status transitions are a table; a Stop silences the next `ready` (decision 13). |
 | 15 | Fixed. `dropdown-menu` builds in step 3 with the sheet and the dialog (decision 20). |
 | 16 | Fixed. One sentence on the dangling `aria-controls` while closed; N5 checks it resolves while open (decision 10). |
-| 17 | Fixed: §2.6; 9 lines; the deferral's counts; the skeleton's four widths by index; `border-groove-line` on the sub-list; the log's two names accepted until the screen-reader placeholder, and settable. |
+| 17 | Fixed: §2.6; 9 lines; the deferral's counts; the skeleton's four widths by index; `border-groove-line` on the sub-list; the log's two names accepted, and settable; no screen reader has been run (`decisions.md`, "After the public-readiness review"). |
 
 **Verdict after disposition: fit to build.**

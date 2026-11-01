@@ -3,7 +3,7 @@
 	"name": "tabs",
 	"title": "Tabs",
 	"type": "registry:ui",
-	"author": "Pluto Systems <https://plutosystems.co>",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 	"description": "Tabbed panels as a pill strip on an inset or as underlined triggers, moved by the arrow keys.",
 	"devDependencies": [
 		"bits-ui@^2.20.2",

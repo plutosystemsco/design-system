@@ -2,8 +2,8 @@ import type { ServerLoadEvent } from "@sveltejs/kit";
 
 /**
  * Reads the sidebar's cookie, which the provider writes on every toggle and
- * never reads (005 decision 10), so the first paint is right. Under
- * prerender there is no cookie and the sidebar opens.
+ * never reads, so the first paint is right. Under prerender there is no
+ * cookie and the sidebar opens.
  */
 export const load = ({ cookies }: ServerLoadEvent) => ({
   sidebarOpen: cookies.get("sidebar_state") !== "false",

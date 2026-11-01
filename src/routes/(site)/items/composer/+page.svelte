@@ -15,7 +15,7 @@
 
   const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-  /** A fake chat: send starts a reply that streams sixty words; stop ends it. */
+  /** A fake chat: send starts a reply that streams 69 words; stop ends it. */
   function makeChat() {
     let turns = $state<Turn[]>([]);
     let status = $state<ComposerStatus>("ready");
@@ -137,10 +137,10 @@
       onstop={() => labelled.stop()}
     />
     <p class="max-w-prose text-sm text-muted-foreground">
-      An error is the app's alert in the log, with a retry; the composer only
-      returns to Send. Where <code>field-sizing</code> is absent, the textarea keeps
-      its minimum and scrolls inside. The composer's file must be among Tailwind's
-      sources, so that its height cap emits its variable.
+      An error is the consuming app's alert in the log, with a retry; the
+      composer only returns to Send. Where <code>field-sizing</code> is absent, the
+      textarea keeps its minimum and scrolls inside. The composer's file must be among
+      Tailwind's sources, so that its height cap emits its variable.
     </p>
   </div>
 </PreviewSection>

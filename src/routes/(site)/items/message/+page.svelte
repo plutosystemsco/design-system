@@ -26,7 +26,7 @@ print(4 * inside / 10_000)`;
     <Message.Root align="end" data-testid="message-user">
       <Message.Avatar>
         <Avatar.Root>
-          <Avatar.Fallback>CG</Avatar.Fallback>
+          <Avatar.Fallback>AL</Avatar.Fallback>
         </Avatar.Root>
       </Message.Avatar>
       <Message.Group>
@@ -90,7 +90,7 @@ print(4 * inside / 10_000)`;
     </li>
     <li>
       Fenced code in a reply is a <code>code-block</code> at <code>sm</code>;
-      markdown is the app's.
+      markdown is the consuming app's.
     </li>
   </ul>
 </PreviewSection>

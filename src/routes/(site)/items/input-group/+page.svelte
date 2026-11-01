@@ -37,9 +37,9 @@
       <div class="grid w-full gap-3">
         <Label for="ig-domain">Subdomain</Label>
         <InputGroup.Root>
-          <InputGroup.Input id="ig-domain" value="wasi" />
+          <InputGroup.Input id="ig-domain" value="pluto-sandbox" />
           <InputGroup.Addon align="inline-end">
-            <InputGroup.Text>.plutosystems.co</InputGroup.Text>
+            <InputGroup.Text>.example.com</InputGroup.Text>
           </InputGroup.Addon>
         </InputGroup.Root>
       </div>
@@ -83,7 +83,7 @@
       <InputGroup.Root>
         <InputGroup.Input />
         <InputGroup.Addon align="inline-end">
-          <InputGroup.Text>.plutosystems.co</InputGroup.Text>
+          <InputGroup.Text>.example.com</InputGroup.Text>
         </InputGroup.Addon>
       </InputGroup.Root>
     </Field.Field>
@@ -103,7 +103,7 @@
     <li>
       The password toggle's visible word, Show or Hide, is in its name ("Show
       password"); it names the input with <code>aria-controls</code>. The input
-      never blocks paste; <code>autocomplete</code> is the app's.
+      never blocks paste; <code>autocomplete</code> is the consuming app's.
     </li>
     <li>
       An icon you pass into an addon or a button is decoration: give it

@@ -33,7 +33,7 @@
     </Field.Field>
     <Field.Field>
       <Field.Label>Filled</Field.Label>
-      <Input value="wasi-python-dev" />
+      <Input value="pluto-sandbox" />
     </Field.Field>
     <Field.Field>
       <Field.Label>Disabled</Field.Label>
@@ -41,7 +41,7 @@
     </Field.Field>
     <Field.Field error="Enter an email address, like name@example.com.">
       <Field.Label>Invalid, with its error</Field.Label>
-      <Input type="email" value="clay@" />
+      <Input type="email" value="ada@" />
     </Field.Field>
     <Field.Field>
       <Field.Label>A file</Field.Label>
@@ -62,7 +62,7 @@
       <code>aria-describedby</code> and <code>aria-invalid</code> from the field.
     </li>
     <li>Invalid is a solid red border and the error in words.</li>
-    <li><code>autocomplete</code> is the app's, passed through.</li>
+    <li><code>autocomplete</code> is the consuming app's, passed through.</li>
   </ul>
 </PreviewSection>
 

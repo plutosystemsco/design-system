@@ -3,7 +3,7 @@
 	"name": "button",
 	"title": "Button",
 	"type": "registry:ui",
-	"author": "Pluto Systems <https://plutosystems.co>",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 	"description": "An action: the surface's one blue primary, a bordered secondary, ghost, destructive or link, at 48 or 32 px, with a busy state that keeps focus.",
 	"devDependencies": [
 		"tailwind-variants@^3.3.1"

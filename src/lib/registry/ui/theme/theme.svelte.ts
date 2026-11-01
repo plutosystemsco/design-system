@@ -1,5 +1,5 @@
 /**
- * The theme store (005 decision 6). `preference` is what the person chose:
+ * The theme store. `preference` is what the person chose:
  * `light`, `dark`, or `system` (no choice made; the operating system's
  * preference is followed and can change under the page). `resolved` is the
  * theme in force. The key is `pluto-theme`: written on a choice, removed for

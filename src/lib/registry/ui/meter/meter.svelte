@@ -17,13 +17,13 @@
     min?: number;
     /** The range's ceiling. Default 100. */
     max?: number;
-    /** What a reader hears instead of a percentage, such as "4.81 billion instructions of 30 billion". */
+    /** What a reader hears instead of a percentage, such as "48 of 100". */
     valuetext?: string;
   } = $props();
 </script>
 
 <!--
-  The native meter (004 decision 14): a measurement within a known range, not
+  The native meter: a measurement within a known range, not
   progress. Its track is muted and its fill primary through pluto-theme's
   rules, with square ends. The app names it with a <label for> or aria-label
   and writes its numbers beside it; the fill is never the only sign.

@@ -2,11 +2,11 @@
  * The code-block page's snippets. They live beside `+page.server.ts`, which
  * SvelteKit allows to export only its load options.
  */
-/** The first app's install snippet, in bash. */
+/** An install snippet, in bash. */
 export const INSTALL = `# Python 3.13 in a WebAssembly sandbox
-pip install wasi-python`;
+pip install pluto-sandbox`;
 
-/** The sudoku example from the app's editor research (random/25-sudoku.py), 25 lines. */
+/** A 25-line sudoku solver. */
 export const SUDOKU = `# Solve a sudoku by backtracking (pure Python).
 puzzle = "530070000600195000098000060800060003400803001700020006060000280000419005000080079"
 cells = [int(c) for c in puzzle]

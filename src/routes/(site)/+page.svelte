@@ -14,6 +14,11 @@
   Tokens, styles and Svelte components for Pluto Systems applications, served as
   a shadcn-svelte registry. An app installs an item and owns its source.
 </p>
+<p class="mt-4 max-w-prose text-muted-foreground">
+  Each command below sets <code>REGISTRY_URL</code>. It points the CLI at this
+  registry's release on GitHub. Without it, <code>add</code> fetches shadcn-svelte's
+  own items.
+</p>
 
 {#each data.groups as group (group.key)}
   <section class="mt-16" aria-labelledby="group-{group.key}">

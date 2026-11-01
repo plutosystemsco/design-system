@@ -3,7 +3,7 @@
 	"name": "skeleton",
 	"title": "Skeleton",
 	"type": "registry:ui",
-	"author": "Pluto Systems <https://plutosystems.co>",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 	"description": "A static, hidden placeholder on an inset where content is loading.",
 	"registryDependencies": [
 		"utils",

@@ -154,7 +154,7 @@
   the focus indicator sits outside .cm-editor, which fills the root, and a
   clip would hide it. The theme rounds the editor and its scroller instead. The
   fallback pre is the editor's type and padding in Tailwind's terms; its 32 px
-  start padding sits a few pixels short of the gutter, accepted. It is a named
+  start padding sits a few pixels short of the gutter. It is a named
   group: ARIA in HTML prohibits a name on a bare pre, and a group may carry one.
 -->
 <div

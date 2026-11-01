@@ -2,8 +2,8 @@
 
 - **Status:** complete
 - **Date:** 2026-10-27
-- **Owner:** Clay Gendron (research executed by an agent, Claude)
-- **Question:** How a shadcn-svelte registry is built, served and consumed today. How an app develops against it in tandem. What the `plutosystemshq` repository already holds that the design system starts from. Which libraries the first app's components imply. What layout this repository should take.
+- **Author:** the design lead
+- **Question:** How a shadcn-svelte registry is built, served and consumed today. How an app develops against it in tandem. What the brand's existing material (its design book and its earlier website) holds that the design system starts from. Which libraries the planned components imply. What layout this repository should take.
 - **What it blocks:** the tokens-and-registry specification.
 
 ## How to read this memo
@@ -14,7 +14,9 @@ Every claim carries a label.
 - **READ**: a source says so. The source is named. Every source was read on 2026-10-27.
 - **INFERRED**: our reasoning from what was executed or read.
 
-The shadcn-svelte source was read from a shallow clone at `context/prior_art/shadcn-svelte`, commit `6149e14` (2026-10-23). Paths below that start `cli/` mean `context/prior_art/shadcn-svelte/packages/cli/`. Paths that start `docs/` mean `context/prior_art/shadcn-svelte/docs/`. Paths that start `hq/` mean `/Users/claygendron/Git/Repos/plutosystemshq/`, read only.
+The shadcn-svelte source was read from a shallow clone at `context/prior_art/shadcn-svelte`, commit `6149e14` (2026-10-23). Paths below that start `cli/` mean `context/prior_art/shadcn-svelte/packages/cli/`. Paths that start `docs/` mean `context/prior_art/shadcn-svelte/docs/`.
+
+The brand's own material was read, read only, from its internal repository, which is not published. It holds the Pluto Systems design book (version 2, cited as *v2*, or as *the design book* with a section number; version 1, *v1*, is named only where the two differ), the brand's earlier website, its mockups, its research notes and its decision records. No path into it is given.
 
 Two terms are used throughout.
 
@@ -31,9 +33,9 @@ Two terms are used throughout.
 - 1.7.0 (2026-09-16) changed the `cn` helper the components import, replacing `clsx` + `tailwind-merge` (READ: `cli/CHANGELOG.md`).
 - The base primitives are **bits-ui** 2.20.2 on npm, MIT (EXECUTED: `npm view bits-ui`). The docs site's own components depend on `bits-ui ^2.20.0` (READ: `docs/package.json`).
 - The CLI requires Svelte 5 and Tailwind v4. Tailwind v3 projects take a legacy path (READ: `cli/src/utils/preconditions.ts`).
-- The components are written with Svelte 5 runes (`$props`, `$bindable`, `$state`, `$effect`) (READ: `docs/src/lib/registry/ui/*`, and the same in `hq/web/src/lib/components/ui/button/button.svelte`).
+- The components are written with Svelte 5 runes (`$props`, `$bindable`, `$state`, `$effect`) (READ: `docs/src/lib/registry/ui/*`, and the same in the earlier website's installed `button`).
 - The registry feature is labelled "currently experimental" in the clone's `docs/content/registry/index.md` (READ). The live getting-started page did not show the label (READ: https://shadcn-svelte.com/docs/registry/getting-started). INFERRED: treat the schema as able to change between minor versions, and pin the CLI version.
-- The CLI needs Node 20 or later. It warns under Bun or Deno that "Only Node.js v22 or higher is officially supported" (READ: `cli/src/index.ts`, `cli/src/utils/prompt-helpers.ts`). The bin's shebang is `#!/usr/bin/env node` (READ). INFERRED: `bunx shadcn-svelte@1.7.1` runs it under Node unless `--bun` is passed; to be confirmed in the specification's first test.
+- The CLI needs Node 20 or later. It warns under Bun or Deno that "Only Node.js v22 or higher is officially supported" (READ: `cli/src/index.ts`, `cli/src/utils/prompt-helpers.ts`). The bin's shebang is `#!/usr/bin/env node` (READ). INFERRED: `bunx shadcn-svelte@1.7.1` runs it under Node unless `--bun` is passed. The foundation memo of the same day confirmed it ([`2026-10-27-the-foundation-run-kit-3-fonts-and-the-theme-item.md`](2026-10-27-the-foundation-run-kit-3-fonts-and-the-theme-item.md) §3, EXECUTED there).
 
 ### 1.2 `registry.json`
 
@@ -117,23 +119,23 @@ There are three ways.
 2. **By `components.json` `registry`.** The field is a single URL. There is no namespace map (no `@pluto/button`) and no per-registry headers (READ: `componentsJsonSchema` in `schema.ts`; a grep for `registries`, `headers` and `Authorization` found nothing in `cli/src`).
    - **The CLI appends `/styles/<style>` to that URL** (READ: `getRegistryUrl`; `cli/test/utils/registry.test.ts`).
    - `style` must be one of the eight preset styles: `nova`, `vega`, `maia`, `lyra`, `mira`, `luma`, `sera` or `rhea`. Any other value is replaced by `nova` with a warning (READ: `cli/src/preset/preset.ts`, `cli/src/utils/config/utils.ts`).
-   - So a registry at `https://ui.plutosystems.co/r` used with style `maia` must serve `https://ui.plutosystems.co/r/styles/maia/index.json`. We built with `--output static/r/styles/maia`, and both adding by name and adding by URL worked (EXECUTED).
+   - So a registry at `https://raw.githubusercontent.com/plutosystemsco/design-system/<tag>/static/r` used with style `maia` must serve `.../static/r/styles/maia/index.json`. We built with `--output static/r/styles/maia`, and both adding by name and adding by URL worked (EXECUTED).
 3. **By environment variable.**
    - `REGISTRY_URL` replaces `components.json`'s `registry` and still appends `/styles/<style>`.
    - `COMPONENTS_REGISTRY_URL` replaces the whole URL and appends nothing (READ: `getRegistryUrl` and its tests; EXECUTED: `COMPONENTS_REGISTRY_URL=http://localhost:4173/r/styles/maia` worked).
 
-`init` builds its starting point from `<registry origin>/init?preset=<encoded>`, an endpoint on shadcn-svelte.com (READ: `cli/src/commands/init/index.ts`). INFERRED: an app should run `init` against the official registry, and only then point `components.json` at ours. Serving `/init` ourselves is possible in principle, as a Worker route or a static file, but it is untested (see §7).
+`init` builds its starting point from `<registry origin>/init?preset=<encoded>`, an endpoint on shadcn-svelte.com (READ: `cli/src/commands/init/index.ts`). INFERRED: an app should run `init` against the official registry, and only then point `components.json` at ours. Serving `/init` ourselves is possible in principle, as a Worker route or a static file, but it is untested (see "What this memo does not settle").
 
 ### 1.8 Auth for a private registry
 
 - The docs say the CLI "does not offer a built-in way to add auth". They suggest a `?token=` query parameter, checked by the server, which returns 401 (READ: getting-started page, live and in the clone).
 - The CLI sends no custom headers (READ: `fetchRegistry` uses plain `fetch` with an optional proxy).
 - **A query token does not survive the CLI's URL resolution.** `new URL("index.json", "https://x/r/styles/maia/?token=abc")` gives `https://x/r/styles/maia/index.json`. A `./button.json` dependency resolved against an item URL that carries `?token=` also loses it (EXECUTED in Node). So the index and every dependency are fetched without the token. INFERRED: the documented scheme works only for single, dependency-free items added by URL.
-- INFERRED: a token carried in the **path** (`https://ui.plutosystems.co/t/<token>/r`) survives relative resolution, and a Worker can check it. Cloudflare Access service tokens need request headers, which the CLI cannot send. A token in `components.json` would be committed, so it would go in `REGISTRY_URL` instead.
+- INFERRED: a token carried in the **path** (`https://<host>/t/<token>/r`) survives relative resolution, and a Worker can check it. Cloudflare Access service tokens need request headers, which the CLI cannot send. A token in `components.json` would be committed, so it would go in `REGISTRY_URL` instead.
 
 ### 1.9 The end-to-end run (EXECUTED)
 
-We ran this in the scratchpad and committed nothing.
+We ran this in a scratch project outside this repository and committed nothing.
 
 - **The registry.** Two items, built with the CLI at 1.7.1:
   - `pluto-theme` (`registry:theme`, with `cssVars`);
@@ -153,14 +155,14 @@ We ran this in the scratchpad and committed nothing.
 - There is a hidden `update` command (READ: `cli/src/commands/update/index.ts`, `{ hidden: true }`; not in `docs/content/cli.md`). It finds installed items by matching folder names under the `ui`, `components` and `hooks` aliases against the registry index. It then re-fetches them and **overwrites** them, after the prompt "Make sure you have committed your changes before proceeding!".
 - `add -o` does the same for named items.
 - There is no `diff` command (READ: a grep in `cli/src/commands`).
-- INFERRED: the update workflow is to re-add with `-o` in a clean working tree and read `git diff`. The app's owner keeps or reverts each hunk. This is why constitution §6 ("a component's change that alters its interface says so in its changelog") matters: the changelog is the only notice an app gets.
+- INFERRED: the update workflow is to re-add with `-o` in a clean working tree and read `git diff`. The app's maintainer keeps or reverts each hunk. This is why constitution §6 ("a component's change that alters its interface says so in its changelog") matters: the changelog is the only notice an app gets.
 
 ### 1.11 Install-time transforms worth knowing
 
 On install, the CLI rewrites:
 
 - alias placeholders, back to the app's aliases (`transform-imports.ts`);
-- an `IconPlaceholder` component, into the app's chosen icon library (`transform-icons.ts`; `hq/web/components.json` chose Phosphor);
+- an `IconPlaceholder` component, into the app's chosen icon library (`transform-icons.ts`; the brand's earlier website chose Phosphor);
 - the menu colour and accent (`transform-menu.ts`);
 - font tokens (`transform-font.ts`);
 - TypeScript into JavaScript for JavaScript projects (`transform-strip-types.ts`).
@@ -190,49 +192,49 @@ The registry is static JSON. The CLI parses responses with `response.json()` and
 
 | Option | Public | Private | Notes |
 |---|---|---|---|
-| **Cloudflare Worker with static assets** at `ui.plutosystems.co` | Yes | Yes, with a small Worker script checking a path token | Static asset requests "are free and unlimited", and need no Worker code (READ: https://developers.cloudflare.com/workers/static-assets/ and its billing page). It is the platform D-0001 already chose for plutosystems.co (READ: `hq/context/02_decision/D-0001-v1-site-architecture.md`). The same deploy can carry the preview pages (INFERRED). |
+| **Cloudflare Worker with static assets** on a Pluto Systems domain | Yes | Yes, with a small Worker script checking a path token | Static asset requests "are free and unlimited", and need no Worker code (READ: https://developers.cloudflare.com/workers/static-assets/ and its billing page). It is the platform the brand had already chosen for its website (READ: the brand's site-architecture decision record). The same deploy can carry the preview pages (INFERRED). |
 | GitHub raw (`raw.githubusercontent.com/plutosystemsco/design-system/<tag>/...`) | Yes | No practical path, because the CLI cannot send an auth header (READ §1.8) | Built JSON would have to be committed. A tag in the URL pins a version for free (INFERRED). |
 | GitHub Pages | Yes | INFERRED: private Pages needs a paid GitHub plan | A second host beside Cloudflare (INFERRED). |
 
-- **Public or private.** Whatever a component's source contains is shipped, compiled, to every visitor of the public site that uses it (INFERRED). A private registry hides little and costs a token scheme the CLI does not support. INFERRED: **public** is simpler, and it fits the design book's law 3, "Transparency is structural" (READ: `hq/pluto-systems-design-book-v2.html` §01). The owner decides.
-- **Versions.** INFERRED: the Worker can keep every release's build at its own path, such as `https://ui.plutosystems.co/v0.1.0/r`, beside a moving `/r`. An app then pins the registry the way it pins npm packages, and an update is a deliberate change of one URL.
+- **Public or private.** Whatever a component's source contains is shipped, compiled, to every visitor of the public site that uses it (INFERRED). A private registry hides little and costs a token scheme the CLI does not support. INFERRED: **public** is simpler, and it fits the design book's law 3, "Transparency is structural" (READ: the design book §01). The owner chose public (decisions.md, "The design book's open calls, answered", 2026-10-27), and the repository was made public on 2026-11-01 (decisions.md, "The registry is served from GitHub, and the repository is public").
+- **Versions.** INFERRED: the Worker can keep every release's build at its own path, such as `<host>/v0.1.0/r`, beside a moving `/r`. An app then pins the registry the way it pins npm packages, and an update is a deliberate change of one URL.
 
 ## 3. Developing in tandem
 
 - **A local path does not work.** Node 22's `fetch("file:///…")` fails with "not implemented" (EXECUTED), and the CLI fetches everything (READ). There is no local-path mode in `add` (READ).
 - **A localhost URL works** (EXECUTED, §1.9). In development, the design system runs its SvelteKit dev server, which serves `static/r/` at `http://localhost:5173/r/...` (READ: getting-started page). Because `build` has no watch, a watcher reruns it on change (INFERRED: a Vite plugin hook or `bun --watch` on a small script).
 - **Switching to the published registry needs no file change.**
-  - The app's `components.json` holds the published URL (`https://ui.plutosystems.co/r`, style `maia`).
-  - In development the owner runs `REGISTRY_URL=http://localhost:5173/r bunx shadcn-svelte@1.7.1 add <item> -y -o` (READ: `getRegistryUrl`).
+  - The app's `components.json` holds the published URL (`https://raw.githubusercontent.com/plutosystemsco/design-system/<tag>/static/r`, style `maia`).
+  - In development the app's maintainer runs `REGISTRY_URL=http://localhost:5173/r bunx shadcn-svelte@1.7.1 add <item> -y -o` (READ: `getRegistryUrl`).
   - INFERRED: the app gets a script such as `bun run ui:add:local <item>`.
-- **A bun workspace is the wrong tool.** A workspace link makes the app import the design system as a package. That is exactly what constitution §3 and wasi-python-dev's §4.5 forbid. It also needs one repository, and there are two (INFERRED).
-- **Testing in the app before calling a component done** (constitution §4.2). INFERRED sequence:
+- **A bun workspace is the wrong tool.** A workspace link makes the app import the design system as a package. That is exactly what constitution §3 forbids. It also needs one repository, and an app lives in its own (INFERRED).
+- **Testing in an app.** INFERRED sequence:
   1. Add the item to the app from localhost.
   2. Use it on the page it was made for.
   3. Run the app's `svelte-check`, its Playwright page test, and its axe scan.
   4. Commit the installed source in the app.
 
-  The design system's item is called done only when that app commit exists. The specification names it, and the app's commit message cites the item and the registry version.
+  An item is done when its criteria are met in this repository, its change is reviewed and the release is tagged (constitution §2 and §4.2); an app's adoption is never a criterion. This repository's smoke suites run the install, `svelte-check` and `vite build` in scratch apps.
 - **Stock or Pluto-owned.** An app can keep the official registry in `components.json` and add Pluto items by URL. Or it can point `components.json` at Pluto's registry, in which case every bare-name dependency (`button`, `tabs`) must exist in Pluto's registry (READ §1.4, §1.7).
-  - INFERRED: the second model matches constitution §2.4 ("built from the registry, with no hand-copied styles") and gives one source.
+  - INFERRED: the second model matches constitution §4.1 ("source, not a package") and gives one source.
   - It means Pluto's registry carries its own `button`, `tabs`, `table` and the rest.
-  - **Open for the owner:** whether installing stock shadcn-svelte components (MIT) into this repository with `add`, then restyling them to the tokens, counts as using a released dependency or as the "copy code from prior art" that constitution §6 forbids. `hq/web` already holds two such installed copies (READ).
+  - **Answered:** installing stock shadcn-svelte components (MIT) into this repository with `add`, then restyling them to the tokens, is using a dependency as it is meant to be used, not the "copy code from prior art" that constitution §6 forbids (constitution §4.6; decisions.md, "Named dependencies are allowed", 2026-10-27). The brand's earlier website already held two such installed copies (READ).
 
 ## 4. What Pluto already has
 
 ### 4.1 The design books: v2 is current, but only proposed
 
-- **v2** is `hq/pluto-systems-design-book-v2.html`: PS-DB-0002, dated 2026-07-26, "status: proposed — for Clay's review", "supersedes: Design Book v1.0" (READ). `hq/CLAUDE.md` says the same and keeps v1 in place (READ).
-- **No acceptance is recorded.** v2 says "once accepted, this book's choices should be captured in a D-NNNN decision record". There are only two decisions, D-0001 and D-0002 (READ: `hq/context/02_decision/`).
-- **D-0002 (accepted) confirms v2's mark geometry**: "dot .30 / gap .08 em" (READ).
-- **v1** is `hq/pluto-systems-design-book.html` (READ). It is stale on the mark gap (.16 em), the type (all IBM Plex Sans and Plex Mono) and the ground (white).
-- **Four open calls** (READ: v2 §10; `hq/context/open-questions.md`):
+- **v2** is PS-DB-0002, dated 2026-07-26, "status: proposed", "supersedes: Design Book v1.0" (READ). The brand repository's own guide says the same and keeps v1 in place (READ).
+- **No acceptance is recorded.** v2 says that once it is accepted, its choices should be captured in a decision record. The brand has only two decision records (READ).
+- **The second (accepted) confirms v2's mark geometry**: "dot .30 / gap .08 em" (READ).
+- **v1** (READ) is stale on the mark gap (.16 em), the type (all IBM Plex Sans and Plex Mono) and the ground (white).
+- **Four open calls** (READ: the design book §10; the brand's list of open questions):
   - the type stack;
   - the spacing base;
   - whether red and green may carry state meaning;
   - a doc-ID scheme.
 
-  A fifth is open too: whether coloured dots may sit on ink for the icon.
+  A fifth is open too: whether coloured dots may sit on ink for the icon. All five are answered since (see "What this memo does not settle").
 
 The tokens in v2 (READ: its `:root` and §02 to §06):
 
@@ -247,11 +249,11 @@ The tokens in v2 (READ: its `:root` and §02 to §06):
 | Elevation | Shadows only for menus and dialogs |
 | Motion | One entrance per page (the mark's orbit-assemble, at most 900 ms, ease-out). Micro-feedback at most 200 ms. Reduced motion shows the composed end state |
 | Mark | 2×2 dots, ⌀ .30 em, gap .08 em; the lockup rises .38 em (a translate of .76 em in a flex row); clearspace of one dot pair; the mark alone below 20 px; order blue, red, amber, green |
-| Wordmark | lowercase "pluto". `hq/tools/logo/generate.js` (Bun with opentype.js) emits self-contained SVGs from Plex Sans Bold outlines (READ) |
+| Wordmark | lowercase "pluto". The brand's logo generator (Bun with opentype.js) emits self-contained SVGs from Plex Sans Bold outlines (READ) |
 
-### 4.2 The site's code
+### 4.2 The earlier website's code
 
-**`hq/web/src/routes/layout.css`** is the Tailwind v4 theme (READ).
+**The site's theme stylesheet** is a Tailwind v4 theme (READ).
 
 - The four brand colours are converted to oklch, with their hex values in comments.
 - `--primary`, `--ring` and `--destructive` are mapped to blue and red.
@@ -267,13 +269,13 @@ But it falls short of v2 in several ways.
 - **The whole `.dark` block is the stock neutral theme, not a brand theme.**
 - There are no spacing, motion or groove tokens.
 
-**`hq/web/components.json`** uses style `maia`, base colour `neutral`, the Phosphor icons, the official registry, and `$lib/...` aliases (READ).
+**The site's `components.json`** uses style `maia`, base colour `neutral`, the Phosphor icons, the official registry, and `$lib/...` aliases (READ).
 
-**`hq/web/src/lib/components/ui/button` and `ui/input`** are stock maia copies installed by the CLI (READ). They use `rounded-4xl`, which is about 18.7 px at that `--radius`. That breaks v2's two-radii rule. `hq/web/src/lib/utils.ts` uses the older `clsx` + `tailwind-merge` helper (READ; 1.7.0 changed it, §1.1).
+**Its `button` and `input`** are stock maia copies installed by the CLI (READ). They use `rounded-4xl`, which is about 18.7 px at that `--radius`. That breaks v2's two-radii rule. Its `utils.ts` uses the older `clsx` + `tailwind-merge` helper (READ; 1.7.0 changed it, §1.1).
 
-**`hq/web/src/lib/components/four-dot.svelte`** is a runes component (READ).
+**Its `four-dot.svelte`** is a runes component (READ).
 
-- It still has **`gap: 0.16em`**, which D-0002 and v2 corrected to .08 em.
+- It still has **`gap: 0.16em`**, which the brand's mark decision and v2 corrected to .08 em.
 - It sets em sizes as literals in a `<style>` block.
 - It has no lockup.
 - It is `aria-hidden` with no text alternative. That is right for decoration, but a lockup used as a home link needs an accessible name (INFERRED).
@@ -297,10 +299,10 @@ INFERRED: the tokens need text-safe variants of red and green for error and succ
 
 ### 4.3 Mockups and research
 
-- **`hq/mockups/`** holds 11 page mockups, an index and `mark-tuning.html` (READ). `11-orbit-assemble.html` is the "current favorite" entrance (READ: `hq/CLAUDE.md`).
+- **The brand's mockups** are 11 page mockups, an index and a mark-tuning page (READ). The orbit-assemble mockup is the "current favorite" entrance (READ: the brand repository's guide).
 - **All 13 HTML files load Google Fonts** (EXECUTED: `grep -l fonts.googleapis`), and so do both design books (READ). INFERRED: they are references for look and motion only. Nothing moves across as code.
-- **The five 2026-07-26 memos** in `hq/context/01_research/` (READ: `INDEX.md`, the section headings) cover the Macintosh, Braun and Bauhaus, transparency, earned minimalism, and Bell Labs, IBM and Plan 9. They distil into v2's five laws and its ban list.
-- Several rules from them bear directly on wasi-python-dev's components (READ: v2 §07, §09):
+- **The brand's five 2026-07-26 research memos** (READ: their index and section headings) cover the Macintosh, Braun and Bauhaus, transparency, earned minimalism, and Bell Labs, IBM and Plan 9. They distil into v2's five laws and its ban list.
+- Several rules from them bear directly on the planned components (READ: the design book §07, §09):
   - "Real terminal output in real docs is welcome; costume is not." This governs the output pane.
   - The footer carries the build commit hash, build date, doc ID, a source link and the public-benefit-corporation sentence.
   - No glassmorphism.
@@ -310,7 +312,7 @@ INFERRED: the tokens need text-safe variants of red and green for error and succ
 **Moves as is**
 
 - The six colour values and names, and their oklch conversions.
-- The mark's geometry numbers (D-0002).
+- The mark's geometry numbers (the brand's mark decision).
 - The type stack, as a proposal (it matches the shipped preset).
 - The spacing ladder, as a proposal.
 - The motion budget and the ban list, as rules for review.
@@ -328,9 +330,9 @@ INFERRED: the tokens need text-safe variants of red and green for error and succ
 - The four-dot gap, plus a lockup component.
 - Spacing, motion and groove tokens.
 - The newer `cn` helper.
-- The open calls of v2 §10, and the acceptance record v2 is owed. **INFERRED: the tokens specification should not fix values the owner has not accepted. It needs the owner to accept v2, or to say which parts stand.**
+- The open calls of the design book §10, and the acceptance record v2 is owed. **INFERRED: the tokens specification should not fix values the owner has not accepted. It needs the owner to accept v2, or to say which parts stand.** The owner accepted v2 the same day (decisions.md, "Design book v2 is the token source", 2026-10-27).
 
-**Missing for the wasi-python-dev home page and `/admin`** (READ: wasi-python-dev `context/constitution.md` §2; shadcn-svelte's stock list in `docs/src/lib/registry/ui/`)
+**Missing for a product home page and an admin page** (INFERRED from what such pages hold; READ: shadcn-svelte's stock list in `docs/src/lib/registry/ui/`)
 
 | Need | Stock base in shadcn-svelte | Pluto work |
 |---|---|---|
@@ -343,14 +345,14 @@ INFERRED: the tokens need text-safe variants of red and green for error and succ
 | Code block with highlighting and copy | **`code-block`** (with copy button, runtime Shiki through a `use-highlighted-code` hook, READ: `docs/src/lib/registry/ui/code-block/`, `hooks/use-highlighted-code.svelte.ts`) | Tokens for the highlight theme; a build-time variant (§5.2) |
 | Security section | `card`, `accordion`, `item` | Layout block |
 | Footer | none | New: build hash and date, source link, PBC line |
-| `/admin` charts | **`chart`** on layerchart (READ: `docs/src/lib/registry/ui/chart/`) | Brand chart tokens |
-| `/admin` tables | `table`; `data-table` patterns | Sorting and filtering, if needed |
-| `/admin` stat tiles | `card` | Shared with run metrics |
-| Empty, loading and error states | `empty`, `skeleton`, `spinner`, `sonner` | Warm failure copy (v2 §07) |
+| Admin charts | **`chart`** on layerchart (READ: `docs/src/lib/registry/ui/chart/`) | Brand chart tokens |
+| Admin tables | `table`; `data-table` patterns | Sorting and filtering, if needed |
+| Admin stat tiles | `card` | Shared with run metrics |
+| Empty, loading and error states | `empty`, `skeleton`, `spinner`, `sonner` | Warm failure copy (the design book §07) |
 
 ## 5. Libraries the components imply
 
-Sizes below are minified, then gzip -9 (EXECUTED). Each was a minimal browser entry, bundled with `bun build --minify` from packages installed in the scratchpad. They are comparative facts, not budgets. npm versions and licences are from `npm view` (EXECUTED).
+Sizes below are minified, then gzip -9 (EXECUTED). Each was a minimal browser entry, bundled with `bun build --minify` from packages installed in a scratch project. They are comparative facts, not budgets. npm versions and licences are from `npm view` (EXECUTED).
 
 ### 5.1 The code editor
 
@@ -361,17 +363,17 @@ Sizes below are minified, then gzip -9 (EXECUTED). Each was a minimal browser en
 | `prism-code-editor` 5.4.0 | MIT | Core with Python: **6,410 B min, 3,567 B gz** | A textarea under a highlighted overlay. Tiny. Its own extensions add brackets, search and the rest |
 | `codejar` 4.3.0 | MIT | 6,043 B min, 2,633 B gz (no highlighter included) | Minimal contenteditable. Highlighting and undo are left to us |
 
-INFERRED: **CodeMirror 6** fits best. It carries real undo, keyboard and screen-reader behaviour, and Python indentation, which constitution §4.4 asks for. It costs about 126 KB gzipped, loaded only on the editor's page or lazily when the editor scrolls into view. `prism-code-editor` is the fallback if that weight proves too much in the app's measurements.
+INFERRED: **CodeMirror 6** fits best. It carries real undo, keyboard and screen-reader behaviour, and Python indentation, which constitution §4.4 asks for. It costs about 126 KB gzipped, loaded only on the editor's page or lazily when the editor scrolls into view. `prism-code-editor` is the fallback if that weight proves too much in a consuming app.
 
 ### 5.2 Syntax highlighting for static code blocks
 
 - **Shiki** 4.5.0, MIT (EXECUTED: `npm view`). At run time, core with the JavaScript regex engine, Python and one theme measures **247,375 B min, 66,043 B gz** (EXECUTED). Grammars and themes are lazy imports.
 - The stock `code-block` uses runtime Shiki with the JavaScript engine and a per-language lazy loader (READ: `docs/src/lib/registry/lib/highlighter.ts`). The docs site depends on `shiki ^3.20.0` (READ: `docs/package.json`); npm's latest is 4.x (EXECUTED). INFERRED: check the major-version change before reusing that hook's shape.
 - **At build time** (in a prerendered `load` or a Svelte preprocessor), Shiki ships no client JavaScript. The page gets coloured spans (INFERRED).
-- INFERRED: the home page's install-and-run snippet is fixed text, so it is highlighted at build time. The editor highlights itself through CodeMirror's Lezer grammar. Two highlighters then need one palette, so both read the same token variables. Shiki offers a CSS-variables theme for exactly this (INFERRED from Shiki's documentation as remembered; to confirm in the specification).
+- INFERRED: the home page's install-and-run snippet is fixed text, so it is highlighted at build time. The editor highlights itself through CodeMirror's Lezer grammar. Two highlighters then need one palette, so both read the same token variables. Shiki offers a CSS-variables theme for exactly this (INFERRED from Shiki's documentation as remembered; the Shiki memo of 2026-10-31 confirmed it, §1.2 and §3, EXECUTED there).
 - `highlight.js` 11.12.0 (BSD-3-Clause) is the older alternative (EXECUTED: `npm view`).
 
-### 5.3 Charts for `/admin`
+### 5.3 Charts for an admin page
 
 | Library | Version, licence | Unpacked | Notes |
 |---|---|---|---|
@@ -381,9 +383,9 @@ INFERRED: **CodeMirror 6** fits best. It carries real undo, keyboard and screen-
 | ECharts | 6.1.0, Apache-2.0 | 60.3 MB | Large |
 | Unovis (`@unovis/svelte`) | 1.7.1, Apache-2.0 | 0.09 MB wrapper | SVG; depends on `@unovis/ts` |
 
-(Versions, licences and unpacked sizes from EXECUTED `npm view`. The bundled size of layerchart needs a Svelte compile and was not measured; see §7.)
+(Versions, licences and unpacked sizes from EXECUTED `npm view`. The bundled size of layerchart needs a Svelte compile and was not measured here; see "What this memo does not settle".)
 
-INFERRED: **layerchart, through the `chart` item**. It is the path the stock component already takes, and its SVG output can carry the brand's chart tokens and text labels. `/admin` is one page behind a login, so its weight matters less than the home page's.
+INFERRED: **layerchart, through the `chart` item**. It is the path the stock component already takes, and its SVG output can carry the brand's chart tokens and text labels. An admin page is one page behind a login, so its weight matters less than the home page's.
 
 ## 6. A recommended repository layout
 
@@ -423,7 +425,7 @@ design-system/
   wrangler.jsonc                    # static assets only: the prerendered previews and build/r
 ```
 
-- **Checks.** `svelte-check` and `prettier --check`, as `hq/web/package.json` already runs (READ). The test files above. A registry smoke test that runs the real `add` against the dev server into a scratch app, as §1.9 did by hand.
+- **Checks.** `svelte-check` and `prettier --check`, as the brand's earlier website already runs (READ). The test files above. A registry smoke test that runs the real `add` against the dev server into a scratch app, as §1.9 did by hand.
 - **Contrast.** It is checked twice: by axe on the rendered pages, and by a unit test over the token pairs, using the arithmetic of §4.2.
 - **The output path.** It is `build/r/styles/maia`, not `static/r`. The CLI expects the `/styles/<style>/` segment (§1.7). Generated JSON then stays out of git (this repository's `.gitignore` already ignores `build/`, READ).
 
@@ -437,12 +439,12 @@ This commits us to nothing. The specification decides.
    - Write our own dependencies as bare names, never `local:`. Apps point `components.json` at the Pluto registry, so it is their one source.
    - Update by `add -o` in a clean tree and `git diff`, guided by each item's changelog.
 2. **Hosting.**
-   - A public registry on a Cloudflare Worker with static assets at `ui.plutosystems.co`, beside the preview pages.
+   - A public registry on a Cloudflare Worker with static assets, beside the preview pages.
    - Each release at a versioned path, with apps pinning one.
-   - No token scheme unless the owner wants it private. Then use a path token, never a query token.
+   - No token scheme. A private registry would need a path token, never a query token.
 3. **Tandem development.**
-   - The app keeps the published URL in `components.json`, and installs from `REGISTRY_URL=http://localhost:5173/r` in development.
-   - An item is done when the app has installed it, used it, and passed its own `svelte-check`, Playwright and axe checks.
+   - An app keeps the published URL in `components.json`, and installs from `REGISTRY_URL=http://localhost:5173/r` in development.
+   - An app installs an item, uses it, and runs its own `svelte-check`, Playwright and axe checks.
 4. **Starting material.**
    - Take v2's tokens, but only after the owner accepts v2 or rules on its §10 calls.
    - Fix the dark theme, the radius, the red and green text contrast, the input border, the chart colours and the four-dot gap as the first items.
@@ -450,18 +452,18 @@ This commits us to nothing. The specification decides.
 5. **Libraries.**
    - CodeMirror 6 for the editor.
    - Shiki at build time for static code blocks, sharing token variables with CodeMirror's highlight style.
-   - layerchart through the `chart` item for `/admin`.
+   - layerchart through the `chart` item for an admin page.
 
-In one line: shadcn-svelte 1.7.1's registry does what we need from a public static host, with two traps (the `/styles/<style>/` path and broken `local:` names), no namespaces and no real auth. Pluto's design book v2 is the source, but it is still only proposed.
+In one line: shadcn-svelte 1.7.1's registry does what we need from a public static host, with two traps (the `/styles/<style>/` path and broken `local:` names), no namespaces and no real auth. Pluto's design book v2 is the source, but on this date it is still only proposed.
 
-## What is still unknown
+## What this memo does not settle
 
-- **Whether v2 is accepted**, and the answers to its four open calls and the on-ink icon question. This blocks the token values.
-- **Whether installing stock shadcn-svelte components into this repository and restyling them counts as copying prior art** under constitution §6. This blocks the two-registry-or-one choice of §3.
-- **Whether a Pluto registry can serve the `/init?preset=` endpoint**, so a new app can `init` straight from it. Untested.
-- **layerchart's bundled size** for one line chart and one bar chart, measured after a Svelte compile.
-- **CodeMirror's size inside the real app** with code splitting, and its behaviour on a phone and with a screen reader. These go into a measured memo, not a test.
-- **Whether `bunx` runs the CLI under Node**, and how the CLI detects Bun as the package manager, in a real SvelteKit app.
-- **Shiki 4's CSS-variables theme**, and its equivalence with a CodeMirror `HighlightStyle` built from the same tokens.
-- **Cloudflare's static-asset limits** (file count and size per file). The billing page points to the platform limits page, which was not read.
-- **Whether the `local:` defect is known upstream.** No issue search was made.
+- **Whether v2 is accepted.** Answered: the owner accepted it (decisions.md, "Design book v2 is the token source", 2026-10-27). Its four open calls are answered: the type stack, the spacing base and state colour in "The design book's open calls, answered" (2026-10-27), and the doc-ID scheme, `PS-<series>-<NNNN>`, in "The theme mechanism, the doc-ID scheme and the footer's sentence" (2026-11-01). The icon on ink uses the lifted primitives for its dots (decisions.md, "After the public-readiness review").
+- **Whether installing stock shadcn-svelte components and restyling them counts as copying prior art.** Answered: it does not (constitution §4.6; decisions.md, "Named dependencies are allowed"). So the registry is one source, and it serves its own `button`, `tabs` and the rest (`001` decision 29).
+- **Whether a Pluto registry can serve the `/init?preset=` endpoint.** It does not. Serving `/init` is outside `001`'s scope; an app runs `init` against the official registry, then points `components.json` at this one (§1.7).
+- **layerchart's bundled size.** Measured later: about 122 to 136 KB gzipped on a page with one bar chart and one line chart (the data-items memo of 2026-10-31, §2.4, EXECUTED there).
+- **CodeMirror's size inside a real app.** Measured in a scratch SvelteKit project at this repository's versions: 126 to 132 KB gzipped on the one route that holds it (the CodeMirror memo of 2026-10-31, §2, EXECUTED there). Phones and screen readers are outside this release's checks (decisions.md, "After the public-readiness review").
+- **Whether `bunx` runs the CLI under Node, and how the CLI detects Bun.** Answered: under the `node` on `PATH`, and it detects Bun from the app's lockfile (the foundation memo of 2026-10-27, §3).
+- **Shiki 4's CSS-variables theme, and its equivalence with a CodeMirror `HighlightStyle`.** Answered by the Shiki memo of 2026-10-31 (§1.2, §3 and §5): both engines read one set of `--code-*` properties.
+- **Cloudflare's static-asset limits.** Not needed. The registry is served from its GitHub tag, and nothing is deployed (decisions.md, "The registry is served from GitHub, and the repository is public").
+- **Whether the `local:` defect is known upstream.** No issue search was made. This registry writes its own dependencies as bare names, never `local:` (`001` decision 19; `registry.test.ts` checks it), so the defect does not reach it.

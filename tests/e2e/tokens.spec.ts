@@ -244,7 +244,7 @@ test.describe("the vertical groove", () => {
     });
     expect(width).toBe("1px");
     expect(holdsColour(colour, line), `${colour} is ${line}`).toBe(true);
-    expect(shadow).toMatch(/inset$|^.*inset.*$/);
+    expect(shadow).toMatch(/\binset\b/);
     expect(shadow).toMatch(/\b1px 0px 0px 0px\b/);
     expect(holdsColour(shadow, light), `${shadow} holds ${light}`).toBe(true);
   });

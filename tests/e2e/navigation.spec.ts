@@ -74,7 +74,7 @@ async function expectElevation(
   expect(await computed(locator, "border-top-width")).toBe("0px");
 }
 
-/** The scrim: --scrim's colour with its alpha, and no blur (R11). */
+/** The scrim: --scrim's colour with its alpha, and no blur (002's R11). */
 async function expectScrim(page: Page, overlay: Locator): Promise<void> {
   expect(
     holdsColour(
@@ -384,7 +384,7 @@ test.describe("N2. the sheet", () => {
     await expect(content).toHaveCount(0);
   });
 
-  // Review finding 2: a top or bottom sheet is capped at the viewport.
+  // A top or bottom sheet is capped at the viewport.
   test.describe("at 360", () => {
     test.use({ viewport: { width: 360, height: 700 } });
 
@@ -450,7 +450,7 @@ test.describe("N3. the dialog", () => {
         expect(await computed(positioner, "pointer-events")).toBe("none");
         expect(await computed(content, "max-height")).toBe("100%");
         expect(await computed(content, "pointer-events")).toBe("auto");
-        // Review finding 3: the close button is positioned by the content.
+        // The close button is positioned by the content.
         expect(await computed(content, "position")).toBe("relative");
         expect(await computed(content, "overflow-y")).toBe("auto");
         expect(await computed(content, "border-top-left-radius")).toBe("8px");
@@ -513,10 +513,10 @@ test.describe("N4. the breadcrumb", () => {
     }
     expect(await size(separators.first().locator("svg"))).toEqual([16, 16]);
     expect(await computed(list, "gap")).toBe("8px");
-    // The list's 0 links are disabled: the current page is not one.
+    // No link is a disabled role=link: the current page is a span.
     await expect(basic.locator('[role="link"]')).toHaveCount(0);
 
-    // A slash separator from the app.
+    // A slash separator passed by the caller.
     const slash = page.getByTestId("breadcrumb-slash");
     await expect(slash).toHaveAttribute("aria-label", /\S/);
     await expect(
@@ -679,7 +679,7 @@ test.describe("N5. the sidebar", () => {
       "sidebar_state=false",
     );
     expect(await computed(nav, "position")).toBe("sticky");
-    // Review finding 6: no groove while the sidebar is off-canvas.
+    // No groove while the sidebar is off-canvas.
     const inset = shell.locator('[data-slot="sidebar-inset"]');
     expect(await computed(inset, "border-inline-start-width")).toBe("0px");
     expect(await computed(inset, "box-shadow")).toBe("none");

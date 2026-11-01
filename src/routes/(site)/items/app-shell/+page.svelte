@@ -51,14 +51,13 @@
     </li>
     <li>
       A doc ID is <code>PS-&lt;series&gt;-&lt;NNNN&gt;</code>: a series is one
-      counter kept in one repository (<code>DB</code> the design book,
-      <code>DS</code> this registry's specifications, one short code per app). The
-      footer shows the string it is given.
+      counter with its own short code (<code>DS</code> is this registry's specifications).
+      The footer shows the string it is given.
     </li>
     <li>
       The <code>statement</code> prop renders one plain sentence under the rows and
-      is empty by default. The design book asks every page for "Pluto Systems is a
-      public benefit corporation."; an app sets it when it is true.
+      is empty by default. An app that wants a sentence under the rows, such as "Pluto
+      Systems is a public benefit corporation.", passes it.
     </li>
   {/snippet}
   {#snippet setup()}

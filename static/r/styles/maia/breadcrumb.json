@@ -3,7 +3,7 @@
 	"name": "breadcrumb",
 	"title": "Breadcrumb",
 	"type": "registry:ui",
-	"author": "Pluto Systems <https://plutosystems.co>",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 	"description": "The path to the current page as a list of links, the current page marked and not a link.",
 	"devDependencies": [
 		"phosphor-svelte@^3.1.1"
@@ -40,12 +40,12 @@
 			"target": "breadcrumb/breadcrumb-item.svelte"
 		},
 		{
-			"content": "<script lang=\"ts\">\n  import { cn, type WithElementRef } from \"$UTILS$\";\n  import type { Snippet } from \"svelte\";\n  import type { HTMLAnchorAttributes } from \"svelte/elements\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    href = undefined,\n    child,\n    children,\n    ...restProps\n  }: WithElementRef<HTMLAnchorAttributes> & {\n    /** Renders a framework link in place of the anchor, with these props. */\n    child?: Snippet<[{ props: HTMLAnchorAttributes }]>;\n  } = $props();\n\n  // At least 24 px tall, a target (R21). The colour alone transitions: a\n  // transition on every colour would fade the focus mark in too, and it must\n  // be there at once.\n  const attrs = $derived({\n    \"data-slot\": \"breadcrumb-link\",\n    class: cn(\n      \"inline-flex min-h-6 items-center transition-[color] hover:text-foreground\",\n      className,\n    ),\n    href,\n    ...restProps,\n  });\n</script>\n\n{#if child}\n  {@render child({ props: attrs })}\n{:else}\n  <a bind:this={ref} {...attrs}>\n    {@render children?.()}\n  </a>\n{/if}\n",
+			"content": "<script lang=\"ts\">\n  import { cn, type WithElementRef } from \"$UTILS$\";\n  import type { Snippet } from \"svelte\";\n  import type { HTMLAnchorAttributes } from \"svelte/elements\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    href = undefined,\n    child,\n    children,\n    ...restProps\n  }: WithElementRef<HTMLAnchorAttributes> & {\n    /** Renders a framework link in place of the anchor, with these props. */\n    child?: Snippet<[{ props: HTMLAnchorAttributes }]>;\n  } = $props();\n\n  // At least 24 px tall, a target. The colour alone transitions: a\n  // transition on every colour would fade the focus mark in too, and it must\n  // be there at once.\n  const attrs = $derived({\n    \"data-slot\": \"breadcrumb-link\",\n    class: cn(\n      \"inline-flex min-h-6 items-center transition-[color] hover:text-foreground\",\n      className,\n    ),\n    href,\n    ...restProps,\n  });\n</script>\n\n{#if child}\n  {@render child({ props: attrs })}\n{:else}\n  <a bind:this={ref} {...attrs}>\n    {@render children?.()}\n  </a>\n{/if}\n",
 			"type": "registry:ui",
 			"target": "breadcrumb/breadcrumb-link.svelte"
 		},
 		{
-			"content": "<script lang=\"ts\">\n  import { cn, type WithElementRef } from \"$UTILS$\";\n  import type { HTMLAttributes } from \"svelte/elements\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    children,\n    ...restProps\n  }: WithElementRef<HTMLAttributes<HTMLSpanElement>> = $props();\n</script>\n\n<!--\n  The current page: a span with aria-current and nothing else. Stock's\n  role=\"link\" aria-disabled announced \"link, disabled\", a false promise.\n-->\n<span\n  bind:this={ref}\n  data-slot=\"breadcrumb-page\"\n  aria-current=\"page\"\n  class={cn(\"text-foreground\", className)}\n  {...restProps}\n>\n  {@render children?.()}\n</span>\n",
+			"content": "<script lang=\"ts\">\n  import { cn, type WithElementRef } from \"$UTILS$\";\n  import type { HTMLAttributes } from \"svelte/elements\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    children,\n    ...restProps\n  }: WithElementRef<HTMLAttributes<HTMLSpanElement>> = $props();\n</script>\n\n<!--\n  The current page: a span with aria-current and nothing else.\n  shadcn-svelte's role=\"link\" aria-disabled announced \"link, disabled\", a false promise.\n-->\n<span\n  bind:this={ref}\n  data-slot=\"breadcrumb-page\"\n  aria-current=\"page\"\n  class={cn(\"text-foreground\", className)}\n  {...restProps}\n>\n  {@render children?.()}\n</span>\n",
 			"type": "registry:ui",
 			"target": "breadcrumb/breadcrumb-page.svelte"
 		},

@@ -3,7 +3,7 @@
 	"name": "tooltip",
 	"title": "Tooltip",
 	"type": "registry:ui",
-	"author": "Pluto Systems <https://plutosystems.co>",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 	"description": "A short inverted label that opens on hover and focus, closes on Escape, and repeats an icon button's name.",
 	"devDependencies": [
 		"bits-ui@^2.20.2",

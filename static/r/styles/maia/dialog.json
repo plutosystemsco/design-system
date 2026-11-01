@@ -3,7 +3,7 @@
 	"name": "dialog",
 	"title": "Dialog",
 	"type": "registry:ui",
-	"author": "Pluto Systems <https://plutosystems.co>",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 	"description": "A modal window named by its title, behind the scrim, for a task that must finish before the page goes on.",
 	"devDependencies": [
 		"bits-ui@^2.20.2",
@@ -43,7 +43,7 @@
 			"target": "dialog/dialog-content.svelte"
 		},
 		{
-			"content": "<script lang=\"ts\">\n  import { Dialog as DialogPrimitive } from \"bits-ui\";\n  import { cn } from \"$UTILS$\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    ...restProps\n  }: DialogPrimitive.OverlayProps = $props();\n</script>\n\n<!-- The scrim (002 decision 7), unblurred (R11), fading with the content. -->\n<DialogPrimitive.Overlay\n  bind:ref\n  data-slot=\"dialog-overlay\"\n  class={cn(\n    \"fixed inset-0 z-50 bg-scrim data-open:animate-enter data-closed:animate-exit\",\n    className,\n  )}\n  {...restProps}\n/>\n",
+			"content": "<script lang=\"ts\">\n  import { Dialog as DialogPrimitive } from \"bits-ui\";\n  import { cn } from \"$UTILS$\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    ...restProps\n  }: DialogPrimitive.OverlayProps = $props();\n</script>\n\n<!-- The scrim, unblurred, fading with the content. -->\n<DialogPrimitive.Overlay\n  bind:ref\n  data-slot=\"dialog-overlay\"\n  class={cn(\n    \"fixed inset-0 z-50 bg-scrim data-open:animate-enter data-closed:animate-exit\",\n    className,\n  )}\n  {...restProps}\n/>\n",
 			"type": "registry:ui",
 			"target": "dialog/dialog-overlay.svelte"
 		},
@@ -68,7 +68,7 @@
 			"target": "dialog/dialog-footer.svelte"
 		},
 		{
-			"content": "<script lang=\"ts\">\n  import { Dialog as DialogPrimitive } from \"bits-ui\";\n  import { cn } from \"$UTILS$\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    level = 2,\n    ...restProps\n  }: DialogPrimitive.TitleProps = $props();\n</script>\n\n<!-- A heading in the heading face (R17); bits-ui renders role=\"heading\" aria-level and names the dialog by it. -->\n<DialogPrimitive.Title\n  bind:ref\n  data-slot=\"dialog-title\"\n  {level}\n  class={cn(\"font-heading text-base font-bold\", className)}\n  {...restProps}\n/>\n",
+			"content": "<script lang=\"ts\">\n  import { Dialog as DialogPrimitive } from \"bits-ui\";\n  import { cn } from \"$UTILS$\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    level = 2,\n    ...restProps\n  }: DialogPrimitive.TitleProps = $props();\n</script>\n\n<!-- A heading in the heading face; bits-ui renders role=\"heading\" aria-level and names the dialog by it. -->\n<DialogPrimitive.Title\n  bind:ref\n  data-slot=\"dialog-title\"\n  {level}\n  class={cn(\"font-heading text-base font-bold\", className)}\n  {...restProps}\n/>\n",
 			"type": "registry:ui",
 			"target": "dialog/dialog-title.svelte"
 		},

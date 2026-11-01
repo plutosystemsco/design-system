@@ -4,8 +4,7 @@ import { pythonLanguageConfigured } from "#lib/registry/ui/code-editor/code-edit
 
 /**
  * Any of the twenty-six languages the highlighter lists, for the editor, on
- * demand (007 decision 7). `codeLanguages` is the table; `loadLanguage` opens
- * one. Each language is loaded the first time it is asked for and cached;
+ * demand. `codeLanguages` is the table; `loadLanguage` opens one. Each language is loaded the first time it is asked for and cached;
  * installing this item installs every `@codemirror/lang-*` package and the
  * legacy modes through `@codemirror/language-data`, about two megabytes on
  * disk, so an app that edits one language keeps `pythonSetup()` alone.

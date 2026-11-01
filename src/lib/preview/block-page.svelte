@@ -21,7 +21,7 @@
     name: string;
     files: { appPath: string; text: string }[];
     accessibility: Snippet;
-    /** What an app does after `add`, as a list (006: moving the shell's layout, the footer's values). */
+    /** What an app does after `add`, as a list: moving the shell's layout, the footer's values. */
     setup?: Snippet;
   } = $props();
 

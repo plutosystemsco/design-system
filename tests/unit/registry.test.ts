@@ -130,7 +130,7 @@ const ITEMS_005: [name: string, type: string, title: string][] = [
   ["composer", "registry:ui", "Composer"],
 ];
 const TYPE_005 = new Map(ITEMS_005.map(([n, t]) => [n, t]));
-/** 007 decision 7: the one new item, a library with no meta.stock. */
+/** 007 decision 7: 007's one item, a library with no meta.stock. */
 const ITEMS_007: [name: string, type: string, title: string][] = [
   ["code-languages", "registry:lib", "Code languages"],
 ];
@@ -205,8 +205,8 @@ const TARGETS_004: Record<string, string> = {
 const BLOCKS_003 = ["hero", "sign-in", "sign-up", "page-states", "settings"];
 const BLOCKS = [...BLOCKS_003, ...ITEMS_006.map(([n]) => n)];
 const ITEMS_003 = ["status", "error-summary", ...BLOCKS_003];
-/** The 26 items 002 added. */
-const NEW_ITEMS = GROUPS.slice(1)
+/** 002's 26 items. */
+const ITEMS_002 = GROUPS.slice(1)
   .flatMap(([, names]) => names)
   .filter(
     (n) =>
@@ -234,7 +234,7 @@ const ITEMS: [string, string][] = [
 ];
 const UI_COUNT = ITEMS.filter(([, t]) => t === "registry:ui").length;
 
-/** Decision 5's titles for the 7 new items. */
+/** 003 decision 5's titles for 003's 7 items. */
 const TITLES: Record<string, string> = {
   status: "Status",
   "error-summary": "Error summary",
@@ -245,7 +245,7 @@ const TITLES: Record<string, string> = {
   settings: "Settings",
 };
 
-/** Decision 5: the page files and component files of each block. */
+/** 003 decision 5: the page files and component files of each block. */
 const BLOCK_FILES: Record<string, { pages: string[]; components: string[] }> = {
   hero: {
     pages: ["+page.svelte"],
@@ -293,7 +293,7 @@ const GROUP_OF = new Map(
   GROUPS.flatMap(([group, names]) => names.map((n) => [n, group] as const)),
 );
 
-/** 002 decision 2's tailwind-variants row, 004's code-block (its review finding 3), and 005's three. */
+/** 002 decision 2's tailwind-variants row, 004's code-block, and 005's three. */
 const TV_ITEMS = [
   "button",
   "code-block",
@@ -375,7 +375,7 @@ describe("registry.json", () => {
         "use-highlighted-code",
         "highlighter",
         "toggle",
-        // 005 decision 4's 4 (its review, finding 9: spinner was named already; tooltip is the fourth).
+        // 005 decision 4's 4 (spinner was named already; tooltip is the fourth).
         "sheet",
         "is-mobile",
         "tooltip",
@@ -414,7 +414,7 @@ describe("registry.json", () => {
     for (const item of ui) expect(item.files.length).toBeGreaterThanOrEqual(2);
   });
 
-  test("63 of 63 items carry a meta.group among the 10, as decisions 5, 4, 4, 3 and 7 order them", () => {
+  test("63 of 63 items carry a meta.group among the 10, in the order their specifications give", () => {
     expect(GROUPS).toHaveLength(10);
     const groups = new Set(GROUPS.map(([g]) => g));
     for (const item of registry.items as {
@@ -426,12 +426,12 @@ describe("registry.json", () => {
     }
   });
 
-  test("26 of 26 new items carry meta.since 0.2.0 and a 5-field meta.stock", () => {
+  test("26 of 26 of 002's items carry meta.since 0.2.0 and a 5-field meta.stock", () => {
     const byName = new Map(
       (registry.items as { name: string; meta: any }[]).map((i) => [i.name, i]),
     );
-    expect(NEW_ITEMS).toHaveLength(26);
-    for (const name of NEW_ITEMS) {
+    expect(ITEMS_002).toHaveLength(26);
+    for (const name of ITEMS_002) {
       const meta = byName.get(name)?.meta;
       expect(meta?.since).toBe("0.2.0");
       expect(Object.keys(meta.stock).sort()).toEqual(
@@ -449,7 +449,7 @@ describe("registry.json", () => {
       expect(byName.get(name)?.meta.since).toBe("0.1.0");
   });
 
-  test("10 of 10 004 items carry meta.since 0.4.0, decision 4's titles and groups; 8 carry a 5-field meta.stock, code-editor and meter none", () => {
+  test("10 of 10 004 items carry meta.since 0.4.0, 004 decision 4's titles and groups; 8 carry a 5-field meta.stock, code-editor and meter none", () => {
     const byName = new Map(
       (registry.items as { name: string; title: string; meta: any }[]).map(
         (i) => [i.name, i],
@@ -482,7 +482,7 @@ describe("registry.json", () => {
     }
   });
 
-  test("11 of 11 005 items carry meta.since 0.5.0, decision 4's titles and groups; 8 carry a 5-field meta.stock dated 2026-11-01, theme, message-log and composer none", () => {
+  test("11 of 11 005 items carry meta.since 0.5.0, 005 decision 4's titles and groups; 8 carry a 5-field meta.stock dated 2026-11-01, theme, message-log and composer none", () => {
     const byName = new Map(
       (
         registry.items as {
@@ -495,7 +495,7 @@ describe("registry.json", () => {
     );
     expect(ITEMS_005).toHaveLength(11);
     expect(STOCK_005).toHaveLength(8);
-    for (const [name, type, title] of ITEMS_005) {
+    for (const [name, , title] of ITEMS_005) {
       const item = byName.get(name)!;
       expect(item.title).toBe(title);
       expect(item.meta?.since).toBe("0.5.0");
@@ -504,7 +504,6 @@ describe("registry.json", () => {
         "utils",
         "pluto-theme",
       ]);
-      void type;
       if (!STOCK_005.includes(name)) {
         expect(item.meta?.stock).toBeUndefined();
         expect(Object.keys(item.meta).sort()).toEqual(["group", "since"]);
@@ -528,10 +527,10 @@ describe("registry.json", () => {
       (i) => i.meta?.stock,
     );
     expect(stocked).toHaveLength(42);
-    expect(NEW_ITEMS.length + STOCK_004.length + STOCK_005.length).toBe(42);
+    expect(ITEMS_002.length + STOCK_004.length + STOCK_005.length).toBe(42);
   });
 
-  test("7 of 7 new items carry meta.since 0.3.0, no meta.stock, and decision 5's titles", () => {
+  test("7 of 7 of 003's items carry meta.since 0.3.0, no meta.stock, and 003 decision 5's titles", () => {
     const byName = new Map(
       (registry.items as { name: string; title: string; meta: any }[]).map(
         (i) => [i.name, i],
@@ -547,7 +546,7 @@ describe("registry.json", () => {
     }
   });
 
-  test("2 of 2 006 blocks carry meta.since 0.6.0, decision 3's titles, the blocks group, no meta.stock, and utils then pluto-theme first", () => {
+  test("2 of 2 006 blocks carry meta.since 0.6.0, 006 decision 3's titles, the blocks group, no meta.stock, and utils then pluto-theme first", () => {
     const byName = new Map(
       (
         registry.items as {
@@ -779,7 +778,7 @@ describe("the built registry", () => {
     );
   });
 
-  test("code-editor names the 7 CodeMirror and Lezer packages of decision 2 at their ranges, and nothing else", () => {
+  test("code-editor names the 7 CodeMirror and Lezer packages of 004 decision 2 at their ranges, and nothing else", () => {
     const item = JSON.parse(
       readFileSync(path.join(latest(), "code-editor.json"), "utf8"),
     );
@@ -867,7 +866,7 @@ describe("the built registry", () => {
     }
   });
 
-  // 006 decision 3 wrote 19 components (10 + 9); the shell's 6 and the chat's 4 make 20.
+  // 20 components: 10 from 003's blocks, 6 from app-shell, 4 from chat.
   test("10 of 10 page files build to <block>/<base name>, 20 of 20 components to bare <block>- names, and 0 targets begin ~/ or src/", () => {
     let pages = 0;
     let components = 0;
@@ -916,7 +915,7 @@ describe("the built registry", () => {
     }
   });
 
-  // 005 decision 4 (review finding 9): an app that adds one item into an
+  // 005 decision 4: an app that adds one item into an
   // empty project must get every file it imports.
   test("47 of 47 built registry:ui items import only $UI$ names in their own registryDependencies", () => {
     const ui = ITEMS.filter(([, type]) => type === "registry:ui");
@@ -983,8 +982,9 @@ describe("the built registry", () => {
 describe("wrangler.jsonc", () => {
   const config = JSON.parse(readFileSync("wrangler.jsonc", "utf8"));
 
-  test("parses with JSON.parse", () => {
-    expect(typeof config).toBe("object");
+  test("parses as an object and names no account_id", () => {
+    expect(config).toBeObject();
+    expect("account_id" in config).toBe(false);
   });
 
   test("serves ./build as static assets", () => {
@@ -1039,7 +1039,7 @@ describe("CHANGELOG.md", () => {
     expect(body).toContain("not an interface change");
   });
 
-  test("has a 0.5.0 entry naming pluto-theme and the 11 new items (12 of 12), the sonner line and the bubble line, with the older entries unchanged", () => {
+  test("has a 0.5.0 entry naming pluto-theme and 005's 11 items (12 of 12), the sonner line and the bubble line", () => {
     const body = entry("0.5.0");
     const names = ["pluto-theme", ...ITEMS_005.map(([n]) => n)];
     expect(names).toHaveLength(12);
@@ -1049,7 +1049,7 @@ describe("CHANGELOG.md", () => {
     expect(body).toContain("`bubble`");
   });
 
-  test("has a 0.4.0 entry naming pluto-theme and the 10 new items (11 of 11), and the scroll-area line", () => {
+  test("has a 0.4.0 entry naming pluto-theme and 004's 10 items (11 of 11), and the scroll-area line", () => {
     const body = entry("0.4.0");
     const names = ["pluto-theme", ...ITEMS_004.map(([n]) => n)];
     expect(names).toHaveLength(11);
@@ -1058,14 +1058,14 @@ describe("CHANGELOG.md", () => {
     expect(body).toContain("`scrollbar`");
   });
 
-  test("has a 0.3.0 entry naming the 7 new items: 7 of 7", () => {
+  test("has a 0.3.0 entry naming 003's 7 items: 7 of 7", () => {
     const body = entry("0.3.0");
     for (const name of ITEMS_003) expect(body).toContain(`\`${name}\``);
   });
 
-  test("has a 0.2.0 entry naming pluto-theme and the 26 new items: 27 of 27", () => {
+  test("has a 0.2.0 entry naming pluto-theme and 002's 26 items: 27 of 27", () => {
     const body = entry("0.2.0");
-    const names = ["pluto-theme", ...NEW_ITEMS];
+    const names = ["pluto-theme", ...ITEMS_002];
     expect(names).toHaveLength(27);
     for (const name of names) expect(body).toContain(`\`${name}\``);
   });

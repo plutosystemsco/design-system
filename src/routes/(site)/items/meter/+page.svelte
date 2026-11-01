@@ -6,7 +6,7 @@
   import PreviewSection from "#lib/preview/preview-section.svelte";
   import Specimen from "#lib/preview/specimen.svelte";
 
-  // The home page's fuel line: 4.81 billion instructions of a 30 billion cap.
+  // A fuel line: 4.81 billion instructions of a 30 billion cap.
   const fuel = { value: 4.81, max: 30 };
 </script>
 
@@ -15,7 +15,7 @@
 <PreviewSection
   id="variants"
   title="Variants"
-  intro="The native meter: a measurement within a known range, not progress. An 8 px bar with square ends on the muted track, filled in primary from the theme's rules. The app names it and writes its numbers beside it; the fill is never the only sign."
+  intro="The native meter: a measurement within a known range, not progress. An 8 px bar with square ends on the muted track, filled in primary from the theme's rules. The consuming app names it and writes its numbers beside it; the fill is never the only sign."
 >
   <div class="grid max-w-md gap-8">
     <Specimen

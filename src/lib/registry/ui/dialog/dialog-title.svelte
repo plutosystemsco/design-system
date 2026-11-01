@@ -10,7 +10,7 @@
   }: DialogPrimitive.TitleProps = $props();
 </script>
 
-<!-- A heading in the heading face (R17); bits-ui renders role="heading" aria-level and names the dialog by it. -->
+<!-- A heading in the heading face; bits-ui renders role="heading" aria-level and names the dialog by it. -->
 <DialogPrimitive.Title
   bind:ref
   data-slot="dialog-title"

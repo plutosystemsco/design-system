@@ -9,7 +9,7 @@
   }: DialogPrimitive.OverlayProps = $props();
 </script>
 
-<!-- The scrim (002 decision 7), unblurred (R11), fading with the content. -->
+<!-- The scrim, unblurred, fading with the content. -->
 <DialogPrimitive.Overlay
   bind:ref
   data-slot="dialog-overlay"

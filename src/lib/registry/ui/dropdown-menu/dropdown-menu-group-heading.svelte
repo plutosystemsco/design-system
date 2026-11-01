@@ -15,7 +15,7 @@
 
 <!--
   The one way to title a menu or a section of one: bits-ui names the group by
-  it. Sentence case, a label to a reader, not mono furniture (R18).
+  it. Sentence case, a label to a reader, not mono furniture.
 -->
 <DropdownMenuPrimitive.GroupHeading
   bind:ref

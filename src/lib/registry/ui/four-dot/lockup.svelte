@@ -7,7 +7,7 @@
       /** The link's accessible name, when `href` makes the lockup a link. It contains the visible word. */
       label?: string;
       tone?: FourDotTone;
-      /** Passed to the mark: the page's one entrance (006 decision 5). */
+      /** Passed to the mark: the page's one entrance. */
       entrance?: boolean;
     };
 </script>

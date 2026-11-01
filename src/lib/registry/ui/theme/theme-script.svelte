@@ -1,6 +1,6 @@
 <script lang="ts" module>
   /**
-   * The head script, as a constant (005 decision 6). It reads the key
+   * The head script, as a constant. It reads the key
    * `theme.svelte.ts` writes, else the system's preference, and sets the
    * `dark` class before first paint. Storage may be unavailable. The key is
    * written here and in `theme.svelte.ts`; the two must agree.

@@ -1,10 +1,12 @@
 # Review of 002 — The primitives: forms, surfaces and feedback
 
-- **Status:** complete; awaiting the author's disposition
+Reviews [`specifications/002-the-primitives-forms-surfaces-and-feedback.md`](../specifications/002-the-primitives-forms-surfaces-and-feedback.md).
+
+- **Status:** dispositioned; fit to build
 - **Date:** 2026-10-28
-- **Reviewer:** an agent, Claude, sub-agent of the orchestrating session, fresh to the specification; not the author
+- **Reviewer:** a reviewer; not the author
 - **Reviewed:** the specification as drafted, 2026-10-28 (`specifications/002-the-primitives-forms-surfaces-and-feedback.md`, 723 lines), against the constitution, `decisions.md`, `001`, the three memos of 2026-10-28 and the two of 2026-10-27, and the code it extends.
-- **Re-ran:** in the session scratchpad (`review-002/`), under Bun 1.3.14. Nothing in this repository was written except this file.
+- **Re-ran:** in a scratch folder outside the repository, under Bun 1.3.14. Nothing in this repository was written except this file.
   - Decision 7's scrim table, with `compositeAlphaByte` and `contrastRatio` imported from `scripts/contrast.ts` → 6 of 6 composited grounds and ratios agree (3.64, 3.45, 3.95, 4.34, 4.17, 3.95). The rejected alpha `0x73` gives 2.95 on light `card`, as stated. Paper under the dark scrim is `#6F7072`, as stated. The dark dialog surface against its scrimmed ground measures 1.02 to 1.12, so the dark edge carries all the separation, as the spec says.
   - Not in the spec, checked anyway: `muted-foreground` on the 8 state-tint grounds → 4.79 to 7.09, all pass. A state tint over `muted`/`accent` → 4.06 light, 3.96 dark (finding 3).
   - `bun pm view` → `bits-ui` 2.20.2, `phosphor-svelte` 3.1.1, `@internationalized/date` 3.12.4, `tailwind-variants` 3.3.1. `tailwind-variants`' `tailwind-merge` and `tailwindcss` peers are optional. `phosphor-svelte`'s `vite` peer is optional, and `vite` is in the CLI's `IGNORE_DEPS` anyway (READ `deps-resolver.ts:80`).
@@ -45,7 +47,7 @@ Does not land yet (ready after fixes): findings 1 and 2 are High. The alert dial
 22. **Smoke** — countable: 12+2+2+13+2+2+5+5+1 = 44 files; 7 × 2 = 14 (READ).
 23. **Test files** — countable: 8, 6, 3 (READ).
 24. **Release** — countable: 27 and 6 (READ).
-25. **In the app (done)** — not checkable here, by design, as `001`'s criterion 24 (READ).
+25. **Released** — tag `v0.2.0`, as `001`'s criterion 24.
 
 ## Findings, most severe first
 
@@ -61,8 +63,8 @@ Does not land yet (ready after fixes): findings 1 and 2 are High. The alert dial
    - Fix (design lead's call, recommended first): (a) controls take ladder heights: default `h-12`, `sm` `h-8`, `lg` dropped or `h-16`. Icon buttons and OTP cells use `size-12` / `size-8`, with content centred. Criterion 18 becomes 48 ± 0.5 and 32 ± 0.5. Or (b) add a `control` size token (for example 44 px), used as `h-(--control)` and `size-(--control)`. Either way, decision 10's table, the heights fixture and criterion 18 are recomputed, and the reason is stated against the ladder decision.
 
 3. **Medium — Tinted badges and alerts will sit on `accent` rows, which `001` forbids** (decision 19 `badge`/`alert`, `:426-427`; `table` and `item` rows, `:432`, `:441`; R7).
-   - What is wrong: `table` paints hover and selected rows `bg-accent`, and a link `item` hovers to `bg-accent`. The badge's `destructive` and `success` variants are the `/10` and `/20` tints. A badge inside such a row is a state tint inside an inset: destructive/10 over light `accent` measures 4.06, destructive/20 over dark 3.96 (EXECUTED; `001` decision 12's forbidden pairs). The primitives memo composes exactly this: run metadata as `item` rows with a `badge` for how a run ended, and `/admin` tables with badges (§1.2).
-   - Why it matters: R7 leaves this to review, but the items make the failing composition the natural one. The home page and `/admin` will fail AA in a selected row, which is a wrong answer by construction.
+   - What is wrong: `table` paints hover and selected rows `bg-accent`, and a link `item` hovers to `bg-accent`. The badge's `destructive` and `success` variants are the `/10` and `/20` tints. A badge inside such a row is a state tint inside an inset: destructive/10 over light `accent` measures 4.06, destructive/20 over dark 3.96 (EXECUTED; `001` decision 12's forbidden pairs). The primitives memo composes exactly this: run metadata as `item` rows with a `badge` for how a run ended, and admin tables with badges (§1.2).
+   - Why it matters: R7 leaves this to review, but the items make the failing composition the natural one. An app's tables and item lists will fail AA in a selected row, which is a wrong answer by construction.
    - Fix: give the badge's state variants no tint: `border-destructive text-destructive` on a transparent ground (destructive on `accent` 4.71 light, 5.53 dark; `001` rows L16 and D16), and the same with `success` (5.23 and 6.55). Keep the tint only on `Alert`, whose context is a panel. Or keep the tints and add a stated rule and a preview fixture showing what a row badge uses instead. This is a design-lead call; the first option is recommended.
 
 4. **Medium — Field wiring is unproven for six of seven controls and absent from server-rendered HTML** (decision 11, `:303-306`; decision 23 field wiring, `:536`; criterion 21).
@@ -71,15 +73,15 @@ Does not land yet (ready after fixes): findings 1 and 2 are High. The alert dial
    - Fix: make `describedBy` computable before the control renders. For example, `Field` takes `description` and `error` props or snippets, or `FieldError` always renders its element (empty when valid), so the ids are known up front. Add a test on the raw prerendered HTML of the `field` page. Extend the wiring check to each of the 7 controls inside a `Field`, with `id`, `aria-describedby` and `aria-invalid` on the right element, and count them (7 of 7).
 
 5. **Medium — Round radios contradict a binding decision, and the spec leaves the contradiction open** (decision 19 `radio-group`, `:439`; decision 28, `:606`; L11).
-   - What is wrong: decisions.md says "The four-dot stays the page's only circles". The spec keeps the radio round as "dot-derived", names the conflict, and says it "does not block the build". v2's "dot-derived" means derived from the mark's dots. A radio's dot is a generic UI convention, and decisions.md applied that same reading to refuse round avatars. The checkbox at 24 px with the 8 px radius is already a visibly rounded square, so a radio can be told apart by its inner dot alone (INFERRED).
+   - What is wrong: decisions.md says "The four-dot stays the page's only circles". The spec keeps the radio round as "dot-derived", names the conflict, and says it "does not block the build". The design book's "dot-derived" means derived from the mark's dots. A radio's dot is a generic UI convention, and decisions.md applied that same reading to refuse round avatars. The checkbox at 24 px with the 8 px radius is already a visibly rounded square, so a radio can be told apart by its inner dot alone (INFERRED).
    - Why it matters: L11's allowlist, the radio's geometry, its preview and the axe and keyboard runs all depend on the answer. A recorded decision should not be overridden by a specification's default.
    - Fix: the design lead (or the owner) decides before build, and decisions.md records it. If the circle stays, amend the decision's wording ("the mark and the radio"). If not, the radio becomes a `size-6 rounded` box with a `size-3 rounded` dot, and L11's allowlist is `four-dot.svelte` alone.
 
 6. **Medium — The switch thumb is a stadium, and stock's border breaks its travel** (decision 14, `:366`).
    - What is wrong, in two parts.
-     - The reason given, that a 16 × 24 thumb with 8 px corners is "a rounded bar", not full round, is false. An 8 px radius on a 16 px tall box rounds each end to a half circle. That is the shape `rounded-full` draws on that box (INFERRED from CSS geometry). So the thumb is the "in between" shape v2 §05 refuses.
+     - The reason given, that a 16 × 24 thumb with 8 px corners is "a rounded bar", not full round, is false. An 8 px radius on a 16 px tall box rounds each end to a half circle. That is the shape `rounded-full` draws on that box (INFERRED from CSS geometry). So the thumb is the "in between" shape the design book §05 refuses.
      - The spec lists the track's new classes but does not say to remove stock's `border border-transparent`. With that border kept, the thumb overflows the track by 2 px on the right and at the bottom (EXECUTED).
-   - Why it matters: the reason does not hold against v2 or the circles decision. And a builder who restyles class by class gets a broken control.
+   - Why it matters: the reason does not hold against the design book or the circles decision. And a builder who restyles class by class gets a broken control.
    - Fix: say "no border on the track". For the shape, either accept the stadium as dot-derived, deciding it together with finding 5, or use a thumb taller than 16 px. For example: track `h-8 w-16 p-1` (32 × 64), thumb `size-6` (a 24 px rounded square), travel `translate-x-8`. All are ladder steps, and 24 + 32 = 64 − 8.
 
 7. **Medium — "`cn` is our one merge engine" is false: `tailwind-variants` 3.3.1 bundles its own** (decision 2, `:68`; decision 23 test 8, `:518`; criterion 13).
@@ -90,7 +92,7 @@ Does not land yet (ready after fixes): findings 1 and 2 are High. The alert dial
 8. **Medium — The install's safety check cannot be read while `001` is untracked, and the pin order is ambiguous** (decision 4, `:92`, `:99`; decision 2, `:71`; decision 28, `:607`).
    - What is wrong: all of `001` is untracked (`git status` shows `?? src/`, `?? tests/` and so on). So "`git status` must show new files only under `src/lib/registry/ui/<name>/`" cannot be observed. The snapshot covers 4 files of a tree of hundreds. Separately, decision 2 says to set the caret specifiers by hand and then run `bun add <name>@<version>`. That order can leave whatever specifier `bun add` writes, not the caret `deps.test.ts` expects.
    - Why it matters: the procedure's one guarantee, that the install leaves `001` untouched, has no evidence. And criterion 1 can fail on a specifier.
-   - Fix: snapshot the whole working tree before and after (the file list from `git ls-files -co --exclude-standard` with a SHA-256 of each), and compare. Better, put the commit and the `v0.1.0` tag to the owner **before build step 3**, not "before `002` lands". That is an owner question under AGENTS.md (AskUserQuestion; recommend committing first). For the pins: run `bun add <name>@<exact>` first, then set the caret specifier, then `bun install`, then check that `bun.lock` is unchanged.
+   - Fix: snapshot the whole working tree before and after (the file list from `git ls-files -co --exclude-standard` with a SHA-256 of each), and compare. Better, put the commit and the `v0.1.0` tag to the owner **before build step 3**, not "before `002` lands". That is a question for the owner, with committing first as the recommended option. For the pins: run `bun add <name>@<exact>` first, then set the caret specifier, then `bun install`, then check that `bun.lock` is unchanged.
 
 9. **Low — `separator` is not decorative by default, and the groove needs a height** (decision 19 `separator`, `:431`).
    - bits-ui's `Separator` defaults to `decorative = false`, so it renders `role="separator"` (READ). Stock does not override it.
@@ -127,7 +129,7 @@ Does not land yet (ready after fixes): findings 1 and 2 are High. The alert dial
 ## Constitution checks
 
 - **§4.1 source, not a package:** holds. Items carry source and name their packages.
-- **§4.2 in tandem:** holds. Criterion 25 mirrors `001`'s built and done split.
+- **§4.2 driven by need:** holds. Criterion 25 is the release, as `001`'s criterion 24.
 - **§4.3 tokens are the one source:**
   - Colour holds. `bg-[Canvas]` is named as the one system-colour use.
   - Sizes: three literal border widths (finding 11). The `sideOffset={4}` literal is named and reviewed.
@@ -145,7 +147,7 @@ Does not land yet (ready after fixes): findings 1 and 2 are High. The alert dial
 
 ## Disposition
 
-To be filled by the author.
+Answered by the author, 2026-10-28, in the amended specification.
 
 | # | Severity | Finding | Disposition |
 |---|---|---|---|
@@ -156,7 +158,7 @@ To be filled by the author.
 | 5 | Medium | Round radios against the circles decision | Fixed by the design lead's call (decisions.md, "Radio buttons are round"; the avatar bullet now names the radio): decision 19 cites it; decision 28 no longer flags it. L11's allowlist unchanged. |
 | 6 | Medium | Switch thumb shape and border | Fixed by the design lead's call, revised once (decisions.md, "The switch is a 32 × 64 track with a 24 × 24 thumb"): decision 14 rewritten with the geometry (track `h-8 w-16 p-1`, thumb `size-6`, travel `translate-x-8`), no track border, and the corrected reason. Every value is on the ladder, so decision 21 has no switch exception; decision 23 and criterion 18 measure the 64 × 32 track, the 24 × 24 thumb and the 4 px inset. |
 | 7 | Medium | `tailwind-variants` has its own merge engine | Fixed, decision 2: every item imports `tv` from `tailwind-variants/lite` (type-only imports from the main entry allowed), so `cn` is the one engine. `utils.test.ts` now proves `lite` leaves both classes, `cn` merges, and 8 of 8 items import `lite` (7 cases, criterion 13); `registry.test.ts` checks the 8 items still name the package. |
-| 8 | Medium | Install check unreadable while `001` is untracked; pin order | Fixed, decision 4: the snapshot is the whole tree (`git ls-files -co --exclude-standard` plus a SHA-256 per file) and the check compares snapshots, never `git status`. Decision 2's pin order is now `bun add` exact, then the caret specifier, then `bun install`. The commit and tag are put to the owner separately, before build step 3; decisions 25 and 27 work either way. |
+| 8 | Medium | Install check unreadable while `001` is untracked; pin order | Fixed, decision 4: the snapshot is the whole tree (`git ls-files -co --exclude-standard` plus a SHA-256 per file) and the check compares snapshots, never `git status`. Decision 2's pin order is now `bun add` exact, then the caret specifier, then `bun install`. `001` was committed and tagged before build step 3 (`33e94de`, `v0.1.0`); decisions 25 and 27 work either way. |
 | 9 | Low | `separator` decorative default and groove height | Fixed, decision 19 separator row: the item sets `decorative = true`; horizontal is `groove pt-(--line-width) w-full` (one hairline of padding gives the inset highlight a row; a zero-height or `h-(--line-width)` box with a top border clips it). |
 | 10 | Low | Live-region preconditions | Fixed, decision 24: four stated preconditions (status alerts are messages, not announcements; `role="alert"` only on insertion; `FieldError` sound only with submit-time errors and moved focus; the labelled spinner inserted when loading starts). The labelled spinner now holds visually hidden text, not `aria-label`; `Alert` takes `role={null}` to render none (decision 19). |
 | 11 | Low | Literal border widths | Fixed: R22 and lint rule L14 forbid numeric border widths; tabs use `border-b-(length:--focus-width)`, avatars `border-(length:--focus-width)`, the caution alert's bar `border-l-(length:--focus-width)`, noted as decoration at 1.95 with the title carrying the state. Samples `border-l-4`, `border-2` (bad) and `border-b-(length:--focus-width)`, `border-0` (good) added. |
@@ -164,3 +166,5 @@ To be filled by the author.
 | 13 | Low | `.js` import extensions | Fixed, decision 4 step 6: the restyle makes `#lib` imports extensionless; `registry.test.ts` asserts 0 of 33 built files contain `$UTILS$.js` or `/index.js"` (criterion 7). |
 | 14 | Low | Small corrections | Fixed: OTP paste strips `/\D/g`, with a third paste case (decision 18, criterion 21); tooltip's double reading noted and accepted with the reason (decision 19); hover reworded as a change to foreground, darker in light and lighter in dark (decision 12); table footer added to R8 (decision 9); Scope's browser line says 4 updated. |
 | 15 | Low | Size and a mid-build checkpoint | Answered and fixed: nothing cut (the split decision fixes the 26). Decision 27 adds a review checkpoint after build step 4 and names the two deferrable parts. |
+
+After the disposition: fit to build.

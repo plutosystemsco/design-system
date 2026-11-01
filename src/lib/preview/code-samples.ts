@@ -189,7 +189,7 @@ jobs:
     title: "TOML",
     code: `# A project file: tables, keys, an array, a date.
 [project]
-name = "wasi-python"
+name = "pluto-sandbox"
 version = "0.7.0"
 requires-python = ">=3.13"
 released = 2026-11-01
@@ -216,7 +216,7 @@ _stopped_, and the output so far is kept.
 - 30 billion instructions by default
 - \`fuel\` in the result tells what was spent
 
-See [the sandbox](https://wasipython.dev/sandbox) for the limits.
+See [the sandbox](https://sandbox.example/limits) for the limits.
 
 \`\`\`python
 print(run.fuel)
@@ -300,7 +300,7 @@ impl<'a> fmt::Display for Run<'a> {
   {
     language: "java",
     title: "Java",
-    code: `package dev.wasipython;
+    code: `package co.plutosystems.sandbox;
 
 /** A run and the fuel it spent. */
 public final class Run {
@@ -413,7 +413,7 @@ echo sprintf("%s: %d left\\n", "darts", (new Run("darts", 4810000000))->left()),
   {
     language: "kotlin",
     title: "Kotlin",
-    code: `package dev.wasipython
+    code: `package co.plutosystems.sandbox
 
 const val BUDGET: Long = 30_000_000_000
 

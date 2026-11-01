@@ -45,7 +45,7 @@
   intro="One table: a caption, a header, rows that hover and select on the accent inset, and a footer on the muted inset."
 >
   <Table.Root>
-    <Table.Caption>Recent runs of wasi-python-dev.</Table.Caption>
+    <Table.Caption>Recent runs of pluto-sandbox.</Table.Caption>
     <Table.Header>
       <Table.Row>
         <Table.Head><span class="sr-only">Select</span></Table.Head>

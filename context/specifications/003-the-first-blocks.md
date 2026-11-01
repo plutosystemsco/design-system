@@ -1,12 +1,12 @@
 # 003 — The first blocks
 
-- **Status:** built, 2026-10-28, committed as the commit that carries this specification and tagged `v0.3.0` (`002` is `7857ea4`, `v0.2.0`); the change review is [`../reviews/003-the-first-blocks-pr-2026-10-28.md`](../reviews/003-the-first-blocks-pr-2026-10-28.md), all 7 findings dispositioned
+- **Status:** built, reviewed and released as `v0.3.0` (`fb942f8`); the change review is [`../reviews/003-the-first-blocks-pr-2026-10-28.md`](../reviews/003-the-first-blocks-pr-2026-10-28.md), all 7 findings dispositioned
 - **Date:** 2026-10-28
-- **Owner:** Clay Gendron (written by an agent, Claude, sub-agent of the orchestrating session)
+- **Author:** the design lead
 - **Kind:** five registry blocks and two new component items (`status`, `error-summary`); the routes and the viewer that serve and show blocks; tests; the 0.3.0 release
 - **Depends on:** [`002`](./002-the-primitives-forms-surfaces-and-feedback.md), *built* (commit `7857ea4`, tagged `v0.2.0`), and through it [`001`](./001-tokens-and-the-registry.md) (`33e94de`, `v0.1.0`).
-- **Blocks:** `006`, the app shell and the chat pane, which reuses `status` and the view machinery. `wasi-python-dev`'s home page takes `hero` and `page-states`; its `/admin` may take `sign-in` (decision 23).
-- **Research:** [`../research/2026-10-28-blocks-how-they-are-declared-installed-and-previewed.md`](../research/2026-10-28-blocks-how-they-are-declared-installed-and-previewed.md) (cited as *blocks memo*); [`../research/2026-10-28-the-blocks-patterns-and-accessibility.md`](../research/2026-10-28-the-blocks-patterns-and-accessibility.md) (*patterns memo*); [`../research/2026-10-28-the-primitives-the-blocks-and-the-home-page-need.md`](../research/2026-10-28-the-primitives-the-blocks-and-the-home-page-need.md) (*primitives memo*); in [`../decisions.md`](../decisions.md), "The design calls for `003`, the first blocks" (cited as *the `003` calls*, and its last part as *the review calls*), "Blocks, and they shape `002`" (*the blocks decision*) and "The primitives split in two, and the design calls for `002`" (*the split decision*); `002`'s decisions and Landing notes; design book v2, `plutosystemshq/pluto-systems-design-book-v2.html` (*v2*). A few facts were read or run for this specification, or read by its review; each is labelled where it is used.
+- **Blocks:** `004`, whose `code-block` composes `status`; and `006`, the app shell and the chat pane, which reuses `status` and the view machinery.
+- **Research:** [`../research/2026-10-28-blocks-how-they-are-declared-installed-and-previewed.md`](../research/2026-10-28-blocks-how-they-are-declared-installed-and-previewed.md) (cited as *blocks memo*); [`../research/2026-10-28-the-blocks-patterns-and-accessibility.md`](../research/2026-10-28-the-blocks-patterns-and-accessibility.md) (*patterns memo*); [`../research/2026-10-28-the-primitives-the-blocks-and-the-home-page-need.md`](../research/2026-10-28-the-primitives-the-blocks-and-the-home-page-need.md) (*primitives memo*); in [`../decisions.md`](../decisions.md), "The design calls for `003`, the first blocks" (cited as *the `003` calls*, and its last part as *the review calls*), "Blocks, and they shape `002`" (*the blocks decision*) and "The primitives split in two, and the design calls for `002`" (*the split decision*); `002`'s decisions and Landing notes; the Pluto Systems design book (*the design book*), cited by section. A few facts were read or run for this specification, or read by its review; each is labelled where it is used.
 
 ## Intent
 
@@ -47,7 +47,7 @@ Each choice, with its reason. Where the `003` calls, the review calls or an earl
 - **The five blocks** are the blocks decision's first set, less the two the split decision moved to `006` (the app shell and the chat pane): `hero`, `sign-in`, `sign-up`, `page-states`, `settings`.
 - **The two new components** are `status` (the `003` calls; `002` decision 24) and `error-summary` (the review calls, after review finding 11), both `registry:ui` items.
 - **The viewer** is the `003` calls' last bullet: a `/view/<block>` route with no chrome, prerendered, in an iframe with 360, 768 and 1280 px presets, a theme the iframe follows, "open alone", and a code view. No screenshots.
-- **Not here:** the app shell and the chat pane (`006`); `code-block` and the editor (`004`); overlays and the sidebar (`005`); deployment; the doc-ID scheme (an owner call, `006`); any server-side authentication. The blocks take callbacks; the preview fakes the server with stubs (decision 6).
+- **Not here:** the app shell and the chat pane (`006`); `code-block` and the editor (`004`); overlays and the sidebar (`005`); deployment; the doc-ID scheme (`006`; settled as `PS-<series>-<NNNN>` in `decisions.md`, "The theme mechanism, the doc-ID scheme and the footer's sentence"); any server-side authentication. The blocks take callbacks; the preview fakes the server with stubs (decision 6).
 - **The registry then holds 39 items:** `002`'s 32, `status`, `error-summary` and the five blocks.
 
 ### 2. A block is one page plus its components, and where its source lives
@@ -75,7 +75,7 @@ The `003` calls fix the shape: "one thin page plus the components an app will re
 - **No page file in `registry.json` carries a `target`.** `build` then computes `<block>/<base name>` for every page file of a multi-file block (blocks memo §1.2, READ `build.ts:119-139`; §4.2, EXECUTED: `probe-block-default/+page.svelte`). So `sign-in`'s page lands at `src/routes/sign-in/+page.svelte`, route `/sign-in`, and `page-states`' error page at `src/routes/page-states/+error.svelte`.
 - **Never `src/routes/…` and never `~/`.** A bare `src/routes/probe/+page.svelte` landed at `src/routes/src/routes/probe/+page.svelte` (blocks memo §4.3, EXECUTED). `~/src/routes/…` names a path from the project root (blocks memo §1.2).
 - *Why the default, not `~/`:* a target at `~/src/routes/+error.svelte` or `~/src/routes/+page.svelte` names an app's root error page or home page, which almost every app has. The default writes no file outside `src/routes/<block>/`, the flat `<block>-*` components, and the folders of the block's dependencies.
-- *What it costs:* the hero lands at `/hero`, not `/`, and the error page handles only errors thrown by `/page-states` itself (decision 13). An app moves or imports what it wants at its root. `wasi-python-dev`'s home-page specification does that (decision 23).
+- *What it costs:* the hero lands at `/hero`, not `/`, and the error page handles only errors thrown by `/page-states` itself (decision 13). An app moves or imports what it wants at its root (decision 23).
 - **The block names are chosen so the route is the natural one:** `/sign-in`, `/sign-up`, `/settings`. Those are also the folders an app may already have, which is why the next rule matters.
 - **Blocks are added without `-o`.** READ on 2026-10-28 in the CLI at `6149e14`: `-y` skips only the "proceed?" prompt (`packages/cli/src/commands/add/index.ts` lines 41, 42 and 115). Without `-o`, `add` lists every item whose files already exist and asks whether to overwrite all of them; answered no, it asks item by item (`packages/cli/src/utils/add-registry-items.ts` lines 92 to 143). With `-o` it asks nothing.
   - A block can pull up to 13 primitives an app may have changed (`settings`), and its route may already exist. With `-o`, both would be replaced without a word (constitution §6, "Break an installed app silently").
@@ -95,7 +95,7 @@ Facts READ on 2026-10-28 in this repository's SvelteKit 3.1.0 (`node_modules/@sv
 `001`'s scratch apps prerender every route. So a block page that links to `/forgot-password` fails the build of an app that has no such route.
 
 - **The link rule: a block file's only root-relative link is `/`.** Every other link is a fragment on the same page (`#hero-features`) or comes from the app through a prop or snippet. *Why `/`:* every app has a root page, and our site's `/` is the catalogue.
-- **Links to app-owned routes are the app's.** "Create an account" and "Forgot your password?" go in the forms' `footer` snippet. The terms and the privacy notice are `sign-up`'s `termsHref` and `privacyHref`. Each renders nothing unless given (decisions 11 and 12). The shipped pages pass none. *Why:* a block must install alone and build. A link to `/sign-up` from `sign-in` would fail an app that installed only `sign-in`, which is `wasi-python-dev`'s likely case (decision 23).
+- **Links to app-owned routes are the app's.** "Create an account" and "Forgot your password?" go in the forms' `footer` snippet. The terms and the privacy notice are `sign-up`'s `termsHref` and `privacyHref`. Each renders nothing unless given (decisions 11 and 12). The shipped pages pass none. *Why:* a block must install alone and build. A link to `/sign-up` from `sign-in` would fail an app that installed only `sign-in`.
 - **Two views pass them,** each linking to `/`, so their markup and targets are tested: `/view/sign-in/credentials/` passes a `footer` with "Create an account", and `/view/sign-up/errors/` passes `termsHref` and `privacyHref` (review finding 12).
 - **No block references a file it does not ship.** No image, font or other asset path; no `<img>`. Icons come from `phosphor-svelte`, a named package (blocks memo §5, "Assets"; `002` decision 20).
 - `blocks.test.ts` counts both rules (decision 20).
@@ -246,14 +246,14 @@ The review calls: "a `registry:ui` component: `role="alert"`, focusable, a headi
 
 **Markup and style.**
 
-- The eyebrow is a `<p>`: `font-mono text-xs font-medium tracking-eyebrow text-muted-foreground lowercase` (v2 §04: mono furniture is lowercase).
-- The `h1` is `font-heading font-bold text-foreground text-2xl tracking-section sm:text-5xl sm:tracking-display`. Below `sm` it is 28 px; from `sm` it is 44 px (the `003` calls: "no size between"). Ink only (v2 §03).
-- The sentence is a `<p>` in `max-w-prose text-muted-foreground`. The text column is capped at 65 ch (`max-w-prose`, inside v2's 60 to 75 ch).
+- The eyebrow is a `<p>`: `font-mono text-xs font-medium tracking-eyebrow text-muted-foreground lowercase` (the design book §04: mono furniture is lowercase).
+- The `h1` is `font-heading font-bold text-foreground text-2xl tracking-section sm:text-5xl sm:tracking-display`. Below `sm` it is 28 px; from `sm` it is 44 px (the `003` calls: "no size between"). Ink only (the design book §03).
+- The sentence is a `<p>` in `max-w-prose text-muted-foreground`. The text column is capped at 65 ch (`max-w-prose`, inside the design book's 60 to 75 ch).
 - The calls to action sit in a row, `flex flex-col gap-3 sm:flex-row sm:items-center`. The primary is `w-full sm:w-auto`. The secondary is an underlined link, 48 px tall like every button (`002` decision 12).
 - With `media`, the section becomes two columns from `lg` (`lg:grid lg:grid-cols-2 lg:gap-12`), copy first; below `lg` the media follows the copy. Without it, one column.
-- **The feature grid is a `ul`, not cards** (the `003` calls). `role="list"`, because WebKit drops list semantics from a list styled `list-style: none` (INFERRED; widely reported, not read for this specification). Each `li` is `groove pt-6`: the groove across its top is the separator. 1 column below `sm`, 2 from `sm` (`sm:grid-cols-2`), 3 from `lg` (`lg:grid-cols-3`), `gap-x-8 gap-y-8`. *Why a top groove on every cell, not lines between cells:* v2's groove has a horizontal form only; the vertical form is `006`'s (`002` decision 19, `separator`). A groove on each cell reads as a ruled list at every column count.
-- Each feature: an optional icon (`size-6`, decorative, monochrome `text-foreground`; v2 §03 "no colour as decoration"), an `h3` (`font-heading text-base font-bold`), and a `<p>` in `text-muted-foreground`.
-- Spacing: the page is `mx-auto max-w-5xl px-6 py-16 sm:py-24`; the hero and grid are `gap-16` apart (layout steps are 32 and up, v2 §05).
+- **The feature grid is a `ul`, not cards** (the `003` calls). `role="list"`, because WebKit drops list semantics from a list styled `list-style: none` (INFERRED; widely reported, not read for this specification). Each `li` is `groove pt-6`: the groove across its top is the separator. 1 column below `sm`, 2 from `sm` (`sm:grid-cols-2`), 3 from `lg` (`lg:grid-cols-3`), `gap-x-8 gap-y-8`. *Why a top groove on every cell, not lines between cells:* the design book's groove has a horizontal form only; the vertical form is `005`'s `groove-s` (`005` decision 5). A groove on each cell reads as a ruled list at every column count.
+- Each feature: an optional icon (`size-6`, decorative, monochrome `text-foreground`; the design book §03 "no colour as decoration"), an `h3` (`font-heading text-base font-bold`), and a `<p>` in `text-muted-foreground`.
+- Spacing: the page is `mx-auto max-w-5xl px-6 py-16 sm:py-24`; the hero and grid are `gap-16` apart (layout steps are 32 and up, the design book §05).
 
 **States and views.** One state; one view, `/view/hero/`, the page file. The `media` snippet is empty in the preview (the `003` calls: the code block is `004`'s).
 
@@ -263,7 +263,7 @@ The review calls: "a `registry:ui` component: `role="alert"`, focusable, a headi
 - The call to action is a link, because it goes to another page (patterns memo §2.2). Its label names its result, not "Get started" (patterns memo §2.1, NN/g; SC 2.4.4, INFERRED there).
 - No landmark of its own: the sections carry no accessible name, so they are not `region` landmarks. The app's layout supplies `<main>` (decision 16).
 - Every target is at least 24 px: both calls to action are 48 px tall (`002` R21).
-- Nothing animates (v2 §06; the `003` calls).
+- Nothing animates (the design book §06; the `003` calls).
 
 **Responsive.** At 360: one column, `h1` 28 px, both calls to action stacked and the primary full width, grid 1 column. At 768: `h1` 44 px, calls to action in a row, grid 2 columns. At 1280: grid 3 columns; the content stays within `max-w-5xl` (1024 px).
 
@@ -320,7 +320,7 @@ The password is not a prop: it is never pre-filled, and decision 7 clears it on 
 - Inside the form: the summary (decision 7) when shown; the email `Field` (`id` `sign-in-email`, label "Email address"); the password `Field` (`id` `sign-in-password`, label "Password"); the submit button, full width; the `Status`.
 - The email `Input`: `type="email"`, `autocomplete="username"`, `spellcheck={false}`, `autocapitalize="off"`. The password: `InputGroupPassword` with `autocomplete="current-password"` (it sets `spellcheck` and `autocapitalize` itself, `002` decision 19).
 - **Below `sm`, the card drops its frame and lets its contents' rings show.** The card root takes `max-sm:overflow-visible max-sm:border-0 max-sm:bg-transparent max-sm:py-0`, and its header, content and footer `max-sm:px-0`. The form sits on the page's paper ground, inside the page's 24 px gutter.
-  - *Why drop the frame* (the review calls): at 320 px a card's border and padding take 48 px of a 272 px column, and `sign-up`'s code step needs them (decision 12). GOV.UK's sign-in has no card at all (patterns memo §3.1). From `sm` it is a raised card, as v2 places forms on raised white.
+  - *Why drop the frame* (the review calls): at 320 px a card's border and padding take 48 px of a 272 px column, and `sign-up`'s code step needs them (decision 12). GOV.UK's sign-in has no card at all (patterns memo §3.1). From `sm` it is a raised card, as the design book places forms on raised white.
   - *Why `overflow-visible`* (review finding 1): `002`'s card root is `overflow-hidden` (READ by the review, `card.svelte`). With no side padding, every full-width control touches the card's edge, and its ring, 4 px beyond the control, would be clipped at left and right. Without the frame there is nothing to clip for; the page's 24 px gutter holds the ring. From `sm` the card keeps `overflow-hidden` and its 24 px padding, which holds the ring.
 - The page: `<div class="flex min-h-svh justify-center px-6 py-16 sm:items-center">` around `<SignInForm class="w-full max-w-sm" …>`. The column is capped at 384 px at every width (patterns memo §3.4).
 
@@ -476,7 +476,7 @@ The `done` step has no view; the browser test reaches it (decision 20).
 `PageStatesMessage` props: `title: string`, `description: string`, `level?: 1 | … | 6` (default 1), `align?: "start" | "center"` (default `"start"`), `icon?: Snippet`, `action?: Snippet`, `link?: Snippet`, `status?: number`, `reference?: string`, `class`.
 
 - It composes `Empty`. With `align="start"` it overrides `Empty`'s centring through `cn` (`items-start text-left p-0`, and `EmptyHeader` `items-start max-w-prose`).
-- With `status`, it adds a mono line under the description: `<p class="font-mono text-xs text-muted-foreground">status <code>{status}</code></p>` (v2 §04: mono furniture is lowercase).
+- With `status`, it adds a mono line under the description: `<p class="font-mono text-xs text-muted-foreground">status <code>{status}</code></p>` (the design book §04: mono furniture is lowercase).
 - With `reference`, it adds `<details>` (closed) whose `<summary>` reads "Technical details", holding "Reference" and the value in `<code>` (`font-mono`). The `<summary>` is `inline-flex min-h-6 items-center`, so it is a 24 px target (`002` R21; review finding 9).
 
 `PageStatesError` props: `status: number`, `reference?: string`, `homeHref?: string` (default `/`), `level?` (default 1).
@@ -487,7 +487,7 @@ The `done` step has no view; the browser test reaches it (decision 20).
 
 - It renders a `<div data-slot="page-states-loading">` with `aria-busy="true"` while `loading`. Inside, while loading, `rows` skeleton rows, each a `Skeleton` `h-6 w-1/2` over a `Skeleton` `h-4 w-1/3`, `gap-6` apart; otherwise `children`. The skeletons are `aria-hidden` (`002` decision 19) and static (the split decision: no shimmer). No control sits inside it (Geist, patterns memo §6.1).
 - A hidden `Status` beside it says `label` while loading. **Its text is set after mount**, not in the first render: the region renders empty, and an `onMount` flag lets the text appear on the next update. When loading ends, the text clears.
-- **The precondition** (review finding 10), stated in the component's comment and on its item page's accessibility list: mount `PageStatesLoading` before loading starts and drive `loading`, rather than mounting it at the moment loading begins. On a full page load, the text appears after hydration, well after the region exists. On a client-side mount, region and text are one tick apart, and that one tick is enough is not shown (INFERRED; patterns memo §0.1: "include them in the initial markup"). Decision 25's placeholder memo tests it.
+- **The precondition** (review finding 10), stated in the component's comment and on its item page's accessibility list: mount `PageStatesLoading` before loading starts and drive `loading`, rather than mounting it at the moment loading begins. On a full page load, the text appears after hydration, well after the region exists. On a client-side mount, region and text are one tick apart, and that one tick is enough is not shown (INFERRED; patterns memo §0.1: "include them in the initial markup"). No screen reader has been run to hear it (decision 25).
 
 **What each state shows.**
 
@@ -500,7 +500,7 @@ The `done` step has no view; the browser test reaches it (decision 20).
 | did not load (500 and above) | full page, left, `h1` | none | This page did not load | Try again in a moment. With a reference: If it keeps happening, include the reference below when you report it. | button "Try again" (reloads the page) | "Go to the home page" → `/` |
 
 - **No red** (GOV.UK, patterns memo §6.1; the `003` calls): every text is `foreground` or `muted-foreground`.
-- **No fault, no codes in the words**, no "Sorry", no "Oops", no "Something went wrong" (GOV.UK, Geist; v2 §07 "never apologize vaguely"; the review calls). A client-side load that fails offline also renders the did-not-load copy, which is why it names no cause (review finding 7). Warmth is in plain, specific words (patterns memo §6.3).
+- **No fault, no codes in the words**, no "Sorry", no "Oops", no "Something went wrong" (GOV.UK, Geist; the design book §07 "never apologize vaguely"; the review calls). A client-side load that fails offline also renders the did-not-load copy, which is why it names no cause (review finding 7). Warmth is in plain, specific words (patterns memo §6.3).
 - The did-not-load copy does not say whether work was saved, though GOV.UK asks it to: a generic page cannot know. An app that can say so passes its own description.
 - **The empty state's button does nothing in the shipped page.** It shows where the app's one action goes. The tile is the page's own markup: `rounded border border-border bg-card p-6 sm:p-12`.
 - **The `<title>`s:** "Page not found", "This page cannot be shown", "This page did not load", "Projects". Each view sets the title of the state it shows.
@@ -511,7 +511,7 @@ The `done` step has no view; the browser test reaches it (decision 20).
 - **In our preview app,** `src/routes/+error.svelte` renders the block's `+error.svelte` inside a `<main>`. It is not prerendered.
 - **What the preview proves.** `bun run preview` serves the production build through SvelteKit's preview server. It serves prerendered pages and static files first, and passes every other request to the server build's `respond` (READ, `node_modules/@sveltejs/kit/src/exports/vite/preview/index.js` lines 125 to 216, SvelteKit 3.1.0), which renders the root layout and the root error page for an unmatched path (READ by the review, `respond_with_error.js:37-75`). So `GET /no-such-page/` answers **404** with the not-found design, rendered by the real error route. The browser test checks the status and the page (decision 20).
 - **The views.** `/view/page-states/not-found/`, `/view/page-states/cannot-show/` and `/view/page-states/error/` are ordinary prerendered pages that render `PageStatesError` with statuses 404, 403 and 500. They answer 200. They exist so the viewer, axe and the reflow test can see each design at three widths.
-- **What the preview cannot prove:** the status a deployed static host sends. `adapter-static` writes no `404.html` unless given `fallback`, and Cloudflare serves the nearest `404.html` with status 404 only with `not_found_handling = "404-page"` (patterns memo §6.2). Both are the deployment specification's, for this site and for each app.
+- **What the preview cannot prove:** the status a deployed static host sends. `adapter-static` writes no `404.html` unless given `fallback`, and Cloudflare serves the nearest `404.html` with status 404 only with `not_found_handling = "404-page"` (patterns memo §6.2). This repository sets neither: it has no deployment (`decisions.md`, "The registry is served from GitHub, and the repository is public"). An app that deploys sets them for itself.
 - **Focus.** The error pages move no focus. On a full load the page is read from the top. On a client-side navigation, SvelteKit resets focus and announces the new `<title>` itself (INFERRED from SvelteKit's accessibility documentation, not read for this specification). *Why not Geist's "move focus to Try again":* a second focus move would fight SvelteKit's own.
 - **The loading state is a component, not a `+loading` file.** SvelteKit has no loading route file; an app shows `PageStatesLoading` while its own data loads. No spinner: the skeleton is the progress, and a spinner belongs only on the control that started an action (the `003` calls).
 
@@ -525,7 +525,7 @@ The `done` step has no view; the browser test reaches it (decision 20).
 | `/view/page-states/not-found/` | `PageStatesError status={404}` |
 | `/view/page-states/cannot-show/` | `PageStatesError status={403}` |
 
-**Accessibility contract.** One `h1` per page (SC 1.3.1); the empty state in the tile is an `h2`. State never by colour (v2; no colour used at all). Loading: `aria-busy` on the region, skeletons hidden, a polite status, with its mount precondition (MDN `aria-busy`, SC 4.1.3, patterns memo §6.2). `<details>` is native, so its summary is a keyboard stop with its own expanded state, 24 px tall. Targets 48 px (`002` R21). Reflow: one column at every width.
+**Accessibility contract.** One `h1` per page (SC 1.3.1); the empty state in the tile is an `h2`. State never by colour (the design book; no colour used at all). Loading: `aria-busy` on the region, skeletons hidden, a polite status, with its mount precondition (MDN `aria-busy`, SC 4.1.3, patterns memo §6.2). `<details>` is native, so its summary is a keyboard stop with its own expanded state, 24 px tall. Targets 48 px (`002` R21). Reflow: one column at every width.
 
 **Responsive.** One column at every width (patterns memo §6.4). Full-page states align with the page's left edge, the text capped at `max-w-prose`, within `mx-auto max-w-5xl px-6 py-16 sm:py-24`. The tile's padding steps from 24 px to 48 px at `sm`.
 
@@ -580,7 +580,7 @@ type SettingsValues = {
 
 **Saving.** On submit: validate (name required; email as `sign-in`). With errors, the summary (decision 7). Otherwise `busy`, the status "Saving…", then the callback. On `ok`, the saved copy takes the saved values, `dirty` becomes false, `saved` true, and the status says "Saved". The first change after that clears `saved` and the status.
 
-- "Saved" is announced because the region already said "Saving…" (decision 8). It stays until the next change, and does not animate (v2 §06).
+- "Saved" is announced because the region already said "Saving…" (decision 8). It stays until the next change, and does not animate (the design book §06).
 - **`beforeunload`:** while `dirty`, the component's `<svelte:window onbeforeunload>` calls `preventDefault()` and sets `returnValue = ""`, so the browser asks before the page unloads; browsers fix the wording (patterns memo §7.1, Primer). Client-side navigation inside an app is the app shell's to guard (`006`); the shipped page has no in-app links.
 
 **The destructive section**, after the form, separated by a groove: an `h2` "Delete your account", a sentence, and `Button variant="destructive"` "Delete account", which opens an `AlertDialog`. `002`'s dialog starts on Cancel (`002` decision 17). Confirming closes the dialog, calls `ondelete`, and a visible `Status` below the button says the request was made. *Why a confirm:* deleting user data needs a way to review and confirm (SC 3.3.4, patterns memo §7.2). *Why outside the `<form>`:* it is not a setting saved by "Save changes" (patterns memo §7.1, Primer: do not mix saving models).
@@ -612,7 +612,7 @@ type SettingsValues = {
 
 Dirty, saving, discarding and the open dialog are reached by the browser test on the default view (decision 20). *Why no view with the dialog open:* a dialog that opens on load moves focus into the iframe and away from the item page's controls.
 
-**Accessibility contract.** One `h1` (the page's); each section a named group and an `h2`. Visible labels; `autocomplete` `name` and `email` (SC 1.3.5). Current values shown, not asked again (SC 3.3.7). Errors as decision 7. "Saved" announced politely, never by colour alone: the word says it (SC 4.1.3; v2). Focus kept after a discard. The delete confirmed in a dialog that starts on the safe choice (SC 3.3.4; `002` decision 17). Nothing sticky, so no focus is hidden under a bar (SC 2.4.11). Targets 48 px; checkboxes and radios 24 px (`002` R21).
+**Accessibility contract.** One `h1` (the page's); each section a named group and an `h2`. Visible labels; `autocomplete` `name` and `email` (SC 1.3.5). Current values shown, not asked again (SC 3.3.7). Errors as decision 7. "Saved" announced politely, never by colour alone: the word says it (SC 4.1.3; the design book). Focus kept after a discard. The delete confirmed in a dialog that starts on the safe choice (SC 3.3.4; `002` decision 17). Nothing sticky, so no focus is hidden under a bar (SC 2.4.11). Targets 48 px; checkboxes and radios 24 px (`002` R21).
 
 **Responsive.** One column at every width (the `003` calls), `mx-auto max-w-2xl px-6 py-16`: the column is 672 px at most, near GOV.UK's two-thirds column (patterns memo §7.4). Below `sm` the buttons are full width, Save first.
 
@@ -622,7 +622,7 @@ Dirty, saving, discarding and the open dialog are reached by the browser test on
 
 The `003` calls: "Plain and warm words, no humour, no apology". The review calls: "Shipped copy promises nothing the block cannot keep." Every string a block ships is written in decisions 9 to 14. The rules they follow, for review:
 
-- **Sentence case** for headings, labels and buttons (the split decision). Mono furniture, the eyebrow and the status line, is lowercase (v2 §04).
+- **Sentence case** for headings, labels and buttons (the split decision). Mono furniture, the eyebrow and the status line, is lowercase (the design book §04).
 - **Buttons and links name their result:** "Sign in", "Create account", "Save changes", "Go to the home page", never "Submit", "OK" or "Get started" (patterns memo §2.1 and §6.1).
 - **Errors say what to do,** in GOV.UK's form: "Enter your email address", "Use at least 15 characters for your password" (SC 3.3.3).
 - **No promise the block cannot keep:** no statement of an app's email policy, no "signed in as", no conformance claim such as "meets WCAG", no fault ("on our side"), no promise of time or of an email to come. A sentence that states the app's policy belongs to the app.
@@ -816,18 +816,18 @@ A block's item page (`src/routes/(site)/items/<block>/+page.svelte`) has four se
 ### 21. The version: 0.3.0
 
 - `package.json`'s `version` becomes **`0.3.0`**. *Why a minor step:* under semver's 0.x reading, a minor step adds features. `003` adds seven items and changes no interface of `001`'s or `002`'s: no `002` file is edited (decision 2's imports, decision 11's frame and decision 12's CSS order and cell size live in block files). If the build finds it must change a `002` item, the changelog marks the change and says whether it alters the interface (constitution §6).
-- `build-registry` writes `static/v0.3.0/r/styles/maia/`. A clean build makes no `v0.1.0/` or `v0.2.0/` folder (`002` decision 25); keeping old versions on the host is deployment's.
-- The seven new items carry `meta.since` `"0.3.0"`. The release is a git tag, `v0.3.0`, made when the owner asks to commit.
+- `build-registry` writes `static/v0.3.0/r/styles/maia/`. A clean build makes no `v0.1.0/` or `v0.2.0/` folder (`002` decision 25); each older version is served from its own GitHub tag.
+- The seven new items carry `meta.since` `"0.3.0"`. The release is the git tag `v0.3.0`, on `fb942f8`.
 
 ### 22. The changelog
 
 - `CHANGELOG.md` gains `## 0.3.0 — <landing date>` above `0.2.0`: one line per new item (`status`, `error-summary` and the five blocks), each marked "new"; one line saying no existing item changed (or naming each change, per decision 21); and one line on installing blocks without `-o` (decision 3).
 - `registry.test.ts` checks: the `0.3.0` entry names 7 of 7; `0.2.0` still names 27 of 27; `0.1.0` still names 6 of 6.
 
-### 23. What `006` and `wasi-python-dev` take
+### 23. What `006` and a consuming app take
 
-- **`wasi-python-dev`'s home page** takes `hero` (`HeroSection`, `HeroFeatures`; the `media` snippet will hold `004`'s code block with a real run's output, v2 §09) and `page-states` (the error page moved to its `src/routes/+error.svelte`, `PageStatesLoading` for anything that loads, `PageStatesMessage` for empty output). Its home-page specification closes `001` criterion 24, `002` criterion 25 and this specification's criterion 28. It installs without `-o` once it holds any of the items (decision 3).
-- **Its `/admin`** (its constitution §2, item 5) may take `sign-in` as the gate. Its decisions allow Cloudflare Access to guard `/admin`; if the owner chooses Access, the app draws no sign-in form (primitives memo §1.1), and `sign-in` waits for the next app. Either way `sign-in` installs alone: it links nowhere outside itself (decision 4).
+- **A consuming app's home page** takes `hero` (`HeroSection`, `HeroFeatures`; the `media` snippet can hold `004`'s code block, the design book §09) and `page-states` (the error page moved to the app's `src/routes/+error.svelte`, `PageStatesLoading` for anything that loads, `PageStatesMessage` for empty output). It installs without `-o` once it holds any of the items (decision 3).
+- **An admin page behind an access gate** may take `sign-in` as the gate. Where a proxy in front of the page is the gate, such as Cloudflare Access, the app draws no sign-in form (primitives memo §1.1). Either way `sign-in` installs alone: it links nowhere outside itself (decision 4).
 - **`006`** takes `status` for the chat pane's "Responding" and "Response complete" (patterns memo §5.2); the `(view)` group and the viewer for its own two blocks; and provides the `<main>`, header, skip link and footer that these blocks assume (decision 16). Client-side navigation guards for unsaved settings are its shell's.
 
 ### 24. Build order
@@ -837,7 +837,7 @@ One builder, in this order. Previews and tests go with each step.
 1. **The machinery.** Version 0.3.0. The routes split into `(site)` and `(view)`, with the root layout and root error page (decision 16). `src/lib/preview/blocks.ts`, `block-viewer.svelte`, `src/lib/server/built-item.ts`. The catalogue's sixth group. `tests/unit/blocks.test.ts` and the new browser files written for all five blocks and seen failing.
 2. **`status` and `error-summary`:** the items, their pages, fixtures and checks.
 3. **`sign-in`:** its two files, registry entry, 4 views, item page; its unit, browser, viewer and keyboard checks, the ring check at 360 among them; and the smoke test run with `add sign-in` alone.
-   - **Checkpoint: a review after step 3.** The builder stops and asks the orchestrator for a short review of the viewer (theme copying, widths, code view, the `-o` note), `status`, `error-summary` (focus and roles), and the sign-in block at the three widths in both themes, including check 27's rings at 360, before step 4 copies the pattern into four more blocks (review finding 14). *Why here:* the viewer and the summary are what every later block reuses, and where a wrong choice costs the most to undo.
+   - **Checkpoint: a review after step 3.** The builder stops and asks the design lead for a short review of the viewer (theme copying, widths, code view, the `-o` note), `status`, `error-summary` (focus and roles), and the sign-in block at the three widths in both themes, including check 27's rings at 360, before step 4 copies the pattern into four more blocks (review finding 14). *Why here:* the viewer and the summary are what every later block reuses, and where a wrong choice costs the most to undo.
 4. **`hero`.**
 5. **`sign-up`.**
 6. **`page-states`,** with the root error page and the 404 check.
@@ -846,14 +846,11 @@ One builder, in this order. Previews and tests go with each step.
 
 **Nothing is deferrable.** The set is fixed by the blocks decision and the split decision, `error-summary` by the review calls, and the viewer by the `003` calls.
 
-### 25. Calls this specification leaves to others
+### 25. Limits, and what lies outside this specification
 
-None blocks the build.
-
-- **placeholder: needs a memo — how real screen readers speak these blocks.** The tests prove the DOM contract (roles, live regions, focus, `aria-describedby`), not what VoiceOver and NVDA say. Three things are unknown: whether `role="alert"` plus a focus move reads the summary twice; whether the code step's heading focus reads cleanly; and whether a status region mounted and filled one tick apart, as `PageStatesLoading` does on a client-side mount, is announced (decision 13). A memo would run VoiceOver on Safari and NVDA on Firefox over the five blocks and record what each says. It blocks nothing here; its findings would amend this specification or a later one.
-- **The deployed 404** (decision 13): `adapter-static`'s `fallback` and Cloudflare's `not_found_handling` are deployment's.
-- **For the owner, through the orchestrator:** whether `/admin` uses Cloudflare Access or `sign-in` (decision 23). It is `wasi-python-dev`'s question and blocks nothing here.
-- `field-sizing` remains `002`'s placeholder; nothing here uses a growing textarea.
+- **Screen readers.** No screen reader has been run; the tests prove the DOM contract (roles, live regions, focus, `aria-describedby`), not what VoiceOver and NVDA say. So this release does not establish three things: whether `role="alert"` plus a focus move reads the summary twice; whether the code step's heading focus reads cleanly; and whether a status region mounted and filled one tick apart, as `PageStatesLoading` does on a client-side mount, is announced (decision 13). Screen readers are outside this release's checks (`decisions.md`, "After the public-readiness review").
+- **The deployed 404** (decision 13): `adapter-static`'s `fallback` and Cloudflare's `not_found_handling` belong to a deployment, and this repository has none (`decisions.md`, "The registry is served from GitHub, and the repository is public").
+- **`field-sizing`** is settled in `005`: the composer grows by `field-sizing: content` (`decisions.md`, "The design calls for `005`, overlays, navigation and the chat primitives"). Nothing here uses a growing textarea.
 
 ## Design
 
@@ -931,14 +928,14 @@ ours: /view/sign-in/ imports the page file directly through package.json "import
 - Tests: 9 unit files (`blocks.test.ts` new; `registry`, `previews`, `literals` updated), 8 browser files (`blocks.spec.ts` and `viewer.spec.ts` new; `axe`, `theme`, `keyboard`, `primitives` and `pages.ts` updated), 4 smoke files (`blocks-add.test.ts` new).
 - `package.json` version 0.3.0; the `CHANGELOG.md` entry.
 
-**The step to *done*** is in `wasi-python-dev` (constitution §4.2): its home-page specification installs `hero` and `page-states` from this registry and passes its checks.
+**The step to *done*** is the release (constitution §2 and §4.2): the built change is reviewed and tagged `v0.3.0` (criterion 28).
 
 **Out:**
 
 - The app shell, the skip link, the header and footer, and the chat pane (`006`); `code-block`, the highlight palette and the editor (`004`); overlays, the sidebar and `toggle-group` (`005`, `004`).
 - Social, passkey and email-link sign-in; password reset; any server-side authentication or form action.
 - Deployment, `adapter-static`'s `fallback`, and Cloudflare's `not_found_handling`.
-- The doc-ID scheme and coloured dots on ink (owner calls).
+- The doc-ID scheme, settled as `PS-<series>-<NNNN>` (`decisions.md`, "The theme mechanism, the doc-ID scheme and the footer's sentence"), and the icon's dots on ink, which use the lifted primitives (`decisions.md`, "After the public-readiness review").
 - Any change to a `001` or `002` item, token or package; any new lint rule.
 - Screenshots of blocks; a drag handle in the viewer; syntax highlighting in the code view.
 
@@ -971,16 +968,15 @@ Each is a count, checked by the command named. "Clean clone" is `001`'s. Every c
 23. **Smoke.** `blocks-add.test.ts` passes 8 of 8 assertions in each of 2 scratch apps (16 of 16), with 102 files landed. `registry-add.test.ts` still passes 20 of 20, `primitives-add.test.ts` 14 of 14, and `dev-loop.test.ts` passes.
 24. **Test files.** On a clean clone, `bun run test` exits 0, having run 9 unit files, 8 browser files in 2 projects and 4 smoke files.
 25. **Release.** `package.json`'s `version` is `0.3.0`. `registry.test.ts` finds the `0.3.0` changelog entry naming 7 of 7 items, `0.2.0` naming 27 of 27 and `0.1.0` naming 6 of 6.
-26. **The checkpoint.** The Landing notes record the orchestrator's review after build step 3, check 27's result at that point, and what the review changed.
+26. **The checkpoint.** The Landing notes record the design lead's review after build step 3, check 27's result at that point, and what the review changed.
 27. **The development walk.** The builder walks the 57 pages on `bun run dev` in 2 themes and records, in the Landing notes, 0 of 114 page loads with a page error or a console error or warning.
-28. **In the app (done).** `wasi-python-dev`'s home-page specification installs `hero` and `page-states` from this registry and passes that app's `svelte-check`, Playwright and axe. Checked in that app; the Landing notes cite its commit: 1 of 1.
+28. **Released:** the change is tagged `v0.3.0` and the Landing notes cite its review.
 
 ## Landing notes
 
-- **Built:** 2026-10-28, committed as the commit that carries this specification, tagged `v0.3.0`. The change review is [`../reviews/003-the-first-blocks-pr-2026-10-28.md`](../reviews/003-the-first-blocks-pr-2026-10-28.md): "Does not land yet" on 1 Medium and 6 Low findings; 6 fixed and 1 (the Landing notes) answered by these notes, two of them by the design lead's calls in `decisions.md` ("The design calls for `003`", "After the change review").
-- **Done:** *pending.* Criterion 28 waits on `wasi-python-dev`'s home-page specification; that commit goes here.
+- **Built:** 2026-10-28, committed as `fb942f8`, tagged `v0.3.0`. The change review is [`../reviews/003-the-first-blocks-pr-2026-10-28.md`](../reviews/003-the-first-blocks-pr-2026-10-28.md): "Does not land yet" on 1 Medium and 6 Low findings; 6 fixed and 1 (the Landing notes) answered by these notes, two of them by the design lead's calls in `decisions.md` ("The design calls for `003`", "After the change review").
 
-**What the orchestrating session saw, under Bun 1.3.14, 2026-10-28 (EXECUTED):**
+**What the design lead saw, under Bun 1.3.14, 2026-10-28 (EXECUTED):**
 
 | Check | Result |
 |---|---|
@@ -989,7 +985,7 @@ Each is a count, checked by the command named. "Clean clone" is `001`'s. Every c
 | `bun run build` | 40 registry files, 40 versioned files, 58 prerendered pages |
 | `bun run test`, twice in a row | exit 0: unit 384 pass (9 files), browser 716 passed (8 files × 2 projects), smoke 52 pass (4 files) |
 
-**Criteria, as counted at landing (EXECUTED by the builder; 1 to 25 also by the reviewer, at the specification's numbers, before the fixes).** A count that moved from the specification is in bold; every move comes from bend 8's new view or its four checks.
+**Criteria, as counted at landing (EXECUTED by the builder; 1 to 25 also by the reviewer, at the specification's numbers, before the fixes).** A count that moved from the specification is in bold; every move comes from deviation 8's new view or its four checks.
 
 | # | Count |
 |---|---|
@@ -1020,30 +1016,30 @@ Each is a count, checked by the command named. "Clean clone" is `001`'s. Every c
 | 25 | `0.3.0`; the changelog's `0.3.0` names 7 of 7 and the `button` change; `0.2.0` 27 of 27; `0.1.0` 6 of 6 |
 | 26 | note 1 |
 | 27 | note 3: **116** loads (58 pages × 2 themes), 0 with a page error, console error or warning |
-| 28 | open: `wasi-python-dev` |
+| 28 | met |
 
 **Notes:**
 
-1. **The checkpoint after build step 3.** The builder stopped with the machinery, `status`, `error-summary` and `sign-in` built and the smoke test passing 16 of 16 with `add sign-in` alone (52 files). It reported the viewer's checks (frame, widths, states, theme copy, code view, the note on `-o`), S1 to S3 and E1 to E2 raw and hydrated, 24 screenshots of the four sign-in views at 360, 768 and 1280 in both themes, and check 27's rings at 360: 19 of 19 sign-in stops unclipped in each theme. The orchestrator passed it with two answers: axe on a block's item page excludes the viewer's frame (note 5, bend 1), and `button`'s `link` variant drops its side padding at every size (bend 4), after the footer link sat 12 px in from the text.
-2. **The change review's findings and the design lead's calls applied.** The consent sentence lost a space ("serviceand"); fixed, and check 11 now reads the sentence. Every callback may reject: the block keeps what was typed, inserts a form-level summary, focuses it and sets the status to a line naming what failed ("We could not sign you in. Try again.", "We could not create your account. Try again.", "We could not check the code. Try again.", "We could not save your changes. Try again.", "We could not delete your account. Try again."; a failed resend: "We could not send a new code. Try again."). The first wording, "Something went wrong. Try again.", was refused by the voice check (v2 §07), which stays as specified. "Technical details" shows an `aria-hidden` caret, right when closed and down when open. An `h1` outranks what sits under it at every width: the page-states and settings `h1` are `text-5xl` from `sm`, tile headings `text-2xl`, settings legends and the delete heading `font-heading text-base font-bold`. The settings delete trigger is `secondary`; only the dialog's confirm is `destructive`. The viewer's pressed preset is inverted (`bg-foreground text-background`), and its State and Width groups have visible mono labels, "state" and "width", that name them.
+1. **The checkpoint after build step 3.** The builder stopped with the machinery, `status`, `error-summary` and `sign-in` built and the smoke test passing 16 of 16 with `add sign-in` alone (52 files). It reported the viewer's checks (frame, widths, states, theme copy, code view, the note on `-o`), S1 to S3 and E1 to E2 raw and hydrated, 24 screenshots of the four sign-in views at 360, 768 and 1280 in both themes, and check 27's rings at 360: 19 of 19 sign-in stops unclipped in each theme. The design lead passed it with two answers: axe on a block's item page excludes the viewer's frame (note 5, deviation 1), and `button`'s `link` variant drops its side padding at every size (deviation 4), after the footer link sat 12 px in from the text.
+2. **The change review's findings and the design lead's calls applied.** The consent sentence lost a space ("serviceand"); fixed, and check 11 now reads the sentence. Every callback may reject: the block keeps what was typed, inserts a form-level summary, focuses it and sets the status to a line naming what failed ("We could not sign you in. Try again.", "We could not create your account. Try again.", "We could not check the code. Try again.", "We could not save your changes. Try again.", "We could not delete your account. Try again."; a failed resend: "We could not send a new code. Try again."). The first wording, "Something went wrong. Try again.", was refused by the voice check (the design book §07), which stays as specified. "Technical details" shows an `aria-hidden` caret, right when closed and down when open. An `h1` outranks what sits under it at every width: the page-states and settings `h1` are `text-5xl` from `sm`, tile headings `text-2xl`, settings legends and the delete heading `font-heading text-base font-bold`. The settings delete trigger is `secondary`; only the dialog's confirm is `destructive`. The viewer's pressed preset is inverted (`bg-foreground text-background`), and its State and Width groups have visible mono labels, "state" and "width", that name them.
 3. **The development walk** (`002` Landing note 8). The 58 pages on `bun run dev` in both themes, collecting page errors and console errors and warnings: 0 of 116 loads. Repeated after each round of fixes, last on the final tree.
-4. **Where the build bends a decision, and who allowed it.**
-   1. *axe excludes the viewer's iframe on a block's item page* (decision 20): the frame's `<main>` beside the page's trips `landmark-unique`. Each view is scanned at its own URL at 3 widths. The orchestrator, at the checkpoint.
-   2. *The root error page was interim until step 6* (decision 16's order); it now renders the block's error page in a `<main>`. The orchestrator, at the checkpoint.
-   3. *Each block form carries `data-slot="<component>"` on its `<form>`*, and `settings-delete` on its section, so tests find each form's status; the card keeps `data-slot="card"` (no decision names a hook). The orchestrator, at the checkpoint.
-   4. *`button`'s `link` variant has no side padding* (`002` decision 12; `003` decision 21's "no `002` file is edited"), as `compoundVariants`; height and interface unchanged; in the changelog. The orchestrator, at the checkpoint.
+4. **Where the build deviates from the specification, and who allowed it.**
+   1. *axe excludes the viewer's iframe on a block's item page* (decision 20): the frame's `<main>` beside the page's trips `landmark-unique`. Each view is scanned at its own URL at 3 widths. The design lead, at the checkpoint.
+   2. *The root error page was interim until step 6* (decision 16's order); it now renders the block's error page in a `<main>`. The design lead, at the checkpoint.
+   3. *Each block form carries `data-slot="<component>"` on its `<form>`*, and `settings-delete` on its section, so tests find each form's status; the card keeps `data-slot="card"` (no decision names a hook). The design lead, at the checkpoint.
+   4. *`button`'s `link` variant has no side padding* (`002` decision 12; `003` decision 21's "no `002` file is edited"), as `compoundVariants`; height and interface unchanged; in the changelog. The design lead, at the checkpoint.
    5. *The consent links are `inline-block`* (decision 12's "inline link"): an inline `<a>` measures its 21 px content area, not the 25.6 px line, and check 26 failed. The builder; seen by the review.
-   6. *`blocks-add.test.ts` takes `SMOKE_BLOCKS`* (decision 24, step 3's `add sign-in` alone); the counts are asserted only for all five. The builder; amended by bend 10.
+   6. *`blocks-add.test.ts` takes `SMOKE_BLOCKS`* (decision 24, step 3's `add sign-in` alone); the counts are asserted only for all five. The builder; amended by deviation 10.
    7. *Additions no decision names:* `SettingsDelete`'s `requested` prop (decision 14), now named in the page's stub comment; the exports `MESSAGES` and `TIME_ZONES` (`settings-form`) and `errorTitle` (`page-states-error`); `MESSAGES.failed` on every form; the preview components `block-page.svelte` and `install-note.svelte` (decision 17). Review finding 3.
-   8. *A failed callback is told* (decisions 6, 7, 12 and 14), with a new view, `/view/settings/failed/` ("Callback failed"), whose stubs reject. Checks 28 and 29 make the shipped page file's stubs reject by making `setTimeout(…, 800 | 400)` throw inside the promise's executor. The design lead, after finding 2; the wording the orchestrator's.
+   8. *A failed callback is told* (decisions 6, 7, 12 and 14), with a new view, `/view/settings/failed/` ("Callback failed"), whose stubs reject. Checks 28 and 29 make the shipped page file's stubs reject by making `setTimeout(…, 800 | 400)` throw inside the promise's executor. The design lead, after finding 2, wording included.
    9. *Classes decisions 13 and 14 name, changed by the design lead's calls after finding 6* (note 2); the specification's text is not edited.
    10. *`test:smoke` clears `SMOKE_BLOCKS`* (`SMOKE_BLOCKS= bun test …`), and the test reads an empty value as unset; probed: an exported value reaches the test as `""`. Review finding 4.
    11. *Checks strengthened* (decision 20): viewer check 4 inverts the frame's own theme so only the viewer's copy can match it (it failed with the copy disabled); viewer check 5 compares each file's text; smoke test 2 counts what `add` wrote. Review finding 5.
    12. *The consent space* is `{" "}` inside the `{#if}` (decision 12). Review finding 1.
-5. **For `004`, `005`, `006` and `wasi-python-dev`.**
+5. **For `004`, `005`, `006` and a consuming app.**
    - A block's page lands at `src/routes/<block>/`: the hero at `/hero`, the error page under `/page-states`, where it handles only that route's errors. An app moves the hero to its home page and the error page to `src/routes/+error.svelte` (decision 3).
    - Add blocks, and any item into an app that already holds some of its files, without `-o`, so the CLI asks before it overwrites (decision 3). The smoke tests keep `-o`; their apps are fresh.
    - A block callback may reject; the block says so in a line naming what failed. An app maps a server's answer to `errors` or `formError` itself.
-   - The screen-reader memo (decision 25) is still a placeholder: the tests prove the DOM contract, not what VoiceOver or NVDA say. `field-sizing` remains `002`'s placeholder.
+   - No screen reader has been run: the tests prove the DOM contract, not what VoiceOver or NVDA say (decision 25). `field-sizing` is settled in `005`.
    - A page that embeds whole pages in frames meets axe's `landmark-unique`; scan each framed page at its own URL and exclude the frame, as `axe.spec.ts` does.
-   - The `(view)` group, `BLOCK_VIEWS` and the viewer are ready for `006`'s two blocks.
+   - The `(view)` group, `BLOCK_VIEWS` and the viewer also serve `006`'s two blocks.

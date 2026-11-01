@@ -2,7 +2,7 @@
   import { getContext, setContext } from "svelte";
 
   /**
-   * The popover's name (004 decision 11). The content provides this context;
+   * The popover's name. The content provides this context;
    * a title inside it registers its id, and the content is then labelled by
    * the title. Without a title, the content's `label` prop names it.
    */
@@ -59,10 +59,10 @@
 
 <!--
   A small dialog raised by elevation alone, which already draws the hairline
-  as a spread layer, so no border. 256 px wide by default. The
-  trigger promises a dialog (aria-haspopup); the content keeps the promise
-  with role="dialog" and a name: its title, else the label prop. Focus inside
-  is the global ring. It fades in and out over the micro budget.
+  as a spread layer, so no border. 256 px wide by default. The trigger
+  promises a dialog (aria-haspopup); the content keeps the promise with
+  role="dialog" and a name: its title, else the label prop. Focus inside is
+  the global ring. It fades in and out over the micro budget.
 -->
 <PopoverPortal {...portalProps}>
   <PopoverPrimitive.Content

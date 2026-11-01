@@ -231,7 +231,7 @@ describe("the code map", () => {
 
 /** 006 decision 4: the orbit, in em, and the entrance's three shares of the budget. */
 describe("the entrance", () => {
-  test("mark.orbit is a number of em, the book's largest offset", () => {
+  test("mark.orbit is a number of em, the design book's largest offset", () => {
     expect(typeof tokens.mark.orbit).toBe("number");
     expect(tokens.mark.orbit).toBe(0.5);
   });

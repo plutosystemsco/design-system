@@ -63,9 +63,9 @@
 
 <!--
   The one scroll container, with the scrollbar from tokens. Its focus
-  indicator is drawn by the root (002 decision 8's recipe), so it drops its
-  own. It draws the groove under a header. Whitespace inside a <pre> is rendered, so its
-  content is a snippet defined outside it, where Svelte trims whitespace.
+  indicator is drawn by the root, so it drops its own. It draws the groove
+  under a header. Whitespace inside a <pre> is rendered, so its content is a
+  snippet defined outside it, where Svelte trims whitespace.
 -->
 <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
 <pre

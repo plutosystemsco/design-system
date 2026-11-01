@@ -4,7 +4,7 @@
  *       (`pluto-theme`'s `cssVars` and `css`, and each font item's `font`), and
  *   (b) `src/app.css`, the stylesheet an app holds after `add pluto-theme`.
  * Both are formatted through prettier's API before they are written, and each
- * is written only when its formatted content changes (decision 15).
+ * is written only when its formatted content changes (001 decision 15).
  */
 import { readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
@@ -37,8 +37,9 @@ const RADIUS_STEPS = ["xs", "sm", "md", "lg", "xl", "2xl", "3xl", "4xl"];
 
 /**
  * 006 decision 4: where each dot starts, as multiples of `--mark-orbit`, in
- * the book's directions and reading order: blue from the lower left, red
- * from the upper right, amber from the upper left, green from the lower right.
+ * the design book's directions and reading order: blue from the lower left,
+ * red from the upper right, amber from the upper left, green from the lower
+ * right.
  */
 const ENTRANCE_OFFSETS: [x: number, y: number][] = [
   [-1, 0.6],
@@ -47,7 +48,7 @@ const ENTRANCE_OFFSETS: [x: number, y: number][] = [
   [1, 0.8],
 ];
 
-/** Pixels become rem at the default 16 px root (decision 9). */
+/** Pixels become rem at the default 16 px root (001 decision 9). */
 const rem = (px: number) => `${px / 16}rem`;
 const em = (n: number) => `${n}em`;
 const ms = (n: number) => `${n}ms`;
@@ -118,7 +119,7 @@ export function themeCssVars(tokens: Tokens): {
   };
 }
 
-/** `pluto-theme`'s `css`. No rule nested in an at-rule may use `:root` or `.dark` (decision 14). */
+/** `pluto-theme`'s `css`. No rule nested in an at-rule may use `:root` or `.dark` (001 decision 14). */
 export function themeCss(tokens: Tokens): CssTree {
   const { mark, motion, line, focus } = tokens;
   return {
@@ -199,7 +200,8 @@ export function themeCss(tokens: Tokens): CssTree {
     // 006 decision 4: the mark's one entrance, the four dots docking. Each
     // dot glides from its orbit offset at 0.4 scale over a share of the
     // budget, staggered; the end state is the dot's own style. A plain
-    // animate-* utility cannot carry four delays and four offsets (R14).
+    // animate-* utility cannot carry four delays and four offsets (002
+    // decision 9's motion rule, R14).
     "@utility mark-entrance": {
       '& > [data-slot="four-dot-dot"]': {
         animation:
@@ -252,16 +254,16 @@ export function themeCss(tokens: Tokens): CssTree {
         outline: "var(--focus-width) solid var(--ring)",
         "outline-offset": "var(--focus-offset)",
       },
-      // 004's checkpoint: code shows the characters that were typed. JetBrains
-      // Mono's contextual ligatures drew `!=` as one glyph, which copy does
-      // not return. The same rule sits on the editor's scroller.
+      // Code shows the characters that were typed (004). JetBrains Mono's
+      // contextual ligatures drew `!=` as one glyph, which copy does not
+      // return. The same rule sits on the editor's scroller.
       [monoSelector(tokens)]: { "font-variant-ligatures": "none" },
     },
     // 004 decision 5: the native meter on the muted track with a primary fill.
     // Pseudo-elements cannot be classes, and an item may hold no <style>. No
-    // radius: the meter has square ends (decision 14). All three WebKit value
-    // states take primary so an app that sets low/high/optimum gets no browser
-    // green or yellow.
+    // radius: the meter has square ends (004 decision 14). All three WebKit
+    // value states take primary so an app that sets low/high/optimum gets no
+    // browser green or yellow.
     "@layer components": {
       '[data-slot="meter"]': {
         appearance: "none",
@@ -286,7 +288,7 @@ export function themeCss(tokens: Tokens): CssTree {
   };
 }
 
-/** A font item's `font` object (decision 17). */
+/** A font item's `font` object (001 decision 17). */
 export function fontObject(family: Family): FontObject {
   const font: FontObject = {
     family: family.family,
@@ -311,7 +313,10 @@ function monoSelector(tokens: Tokens): string {
   return mono?.selector ?? "code, kbd, samp, pre";
 }
 
-/** The `@layer base` rules the CLI writes for the font items (run memo §4). */
+/**
+ * The `@layer base` rules the CLI writes for the font items (§4 of
+ * `context/research/2026-10-27-the-foundation-run-kit-3-fonts-and-the-theme-item.md`).
+ */
 function fontBaseRules(tokens: Tokens): CssTree {
   const groups = new Map<string, string[]>();
   for (const family of Object.values(tokens.type.families)) {
@@ -358,9 +363,13 @@ export function appCss(tokens: Tokens): string {
   const fontTheme: Vars = {};
   for (const family of families)
     fontTheme[family.variable.replace(/^--/, "")] = family.family;
+  // A colour utility for each theme variable. The code slots' utilities are
+  // already in `vars.theme`, which the registry item carries, so they are
+  // not written a second time.
   const colourTheme: Vars = {};
   for (const name of Object.keys(vars.dark))
-    colourTheme[`color-${name}`] = `var(--${name})`;
+    if (!(`color-${name}` in vars.theme))
+      colourTheme[`color-${name}`] = `var(--${name})`;
 
   const { ":root": rootRules, ".dark": darkRules, ...rest } = css;
   // A font rule on a selector the theme already styles joins that rule.
@@ -372,8 +381,9 @@ export function appCss(tokens: Tokens): string {
       ...(rule as CssTree),
     };
   }
-  // The CLI places an item's @keyframes inside the app's @theme inline (READ:
-  // cli/src/utils/updaters/update-css.ts), so the preview's CSS does too.
+  // The CLI places an item's @keyframes inside the app's @theme inline
+  // (https://github.com/huntabyte/shadcn-svelte/blob/shadcn-svelte%401.7.1/packages/cli/src/utils/updaters/update-css.ts),
+  // so the preview's CSS does too.
   const keyframes: CssTree = {};
   const others: CssTree = {};
   for (const [key, value] of Object.entries({ ...rest, "@layer base": base })) {

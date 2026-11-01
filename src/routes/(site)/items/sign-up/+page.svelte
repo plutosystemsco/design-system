@@ -27,8 +27,8 @@
       and the second result is worded differently.
     </li>
     <li>
-      Consent is a sentence with links, shown only when the app gives its terms.
-      Its links are 25.6 px tall, in body text.
+      Consent is a sentence with links, shown only when the consuming app gives
+      its terms. Its links are 25.6 px tall, in body text.
     </li>
     <li>
       Below 640 px the card drops its frame and the code cells are 32 px, so six

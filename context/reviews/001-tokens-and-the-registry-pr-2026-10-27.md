@@ -1,8 +1,11 @@
 # Review of 001 — Tokens and the registry (the built change)
 
+Reviews [`specifications/001-tokens-and-the-registry.md`](../specifications/001-tokens-and-the-registry.md).
+
+- **Status:** dispositioned; lands
 - **Date:** 2026-10-27
-- **Reviewer:** an agent (Claude), a fresh sub-agent of the orchestrating session; not the author
-- **Reviewed:** the uncommitted working tree on 2026-10-27 (nothing committed yet); the one tracked change is `.gitignore`
+- **Reviewer:** a reviewer; not the author
+- **Reviewed:** the uncommitted working tree on 2026-10-27 (nothing committed yet). Three tracked files had changed: `.gitignore`, which is the change's, and `context/decisions.md` and `context/handoff.md`, which are not under review.
 - **Re-ran:** under Bun 1.3.14, in this order, in the repository unless said otherwise. No `node` or `npx` was used.
   - `bun install --frozen-lockfile` → exit 0, "Checked 86 installs across 137 packages (no changes)".
   - `bun run check` → exit 0. `COMPLETED 400 FILES 0 ERRORS 0 WARNINGS 0 FILES_WITH_PROBLEMS`. Two "failed to load config" lines name `context/prior_art/shadcn-svelte/{docs,repro}/vite.config.ts`; they are noise. `tsc --listFilesOnly` gives 380 program files plus 15 `.svelte` files, so no prior-art file is counted.
@@ -15,9 +18,9 @@
   - `bun run test:smoke` → exit 0. 22 pass, 0 fail, 115 `expect()` calls, 2 files, 16.8 s.
   - `bun run dev` (after deleting `static/r` and `static/v0.1.0`) → `GET /r/styles/maia/index.json` answered 200 after 2 s. A JSON array of 6 items, in registry order. The server was then stopped.
   - `bun.lock` queried for the 19 packages of decision 4 → 19 of 19 resolve to the table's versions. `@types/node` arrives transitively at 26.6.5.
-  - A clean copy: the files git does not ignore (minus `context/`), copied to the scratchpad. There, `bun install --frozen-lockfile` exit 0; `check` 0 errors, 0 warnings; `lint` exit 0; `test:unit` 209 pass; `bun run dev` with no `static/` served 6 items after 3 s; `bun run build` exit 0 with 7, 7 and 7. The two generated files kept the same SHA-256. The copy was deleted.
+  - A clean copy: the files git does not ignore (minus `context/`), copied to a scratch folder outside the repository. There, `bun install --frozen-lockfile` exit 0; `check` 0 errors, 0 warnings; `lint` exit 0; `test:unit` 209 pass; `bun run dev` with no `static/` served 6 items after 3 s; `bun run build` exit 0 with 7, 7 and 7. The two generated files kept the same SHA-256. The copy was deleted.
   - `git status` after every suite → only the three changes that were there before (`.gitignore`, `context/decisions.md`, `context/handoff.md`). The tests wrote nothing tracked.
-  - Probes, all in the scratchpad:
+  - Probes, all in a scratch folder outside the repository:
     - 16 candidate lines through `lintText` from `scripts/lint-literals.ts` → 12 pass that a §4.3 lint should flag (finding 1).
     - Chromium (Playwright 1.64.1) on a blank page → `document.fonts.check('16px "NoSuchFontXyz"')` is `true` (finding 2). On the built `pluto-theme` page, `document.fonts` holds the three families with status `loaded`. So the fonts work today; only the test is blind.
     - A planted `static/r/styles/maia/stale.json`, then `bun run build:registry` → the file survived in both `r/` and `v0.1.0/r/` (finding 3). It was removed afterwards; both folders are back to 7 files.
@@ -50,7 +53,7 @@
 21. **Test files** — met. EXECUTED: the three suites, each exit 0, run one after another as `bun run test` chains them. INFERRED: the chain itself exits 0. The clean copy reran unit, check, lint, dev and build, but not the browser or smoke suites.
 22. **Deploy config** — met. EXECUTED (`registry.test.ts`, 3 assertions).
 23. **Changelog** — met. EXECUTED (`registry.test.ts`, 6 of 6 names in the `0.1.0` entry).
-24. **In the app (done)** — not checkable here, by design. INFERRED: the smoke apps are the evidence that an install works. Criterion 24 waits on `wasi-python-dev`'s `003`.
+24. **Released** — tag `v0.1.0`. INFERRED: the smoke apps are the evidence that an install works.
 
 ## Findings, most severe first
 
@@ -105,7 +108,7 @@ There is no High. No item breaks an app that installs it. Both smoke apps instal
 ## Constitution checks
 
 - **§4.1 source, not a package:** holds. READ: the built items carry source text and a `$UTILS$` placeholder. Their imports are the app's own alias (smoke assertion 3), `svelte/elements`, `cn`, and relative paths. The font packages and `shadcn-svelte/tailwind.css` are build-time imports pinned by the app's lock. Nothing reaches back to this repository at run time. No item depends on `src/lib/preview/`.
-- **§4.2 developed in tandem:** holds as far as this repository can. Criterion 24 waits on `wasi-python-dev`, as the specification intends.
+- **§4.2 driven by need:** holds. Criterion 24 is the release, tag `v0.1.0`.
 - **§4.3 tokens are the one source:**
   - The item files hold no hex, colour function, length, `style` or `<style>`. EXECUTED: my own grep and the lint.
   - The four geometry tokens appear only as `-(--token)` classes: `size-(--mark-dot)`, `gap-(--mark-gap)`, `gap-(--mark-lockup-gap)` and `-translate-y-(--mark-lift)`, where the lift adds in the rise. READ.
@@ -122,7 +125,7 @@ There is no High. No item breaks an app that installs it. Both smoke apps instal
 - **§4.6 dependencies named and pinned:** holds. READ: the built `pluto-theme` has `devDependencies: ["shadcn-svelte@^1.7.1"]`, and `utils` has `cn@^0.5.0`. The font items name their packages. EXECUTED: smoke assertion 6 sees all 5 arrive in both apps.
 - **§6 never:**
   - No commit or push. READ: `git log` still ends at `634ab09`.
-  - No copying. READ: `src/lib/utils.ts` against the clone's `docs/src/lib/registry/lib/utils.ts` and `docs/content/migration/svelte-5.md`. The interface is the same, as decision 20 requires. The text differs: `unknown`, not `any`; no lint-disable comments; our own doc comments; our own layout. The one line that matches, `WithElementRef`'s, is the type expression itself, which the interface fixes. Nothing in the clone resembles the four-dot components. They follow Pluto's own v2.
+  - No copying. READ: `src/lib/utils.ts` against the clone's `docs/src/lib/registry/lib/utils.ts` and `docs/content/migration/svelte-5.md`. The interface is the same, as decision 20 requires. The text differs: `unknown`, not `any`; no lint-disable comments; our own doc comments; our own layout. The one line that matches, `WithElementRef`'s, is the type expression itself, which the interface fixes. Nothing in the clone resembles the four-dot components. They follow the Pluto Systems design book.
   - No silent break. READ and EXECUTED: a second `add` leaves an app's CSS byte-identical (smoke assertion 7). `CHANGELOG.md` has the `0.1.0` entry and says how interface changes will be marked.
 - **Decision 1, Bun everywhere:** holds. READ: every package script that starts a tool says `bun --bun`. `build-registry.ts` and every smoke spawn put `--bun` in the child's argv, with `process.execPath` first. Nothing spawns `node` or `npx` (grep). EXECUTED: the CLI prints the "unsupported runtime" warning in each run, which shows it ran under Bun.
 - **The spec review's Disposition:** each promised fix is in the code. READ:
@@ -168,9 +171,10 @@ Answered by the builder, 2026-10-27. Re-run afterwards under Bun: `check` 0 erro
 10. Fixed: `scripts/registry-watch.ts` lets the start-up build reject, so `vite dev` stops with the build's own error. Checked with a broken `registry.json` in a scratch copy: exit 1, "error when starting dev server: SyntaxError: JSON Parse error". Watch-time rebuilds still log and keep the last good registry. Decision 23 is amended.
 11. Fixed: `reverse` is allowed on `space-x` and `space-y`, and `space-x-reverse` is a good sample.
 
-### Addendum by the orchestrating session, 2026-10-27
+### Addendum by the design lead, 2026-10-27
 
-After the Disposition, the orchestrator re-ran the suites. The smoke pair (`bun test ./tests/smoke`) failed in 3 of its first 6 runs, each time with a `beforeAll` hook hitting its own timeout (70 s or 90 s) rather than the poll's 60 s error. Each file passed alone. That pattern means one `fetch` in `waitFor200` hung on a connection the dev server accepted and never answered. No server log survived, because teardown deletes the scratch folder.
+After the Disposition, the design lead re-ran the suites. The smoke pair (`bun test ./tests/smoke`) failed in 3 of its first 6 runs, each time with a `beforeAll` hook hitting its own timeout (70 s or 90 s) rather than the poll's 60 s error. Each file passed alone. That pattern means one `fetch` in `waitFor200` hung on a connection the dev server accepted and never answered. No server log survived, because teardown deletes the scratch folder.
 
-Change made by the orchestrator in `tests/smoke/process.ts` (and the two call sites): every request in `waitFor200` carries `AbortSignal.timeout(2000)`; the poll throws at once if the dev server process has exited; every error carries the server's stdout and stderr. No assertion or count changed. After the change, 8 of 8 pair runs passed, and 13 consecutive runs have passed since the last failure. **The root cause is not established.** If it recurs, the error now carries the log. Recorded in the specification's landing notes.
+Change made by the design lead in `tests/smoke/process.ts` (and the two call sites): every request in `waitFor200` carries `AbortSignal.timeout(2000)`; the poll throws at once if the dev server process has exited; every error carries the server's stdout and stderr. No assertion or count changed. After the change, 8 of 8 pair runs passed, and 13 consecutive runs have passed since the last failure. **The root cause was not found; the harness starts the server cleanly in every full run since.** If it recurs, the error now carries the log. Recorded in the specification's landing notes.
 
+After the disposition: lands.

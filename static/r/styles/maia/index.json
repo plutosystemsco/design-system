@@ -3,7 +3,7 @@
 		"name": "pluto-theme",
 		"title": "Pluto theme",
 		"type": "registry:theme",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "The Pluto Systems tokens for light and dark: colour, radius, spacing, type, motion, focus and the groove.",
 		"devDependencies": [
 			"shadcn-svelte@^1.7.1"
@@ -23,7 +23,7 @@
 		"name": "font-geist",
 		"title": "Geist",
 		"type": "registry:font",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "Geist, the body face, self-hosted through Fontsource.",
 		"registryDependencies": [],
 		"meta": {
@@ -36,7 +36,7 @@
 		"name": "font-heading-ibm-plex-sans",
 		"title": "IBM Plex Sans",
 		"type": "registry:font",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "IBM Plex Sans, the heading face, self-hosted through Fontsource.",
 		"registryDependencies": [],
 		"meta": {
@@ -49,7 +49,7 @@
 		"name": "font-jetbrains-mono",
 		"title": "JetBrains Mono",
 		"type": "registry:font",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "JetBrains Mono, the face for labels, code and data, self-hosted through Fontsource.",
 		"registryDependencies": [],
 		"meta": {
@@ -62,7 +62,7 @@
 		"name": "utils",
 		"title": "Utils",
 		"type": "registry:lib",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "The cn class-merging helper and the prop-type helpers that components import.",
 		"registryDependencies": [],
 		"meta": {
@@ -75,7 +75,7 @@
 		"name": "four-dot",
 		"title": "Four-dot mark",
 		"type": "registry:ui",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "The Pluto Systems four-dot mark and the wordmark lockup, sized by the text around them.",
 		"registryDependencies": [
 			"utils",
@@ -91,7 +91,7 @@
 		"name": "theme",
 		"title": "Theme",
 		"type": "registry:ui",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "The light and dark switch: a head script that sets the theme before paint, a store that follows the system until a choice is made, and a toggle button.",
 		"registryDependencies": [
 			"utils",
@@ -108,7 +108,7 @@
 		"name": "button",
 		"title": "Button",
 		"type": "registry:ui",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "An action: the surface's one blue primary, a bordered secondary, ghost, destructive or link, at 48 or 32 px, with a busy state that keeps focus.",
 		"registryDependencies": [
 			"utils",
@@ -132,7 +132,7 @@
 		"name": "tooltip",
 		"title": "Tooltip",
 		"type": "registry:ui",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "A short inverted label that opens on hover and focus, closes on Escape, and repeats an icon button's name.",
 		"registryDependencies": [
 			"utils",
@@ -155,7 +155,7 @@
 		"name": "kbd",
 		"title": "Kbd",
 		"type": "registry:ui",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "A keyboard key, or a group of keys, set in the mono face on an inset.",
 		"registryDependencies": [
 			"utils",
@@ -178,7 +178,7 @@
 		"name": "toggle",
 		"title": "Toggle",
 		"type": "registry:ui",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "A two-state button that says whether it is pressed, inverted when it is.",
 		"registryDependencies": [
 			"utils",
@@ -201,7 +201,7 @@
 		"name": "toggle-group",
 		"title": "Toggle group",
 		"type": "registry:ui",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "A row of toggles, one stop for the row, moved by the arrow keys, for one choice or several.",
 		"registryDependencies": [
 			"utils",
@@ -225,7 +225,7 @@
 		"name": "card",
 		"title": "Card",
 		"type": "registry:ui",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "A raised surface with a header, content, footer and an action, whose title is a real heading.",
 		"registryDependencies": [
 			"utils",
@@ -248,7 +248,7 @@
 		"name": "separator",
 		"title": "Separator",
 		"type": "registry:ui",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "The groove between sections, decorative by default, or a plain vertical hairline.",
 		"registryDependencies": [
 			"utils",
@@ -271,7 +271,7 @@
 		"name": "item",
 		"title": "Item",
 		"type": "registry:ui",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "A row of media, content and actions, plain or outlined, that can be one link.",
 		"registryDependencies": [
 			"utils",
@@ -295,7 +295,7 @@
 		"name": "table",
 		"title": "Table",
 		"type": "registry:ui",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "A data table with a caption, header, selectable rows and a footer, scrolling inside itself when it must.",
 		"registryDependencies": [
 			"utils",
@@ -318,7 +318,7 @@
 		"name": "tabs",
 		"title": "Tabs",
 		"type": "registry:ui",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "Tabbed panels as a pill strip on an inset or as underlined triggers, moved by the arrow keys.",
 		"registryDependencies": [
 			"utils",
@@ -341,7 +341,7 @@
 		"name": "collapsible",
 		"title": "Collapsible",
 		"type": "registry:ui",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "A button that shows and hides a region, with its state in aria-expanded.",
 		"registryDependencies": [
 			"utils",
@@ -364,7 +364,7 @@
 		"name": "avatar",
 		"title": "Avatar",
 		"type": "registry:ui",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "A person's image or initials at the case radius, alone or in an overlapping group.",
 		"registryDependencies": [
 			"utils",
@@ -387,7 +387,7 @@
 		"name": "popover",
 		"title": "Popover",
 		"type": "registry:ui",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "A small dialog anchored to its button, raised by the elevation shadow, that returns focus when it closes.",
 		"registryDependencies": [
 			"utils",
@@ -410,7 +410,7 @@
 		"name": "accordion",
 		"title": "Accordion",
 		"type": "registry:ui",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "Headings that each open a section, divided by grooves, moved by the arrow keys.",
 		"registryDependencies": [
 			"utils",
@@ -433,7 +433,7 @@
 		"name": "alert",
 		"title": "Alert",
 		"type": "registry:ui",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "A message in default, destructive, success or caution, whose role matches how urgent it is.",
 		"registryDependencies": [
 			"utils",
@@ -456,7 +456,7 @@
 		"name": "alert-dialog",
 		"title": "Alert dialog",
 		"type": "registry:ui",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "A modal confirm on the scrim that traps focus, starts on Cancel and closes on Escape.",
 		"registryDependencies": [
 			"utils",
@@ -480,7 +480,7 @@
 		"name": "badge",
 		"title": "Badge",
 		"type": "registry:ui",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "A small mono label that names a state in words, outlined in its state colour.",
 		"registryDependencies": [
 			"utils",
@@ -503,7 +503,7 @@
 		"name": "empty",
 		"title": "Empty",
 		"type": "registry:ui",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "An empty state: an icon tile, a heading, a sentence and the next action.",
 		"registryDependencies": [
 			"utils",
@@ -526,7 +526,7 @@
 		"name": "skeleton",
 		"title": "Skeleton",
 		"type": "registry:ui",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "A static, hidden placeholder on an inset where content is loading.",
 		"registryDependencies": [
 			"utils",
@@ -549,7 +549,7 @@
 		"name": "spinner",
 		"title": "Spinner",
 		"type": "registry:ui",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "A turning icon for the one control that is busy, decorative by default or announced with a label.",
 		"registryDependencies": [
 			"utils",
@@ -572,7 +572,7 @@
 		"name": "status",
 		"title": "Status",
 		"type": "registry:ui",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "An empty polite live region, present from the first render, whose text the app sets.",
 		"registryDependencies": [
 			"utils",
@@ -588,7 +588,7 @@
 		"name": "error-summary",
 		"title": "Error summary",
 		"type": "registry:ui",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "The box a failed submit puts at the top of a form: a heading, the form's message and a link to each invalid field, focused when it appears.",
 		"registryDependencies": [
 			"utils",
@@ -605,7 +605,7 @@
 		"name": "label",
 		"title": "Label",
 		"type": "registry:ui",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "A form label in sentence case, dimmed with its disabled control.",
 		"registryDependencies": [
 			"utils",
@@ -628,7 +628,7 @@
 		"name": "field",
 		"title": "Field",
 		"type": "registry:ui",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "A label, control, description and error, wired to the control by id, aria-describedby and aria-invalid.",
 		"registryDependencies": [
 			"utils",
@@ -653,7 +653,7 @@
 		"name": "input",
 		"title": "Input",
 		"type": "registry:ui",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "A 48 px text input on the raised ground with a visible border and a red one when invalid.",
 		"registryDependencies": [
 			"utils",
@@ -676,7 +676,7 @@
 		"name": "textarea",
 		"title": "Textarea",
 		"type": "registry:ui",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "A multi-line text input that grows with its text where the browser can.",
 		"registryDependencies": [
 			"utils",
@@ -699,7 +699,7 @@
 		"name": "input-group",
 		"title": "Input group",
 		"type": "registry:ui",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "An input or textarea with text or button addons, one focus ring around the group, and a password toggle.",
 		"registryDependencies": [
 			"utils",
@@ -725,7 +725,7 @@
 		"name": "native-select",
 		"title": "Native select",
 		"type": "registry:ui",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "The browser's own select, styled as an input, with a caret.",
 		"registryDependencies": [
 			"utils",
@@ -748,7 +748,7 @@
 		"name": "checkbox",
 		"title": "Checkbox",
 		"type": "registry:ui",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "A 24 px checkbox that tells checked and mixed by shape as well as colour.",
 		"registryDependencies": [
 			"utils",
@@ -771,7 +771,7 @@
 		"name": "radio-group",
 		"title": "Radio group",
 		"type": "registry:ui",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "Round radios in a group with one stop, moved and chosen by the arrow keys.",
 		"registryDependencies": [
 			"utils",
@@ -794,7 +794,7 @@
 		"name": "switch",
 		"title": "Switch",
 		"type": "registry:ui",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "An on and off setting: a blue track with a thumb that moves to the end.",
 		"registryDependencies": [
 			"utils",
@@ -817,7 +817,7 @@
 		"name": "input-otp",
 		"title": "Input OTP",
 		"type": "registry:ui",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "A six-digit code in 48 px cells over one real input that accepts a pasted code.",
 		"registryDependencies": [
 			"utils",
@@ -840,7 +840,7 @@
 		"name": "code-block",
 		"title": "Code block",
 		"type": "registry:ui",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "Code, output or a diff on the muted inset, highlighted from the code tokens, with line numbers, a copy button and a header divided by the groove.",
 		"registryDependencies": [
 			"utils",
@@ -866,7 +866,7 @@
 		"name": "code-editor",
 		"title": "Code editor",
 		"type": "registry:ui",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "A CodeMirror 6 editor themed from the tokens, with line numbers and Python, that prerenders as plain code and leaves Tab unbound.",
 		"registryDependencies": [
 			"utils",
@@ -882,7 +882,7 @@
 		"name": "highlighter",
 		"title": "Highlighter",
 		"type": "registry:lib",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "Shiki with the JavaScript engine and a theme whose every colour is a code token, for the server or the browser.",
 		"registryDependencies": [
 			"utils",
@@ -905,7 +905,7 @@
 		"name": "use-highlighted-code",
 		"title": "Use highlighted code",
 		"type": "registry:hook",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "A hook that highlights a changing string line by line as it grows.",
 		"registryDependencies": [
 			"utils",
@@ -929,7 +929,7 @@
 		"name": "code-languages",
 		"title": "Code languages",
 		"type": "registry:lib",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "Any of the highlighter's twenty-six languages for the editor, loaded on demand: a table of ids, aliases and kinds, and loadLanguage.",
 		"devDependencies": [
 			"@codemirror/language-data@^6.5.2",
@@ -951,7 +951,7 @@
 		"name": "chart",
 		"title": "Chart",
 		"type": "registry:ui",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "A figure for layerchart with a name and a table of its data, series coloured by token classes, and a tooltip on the elevation shadow.",
 		"registryDependencies": [
 			"utils",
@@ -974,7 +974,7 @@
 		"name": "meter",
 		"title": "Meter",
 		"type": "registry:ui",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "A measurement within a known range, as the native meter on the muted track with a primary fill, its numbers written beside it.",
 		"registryDependencies": [
 			"utils",
@@ -990,7 +990,7 @@
 		"name": "dropdown-menu",
 		"title": "Dropdown menu",
 		"type": "registry:ui",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "A menu opened from a button, on the elevation shadow, moved by the arrow keys, with check and radio items and a shortcut written in words.",
 		"registryDependencies": [
 			"utils",
@@ -1013,7 +1013,7 @@
 		"name": "sheet",
 		"title": "Sheet",
 		"type": "registry:ui",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "A modal panel fixed to one edge of the screen, named by its title, behind the scrim, that returns focus when it closes.",
 		"registryDependencies": [
 			"utils",
@@ -1037,7 +1037,7 @@
 		"name": "dialog",
 		"title": "Dialog",
 		"type": "registry:ui",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "A modal window named by its title, behind the scrim, for a task that must finish before the page goes on.",
 		"registryDependencies": [
 			"utils",
@@ -1061,7 +1061,7 @@
 		"name": "breadcrumb",
 		"title": "Breadcrumb",
 		"type": "registry:ui",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "The path to the current page as a list of links, the current page marked and not a link.",
 		"registryDependencies": [
 			"utils",
@@ -1084,7 +1084,7 @@
 		"name": "sidebar",
 		"title": "Sidebar",
 		"type": "registry:ui",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "A navigation landmark on the paper ground, set apart by a vertical groove, that collapses off-canvas or to icons and becomes a sheet on a phone.",
 		"registryDependencies": [
 			"utils",
@@ -1115,7 +1115,7 @@
 		"name": "is-mobile",
 		"title": "Is mobile",
 		"type": "registry:hook",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "A media-query store that is true below 768 px and false on the server.",
 		"registryDependencies": [
 			"utils",
@@ -1138,7 +1138,7 @@
 		"name": "message-log",
 		"title": "Message log",
 		"type": "registry:ui",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "A scroll box named \"Messages\" holding a named log, that follows new content until the reader scrolls away, with a button back to the end.",
 		"registryDependencies": [
 			"utils",
@@ -1155,7 +1155,7 @@
 		"name": "message",
 		"title": "Message",
 		"type": "registry:ui",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "One turn of a conversation: a heading that says who, the content as full-width prose or a bubble on the muted inset, and a footer.",
 		"registryDependencies": [
 			"utils",
@@ -1178,7 +1178,7 @@
 		"name": "marker",
 		"title": "Marker",
 		"type": "registry:ui",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "A line in a conversation that is not a turn: a status, a divider, a note.",
 		"registryDependencies": [
 			"utils",
@@ -1201,7 +1201,7 @@
 		"name": "composer",
 		"title": "Composer",
 		"type": "registry:ui",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "The form a person writes a message in: a textarea that grows, Enter to send, a send button that becomes Stop while a reply runs, and never a disabled control.",
 		"registryDependencies": [
 			"utils",
@@ -1223,7 +1223,7 @@
 		"name": "hero",
 		"title": "Hero",
 		"type": "registry:block",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "A page's opening: an optional eyebrow, the one heading, a sentence, one call to action, and a feature grid divided by grooves.",
 		"registryDependencies": [
 			"utils",
@@ -1240,7 +1240,7 @@
 		"name": "sign-in",
 		"title": "Sign in",
 		"type": "registry:block",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "Email and password in one step, with an error summary that takes focus, a password you can show, and a button that goes busy.",
 		"registryDependencies": [
 			"utils",
@@ -1263,7 +1263,7 @@
 		"name": "sign-up",
 		"title": "Sign up",
 		"type": "registry:block",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "Email and a password with its rules written first, then a six-digit code on its own step, with resend.",
 		"registryDependencies": [
 			"utils",
@@ -1287,7 +1287,7 @@
 		"name": "page-states",
 		"title": "Page states",
 		"type": "registry:block",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "Empty, loading, error and not found as one family, with an error page for SvelteKit's error route.",
 		"registryDependencies": [
 			"utils",
@@ -1307,7 +1307,7 @@
 		"name": "settings",
 		"title": "Settings",
 		"type": "registry:block",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "One column of sections divided by grooves, saved by one button, with an inline Saved message and a confirmed delete.",
 		"registryDependencies": [
 			"utils",
@@ -1332,7 +1332,7 @@
 		"name": "app-shell",
 		"title": "App shell",
 		"type": "registry:block",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "The frame every page sits in: a skip link, a header with the lockup's one entrance and a theme toggle, an optional sidebar, the main area, and a footer that states the build.",
 		"registryDependencies": [
 			"utils",
@@ -1357,7 +1357,7 @@
 		"name": "chat",
 		"title": "Chat",
 		"type": "registry:block",
-		"author": "Pluto Systems <https://plutosystems.co>",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "A conversation: a log that follows new replies, turns with code, a composer that sends and stops, and the words a screen reader hears.",
 		"registryDependencies": [
 			"utils",

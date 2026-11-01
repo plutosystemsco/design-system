@@ -39,7 +39,7 @@
 </script>
 
 <!--
-  A figure named by its visible caption (004 decision 10), which comes first:
+  A figure named by its visible caption, which comes first:
   a figcaption must be the figure's first or last child, and the table's
   disclosure follows the chart. layerchart draws nothing on the server and
   exposes only its tick labels, so the name and the table are what every

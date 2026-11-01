@@ -4,7 +4,7 @@
   import PreviewSection from "#lib/preview/preview-section.svelte";
   import Specimen from "#lib/preview/specimen.svelte";
 
-  // The home page's security section: three claims.
+  // Three claims, for the single accordion.
   const claims = [
     {
       value: "sandbox",

@@ -88,7 +88,7 @@ test.describe("L1. the message log", () => {
 
   test("it follows an appended turn and a streamed reply; a wheel up releases it and nothing moves it while released; the button appears inside the region, and returns to the end", async ({
     page,
-  }, info) => {
+  }) => {
     await open(page, PAGE);
     const region = page.getByTestId("log-main");
     const button = region
@@ -108,7 +108,7 @@ test.describe("L1. the message log", () => {
     await expect(button).toBeHidden();
 
     // A wheel towards the end while at the end moves nothing and releases
-    // nothing (review finding 1): a stream is still followed.
+    // nothing: a stream is still followed.
     const box = (await region.boundingBox())!;
     await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
     await page.mouse.wheel(0, 120);
@@ -141,7 +141,6 @@ test.describe("L1. the message log", () => {
     expect(await computed(button, "background-color")).toBe(
       hexToRgb(await cssVar(page, "--secondary")),
     );
-    void info;
     // Released: a stream does not move it.
     const before = (await scrollState(region)).top;
     await page.getByTestId("log-stream").click();

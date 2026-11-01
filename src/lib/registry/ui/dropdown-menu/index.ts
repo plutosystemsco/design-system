@@ -15,7 +15,7 @@ import Sub from "./dropdown-menu-sub.svelte";
 import Trigger from "./dropdown-menu-trigger.svelte";
 import Root from "./dropdown-menu.svelte";
 
-// No Label part (005 decision 7): a menu's title is a GroupHeading inside a
+// No Label part: a menu's title is a GroupHeading inside a
 // Group, or the content's `label`.
 export {
   Root,

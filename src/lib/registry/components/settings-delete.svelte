@@ -62,8 +62,7 @@
       Delete your account
     </svelte:element>
     <p class="max-w-prose text-muted-foreground">
-      This removes your projects, runs and settings for good. It cannot be
-      undone.
+      This removes your data and settings for good. It cannot be undone.
     </p>
   </div>
   <ErrorSummary bind:ref={summary} {message} level={summaryLevel} />
@@ -77,8 +76,8 @@
         <AlertDialog.Header>
           <AlertDialog.Title>Delete your account?</AlertDialog.Title>
           <AlertDialog.Description>
-            Your projects, runs and settings will be removed for good. You
-            cannot undo this.
+            Your data and settings will be removed for good. You cannot undo
+            this.
           </AlertDialog.Description>
         </AlertDialog.Header>
         <AlertDialog.Footer>

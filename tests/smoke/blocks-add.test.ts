@@ -5,8 +5,8 @@
  * decision 14 widens it to seven blocks: the scratch apps get none of the
  * shell's vite.config.ts lines, so its footer shows no commit and no built row.
  *
- * `SMOKE_BLOCKS=sign-in` narrows the run to the named blocks (build step 3
- * ran it so); the counts are asserted only for all seven.
+ * `SMOKE_BLOCKS=sign-in` narrows the run to the named blocks; the counts are
+ * asserted only for all seven.
  */
 import { afterAll, beforeAll, describe, expect, test } from "bun:test";
 import {
@@ -354,7 +354,12 @@ describe.each([
   // so the shell's footer shows no commit (Kit's default name is all digits)
   // and no built row; the skip link is the first element of body.
   test("6b. the shell's page holds the skip link first in body, a footer, and no commit or built row; its vite.config.ts has no git line", () => {
-    if (!BLOCKS.includes("app-shell")) return;
+    if (!BLOCKS.includes("app-shell")) {
+      // A narrowed run without app-shell: say so, and prove the narrowing.
+      console.log(`6b: SMOKE_BLOCKS=${BLOCKS.join()} leaves out app-shell`);
+      expect(FULL).toBe(false);
+      return;
+    }
     const html = readFileSync(
       path.join(r.app, "build", "app-shell.html"),
       "utf8",
@@ -370,7 +375,7 @@ describe.each([
     expect(body).not.toMatch(/<dt[^>]*>commit<\/dt>/);
     expect(body).not.toMatch(/<dt[^>]*>built<\/dt>/);
     expect(body).toMatch(/<dt[^>]*>source<\/dt>/);
-    // Review finding 3: no word stands in for a missing commit.
+    // No word stands in for a missing commit.
     expect(body).not.toContain("unknown");
     expect(
       readFileSync(path.join(r.app, "vite.config.ts"), "utf8"),

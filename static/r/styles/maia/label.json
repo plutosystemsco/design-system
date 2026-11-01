@@ -3,7 +3,7 @@
 	"name": "label",
 	"title": "Label",
 	"type": "registry:ui",
-	"author": "Pluto Systems <https://plutosystems.co>",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 	"description": "A form label in sentence case, dimmed with its disabled control.",
 	"devDependencies": [
 		"bits-ui@^2.20.2",

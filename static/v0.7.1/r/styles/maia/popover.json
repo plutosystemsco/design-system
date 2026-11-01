@@ -1,0 +1,74 @@
+{
+	"$schema": "https://shadcn-svelte.com/schema/registry-item.json",
+	"name": "popover",
+	"title": "Popover",
+	"type": "registry:ui",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+	"description": "A small dialog anchored to its button, raised by the elevation shadow, that returns focus when it closes.",
+	"devDependencies": [
+		"bits-ui@^2.20.2",
+		"@internationalized/date@^3.12.4"
+	],
+	"registryDependencies": [
+		"utils",
+		"pluto-theme"
+	],
+	"meta": {
+		"since": "0.4.0",
+		"group": "surfaces",
+		"stock": {
+			"registry": "https://shadcn-svelte.com/registry/styles/maia",
+			"item": "popover",
+			"cli": "1.7.1",
+			"date": "2026-10-31",
+			"sha256": "04fedc3e4d903c6e1c0454211a79a9bd0c88827dbab3fab1d4e56ac82b8ef609"
+		}
+	},
+	"files": [
+		{
+			"content": "<script lang=\"ts\">\n  import { Popover as PopoverPrimitive } from \"bits-ui\";\n\n  let { open = $bindable(false), ...restProps }: PopoverPrimitive.RootProps =\n    $props();\n</script>\n\n<PopoverPrimitive.Root bind:open {...restProps} />\n",
+			"type": "registry:ui",
+			"target": "popover/popover.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import { Popover as PopoverPrimitive } from \"bits-ui\";\n  import { cn } from \"$UTILS$\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    ...restProps\n  }: PopoverPrimitive.TriggerProps = $props();\n</script>\n\n<PopoverPrimitive.Trigger\n  bind:ref\n  data-slot=\"popover-trigger\"\n  class={cn(className)}\n  {...restProps}\n/>\n",
+			"type": "registry:ui",
+			"target": "popover/popover-trigger.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\" module>\n  import { getContext, setContext } from \"svelte\";\n\n  /**\n   * The popover's name. The content provides this context;\n   * a title inside it registers its id, and the content is then labelled by\n   * the title. Without a title, the content's `label` prop names it.\n   */\n  export type PopoverContext = {\n    /** The id a title takes unless it has its own. */\n    readonly titleId: string;\n    /** The id of the rendered title, or undefined when there is none. */\n    labelledBy: string | undefined;\n  };\n\n  const KEY = \"pluto:popover\";\n\n  export function setPopoverContext(context: PopoverContext): PopoverContext {\n    return setContext(KEY, context);\n  }\n\n  export function getPopoverContext(): PopoverContext | undefined {\n    return getContext<PopoverContext | undefined>(KEY);\n  }\n</script>\n\n<script lang=\"ts\">\n  import { Popover as PopoverPrimitive } from \"bits-ui\";\n  import { cn, type WithoutChildrenOrChild } from \"$UTILS$\";\n  import PopoverPortal from \"./popover-portal.svelte\";\n  import type { ComponentProps } from \"svelte\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    sideOffset = 4,\n    align = \"center\",\n    label,\n    portalProps,\n    ...restProps\n  }: PopoverPrimitive.ContentProps & {\n    /** The dialog's name when it holds no `PopoverTitle`. One of the two is required. */\n    label?: string;\n    portalProps?: WithoutChildrenOrChild<ComponentProps<typeof PopoverPortal>>;\n  } = $props();\n\n  const uid = $props.id();\n  let labelledBy = $state<string | undefined>();\n  setPopoverContext({\n    titleId: `${uid}-title`,\n    get labelledBy() {\n      return labelledBy;\n    },\n    set labelledBy(id) {\n      labelledBy = id;\n    },\n  });\n</script>\n\n<!--\n  A small dialog raised by elevation alone, which already draws the hairline\n  as a spread layer, so no border. 256 px wide by default. The trigger\n  promises a dialog (aria-haspopup); the content keeps the promise with\n  role=\"dialog\" and a name: its title, else the label prop. Focus inside is\n  the global ring. It fades in and out over the micro budget.\n-->\n<PopoverPortal {...portalProps}>\n  <PopoverPrimitive.Content\n    bind:ref\n    data-slot=\"popover-content\"\n    role=\"dialog\"\n    aria-labelledby={labelledBy}\n    aria-label={labelledBy ? undefined : label}\n    {sideOffset}\n    {align}\n    class={cn(\n      \"z-50 grid w-3xs origin-(--bits-popover-content-transform-origin) gap-4 rounded bg-popover p-4 text-sm text-popover-foreground shadow-elevation data-open:animate-enter data-closed:animate-exit\",\n      className,\n    )}\n    {...restProps}\n  />\n</PopoverPortal>\n",
+			"type": "registry:ui",
+			"target": "popover/popover-content.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import { Popover as PopoverPrimitive } from \"bits-ui\";\n\n  let { ...restProps }: PopoverPrimitive.PortalProps = $props();\n</script>\n\n<PopoverPrimitive.Portal {...restProps} />\n",
+			"type": "registry:ui",
+			"target": "popover/popover-portal.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import { Popover as PopoverPrimitive } from \"bits-ui\";\n\n  let { ref = $bindable(null), ...restProps }: PopoverPrimitive.CloseProps =\n    $props();\n</script>\n\n<PopoverPrimitive.Close bind:ref data-slot=\"popover-close\" {...restProps} />\n",
+			"type": "registry:ui",
+			"target": "popover/popover-close.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import { cn, type WithElementRef } from \"$UTILS$\";\n  import type { HTMLAttributes } from \"svelte/elements\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    children,\n    ...restProps\n  }: WithElementRef<HTMLAttributes<HTMLDivElement>> = $props();\n</script>\n\n<div\n  bind:this={ref}\n  data-slot=\"popover-header\"\n  class={cn(\"flex flex-col gap-1\", className)}\n  {...restProps}\n>\n  {@render children?.()}\n</div>\n",
+			"type": "registry:ui",
+			"target": "popover/popover-header.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import { cn, type WithElementRef } from \"$UTILS$\";\n  import type { HTMLAttributes } from \"svelte/elements\";\n  import { getPopoverContext } from \"./popover-content.svelte\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    level = 2,\n    id,\n    children,\n    ...restProps\n  }: WithElementRef<HTMLAttributes<HTMLHeadingElement>> & {\n    /** The heading level: a title that looks like a heading is one. Default 2. */\n    level?: 1 | 2 | 3 | 4 | 5 | 6;\n  } = $props();\n\n  const context = getPopoverContext();\n  const titleId = $derived(id ?? context?.titleId);\n\n  // The content is labelled by this title while it is rendered.\n  $effect(() => {\n    if (!context) return;\n    context.labelledBy = titleId;\n    return () => {\n      context.labelledBy = undefined;\n    };\n  });\n</script>\n\n<svelte:element\n  this={`h${level}`}\n  bind:this={ref}\n  id={titleId}\n  data-slot=\"popover-title\"\n  class={cn(\"font-heading text-base font-bold\", className)}\n  {...restProps}\n>\n  {@render children?.()}\n</svelte:element>\n",
+			"type": "registry:ui",
+			"target": "popover/popover-title.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import { cn, type WithElementRef } from \"$UTILS$\";\n  import type { HTMLAttributes } from \"svelte/elements\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    children,\n    ...restProps\n  }: WithElementRef<HTMLAttributes<HTMLDivElement>> = $props();\n</script>\n\n<div\n  bind:this={ref}\n  data-slot=\"popover-description\"\n  class={cn(\"text-muted-foreground\", className)}\n  {...restProps}\n>\n  {@render children?.()}\n</div>\n",
+			"type": "registry:ui",
+			"target": "popover/popover-description.svelte"
+		},
+		{
+			"content": "import Close from \"./popover-close.svelte\";\nimport Content from \"./popover-content.svelte\";\nimport Description from \"./popover-description.svelte\";\nimport Header from \"./popover-header.svelte\";\nimport Portal from \"./popover-portal.svelte\";\nimport Title from \"./popover-title.svelte\";\nimport Trigger from \"./popover-trigger.svelte\";\nimport Root from \"./popover.svelte\";\n\nexport {\n  Root,\n  Content,\n  Description,\n  Header,\n  Title,\n  Trigger,\n  Close,\n  Portal,\n  //\n  Root as Popover,\n  Content as PopoverContent,\n  Description as PopoverDescription,\n  Header as PopoverHeader,\n  Title as PopoverTitle,\n  Trigger as PopoverTrigger,\n  Close as PopoverClose,\n  Portal as PopoverPortal,\n};\n",
+			"type": "registry:ui",
+			"target": "popover/index.ts"
+		}
+	]
+}

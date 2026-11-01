@@ -14,7 +14,7 @@ import {
 import {
   cssVar,
   hexToRgb,
-  NEW_PAGES,
+  PAGES_003,
   open,
   openView,
   VIEW_STOPS,
@@ -465,7 +465,7 @@ test.describe("page states", () => {
     await expect(page.locator("h1")).toHaveText("Page not found");
   });
 
-  test("20. no status number outside code on 18 pages, and no red text on the 5 page-states views", async ({
+  test(`20. no status number outside code on ${VIEWS.length + 1} pages, and no red text on the ${VIEWS.filter((v) => v.block === "page-states").length} page-states views`, async ({
     page,
   }) => {
     const found: string[] = [];
@@ -561,7 +561,7 @@ test.describe("hero", () => {
   }
 });
 
-const PAGES_24 = [...VIEWS.map((v) => v.path), ...NEW_PAGES];
+const PAGES_24 = [...VIEWS.map((v) => v.path), ...PAGES_003];
 
 async function load(page: Page, path: string): Promise<void> {
   if (path.startsWith("/view/")) await openView(page, path);
@@ -569,8 +569,8 @@ async function load(page: Page, path: string): Promise<void> {
 }
 
 test.describe("all blocks", () => {
-  // 006: 28 views (the shell's 4 and the chat's 6 join) and 7 item pages: 35.
-  test("24. no infinite animation outside a spinner on the 28 views and 7 new item pages", async ({
+  // 28 views (the shell's 4 and the chat's 6 among them) and 003's 7 item pages: 35.
+  test("24. no infinite animation outside a spinner on the 28 views and 003's 7 item pages", async ({
     page,
   }) => {
     const loops: string[] = [];
@@ -691,7 +691,7 @@ test.describe("all blocks", () => {
   });
 });
 
-/** decisions.md, after the change review: each failed callback names what failed. */
+/** Each failed callback names what failed. */
 const FAILED = {
   signIn: "We could not sign you in. Try again.",
   save: "We could not save your changes. Try again.",
@@ -718,7 +718,7 @@ async function failStubs(page: Page): Promise<void> {
   });
 }
 
-/** decisions.md, after the change review, finding 2: a callback that rejects. */
+/** A callback that rejects. */
 test.describe("a callback that rejects", () => {
   test("28. sign in: onsubmit rejects; a focused summary and the status say so, and nothing typed is lost", async ({
     page,
@@ -827,8 +827,7 @@ test.describe("the app shell", () => {
     await expect(page.getByRole("main")).toHaveAttribute("id", "main");
   });
 
-  // The checkpoint's call (decisions.md, "After the 006 build's checkpoint"):
-  // with a sidebar the header is sticky and the sidebar sits under it, its
+  // With a sidebar the header is sticky and the sidebar sits under it, its
   // foot padded by the header's height, so the account row ends at the
   // viewport's bottom at load, and both stay put when the page scrolls.
   for (const width of [768, 1280] as const) {
@@ -893,7 +892,7 @@ test.describe("the app shell", () => {
     });
   }
 
-  // Review finding 4: the Preferences caret turns with the group's state.
+  // The Preferences caret turns with the group's state.
   test("A1c. the sidebar's Preferences caret is upright while the group is closed and rotated 90 degrees once it is open", async ({
     page,
   }) => {
@@ -1082,7 +1081,7 @@ test.describe("the app shell", () => {
 });
 
 /**
- * 006 decision 14, C1 to C5 and C9: the chat pane, in both themes. C6 to C8
+ * 006 decision 14, C1 to C5, C9 and C10: the chat pane, in both themes. C6 to C8
  * are tests 24 to 26 above, widened to the 28 views.
  */
 test.describe("the chat", () => {
@@ -1226,7 +1225,7 @@ test.describe("the chat", () => {
     await expect(sendButton(page)).toHaveAccessibleName("Send message");
   });
 
-  // Review finding 8 (a call): the "Latest reply" row keeps its height, so
+  // The "Latest reply" row keeps its height, so
   // the log does not resize when the button appears.
   test("C10. the log's height is the same before a send and after the reply ends, when Latest reply appears", async ({
     page,

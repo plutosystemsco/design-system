@@ -7,7 +7,7 @@
   import PreviewSection from "#lib/preview/preview-section.svelte";
   import Specimen from "#lib/preview/specimen.svelte";
 
-  // The /admin page's time-range presets.
+  // Time-range presets.
   const ranges = [
     ["today", "Today"],
     ["7d", "7 days"],

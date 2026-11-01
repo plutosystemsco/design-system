@@ -15,7 +15,7 @@
       >Environment variables</Collapsible.Trigger
     >
     <Collapsible.Content class="rounded border border-border p-4 text-sm">
-      <code>PYTHONPATH</code>, <code>WASI_SDK</code> and two secrets.
+      <code>PYTHONPATH</code>, <code>SANDBOX_FUEL</code> and two secrets.
     </Collapsible.Content>
   </Collapsible.Root>
 {/snippet}

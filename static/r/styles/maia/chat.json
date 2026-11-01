@@ -3,7 +3,7 @@
 	"name": "chat",
 	"title": "Chat",
 	"type": "registry:block",
-	"author": "Pluto Systems <https://plutosystems.co>",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 	"description": "A conversation: a log that follows new replies, turns with code, a composer that sends and stops, and the words a screen reader hears.",
 	"devDependencies": [
 		"phosphor-svelte@^3.1.1"

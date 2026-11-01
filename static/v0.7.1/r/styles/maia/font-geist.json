@@ -1,0 +1,23 @@
+{
+	"$schema": "https://shadcn-svelte.com/schema/registry-item.json",
+	"name": "font-geist",
+	"title": "Geist",
+	"type": "registry:font",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+	"description": "Geist, the body face, self-hosted through Fontsource.",
+	"meta": {
+		"since": "0.1.0",
+		"group": "foundation"
+	},
+	"files": [],
+	"font": {
+		"family": "'Geist Variable', system-ui, sans-serif",
+		"provider": "google",
+		"import": "Geist",
+		"variable": "--font-sans",
+		"subsets": [
+			"latin"
+		],
+		"dependency": "@fontsource-variable/geist"
+	}
+}

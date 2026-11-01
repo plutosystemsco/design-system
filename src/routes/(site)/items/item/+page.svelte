@@ -24,7 +24,7 @@
               <FolderOpen aria-hidden="true" />
             </Item.Media>
             <Item.Content>
-              <Item.Title>wasi-python-dev</Item.Title>
+              <Item.Title>pluto-sandbox</Item.Title>
               <Item.Description
                 >Last run 2 minutes ago on main.</Item.Description
               >

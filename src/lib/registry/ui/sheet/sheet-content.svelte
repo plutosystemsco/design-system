@@ -36,9 +36,9 @@
   its title (bits-ui wires aria-labelledby) or by `label`, focus to the first
   tabbable inside, trapped and looped, returned to the trigger on close. 288
   px wide on a side and at most the viewport tall on a top or bottom edge;
-  the elevation draws the
-  edge, so no border. It fades, as every overlay does; no slide. A long body
-  scrolls inside. The close button is 32 px and the last stop.
+  the elevation draws the edge, so no border. It fades, as every overlay
+  does; no slide. A long body scrolls inside. The close button is 32 px and
+  the last stop.
 -->
 <SheetPortal {...portalProps}>
   <SheetOverlay />

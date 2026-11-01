@@ -3,7 +3,7 @@
 	"name": "font-jetbrains-mono",
 	"title": "JetBrains Mono",
 	"type": "registry:font",
-	"author": "Pluto Systems <https://plutosystems.co>",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 	"description": "JetBrains Mono, the face for labels, code and data, self-hosted through Fontsource.",
 	"meta": {
 		"since": "0.1.0",

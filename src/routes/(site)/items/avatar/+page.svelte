@@ -18,7 +18,7 @@
     {#each sizes as size (size)}
       <Specimen caption={size}>
         <Avatar.Root {size}>
-          <Avatar.Fallback>CG</Avatar.Fallback>
+          <Avatar.Fallback>AL</Avatar.Fallback>
         </Avatar.Root>
       </Specimen>
     {/each}
@@ -28,8 +28,8 @@
 <PreviewSection id="states" title="States">
   <Specimen caption="a group with a count">
     <Avatar.Group>
-      <Avatar.Root><Avatar.Fallback>CG</Avatar.Fallback></Avatar.Root>
       <Avatar.Root><Avatar.Fallback>AL</Avatar.Fallback></Avatar.Root>
+      <Avatar.Root><Avatar.Fallback>GH</Avatar.Fallback></Avatar.Root>
       <Avatar.Root><Avatar.Fallback>MK</Avatar.Fallback></Avatar.Root>
       <Avatar.GroupCount>+4</Avatar.GroupCount>
     </Avatar.Group>
@@ -38,7 +38,7 @@
 
 <PreviewSection id="accessibility" title="Accessibility">
   <ul class="grid max-w-prose list-disc gap-2 pl-6">
-    <li>The image needs <code>alt</code> from the app.</li>
+    <li>The image needs <code>alt</code> from the consuming app.</li>
     <li>
       The fallback's initials are text. This page shows no image, because the
       preview ships no image file.

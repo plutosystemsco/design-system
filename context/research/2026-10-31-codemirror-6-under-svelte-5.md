@@ -2,19 +2,19 @@
 
 - **Status:** complete
 - **Date:** 2026-10-31
-- **Owner:** Clay Gendron (research executed by an agent, Claude, sub-agent of the orchestrating session)
+- **Author:** the design lead
 - **Question:** How does a CodeMirror 6 Python editor become a registry item of ours (`registry:ui`, source an app copies in), wrapped for Svelte 5, themed only through our tokens, accessible by keyboard and screen reader, prerender-safe, and how much does it weigh?
-- **What it blocks:** specification `004`, code and data; through it `wasi-python-dev`'s home page, whose editor the owner decided on 2026-10-31 comes from this registry.
+- **What it blocks:** specification `004`, code and data.
 
 ## How to read this memo
 
 Every claim carries a label.
 
-- **EXECUTED**: we ran it and saw the result, on 2026-10-31, macOS (Darwin 25.5.0, arm64), Bun 1.3.14. `bun pm view` ran at 23:06 UTC. Browser checks ran in Playwright 1.64.1's Chrome Headless Shell 156.0.8078.4 (`chromium-1248`), the build the repository's `@playwright/test` pins; it was not yet installed on this machine, so `bunx --bun playwright install chromium` fetched it into `~/Library/Caches/ms-playwright`.
-- **READ**: a source says so. Each source was read on 2026-10-31. Paths such as `@codemirror/view/dist/index.js` are files in the scratch install, at the versions of section 1. Paths in the first app are relative to `/Users/claygendron/Git/Repos/wasi-python-dev/context/`, read only.
+- **EXECUTED**: we ran it and saw the result, on 2026-10-31, macOS (Darwin 25.5.0, arm64), Bun 1.3.14. Browser checks ran in Playwright 1.64.1's Chrome Headless Shell 156.0.8078.4 (`chromium-1248`), the build the repository's `@playwright/test` pins.
+- **READ**: a source says so. Each source was read on 2026-10-31. Paths such as `@codemirror/view/dist/index.js` are files in the scratch install, at the versions of section 1.
 - **INFERRED**: our reasoning.
 
-Scratch work lives in the session scratchpad, folder `research-editor/`: `app/` (the SvelteKit project at the pinned versions, with `src/lib/code-editor/` the scratch component and theme, `src/lib/variants/` the measured variants, `build-all.sh`, `measure.ts`, `perpkg.ts`, `probe2.ts` and `probe3.ts`), `view-*.json` (the npm metadata), `lint-scratch.ts`, `lint-samples.ts`, and `prior-art/` (the studied package, read only). Nothing was written to this repository except this memo.
+Scratch work was done in a folder outside this repository, and was not kept: `app/` (the SvelteKit project at the pinned versions, with `src/lib/code-editor/` the scratch component and theme, `src/lib/variants/` the measured variants, `build-all.sh`, `measure.ts`, `perpkg.ts`, `probe2.ts` and `probe3.ts`), `view-*.json` (the npm metadata), `lint-scratch.ts`, `lint-samples.ts`, and `prior-art/` (the studied package, read only). Nothing was written to this repository except this memo.
 
 Terms of art used below.
 
@@ -40,7 +40,7 @@ Terms of art used below.
 
 ## 1. The packages
 
-**EXECUTED**: `bun pm view <pkg> --json` and `bun pm view <pkg> time --json`, 23:06 UTC. Every package is MIT.
+**EXECUTED**: `bun pm view <pkg> --json` and `bun pm view <pkg> time --json`. Every package is MIT.
 
 | Package | Version | Published | Depends on (runtime) |
 |---|---|---|---|
@@ -182,7 +182,7 @@ READ, `@codemirror/view/dist/index.js` lines 8338 to 8353: the content element g
 
 ### 4.3 Announcements
 
-READ: `EditorView.announce` is a state effect; its strings are added to a visually hidden `div.cm-announced` with `aria-live="polite"` inside the editor (lines 7968 to 7972, 8367 to 8376, 9061 to 9068). The doc comment aims it at "effects that are visually obvious but may not be noticed by screen reader users." EXECUTED: the region exists, `aria-live="polite"`, `position: fixed`. INFERRED: a run's start and end belong to the page's own status region (the run memo's panel), not to the editor's; the editor announces editor things, such as "Reset to the NumPy example" on Reset, with `view.dispatch({ effects: EditorView.announce.of("...") })`.
+READ: `EditorView.announce` is a state effect; its strings are added to a visually hidden `div.cm-announced` with `aria-live="polite"` inside the editor (lines 7968 to 7972, 8367 to 8376, 9061 to 9068). The doc comment aims it at "effects that are visually obvious but may not be noticed by screen reader users." EXECUTED: the region exists, `aria-live="polite"`, `position: fixed`. INFERRED: a run's start and end belong to the page's own status region, not to the editor's; the editor announces editor things, such as "Reset to the NumPy example" on Reset, with `view.dispatch({ effects: EditorView.announce.of("...") })`.
 
 ### 4.4 Focus visible (SC 2.4.7), and axe
 
@@ -227,7 +227,7 @@ READ, the base theme (`@codemirror/view/dist/index.js` lines 6870 to 7105) and `
 | Scrollbars | `.cm-scroller { scrollbarColor, scrollbarWidth }` | the browser's |
 | Panels, search dialog, fold gutter, tooltips | `.cm-panels`, `.cm-dialog`, ... | `#f5f5f5`, `#ddd`; only if `004` adds those extensions |
 
-The scratch theme covers every row but the last, using `--color-foreground`, `--color-muted`, `--color-muted-foreground`, `--color-border`, `--color-ring`, `--color-destructive`, `--focus-width`, `--focus-offset`, `--line-width`, `--radius`, `--spacing`, `--text-sm`, `--text-sm--line-height`, `--font-mono`, and four editor-only slots: `--code-active-line`, `--code-selection`, `--code-bracket-match`, `--code-bracket-mismatch`. INFERRED: those four and the highlight slots below are the Shiki memo's palette to define; this memo only shows they are consumed as plain variables. The cursor is drawn at `--focus-width` (2 px) rather than CodeMirror's 1.2 px; whether that reads as a cursor or a bar is a design call.
+The scratch theme covers every row but the last, using `--color-foreground`, `--color-muted`, `--color-muted-foreground`, `--color-border`, `--color-ring`, `--color-destructive`, `--focus-width`, `--focus-offset`, `--line-width`, `--radius`, `--spacing`, `--text-sm`, `--text-sm--line-height`, `--font-mono`, and four editor-only slots: `--code-active-line`, `--code-selection`, `--code-bracket-match`, `--code-bracket-mismatch`. INFERRED: those four and the highlight slots below are the Shiki memo's palette to define; this memo only shows they are consumed as plain variables. The cursor is drawn at `--focus-width` (2 px) rather than CodeMirror's 1.2 px; whether that reads as a cursor or a bar is a design call. `004` keeps the browser's native caret, so the question does not arise (`004` decision 9).
 
 ### 5.3 What the Python grammar emits
 
@@ -302,13 +302,13 @@ EXECUTED: the repository's `lintText` on the scratch `code-editor.svelte` and `c
 
 Why: the lint's class tokeniser keeps a trailing colon on an object key (`outline:` splits into a variant and an empty utility, so L4 never fires) and only inspects tokens that start with a letter, so `4px` and `13px` are never looked at; named colours are checked only in arbitrary class values and SVG paint attributes. INFERRED: a theme object is the first registry file whose values are CSS, not classes. The lint catches hex and colour functions in it and nothing else. `004` either adds a rule for theme files (a length or a named colour inside a quoted CSS value) or puts the theme under review, as R3 and R7 are. Also READ: CodeMirror itself writes `style="tab-size: 4; flex-basis: …"` on `.cm-content` at run time (line 8347); that is not in our files, so the lint cannot see it and it holds no colour or size of ours.
 
-## 6. Behaviour the home page needs
+## 6. Behaviour a home page needs
 
-The first app's constitution asks for one editor with five tabs, every example editable, one run and one result, the editor bundled (READ: `constitution.md` §2 item 2, §3; the run memo line 163 drops "CodeMirror 5 from cdnjs"). The toolbar has Run, Reset and a "Ctrl Enter" hint (READ: the primitives memo lines 61 to 69).
+INFERRED: a sandbox's home page wants one editor under a row of example tabs, every example editable, one run and one result, the editor bundled. The toolbar has Run, Reset and a "Ctrl Enter" hint (READ: the primitives memo of 2026-10-28, §1.2).
 
-- **The examples.** EXECUTED over the 29 files: 9 to 25 lines (the four tab examples 22 to 24; `random/25-sudoku.py` 25); the longest line 98 characters (`random/05-regex-fuzzy.py`), 17 files have a line over 90. At `text-sm` (13.5 px) in JetBrains Mono the 92-character Sudoku line needed 766 px against a 640 px editor (scroll width versus client width, gutter 37 px included), so a 640 px editor scrolls horizontally on most examples; INFERRED, at about 8.1 px per character a 98-character line fits from about 850 px of content width.
+- **The examples.** EXECUTED over a sample corpus of 29 short Python scripts for a code sandbox, not kept in this repository: 9 to 25 lines (the four tab examples 22 to 24; the Sudoku example 25); the longest line 98 characters (the fuzzy-regex example), 17 files have a line over 90. At `text-sm` (13.5 px) in JetBrains Mono the 92-character Sudoku line needed 766 px against a 640 px editor (scroll width versus client width, gutter 37 px included), so a 640 px editor scrolls horizontally on most examples; INFERRED, at about 8.1 px per character a 98-character line fits from about 850 px of content width.
 - **Height.** EXECUTED: with no height set, the editor is as tall as its document: 26 lines × 21.6 px + 24 px padding = 585 px for Sudoku, 542 px for the 24-line Pandas example. INFERRED: a fixed height from the ladder (`h-96`, 384 px, about 16 lines) with the editor scrolling inside avoids the page jumping on tab change; a growing height shows every example whole. `.cm-scroller` has `overflow: auto` on both axes, so the editor scrolls itself; `scroll-area` is not needed and would double the scrollbars.
-- **Wrapping.** EXECUTED: `EditorView.lineWrapping` reconfigured live; scroll width equalled client width and the editor grew from 542 to 607 px. INFERRED: wrapped code breaks Python's visual indentation; horizontal scroll is the usual choice, with the wrap left to a reader on a phone if `004` wants it.
+- **Wrapping.** EXECUTED: `EditorView.lineWrapping` reconfigured live; scroll width equalled client width and the editor grew from 542 to 607 px. INFERRED: wrapped code breaks Python's visual indentation; horizontal scroll is the usual choice, with the wrap left to a reader on a phone if `004` wants it. `004` sets no `lineWrapping` by default (`004` decision 9).
 - **Line numbers.** `lineNumbers()` renders `.cm-lineNumbers .cm-gutterElement` right-aligned, default `padding: 0 3px 0 5px; min-width: 20px` (READ: lines 7037 to 7042). The theme sets the padding in `--spacing` steps. INFERRED: `code-block`'s numbers share the font, size, line height and `muted-foreground`; the two match when both read the same tokens.
 - **Mod-Enter.** EXECUTED: `Prec.highest(keymap.of([{ key: "Mod-Enter", run }, { key: "Ctrl-Enter", run }]))`. On the Mac browser Meta-Enter fired the handler and the document's line count did not change (the default `insertBlankLine` was suppressed); Control-Enter did not fire until `Ctrl-Enter` was bound too. INFERRED: the hint must read "⌘ Enter" on a Mac and "Ctrl Enter" elsewhere, or both keys are bound as here and the hint says "Ctrl Enter" everywhere; a `kbd` that reads `navigator.platform` at mount is a client-only detail.
 - **Reset and the tabs.** EXECUTED: `view.setState(EditorState.create({ doc }))` replaced the document and Mod-z then changed nothing (history gone); setting `value` dispatched a replacement and Mod-z restored the previous text. INFERRED: a tab change is a reset (new state), so a visitor cannot undo into another tab's example; Reset is the same call. A `tabs` panel that unmounts its content destroys the view with it; the app keeps each tab's text in its own state if edits must survive a tab change. One editor under the tab list, re-set on change, is simpler and is what "one editor" asks for.
@@ -329,21 +329,21 @@ INFERRED. This commits us to nothing; it is what the findings point to.
 
 1. **Item `code-editor` (`registry:ui`)**, two files: `code-editor.svelte` (the wrapper of section 3: `onMount` view, `$bindable` `value` synced by comparison, `readonly`, `disabled`, `label`, `describedby`, `extensions`, `onrun`, `focus()`, `reset()`) and `code-editor-theme.ts` (the theme and highlight style of section 5, every value a `var(--…)`). Dependencies named and pinned: `@codemirror/state` 6.7.6, `@codemirror/view` 6.43.15, `@codemirror/language` 6.13.1, `@lezer/highlight` 1.2.5. The item itself binds no language.
 2. **A preset file, `code-editor-python.ts`**, either in the same item or a sibling item, exporting variant b or d's extension array plus `@codemirror/lang-python` 6.2.1 (`pythonLanguage`, not `python()`, unless completion is wanted), `@codemirror/commands` 6.11.1 and `@codemirror/autocomplete` 6.20.4 for `closeBrackets`. About 128 to 132 KB gzip on the one route that uses it.
-3. **No `basicSetup`, no `indentWithTab`.** Tab leaves the editor; Mod-] indents. If the owner wants Tab to indent, the "Escape, then Tab" text goes beside the editor and into `aria-describedby`.
-4. **`tabindex="0"`, `aria-label`, `aria-describedby`** through `contentAttributes`; `Ctrl-Enter` bound beside `Mod-Enter`; `readonly` during a run; `reset()` on tab change and Reset; a fixed ladder height with internal scroll, or a growing height, as `004` decides.
+3. **No `basicSetup`, no `indentWithTab`.** Tab leaves the editor; Mod-] indents. If an app binds Tab to indent, the "Escape, then Tab" text goes beside the editor and into `aria-describedby`.
+4. **`tabindex="0"`, `aria-label`, `aria-describedby`** through `contentAttributes`; `Ctrl-Enter` bound beside `Mod-Enter`; `readonly` during a run; `reset()` on tab change and Reset; a fixed ladder height with internal scroll, or a growing height; `004` decision 9 takes the growing height.
 5. **The palette** is the Shiki memo's neutral set (`--code-foreground`, `-background`, `-keyword`, `-string`, `-constant`, `-function`, `-comment`, `-link`, and the diff and ANSI slots), plus four editor-only properties: `--code-active-line`, `--code-selection`, `--code-bracket-match`, `--code-bracket-mismatch`. All defined once in the generated CSS from tokens, consumed by both the editor's `HighlightStyle` and `code-block`.
 6. **The lint** gains a rule for CSS values in a theme file (a length, or a named colour, inside a quoted value), or `004`'s checklist assigns theme files to review.
 7. **A prerendered `<pre>` fallback** inside the component, swapped on mount.
 
-## 9. What is still unknown
+## 9. What this memo does not settle
 
-- **The colours.** The Shiki memo measured the five text slots on `muted`; the four editor-only tints (active line, selection, bracket match and mismatch) have no values yet, and a selection tint must keep the text under it at AA.
-- **Hydration on a slow device.** The `<pre>` to editor swap was seen only in headless Chromium on an M-series Mac; the flash's length on a phone was not measured.
-- **Firefox and Safari.** Keyboard, `scrollbar-color` and the drawn selection were checked in Chromium only. CodeMirror special-cases Firefox 153's selection styling (READ, line 9692), so the engines differ.
-- **A real screen reader.** The attributes are in place; how VoiceOver reads the editor, the announcements and the Tab instruction was not listened to.
-- **Touch.** CodeMirror draws selection handles on touch; their colour (`currentColor`) and size were not reviewed.
-- **Whether `004` wants completion.** `python()` versus `pythonLanguage` turns on it.
-- **Whether `shadcn-svelte add` installs `@codemirror/*` at the pinned versions** when the item's `dependencies` carry them; the registry build and the CLI's handling were not exercised here.
-- **The exact Shiki `code-block` line metrics**, to confirm that the two components' line numbers align pixel for pixel.
+- **The colours.** Answered by `004`: no drawn selection, so the selection is the browser's own; the active line is an opaque `card` step; a matching bracket takes an `input` outline and a mismatch `destructive` (`004` decisions 5 and 9).
+- **Hydration on a slow device.** The `<pre>` to editor swap was seen only in headless Chromium on a desktop machine; its length on a phone was not measured.
+- **Firefox and Safari.** This release checks Chromium only (decisions.md, "After the public-readiness review"). CodeMirror special-cases Firefox 153's selection styling (READ, line 9692), so the engines differ.
+- **A real screen reader.** No screen reader has been run; the tests prove the DOM contract (same entry).
+- **Touch.** CodeMirror draws selection handles on touch; their colour (`currentColor`) and size were not reviewed. No touch device is among this release's checks.
+- **Completion.** Answered: none; the preset uses `pythonLanguage`, not `python()` (`004` decision 9).
+- **Whether `shadcn-svelte add` installs `@codemirror/*` at the pinned versions.** Answered: `004`'s smoke test installs the editor and finds each package at its pinned range in the app (`tests/smoke/code-add.test.ts`).
+- **The exact line metrics.** The editor and `code-block` read the same font, size and line-height tokens; whether their line numbers align pixel for pixel is not measured.
 
 **In one line:** CodeMirror 6 wraps in a 130-line Svelte 5 component created in `onMount`, costs 126 to 132 KB gzip on one route, prerenders to a `<pre>`, takes every colour and size from `var(--…)` tokens through style-mod, leaves Tab unbound so there is no trap, and needs a `tabindex="0"` on its content and a palette the Shiki memo must supply.

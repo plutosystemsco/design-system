@@ -144,8 +144,8 @@ ZeroDivisionError: division by zero`;
       highlighted token is a class, <code>text-code-keyword</code>, never a
       <code>style</code>; a token in the body's colour carries no class. The
       sudoku example shows numbers, built-ins such as <code>print</code> and
-      <code>range</code>, constants and comments by the new rules; a definition
-      is medium weight, a call is not.
+      <code>range</code>, constants and comments; a definition is medium weight,
+      a call is not.
     </li>
   </ul>
 </PreviewSection>

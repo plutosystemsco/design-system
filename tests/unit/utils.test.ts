@@ -39,19 +39,6 @@ test("(c) cn keeps a text size and a later text colour", () => {
   expect(out).toContain("text-destructive");
 });
 
-// Review finding 7: the sidebar's outline row writes its start width after
-// the border shorthand, so the merge keeps it.
-test("(e) a start border width written after the border shorthand survives cn; written before, it is dropped", () => {
-  const kept = cn(
-    "border-s-(length:--focus-width) border-transparent",
-    "border border-input border-s-(length:--focus-width)",
-  ).split(/\s+/);
-  expect(kept).toContain("border");
-  expect(kept).toContain("border-s-(length:--focus-width)");
-  const dropped = cn("border-s-(length:--focus-width)", "border").split(/\s+/);
-  expect(dropped).not.toContain("border-s-(length:--focus-width)");
-});
-
 test("(d) 14 of 14 items that use tv import it from tailwind-variants/lite", () => {
   const registry = JSON.parse(readFileSync("registry.json", "utf8"));
   const files: string[] = registry.items.flatMap(
@@ -89,4 +76,17 @@ test("(d) 14 of 14 items that use tv import it from tailwind-variants/lite", () 
       "marker",
     ].sort(),
   );
+});
+
+// The sidebar's outline row writes its start width after
+// the border shorthand, so the merge keeps it.
+test("(e) a start border width written after the border shorthand survives cn; written before, it is dropped", () => {
+  const kept = cn(
+    "border-s-(length:--focus-width) border-transparent",
+    "border border-input border-s-(length:--focus-width)",
+  ).split(/\s+/);
+  expect(kept).toContain("border");
+  expect(kept).toContain("border-s-(length:--focus-width)");
+  const dropped = cn("border-s-(length:--focus-width)", "border").split(/\s+/);
+  expect(dropped).not.toContain("border-s-(length:--focus-width)");
 });

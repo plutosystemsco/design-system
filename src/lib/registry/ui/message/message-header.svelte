@@ -15,7 +15,7 @@
 </script>
 
 <!--
-  Who spoke, as a heading in mono: the book's lowercase eyebrow. tabindex="-1"
+  Who spoke, as a heading in mono, lowercase, as every eyebrow is. tabindex="-1"
   so a "Latest reply" control can focus it, and Tab does not stop on it.
 -->
 <svelte:element

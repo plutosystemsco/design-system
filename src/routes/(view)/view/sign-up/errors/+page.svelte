@@ -5,7 +5,7 @@
   } from "#lib/registry/components/sign-up-form.svelte";
 
   // A malformed email and an 8-character password after a submit, and the
-  // consent sentence with both of the app's links, here to "/".
+  // consent sentence with both of the consuming app's links, here to "/".
   async function createAccount(): Promise<SignUpResult> {
     return { ok: true };
   }

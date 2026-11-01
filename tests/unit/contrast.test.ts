@@ -19,7 +19,7 @@ type Row = [
   result: string,
 ];
 
-// Decision 12's tables, held as expected data. Each row is recomputed from the token file.
+// 001 decision 12's tables, held as expected data. Each row is recomputed from the token file.
 const LIGHT: Row[] = [
   ["foreground on background", "#14161C", "#F7F7F4", 16.84, 4.5, "pass"],
   ["card-foreground on card", "#14161C", "#FFFFFF", 18.08, 4.5, "pass"],

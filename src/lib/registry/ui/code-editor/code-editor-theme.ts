@@ -3,7 +3,7 @@ import { EditorView } from "@codemirror/view";
 import { tags } from "@lezer/highlight";
 
 /**
- * The editor's chrome and its highlight, from the tokens (004 decision 9).
+ * The editor's chrome and its highlight, from the tokens.
  * Every value is a `var()`, read from `:root` wherever a name exists there.
  * Five names live only in `@theme inline`: `--spacing`, `--text-sm`,
  * `--text-sm--line-height`, `--font-mono` and `--font-weight-medium`. They
@@ -19,7 +19,7 @@ export const codeTheme = EditorView.theme({
     backgroundColor: "var(--code-background)",
     borderRadius: "var(--radius)",
   },
-  // 001's focus recipe, around the whole editor, gutter included.
+  // The global focus recipe, around the whole editor, gutter included.
   "&.cm-focused": {
     outline: "var(--focus-width) solid var(--ring)",
     outlineOffset: "var(--focus-offset)",
@@ -32,7 +32,7 @@ export const codeTheme = EditorView.theme({
     fontFamily: "var(--font-mono)",
     fontSize: "var(--text-sm)",
     lineHeight: "var(--text-sm--line-height)",
-    // Code shows the characters that were typed (the checkpoint's call).
+    // Code shows the characters that were typed: no ligatures.
     fontVariantLigatures: "none",
     borderRadius: "var(--radius)",
     scrollbarColor: "var(--input) var(--muted)",
@@ -67,7 +67,7 @@ export const codeTheme = EditorView.theme({
 const slot = (name: string) => `var(--code-${name})`;
 
 /**
- * The highlight, by role (007 decision 6): the same twenty-one code slots
+ * The highlight, by role: the same twenty-one code slots
  * Shiki reads in `code-block`, so the editor and the block colour the same
  * code the same way in every language with a Lezer grammar. A rule on a
  * parent tag catches its children and a child's rule wins. A definition is

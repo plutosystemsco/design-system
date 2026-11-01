@@ -351,8 +351,9 @@ async function expectRingUnclipped(
   expect(problem).toBeNull();
 }
 
-// 005 decision 17: 32 fixtures and 64 stops when 005 landed; 007 decision 9
-// adds the ink surface's fixture of 7 stops on the pluto-theme page.
+// 005 decision 17: 32 fixtures and 64 stops when 005 landed. 007 adds two:
+// the ink surface's fixture of 7 stops on the pluto-theme page (007 decision 9)
+// and the code-languages page's fixture of 2 stops (007 decision 7).
 const FIXTURE_COUNT = 34;
 const STOP_COUNT = 73;
 test(`the ${FIXTURE_COUNT} fixtures hold ${STOP_COUNT} stops`, () => {
@@ -414,6 +415,8 @@ for (const [item, expected] of FIXTURES) {
 
 /** 002 decision 23's 9 behaviours, 003 decision 20's 2, 004 decision 17's 8 and 005 decision 17's 12: 31. */
 test.describe("behaviours", () => {
+  const fixture = (page: Page) => page.getByTestId("keyboard-fixture");
+
   // 005 decision 17, behaviour 1.
   test("Space on the theme toggle flips aria-pressed and the dark class; Space again restores both", async ({
     page,
@@ -610,8 +613,8 @@ test.describe("behaviours", () => {
     await expect.poll(async () => (await state()).atEnd).toBe(true);
     const button = fixture(page).getByRole("button", { name: "Scroll to end" });
     await expect(button).toBeHidden();
-    // End while at the end moves nothing and releases nothing (review
-    // finding 1): an appended turn is still followed.
+    // End while at the end moves nothing and releases nothing: an appended
+    // turn is still followed.
     await page.waitForTimeout(800);
     await page.keyboard.press("End");
     await page.waitForTimeout(200);
@@ -755,8 +758,6 @@ test.describe("behaviours", () => {
     await expect(count).toHaveText("1");
   });
 
-  const fixture = (page: Page) => page.getByTestId("keyboard-fixture");
-
   test("Space flips the switch", async ({ page }) => {
     await open(page, "/items/switch/");
     const control = fixture(page).getByRole("switch").first();
@@ -892,6 +893,7 @@ test.describe("behaviours", () => {
     await expect(content).toHaveCount(0);
     await expect(trigger).toBeFocused();
   });
+
   test("Space on Announce sets the status text", async ({ page }) => {
     await open(page, "/items/status/");
     const announce = fixture(page).getByRole("button", { name: "Announce" });
@@ -1308,8 +1310,8 @@ test.describe("viewer toolbars", () => {
 });
 
 // 003's 42, plus app-shell (4 states, 3 widths, Open alone, the frame: 9) and
-// chat (6 states and the same 5: 11): 62. (006 decision 14 wrote 58, adding
-// 7 and 9; the frame and Open alone are stops on every toolbar.)
+// chat (6 states and the same 5: 11): 62. The frame and Open alone are stops
+// on every toolbar.
 test("the 7 viewer toolbars hold 62 stops", () => {
   const counts = BLOCKS.map((b) => {
     const n = (BLOCK_VIEWS[b] ?? []).length;

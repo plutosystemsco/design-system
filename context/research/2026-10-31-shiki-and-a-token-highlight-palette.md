@@ -2,19 +2,19 @@
 
 - **Status:** complete
 - **Date:** 2026-10-31
-- **Owner:** Clay Gendron (research executed by an agent, Claude, sub-agent of the orchestrating session)
+- **Author:** the design lead
 - **Question:** Can a `code-block` item highlight code with Shiki so that every colour comes from our tokens in both themes, passes WCAG 2.2 AA as text on its ground, and the same palette can also drive a CodeMirror 6 editor? Another memo covers CodeMirror; this one provides the palette and the slot list it will map to.
-- **What it blocks:** specification `004` (the code block: its code and its token data); through it, `wasi-python-dev`'s home page (the install snippet, the output panel, and code in the later chat pane).
+- **What it blocks:** specification `004` (the code block: its code and its token data); through it, an app's code surfaces: an install snippet, an output panel, and code in a chat pane.
 
 ## How to read this memo
 
 Every claim carries a label.
 
-- **EXECUTED**: we ran it and saw the result, on 2026-10-31, macOS (Darwin 25.5.0, arm64), Bun 1.3.14. `bun pm view` ran at 23:06 UTC.
-- **READ**: a source says so. Each source was read on 2026-10-31. Paths in the prior-art clone are relative to `context/prior_art/shadcn-svelte/`, at commit `6149e14`. Paths in the first app are relative to `/Users/claygendron/Git/Repos/wasi-python-dev/context/`, read only. Shiki's own source was read in the scratch installs named below.
+- **EXECUTED**: we ran it and saw the result, on 2026-10-31, macOS (Darwin 25.5.0, arm64), Bun 1.3.14.
+- **READ**: a source says so. Each source was read on 2026-10-31. Paths in the prior-art clone are relative to `context/prior_art/shadcn-svelte/`, at commit `6149e14`. Shiki's own source was read in the scratch installs named below.
 - **INFERRED**: our reasoning.
 
-Scratch work lives in the session scratchpad, folder `research-shiki/`: `view/` (the registry queries), `s4/` (shiki 4.5.0 plus the CodeMirror packages; `render.ts`, `cmp.ts`, `custom.ts`, `hs.ts`, `lezer2.ts`, `bundle/`), `s3/` (shiki 3.23.0; `render3.ts`, `bundle/`), `stock/` (copies of the stock files the lint ran on), and `scripts/` (`lines.ts`, `contrast-table.ts`, `lint-stock.ts`). Nothing was written to this repository except this memo. No package was installed into it.
+Scratch work was done in folders outside this repository, and was not kept: `view/` (the registry queries), `s4/` (shiki 4.5.0 plus the CodeMirror packages; `render.ts`, `cmp.ts`, `custom.ts`, `hs.ts`, `lezer2.ts`, `bundle/`), `s3/` (shiki 3.23.0; `render3.ts`, `bundle/`), `stock/` (copies of the stock files the lint ran on), and `scripts/` (`lines.ts`, `contrast-table.ts`, `lint-stock.ts`). Nothing was written to this repository except this memo. No package was installed into it.
 
 This memo builds on the primitives memo ([`2026-10-28-the-primitives-the-blocks-and-the-home-page-need.md`](2026-10-28-the-primitives-the-blocks-and-the-home-page-need.md), §1.3, §3, §4 and §6.2), which already found what the stock `code-block` is, its lint counts, and the shiki versions as of that date. It does not repeat those.
 
@@ -33,7 +33,7 @@ Terms of art used below.
 
 - **Yes, with the CSS-variables theme.** Shiki's `createCssVariablesTheme` writes every token colour as `style="color:var(--shiki-token-keyword)"`, nothing else (EXECUTED, §3.1). It exists in both 3.23.0 and 4.5.0, the function bodies differ only in formatting, and the rendered HTML for a Python and an ANSI sample is byte-identical between the two (EXECUTED, §1 and §3). A hand-made theme object may also use `var()` colours and add `font-style` or `font-weight` per scope (EXECUTED, §3.4).
 - **The palette needs five text tokens we already have, and no new hue.** On the `muted` ground every candidate passes AA in both themes: `foreground` 15.00 / 12.83, `muted-foreground` 6.79 / 6.13, `primary` 4.90 / 5.22, `success` 5.23 / 6.55, `destructive` 4.71 / 5.53 (EXECUTED, §4.1). `input` fails text at 3.27 / 3.31. Amber fails light text at 1.61.
-- **Fourteen slots, 32 ANSI variables.** The theme uses `--shiki-foreground`, `--shiki-background`, eleven `--shiki-token-*` and three diff slots, plus 16 ANSI colours and a `-dim` variant of each (READ and EXECUTED, §3.2). For Python, 34% of tokens land in `punctuation`, 16% in `keyword`, 16% in `foreground`, 12% in `constant`, 11% in `string-expression`, 9% in `function`, 1% in `comment`; `token-string` gets none (EXECUTED over the 29 examples, §3.3).
+- **Fourteen slots, 32 ANSI variables.** The theme uses `--shiki-foreground`, `--shiki-background`, eleven `--shiki-token-*` and three diff slots, plus 16 ANSI colours and a `-dim` variant of each (READ and EXECUTED, §3.2). For Python, 34% of tokens land in `punctuation`, 16% in `keyword`, 16% in `foreground`, 12% in `constant`, 11% in `string-expression`, 9% in `function`, 1% in `comment`; `token-string` gets none (EXECUTED over a sample corpus of 29 short Python scripts for a code sandbox, not kept in this repository; §3.3).
 - **Bundle cost.** Core plus the JavaScript engine (ANSI included) is 55.9 KB gzipped; plus Python, bash and JSON, 70.6 KB (284.6 KB minified). The Oniguruma engine with its inlined WASM is 284.3 KB gzipped. ANSI costs nothing extra: its parser is inside core (EXECUTED, §3.5). Highlighting can run at build time, so a static snippet ships no Shiki at all (READ and INFERRED, §3.6).
 - **Shiki 4.5.0 is the version to test against** and `^4.5.0` the range to name (INFERRED, §1.4). 3.x ended at 3.23.0 two days before 4.0.0; 4.0 only dropped Node 18 and deleted deprecated names.
 - **The stock files fail our rules on 21 points by the lint and 12 more in their maia CSS**, mostly `cn-` markers, three `style` attributes, `outline-none`, a `dark:` variant, the `ring-[3px] ring-ring/50` halo, tints and off-ladder sizes (EXECUTED, §2.3). Two rules the lint cannot see matter more: the `bg-muted` line tints vanish on a `muted` ground, and `bg-destructive/10` is forbidden inside one (§2.4).
@@ -64,7 +64,7 @@ What 3.0 had changed (READ: `shiki.style/blog/v3`): the engines left core (`shik
 
 ### 1.2 `createCssVariablesTheme` in both lines
 
-EXECUTED: the function is exported from `@shikijs/core/dist/index.mjs` in both installs, re-exported by `shiki/core`. A `diff` of the two bodies (whitespace stripped) shows only formatting and one comment. Rendering the sudoku example (`random/25-sudoku.py`) and an ANSI string with the same theme name in both versions produced byte-identical HTML (`s3/py3.html` against `s4/py4.html`, `ansi3.html` against `ansi4.html`).
+EXECUTED: the function is exported from `@shikijs/core/dist/index.mjs` in both installs, re-exported by `shiki/core`. A `diff` of the two bodies (whitespace stripped) shows only formatting and one comment. Rendering the Sudoku example from the sample corpus and an ANSI string with the same theme name in both versions produced byte-identical HTML (`s3/py3.html` against `s4/py4.html`, `ansi3.html` against `ansi4.html`).
 
 READ (`shiki.style/guide/theme-colors`, "CSS Variables Theme"): the theme "is not included by default and must be registered explicitly"; its options are `name` (`'css-variables'`), `variablePrefix` (`'--shiki-'`), `variableDefaults` (`{}`) and `fontStyle` (`true`); it "is provided mainly for easier migration" and is "a lot less granular than most of the other themes". The page recommends building a theme by hand or using colour replacements for finer control. §3.4 shows the hand-made route works with our variables.
 
@@ -121,7 +121,7 @@ EXECUTED: `lintText` from `scripts/lint-literals.ts` (its CLI takes no file argu
 | `use-highlighted-code.svelte.ts` | 0 | |
 | maia CSS, lines 1689 to 1740 | 12 | `ring-[3px]`, `ring-ring/50`, `dark:bg-input/30`, `border-destructive/30`, `dark:border-destructive/40`, `me-1.5` ×2, `size-3.5`, `ring-1`, `ring-foreground/10`, `leading-relaxed`, `pt-1.5` |
 
-Total 21 in the files, 12 in the CSS. The `002` checklist rules the lint cannot see (`002` lines 248 to 297), INFERRED from the reading above:
+Total 21 in the files, 12 in the CSS. The `002` checklist rules the lint cannot see (`002` decision 9), INFERRED from the reading above:
 
 - **R2, focus.** The halo is drawn on the root through `has-[…]:ring-*`. Our recipe is the `:focus-visible` outline on the `pre` itself (`001` decision 13); `outline-none` goes.
 - **R5 and R21, sizes.** The copy button is `icon-xs`, under 24 px; `002` has `size-8` and `size-12` only. The title's `size-3.5` icon is off the ladder.
@@ -136,7 +136,7 @@ Total 21 in the files, 12 in the CSS. The `002` checklist rules the lint cannot 
 
 ## 3. The CSS-variables theme, executed
 
-EXECUTED in `s4/` with shiki 4.5.0, `createHighlighterCore`, `createJavaScriptRegexEngine({ forgiving: true })`, and `createCssVariablesTheme({ name: "pluto-vars" })`. Languages loaded from `shiki/langs/python.mjs`, `shellscript.mjs` and `json.mjs`. Samples: `random/25-sudoku.py`; `pip install wasi-python` plus a second shell line; a JSON object shaped like a run result; and a string with SGR codes 31, 1;31, 32, 33, 34, 35, 36, 90, 2 and 41.
+EXECUTED in `s4/` with shiki 4.5.0, `createHighlighterCore`, `createJavaScriptRegexEngine({ forgiving: true })`, and `createCssVariablesTheme({ name: "pluto-vars" })`. Languages loaded from `shiki/langs/python.mjs`, `shellscript.mjs` and `json.mjs`. Samples: the Sudoku example; `pip install pluto-sandbox` plus a second shell line; a JSON object shaped like a run result; and a string with SGR codes 31, 1;31, 32, 33, 34, 35, 36, 90, 2 and 41.
 
 ### 3.1 The HTML shape
 
@@ -182,7 +182,7 @@ EXECUTED: `codeToTokens`, counting non-blank tokens.
 | `token-function` | 361 (9.2%) | 2 | 0 | `print`, `DataFrame`, `groupby`, `linspace`; bash `pip`, `python` |
 | `token-comment` | 45 (1.1%) | 0 | 0 | `#` comments, docstrings |
 | `token-parameter` | 11 (0.3%) | 0 | 0 | `self`, `n`, `row` |
-| `token-string` | 0 | 5 | 0 | bash `install`, `wasi-python`, `-m` |
+| `token-string` | 0 | 5 | 0 | bash `install`, `pluto-sandbox`, `-m` |
 
 ANSI sample: SGR 31 gave `color:var(--shiki-ansi-red)`; 1;31 added `font-weight:bold`; 90 gave `--shiki-ansi-bright-black`; 2;32 gave `--shiki-ansi-green-dim`; 41 gave `background-color:var(--shiki-ansi-red)` with `color:var(--shiki-foreground)`; unstyled text is `foreground`.
 
@@ -207,7 +207,7 @@ ANSI adds nothing: its parser (`ansi-sequence-parser`) is compiled into `@shikij
 
 ### 3.6 Build time or run time
 
-READ (`code-block.md` lines 399 to 431): `highlightCode` is async and returns plain data, for a `load` function. Our preview app and `wasi-python-dev` build with `@sveltejs/adapter-static` (`001` decision 3). INFERRED:
+READ (`code-block.md` lines 399 to 431): `highlightCode` is async and returns plain data, for a `load` function. Our preview app builds with `@sveltejs/adapter-static` (`001` decision 3), as any static app may. INFERRED:
 
 - **Static code, such as the install snippet**, highlights at prerender. The page ships the token data (an array of `{ content, color }` per line) and zero Shiki bytes. The `code-block` item renders tokens it is given; it need not import Shiki at all.
 - **Run output is dynamic.** A client that highlights it needs core plus the engine: 55.9 KB gzipped for ANSI alone, 70.6 KB with the three grammars. But run output is text, and CPython colours tracebacks only for a terminal (READ, 2026-10-31, `docs.python.org/3/using/cmdline.html`, "Controlling color": colour is on by default "in certain situations such as when displaying tracebacks"; `TERM=dumb`, `NO_COLOR` and `PYTHON_COLORS=0` turn it off; `PYTHON_COLORS` is new in 3.13). The sandbox gives the program no terminal, so its stderr carries no escape codes unless the program writes them itself (INFERRED). A plain `<pre>` with no highlighter is the likely answer for the output panel, with the ANSI path as an option for programs that print colour.
@@ -215,7 +215,7 @@ READ (`code-block.md` lines 399 to 431): `highlightCode` is async and returns pl
 
 ### 3.7 Passing the lint without a `style` attribute (INFERRED)
 
-The lint flags every `style=` (§2.4). The header comment of `scripts/lint-literals.ts` says "the CSS-variable form `-(--token)` is always allowed". So an item can turn each slot into a class instead of a style: `var(--code-keyword)` becomes `text-(--code-keyword)`, which Tailwind compiles to `color: var(--code-keyword)`. The item would hold a literal table of the fourteen class strings, so Tailwind's scanner sees them. Font styles map the same way (`italic`, `font-medium`). The counter reset for line numbers can move to CSS as well (a `[counter-reset:line]` arbitrary property holds no length or colour, which the lint allows), with `startLine` set as a CSS variable or a `style` the lint would still flag; `004` decides that one case. Not tested here.
+The lint flags every `style=` (§2.4). The header comment of `scripts/lint-literals.ts` says "the CSS-variable form `-(--token)` is always allowed". So an item can turn each slot into a class instead of a style: `var(--code-keyword)` becomes `text-(--code-keyword)`, which Tailwind compiles to `color: var(--code-keyword)`. The item would hold a literal table of the fourteen class strings, so Tailwind's scanner sees them. Font styles map the same way (`italic`, `font-medium`). The counter reset for line numbers can move to CSS as well (a `[counter-reset:line]` arbitrary property holds no length or colour, which the lint allows), with `startLine` set as a CSS variable or a `style` the lint would still flag; `004` decides that one case. Not tested here. `004` takes this route: tokens render as `text-code-<slot>` classes (`004` decision 7), and `startLine` is out of its scope.
 
 ## 4. The palette, computed
 
@@ -249,9 +249,9 @@ Dark theme:
 | `paper-line-input` `#787C8A` (`input`) | 3.31 non-text only | 3.86 non-text only | 4.34 non-text only |
 | `amber` `#F0AE12` | 7.06 | 8.25 | 9.27 |
 
-Bold is 4.5 or better. Every semantic text token passes on every ground in both themes. `input` never reaches text. Amber passes arithmetically in dark but the brand forbids it as text (v2 §03, `001` decision 8: `caution` is "Never text"). The tightest pair is `primary` on light `muted`, 4.90; `destructive` on light `muted`, 4.71, is already a `001` contrast row.
+Bold is 4.5 or better. Every semantic text token passes on every ground in both themes. `input` never reaches text. Amber passes arithmetically in dark but the brand forbids it as text (the design book §03, `001` decision 8: `caution` is "Never text"). The tightest pair is `primary` on light `muted`, 4.90; `destructive` on light `muted`, 4.71, is already a `001` contrast row.
 
-Between text colours the ratios are small: `ink` against `blue` 3.05, `ink` against `ink-soft` 2.20, `paper` against `blue-lifted` 2.45 (EXECUTED). INFERRED: WCAG sets no minimum between two text colours, but these numbers say the palette is quiet, as v2 wants.
+Between text colours the ratios are small: `ink` against `blue` 3.05, `ink` against `ink-soft` 2.20, `paper` against `blue-lifted` 2.45 (EXECUTED). INFERRED: WCAG sets no minimum between two text colours, but these numbers say the palette is quiet, as the design book wants.
 
 ### 4.2 The mapping (INFERRED)
 
@@ -279,8 +279,6 @@ Does a reader who cannot see colour still read the code? Yes (INFERRED). Highlig
 
 ### 4.3 The ANSI sixteen (INFERRED, from §4.1)
 
-The brief for this memo says the app's output panel shows stderr in red; that statement was not found in the app's `context/` (EXECUTED: grep of its memos, specifications and reviews), so it is taken as the orchestrating session's intent, not a settled app decision.
-
 | ANSI | Token | What is lost |
 |---|---|---|
 | black, white | `foreground` | black on ink and white on paper would vanish; both become the body colour |
@@ -294,7 +292,7 @@ The brief for this memo says the app's output panel shows stderr in red; that st
 | every `-dim` | `muted-foreground` | the per-colour dimming; Shiki halves a hex colour's alpha, but a variable gets a new name, so we choose one quiet colour |
 | a background code (SGR 40 to 47) | `background-color` is set to the same variable | a red background needs `destructive-foreground` text; the theme sets `foreground`. Not solved by variables alone |
 
-So of sixteen, nine keep their meaning, two become body text, and yellow, magenta and cyan lose theirs. For the app this matters little: its stderr carries no escape codes (§3.6), and a program that prints colour is the visitor's own.
+So of sixteen, nine keep their meaning, two become body text, and yellow, magenta and cyan lose theirs. For a sandbox's output this matters little: its stderr carries no escape codes (§3.6), and a program that prints colour is the visitor's own.
 
 ## 5. One palette for two engines
 
@@ -355,15 +353,15 @@ Define, in the generated CSS from tokens, one set of custom properties that neit
 | `--code-inserted`, `--code-deleted`, `--code-changed` | `success`, `destructive`, `primary` | `markup.inserted`, `markup.deleted`, `markup.changed` | `inserted`, `deleted`, `changed` |
 | `--code-ansi-<name>` ×16 and `--code-ansi-<name>-dim` ×16 | §4.3 | `terminal.ansi*` | not used by an editor |
 
-Then one token change moves both engines. If `004` keeps `createCssVariablesTheme`, set `variablePrefix: "--code-"` and accept Shiki's `--code-token-keyword` spelling; if it writes the theme object (§3.4), the names are exactly these. The property values are themselves `var(--primary)` and the like, so `build-tokens` emits them in `:root` once and the `.dark` switch carries through (INFERRED from how `src/app.css` lines 10 to 123 already work).
+Then one token change moves both engines. If `004` keeps `createCssVariablesTheme`, set `variablePrefix: "--code-"` and accept Shiki's `--code-token-keyword` spelling; if it writes the theme object (§3.4), the names are exactly these. The property values are themselves `var(--primary)` and the like, so `build-tokens` emits them in `:root` once and the `.dark` switch carries through (INFERRED from how the `:root` and `.dark` blocks of `src/app.css` already work).
 
 ## 6. The groove and the ground
 
-READ: `001` decision 13 and `src/app.css` lines 241 to 245: `groove` is `border-top: var(--line-width) solid var(--groove-line)` plus `box-shadow: inset 0 var(--line-width) 0 var(--groove-light)`; in dark, `groove-light` is `clear`. The stock chrome is `border border-input` all round, `dark:bg-input/30`, no line between header and code (§2.3). INFERRED options, no decision:
+READ: `001` decision 13 and the `@utility groove` rule in `src/app.css`, as they stood on this date: `groove` is `border-top: var(--line-width) solid var(--groove-line)` plus `box-shadow: inset 0 var(--line-width) 0 var(--groove-light)`; in dark, `groove-light` is `clear`. The stock chrome is `border border-input` all round, `dark:bg-input/30`, no line between header and code (§2.3). INFERRED options (`004` decision 8 took the first: `muted`, no border, the groove under the header):
 
 | Ground | Border | Header to code | Line tints | Trade-offs |
 |---|---|---|---|---|
-| **`muted`** (wash / ink-wash) | none, or `border-border` hairline | `groove` | `highlighted` and `added` cannot be `bg-muted` (invisible); `removed` cannot be `bg-destructive/10` (R7). Needs another device: a left `border-l-(length:--focus-width) border-primary` marker, or `card` as the inset for a highlighted line | the v2 "code ground" look `001` decision 8 names; tightest pair `primary` 4.90; v2 specifies the groove's white line "on paper grounds", so on wash it is untested |
+| **`muted`** (wash / ink-wash) | none, or `border-border` hairline | `groove` | `highlighted` and `added` cannot be `bg-muted` (invisible); `removed` cannot be `bg-destructive/10` (R7). Needs another device: a left `border-l-(length:--focus-width) border-primary` marker, or `card` as the inset for a highlighted line | the design book's "code ground" look `001` decision 8 names; tightest pair `primary` 4.90; the design book specifies the groove's white line "on paper grounds", so on wash it is untested |
 | **`card`** (raised / ink-raised) | `border-border` hairline (`card` draws its edge that way, primitives memo §3) | `groove` | the stock tints work as they stand: `bg-muted` for highlighted and added, `bg-destructive/10` for removed, both sanctioned on `card` | more room: `primary` 5.91; a code block inside a card then sits white on white, told apart only by the hairline |
 | **`background`** (paper / ink) | `border-border` | `groove` | as `card` | the block disappears into the page; reads as a plain `<pre>` with a line |
 
@@ -371,13 +369,13 @@ Header and footer carry `text-muted-foreground` in stock; both pass on every gro
 
 ## 7. Line numbers and long lines
 
-EXECUTED (`scripts/lines.ts`) over the 29 examples (`tabs/` 4, `random/` 25) and their 29 `expected/*.stdout.txt`.
+EXECUTED (`scripts/lines.ts`) over the 29 examples (4 tab examples and 25 others) and their 29 expected outputs.
 
 | Measure | Code | Expected output |
 |---|---|---|
 | Lines per file: min / median / max | 9 / 19 / 25 | 3 / 8 / 1,163 (the SVG example) |
 | Total lines | 524 | |
-| Longest line (characters) | 98 (`random/05-regex-fuzzy.py`) | 159 (`16-yaml-toml-json.stdout.txt`) |
+| Longest line (characters) | 98 (the fuzzy-regex example) | 159 (the YAML, TOML and JSON example's output) |
 | Longest line per file: min / median / max | 65 / 87 / 98 | |
 | Files with a line over 80 characters | 23 of 29 | |
 | Lines over 80 / over 100 | 46 / 0 | |
@@ -395,16 +393,15 @@ This commits us to nothing. It is what the findings point to.
 4. **The `--code-*` properties of §5.3**, emitted by `build-tokens`, read by both engines.
 5. **Tokens as classes, not `style`** (§3.7), so the item passes the lint as it stands and `dark:` disappears.
 6. **Prerender the static snippets**; give the output panel a plain `<pre>` and leave the ANSI path for programs that print colour (§3.6). Load Shiki in the client only where code streams.
-7. **Ground: `card` with a `border-border` hairline and the `groove` under the header** is the easier ground for diff and highlighted lines; `muted` is the v2 look and needs a marker device for those lines (§6). The owner's call.
+7. **Ground: `card` with a `border-border` hairline and the `groove` under the header** is the easier ground for diff and highlighted lines; `muted` is the design book's look and needs a marker device for those lines (§6). `004` decision 8 chose `muted`, with an opaque `card` step and a left marker for an emphasised line.
 
-## 9. What is still unknown
+## 9. What this memo does not settle
 
-- **Whether `@fontsource-variable/jetbrains-mono` as installed includes an italic face**, and whether its medium weight keeps column alignment in practice. Both only matter if `004` uses weight or italic to tell slots apart.
-- **The bash and JSON grammars under the strict JavaScript engine.** Only Python was checked; `forgiving: true` covers the rest at the cost of silent misses.
-- **The exact mechanism** by which Shiki keeps `var()` strings through its placeholder colours. Observed, not read to its source; a `colorReplacements` option of our own was not tested against it.
-- **The class-per-slot rendering** of §3.7: whether Tailwind's scanner picks the fourteen literal classes out of a lookup table in a `.ts` file, and whether `cn` merges `text-(--code-keyword)` with a line's own classes as expected.
-- **Whether the app colours all of stderr red.** The brief says so; the app's `context/` does not record it.
-- **The groove's white line on `wash`.** v2 specifies it on paper; on the muted ground it was not rendered or measured.
-- **CodeMirror itself**: its bundle, its Svelte wrapping, its keyboard escape and how a HighlightStyle takes these properties. The CodeMirror memo's.
+- **Whether `@fontsource-variable/jetbrains-mono` as installed includes an italic face, and whether its medium weight keeps column alignment.** Answered in part: `004` uses no italic, since `001` installs only the upright face (decisions.md, "The design calls for `004`, code and data"). Medium weight's column alignment was not measured; a monospaced face keeps one advance width by design (INFERRED).
+- **The bash and JSON grammars under the strict JavaScript engine.** Answered: the highlighter runs strict (`forgiving: false`), and all 26 grammars it loads compile under it (decisions.md, "The design calls for `007`, the full highlight palette and the ink surface").
+- **The exact mechanism** by which Shiki keeps `var()` strings through its placeholder colours. Observed, not read to its source; a `colorReplacements` option of our own was not tested against it. `004` relies only on the observed output, which it maps to classes (`004` decision 7).
+- **The class-per-slot rendering** of §3.7. Answered: `004` renders each token as a `text-code-<slot>` class, never a `style` (`004` decision 7).
+- **The groove's white line on `wash`.** Answered by `004` decision 8: the groove divides the header from the code on the `muted` ground, and the built block shows it on its preview page in both themes.
+- **CodeMirror itself**: its bundle, its Svelte wrapping, its keyboard escape and how a HighlightStyle takes these properties. Answered by the CodeMirror memo of 2026-10-31.
 
 **In one line:** Shiki 4.5.0's variables theme writes every token colour as `var()` and nothing else, the same in 3.23.0; four of our text tokens (`foreground`, `muted-foreground`, `primary`, `success`, with `destructive` for deletions) pass AA on `muted`, `card` and `background` in both themes with no new hue; a hand-made theme of thirty lines gives the slots our own `--code-*` names and font styles that CodeMirror's tags can share; and a prerendered snippet ships no Shiki at all, while a client that highlights Python, bash and JSON pays 70.6 KB gzipped.

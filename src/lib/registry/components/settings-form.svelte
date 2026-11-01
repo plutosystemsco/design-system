@@ -257,7 +257,7 @@
       <Field.Legend><h2 class={legend}>Email notifications</h2></Field.Legend>
       <Field.Field id={ids.failures} orientation="horizontal">
         <Checkbox bind:checked={form.notifyFailures} />
-        <Field.Label>When a run fails</Field.Label>
+        <Field.Label>When something fails</Field.Label>
       </Field.Field>
       <Field.Field id={ids.summary} orientation="horizontal">
         <Checkbox bind:checked={form.notifySummary} />

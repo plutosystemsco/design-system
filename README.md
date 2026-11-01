@@ -5,7 +5,7 @@ The tokens, styles and Svelte components of Pluto Systems applications, served a
 ## What is here
 
 - `tokens/pluto.tokens.json`: the one source of every colour and size, light and dark.
-- `registry.json` and `src/lib/registry/`: the registry's items. Today 49, in eight groups: foundation (`pluto-theme`, three font items, `utils`, `four-dot`), actions, surfaces, feedback, forms, code, data, and blocks. A block is a whole page or section (sign in, sign up, a hero, page states, a settings form) that installs as a route plus its components. Every colour and size in them comes from the token file.
+- `registry.json` and `src/lib/registry/`: the registry's items. Today 63, in ten groups: foundation (`pluto-theme`, `theme`, three font items, `utils`, `four-dot`), actions, surfaces, feedback, forms, code, data, navigation, chat and blocks. A block is a whole page or section (sign in, sign up, a hero, page states, a settings form, an app shell, a chat pane) that installs as a route plus its components. Every colour and size in them comes from the token file.
 - `src/routes/`: a preview app, one page per item, in both themes. A block's page embeds it live at phone, tablet and desktop widths; the chrome-less `/view/<block>/` routes are what the frame shows. It is not a website.
 - `context/`: the research, specifications, reviews and decisions this code is built from. Read [`context/README.md`](context/README.md) first.
 
@@ -22,16 +22,22 @@ bun run check      # svelte-check
 bun run lint       # prettier
 ```
 
-An app installs an item from GitHub, pinned to a release by its tag (the built JSON under `static/` is committed with each release):
+## Installing from it
+
+An app installs an item from GitHub, pinned to a release by its tag. The built JSON under `static/` is committed with each release, so no server runs.
 
 ```
-REGISTRY_URL=https://raw.githubusercontent.com/plutosystemsco/design-system/v0.4.0/static/r bunx --bun shadcn-svelte@1.7.1 add four-dot -y -o
-REGISTRY_URL=https://raw.githubusercontent.com/plutosystemsco/design-system/v0.4.0/static/r bunx --bun shadcn-svelte@1.7.1 add button field alert-dialog -y
-REGISTRY_URL=https://raw.githubusercontent.com/plutosystemsco/design-system/v0.4.0/static/r bunx --bun shadcn-svelte@1.7.1 add sign-in -y
+REGISTRY_URL=https://raw.githubusercontent.com/plutosystemsco/design-system/v0.7.1/static/r bunx --bun shadcn-svelte@1.7.1 add four-dot -y -o
+REGISTRY_URL=https://raw.githubusercontent.com/plutosystemsco/design-system/v0.7.1/static/r bunx --bun shadcn-svelte@1.7.1 add button field alert-dialog -y
+REGISTRY_URL=https://raw.githubusercontent.com/plutosystemsco/design-system/v0.7.1/static/r bunx --bun shadcn-svelte@1.7.1 add app-shell code-editor -y
 ```
 
-`main/static/r` in place of `v0.4.0/static/r` follows the latest commit. With `bun run dev` running, `REGISTRY_URL=http://localhost:5173/r` installs from this machine instead.
+`main/static/r` in place of `v0.7.1/static/r` follows the latest commit. With `bun run dev` running, `REGISTRY_URL=http://localhost:5173/r` installs from this machine instead.
 
-The first `add` brings the theme and the fonts with it. An item's dependencies, such as `field`'s `label` and `separator`, come from this registry too; nothing is fetched from shadcn-svelte's own. Leave out `-o` after the first install: without it the CLI lists the files that already exist and asks before it overwrites any, which matters for a block, since it lands a route and up to a dozen primitives you may have changed.
+The first `add` brings the theme and the fonts with it. An item's dependencies, such as `field`'s `label` and `separator`, come from this registry too; nothing is fetched from shadcn-svelte's own. Leave out `-o` after the first install: without it the CLI lists the files that already exist and asks before it overwrites any, which matters for a block, since it lands a route and up to seventeen primitives you may have changed.
 
-The registry is not deployed to a host. `wrangler.jsonc` is ready for an assets-only Cloudflare Worker, if the owner wants one later.
+The registry is not deployed to a host. `wrangler.jsonc` configures an assets-only Cloudflare Worker; nothing is deployed.
+
+## Licence
+
+Apache-2.0. See [`LICENSE`](LICENSE).

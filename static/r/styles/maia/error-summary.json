@@ -3,7 +3,7 @@
 	"name": "error-summary",
 	"title": "Error summary",
 	"type": "registry:ui",
-	"author": "Pluto Systems <https://plutosystems.co>",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 	"description": "The box a failed submit puts at the top of a form: a heading, the form's message and a link to each invalid field, focused when it appears.",
 	"devDependencies": [
 		"phosphor-svelte@^3.1.1"

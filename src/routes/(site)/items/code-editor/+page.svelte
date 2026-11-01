@@ -148,8 +148,7 @@
     </li>
     <li>
       Selection and caret are the browser's own, so they stay readable by the
-      platform's design. The caret is the browser's own. The editor itself runs
-      no animation.
+      platform's design. The editor itself runs no animation.
     </li>
     <li>
       Before the script runs, the prerendered <code>pre</code> is a
@@ -170,8 +169,9 @@
       narrows <code>@source</code> keeps the editor's folder in.
     </li>
     <li>
-      No height is set: the editor grows with its document. Cap it in the app
-      with a class such as <code>max-h-96</code> when an inner scroll is wanted.
+      No height is set: the editor grows with its document. Cap it in the
+      consuming app with a class such as <code>max-h-96</code> when an inner scroll
+      is wanted.
     </li>
   </ul>
 </PreviewSection>

@@ -1,13 +1,12 @@
 # 001 — Tokens and the registry
 
-- **Status:** **built**, 2026-10-27; committed 2026-10-28 as `33e94de`, tagged `v0.1.0` (see Landing notes). Drafted 2026-10-27; amended 2026-10-27 after review ([`../reviews/001-tokens-and-the-registry-spec-2026-10-27.md`](../reviews/001-tokens-and-the-registry-spec-2026-10-27.md)), amended again 2026-10-27 after the change review ([`../reviews/001-tokens-and-the-registry-pr-2026-10-27.md`](../reviews/001-tokens-and-the-registry-pr-2026-10-27.md)). It lands as **built** when acceptance criteria 1 to 23 hold. It is **done** when `wasi-python-dev`'s home-page specification installs `pluto-theme` and `four-dot` from this registry and passes that app's checks (criterion 24).
+- **Status:** built, reviewed and released as `v0.1.0` (`33e94de`). Built 2026-10-27; committed and tagged 2026-10-28 (see Landing notes). Drafted 2026-10-27; amended 2026-10-27 after review ([`../reviews/001-tokens-and-the-registry-spec-2026-10-27.md`](../reviews/001-tokens-and-the-registry-spec-2026-10-27.md)), amended again 2026-10-27 after the change review ([`../reviews/001-tokens-and-the-registry-pr-2026-10-27.md`](../reviews/001-tokens-and-the-registry-pr-2026-10-27.md)).
 - **Date:** 2026-10-27
-- **Owner:** Clay Gendron
-- **Author:** an agent (Claude), sub-agent of the orchestrating session
+- **Author:** the design lead
 - **Kind:** new repository scaffold; the token source; the registry's foundation items
-- **Depends on:** nothing in this repository. The reverse edge: `wasi-python-dev`'s home-page specification (its `003`) depends on this one. This one is *done* only when that specification passes criterion 24.
-- **Blocks:** `002` the primitives; `003` the blocks; `wasi-python-dev`'s home page, which installs `pluto-theme` and `four-dot` from this registry. `002` may start once 001 is *built*.
-- **Research:** [`../research/2026-10-27-a-shadcn-svelte-registry-and-what-pluto-already-has.md`](../research/2026-10-27-a-shadcn-svelte-registry-and-what-pluto-already-has.md) (cited as *registry memo*); [`../research/2026-10-27-the-foundation-run-kit-3-fonts-and-the-theme-item.md`](../research/2026-10-27-the-foundation-run-kit-3-fonts-and-the-theme-item.md) (cited as *run memo*); [`../research/2026-10-27-the-toolchain-under-bun.md`](../research/2026-10-27-the-toolchain-under-bun.md) (cited as *toolchain memo*); the owner's answers in [`../decisions.md`](../decisions.md); design book v2, `plutosystemshq/pluto-systems-design-book-v2.html` (cited as *v2*)
+- **Depends on:** nothing in this repository.
+- **Blocks:** `002` the primitives; `003` the blocks. `002` may start once 001 is *built*.
+- **Research:** [`../research/2026-10-27-a-shadcn-svelte-registry-and-what-pluto-already-has.md`](../research/2026-10-27-a-shadcn-svelte-registry-and-what-pluto-already-has.md) (cited as *registry memo*); [`../research/2026-10-27-the-foundation-run-kit-3-fonts-and-the-theme-item.md`](../research/2026-10-27-the-foundation-run-kit-3-fonts-and-the-theme-item.md) (cited as *run memo*); [`../research/2026-10-27-the-toolchain-under-bun.md`](../research/2026-10-27-the-toolchain-under-bun.md) (cited as *toolchain memo*); the owner's answers in [`../decisions.md`](../decisions.md); the Pluto Systems design book, cited by section as *the design book* (for example, *the design book §02*)
 
 ## Intent
 
@@ -15,10 +14,10 @@ This specification turns an empty repository into a working registry. It builds 
 
 1. **A scaffold.** A SvelteKit app run by Bun, with every dependency pinned. Its pages preview the registry's items. It is not a website.
 2. **One token file.** It holds every colour and size the brand uses, for light and dark. Scripts turn it into the `pluto-theme` registry item and into the preview app's own CSS.
-3. **Six registry items.** `pluto-theme`, three font items, `utils`, and `four-dot` (the mark and its lockup). The dev server serves them at `localhost`, so `wasi-python-dev` can install them while both are being built.
+3. **Six registry items.** `pluto-theme`, three font items, `utils`, and `four-dot` (the mark and its lockup). The dev server serves them at `localhost`, so an app can install them during development.
 4. **Tests.** Contrast arithmetic, schema checks, a lint against literal colours and sizes, Playwright and axe on every preview page in both themes, keyboard checks, and a smoke test that runs the real `add` into scratch apps.
 
-Deployment is out of scope. The owner runs it. This specification only leaves a `wrangler.jsonc` ready for it.
+Deployment is out of scope: no release is deployed, and apps install from the registry's GitHub tag (decisions.md, "The registry is served from GitHub, and the repository is public"). This specification leaves a `wrangler.jsonc` that no release uses.
 
 Terms used throughout.
 
@@ -34,8 +33,9 @@ Terms used throughout.
 - **Preview page:** a page of this repository's app that shows one item.
 - **Catalogue:** the page listing every item.
 - **Scratch app:** a throwaway SvelteKit app, copied by the smoke test from a committed fixture into a temporary folder, that installs items the way a real app would.
-- **The run:** the experiment in the run memo, which built these six items in the scratchpad and installed them.
-- **Built** and **done:** 001 is *built* when criteria 1 to 23 hold in this repository. It is *done* when criterion 24 holds in `wasi-python-dev` (constitution §4.2: "tested in that app before it is called done").
+- **The run:** the experiment in the run memo, which built these six items in a throwaway folder and installed them.
+- **The canvas:** the design canvas drawn from the design book's tokens before this specification. It proposed the dark theme and the input borders that decision 7 confirms or replaces (decisions.md, "The design book's open calls, answered").
+- **Built** and **done:** 001 is *built* when criteria 1 to 23 hold in this repository. It is *done* when its change is reviewed and the release is tagged: criterion 24 (constitution §2 and §4.2).
 
 ## Decisions
 
@@ -80,7 +80,7 @@ Each choice, with its reason.
 - *Rejected: writing `#lib/utils.js` in our files.* It passes `svelte-check`, but `registry build` turns it into `$UTILS$.js` in an item's source, so the extension travels into every app (toolchain memo §4, EXECUTED, fix A).
 - *Limit of the fallbacks:* only Vite and TypeScript read the array. Bun's own resolver does not: under `bun test`, `#lib/utils` fails and `#lib/utils.ts` loads (toolchain memo §4, §5.2, EXECUTED). So tests import `.ts` paths (decision 25).
 - *Why `include` and `types`:* without `include`, `svelte-check` scanned `build/` and reported 1344 errors. Without `$app/types` in `types`, Kit warns `tsconfig_invalid` (toolchain memo §3, §4, EXECUTED). `"bun"` gives the scripts and tests the `Bun` global and `bun:test`, through `@types/bun` (decision 4).
-- **What a Kit 3 app needs to install from here.** The same `imports` shape, or its own `svelte-check` fails on the CLI's extensionless `#lib/utils`. Decision 23 tells `wasi-python-dev`.
+- **What a Kit 3 app needs to install from here.** The same `imports` shape, or its own `svelte-check` fails on the CLI's extensionless `#lib/utils`. Decision 23 repeats it for an app that installs from here.
 - *Why Kit 3 at all:*
   - Kit 3 is the current major. Starting a new repository on the old one buys a migration.
   - Kit 3 removed `$lib`. shadcn-svelte 1.7.1 resolves `#`-prefixed aliases through `package.json` imports, and `add` and `build` both worked with `#lib` (run memo §2, EXECUTED).
@@ -92,7 +92,7 @@ Each choice, with its reason.
 
 - Every page is prerendered. `+layout.ts` sets `export const prerender = true` and `export const trailingSlash = 'always'`.
 - `vite build` writes the site to `build/`. With `trailingSlash = 'always'`, prerender writes `build/index.html` and `build/items/<name>/index.html`, matching the paths `/items/<name>/` used throughout (decision 24).
-- *Why:* the preview pages are prerendered and the registry is static JSON. A static `build/` folder is exactly what a Cloudflare Worker with static assets serves without any Worker code (registry memo §2). `@sveltejs/adapter-cloudflare` 8.0.1 would build a Worker script, which nothing here needs, and it would add `wrangler` as a peer dependency (run memo §1). A Worker can come later, if the registry ever needs private access or redirects (registry memo §1.8).
+- *Why:* the preview pages are prerendered and the registry is static JSON. A static `build/` folder is exactly what a Cloudflare Worker with static assets serves without any Worker code (registry memo §2). `@sveltejs/adapter-cloudflare` 8.0.1 would build a Worker script, which nothing here needs, and it would add `wrangler` as a peer dependency (run memo §1). No Worker is needed: the registry needs no private access and no redirects (registry memo §1.8).
 - *Why `trailingSlash = 'always'`:* Kit's default, `'never'`, would make `/items/<name>/` a redirect to `/items/<name>` and write `items/<name>.html`. The paths in this specification and the page count of criterion 8 would then depend on redirects.
 
 ### 4. Dependencies, named and pinned
@@ -118,7 +118,7 @@ All are devDependencies. A SvelteKit app bundles what it imports, and stock item
 | `tailwindcss` | 4.3.3 | `4.3.3` | MIT | The CLI requires Tailwind v4 (registry memo §1.1) |
 | `@tailwindcss/vite` | 4.3.3 | `4.3.3` | MIT | Tailwind's Vite plugin |
 | `typescript` | 6.0.3 | `6.0.3` | Apache-2.0 | Kit 3.1.0 and `svelte-check` 4.7.7 both accept `^6` and not 7.0.2, the latest (run memo §1) |
-| `svelte-check` | 4.7.7 | `4.7.7` | MIT | Type checks, as `hq/web` already runs |
+| `svelte-check` | 4.7.7 | `4.7.7` | MIT | Type checks |
 | `@types/bun` | 1.3.14 | `1.3.14` | MIT | Types for `Bun.spawn`, `bun:test` and, through `bun-types`, the `node:` modules the scripts and tests import (toolchain memo §11, EXECUTED) |
 | `cn` | 0.5.0 | `^0.5.0` | MIT | The class-merging helper the `utils` item re-exports, as shadcn-svelte 1.7.x does (run memo §7) |
 | `@fontsource-variable/geist` | 5.3.0 | `^5.3.0` | OFL-1.1 | The body face, self-hosted |
@@ -136,8 +136,8 @@ Not added, and why:
 - `vitest`: the unit and smoke tests run under `bun test` (decision 25).
 - `@types/node`: `@types/bun` 1.3.14 depends on `bun-types` 1.3.14, which depends on `@types/node` (READ: both packages' `package.json`, in Bun's install cache, 2026-10-27). `bun.lock` pins the version that arrives.
 - `bits-ui`, `tw-animate-css`, an icon library: no 001 item uses them. `002` adds them with the first component that does.
-- `mode-watcher`: the preview app switches themes with a few lines of its own (decision 24). `003`'s theme toggle decides whether apps get `mode-watcher`.
-- `wrangler`: deployment is owner-run and out of scope. The owner runs it at deploy time.
+- `mode-watcher`: the preview app switches themes with a few lines of its own (decision 24). Apps do not get it either: `005` ships a `theme` item of its own (`005` decision 6).
+- `wrangler`: deployment is out of scope; no release is deployed.
 - `zod`: `shadcn-svelte/schema` parsed without it (run memo §6).
 
 ### 5. Repository layout
@@ -180,7 +180,7 @@ design-system/
       items/<name>/+page.svelte   one preview page per item, six in all
       items/<name>/+page.server.ts  for pluto-theme and the three font items: loads token data (decision 24)
   static/
-    r/  v0.1.0/                   generated by build-registry; git-ignored
+    r/  v0.1.0/                   generated by build-registry; git-ignored at v0.1.0 (decision 18)
   tests/
     unit/                         8 files (decision 25)
     e2e/                          5 files
@@ -188,7 +188,7 @@ design-system/
       fixtures/kit3/  fixtures/kit2/   the two scratch apps, with their bun.lock files (decision 25)
 ```
 
-- `.gitignore` gains `static/r/`, `static/v*/`, `test-results/` and `playwright-report/`.
+- `.gitignore` gains `static/r/`, `static/v*/`, `test-results/` and `playwright-report/`. The first two leave it at `v0.4.0` (decision 18).
 - *Why this shape:* it is the registry memo's §6 proposal, changed in four places. The registry is generated into `static/`, not `build/` (decision 18). Registry sources sit under `src/lib/registry/`, the CLI's default alias paths (decision 19). Preview-only components get their own folder, so nothing in `registry/` exists only for the preview. The scratch apps are committed fixtures, so their packages are pinned (decision 25).
 
 ### 6. The token file is plain JSON of our own shape
@@ -210,7 +210,7 @@ design-system/
 - A semantic value names a primitive, never a hex. Each hex appears once in the file.
 - *Why our own shape, not the W3C Design Tokens Community Group format:*
   - The only reader is our build script. No tool such as Style Dictionary is needed, so none is added.
-  - Our two themes are pairs of maps over the same names. The Community Group's core format has no theme or mode construct; modes live in a separate module (INFERRED; its current status was not read today, run memo §10).
+  - Our two themes are pairs of maps over the same names. The Community Group's core format has no theme or mode construct; modes live in a separate module (INFERRED, run memo §10; this specification did not read the module's status).
   - We need fields the format does not have: which shadcn name a token fills, which pairs must pass contrast, which font item a family becomes.
 - `scripts/tokens.ts` validates the file with hand-written checks and fails with the key at fault. It adds no validation library.
 
@@ -220,18 +220,18 @@ All values are sRGB hex. An eight-digit value carries alpha. Ratios are in decis
 
 | Primitive | Hex | Source |
 |---|---|---|
-| `ink` | `#14161C` | v2 Ink |
-| `ink-soft` | `#4A4F5C` | v2 Ink Soft |
-| `paper` | `#F7F7F4` | v2 Paper, the default ground |
-| `raised` | `#FFFFFF` | v2 Raised: cards, inputs, figures |
-| `blue` | `#2456E6` | v2 Charon Blue |
-| `red` | `#E23A2E` | v2 Tombaugh Red: fills and dots |
-| `amber` | `#F0AE12` | v2 Sputnik Amber: fills only, never text |
-| `green` | `#1E9E56` | v2 Hydra Green: fills and dots |
-| `red-text` | `#C42A1F` | the owner's text-safe red, **confirmed** |
+| `ink` | `#14161C` | The design book's Ink |
+| `ink-soft` | `#4A4F5C` | The design book's Ink Soft |
+| `paper` | `#F7F7F4` | The design book's Paper, the default ground |
+| `raised` | `#FFFFFF` | The design book's Raised: cards, inputs, figures |
+| `blue` | `#2456E6` | The design book's Charon Blue |
+| `red` | `#E23A2E` | The design book's Tombaugh Red: fills and dots |
+| `amber` | `#F0AE12` | The design book's Sputnik Amber: fills only, never text |
+| `green` | `#1E9E56` | The design book's Hydra Green: fills and dots |
+| `red-text` | `#C42A1F` | the text-safe red of `decisions.md`, **confirmed** |
 | `green-text` | `#136E3E` | text-safe green; **replaces the proposed `#157A43`** |
-| `wash` | `#EAEAE7` | a flattened tint: ink at alpha 15/255 (about 5.9%, the owner's "6%") over paper. The light `muted` ground, for component insets only (decision 8) |
-| `line` | `#14161C1A` | v2's ink hairline at 10% (alpha byte `1A`, 26/255) |
+| `wash` | `#EAEAE7` | a flattened tint: ink at alpha 15/255 (about 5.9%, the decision's "6%") over paper. The light `muted` ground, for component insets only (decision 8) |
+| `line` | `#14161C1A` | The design book's ink hairline at 10% (alpha byte `1A`, 26/255) |
 | `line-input` | `#7C808B` | input border; **replaces the proposed `#878B96`** |
 | `ink-raised` | `#1E2129` | the canvas's dark raised, **confirmed** |
 | `ink-wash` | `#2B2D32` | a flattened tint: paper at alpha 0.1 over ink. The dark `muted` ground, for component insets only (decision 8) |
@@ -252,23 +252,23 @@ All values are sRGB hex. An eight-digit value carries alpha. Ratios are in decis
 | dark input border `#656A79` | 2.98 on `card`; 2.55 on `muted` | `#787C8A` | 3.86 on `card`; 3.31 on `muted` |
 | dark red `#FF6E63` | 4.32 on its 20% tint over `card` (stock `dark:bg-destructive/20`) | `#FF7D73` | 4.60 |
 
-**`wash` and `ink-wash` are flattened values.** Each is a fixed hex, and the tests use the hex, never the derivation. The derivations, exactly: `wash` is ink composited over paper at alpha 15/255, each channel rounded to the nearest integer (234, 234, 231). Ink at exactly 0.06 would give `#E9E9E7`; the owner's decision fixes `#EAEAE7` (decisions.md, "A fourth ground for `muted`, insets only"). `ink-wash` is paper over ink at alpha 0.1, rounded the same way (43, 45, 50). The fourth ground is the owner's decision, not this specification's (decision 8).
+**`wash` and `ink-wash` are flattened values.** Each is a fixed hex, and the tests use the hex, never the derivation. The derivations, exactly: `wash` is ink composited over paper at alpha 15/255, each channel rounded to the nearest integer (234, 234, 231). Ink at exactly 0.06 would give `#E9E9E7`; the decision fixes `#EAEAE7` (decisions.md, "A fourth ground for `muted`, insets only"). `ink-wash` is paper over ink at alpha 0.1, rounded the same way (43, 45, 50). The fourth ground is decided in `decisions.md`, not in this specification (decision 8).
 
 Primitives are not emitted as CSS variables. A component that used `--blue` directly would bypass both the dark theme and the text-safe rule.
 
 ### 8. The semantic tokens, and how the shadcn names map onto the brand
 
-The stock shadcn theme defines 31 names (READ: `hq/web/src/routes/layout.css`, as `init` wrote it). Mapping all of them to brand primitives lets a stock component restyle by tokens alone. Fourteen Pluto names are added for the brand's own needs. Each is a CSS variable in `:root` and `.dark`, and Tailwind gets `--color-<name>` for each (decision 15).
+The stock shadcn theme defines 31 names (INFERRED from the CSS that shadcn-svelte's `init` writes). Mapping all of them to brand primitives lets a stock component restyle by tokens alone. Fourteen Pluto names are added for the brand's own needs. Each is a CSS variable in `:root` and `.dark`, and Tailwind gets `--color-<name>` for each (decision 15).
 
 | Name | Light | Dark | Role |
 |---|---|---|---|
 | `background` | `paper` `#F7F7F4` | `ink` `#14161C` | the page ground |
-| `foreground` | `ink` | `paper` | all body text; headings are always ink (v2 §03) |
+| `foreground` | `ink` | `paper` | all body text; headings are always ink (the design book §03) |
 | `card` | `raised` `#FFFFFF` | `ink-raised` `#1E2129` | surfaces on the ground |
 | `card-foreground` | `ink` | `paper` | |
 | `popover` | `raised` | `ink-raised` | menus, dialogs |
 | `popover-foreground` | `ink` | `paper` | |
-| `primary` | `blue` `#2456E6` | `blue-lifted` `#7A9BFF` | links, primary actions, focus (v2 §03) |
+| `primary` | `blue` `#2456E6` | `blue-lifted` `#7A9BFF` | links, primary actions, focus (the design book §03) |
 | `primary-foreground` | `raised` | `ink` | text on a primary fill |
 | `secondary` | `raised` | `ink-raised` | secondary actions; `002` gives them a visible border |
 | `secondary-foreground` | `ink` | `paper` | |
@@ -280,11 +280,11 @@ The stock shadcn theme defines 31 names (READ: `hq/web/src/routes/layout.css`, a
 | `border` | `line` `#14161C1A` | `paper-line` `#F7F7F41A` | decorative hairlines: cards, separators, table rows |
 | `input` | `line-input` `#7C808B` | `paper-line-input` `#787C8A` | the border of a form control; 3:1 on every ground |
 | `ring` | `blue` | `blue-lifted` | the focus outline |
-| `chart-1` | `blue` | `blue-lifted` | data figures cycle the four, blue first (v2 §03) |
+| `chart-1` | `blue` | `blue-lifted` | data figures cycle the four, blue first (the design book §03) |
 | `chart-2` | `red` `#E23A2E` | `red-lifted` | |
 | `chart-3` | `amber` `#F0AE12` | `amber` | see the exception in decision 12 |
 | `chart-4` | `green` `#1E9E56` | `green-lifted` `#4CC982` | |
-| `chart-5` | `ink-soft` | `paper-soft` | a neutral fifth series; v2 allows no new hue |
+| `chart-5` | `ink-soft` | `paper-soft` | a neutral fifth series; the design book allows no new hue |
 | `sidebar` | `paper` | `ink` | a sidebar is a ground, set apart by a groove, not a tint |
 | `sidebar-foreground` | `ink` | `paper` | |
 | `sidebar-primary` | `blue` | `blue-lifted` | |
@@ -298,9 +298,9 @@ The stock shadcn theme defines 31 names (READ: `hq/web/src/routes/layout.css`, a
 | `success` | `green-text` `#136E3E` | `green-lifted` | success text |
 | `success-foreground` | `raised` | `ink` | text on a solid `success` fill |
 | `success-fill` | `green` | `green-lifted` | state dots and fills |
-| `caution` | `amber` | `amber` | caution fills. Never text (v2 §03) |
+| `caution` | `amber` | `amber` | caution fills. Never text (the design book §03) |
 | `caution-foreground` | `ink` | `ink` | text on a caution fill |
-| `raised` | `raised` | `ink-raised` | v2's name for the card surface, for blocks that are not cards |
+| `raised` | `raised` | `ink-raised` | The design book's name for the card surface, for blocks that are not cards |
 | `mark-1` | `blue` | `paper` | the mark's top-left dot |
 | `mark-2` | `red` | `paper` | top-right |
 | `mark-3` | `amber` | `paper` | bottom-left |
@@ -310,21 +310,21 @@ The stock shadcn theme defines 31 names (READ: `hq/web/src/routes/layout.css`, a
 
 That is 45 names in each theme (31 stock, 14 Pluto), 90 values.
 
-- **The `muted` rule** (decisions.md, "A fourth ground for `muted`, insets only", 2026-10-27). v2 §02 names three grounds: paper, raised white and ink. The owner's decision allows a fourth, the flattened tint, **for component insets only**: skeletons, tab strips, code grounds, hover and selected rows. `muted`, `accent` and `sidebar-accent` are never a page, section or sidebar ground. *Why, as the decision gives it:* a `muted` equal to the card surface makes skeletons and hover rows invisible without extra borders, which adds more lines than v2 wants; a flattened tint adds no hue. The literal lint cannot enforce where a class is used, so review enforces it. This binds `002` and `003` (decision 29).
+- **The `muted` rule** (decisions.md, "A fourth ground for `muted`, insets only", 2026-10-27). The design book §02 names three grounds: paper, raised white and ink. The decision allows a fourth, the flattened tint, **for component insets only**: skeletons, tab strips, code grounds, hover and selected rows. `muted`, `accent` and `sidebar-accent` are never a page, section or sidebar ground. *Why, as the decision gives it:* a `muted` equal to the card surface makes skeletons and hover rows invisible without extra borders, which adds more lines than the design book wants; a flattened tint adds no hue. The literal lint cannot enforce where a class is used, so review enforces it. This binds `002` and `003` (decision 29).
 - **No state tint on `muted`, in either theme.** A component never puts `bg-destructive/10`, `bg-success/10` (light) or `/20` (dark) on or inside a `muted` or `accent` inset. Three of the four cases fail AA: destructive/10 over light `muted` 4.06; destructive/20 over dark `muted` 3.96; success/20 over dark `muted` 4.44. Success/10 over light `muted` measures 4.58 and is forbidden too, so `002` has one rule, not four cases. The token file lists the three failing pairs as forbidden, and the contrast test asserts that each still fails, so a change that makes one pass is noticed (decision 12).
 - **Red and green state colours** follow the owner's answer: fills and dots use Tombaugh Red and Hydra Green, and running text uses text-safe variants (decisions.md). State is never told by colour alone; that rule binds the components of `002` and `003`.
 - **The dark theme is paper on ink, with lifted accents.** This is the canvas's proposal, confirmed by the arithmetic in decision 12.
-- **On ink, the mark goes paper-white.** v2 §03 refuses "colour dots on dark grounds — on ink, everything goes paper-white", and v2 §02 says "all paper on dark". So `mark-1` to `mark-4` are all `paper` in the dark theme. v2's own CSS for the monochrome mark on dark (`.paperdots`) uses `--raised` `#FFFFFF`. We follow v2's words, "paper", which is also the dark theme's one foreground. The two differ by 1.07:1, which no reader sees.
-- **How this reads v2's on-ink rule.** We apply it to the mark and to decoration. We do not apply it to functional colour: links, focus, errors and success keep lifted accents in the dark theme, because a dark theme whose errors were paper-white would tell state by nothing at all. That includes state dots (`destructive-fill`, `success-fill`), decided here (decision 28). The owner's open call on coloured dots on ink concerns the icon only. If the owner reads the rule more widely, only the dark values in this table change.
+- **On ink, the mark goes paper-white.** The design book §03 refuses "colour dots on dark grounds — on ink, everything goes paper-white", and the design book §02 says "all paper on dark". So `mark-1` to `mark-4` are all `paper` in the dark theme. The design book's own CSS for the monochrome mark on dark (`.paperdots`) uses `--raised` `#FFFFFF`. We follow the design book's words, "paper", which is also the dark theme's one foreground. The two differ by 1.07:1, which no reader sees.
+- **How this reads the design book's on-ink rule.** We apply it to the mark and to decoration. We do not apply it to functional colour: links, focus, errors and success keep lifted accents in the dark theme, because a dark theme whose errors were paper-white would tell state by nothing at all. That includes state dots (`destructive-fill`, `success-fill`), decided here (decision 28). The icon's coloured dots on ink are answered the same way, with the lifted primitives (decision 28).
 
 ### 9. One radius: 8 px, and every stock radius maps to it
 
 - The token is `radius.case: 8`. It is emitted as `--radius: 0.5rem`.
 - `--radius-xs`, `-sm`, `-md`, `-lg`, `-xl`, `-2xl`, `-3xl` and `-4xl` are all `var(--radius)`. So `rounded-xs` through `rounded-4xl` all draw 8 px.
 - `--radius: 0.5rem` is also written into `@theme inline`, so the bare `rounded` class draws 8 px too. Without it, `rounded` stays at Tailwind's 0.25 rem (run memo §5, EXECUTED).
-- `rounded-full` is left alone. It is v2's second radius, for dot-derived shapes.
-- *Why:* v2 §05 allows "two radii, total": the 8 px case radius and full round. Stock maia components use `rounded-md` up to `rounded-4xl` (registry memo §4.2). Mapping the whole scale to one value restyles them without editing their classes. The CLI would otherwise derive multiples of `--radius`, from 0.6 to 2.6. It skips any it finds already present, so ours win (run memo §5).
-- *Why rem:* sizes in rem follow the reader's chosen root font size (WCAG 2.2 SC 1.4.4). At the default 16 px, 0.5 rem is exactly v2's 8 px.
+- `rounded-full` is left alone. It is the design book's second radius, for dot-derived shapes.
+- *Why:* the design book §05 allows "two radii, total": the 8 px case radius and full round. Stock maia components use `rounded-md` up to `rounded-4xl` (registry memo §4.2). Mapping the whole scale to one value restyles them without editing their classes. The CLI would otherwise derive multiples of `--radius`, from 0.6 to 2.6. It skips any it finds already present, so ours win (run memo §5).
+- *Why rem:* sizes in rem follow the reader's chosen root font size (WCAG 2.2 SC 1.4.4). At the default 16 px, 0.5 rem is exactly the design book's 8 px.
 
 ### 10. Spacing: Tailwind's multiplier is the 4 px atom, and the ladder is enforced by lint
 
@@ -335,11 +335,11 @@ That is 45 names in each theme (31 stock, 14 Pluto), 90 values.
   - `auto`, for margins;
   - the CSS-variable form `-(--<token>)`, such as `gap-(--mark-gap)`, because the value then comes from a token.
 - The spacing utilities are `p`, `px`, `py`, `pt`, `pr`, `pb`, `pl`, `ps`, `pe`, `m`, `mx`, `my`, `mt`, `mr`, `mb`, `ml`, `ms`, `me`, `gap`, `gap-x`, `gap-y`, `space-x` and `space-y`, with any variant prefix and an optional leading `-`. The lint reads the allowed multipliers from the token file, so the ladder lives in one place.
-- *Why not remove Tailwind's other steps from the theme:* stock components use off-ladder steps such as `gap-1.5` and `h-9` (registry memo §4.2). Removing them would make those classes emit nothing, silently. `002` brings each component onto the ladder when it restyles it, and the lint then holds it there. Heights and widths (`h-*`, `w-*`, `size-*`) are sizes, not spacing; v2's ladder governs gaps (v2 §05), so the lint does not restrict them.
+- *Why not remove Tailwind's other steps from the theme:* stock components use off-ladder steps such as `gap-1.5` and `h-9` (registry memo §4.2). Removing them would make those classes emit nothing, silently. `002` brings each component onto the ladder when it restyles it, and the lint then holds it there. Heights and widths (`h-*`, `w-*`, `size-*`) are sizes, not spacing; the design book's ladder governs gaps (the design book §05), so the lint does not restrict them.
 
 ### 11. Type: five steps on Tailwind's own names, four tracking values, three weights
 
-| Token | Size | Line height | v2 use |
+| Token | Size | Line height | Design book use |
 |---|---|---|---|
 | `text-xs` | 12 px (0.75 rem) | 1.5 | eyebrows, captions, ids; mono 500, lowercase |
 | `text-sm` | 13.5 px (0.84375 rem) | 1.6 | code, paths, data; mono 400 |
@@ -352,18 +352,18 @@ That is 45 names in each theme (31 stock, 14 Pluto), 90 values.
 | `tracking-display` | −0.03 em | display |
 | `tracking-section` | −0.02 em | section headings |
 | `tracking-eyebrow` | 0.08 em | eyebrows |
-| `tracking-mark` | −0.04 em | the wordmark in the lockup (v2 §02's `.lockup`) |
+| `tracking-mark` | −0.04 em | the wordmark in the lockup (the design book §02's `.lockup`) |
 
 | Token | Value | Emitted as | Use |
 |---|---|---|---|
-| `type.weight.normal` | 400 | `--font-weight-normal: 400` | body, code (v2 §04) |
-| `type.weight.medium` | 500 | `--font-weight-medium: 500` | eyebrows (v2 §04) |
-| `type.weight.bold` | 700 | `--font-weight-bold: 700` | headings and the wordmark (v2 §04) |
+| `type.weight.normal` | 400 | `--font-weight-normal: 400` | body, code (the design book §04) |
+| `type.weight.medium` | 500 | `--font-weight-medium: 500` | eyebrows (the design book §04) |
+| `type.weight.bold` | 700 | `--font-weight-bold: 700` | headings and the wordmark (the design book §04) |
 | `type.leading.none` | 1 | `--leading-none: 1` | the lockup's wordmark (decision 22) |
 
-- Sizes and line heights come from v2 §04's scale. The display line height is v2's own: `.ts-display` has `line-height: 1.15` (v2 line 186). v2 gives none for eyebrow or code. We chose 1.5 and 1.6 (INFERRED: open for reading).
+- Sizes and line heights come from the design book §04's scale. The display line height is the design book's own: `.ts-display` has `line-height: 1.15`. The design book gives none for eyebrow or code. We chose 1.5 and 1.6, open line heights for reading small text (INFERRED).
 - **Weights and the one named line height are tokens.** They are written into `@theme inline` (decision 15), so `font-normal`, `font-medium`, `font-bold` and `leading-none` read our values. Tailwind's defaults are the same numbers. Making them ours puts the lockup's weight and line height under constitution §4.3, and lets the lint flag any weight or line height the token file does not hold (decision 25).
-- *Why Tailwind's own names, not names like `text-display`:* `cn` merges classes the way tailwind-merge does. It reads an unknown `text-<name>` as a colour: `cn("text-display", "text-foreground")` returned `"text-foreground"`, dropping the size, while `cn("text-5xl", "text-foreground")` kept both (run memo §9, EXECUTED). Custom tracking names are not merged at all (`cn("tracking-tight", "tracking-mark")` keeps both), so a component never sets two tracking classes on one element. Tailwind's other steps (`text-lg`, `text-3xl`, and so on) stay at their defaults in 001, for the reason given in decision 10. `002` decides whether to remove them.
+- *Why Tailwind's own names, not names like `text-display`:* `cn` merges classes the way tailwind-merge does. It reads an unknown `text-<name>` as a colour: `cn("text-display", "text-foreground")` returned `"text-foreground"`, dropping the size, while `cn("text-5xl", "text-foreground")` kept both (run memo §9, EXECUTED). Custom tracking names are not merged at all (`cn("tracking-tight", "tracking-mark")` keeps both), so a component never sets two tracking classes on one element. Tailwind's other steps (`text-lg`, `text-3xl`, and so on) stay at their defaults in 001, for the reason given in decision 10. `002` keeps them in the theme and keeps them out of items by lint (`002` decision 21).
 - The families:
 
 | Variable | Family | Package | Font item |
@@ -372,7 +372,7 @@ That is 45 names in each theme (31 stock, 14 Pluto), 90 values.
 | `--font-heading` | `'IBM Plex Sans Variable', system-ui, sans-serif` | `@fontsource-variable/ibm-plex-sans` | `font-heading-ibm-plex-sans` |
 | `--font-mono` | `'JetBrains Mono Variable', ui-monospace, monospace` | `@fontsource-variable/jetbrains-mono` | `font-jetbrains-mono` |
 
-The fallbacks are v2's (`system-ui` and `ui-monospace`).
+The fallbacks are the design book's (`system-ui` and `ui-monospace`).
 
 ### 12. Contrast, computed
 
@@ -384,7 +384,7 @@ The arithmetic is WCAG 2.2's relative luminance (run memo §8). Each sRGB channe
 - **An eight-digit primitive** (`line`, `paper-line`) uses its own alpha byte ÷ 255.
 - **A tint row** uses the decimal alpha the token file states: **0.1** in light and **0.2** in dark. These are the alphas of Tailwind's `/10` and `/20` modifiers, which stock components use (`bg-destructive/10`, `dark:bg-destructive/20`; run memo §7).
 - **The test computes with the same decimal.** It reads 0.1 or 0.2 from the token file. To keep a half exact, it scales the decimal to tenths, `k = alpha × 10` (1 or 2), and computes each channel as `Math.floor((colour × k + ground × (10 − k)) / 10 + 0.5)`, in integers. Three channels land exactly on a half (the green channel of light rows 27 and 30, and the red channel of the forbidden success/10 over light `muted`); they round up.
-- *Why exact decimals:* an earlier draft computed the light tints at alpha 26/255 (the `0x1A` byte), not 0.1, so three of its light tint ratios did not reproduce at the alpha it stated (review finding 3, EXECUTED). Every tint row below was recomputed at exactly 0.1 and 0.2 by this rule (EXECUTED, 2026-10-27, a Bun script in the session scratchpad; integer and floating-point compositing agreed on every channel).
+- *Why exact decimals:* an earlier draft computed the light tints at alpha 26/255 (the `0x1A` byte), not 0.1, so three of its light tint ratios did not reproduce at the alpha it stated (review finding 3, EXECUTED). Every tint row below was recomputed at exactly 0.1 and 0.2 by this rule (EXECUTED, 2026-10-27, a Bun script in the builder's working notes, not kept; integer and floating-point compositing agreed on every channel).
 
 Which pairs, and what they need.
 
@@ -395,7 +395,7 @@ Which pairs, and what they need.
 
 The token file's `contrast` key lists these pairs by semantic name, and a unit test recomputes every row from the token file in both themes.
 
-**Two recorded exceptions.** `chart-3` (amber) measures 1.81 on `background` and 1.95 on `card` in the light theme. v2 forbids a new hue, and it fixes the four chart colours. So the exception stands. **Any figure that uses `chart-3` in the light theme labels that series directly** (a text label or a pattern beside the mark), so the series is not told by colour alone. That rule binds the chart work of a later specification. The test asserts exactly these 2 exceptions, so a third cannot slip in.
+**Two recorded exceptions.** `chart-3` (amber) measures 1.81 on `background` and 1.95 on `card` in the light theme. The design book forbids a new hue, and it fixes the four chart colours. So the exception stands. **Any figure that uses `chart-3` in the light theme labels that series directly** (a text label or a pattern beside the mark), so the series is not told by colour alone. That rule binds any chart component. The test asserts exactly these 2 exceptions, so a third cannot slip in.
 
 **Three forbidden pairs.** The token file lists, under `contrast.forbidden`, the state tints on `muted` that fail: destructive/10 over light `muted` (`#E6D7D3`, 4.06), destructive/20 over dark `muted` (`#553D3F`, 3.96), and success/20 over dark `muted` (`#324C42`, 4.44). The test asserts each measures below 4.5 and equals its stated ratio. The rule they enforce is in decision 8: no state tint on `muted`, in either theme.
 
@@ -513,12 +513,12 @@ The token file's `contrast` key lists these pairs by semantic name, and a unit t
 
 ### 13. The groove, focus and hairlines
 
-- **The groove** is v2's one line primitive: "a hairline of Ink at 8–10% with a 1 px white line beneath it on paper grounds" (v2 §05). It becomes a Tailwind utility, `groove`: `border-top: var(--line-width) solid var(--groove-line)` and `box-shadow: inset 0 var(--line-width) 0 var(--groove-light)`.
-- **In the dark theme the groove is a plain hairline.** v2 specifies the white line only "on paper grounds". On ink, a light line under a light line reads as a ridge, not a groove (INFERRED). So `groove-light` is `clear` in dark.
+- **The groove** is the design book's one line primitive: "a hairline of Ink at 8–10% with a 1 px white line beneath it on paper grounds" (the design book §05). It becomes a Tailwind utility, `groove`: `border-top: var(--line-width) solid var(--groove-line)` and `box-shadow: inset 0 var(--line-width) 0 var(--groove-light)`.
+- **In the dark theme the groove is a plain hairline.** The design book specifies the white line only "on paper grounds". On ink, a light line under a light line reads as a ridge, not a groove (INFERRED). So `groove-light` is `clear` in dark.
 - **Focus.** `@layer base { :focus-visible { outline: var(--focus-width) solid var(--ring); outline-offset: var(--focus-offset) } }`, with `focus.width: 2` and `focus.offset: 2`. Every focusable element without its own focus style gets a solid ring that passes 3:1 (decision 12). `shadcn-svelte init` writes `* { @apply outline-ring/50 }` into apps; `:focus-visible` is more specific, so our solid ring wins when it matters (INFERRED from CSS specificity).
 - **Hairlines and the focus outline stay in px** (`--line-width: 1px`, `--focus-width: 2px`, `--focus-offset: 2px`). A hairline that scaled with the root font size would blur at fractional pixels (INFERRED).
 - **`color-scheme`.** `:root` sets `color-scheme: light` and `.dark` sets `color-scheme: dark`, so scrollbars and native controls follow the theme.
-- **Elevation** (shadows for menus and dialogs only, v2 §05) is out of scope; `002` adds it with the first menu.
+- **Elevation** (shadows for menus and dialogs only, the design book §05) is out of scope; `002` adds it with the first menu.
 
 ### 14. Motion
 
@@ -528,15 +528,15 @@ The token file's `contrast` key lists these pairs by semantic name, and a unit t
 | `motion.microMs` | 200 | `--motion-micro: 200ms` in `:root`, and `--default-transition-duration: 200ms` in `@theme inline` |
 | `motion.easeEntrance` | `[0.2, 0.7, 0.3, 1]` | `--ease-entrance: cubic-bezier(0.2, 0.7, 0.3, 1)` in `@theme inline`, the utility `ease-entrance` |
 
-- These are v2 §06's budgets: one entrance of at most 900 ms, ease-out, and micro-feedback of at most 200 ms. The curve is v2's own cover animation (`dockin`), an ease-out.
+- These are the design book §06's budgets: one entrance of at most 900 ms, ease-out, and micro-feedback of at most 200 ms. The curve is the design book's own cover animation (`dockin`), an ease-out.
 - `--default-transition-duration` makes Tailwind's plain `transition` class use 200 ms, not Tailwind's 150 ms (run memo §5).
 - **Reduced motion.** Under `@media (prefers-reduced-motion: reduce)`:
   - **`html:root`** sets `--motion-entrance: 0ms` and `--motion-micro: 0ms`.
   - `*, ::before, ::after` get `animation-duration: 0.01ms !important`, `animation-iteration-count: 1 !important`, `transition-duration: 0.01ms !important` and `scroll-behavior: auto !important`.
-  - *Why both:* our own components read the tokens. Third-party animation (stock components, `tw-animate-css`) does not, so the catch-all stops it. 0.01 ms, not 0, still fires `animationend`, and an animation with `forwards` fill lands on its last frame. That is v2's "composed end state, never a blank" (INFERRED).
+  - *Why both:* our own components read the tokens. Third-party animation (stock components, `tw-animate-css`) does not, so the catch-all stops it. 0.01 ms, not 0, still fires `animationend`, and an animation with `forwards` fill lands on its last frame. That is the design book's "composed end state, never a blank" (INFERRED).
 - **Why `html:root`, never `:root`, inside the media query.** On every `add` of `pluto-theme`, or of any item that depends on it, the CLI writes the 45 light colours and `radius` into every rule whose selector is `:root`, including rules nested in at-rules (READ: `cli/src/utils/updaters/update-css-vars.ts`; review finding 1). Theme items skip the "already installed" check, so this happens on every such `add`. A nested `:root` rule therefore receives the light palette on the second `add`. It comes after `.dark` at equal specificity, so a reduced-motion user who chose dark gets the light palette (review finding 1, EXECUTED in Chromium). `html:root` is not the selector `:root` to the CLI, so it is left alone. Its specificity (0,1,1) beats `:root` (0,1,0), so the motion tokens still read 0 ms under reduce. Plain `html` would lose to `:root` and read 900 ms. With `html:root`, a second `add` left the CSS byte-identical, dark stayed dark, and `--motion-entrance` read `0ms` under reduce (review, EXECUTED).
 - The rule, for every later edit of the token CSS: **no rule nested in an at-rule uses the selector `:root` or `.dark`.** `generated.test.ts` asserts it, and the smoke test asserts that a second `add` changes nothing (decision 25).
-- The orbit-assemble entrance itself is `003`'s.
+- The orbit-assemble entrance itself is `006`'s.
 
 ### 15. What `build-tokens` emits, and what the CLI derives itself
 
@@ -558,7 +558,7 @@ The token file's `contrast` key lists these pairs by semantic name, and a unit t
   - `.dark`: `color-scheme: dark`;
   - `@media (prefers-reduced-motion: reduce)`: the two rules of decision 14, `html:root` and `*, ::before, ::after`;
   - `@utility groove`;
-  - `@layer base`: `body { @apply bg-background text-foreground }`, `h1, h2, h3, h4, h5, h6 { @apply font-heading }`, and the `:focus-visible` rule. The heading rule is ours because the CLI's font setup deliberately skips `--font-heading` (run memo §4), and v2 §04 sets every heading in IBM Plex Sans.
+  - `@layer base`: `body { @apply bg-background text-foreground }`, `h1, h2, h3, h4, h5, h6 { @apply font-heading }`, and the `:focus-visible` rule. The heading rule is ours because the CLI's font setup deliberately skips `--font-heading` (run memo §4), and the design book §04 sets every heading in IBM Plex Sans.
 - The `font` object of each of the three font items (decision 17).
 
 `pluto-theme`'s `devDependencies` field, `["shadcn-svelte@^1.7.1"]`, is hand-written in `registry.json`, not emitted (decision 19).
@@ -592,15 +592,15 @@ Both written files are committed. A unit test fails if either differs from a fre
 
 ### 16. The mark's geometry as tokens
 
-| Token | Value | v2 / D-0002 |
+| Token | Value | Design book |
 |---|---|---|
 | `--mark-dot` | 0.3 em | dot diameter .30 em |
 | `--mark-gap` | 0.08 em | gap .08 em |
 | `--mark-rise` | 0.38 em | lockup rise .38 em |
-| `--mark-lockup-gap` | 0.16 em | the space between wordmark and mark (v2's `.lockup` gap) |
+| `--mark-lockup-gap` | 0.16 em | the space between wordmark and mark (the design book's `.lockup` gap) |
 
-- em, so the mark scales with the font size it sits in, as v2 specifies ("all values relative to the lockup's font size").
-- The lockup's lift is derived, not a fifth value: `--mark-lift: calc(var(--mark-rise) + var(--mark-dot) + var(--mark-gap))`, which is 0.76 em. v2 §02 explains the sum: a flex row aligns the mark by its top-left dot, so the lift adds one row. The `Lockup` applies it as `-translate-y-(--mark-lift)`.
+- em, so the mark scales with the font size it sits in, as the design book specifies ("all values relative to the lockup's font size").
+- The lockup's lift is derived, not a fifth value: `--mark-lift: calc(var(--mark-rise) + var(--mark-dot) + var(--mark-gap))`, which is 0.76 em. The design book §02 explains the sum: a flex row aligns the mark by its top-left dot, so the lift adds one row. The `Lockup` applies it as `-translate-y-(--mark-lift)`.
 - Clearspace (one dot-pair height) and minimum size (the mark alone below 20 px of lockup height) are usage rules. The four-dot preview page shows both. No component enforces them, because a component cannot know its surroundings.
 
 ### 17. Three `registry:font` items
@@ -621,17 +621,17 @@ Both written files are committed. A unit test fails if either differs from a fre
 - The CLI writes files but deletes none. So the script builds into a fresh temporary folder inside `<out>`, and only when the CLI exits 0 does it replace `<out>/r/styles/maia/` with it. A removed or renamed item leaves no stale file to be served or deployed, and a failed build leaves the last good registry in place (change review finding 3).
 - It then copies `<out>/r/styles/maia/` to `<out>/v<version>/r/styles/maia/`, where `<version>` is `package.json`'s `version`, after clearing that folder.
 - `<out>` is `static` by default. `--out <dir>` sets another folder; `registry.test.ts` uses it to build into a temporary folder (decision 25).
-- `vite build` copies `static/` into `build/`. **The deployable output therefore holds `build/r/styles/maia/`**, the path the roadmap fixes, and `build/v0.1.0/r/styles/maia/` (run memo §6, EXECUTED for the first).
-- *Why `static/`, not `build/` directly:* the SvelteKit dev server serves `static/` and nothing else, and it served `static/r/` at `/r/` (run memo §6, EXECUTED; toolchain memo §3 under Bun). Writing straight into `build/` would leave the dev server with no registry. Generated JSON stays out of git, because `static/r/` and `static/v*/` are ignored.
-- *Why `/styles/maia/`:* the CLI appends `/styles/<style>` to the registry URL, and `style` must be one of eight presets (registry memo §1.7). We use `maia`, as `hq/web` does.
-- **The versioned path.** An app pins a release by setting its registry to `https://ui.plutosystems.co/v0.1.0/r`. `/r` always holds the latest. An update is then a deliberate change of one URL (registry memo §2).
+- `vite build` copies `static/` into `build/`. **The built site therefore holds `build/r/styles/maia/`**, and `build/v0.1.0/r/styles/maia/` (run memo §6, EXECUTED for the first).
+- *Why `static/`, not `build/` directly:* the SvelteKit dev server serves `static/` and nothing else, and it served `static/r/` at `/r/` (run memo §6, EXECUTED; toolchain memo §3 under Bun). Writing straight into `build/` would leave the dev server with no registry. At `v0.1.0`, generated JSON stays out of git, because `static/r/` and `static/v*/` are ignored. From `v0.4.0` the built registry is committed, so each tag carries its own JSON (decisions.md, "The registry is served from GitHub, and the repository is public").
+- *Why `/styles/maia/`:* the CLI appends `/styles/<style>` to the registry URL, and `style` must be one of eight presets (registry memo §1.7). We use `maia`.
+- **The versioned path.** An app pins a release by setting its registry to the raw GitHub URL of its tag, `https://raw.githubusercontent.com/plutosystemsco/design-system/<tag>/static/r`; `.../main/static/r` follows the latest (decisions.md, "The registry is served from GitHub, and the repository is public"). Tags carry their JSON from `v0.4.0`. An update is then a deliberate change of one URL (registry memo §2).
   - `package.json`'s `version` is `0.1.0` when this specification lands.
-  - Each release is a git tag `v<version>`. Keeping older releases' paths on the host after a new deploy is the deployment specification's job: a deploy of one build holds only its own version.
+  - Each release is a git tag `v<version>`. No release is deployed, so no host keeps older paths: the tag is the pin.
 
 ### 19. `registry.json`
 
-- `"$schema": "https://shadcn-svelte.com/schema/registry.json"`, `"name": "pluto"`, `"homepage": "https://ui.plutosystems.co"`.
-  - The host is the registry memo's recommendation (§2), on the platform D-0001 already chose. `homepage` is metadata: changing it later changes nothing an app installs.
+- `"$schema": "https://shadcn-svelte.com/schema/registry.json"`, `"name": "pluto"`, `"homepage": "https://github.com/plutosystemsco/design-system"`.
+  - `homepage` is the repository, since the registry is not hosted (decisions.md, "The registry is served from GitHub, and the repository is public"). It is metadata: changing it changes nothing an app installs.
 - `"aliases"`: `components` `#lib/registry/components`, `ui` `#lib/registry/ui`, `hooks` `#lib/registry/hooks`, `utils` `#lib/utils`, `lib` `#lib/registry/lib`.
   - *How `build` uses them:* it replaces each alias string with its placeholder (`$COMPONENTS$`, `$UI$`, `$HOOKS$`, `$UTILS$`, `$LIB$`), in the order components, ui, hooks, utils, lib, each with a plain `replaceAll` (READ: `transformAliases` in `cli/src/commands/registry/build.ts`, `ALIASES` in `cli/src/constants.ts`). The run confirmed `#lib/utils` became `$UTILS$` (run memo §2).
   - *Why `lib` is never bare `#lib`:* replaced last, a bare `#lib` would rewrite every `#lib/...` path that no earlier alias matched. For example, `#lib/registry/blocks/x` would become `$LIB$/registry/blocks/x`, which resolves wrongly in an app. The order does not protect against this; only the aliases do.
@@ -648,14 +648,14 @@ Both written files are committed. A unit test fails if either differs from a fre
 | `utils` | `registry:lib` | `src/lib/utils.ts` | none | `cn`, detected by `build` |
 | `four-dot` | `registry:ui` | `src/lib/registry/ui/four-dot/four-dot.svelte`, `lockup.svelte`, `index.ts` | `utils`, `pluto-theme` | none of its own; `shadcn-svelte` through `pluto-theme` |
 
-- **Why `pluto-theme` names `shadcn-svelte`.** Whenever an item carries `cssVars` or `css`, `add` writes `@import "shadcn-svelte/tailwind.css"` into the app's CSS (READ: `cli/src/utils/add-registry-items.ts`, where it merges `shadcnSvelteTailwindCssImport`; EXECUTED in the run and the review). An app that runs the CLI through `bunx`, as `wasi-python-dev` does, has no `shadcn-svelte` in its own `node_modules`, so its build could not resolve that import (run memo §6, INFERRED there). Constitution §4.6 asks the item to name what it needs.
+- **Why `pluto-theme` names `shadcn-svelte`.** Whenever an item carries `cssVars` or `css`, `add` writes `@import "shadcn-svelte/tailwind.css"` into the app's CSS (READ: `cli/src/utils/add-registry-items.ts`, where it merges `shadcnSvelteTailwindCssImport`; EXECUTED in the run and the review). An app that runs the CLI through `bunx` has no `shadcn-svelte` in its own `node_modules`, so its build could not resolve that import (run memo §6, INFERRED there). Constitution §4.6 asks the item to name what it needs.
   - *How:* `"devDependencies": ["shadcn-svelte@^1.7.1"]` on `pluto-theme` in `registry.json`. The item schema allows `dependencies` and `devDependencies` on every item type (READ: `cli/src/utils/registry/schema.ts`). `build` keeps an item's own `devDependencies` as written; it adds detected packages only from files, and this item has none (READ: `cli/src/commands/registry/build.ts`). `add` installs a theme item's `devDependencies` like any other item's, and skips a package the app already has at a satisfying version (READ: `add-registry-items.ts`, `install-deps.ts`).
   - *Why the item, not a documented precondition:* a precondition is a step an app can miss, and the failure appears only at its next build. The item field makes `add` do it.
   - The smoke test proves it: its scratch apps start without `shadcn-svelte`, and after `add` their `package.json` holds it and their build passes (decision 25).
 
 `build` never records `svelte` or `@sveltejs/kit`, even when a component imports types from `svelte/elements` (READ: `IGNORE_DEPS` in `cli/src/commands/registry/deps-resolver.ts`). So `four-dot` names no npm package, and `utils` names only `cn`.
 
-- Every item has a `title`, a one-sentence `description`, `author: "Pluto Systems <https://plutosystems.co>"`, and `meta: { "since": "0.1.0" }`.
+- Every item has a `title`, a one-sentence `description`, `author: "Pluto Systems <https://github.com/plutosystemsco/design-system>"`, and `meta: { "since": "0.1.0" }`.
 - **Every `registry:ui` item has at least two files.** A one-file item installs flat (`ui/four-dot.svelte`), not in its own folder (run memo §6, EXECUTED). An `index.ts` that re-exports the components is always the second file.
 - **The changelog** (constitution §6). `CHANGELOG.md` gets a dated `## 0.1.0 — <landing date>` entry with one line per item. Later releases add an entry and mark any change to an item's interface as such. `registry.test.ts` checks it (decision 25).
 
@@ -693,8 +693,8 @@ Both written files are committed. A unit test fails if either differs from a fre
 - The aliases equal `registry.json`'s, so a stock component that `002` installs with `add` lands in `src/lib/registry/ui/<name>/`, ready to restyle and publish.
 - `registry` points at the official registry, because this repository installs stock components from there (constitution §4.6).
 - **`"style": "maia"` is required.** The CLI's default style is `nova`. Without the field, `add` fetched `/r/styles/nova/index.json` and failed with 404 (toolchain memo §7, EXECUTED). The same holds for every app that installs from here (decision 23).
-- `iconLibrary: "phosphor"` follows `hq/web`. No icon package is added until an item uses one.
-- **`menuColor: "default"`, not `hq/web`'s `"default-translucent"`.** The translucent setting inlines `backdrop-blur-2xl` into every menu (run memo §7). v2 §09 bans glassmorphism.
+- `iconLibrary: "phosphor"` picks the Phosphor set, the one `002` names. No icon package is added until an item uses one.
+- **`menuColor: "default"`, not `"default-translucent"`.** The translucent setting inlines `backdrop-blur-2xl` into every menu (run memo §7). The design book §09 bans glassmorphism.
 
 ### 22. The `four-dot` item: the mark and the lockup
 
@@ -702,18 +702,18 @@ Two components, exported from `index.ts` as `FourDot` and `Lockup`.
 
 **`FourDot`**, the mark.
 
-- Four dots in a two-by-two grid, in v2's order: `mark-1` top-left, `mark-2` top-right, `mark-3` bottom-left, `mark-4` bottom-right. Blue, red, amber, green in light; all paper in dark.
+- Four dots in a two-by-two grid, in the design book's order: `mark-1` top-left, `mark-2` top-right, `mark-3` bottom-left, `mark-4` bottom-right. Blue, red, amber, green in light; all paper in dark.
 - Each dot is `--mark-dot` square and fully round. The grid gap is `--mark-gap`.
 - Props:
-  - `tone?: "brand" | "mono"`, default `"brand"`. `"mono"` paints every dot `currentColor` (`bg-current`): v2's "all ink, or all paper on dark".
+  - `tone?: "brand" | "mono"`, default `"brand"`. `"mono"` paints every dot `currentColor` (`bg-current`): the design book's "all ink, or all paper on dark".
   - `label?: string`. Without it, the root has `aria-hidden="true"`: decoration. With it, the root has `role="img"` and `aria-label={label}`, for a mark that stands alone, such as inside a link.
   - `class?: string`, merged with `cn`, and the remaining attributes spread onto the root `<span>`.
-- No prop recolours or reorders a dot. v2 §02: "never recolored, never reordered, never three dots".
+- No prop recolours or reorders a dot. The design book §02: "never recolored, never reordered, never three dots".
 
 **`Lockup`**, the wordmark with the displaced mark.
 
 - The lowercase word "pluto" in `font-heading font-bold tracking-mark leading-none`. All four are token classes: the family, the weight and the line height come from the token file (decision 11). Then `FourDot` (decorative), lifted by `--mark-lift` (0.76 em).
-- The row is `inline-flex`, `items-baseline`, gap `--mark-lockup-gap`: v2 §02's reference implementation, expressed in tokens.
+- The row is `inline-flex`, `items-baseline`, gap `--mark-lockup-gap`: the design book §02's reference implementation, expressed in tokens.
 - Props:
   - `href?: string`. With it, the root is an `<a>`, and its accessible name is `label`. Without it, the root is a `<span>`, and the name a screen reader hears is the word "pluto".
   - `label?: string`, default `"Pluto Systems"`. It contains the visible word, so speech users can say what they see (SC 2.5.3).
@@ -733,13 +733,13 @@ Both are Svelte 5 runes components (`$props`), as stock components are (registry
   - Runs are debounced by 200 ms and never overlap; a change during a run queues one more run.
   - `build:tokens` writes a file only when its content changes. So its own write to `registry.json` triggers one registry build and no loop.
   - It runs the builds by calling the functions the two scripts export. `build:registry` spawns the CLI with `--bun` in argv (decision 18).
-- *Why a Vite plugin:* the CLI's `build` has no watch mode (registry memo §1.6). Vite already watches files, so this adds no dependency and needs no second terminal. Vite's watcher has not yet been exercised under Bun beyond start-up (toolchain memo §12); `dev-loop.test.ts` is its first test.
-- **Installing into `wasi-python-dev` during development.** The app keeps the published URL in its `components.json` and installs from here with
+- *Why a Vite plugin:* the CLI's `build` has no watch mode (registry memo §1.6). Vite already watches files, so this adds no dependency and needs no second terminal. The toolchain memo ran Vite's watcher under Bun only at start-up (§12); `dev-loop.test.ts` tests it.
+- **Installing into an app during development.** An app keeps the published URL in its `components.json` and installs from here with
   `REGISTRY_URL=http://localhost:5173/r bunx --bun shadcn-svelte@1.7.1 add <item> -y -o`.
   - The CLI appends `/styles/maia` itself (registry memo §1.7). `-o` is needed, because `-y` alone still prompts before changing the app's CSS (registry memo §1.9).
   - `--bun` runs the CLI under Bun; it must come before the package name (toolchain memo §1, READ).
-  - `bunx pkg@version` runs a copy outside the app's `bun.lock`. For the first install there is no other copy. After it, `pluto-theme` has put `shadcn-svelte@^1.7.1` in the app's `devDependencies`, so the app may run its own locked copy with `bun --bun shadcn-svelte add …`. Which it uses is that app's choice.
-  - **What the app needs** before its first `add`: `components.json` with `"style": "maia"` (decision 21); and, as a Kit 3 app, the `imports` shape of decision 2, or its `svelte-check` fails on the CLI's extensionless `#lib/utils`.
+  - `bunx pkg@version` runs a copy outside the app's `bun.lock`. For the first install there is no other copy. After it, `pluto-theme` has put `shadcn-svelte@^1.7.1` in the app's `devDependencies`, so an app may run its own locked copy with `bun --bun shadcn-svelte add …`. Which it uses is its own choice.
+  - **What an app needs** before its first `add`: `components.json` with `"style": "maia"` (decision 21); and, as a Kit 3 app, the `imports` shape of decision 2, or its `svelte-check` fails on the CLI's extensionless `#lib/utils`.
 
 ### 24. The preview app
 
@@ -751,7 +751,7 @@ Both are Svelte 5 runes components (`$props`), as stock components are (registry
 - **Themes.**
   - An inline script in `src/app.html` sets `class="dark"` on `<html>` before first paint. It uses the stored choice under the `localStorage` key `pluto-preview-theme`, or else `prefers-color-scheme`.
   - The toggle is a `<button type="button">` named "Dark theme", with `aria-pressed` reflecting the state once it has hydrated. The prerendered button carries no `aria-pressed`, because the server cannot know the theme the head script chose (change review finding 8). Pressing it flips the class and stores the choice.
-  - *Why our own few lines, not `mode-watcher`:* a preview app needs only this, and the tests drive the theme through `prefers-color-scheme`. `003` decides what apps use.
+  - *Why our own few lines, not `mode-watcher`:* a preview app needs only this, and the tests drive the theme through `prefers-color-scheme`. For apps, `005` ships a `theme` item of its own (`005` decision 6).
 - **What each preview page shows**, in the current theme:
   - `pluto-theme`: every semantic colour as a swatch chip, with its name and hex written **beside** the chip, on the page ground, in `foreground`. Text never sits on the chip, because amber or a translucent `border` under text would fail axe's `color-contrast`. Then the contrast table of decision 12; the type scale; the spacing ladder as bars; a radius specimen with one box per `rounded` class; the groove; the motion tokens.
   - `font-*`: a specimen in the face, at each scale step that uses it, with its CSS variable and install command.
@@ -791,7 +791,7 @@ Each acceptance criterion's check is written first and seen failing (constitutio
    - `wrangler.jsonc` parses with `JSON.parse`, has `assets.directory` `"./build"`, and has no `main` key: 3 assertions (decision 27).
    - `CHANGELOG.md` has a `## 0.1.0` entry that names each of the 6 items.
 5. `previews.test.ts`: each of the 6 items has `src/routes/items/<name>/+page.svelte`.
-6. `literals.test.ts`: the literal lint finds 0 violations in the 4 files that items carry (`utils.ts`, `four-dot.svelte`, `lockup.svelte`, `index.ts`). Then the lint itself is tested: it flags each of 16 bad samples and none of 10 good ones.
+6. `literals.test.ts`: the literal lint finds 0 violations in the 4 files that items carry (`utils.ts`, `four-dot.svelte`, `lockup.svelte`, `index.ts`). Then the lint itself is tested: it flags each of 27 bad samples and none of 12 good ones.
 7. `deps.test.ts`:
    - Every npm package an item names (built `dependencies` and `devDependencies`, and each font item's `font.dependency`) has a range in `package.json`. That is 5 packages: `shadcn-svelte`, `cn` and the three fonts. Where the item states a range (`shadcn-svelte`, `cn`), `package.json`'s specifier equals it.
    - `package.json` names exactly the 19 packages of decision 4 with their specifiers, and `bun.lock` resolves each to the version there.
@@ -816,7 +816,7 @@ The 27 bad samples: `#14161C`, `#abc`, `oklch(0.5 0.2 264)`, `rgb(0 0 0)`, `bg-r
 
 - They run against `vite preview` of the production build. Playwright's `webServer.command` is `bun run build && bun --bun vite preview --port 4173 --strictPort`, so the site is built first and the tests see the prerendered pages a deploy would serve. The config process, the workers and the web server all ran under Bun in the toolchain memo (§6, EXECUTED).
 - Chromium is installed with `bunx --bun playwright install chromium`, which fetches the build that `@playwright/test` 1.64.1 pins.
-- There are two projects, `light` and `dark`, set by `colorScheme`. Both use Chromium. *Why one engine:* the geometry assertions need one set of font metrics. A later specification may add engines.
+- There are two projects, `light` and `dark`, set by `colorScheme`. Both use Chromium. *Why one engine:* the geometry assertions need one set of font metrics. This release checks Chromium only (decisions.md, "After the public-readiness review").
 
 1. `axe.spec.ts`: each of the 7 pages, in both projects, scanned by `@axe-core/playwright` with the tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22aa` and `best-practice`. 0 violations, across 14 scans.
 2. `theme.spec.ts`: on each of the 7 pages, `<html>` has the class `dark` in the dark project and not in the light one. `body`'s background computes to `rgb(247, 247, 244)` in light and `rgb(20, 22, 28)` in dark. 14 checks.
@@ -850,10 +850,10 @@ The 27 bad samples: `#14161C`, `#abc`, `oklch(0.5 0.2 264)`, `rgb(0 0 0)`, `bg-r
   - **A**: SvelteKit 3.1.0 with `@sveltejs/adapter-static` 4.0.0; the `imports` of decision 2; `tsconfig.json` extends `$app/tsconfig` and sets `include: ["src", "*.ts"]`, for decision 2's reason: after assertion 9's build, `svelte-check` would otherwise scan `build/`; `components.json` aliases `#lib/components`, `#lib/components/ui`, `#lib/hooks`, `#lib/utils`, `#lib`.
   - **B**: SvelteKit 2.70.3 with `@sveltejs/adapter-static` 3.0.10, a `svelte.config.js` (as Kit 2 requires) and `$lib` aliases; `tsconfig.json` extends `./.svelte-kit/tsconfig.json` and sets `skipLibCheck: true`, as Kit 2's own template does: without it, Vite 8's types fail for want of `@types/node` before any `add`; `src/lib` exists, which Kit 2 needs before `add` accepts `$lib` (run memo §2).
   - Both pin, exactly, `svelte` 5.57.3, `vite` 8.3.5, `@sveltejs/vite-plugin-svelte` 7.3.1, `tailwindcss` and `@tailwindcss/vite` 4.3.3, `typescript` 6.0.3 and `svelte-check` 4.7.7. **Neither holds `shadcn-svelte`, `cn` or a font package.**
-  - Both `components.json` files name the **published** URL, `"registry": "https://ui.plutosystems.co/r"`, and `"style": "maia"`, so the run proves the `REGISTRY_URL` override an app uses in development.
-  - **The starting `src/app.css` is exactly one line, `@import "tailwindcss";`**, as in the review's run. No stock theme is present, so after `add` the app's variables can equal ours exactly.
+  - Both `components.json` files name a **published** URL in `"registry"`, never `localhost`, and `"style": "maia"`, so the run proves the `REGISTRY_URL` override an app uses in development.
+  - **The starting `src/app.css` is exactly one line, `@import "tailwindcss";`**, as in the specification review's run. No stock theme is present, so after `add` the app's variables can equal ours exactly.
   - Each `bun.lock` is made once by `bun install` in the fixture folder and committed. The tests never write to the fixtures.
-- Bun 1.3.14 has not yet run a Kit 2 app through `add` (toolchain memo §12). App B's run is the first.
+- The toolchain memo did not run a Kit 2 app through `add` under Bun 1.3.14 (§12). App B's run does.
 
 1. `registry-add.test.ts`:
    - It starts this repository's `vite dev` (as `[process.execPath, '--bun', 'node_modules/.bin/vite', 'dev', '--port', <free port>, '--strictPort']`) and waits, at most 60 s, for `/r/styles/maia/index.json` to answer 200. The watcher builds the registry before the server listens (decision 23).
@@ -902,23 +902,21 @@ The 27 bad samples: `#14161C`, `#abc`, `oklch(0.5 0.2 264)`, `rgb(0 0 0)`, `bg-r
 
 - An assets-only Worker: there is no `main`, so no Worker code runs, and static asset requests are free (registry memo §2).
 - It has no comments, so `JSON.parse` reads it, and `registry.test.ts` checks it with no JSONC parser (decision 25).
-- Routes, the custom domain and the deploy command are the deployment specification's. The owner runs the deploy.
+- Routes, a custom domain and a deploy command are out of scope: no release is deployed (decisions.md, "The registry is served from GitHub, and the repository is public").
 
 ### 28. Two owner calls this specification does not decide
 
-Both are open from v2 §10. Neither blocks 001.
+Both were open in the design book §10. Neither blocked 001. Both are answered in `decisions.md`.
 
-- **The doc-ID scheme** (v2 names itself PS-DB-0002). v2 §07 puts the doc ID in every page's footer. **`003` needs it**, for the footer block. 001 shows no doc IDs.
-- **Coloured dots on ink for the icon.** v2 makes ink the icon's field and refuses coloured dots on dark grounds. **The specification that ships the icon files needs it**: the favicon, app icon and logo SVGs, which the registry memo proposes as `registry:file` items. That is `003` (the top nav and site head) or a later logo-files specification, whichever ships the icon first. 001 ships no icon. In the dark theme, its in-page mark follows v2's written rule and goes all paper (decision 8).
-- **What 001 does decide next to the icon call: state dots in the dark theme.** `destructive-fill` and `success-fill` are lifted red and green on ink. v2 §03 refuses "colour dots on dark grounds", but it also sanctions functional state semantics, and a state dot that went paper-white would tell state by nothing. So 001 reads the refusal as covering the mark and decoration, not state (decision 8). `003`'s run metrics will show these dots. When the icon call is put to the owner, both parts are asked together: coloured dots on ink for the icon, and confirmation of lifted state dots on ink. If the owner refuses the second, only the two dark values change.
-- Also recorded for that question: v2's monochrome mark on dark (`.paperdots`) uses `raised` `#FFFFFF`, and 001 uses `paper` `#F7F7F4` (decision 8).
-
-Each will be put to the owner with the AskUserQuestion tool, with options and a recommendation, by the specification that needs it.
+- **The doc-ID scheme** (the design book names itself PS-DB-0002). The design book §07 puts the doc ID in every page's footer. 001 shows no doc IDs. The scheme is `PS-<series>-<NNNN>` (decisions.md, "The theme mechanism, the doc-ID scheme and the footer's sentence", 2026-11-01). `006`'s footer takes the ID as a string prop.
+- **Coloured dots on ink for the icon.** The design book makes ink the icon's field and refuses coloured dots on dark grounds. On ink, the icon's coloured dots use the lifted primitives (`*-lifted`), which pass 3:1 on every dark ground (decisions.md, "After the public-readiness review", 2026-11-01). The icon files (the favicon, app icon and logo SVGs, which the registry memo proposes as `registry:file` items) are in no release. 001 ships no icon. In the dark theme, its in-page mark follows the design book's written rule and goes all paper (decision 8).
+- **What 001 does decide next to the icon call: state dots in the dark theme.** `destructive-fill` and `success-fill` are lifted red and green on ink. The design book §03 refuses "colour dots on dark grounds", but it also sanctions functional state semantics, and a state dot that went paper-white would tell state by nothing. So 001 reads the refusal as covering the mark and decoration, not state (decision 8). The icon's answer uses the same lifted primitives, so state dots and the icon agree on ink.
+- Also recorded: the design book's monochrome mark on dark (`.paperdots`) uses `raised` `#FFFFFF`, and 001 uses `paper` `#F7F7F4` (decision 8).
 
 ### 29. Room left for `002` and `003`
 
 - **Layout.** `src/lib/registry/` has `ui/`, `components/`, `hooks/`, `lib/` and `blocks/` folders, matching the aliases. `003`'s blocks import only `#lib/registry/ui/...` and `#lib/utils`, never another block, so the aliases cover every import (decision 19's trap).
-- **The restyling approach.** `002` installs each stock component from the official registry into `src/lib/registry/ui/<name>/` (decision 21), with this repository's locked CLI, `bun --bun shadcn-svelte add <name>`, then restyles it to the tokens and to v2. Constitution §4.6 counts that install as using a dependency.
+- **The restyling approach.** `002` installs each stock component from the official registry into `src/lib/registry/ui/<name>/` (decision 21), with this repository's locked CLI, `bun --bun shadcn-svelte add <name>`, then restyles it to the tokens and to the design book. Constitution §4.6 counts that install as using a dependency.
 - **Never `-o` on a stock add here.** A stock component depends on the official `utils`, and our `utils` alias is `#lib/utils`, so `add -o` would overwrite our `src/lib/utils.ts` (decision 20). `002` runs those adds without `-o` and declines the overwrite, or restores `src/lib/utils.ts` from git afterwards. `generated.test.ts` does not cover `utils.ts`; `utils.test.ts` and review do.
 - **The `muted` rule** (decisions.md, "A fourth ground for `muted`, insets only"). `muted`, `accent` and `sidebar-accent` are for component insets only: skeletons, tab strips, code grounds, hover and selected rows. Never a page, section or sidebar ground. The literal lint cannot see where a class is used, so the review of each `002` and `003` change checks it.
 - **No state tint on `muted`, in either theme** (decision 8). An alert or badge with `bg-destructive/10`, `bg-success/10` or their `/20` dark forms never sits inside a `muted` or `accent` inset. Three of the four cases fail AA (decision 12).
@@ -938,7 +936,7 @@ registry.json + src/lib/utils.ts + src/lib/registry/**
         │  bun run build:registry (scripts/build-registry.ts → bun --bun node_modules/.bin/shadcn-svelte registry build)
         ├──────────────► static/r/styles/maia/            index.json + 6 item files
         └──────────────► static/v0.1.0/r/styles/maia/     the same 7 files
-bun --bun vite dev    ── builds both once, then serves static/ ──►  http://localhost:5173/r/styles/maia/…   (wasi-python-dev installs from here)
+bun --bun vite dev    ── builds both once, then serves static/ ──►  http://localhost:5173/r/styles/maia/…   (an app installs from here during development)
 bun --bun vite build  ── copies static/ ──►  build/r/styles/maia/…, build/v0.1.0/…, and 7 prerendered pages
 ```
 
@@ -972,7 +970,7 @@ bun --bun vite build  ── copies static/ ──►  build/r/styles/maia/…, 
     "text":       [["foreground", "background"], ["muted-foreground", "muted"], "…"],
     "tints":      [{ "text": "destructive", "tint": "destructive", "over": "background", "alpha": { "light": 0.1, "dark": 0.2 } }, "…"],
     "nonText":    [["input", "card"], ["chart-3", "background"], "…"],
-    "exceptions": [{ "theme": "light", "pair": ["chart-3", "background"], "why": "amber series are labelled directly (v2 §03; WCAG 1.4.11)" }, "…"],
+    "exceptions": [{ "theme": "light", "pair": ["chart-3", "background"], "why": "amber series are labelled directly (the design book §03; WCAG 1.4.11)" }, "…"],
     "forbidden":  [{ "theme": "light", "text": "destructive", "tint": "destructive", "over": "muted", "alpha": 0.1, "ratio": 4.06, "why": "no state tint on muted (decision 8)" }, "…"]
   }
 }
@@ -1009,15 +1007,15 @@ Units. Pixel tokens become rem by dividing by 16 (radius, spacing, type sizes), 
 - 15 test files: 8 unit, 5 browser, 2 smoke; and the two scratch-app fixtures under `tests/smoke/fixtures/`.
 - `wrangler.jsonc` and `CHANGELOG.md`.
 
-**The step to *done*** is `wasi-python-dev`'s work, not this repository's: its home-page specification (its `003`) installs `pluto-theme` and `four-dot` from this registry and passes that app's own checks (constitution §4.2). That specification depends on this one. 001's landing notes record the *built* date when criteria 1 to 23 hold, and later the `wasi-python-dev` commit that makes it *done* (criterion 24).
+**The step to *done*** is the release: the change is reviewed, the Landing notes cite the review, and the commit is tagged `v0.1.0` (criterion 24; constitution §2 and §4.2).
 
 **Out:**
 
-- Deployment, the domain, and retaining older versioned paths on the host. The owner runs the deploy; a later specification covers it.
+- Deployment, a domain, and retaining older versioned paths on a host. No release is deployed (decisions.md, "The registry is served from GitHub, and the repository is public").
 - The primitives (`002`) and the blocks (`003`), and their dependencies: `bits-ui`, `tw-animate-css`, an icon package, `mode-watcher`.
 - Elevation tokens, the editor and code-block highlight palettes, and the logo SVG files.
-- The orbit-assemble entrance (`003`).
-- The two owner calls of decision 28.
+- The orbit-assemble entrance (`006`).
+- The doc-ID scheme and the icon files (decision 28).
 - A branded CLI (constitution §3).
 - Serving `/init` from this registry (registry memo §7).
 
@@ -1048,14 +1046,13 @@ Each is a count, checked by the command named. "Clean clone" means a fresh `git 
 21. **Test files.** On a clean clone, `bun run test` exits 0, having run 8 unit files, 5 browser files in 2 projects, and 2 smoke files.
 22. **Deploy config.** `registry.test.ts` finds that `wrangler.jsonc` parses with `JSON.parse`, has `assets.directory` `"./build"`, and has no `main` key: 3 of 3.
 23. **Changelog.** `registry.test.ts` finds a `0.1.0` entry in `CHANGELOG.md` naming 6 of 6 items.
-24. **In the app (done).** `wasi-python-dev`'s home-page specification installs `pluto-theme` and `four-dot` from this registry and passes that app's checks: its `svelte-check`, Playwright and axe. That app holds the commit: 1 of 1. This criterion is checked in `wasi-python-dev`, after 001 is *built*; 001's landing notes cite the commit.
+24. **Released.** The change is tagged `v0.1.0` and the Landing notes cite its review.
 
 ## Landing notes
 
-- **Built:** 2026-10-27. Nothing is committed yet; the owner commits when asked. The change review is [`../reviews/001-tokens-and-the-registry-pr-2026-10-27.md`](../reviews/001-tokens-and-the-registry-pr-2026-10-27.md): "Does not land yet" on three Medium and eight Low findings, every one fixed in its Disposition, then re-verified by the orchestrating session. The specification review is [`../reviews/001-tokens-and-the-registry-spec-2026-10-27.md`](../reviews/001-tokens-and-the-registry-spec-2026-10-27.md).
-- **Done:** *pending.* Criterion 24 waits on `wasi-python-dev`'s home-page specification, which installs `pluto-theme` and `four-dot` from this registry. That commit goes here.
+- **Built:** 2026-10-27. Committed 2026-10-28 as `33e94de` and tagged `v0.1.0`. The change review is [`../reviews/001-tokens-and-the-registry-pr-2026-10-27.md`](../reviews/001-tokens-and-the-registry-pr-2026-10-27.md): "Does not land yet" on three Medium and eight Low findings, every one fixed in its Disposition, then re-verified by the design lead. The specification review is [`../reviews/001-tokens-and-the-registry-spec-2026-10-27.md`](../reviews/001-tokens-and-the-registry-spec-2026-10-27.md).
 
-**What the orchestrating session saw, under Bun 1.3.14, 2026-10-27 (EXECUTED):**
+**What the design lead saw, under Bun 1.3.14, 2026-10-27 (EXECUTED):**
 
 | Check | Result |
 |---|---|
@@ -1067,11 +1064,11 @@ Each is a count, checked by the command named. "Clean clone" means a fresh `git 
 | `bun --bun playwright test` | 130 passed, 5 files in 2 projects |
 | `bun test ./tests/smoke` | 22 pass, 0 fail, 2 files |
 
-Criteria 1 to 23 hold at the counts the amended criteria state. Criterion 24 is not met, by design.
+Criteria 1 to 23 hold at the counts the amended criteria state. Criterion 24 holds: the tag `v0.1.0` exists, and these notes cite the review.
 
 **Two things to know:**
 
-1. **An intermittent hang in the smoke harness, root cause not established.** The smoke pair failed in 3 of its first 6 runs with a `beforeAll` hitting its own timeout while polling the dev server, which means one `fetch` hung on an accepted connection. Each file passed alone. The orchestrator gave each poll request a 2 s timeout, made the poll fail at once if the server exits, and put the server log in every error (`tests/smoke/process.ts`). 13 consecutive runs have passed since. If it recurs, the error now carries the log. See the change review's addendum.
-2. **Decisions made during the build that the owner delegated or that the spec did not foresee** are recorded: the `muted` ground (decisions.md, "A fourth ground for `muted`, insets only"); Bun as the runtime (decisions.md); and the six deviations the change review judged necessary, now written into decisions 23 to 26.
+1. **An intermittent hang in the smoke harness.** The smoke pair failed in 3 of its first 6 runs with a `beforeAll` hitting its own timeout while polling the dev server, which means one `fetch` hung on an accepted connection. Each file passed alone. The design lead gave each poll request a 2 s timeout, made the poll fail at once if the server exits, and put the server log in every error (`tests/smoke/process.ts`). 13 consecutive runs passed after that. The root cause is not established; a recurrence reports the server log. See the change review's addendum.
+2. **Decisions made during the build** are recorded: the `muted` ground (decisions.md, "A fourth ground for `muted`, insets only"); Bun as the runtime (decisions.md); and the six deviations the change review judged necessary, now written into decisions 23 to 26.
 
 **For `002`:** this repository's `components.json` points at the official registry, so `add <stock item>` lands in `src/lib/registry/ui/<name>/` for restyling. Never run that `add` with `-o`, or restore `src/lib/utils.ts` afterwards (decision 29). The stock classes to replace are listed in decision 29.

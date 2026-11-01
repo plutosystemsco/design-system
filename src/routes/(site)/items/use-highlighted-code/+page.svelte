@@ -41,7 +41,7 @@ nothing is loaded, and nothing is coloured`;
   <div class="grid max-w-2xl gap-8">
     <Specimen caption="a language that is not listed · plain" class="w-full">
       <CodeBlock.Root>
-        <CodeBlock.Content code={unknown} language="brainfuck" lineNumbers />
+        <CodeBlock.Content code={unknown} language="cobol" lineNumbers />
       </CodeBlock.Root>
     </Specimen>
     <Specimen caption="no language · one text node" class="w-full">
@@ -65,9 +65,9 @@ nothing is loaded, and nothing is coloured`;
       sign of anything.
     </li>
     <li>
-      Streaming code should sit in a block whose height is capped by the app, so
-      the page does not grow under the reader; a chat pane is the case this hook
-      serves.
+      Streaming code should sit in a block whose height is capped by the
+      consuming app, so the page does not grow under the reader; a chat pane is
+      the case this hook serves.
     </li>
   </ul>
 </PreviewSection>

@@ -69,7 +69,7 @@
 <PreviewSection
   id="states"
   title="States"
-  intro="Announced: inserted by a failed submit with role=alert, and focused. From props: rendered with the page, announce={false}, no role; the app moves focus to it."
+  intro="Announced: inserted by a failed submit with role=alert, and focused. From props: rendered with the page, announce={false}, no role; the consuming app moves focus to it."
 >
   <p class="max-w-prose text-muted-foreground">
     The Keyboard section shows the announced state; the specimens above show the

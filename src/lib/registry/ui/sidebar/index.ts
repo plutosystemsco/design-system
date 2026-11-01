@@ -22,7 +22,7 @@ import Trigger from "./sidebar-trigger.svelte";
 import Root from "./sidebar.svelte";
 import { useSidebar } from "./context.svelte.js";
 
-// No Rail (005 decision 10): 16 px and mouse-only, it failed the target rule
+// No Rail: 16 px and mouse-only, it failed the target rule
 // and doubled the trigger.
 export {
   Content,

@@ -70,7 +70,7 @@
             <Sheet.Title>Filters</Sheet.Title>
             <Sheet.Description>Narrow the list of runs.</Sheet.Description>
           </Sheet.Header>
-          <p class="text-sm">Status, owner and date go here.</p>
+          <p class="text-sm">Filter by status, owner and date.</p>
         </Sheet.Content>
       </Sheet.Root>
     </Specimen>

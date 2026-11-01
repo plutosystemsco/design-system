@@ -1,8 +1,8 @@
 /**
  * `bun run build:registry [--out <dir>]`: builds the registry with the locked
- * local shadcn-svelte CLI, run under Bun (decision 1), into
+ * local shadcn-svelte CLI, run under Bun (001 decision 1), into
  * `<out>/r/styles/maia/`, then copies it to `<out>/v<version>/r/styles/maia/`
- * (decision 18). `<out>` is `static` unless `--out` says otherwise.
+ * (001 decision 18). `<out>` is `static` unless `--out` says otherwise.
  *
  * The CLI writes files but deletes none, so it builds into a fresh temporary
  * folder beside `<out>/r/`, which is swapped in only when the CLI exits 0. A

@@ -1,11 +1,12 @@
 /**
- * Follow-bottom (005 decision 11): a scroll box that keeps its end in view as
- * content arrives, until the reader scrolls away. The rules are the stock
- * scroller's, written fresh: `following` starts true; while following, every
- * resize of the content scrolls to the end (coalesced into one frame); a
- * wheel, a touch move, one of seven keys on the box, or a scrollTop that fell
- * since the last frame releases it; it re-arms when the box comes within 8 px
- * of its end; growth past the end never releases it.
+ * Follow-bottom: a scroll box that keeps its end in view as content arrives,
+ * until the reader scrolls away. The rules are those of shadcn-svelte's
+ * message scroller, written fresh: `following` starts true; while following,
+ * every resize of the content scrolls to the end (coalesced into one frame);
+ * a wheel, a touch move, one of three keys on the box (ArrowUp, PageUp,
+ * Home), or a scrollTop that fell since the last frame releases it; it
+ * re-arms when the box comes within 8 px of its end; growth past the end
+ * never releases it.
  */
 
 /**

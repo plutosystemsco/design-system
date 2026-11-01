@@ -138,9 +138,9 @@ export const load: LayoutServerLoad = ({ cookies }) => ({
   <Sidebar.Footer>
     <Sidebar.Menu>
       <Sidebar.MenuItem>
-        <Sidebar.MenuButton tooltipContent="Clay Gendron">
+        <Sidebar.MenuButton tooltipContent="Ada Lovelace">
           <User aria-hidden="true" />
-          <span>Clay Gendron</span>
+          <span>Ada Lovelace</span>
         </Sidebar.MenuButton>
       </Sidebar.MenuItem>
     </Sidebar.Menu>

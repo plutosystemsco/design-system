@@ -3,7 +3,7 @@
 	"name": "accordion",
 	"title": "Accordion",
 	"type": "registry:ui",
-	"author": "Pluto Systems <https://plutosystems.co>",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 	"description": "Headings that each open a section, divided by grooves, moved by the arrow keys.",
 	"devDependencies": [
 		"bits-ui@^2.20.2",
@@ -32,7 +32,7 @@
 			"target": "accordion/accordion.svelte"
 		},
 		{
-			"content": "<script lang=\"ts\" module>\n  import { getContext, setContext } from \"svelte\";\n\n  /**\n   * The wiring bits-ui leaves out (004 decision 12): one id per item, made\n   * here and shared, so the trigger says `aria-controls` and the content is a\n   * `region` labelled by the trigger.\n   */\n  export type AccordionItemContext = {\n    readonly triggerId: string;\n    readonly contentId: string;\n  };\n\n  const KEY = \"pluto:accordion-item\";\n\n  export function setAccordionItemContext(\n    context: AccordionItemContext,\n  ): AccordionItemContext {\n    return setContext(KEY, context);\n  }\n\n  export function getAccordionItemContext(): AccordionItemContext | undefined {\n    return getContext<AccordionItemContext | undefined>(KEY);\n  }\n</script>\n\n<script lang=\"ts\">\n  import { Accordion as AccordionPrimitive } from \"bits-ui\";\n  import { cn } from \"$UTILS$\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    ...restProps\n  }: AccordionPrimitive.ItemProps = $props();\n\n  const uid = $props.id();\n  setAccordionItemContext({\n    triggerId: `${uid}-trigger`,\n    contentId: `${uid}-content`,\n  });\n</script>\n\n<!-- Every item after the first carries the groove. No tint on the open item. -->\n<AccordionPrimitive.Item\n  bind:ref\n  data-slot=\"accordion-item\"\n  class={cn(\"not-first:groove\", className)}\n  {...restProps}\n/>\n",
+			"content": "<script lang=\"ts\" module>\n  import { getContext, setContext } from \"svelte\";\n\n  /**\n   * The wiring bits-ui leaves out: one id per item, made\n   * here and shared, so the trigger says `aria-controls` and the content is a\n   * `region` labelled by the trigger.\n   */\n  export type AccordionItemContext = {\n    readonly triggerId: string;\n    readonly contentId: string;\n  };\n\n  const KEY = \"pluto:accordion-item\";\n\n  export function setAccordionItemContext(\n    context: AccordionItemContext,\n  ): AccordionItemContext {\n    return setContext(KEY, context);\n  }\n\n  export function getAccordionItemContext(): AccordionItemContext | undefined {\n    return getContext<AccordionItemContext | undefined>(KEY);\n  }\n</script>\n\n<script lang=\"ts\">\n  import { Accordion as AccordionPrimitive } from \"bits-ui\";\n  import { cn } from \"$UTILS$\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    ...restProps\n  }: AccordionPrimitive.ItemProps = $props();\n\n  const uid = $props.id();\n  setAccordionItemContext({\n    triggerId: `${uid}-trigger`,\n    contentId: `${uid}-content`,\n  });\n</script>\n\n<!-- Every item after the first carries the groove. No tint on the open item. -->\n<AccordionPrimitive.Item\n  bind:ref\n  data-slot=\"accordion-item\"\n  class={cn(\"not-first:groove\", className)}\n  {...restProps}\n/>\n",
 			"type": "registry:ui",
 			"target": "accordion/accordion-item.svelte"
 		},

@@ -54,7 +54,7 @@
   // Pressed is inverted, as the tooltip chip is; hover stays the darker
   // border of every secondary button, so the two cannot be confused.
   const uid = $props.id();
-  // A visible label before each group, as v2's mono furniture: lowercase.
+  // A visible label before each group, as the design book's mono furniture: lowercase.
   const eyebrow =
     "font-mono text-xs font-medium tracking-eyebrow text-muted-foreground lowercase";
   const pressed =

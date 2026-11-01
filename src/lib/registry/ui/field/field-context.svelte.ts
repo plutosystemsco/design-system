@@ -1,7 +1,7 @@
 import { getContext, setContext } from "svelte";
 
 /**
- * The field context (decision 11). `Field` and `FieldSet` set it in their
+ * The field context. `Field` and `FieldSet` set it in their
  * script, before their children render, so the wiring is in the server HTML.
  *
  * Controls read it by this string key with `getContext`, without importing
@@ -79,8 +79,7 @@ export function fieldContext(props: {
 }
 
 /**
- * The set context (decisions.md, after the review of the built change). A
- * `FieldSet` describes its own `<fieldset>` with its description and error,
+ * The set context. A `FieldSet` describes its own `<fieldset>` with its description and error,
  * and gives the same wiring, under this separate key, only to a group control
  * that asks for it: the radio group. A checkbox never reads it, so two
  * checkboxes in a set never share an id. `FieldLegend` records its id here, so

@@ -1,0 +1,30 @@
+{
+	"$schema": "https://shadcn-svelte.com/schema/registry-item.json",
+	"name": "is-mobile",
+	"title": "Is mobile",
+	"type": "registry:hook",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+	"description": "A media-query store that is true below 768 px and false on the server.",
+	"registryDependencies": [
+		"utils",
+		"pluto-theme"
+	],
+	"meta": {
+		"since": "0.5.0",
+		"group": "navigation",
+		"stock": {
+			"registry": "https://shadcn-svelte.com/registry/styles/maia",
+			"item": "is-mobile",
+			"cli": "1.7.1",
+			"date": "2026-11-01",
+			"sha256": "f4a286715fe4b3a1610b94e75565422e0a8cae30d7d05463b7c5c3d909f677b5"
+		}
+	},
+	"files": [
+		{
+			"content": "import { MediaQuery } from \"svelte/reactivity\";\n\nconst DEFAULT_MOBILE_BREAKPOINT = 768;\n\nexport class IsMobile extends MediaQuery {\n  constructor(breakpoint: number = DEFAULT_MOBILE_BREAKPOINT) {\n    super(`max-width: ${breakpoint - 1}px`);\n  }\n}\n",
+			"type": "registry:hook",
+			"target": "is-mobile.svelte.ts"
+		}
+	]
+}

@@ -1,6 +1,6 @@
 /**
  * Process helpers for the smoke tests. Every tool is spawned under Bun with
- * `--bun` in its argv (decision 1): a child of `bun test` runs under Node
+ * `--bun` in its argv (001 decision 1): a child of `bun test` runs under Node
  * otherwise.
  */
 import { setTimeout as sleep } from "node:timers/promises";

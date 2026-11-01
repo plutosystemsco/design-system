@@ -3,7 +3,7 @@
 
   /**
    * A line in a conversation that is not a turn. `separator` draws the
-   * hairline either side (R22: a border, not a 1 px box); `border` underlines
+   * hairline either side (a border, not a 1 px box); `border` underlines
    * it. No role by default: a marker inserted with its text is the silent
    * live-region case, the log announces it as an added node, and the state is
    * told by the status item. An app passes a role when it means one.

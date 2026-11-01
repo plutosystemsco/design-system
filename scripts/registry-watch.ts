@@ -1,5 +1,5 @@
 /**
- * The dev loop's Vite plugin (decision 23). Active only under `vite dev`.
+ * The dev loop's Vite plugin (001 decision 23). Active only under `vite dev`.
  *
  * At start, before the server listens, it runs build:tokens then
  * build:registry, so any `vite dev` serves a fresh registry. It then watches

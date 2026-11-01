@@ -1,18 +1,18 @@
 # 002 — The primitives: forms, surfaces and feedback
 
-- **Status:** built, 2026-10-28, committed as the commit that carries this specification and tagged `v0.2.0` (`001` is `33e94de`, `v0.1.0`); the change review is [`../reviews/002-the-primitives-forms-surfaces-and-feedback-pr-2026-10-28.md`](../reviews/002-the-primitives-forms-surfaces-and-feedback-pr-2026-10-28.md), all 12 findings dispositioned
+- **Status:** built, reviewed and released as `v0.2.0` (`7857ea4`). Built 2026-10-28; amended 2026-11-01 (R23 and R24, decision 9). The change review is [`../reviews/002-the-primitives-forms-surfaces-and-feedback-pr-2026-10-28.md`](../reviews/002-the-primitives-forms-surfaces-and-feedback-pr-2026-10-28.md), all 12 findings dispositioned
 - **Date:** 2026-10-28
-- **Owner:** Clay Gendron (written by an agent, Claude, sub-agent of the orchestrating session)
+- **Author:** the design lead
 - **Kind:** 26 stock components installed and restyled to the tokens; two new tokens; a stronger literal lint; a preview page per item; the 0.2.0 release
-- **Depends on:** [`001`](./001-tokens-and-the-registry.md), *built* (its Landing notes). `001` is not yet committed; see decision 4 on what that means for the install.
-- **Blocks:** `003`, the first blocks (decisions.md, 2026-10-28). `wasi-python-dev`'s home page waits on this and on `004`.
-- **Research:** [`../research/2026-10-28-the-primitives-the-blocks-and-the-home-page-need.md`](../research/2026-10-28-the-primitives-the-blocks-and-the-home-page-need.md) (cited as *primitives memo*); [`../research/2026-10-28-the-blocks-patterns-and-accessibility.md`](../research/2026-10-28-the-blocks-patterns-and-accessibility.md) (*patterns memo*); [`../research/2026-10-28-blocks-how-they-are-declared-installed-and-previewed.md`](../research/2026-10-28-blocks-how-they-are-declared-installed-and-previewed.md) (*blocks memo*); from `001`: [`../research/2026-10-27-the-foundation-run-kit-3-fonts-and-the-theme-item.md`](../research/2026-10-27-the-foundation-run-kit-3-fonts-and-the-theme-item.md) (*run memo*) and [`../research/2026-10-27-the-toolchain-under-bun.md`](../research/2026-10-27-the-toolchain-under-bun.md) (*toolchain memo*); the owner's and design lead's calls in [`../decisions.md`](../decisions.md), above all "The primitives split in two, and the design calls for `002`" (cited as *the split decision*); design book v2, `plutosystemshq/pluto-systems-design-book-v2.html` (*v2*).
+- **Depends on:** [`001`](./001-tokens-and-the-registry.md), released as `v0.1.0` (`33e94de`). Decision 4 says what that means for the install.
+- **Blocks:** `003`, the first blocks (decisions.md, 2026-10-28).
+- **Research:** [`../research/2026-10-28-the-primitives-the-blocks-and-the-home-page-need.md`](../research/2026-10-28-the-primitives-the-blocks-and-the-home-page-need.md) (cited as *primitives memo*); [`../research/2026-10-28-the-blocks-patterns-and-accessibility.md`](../research/2026-10-28-the-blocks-patterns-and-accessibility.md) (*patterns memo*); [`../research/2026-10-28-blocks-how-they-are-declared-installed-and-previewed.md`](../research/2026-10-28-blocks-how-they-are-declared-installed-and-previewed.md) (*blocks memo*); from `001`: [`../research/2026-10-27-the-foundation-run-kit-3-fonts-and-the-theme-item.md`](../research/2026-10-27-the-foundation-run-kit-3-fonts-and-the-theme-item.md) (*run memo*) and [`../research/2026-10-27-the-toolchain-under-bun.md`](../research/2026-10-27-the-toolchain-under-bun.md) (*toolchain memo*); the owner's and design lead's calls in [`../decisions.md`](../decisions.md), above all "The primitives split in two, and the design calls for `002`" (cited as *the split decision*); the Pluto Systems design book, cited by section as *the design book*.
 
 ## Intent
 
-`001` built the tokens and the registry's foundation. This specification fills the registry with the first 26 components. They are the forms, surfaces and feedback that the first blocks (`003`) and `wasi-python-dev`'s home page share.
+`001` built the tokens and the registry's foundation. This specification fills the registry with the first 26 components. They are the forms, surfaces and feedback that the first blocks (`003`) and an app's first pages share.
 
-Each component comes from shadcn-svelte's own registry. We install it with this repository's locked CLI, then restyle it to our tokens and to v2. An app that installs one gets our source, with its whole dependency tree served from here.
+Each component comes from shadcn-svelte's own registry. We install it with this repository's locked CLI, then restyle it to our tokens and to the design book. An app that installs one gets our source, with its whole dependency tree served from here.
 
 It builds five things.
 
@@ -32,7 +32,7 @@ Terms used throughout. `001`'s terms (registry, item, `add`, token, primitive co
 - **Line box:** the height one line of text takes: font size times line height. `text-base` is 16 px × 1.6 = 25.6 px.
 - **Control:** a component a person operates: button, input, select, checkbox, radio, switch, code input, tab.
 - **Scrim:** the dimmed layer behind a modal dialog.
-- **Elevation:** the shadow and edge that lift a surface above the page. v2 §05 allows it for menus and dialogs only.
+- **Elevation:** the shadow and edge that lift a surface above the page. The design book §05 allows it for menus and dialogs only.
 - **Live region:** an element whose changes a screen reader announces without moving focus.
 - **Keyboard stop:** an element that Tab focuses.
 - **Fixture:** a section of a preview page built for a test to measure.
@@ -46,7 +46,7 @@ Each choice, with its reason. Where the split decision already decided something
 
 The 26 are fixed by the split decision: button, card, badge, alert, empty, skeleton, spinner, separator, item, kbd, switch, collapsible, native-select, tooltip, avatar, field, label, input, textarea, input-group, checkbox, radio-group, alert-dialog, tabs, table, input-otp.
 
-- *Why these:* they are what the first blocks and the home page share (split decision; primitives memo §6.1; blocks memo §2.1 for the auth blocks' `card`, `field`, `button`, `input`, `input-otp`).
+- *Why these:* they are what the first blocks and an app's home page share (split decision; primitives memo §6.1; blocks memo §2.1 for the auth blocks' `card`, `field`, `button`, `input`, `input-otp`).
 - **Not in this specification**, each by the split decision: `code-block`, the highlight palette, `chart`, `popover`, `accordion`, `toggle`, `scroll-area` and the editor tabs (`004`); `dropdown-menu`, `sheet`, `sidebar`, `breadcrumb`, `sonner`, `mode-watcher` and the chat primitives (`005`); the blocks (`003`, `006`); the icon files and deployment.
 - **The registry then holds 32 items**: `001`'s 6 and these 26.
 
@@ -85,11 +85,11 @@ Two stock items in scope animate with `tw-animate-css` classes: `tooltip` and `a
 - **`pluto-theme` gains two keyframes and two animation tokens**, emitted by `build-tokens` (decision 7's emission list):
   - `@keyframes pluto-enter { from { opacity: 0 } }` and `@keyframes pluto-exit { to { opacity: 0 } }`, in `css`;
   - `--animate-enter: pluto-enter var(--motion-micro) cubic-bezier(0.2, 0.7, 0.3, 1)` and `--animate-exit: pluto-exit var(--motion-micro) cubic-bezier(0.2, 0.7, 0.3, 1) forwards`, in `cssVars.theme`. Tailwind makes them the utilities `animate-enter` and `animate-exit`.
-- **Opening is a fade in, closing a fade out, over `--motion-micro` (200 ms).** No zoom, no slide. *Why:* v2 §06 allows response motion at most 200 ms; a fade is the least motion that still shows the change. v2 §05 refuses "fake depth", and a zoom from 95% is depth.
+- **Opening is a fade in, closing a fade out, over `--motion-micro` (200 ms).** No zoom, no slide. *Why:* the design book §06 allows response motion at most 200 ms; a fade is the least motion that still shows the change. The design book §05 refuses "fake depth", and a zoom from 95% is depth.
 - **Why the curve is written out, not `var(--ease-entrance)`:** `--ease-entrance` lives in `@theme inline`, and Tailwind inlines those values without emitting them as variables (`001` decision 15). A `var()` to it would be undefined at run time. `--motion-micro` is in `:root`, so the `var()` resolves, and under reduced motion it reads 0 ms (`001` decision 14).
 - **Why the `pluto-` prefix on the keyframes:** `tw-animate-css` defines keyframes named `enter` and `exit`. An app that ran the stock `init` has them. Our names cannot collide.
 - **The skeleton is static.** No `animate-pulse` (split decision).
-- **The code input's caret does not blink.** It is a solid 2 px bar on the active cell. *Why:* a blinking caret loops while a person reads, which v2 §06 bans (patterns memo §5.3).
+- **The code input's caret does not blink.** It is a solid 2 px bar on the active cell. *Why:* a blinking caret loops while a person reads, which the design book §06 bans (patterns memo §5.3).
 - **The spinner keeps `animate-spin`.** It is functional progress on the one busy control (split decision). Under reduced motion, `001`'s catch-all stops it after one turn of 0.01 ms, leaving the static icon.
 - **bits-ui and the exit fade.** bits-ui keeps closing content mounted while its exit animation runs, as it does for `tw-animate-css`'s `animate-out` (INFERRED: the stock items rely on it). The browser test proves the dialog is removed after close (decision 23).
 
@@ -97,7 +97,7 @@ Two stock items in scope animate with `tw-animate-css` classes: `tooltip` and `a
 
 `001` decision 29 fixed the approach: install each stock item with this repository's locked CLI under Bun, never with `-o`, then restyle. This decision makes it a procedure a builder can follow and a reviewer can check.
 
-1. **Snapshot the whole working tree first.** `001` is committed and tagged `v0.1.0` (decision 25), so `git` can recover its files. The snapshot is taken all the same, because the restyled files of this specification are not committed while the build runs. The builder lists every file with `git ls-files -co --exclude-standard` (which includes untracked files) and records each one's SHA-256 in the session scratchpad.
+1. **Snapshot the whole working tree first.** `001` is committed and tagged `v0.1.0` (decision 25), so `git` can recover its files. The snapshot is taken all the same, because the restyled files of this specification are not committed while the build runs. The builder lists every file with `git ls-files -co --exclude-standard` (which includes untracked files) and records each one's SHA-256 outside the tree, in the builder's working notes, not kept.
 2. **Install all 26 at once, before any restyle**, from the repository root:
    `bun --bun node_modules/.bin/shadcn-svelte add button card badge alert empty skeleton spinner separator item kbd switch collapsible native-select tooltip avatar field label input textarea input-group checkbox radio-group alert-dialog tabs table input-otp -y`
    - No `-o`. `-y` answers the "proceed?" prompt only.
@@ -122,7 +122,7 @@ A stock item's JSON has no version field (primitives memo §3.1). Without a reco
     "registry": "https://shadcn-svelte.com/registry/styles/maia",
     "item": "button",
     "cli": "1.7.1",
-    "date": "2026-10-29",
+    "date": "2026-10-28",
     "sha256": "<64 lowercase hex digits>"
   }
   ```
@@ -186,7 +186,7 @@ That is 129 files in the 26 items, and 133 item files with `001`'s 4. The distin
 
 ### 7. The two new tokens: elevation and scrim
 
-The split decision added them: "an elevation shadow for menus and dialogs, and a scrim for modal overlays, both from ink. In dark, elevation is a hairline plus the raised ground, since a shadow on ink is invisible." The primitives memo left their values to this specification (§7). In `002`, `alert-dialog` is the one item that uses them. Menus in `004` and `005` will use the same token.
+The split decision added them: "an elevation shadow for menus and dialogs, and a scrim for modal overlays, both from ink. In dark, elevation is a hairline plus the raised ground, since a shadow on ink is invisible." The primitives memo left their values to this specification (§7). In `002`, `alert-dialog` is the one item that uses them. Menus in `004` and `005` use the same token.
 
 **New primitive colours** (25 in all, from 22). Each is ink with an alpha byte, so it composites by `001` decision 12's rule for eight-digit primitives (alpha byte ÷ 255).
 
@@ -214,9 +214,9 @@ The split decision added them: "an elevation shadow for menus and dialogs, and a
 - *Why reuse `paper-line-input` for the dark edge:* it already passes 3:1 on every dark ground (`001` decision 12, rows 31 to 33). A new primitive would add a value without adding a meaning.
 - *Why no dark shadow:* "a shadow on ink is invisible" (split decision). `clear` is `001`'s fully transparent primitive.
 
-**The visibility check.** WCAG sets no minimum for a dialog's edge. We set one anyway, because a dialog that blends into the dimmed page fails v2's "honest pixels". The rule: **the elevated surface's edge measures at least 3:1 against every ground the scrim can cover**, in both themes. In light, the edge is the dialog's own `popover` white against the scrimmed ground. In dark, the dialog (`#1E2129`) is too close to ink, so the edge is `elevation-line`.
+**The visibility check.** WCAG sets no minimum for a dialog's edge. We set one anyway, because a dialog that blends into the dimmed page fails the design book's "honest pixels". The rule: **the elevated surface's edge measures at least 3:1 against every ground the scrim can cover**, in both themes. In light, the edge is the dialog's own `popover` white against the scrimmed ground. In dark, the dialog (`#1E2129`) is too close to ink, so the edge is `elevation-line`.
 
-The token file gains `contrast.scrim`, six rows of `{ theme, edge, over, scrim, min: 3 }`. A new check in `contrast.test.ts` composites the scrim over each ground by the eight-digit rule, then measures. EXECUTED by this author on 2026-10-28, with `compositeAlphaByte` and `contrastRatio` from `scripts/contrast.ts`, in the session scratchpad:
+The token file gains `contrast.scrim`, six rows of `{ theme, edge, over, scrim, min: 3 }`. A new check in `contrast.test.ts` composites the scrim over each ground by the eight-digit rule, then measures. EXECUTED by this author on 2026-10-28, with `compositeAlphaByte` and `contrastRatio` from `scripts/contrast.ts`:
 
 | # | Theme | Edge | Over | Scrimmed ground | Ratio |
 |---|---|---|---|---|---|
@@ -229,7 +229,7 @@ The token file gains `contrast.scrim`, six rows of `{ theme, edge, over, scrim, 
 
 - *Why 128/255 in light:* at ink 0.451 (`#14161C73`), row 2 measured 2.95 and failed; at 0.502 every row passes (EXECUTED, same run).
 - *Why 153/255 in dark:* ink over ink changes nothing, so the dark scrim's only job is to dim paper text behind the dialog. At 0.6 the dark rows are set by the edge alone, and paper text behind drops to `#6F7072`, well behind the dialog's own text.
-- **What this does not check:** a menu with no scrim. Its edge in light is the 10% hairline plus the shadow. `004` and `005` own that check.
+- **What this does not check:** a menu with no scrim. Its edge in light is the 10% hairline plus the shadow. `004` checks it on its popover (`004` decision 11, browser check P1).
 
 ### 8. One focus recipe, and two focus utilities
 
@@ -261,7 +261,7 @@ A builder applies each rule to each item. A reviewer checks the same list. The l
 | R8 | `muted` and `accent` are insets only: tab strips, skeletons, hover and selected rows, the table footer, the `kbd` key, empty-state and dialog icon tiles, avatar fallbacks. Never an item's own ground or a panel. | review |
 | R9 | Radius through the one case radius. Any `rounded-*` draws 8 px (`001` decision 9); write `rounded`. `rounded-full` only in the allowlist (decision 19). | lint (`rounded-full`); review |
 | R10 | Elevation only as `shadow-elevation`; the scrim only as `bg-scrim`. No other `shadow-*`, `drop-shadow-*`, `inset-shadow-*` or `text-shadow-*`. | lint |
-| R11 | No `backdrop-*`. v2 §09 bans blur panels. | lint |
+| R11 | No `backdrop-*`. The design book §09 bans blur panels. | lint |
 | R12 | `dark:` only where a token does not already switch. In `002` that is the two dark state tints, nowhere else. | lint |
 | R13 | Type and tracking on the token scale: `text-xs`, `sm`, `base`, `2xl`, `5xl`; `tracking-display`, `section`, `eyebrow`, `mark`. | lint |
 | R14 | Motion only as `animate-enter`, `animate-exit` and the spinner's `animate-spin`; durations as `duration-(--motion-micro)` or the default `transition`. | lint |
@@ -274,7 +274,7 @@ A builder applies each rule to each item. A reviewer checks the same list. The l
 | R21 | Every pointer target at least 24 by 24 px. This is a house rule, stricter than AA: SC 2.5.8 also passes smaller targets through its spacing and inline exceptions (patterns memo §0.1). We do not rely on those exceptions, because a component cannot know its surroundings. | heights test |
 | R22 | Border widths from tokens: the bare `border` (1 px, the hairline) or the `-(length:--token)` form, such as `border-b-(length:--focus-width)`. No `border-2` or `border-l-4`. | lint |
 | R23 | Copy says what happens. A button or link names its action in active voice (Send, Stop, Scroll to end), and the name holds through the flow (Stop, then Stopped). An error says what went wrong and what to do; an empty state invites an action. No filler, no selling. | review |
-| R24 | Furniture carries information. An eyebrow, a mono row, a divider, a number or tracked text appears only where it encodes something: a mono row is data, a number marks a sequence. Not the generic kit: all-caps labels, an eyebrow over every heading, meta strings joined with middle dots, an arrow after link text, identical cards with one shadow. The book's own furniture (the lowercase mono eyebrow, the footer's rows) is a choice and stays. | review |
+| R24 | Furniture carries information. An eyebrow, a mono row, a divider, a number or tracked text appears only where it encodes something: a mono row is data, a number marks a sequence. Not the generic kit: all-caps labels, an eyebrow over every heading, meta strings joined with middle dots, an arrow after link text, identical cards with one shadow. The design book's own furniture (the lowercase mono eyebrow, the footer's rows) is a choice and stays. | review |
 
 *Why a checklist and a lint both:* the lint is countable, which `001`'s acceptance style prefers. But "a zero is not a pass" (primitives memo §6.3): the lint cannot see where a class is used, so R3, R7, R8, R17 to R19, R23 and R24 stay review's. R23 and R24 were added on 2026-11-01 at the owner's word (decisions.md, "Two writing and furniture rules join the checklist").
 
@@ -323,19 +323,19 @@ Stock controls set heights off the ladder: `h-9`, `size-9` (primitives memo §3.
 
 ### 12. `button`
 
-**Variants.** v2 §01 law 2: a surface spends one brand accent, blue, on its primary action. Red, amber and green that tell state are outside that budget (split decision).
+**Variants.** The design book §01 law 2: a surface spends one brand accent, blue, on its primary action. Red, amber and green that tell state are outside that budget (split decision).
 
 | Stock | Ours | Look | Why |
 |---|---|---|---|
 | `default` | `default` | `bg-primary text-primary-foreground border-primary` | the surface's one blue action. One per surface: review |
-| `secondary` | `secondary` | `bg-secondary text-secondary-foreground border-input` | `001` decision 8: "`002` gives them a visible border". v2: "buttons have shapes" |
+| `secondary` | `secondary` | `bg-secondary text-secondary-foreground border-input` | `001` decision 8: "`002` gives them a visible border". The design book: "buttons have shapes" |
 | `outline` | dropped | | it was the bordered look `secondary` now has; two names for one look |
 | `ghost` | `ghost` | transparent, `border-transparent`; hover `bg-accent` | a toolbar or header action. Hover on `accent` is an inset state (R8) |
 | `destructive` | `destructive` | `bg-destructive text-destructive-foreground border-destructive`, solid | a solid fill works on every ground, `muted` included, where the stock tint is forbidden (R7). It is the stop colour of a confirm, used rarely |
-| `link` | `link` | `text-primary underline underline-offset-4`, always underlined | v2 §09: "links look like links", not only on hover |
+| `link` | `link` | `text-primary underline underline-offset-4`, always underlined | The design book §09: "links look like links", not only on hover |
 
-- **Hover** changes a bordered button's border to `border-foreground`: ink in light, paper in dark, so it darkens in one theme and lightens in the other; either way the frame visibly changes. *Why:* v2 asks for "real active states" with no fake depth, and stock's `hover:bg-primary/80` is a translucent tint (R6). A border change uses tokens only. `ghost` uses the `accent` inset; `link` has its underline.
-- **Press** keeps stock's `active:translate-y-px`, a 1 px drop: "interactive elements look pressable" (v2 §05).
+- **Hover** changes a bordered button's border to `border-foreground`: ink in light, paper in dark, so it darkens in one theme and lightens in the other; either way the frame visibly changes. *Why:* the design book asks for "real active states" with no fake depth, and stock's `hover:bg-primary/80` is a translucent tint (R6). A border change uses tokens only. `ghost` uses the `accent` inset; `link` has its underline.
+- **Press** keeps stock's `active:translate-y-px`, a 1 px drop: "interactive elements look pressable" (the design book §05).
 - **Sizes:** `sm` (`h-8 px-3 text-sm`), `default` (`h-12 px-4 text-base`), `icon-sm` (`size-8`), `icon` (`size-12`), by decision 10. Stock `xs`, `icon-xs`, `lg` and `icon-lg` are dropped (decision 10).
 - **Disabled** stays stock: the `disabled` attribute, `disabled:opacity-50`. A disabled control is exempt from contrast (SC 1.4.3). It leaves the tab order.
 
@@ -347,7 +347,7 @@ Stock controls set heights off the ladder: `h-9`, `size-9` (primitives memo §3.
   - calls `event.preventDefault()` on every click while busy. That also stops a form's implicit submission by Enter, which fires a click on the default button (INFERRED from the HTML form submission algorithm);
   - stays enabled and keeps focus.
 - *Why not `disabled`:* a disabled button drops focus, and keyboard users lose their place. The split decision says so.
-- The spinner appears in the same render as the prop change, inside v2's 200 ms budget for response.
+- The spinner appears in the same render as the prop change, inside the design book's 200 ms budget for response.
 - `aria-busy` on a button is announced poorly by screen readers (INFERRED). The announcement ("Signing in…") is `003`'s status region (decision 24).
 - `busy` applies to `<button>` only. A link has no busy state.
 
@@ -359,12 +359,12 @@ Stock controls set heights off the ladder: `h-9`, `size-9` (primitives memo §3.
 
 **The recipe:** `h-12 bg-card text-foreground border border-input rounded px-3 text-base placeholder:text-muted-foreground aria-invalid:border-destructive disabled:opacity-50`, full width (decision 10).
 
-- **Why `bg-card`:** v2 reserves raised white for "surfaces that sit on" the ground: "cards, inputs, figures". Stock `bg-input/30` greys the control, now that `input` is a 3:1 border colour (`001` decision 29; R6).
-- **The border is the `input` token**, 3.94 on light `card`, 3.67 on light `background`, 3.86 on dark `card` (EXECUTED, same run; `001` decision 12). v2 §09: "inputs keep visible borders".
+- **Why `bg-card`:** The design book reserves raised white for "surfaces that sit on" the ground: "cards, inputs, figures". Stock `bg-input/30` greys the control, now that `input` is a 3:1 border colour (`001` decision 29; R6).
+- **The border is the `input` token**, 3.94 on light `card`, 3.67 on light `background`, 3.86 on dark `card` (EXECUTED, same run; `001` decision 12). The design book §09: "inputs keep visible borders".
 - **No variant.** Stock has none. Sizes: default only; `sm` would invite a 13.5 px field.
 - **Native selects and single-line input groups** take `h-12` too.
 - `type="file"` keeps stock's file-button styling, restyled by R1 to R16.
-- **`textarea`:** the same recipe with `min-h-16` (64 px) and `py-2` in place of `h-12`, and stock's `field-sizing-content`, so it grows with its text where the browser supports `field-sizing`. Where it does not, it keeps its minimum height and the person can resize it. *placeholder: needs a memo* — which engines support `field-sizing` today (primitives memo §7). It does not block `002`: growth is a refinement here. It blocks `006`'s chat composer, which needs a known maximum height.
+- **`textarea`:** the same recipe with `min-h-16` (64 px) and `py-2` in place of `h-12`, and stock's `field-sizing-content`, so it grows with its text where the browser supports `field-sizing`. Where it does not, it keeps its minimum height and the person can resize it. `field-sizing: content` grows a textarea in Chromium, WebKit and Firefox, and stops at a `max-height` with an inner scroll; it is Baseline 2026, first supported in Chrome 123, Firefox 152 and Safari 26.2 ([`../research/2026-11-01-the-chat-primitives-the-composer-and-field-sizing.md`](../research/2026-11-01-the-chat-primitives-the-composer-and-field-sizing.md) §4, EXECUTED and READ). Growth is a refinement here. A chat composer gets its known maximum height from a CSS cap.
 - **`native-select`:** the same recipe with `appearance-none pr-12`, and `CaretDown` from `phosphor-svelte` (`size-4`, `text-muted-foreground`, decorative) on the right. Its `<option>` and `<optgroup>` keep stock's `bg-[Canvas] text-[CanvasText]`. *Why:* the open list is drawn by the operating system, and CSS system colours follow `color-scheme`, which `001` sets per theme. The lint allows it, because `Canvas` names no colour of ours or the palette's; review notes it as the one system-colour use.
 
 **Accessibility contract.** Native elements. A visible label, through `Field` or `Label` (SC 3.3.2: a placeholder is not a label). `aria-invalid` and `aria-describedby` from `Field` (decision 11). `autocomplete` is the app's, passed through.
@@ -382,7 +382,7 @@ Stock controls set heights off the ladder: `h-9`, `size-9` (primitives memo §3.
   - **Track:** `h-8 w-16 p-1 rounded`, 32 × 64 px, at the case radius. 32 px is the `sm` control height (decision 10). **No border**: stock's `border border-transparent` is removed. With it kept, the first draft's thumb overflowed the track by 2 px right and bottom (review finding 6, EXECUTED in Chromium).
   - **Thumb:** `size-6 rounded`, 24 × 24 px, at the case radius, inset 4 px by the track's padding.
   - **Travel:** `translate-x-8` (32 px) when checked: 64 − 2 × 4 − 24 = 32, so the thumb sits 4 px from either end, inside the track in both states.
-  - *Why a 24 px thumb:* any thumb 16 px or less on a side goes fully round at an 8 px radius, which is the "in between" v2 §05 forbids (the first draft's 16 × 24 thumb was a stadium for that reason, not the "rounded bar" it claimed). At 24 px with 8 px corners the thumb reads as a rounded square and matches the checkbox and radio at 24 px.
+  - *Why a 24 px thumb:* any thumb 16 px or less on a side goes fully round at an 8 px radius, which is the "in between" the design book §05 forbids (the first draft's 16 × 24 thumb was a stadium for that reason, not the "rounded bar" it claimed). At 24 px with 8 px corners the thumb reads as a rounded square and matches the checkbox and radio at 24 px.
   - **Every value is on the ladder** (`h-8`, `w-16`, `size-6`, `p-1`, `translate-x-8`), so the lint needs no exception for `switch.svelte`. *Why revised:* the first post-review geometry (24 × 44, a 20 px thumb, a 2 px inset) was off the ladder and needed one.
   - The track is 32 px high and 64 px wide, so it meets R21 alone.
 - **Motion:** `transition-transform`, which reads the default 200 ms (`001` decision 14).
@@ -409,7 +409,7 @@ Two variants, the stock names kept.
 - **`FieldError` is not a live region.** Stock gives it `role="alert"`. We remove it. *Why:* Primer's guidance is "don't use live regions for validation", and after a failed submit with several errors, several `role="alert"` regions would speak at once (patterns memo §3.2). The error is reached through `aria-describedby` when focus lands on the field, and announced once by `003`'s error summary. That holds only under decision 24's precondition: errors appear on submit, and focus moves to the summary or the field.
 - **`FieldError` says the error in text,** in `text-sm text-destructive` (SC 3.3.1), with no icon. The control's red border is a second cue (R19). *Why no icon:* the text already names the error, and an icon would make `field` name `phosphor-svelte` for decoration.
 - **The label stays `foreground` when invalid.** Stock turns the whole field red (`data-[invalid=true]:text-destructive`). The error text and the border carry the state; a red label adds colour, not meaning.
-- **Text:** `FieldLabel` and `FieldLegend` are `text-base font-medium`, sentence case (split decision). `FieldDescription` is `text-sm text-muted-foreground`. *Why 13.5 px for helper text:* v2's own card text is set at 13.5 px in the body face.
+- **Text:** `FieldLabel` and `FieldLegend` are `text-base font-medium`, sentence case (split decision). `FieldDescription` is `text-sm text-muted-foreground`. *Why 13.5 px for helper text:* the design book's own card text is set at 13.5 px in the body face.
 - **Choice cards** (a `FieldLabel` wrapping a `Field`): checked is `has-data-checked:border-primary`, a 3:1 boundary (`primary` on `card` 5.91 light, 6.10 dark), not stock's `bg-primary/5` tint.
 - **`FieldSeparator`** draws the groove, through `separator`, with optional centred text ("or continue with").
 - Spacing: `gap-3` inside a field, `gap-6` in a group, `gap-8` between groups. All ladder steps; stock's `gap-7` and `leading-snug` go.
@@ -419,7 +419,7 @@ Two variants, the stock names kept.
 
 - **Role and focus:** bits-ui renders `role="alertdialog"` (READ: `dialog.svelte.js` line 265, bits-ui 2.20.2), traps focus, closes on Escape and returns focus to the trigger (patterns memo §1.2, READ from bits-ui's Dialog docs). Title and description become the dialog's name and description.
 - **Initial focus is Cancel, set by our code.** bits-ui 2.20.2's `AlertDialog.Content` does not focus the first focusable: its default `onOpenAutoFocus` prevents the default and focuses the content node itself (review finding 1, READ: `alert-dialog/components/alert-dialog-content.svelte` lines 51 to 59). So our `AlertDialogContent` passes its own `onOpenAutoFocus`: it calls `preventDefault()`, then focuses the element with `data-slot="alert-dialog-cancel"` inside the content, and falls back to the content node only when there is none. An app's own `onOpenAutoFocus`, if passed, runs first and wins if it prevents the default. *Why:* a confirm of a destructive act should start on the safe choice (APG alert dialog, as cited in the patterns memo §1.2). *Why by `data-slot`, not markup order:* the footer's children are the app's markup, so their order guarantees nothing. The footer keeps stock's visual order (`flex-col-reverse sm:flex-row sm:justify-end`).
-- **The scrim:** the overlay is `fixed inset-0 bg-scrim`, fading by `animate-enter` and `animate-exit`. Stock's `bg-black/80` (a palette literal) and `backdrop-blur-xs` (v2 §09) go.
+- **The scrim:** the overlay is `fixed inset-0 bg-scrim`, fading by `animate-enter` and `animate-exit`. Stock's `bg-black/80` (a palette literal) and `backdrop-blur-xs` (the design book §09) go.
 - **The surface:** `bg-popover text-popover-foreground shadow-elevation rounded p-6 gap-6`, fading the same way. Stock's `ring-1 ring-foreground/5` goes; `elevation-line` draws the edge. Width: stock's `max-w-xs` and `sm:max-w-md` are container sizes and stay.
 - **Title** `font-heading text-base font-bold`; **description** `text-sm text-muted-foreground`.
 - **`AlertDialogMedia`** keeps its icon tile on `bg-muted` (an inset, R8), `size-16 rounded`, not `rounded-full`.
@@ -449,7 +449,7 @@ The split decision: "Sign-up verification is a six-digit code, so `input-otp` is
 | `empty` | stock parts kept; `EmptyMedia` variants `default` and `icon` | title `font-heading font-bold text-2xl tracking-section`, not stock's `text-lg tracking-tight`; description `text-muted-foreground`; the icon tile on `bg-muted` (an inset) | `EmptyTitle` renders a heading with `level` (as `card`). Centred, as stock; `003` decides alignment per context (patterns memo §6.4) | with icon, title, description, one action and one link. No fixture |
 | `skeleton` | one | `bg-muted rounded` (an inset, R8) | static: no `animate-pulse` (split decision). `aria-hidden="true"` by default: skeletons are decorative (patterns memo §6.2). The region being filled carries `aria-busy`; that is `003`'s | a card-shaped and a row-shaped skeleton. No fixture |
 | `spinner` | one; size from the text around it (`size-4` default) | `currentColor` | **Decorative by default** (`aria-hidden="true"`), because it sits inside a busy button that has its own name. With a `label` prop it renders a wrapper with `role="status"` holding the icon (hidden) and the label as visually hidden text (`sr-only`), for a spinner that stands alone. *Why text, not `aria-label`:* a live region announces its content, and an `aria-label` alone gives it none (review finding 10). `Spinner` from `phosphor-svelte` with `animate-spin` (decision 3) | decorative, labelled, inside a busy button. No fixture |
-| `separator` | horizontal, vertical | horizontal: `groove pt-(--line-width) w-full`; vertical: `border-l border-border self-stretch`, a plain hairline | **The item sets `decorative = true` by default**, so bits-ui renders `role="none"`; bits-ui's own default is `false`, which would render `role="separator"` (review finding 9, READ: `separator/components/separator.svelte` line 14). An app passes `decorative={false}` for a separator that means something. *Why `pt-(--line-width)`:* the groove is a top border plus a 1 px inset highlight, and an inset shadow on an element with no padding box is clipped away. One hairline of padding gives the highlight its row; stock's `h-px` is banned by L7. *Why a plain vertical line:* v2's groove has no vertical form yet; the patterns memo leaves it open for the app shell (§1.3), which is `006`'s | both orientations. No fixture |
+| `separator` | horizontal, vertical | horizontal: `groove pt-(--line-width) w-full`; vertical: `border-l border-border self-stretch`, a plain hairline | **The item sets `decorative = true` by default**, so bits-ui renders `role="none"`; bits-ui's own default is `false`, which would render `role="separator"` (review finding 9, READ: `separator/components/separator.svelte` line 14). An app passes `decorative={false}` for a separator that means something. *Why `pt-(--line-width)`:* the groove is a top border plus a 1 px inset highlight, and an inset shadow on an element with no padding box is clipped away. One hairline of padding gives the highlight its row; stock's `h-px` is banned by L7. *Why a plain vertical line:* the design book's groove has no vertical form; `005` adds one, `groove-s`, for the sidebar's edge (`005` decision 5) | both orientations. No fixture |
 | `item` | `default`, `outline`; sizes `default` (`p-4 gap-4`), `sm` (`p-3 gap-3`). Stock `muted` dropped: an item on `muted` is a panel ground (R8) | `outline`: `border-border`; a link item's hover `bg-accent` (a hover row) | a link item (stock `child` snippet) is one stop with the global ring. Stock `-2.5` and `-3.5` spacing goes (R4) | each variant and size; with media, actions, header and footer; a link item. Fixture: 1 stop |
 | `kbd` | `Kbd`, `KbdGroup` | `bg-muted text-muted-foreground border border-border` (6.79, `001` decision 12) | a `<kbd>` element; `font-mono text-xs px-1 min-w-6`, 20 px high, not stock's `h-5 min-w-5` | single keys and "Ctrl Enter" in a group. No fixture |
 | `tooltip` | one | `bg-foreground text-background` (16.84), so no elevation: an inverted chip stands out on its own | bits-ui opens it on hover and focus, links it to the trigger by `aria-describedby`, closes it on Escape, and lets the pointer move onto it (READ: `tooltip.svelte.js` lines 562 to 694) — SC 1.4.13's dismissible, hoverable and persistent. **It is never an icon button's only name**: the button has `aria-label`, and the tooltip repeats it. While it is open, bits-ui also makes it the button's description, so a screen reader hears the text twice. We accept that: the repeat is harmless, and removing bits-ui's wiring would mean overriding its trigger props. Where there is more to say, such as a shortcut, the tooltip says that instead of the bare name. Stock's arrow and its ten arbitrary offsets go. `sideOffset={4}`: bits-ui takes a number, not a CSS value, so the 4 px ladder step is written as a number, the one size literal in `002`, checked by review. Stock `delayDuration` 0 kept | an icon button with a tooltip; a button whose tooltip shows a shortcut in `kbd`. Fixture: 1 stop; focus opens the tooltip (`role="tooltip"` visible, the trigger's `aria-describedby` names it); Escape closes it |
@@ -457,7 +457,7 @@ The split decision: "Sign-up verification is a six-digit code, so `input-otp` is
 | `avatar` | `default` (`size-8`), `sm` (`size-6`), `lg` (`size-12`); `AvatarGroup`, `AvatarGroupCount` kept; `AvatarBadge` dropped | fallback `bg-muted text-muted-foreground` (an inset); group overlap `-space-x-2` with `border-(length:--focus-width) border-background`, not `ring-2 ring-background` (R22) | **the 8 px case radius, not a circle** (split decision). `AvatarBadge` is dropped: it is a coloured status dot no `002` consumer needs, and a dot on an avatar tells state by colour. The image needs `alt` from the app | fallbacks at each size; a group with a count. The image state is not shown: the preview ships no image file (blocks memo §5: a page references no file it does not ship). `svelte-check` and review cover it. No fixture |
 | `label` | one | `text-base font-medium` | bits-ui `Label` renders a `<label>`. Disabled peers dim it, as stock | alone and beside a checkbox. No fixture |
 | `checkbox` | one | unchecked `bg-card border-input`; checked and indeterminate `bg-primary border-primary text-primary-foreground` | bits-ui: a `<button role="checkbox" aria-checked>` with `true`, `false` or `mixed`; Space toggles. `Check` and `Minus` from `phosphor-svelte` tell the state by shape (R19). **`size-6` (24 px)**, not stock's 16 px. *Why:* at 16 px, the 8 px case radius draws a circle; at 24 px it draws a rounded square, which still reads as a checkbox. 24 px is about one body line box, and meets R21 alone | unchecked, checked, indeterminate, disabled, invalid, with a label. Fixture: 3 stops; Space flips the first |
-| `radio-group` | one | unchecked `bg-card border-input`; checked `border-primary` with a `size-3 bg-primary` inner dot | bits-ui: `radiogroup` with `radio` items, one stop (roving), arrows move and select. **Round**: the item and its dot are `rounded-full`, the one primitive besides `four-dot` on the allowlist. Decided by the design lead after review finding 5 (decisions.md, "Radio buttons are round"; the avatar bullet now reads "The four-dot and the radio button are the only circles"): the radio's mark is a dot, so it is dot-derived under v2 §05, and the circle is what tells "one of many" from a checkbox's square. `size-6`, as checkbox | three options, one disabled, inside a `FieldSet`. Fixture: 1 stop; ArrowDown moves focus and `aria-checked` to the next |
+| `radio-group` | one | unchecked `bg-card border-input`; checked `border-primary` with a `size-3 bg-primary` inner dot | bits-ui: `radiogroup` with `radio` items, one stop (roving), arrows move and select. **Round**: the item and its dot are `rounded-full`, the one primitive besides `four-dot` on the allowlist. Decided by the design lead after review finding 5 (decisions.md, "Radio buttons are round"; the avatar bullet now reads "The four-dot and the radio button are the only circles"): the radio's mark is a dot, so it is dot-derived under the design book §05, and the circle is what tells "one of many" from a checkbox's square. `size-6`, as checkbox | three options, one disabled, inside a `FieldSet`. Fixture: 1 stop; ArrowDown moves focus and `aria-checked` to the next |
 | `input-group` | addons `inline-start`, `inline-end`, `block-start`, `block-end`; `InputGroupButton` sizes `sm`, `icon-sm` | the group takes the input recipe (decision 13); addon text `text-muted-foreground` | focus by decision 8; invalid by `has-[[aria-invalid=true]]:border-destructive`. **`InputGroupPassword`** (new file): an `InputGroupInput` whose type flips between `password` and `text`, and an `InputGroupButton` whose visible text is "Show" or "Hide", whose name is "Show password" or "Hide password" (the visible word is in the name, SC 2.5.3), with `aria-controls` the input. The input sets `spellcheck="false"` and `autocapitalize="off"`; `autocomplete` is the app's (`current-password` or `new-password`). Never blocks paste (patterns memo §3.2, GOV.UK) | an input with a text addon and a button; a textarea with a block addon; the password input, hidden and shown; invalid. Fixture: 4 stops (the input, its button, the password input, its toggle); Enter on the toggle flips the input's `type` and the button's name |
 | `table` | one | row hover and selected `bg-accent` (hover and selected rows, R8); footer `bg-muted` (an inset, R8); borders `border-border`. A badge in a row is safe, because badges carry no tint | `<table>` semantics as stock. Selected rows set `aria-selected`, so the state is not the inset alone. The container keeps `overflow-x-auto`: data tables may scroll inside themselves (SC 1.4.10). With a `label` prop it becomes `role="region" tabindex="0" aria-label={label}`, so keyboard users can scroll it; without one it adds no stop | a caption, header, body with a selected row, and footer, sized to fit 1280 px so it never scrolls on the preview. No fixture |
 
@@ -468,7 +468,7 @@ The split decision: "Sign-up verification is a six-digit code, so `input-otp` is
 - **`phosphor-svelte` 3.1.1** (split decision). Four items import it: `spinner` (`Spinner`), `native-select` (`CaretDown`), `checkbox` (`Check`, `Minus`), `input-otp` (`Minus`). No other item imports an icon.
 - **Imports are as `add` wrote them**: the CLI rewrites each `IconPlaceholder` to an import from `phosphor-svelte/lib/<Name>` when `iconLibrary` is `phosphor` (primitives memo §3.1, READ). Our `components.json` already says `phosphor` (`001` decision 21).
 - **Our items carry plain imports, never a placeholder.** So an app's own `iconLibrary` setting does not matter: it gets phosphor, named in the item. *Why:* one icon set per app (primitives memo §2.1).
-- Whether each name exists in 3.1.1 was not checked (primitives memo §7). `bun run check` proves it: `svelte-check` fails on a missing export.
+- The primitives memo did not check that each name exists in 3.1.1 (§7). `bun run check` proves it: `svelte-check` fails on a missing export.
 - Every icon is decorative (`aria-hidden`) unless an item's decision gives it a name.
 
 ### 21. The stronger lint
@@ -605,7 +605,7 @@ The split decision: "Sign-up verification is a six-digit code, so `input-otp` is
 - `package.json`'s `version` becomes **`0.2.0`**. *Why a minor step:* under semver's 0.x reading, a minor step adds features. `002` adds 26 items and adds to `pluto-theme`. It changes no interface of `001`'s items: `pluto-theme`'s new variables, utilities and keyframes are additions, and `utils` and `four-dot` are untouched.
 - **`build-registry` writes `static/v0.2.0/r/styles/maia/`** and clears only that folder (`001` decision 18).
 - **`static/v0.1.0/` is not made by a clean build.** In a working copy that built `001`, the old folder stays (it is git-ignored), and `vite build` copies it into `build/`. The criteria count on a clean clone.
-- *Why nothing removes it:* retaining older versions on the host is the deployment specification's job (`001` decision 18). 0.1.0 was never deployed, so no app pins its URL.
+- *Why nothing removes it:* no release is deployed, so no host keeps older versions (decisions.md, "The registry is served from GitHub, and the repository is public"). 0.1.0 was never deployed, so no app pins its URL.
 - **0.1.0 and the commit are the owner's.** Each release is a git tag (`001` decision 18). **The owner chose to commit: `001` is commit `33e94de` on `main`, tagged `v0.1.0`, on 2026-10-28, before any `002` build step.** The install's SHA-256 snapshot (decision 4) is still taken, and the check still never reads `git status`, so the procedure is the same as if they had not. 0.1.0 is recoverable from the tag.
 - New items carry `meta.since` `"0.2.0"`. `001`'s six keep `"0.1.0"`.
 
@@ -623,22 +623,22 @@ One builder, in this order. Previews and tests go with each step, not at the end
 2. **The lint** (decision 21) and `literals.test.ts`, with every sample. Seen failing on the stock files once they land.
 3. **The install** (decisions 2, 4, 5): all 26 at once, after the whole-tree snapshot; packages pinned; provenance recorded. `001` is committed and tagged `v0.1.0` (decision 25); the snapshot is taken all the same.
 4. **The shared recipe on three items**: `button` (with `spinner`), `input`, `field` (with `label` and `separator`). Their preview pages; the heights fixture; the keyboard fixtures for these. This settles decisions 8, 10 and 11 before anything else copies them.
-   - **Checkpoint: a review after step 4.** The builder stops and asks the orchestrator for a short review of these three items, their heights, their focus and the field wiring in the raw prerendered HTML, before step 5 copies the recipe into 23 more items. *Why:* that is where the review's two High findings and finding 4 would bite first (review finding 15).
+   - **Checkpoint: a review after step 4.** The builder stops and asks the design lead for a short review of these three items, their heights, their focus and the field wiring in the raw prerendered HTML, before step 5 copies the recipe into 23 more items. *Why:* that is where the review's two High findings and finding 4 would bite first (review finding 15).
 5. **The other form controls:** `textarea`, `native-select`, `input-group`, `checkbox`, `radio-group`, `switch`, `input-otp`.
 6. **Surfaces:** `card`, `item`, `table`, `tabs`, `collapsible`, `avatar`.
 7. **Feedback and the rest:** `alert`, `badge`, `empty`, `skeleton`, `tooltip`, `kbd`, `alert-dialog` (the elevation and scrim).
 8. **Registry and catalogue:** `registry.json` entries, `meta.group`, the grouped catalogue, `registry.test.ts`, `previews.test.ts`, `deps.test.ts`, `utils.test.ts`.
 9. **Browser and smoke suites** in full; `CHANGELOG.md`.
 
-**If time runs short**, two parts may be deferred, each recorded in the Landing notes as deferred, not dropped: the comparison of the live stock JSON with the prior-art clone (criterion 24's last sentence), and the `table` item's `label` region (decision 19). Nothing else is deferrable: the 26 are fixed by the split decision.
+**If time runs short**, two parts may be deferred, each recorded in the Landing notes as deferred, not dropped: the comparison of the live stock JSON with the prior-art clone (criterion 24's last sentence), and the `table` item's `label` region (decision 19). Nothing else is deferrable: the 26 are fixed by the split decision. Neither was deferred: Landing note 3 holds the comparison, and `table` has its `label` prop.
 
-### 28. Calls this specification leaves to others
+### 28. Calls settled elsewhere
 
-None blocks the build.
+None blocked the build.
 
 - **Settled by the design lead after review**, and cited, not flagged: round radios (decision 19), the switch geometry, revised once to ladder values (decision 14), ladder control heights (decision 10), untinted badges (decision 19). All four are in decisions.md's entry "The primitives split in two, and the design calls for `002`".
 - **The owner's, answered:** `001` is committed and tagged `v0.1.0` before build step 3 (decision 25).
-- **The light shadow's numbers** (12 px offset, 32 px blur, ink at 16%) are a design choice. In `002` the scrim, not the shadow, separates the dialog (decision 7), so nothing here depends on them. `004` and `005` test them on menus.
+- **The light shadow's numbers** (12 px offset, 32 px blur, ink at 16%) are a design choice. In `002` the scrim, not the shadow, separates the dialog (decision 7), so nothing here depends on them. `004` tests them on its popover (`004` decision 11, browser check P1).
 
 ## Design
 
@@ -711,7 +711,7 @@ src/routes/items/<name>/+page.svelte   32 pages: header, variants, states, acces
 - Tests: 8 unit files (updated), 6 browser files (4 updated, `four-dot.spec.ts` unchanged, 1 new), 3 smoke files (1 new).
 - `package.json` version 0.2.0; the `CHANGELOG.md` entry.
 
-**The step to *done*** is in `wasi-python-dev` (constitution §4.2): its home-page specification installs the `002` items its page uses from this registry and passes its checks.
+**The step to *done*** is the release: the change is reviewed, the Landing notes cite the review, and the commit is tagged `v0.2.0` (criterion 25; constitution §2 and §4.2).
 
 **Out:**
 
@@ -720,7 +720,7 @@ src/routes/items/<name>/+page.svelte   32 pages: header, variants, states, acces
 - The icon files, the doc-ID scheme, coloured dots on ink (`001` decision 28).
 - Deployment and retaining old versions on the host.
 - `tailwind-merge`, `tw-animate-css`, `form`, `formsnap`, `sveltekit-superforms`.
-- A vertical groove (`006`).
+- A vertical groove (`005` decision 5).
 
 ## Acceptance criteria
 
@@ -750,14 +750,13 @@ Each is a count, checked by the command named. "Clean clone" is `001`'s. Every c
 22. **Smoke.** `primitives-add.test.ts` passes 7 of 7 assertions in each of 2 scratch apps (14 of 14). `001`'s `registry-add.test.ts` still passes 20 of 20 and `dev-loop.test.ts` 3 of 3.
 23. **Test files.** On a clean clone, `bun run test` exits 0, having run 8 unit files, 6 browser files in 2 projects and 3 smoke files.
 24. **Release.** `package.json`'s `version` is `0.2.0`. `registry.test.ts` finds the `0.2.0` changelog entry naming 27 of 27 items and the `0.1.0` entry still naming 6 of 6. The Landing notes record, for 26 of 26 items, whether the live stock JSON equalled the prior-art clone's.
-25. **In the app (done).** `wasi-python-dev`'s home-page specification installs from this registry the `002` items its page uses and passes that app's `svelte-check`, Playwright and axe. Checked in that app; `002`'s Landing notes cite its commit: 1 of 1.
+25. **Released.** The change is tagged `v0.2.0` and the Landing notes cite its review.
 
 ## Landing notes
 
-- **Built:** 2026-10-28, committed as the commit that carries this specification, tagged `v0.2.0`. The change review is [`../reviews/002-the-primitives-forms-surfaces-and-feedback-pr-2026-10-28.md`](../reviews/002-the-primitives-forms-surfaces-and-feedback-pr-2026-10-28.md): "Does not land yet" on 4 Medium and 8 Low findings; 10 fixed and 2 answered in its Disposition, four of them by the design lead's calls in `decisions.md`.
-- **Done:** *pending.* Criterion 25 waits on `wasi-python-dev`'s home-page specification; that commit goes here.
+- **Built:** 2026-10-28, committed as `7857ea4` and tagged `v0.2.0`. The change review is [`../reviews/002-the-primitives-forms-surfaces-and-feedback-pr-2026-10-28.md`](../reviews/002-the-primitives-forms-surfaces-and-feedback-pr-2026-10-28.md): "Does not land yet" on 4 Medium and 8 Low findings; 10 fixed and 2 answered in its Disposition, four of them by the design lead's calls in `decisions.md`.
 
-**What the orchestrating session saw, under Bun 1.3.14, 2026-10-28 (EXECUTED):**
+**What the design lead saw, under Bun 1.3.14, 2026-10-28 (EXECUTED):**
 
 | Check | Result |
 |---|---|
@@ -785,7 +784,7 @@ Each is a count, checked by the command named. "Clean clone" is `001`'s. Every c
 | 13 | 7 of 7 |
 | 14 | 68 scans, 0 violations |
 | 15 | 66 of 66 |
-| 16 | four-dot 28; tokens 70 (35 per theme, the 2 new ones in each) |
+| 16 | four-dot 28 (20 geometry and colour checks, and 4 names in each of 2 themes); tokens 70 (35 per theme, the 2 new ones in each) |
 | 17 | 34 catalogue stops; 34 fixture stops over 15 items, each checked by role and name; 9 of 9 behaviours |
 | 18 | 6 of 6 at 48, 2 of 2 square; 2 of 2 at 32; switch 64 × 32 and 24 × 24, 4 px inside; 0 stops under 24 |
 | 19 | **4 of 4** invalid borders (the code input's cells added, review finding 2); scrim, `backdrop-filter: none`, `elevation-line` |
@@ -794,23 +793,23 @@ Each is a count, checked by the command named. "Clean clone" is `001`'s. Every c
 | 22 | 14 of 14; `registry-add` 20 of 20; `dev-loop` passes |
 | 23 | 8, 6 and 3 files; exit 0 |
 | 24 | `0.2.0`; 27 of 27 and 6 of 6 in the changelog; the clone comparison is note 3 |
-| 25 | open: `wasi-python-dev` |
+| 25 | met |
 
 **Notes:**
 
-1. **A cancelled animation failed one run** (the orchestrating session, EXECUTED). One full run failed once: `primitives.spec.ts` "elevation and scrim", dark project, `evaluate: AbortError: The user aborted a request` at `Promise.all(document.getAnimations().map((a) => a.finished))`. A cancelled animation rejects its `finished` promise. The orchestrator added `settled(page)` to `tests/e2e/pages.ts`, which skips infinite animations and treats a cancelled one as finished, and used it at the three page-wide waits in `axe.spec.ts` and `primitives.spec.ts`. The affected specs then passed 3 of 3 runs, and the full suite 2 of 2.
-2. **The checkpoint after build step 4.** The builder stopped with `button`, `spinner`, `input`, `field`, `label` and `separator` restyled and reported heights (48 and 32 as specified), the focus outline (2 px solid `--ring`, 2 px offset) and the field wiring in the raw prerendered HTML. The orchestrator sent back four changes, all applied: a horizontal `Field` is a two-column grid, so the label, description and error stack beside the control; no control transitions `outline-color`, so focus is instant; every icon an item renders is `aria-hidden`; and `bun run check`'s prior-art noise is removed (note 4, last group).
+1. **A cancelled animation failed one run** (the design lead, EXECUTED). One full run failed once: `primitives.spec.ts` "elevation and scrim", dark project, `evaluate: AbortError: The user aborted a request` at `Promise.all(document.getAnimations().map((a) => a.finished))`. A cancelled animation rejects its `finished` promise. The design lead added `settled(page)` to `tests/e2e/pages.ts`, which skips infinite animations and treats a cancelled one as finished, and used it at the three page-wide waits in `axe.spec.ts` and `primitives.spec.ts`. The affected specs then passed 3 of 3 runs, and the full suite 2 of 2.
+2. **The checkpoint after build step 4.** The builder stopped with `button`, `spinner`, `input`, `field`, `label` and `separator` restyled and reported heights (48 and 32 as specified), the focus outline (2 px solid `--ring`, 2 px offset) and the field wiring in the raw prerendered HTML. The design lead sent back four changes, all applied: a horizontal `Field` is a two-column grid, so the label, description and error stack beside the control; no control transitions `outline-color`, so focus is instant; every icon an item renders is `aria-hidden`; and `bun run check`'s prior-art noise is removed (note 4, last group).
 3. **Provenance.** All 26 stock items were installed in one `add` at 12:36 UTC. Their live JSON, fetched the same minute, equals the prior-art clone's at `6149e14` for 25 of 26; `native-select` differs by one type line (`WithElementRef<HTMLSelectAttributes, HTMLSelectElement>`). The reviewer re-fetched 5 of 5 and found them equal to `meta.stock.sha256`. The whole-tree snapshot showed only `package.json` and `bun.lock` changed outside the 26 folders; nothing was restored.
-4. **Where the build bends a decision, and who allowed it.**
-   - *Field wiring (decision 11).* `FieldLabel` points `for` at the nearest `Field`'s control through a second internal key, `pluto:field-label`; the orchestrator accepted it at the checkpoint. After review finding 1, by the design lead's call, `FieldSet` no longer sets `pluto:field`: it describes its own `<fieldset>` and sets `pluto:field-set`, which only `radio-group` reads, so a checkbox takes its own `Field`'s ids or none. Finding 8: the radio group is named by the set's `FieldLegend` through `aria-labelledby`.
+4. **Where the build deviates from a decision, and who allowed it.**
+   - *Field wiring (decision 11).* `FieldLabel` points `for` at the nearest `Field`'s control through a second internal key, `pluto:field-label`; the design lead accepted it at the checkpoint. After review finding 1, by the design lead's call, `FieldSet` no longer sets `pluto:field`: it describes its own `<fieldset>` and sets `pluto:field-set`, which only `radio-group` reads, so a checkbox takes its own `Field`'s ids or none. Finding 8: the radio group is named by the set's `FieldLegend` through `aria-labelledby`.
    - *Tooltip (decision 19).* bits-ui 2.20.2 gives tooltip content no role, so ours sets `role="tooltip"`. Its provider closes a tooltip on any scroll, and Tab to an off-screen trigger scrolls; after finding 3, by the design lead's call, our `Tooltip` reopens it on the next frame while the trigger keeps keyboard focus, unless Escape or the pointer dismissed it.
    - *`InputOTP` (decision 18).* PinInput gives its root only `class`, so our root is a wrapping `div` with `data-slot="input-otp"`, which draws the focus ring and, after finding 2, the cells' invalid border.
    - *Switch (decision 14, R3).* Invalid is said in words only; a required consent is a checkbox. The design lead's call after finding 9.
    - *Table (decision 19).* A selected row keeps `bg-accent` and adds a `border-l-(length:--focus-width) border-l-primary` edge; `aria-selected` is gone from `<tr>`, and a selectable row carries a checkbox cell. The design lead's call after finding 12.
    - *Item.* Inside an `ItemGroup`, an `Item` renders `role="listitem"` itself (finding 12).
-   - *`bun run check` (`001` decision 26).* svelte-check searches the workspace for config files and loaded the prior-art clone's; the script adds `--config ./vite.config.ts`. It changes no checked file (1045 either way, the reviewer confirmed); it removes the noise. The orchestrator's request at the checkpoint.
-5. **Smaller bends, each recorded in the build's deviation list:** registry entries were added as each item landed, not at step 8; `src/app.css` places the theme's keyframes inside `@theme inline`, where the CLI puts them in apps, and the smoke helper skips nested blocks; `badge` was restyled a step early; `InputGroupPassword` renders its own group and has a bindable `shown`; `textarea` resizes vertically; a choice card's control also needs `aria-labelledby` on its title.
+   - *`bun run check` (`001` decision 26).* svelte-check searches the workspace for config files and loaded the prior-art clone's; the script adds `--config ./vite.config.ts`. It changes no checked file (1045 either way, the reviewer confirmed); it removes the noise. The design lead's request at the checkpoint.
+5. **Smaller deviations from the specification:** registry entries were added as each item landed, not at step 8; `src/app.css` places the theme's keyframes inside `@theme inline`, where the CLI puts them in apps, and the smoke helper skips nested blocks; `badge` was restyled a step early; `InputGroupPassword` renders its own group and has a bindable `shown`; `textarea` resizes vertically; a choice card's control also needs `aria-labelledby` on its title.
 6. **The lint.** Decision 21's 14 rules, then five more after review finding 10: `focus-ring` only in `input-group.svelte` and `input-otp.svelte`; numeric position and translate offsets on the ladder; no palette colour through the variable form; no `scale-*`; no named colour in an SVG paint attribute. Samples: 64 bad, 39 good. Words in comments are tokens too, so prose in items avoids the bare words `ring`, `outline` and `shadow`.
 7. **Design-lead calls in `decisions.md` that the build applied:** the 26 items and five groups; untinted badges; round radios; the 32 × 64 switch with a 24 px thumb; ladder heights 32 and 48 with no `lg`; blue switches and checked states; the busy button; elevation and scrim tokens; `input-otp`'s paste and `one-time-code`; no `tw-animate-css`; phosphor icons; and, after the change review, the four on tooltips, sets, switches and table rows.
-8. **The table page failed in development only** (the orchestrating session, EXECUTED). On `bun run dev`, `/items/table/` rendered SvelteKit's 500 page: `Svelte error: props_invalid_value — Cannot do bind:checked={undefined} when checked has a fallback value`, because the preview's `selected` map named only the selected row. It is a development-mode check, so the production build the browser suites test against rendered the page and every suite passed. The preview now initialises every row's entry. A walk of all 33 pages in both themes on the dev server, collecting page errors and console errors and warnings, found 0 of 66 with any. Review addendum, item 2. A later specification should make that walk a test, since the suites cannot see a development-only error.
-9. **For `003` and `004`.** An icon an app passes into a button or addon needs `aria-hidden="true"` (phosphor renders `role="img"` with no name). Whether `field-sizing` is supported is still a placeholder; it blocks `006`'s composer, not `002`. `tw-animate-css` is absent: open and close motion is `animate-enter` and `animate-exit` with the theme's `pluto-` keyframes. A clean build has no `v0.1.0/` folder; this working copy's comes from `001`'s git-ignored `static/v0.1.0/`.
+8. **The table page failed in development only** (the design lead, EXECUTED). On `bun run dev`, `/items/table/` rendered SvelteKit's 500 page: `Svelte error: props_invalid_value — Cannot do bind:checked={undefined} when checked has a fallback value`, because the preview's `selected` map named only the selected row. It is a development-mode check, so the production build the browser suites test against rendered the page and every suite passed. The preview now initialises every row's entry. A walk of all 33 pages in both themes on the dev server, collecting page errors and console errors and warnings, found 0 of 66 with any. Review addendum, item 2. The suites test the production build and cannot see a development-only error, so the walk is by hand; `004` makes it an acceptance criterion (its criterion 25).
+9. **For `003` and `004`.** An icon an app passes into a button or addon needs `aria-hidden="true"` (phosphor renders `role="img"` with no name). `field-sizing` grows a textarea in all three engines (decision 13). `tw-animate-css` is absent: open and close motion is `animate-enter` and `animate-exit` with the theme's `pluto-` keyframes. A clean build has no `v0.1.0/` folder; a working copy that built `001` keeps its git-ignored `static/v0.1.0/`.

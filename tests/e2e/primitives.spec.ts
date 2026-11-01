@@ -14,7 +14,7 @@ import {
   ITEMS_005,
   ITEMS_006,
   ITEMS_007,
-  NEW_ITEMS,
+  ITEMS_002,
   cssVar,
   open,
   settled,
@@ -215,7 +215,7 @@ test.describe("heights and targets", () => {
       "accordion",
       "toggle",
       "toggle-group",
-      // 005's fixtures (decision 17).
+      // 005's fixtures (005 decision 17).
       "theme",
       "dropdown-menu",
       "sheet",
@@ -224,7 +224,7 @@ test.describe("heights and targets", () => {
       "sidebar",
       "message-log",
       "composer",
-      // 007 decisions 7 and 9: the ink surface's fixture and the new item.
+      // 007 decisions 7 and 9: the ink surface's fixture and 007's item.
       "pluto-theme",
       "code-languages",
     ]) {
@@ -423,7 +423,7 @@ test.describe("motion", () => {
   }) => {
     const loops: string[] = [];
     for (const item of [
-      ...NEW_ITEMS,
+      ...ITEMS_002,
       ...ITEMS_004,
       ...ITEMS_005,
       ...ITEMS_006,
@@ -443,7 +443,7 @@ test.describe("motion", () => {
       );
       for (const f of found) loops.push(`${item}: ${f}`);
     }
-    expect(NEW_ITEMS).toHaveLength(26);
+    expect(ITEMS_002).toHaveLength(26);
     expect(loops).toEqual([]);
   });
 });
@@ -594,7 +594,7 @@ type SetWiring = {
   describedBy: (string | null)[];
 };
 
-/** 002 decisions.md, finding 1: a set wires itself; its checkboxes never take its ids. */
+/** A set wires itself; its checkboxes never take its ids. */
 async function readSetWiring(page: Page): Promise<SetWiring[]> {
   return page.evaluate(() =>
     ["wiring-checkbox-set-bare", "wiring-checkbox-set-fields"].map((box) => {

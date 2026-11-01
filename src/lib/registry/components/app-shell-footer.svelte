@@ -46,7 +46,8 @@
   line beside it, and the build's furniture at the end in mono, lowercase
   labels typed as such: commit, built, doc, source, each row only when its
   value is given. The row wraps to one column on a phone. The build date on
-  every page meets v2's dating rule.
+  every page shows when it was last updated: no public surface without a visible
+  last-updated date.
 -->
 <footer
   data-slot="app-shell-footer"

@@ -54,7 +54,7 @@
     textarea?.focus();
   }
 
-  // The status words (decision 13's table): "Responding" at submitted,
+  // The status words: "Responding" at submitted,
   // "Response complete" at ready after a reply, "Stopped" on a Stop press,
   // and the ready that follows a stop is silent. No two in a row are the same.
   let statusText = $state("");

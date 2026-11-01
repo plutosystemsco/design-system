@@ -1,0 +1,35 @@
+{
+	"$schema": "https://shadcn-svelte.com/schema/registry-item.json",
+	"name": "skeleton",
+	"title": "Skeleton",
+	"type": "registry:ui",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+	"description": "A static, hidden placeholder on an inset where content is loading.",
+	"registryDependencies": [
+		"utils",
+		"pluto-theme"
+	],
+	"meta": {
+		"since": "0.2.0",
+		"group": "feedback",
+		"stock": {
+			"registry": "https://shadcn-svelte.com/registry/styles/maia",
+			"item": "skeleton",
+			"cli": "1.7.1",
+			"date": "2026-10-28",
+			"sha256": "10a593b567aa8fb15a9027a8e52dee8bad8d93b1a9a9c5f1239a1ae68f9cab08"
+		}
+	},
+	"files": [
+		{
+			"content": "<script lang=\"ts\">\n  import { cn, type WithElementRef, type WithoutChildren } from \"$UTILS$\";\n  import type { HTMLAttributes } from \"svelte/elements\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    ...restProps\n  }: WithoutChildren<WithElementRef<HTMLAttributes<HTMLDivElement>>> = $props();\n</script>\n\n<!-- Static and hidden: the region being filled carries aria-busy. -->\n<div\n  bind:this={ref}\n  data-slot=\"skeleton\"\n  aria-hidden=\"true\"\n  class={cn(\"rounded bg-muted\", className)}\n  {...restProps}\n></div>\n",
+			"type": "registry:ui",
+			"target": "skeleton/skeleton.svelte"
+		},
+		{
+			"content": "import Root from \"./skeleton.svelte\";\n\nexport {\n  Root,\n  //\n  Root as Skeleton,\n};\n",
+			"type": "registry:ui",
+			"target": "skeleton/index.ts"
+		}
+	]
+}

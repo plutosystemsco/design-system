@@ -1,6 +1,21 @@
 # The owner's decisions
 
-The owner's answers and decisions, newest first. A decision that changes the constitution is also recorded in its Status line.
+The owner's answers and decisions, newest first. A decision that changes the constitution is also recorded in its Status line. "The design book" and "v2" both mean the Pluto Systems design book, version 2, the source of the brand's rules; a section of it is cited as "§03".
+
+### After the public-readiness review (2026-11-01)
+
+The repository was read in full before public viewing. The owner's rulings:
+
+- **The whole `context/` record is rewritten in place** so each file stands alone for a stranger. Research memos keep their dates and their labelled claims; an exception to "a memo is never edited", recorded here, is this rewrite, which removes names, paths and pointers and closes each "unknown" with its later answer or a stated limit.
+- **"Done" is never an app's adoption.** This repository is developed over time to meet the needs of Pluto Systems, PBC; a specification is done when its criteria are met here, its change is reviewed and the release is tagged. The constitution's §2 and §4.2 are amended; every specification's app-side criterion becomes a release criterion.
+- **Licence: Apache-2.0**, copyright Pluto Systems, PBC.
+- **No person is named** in any document; the roles of the constitution's §5 are used instead.
+- **No external pointer** remains: not to another repository, a local path, a working session's files or a private link. The design book stays as a named source, by section, without a path.
+
+Two questions that had waited on the owner are settled by the design lead under the same ruling, so that no open item remains:
+
+- **The icon on ink.** The four-dot mark's coloured dots on the ink surface use the lifted primitives (`*-lifted`), which the palette already holds for contrast on dark grounds. The light blue `#2456E6` measured 2.71 on `card` and 2.32 on `muted`; the lifted blue `#7A9BFF` measures 6.85 on `background`, 6.10 on `card` and 5.22 on `muted` (computed with the WCAG 2.2 formula, 2026-11-01), above the 3:1 a graphic needs.
+- **Browsers and assistive technology outside this release.** Firefox, Safari, iOS Safari and screen readers are not checked by this release and are recorded as limits, not as pending work. A release that adds them says so in its specification.
 
 ### After the `006` change review (2026-11-01)
 
@@ -12,9 +27,9 @@ From `reviews/006-the-app-shell-and-the-chat-pane-pr-2026-11-01.md` (3 Medium, 5
 - **bits-ui writes `data-state`, not `data-open`**: the caret turns on `group-data-[state=open]`. `005`'s sidebar files are checked for the same habit.
 - **The "Latest reply" row keeps its height** whether or not the button shows, so the log does not resize when a reply ends.
 
-### After the `006` build's run 2 (2026-11-01)
+### After the `006` build's second pass (2026-11-01)
 
-From the builder's final report (`scratchpad/build-006/bends.md` 18 to 32), the chat views and the fixed sidebar shell read.
+From the builder's final report, the chat views and the fixed sidebar shell read.
 
 - **The sidebar's offset under the sticky header is `md:top-16 md:pb-16`**, prefixed, so the sheet's nav below `md` is untouched: an unprefixed `pb-16` would lift the sheet's account row.
 - **A sticky sidebar holds only while the page is taller than it.** The example page is shorter, so the test lengthens `main` before scrolling, as an app page would be. Not a defect of the shell.
@@ -22,7 +37,7 @@ From the builder's final report (`scratchpad/build-006/bends.md` 18 to 32), the 
 - **The streaming view's half-written reply is prose**, since an open fence would add two stops to the view's count; the fence splitter still handles an open fence in the pane.
 - Counts corrected from the spec: 20 components (6 + 4 on `003`'s 10, not 19); 62 toolbar stops (the spec's 58 left out Open alone and the frame on each new toolbar).
 - Both deferrable views (`sidebar-icon`, the chat `error`) were built; nothing is deferred.
-- The one smoke flake, `001`'s dev-loop watcher under the seven-block install's load, passed alone and in an earlier full run; recorded, not chased.
+- The one smoke flake, `001`'s dev-loop watcher under the seven-block install's load, passed alone and in an earlier full run; recorded as a flake.
 
 ### After the `007` change review (2026-11-01)
 
@@ -37,42 +52,40 @@ From `reviews/007-the-full-highlight-palette-and-the-ink-surface-pr-2026-11-01.m
 
 ### After the `006` build's checkpoint (2026-11-01)
 
-Made by the orchestrating session as design lead from the builder's checkpoint report (steps 1 to 3; `scratchpad/build-006/`), the entrance frames, the sidebar shell and the footer read.
+Made by the design lead from the builder's checkpoint report, the entrance frames, the sidebar shell and the footer read.
 
 - **The entrance is right**: at 300 ms the blue and red dots are mid-dock and the amber and green not yet begun; at 900 ms the mark is composed; under reduce the mark is composed at load; a client-side navigation replays nothing. The footer at 360 wraps to one column with the source link broken at a slash.
 - **With a sidebar, the shell's header is sticky.** The checkpoint showed the sidebar's account row cut off by the header's height at load: `005`'s sidebar is `sticky top-0 h-svh`, and under a header that scrolls away it is only whole once the page has scrolled 64 px. A sticky sidebar beside a scrolling header is two scroll behaviours on one screen. So the header is `sticky top-0 z-20` whenever the sidebar is on, and the sidebar is offset under it with `top-16 pb-16` through its `class` prop: the box keeps `h-svh`, its last 64 px are padding below the viewport, and the account row sits at the viewport's bottom. No new utility, no arbitrary value. Without a sidebar the header is not sticky by default, as `006` decision 6 says; the one line is the app's. Decision 6 reads so.
-- The checkpoint's bends are accepted as the least that works: the validator caps the entrance at the budget; `mark-entrance` targets child dots; the header's box is 65 px with its hairline; with a sidebar the account lives in the sidebar's footer and the header shows no account menu; the Preferences group is closed by default; the account trigger is named by `sr-only` text (axe's label-content-name-mismatch); the nav sheet closes after navigation; the shipped `sourceHref` is this registry's repository, with a comment; the three state views share one preview component; the footer's source link wraps at 320 px.
-- Housekeeping: `.claude/worktrees/` (the `007` build's worktree) is ignored by git and Prettier so the main tree's lint stays clean while the two build in parallel.
+- The checkpoint's deviations from the specification are accepted as the least that works: the validator caps the entrance at the budget; `mark-entrance` targets child dots; the header's box is 65 px with its hairline; with a sidebar the account lives in the sidebar's footer and the header shows no account menu; the Preferences group is closed by default; the account trigger is named by `sr-only` text (axe's label-content-name-mismatch); the nav sheet closes after navigation; the shipped `sourceHref` is this registry's repository, with a comment; the three state views share one preview component; the footer's source link wraps at 320 px.
 
 ### After the `007` build's checkpoint (2026-11-01)
 
-Made by the orchestrating session as design lead from the builder's checkpoint report (steps 1 to 3 on the `007-palette` branch; `scratchpad/build-007/`), the gallery and surface screenshots read.
+Made by the design lead from the builder's checkpoint report on the `007` branch, the gallery and surface screenshots read.
 
 - **Cyan stays for `property`.** On the Python class sample at 2× and at native size, teal type names and cyan attributes read as two colours (teal the greener), and cyan sits well apart from the keywords' blue. The magenta fallback of `007` decision 3 is not taken. A type and an attribute never share a syntactic position, so the closest pair costs the least.
 - **The surface reads as specified**: ink on paper with the editor and the block flush, the pill strip and the meter's track on the wash inset, the popover dark inside the panel, the dialog white over the page's scrim.
-- The checkpoint's bends are accepted as the least that works: C2 rewritten with the theme (the old assertions broke at once); the keyboard ring helper reads `--ring` where the element sits, so the dark ring inside a surface on a light page passes; the surface's two tab panels carry `tabindex={-1}` so the fixture counts 7 stops (bits-ui's panel is a stop); the gallery's blocks keep their `pre` stop; `@property` tokenises as a decorator mark plus a teal `property`, and `int(c)` and `str(d)` are types to Shiki, not built-ins, so C2 reads `builtin` on `divmod`, `all`, `range` and `print`; the samples are 10 to 15 lines.
-- The suites ran on a second port because the `006` build held 4173 in the main tree; a git-ignored config copy, nothing tracked.
+- The checkpoint's deviations from the specification are accepted as the least that works: C2 rewritten with the theme (the old assertions broke at once); the keyboard ring helper reads `--ring` where the element sits, so the dark ring inside a surface on a light page passes; the surface's two tab panels carry `tabindex={-1}` so the fixture counts 7 stops (bits-ui's panel is a stop); the gallery's blocks keep their `pre` stop; `@property` tokenises as a decorator mark plus a teal `property`, and `int(c)` and `str(d)` are types to Shiki, not built-ins, so C2 reads `builtin` on `divmod`, `all`, `range` and `print`; the samples are 10 to 15 lines.
+- The suites ran on a second port while the `006` build held the first; nothing tracked changed.
 
 ### `007` builds in parallel with `006` (2026-11-01)
 
-Asked whether the highlighting pieces were built: not yet, specified and reviewed, queued behind `006` in one working tree. **The owner:** "start working on 0.7.0 in parallel." So `007` builds on its own branch, `007-palette`, in a git worktree over `v0.5.0` (`616b8a0`), while `006` builds on `main`. `007`'s counts stand on `005`'s landed numbers, not `006`'s predicted ones; its Landing notes say so. Whichever lands second rebases onto the other before its change review; the expected overlaps are `registry.json`, `pages.ts`, the axe and keyboard counts, `package.json`'s version and the changelog. The surface fixture composes `005`'s dialog and dropdown menu, which `v0.5.0` holds, so `007` does not need `006` to build.
+Asked whether the highlighting pieces were built: not yet, specified and reviewed, queued behind `006`. **The owner:** "start working on 0.7.0 in parallel." So `007` builds on its own branch over `v0.5.0` (`616b8a0`), while `006` builds on `main`. `007`'s counts stand on `005`'s landed numbers, not `006`'s predicted ones; its Landing notes say so. Whichever lands second rebases onto the other before its change review; the expected overlaps are `registry.json`, `pages.ts`, the axe and keyboard counts, `package.json`'s version and the changelog. The surface fixture composes `005`'s dialog and dropdown menu, which `v0.5.0` holds, so `007` does not need `006` to build.
 
 ### Two writing and furniture rules join the checklist (2026-11-01)
 
-The owner asked whether the `frontend-design` skill (a brief for designing one page from a blank brief) helps this work. Assessed: its palette, type and layout passes do not apply, because the design book fixes them; three parts transfer. Its motion rule (one page-load moment; otherwise motion answers a person's action) is already `006`'s entrance and the overlays' enter and exit. Its writing rules and its list of templated "tells" were worth keeping. **Answered:** "yes, add them to the checklist."
+At the owner's word, two rules join the review checklist. Both are rules of writing and furniture that the design book's own pages already keep; the checklist now states them so review can hold them.
 
 - `002` decision 9's checklist gains **R23** (copy says what happens: active names, one name through a flow, errors that direct, empty states that invite) and **R24** (furniture carries information: no all-caps, no eyebrow over every heading, no middle-dot meta strings or arrows in copy, no card kit; the book's own mono eyebrow and footer rows are choices and stay). Both are review's, not the lint's.
 - Checked on the day: the registry and the site hold no all-caps, no arrows in copy, no em-dash labels. The lowercase mono eyebrow with middle dots (home, hero, card captions) and `006`'s footer rows are the book's.
-- Prior art is studied, never copied: the rules are rewritten in the checklist's terms; the skill is not referenced from code.
 
 ### Syntax highlighting is a function, outside the colour budget (2026-11-01)
 
-The first app, restyling wasipython.dev to the design book, asked for four things in a tagged release: fuller Python highlighting, a sanctioned ink surface for its run panel, the mark's entrance, and the footer's furniture. The last two are `006`'s. The first needed a ruling, since `004` had kept the palette to the text-safe brand colours under v2 §03 ("no new hues"; the four colours together only in the mark and in data figures). Put to the owner with three options. **Answered:** "we should have full syntax highlighting as a dev would expect from something like PyCharm or VS Code. This in no way impacts how colors and accents are used, this is a functional feature."
+A consuming app, restyling itself to the design book, asked for four things in a tagged release: fuller Python highlighting, a sanctioned ink surface for its run panel, the mark's entrance, and the footer's furniture. The last two are `006`'s. The first needed a ruling, since `004` had kept the palette to the text-safe brand colours under v2 §03 ("no new hues"; the four colours together only in the mark and in data figures). Put to the owner with three options. **Answered:** "we should have full syntax highlighting as a dev would expect from something like PyCharm or VS Code. This in no way impacts how colors and accents are used, this is a functional feature."
 
 What follows:
 
 - **Code colour is functional**, as state colour is (decisions.md, "State colour is outside the one-accent budget", 2026-10-28). The highlight palette may use as many hues as a Python editor needs, with a light and a dark value each, every one passing AA on every code ground. v2 §03's budget binds surfaces and brand copy, not the tokens inside a code block; the book gains a one-line note when it is next revised.
-- `007` specifies the full palette (the slots an editor shows, the two engines' mappings, the contrast table) and the ink surface the app asked for. The `--code-*` map stays the one place a highlight colour lives (`004` decision 19); it grows.
+- `007` specifies the full palette (the slots an editor shows, the two engines' mappings, the contrast table) and the ink surface that app asked for. The `--code-*` map stays the one place a highlight colour lives (`004` decision 19); it grows.
 - **Every major language, not Python alone.** The owner added: "we should have full coverage of all major coding languages." So the palette's slots are the language-agnostic roles an editor theme colours (a TextMate scope family, a Lezer tag), the code block's grammar list grows to the major languages, and the editor gains a language package per major language, each pinned and loaded only when used. `007` names the set and what each costs.
 - The research memo of the same day, `a-fuller-python-palette-within-the-books-rules`, turns from three options to one: what a full palette is, across languages, and what it costs.
 
@@ -86,18 +99,18 @@ From `reviews/005-overlays-navigation-and-the-chat-primitives-pr-2026-11-01.md` 
 - **The log's floating button may cover the corner of the last bubble while the reader is scrolled away.** Accepted: it is shown only then, padding cannot help mid-scroll, and the one way never to cover text is to place the control outside the box, which is `006`'s composition. The page says so.
 - Booleans never render as `data-x="false"`: a false boolean data attribute is omitted, so presence variants cannot match it.
 
-### After the `005` build's run 2 (2026-11-01)
+### After the `005` build's second pass (2026-11-01)
 
-From the builder's final report (`scratchpad/build-005/bends.md` 16 to 26), screenshots read.
+From the builder's final report, screenshots read.
 
 - **The log's "Scroll to end" button sits absolute over the box, in a relative wrapper, not sticky inside it.** Measured: Tab onto a sticky button scrolled the box to the button's static position at the end, and the button hid under the reader before Enter could press it. On activation focus returns to the region. `005` decision 11 reads so.
 - **The button also hides while the box is following**, not only at the end, for stock's reason: it would strobe as each token arrived.
-- The run's smaller bends (the message group `flex-1 items-end` in an end-aligned turn; three region names on the log page for `landmark-unique`; the composer preview holding `submitted` 700 ms; the fourth new dependency name is `tooltip`, not `spinner`; two keyboard behaviours waiting out Chromium's animated scroll) are accepted as the least that works and are the Landing notes' to record.
-- The R23 and R24 pass over run 1's pages: middle-dot captions rewritten as clauses; "More" became "More actions" and "Quick note" became "Open the quick note". The `ItemHeader` eyebrow is `001`'s and stays.
+- The pass's smaller deviations (the message group `flex-1 items-end` in an end-aligned turn; three region names on the log page for `landmark-unique`; the composer preview holding `submitted` 700 ms; the fourth new dependency name is `tooltip`, not `spinner`; two keyboard behaviours waiting out Chromium's animated scroll) are accepted as the least that works and are the Landing notes' to record.
+- The R23 and R24 pass over the first pass's pages: middle-dot captions rewritten as clauses; "More" became "More actions" and "Quick note" became "Open the quick note". The `ItemHeader` eyebrow is `001`'s and stays.
 
 ### The design calls for `007`, the full highlight palette and the ink surface (2026-11-01)
 
-Made by the orchestrating session as design lead, under the owner's delegation and the owner's ruling of the same day, from the palette memo and the ink memo of 2026-11-01. The owner may overturn any of them.
+Made by the design lead, under the owner's delegation and the owner's ruling of the same day, from the palette memo and the ink memo of 2026-11-01. The owner may overturn any of them.
 
 - **Twenty-one slots, each a role that holds in any language**, not a colour per scope. Five hue families join the five text colours the tokens hold: orange (numbers, escapes), amber as text (functions), purple (built-ins, decorators, `self`), teal (types, tags), cyan (keys and attributes). `constant` moves from ink to blue and `function` from ink to amber; calls lose their weight and definitions keep it. No `operator`, `punctuation`, `parameter`, `regexp` or `docstring` slot: both editors leave the first two in the body, and the rest read as another role.
 - **The five new hues are semantic pairs named `syntax-<hue>`** (48 semantic names become 53), so `004` decision 5's rule that a `code` value names a semantic colour stays and the theme switch carries through. A lint rule, L19, forbids a `syntax-*` colour class in any item: the five exist for the code slots alone.
@@ -120,24 +133,24 @@ From `reviews/007-the-full-highlight-palette-and-the-ink-surface-spec-2026-11-01
 
 ### After the `005` build's checkpoint (2026-11-01)
 
-Made by the orchestrating session as design lead from the builder's checkpoint report (steps 1 to 4, `scratchpad/build-005/bends.md`), screenshots read. The owner may overturn any of them.
+Made by the design lead from the builder's checkpoint report, screenshots read. The owner may overturn any of them.
 
 - **The dropdown menu renders in place, not in a portal.** axe's `region` rule exempts dialogs only, so a `role="menu"` portalled to `body` fails "content contained by landmarks" whenever it is open, and decision 17's open-menu scan could never pass. In place, the menu also reads in DOM order after its trigger. Floating UI still positions it `fixed`; `portalProps` re-enables the portal where an ancestor clips or transforms; the submenu stays portalled. `005` decision 7 reads so.
 - **The dialog has a positioner.** `max-h-full` on the content resolved against the viewport, not the inset box (a long dialog measured 900 of 900 px). A `dialog-positioner` div, `fixed inset-4 flex items-center justify-center pointer-events-none`, wraps the content, which scrolls inside `max-h-full`. Decision 8 reads so.
 - **Every sidebar row carries the 2 px start edge, transparent**; the current row colours it. Otherwise the current row's text shifted 2 px against its neighbours, as `004`'s code block found for its line marker.
 - **The sidebar trigger closes its tooltip on press.** The tooltip's reopen after bits-ui's scroll-close registered a newer focus scope and the sheet skipped its autofocus 2 times in 6. Measured 0 in 6 after.
 - **bits-ui leaves a menu open on Tab when its trigger is the page's last stop** (it closes only when a next tabbable exists). Not ours to fix; the menu page says so. `006`'s header menu always has the main content after it, so the shell is not affected.
-- **The icon-collapsed sidebar must not clip its header text.** The checkpoint's icon shell shows "Pl" where the header reads "Pluto": the page's example, not the item. Run 2 hides the text when collapsed to icons and keeps a 32 px mark, so the header reads as the mark alone.
-- The smaller bends (breadcrumb links `inline-flex min-h-6` for R21; the submenu's `alignOffset` −4; the theme store read once at module start; the toggle's light icon until mount; the nonce test's server render; the third minimal sidebar fixture; the row tooltip mounted only when collapsed on desktop) are accepted as the least that works and are the Landing notes' to record.
+- **The icon-collapsed sidebar must not clip its header text.** The checkpoint's icon shell shows "Pl" where the header reads "Pluto": the page's example, not the item. The second pass hides the text when collapsed to icons and keeps a 32 px mark, so the header reads as the mark alone.
+- The smaller deviations (breadcrumb links `inline-flex min-h-6` for R21; the submenu's `alignOffset` −4; the theme store read once at module start; the toggle's light icon until mount; the nonce test's server render; the third minimal sidebar fixture; the row tooltip mounted only when collapsed on desktop) are accepted as the least that works and are the Landing notes' to record.
 
 ### The design calls for `006`, the app shell and the chat pane (2026-11-01)
 
-Made by the orchestrating session as design lead, under the owner's delegation, from the entrance memo of 2026-11-01 and the `005` memos, after the owner's answers of the same day. The owner may overturn any of them.
+Made by the design lead, under the owner's delegation, from the entrance memo of 2026-11-01 and the `005` memos, after the owner's answers of the same day. The owner may overturn any of them.
 
 - **The entrance is the book's own `dockin`, drawn from tokens**: four dots docking over 900 ms, 495 ms each, staggered 90 ms, on `--ease-entrance`, from one new token `--mark-orbit` (0.5 em) and three unitless numbers. It is a prop, `entrance`, on `FourDot` and `Lockup`, and the shell's header is the one place that sets it. Under reduced motion the dots are the composed mark before any frame (`animation: none` in the reduce block, the third rule there). "One per page" is one per full document load: SvelteKit keeps the layout's lockup across client-side navigation, and no flag is kept. *Why not the mockup's spiral:* it is script, 1230 ms, over budget.
-- **The shell is a block whose page file is a layout**, shipped under `/app-shell` and moved to the app's root by hand, with a server load that reads the sidebar cookie. Its app-specific values are constants at the top of the layout, since a root layout has no caller.
+- **The shell is a block whose page file is a layout**, shipped under `/app-shell` and moved to an app's root by hand, with a server load that reads the sidebar cookie. Its app-specific values are constants at the top of the layout, since a root layout has no caller.
 - **The header is 64 px, grooved on its bottom edge** (`groove-b`, a second groove utility), the lockup at 28 px with the entrance, a labelled primary nav hidden below `md` into a start sheet, the theme toggle and the account menu at the right. Not sticky by default; the one line a sticky header needs is the app's.
-- **The footer is the lockup and "Work runs on data."**, then mono rows `commit`, `built`, `doc`, `source`, each only when given, and the public-benefit sentence only when the owner says it is true. *Why the tagline without the name:* the lockup is the name; "Pluto Systems. Work runs on data." is read as one line. The commit comes from SvelteKit's `version.name` and the date from the commit's own date, so a rebuild of one commit is byte-identical.
+- **The footer is the lockup and "Work runs on data."**, then mono rows `commit`, `built`, `doc`, `source`, each only when given, and the public-benefit sentence only when an app passes it. *Why the tagline without the name:* the lockup is the name; "Pluto Systems. Work runs on data." is read as one line. The commit comes from SvelteKit's `version.name` and the date from the commit's own date, so a rebuild of one commit is byte-identical.
 - **The chat pane shows no avatar and no markdown.** Turns are headed "you" and "assistant" in mono; fenced code becomes `code-block` at `sm` through a fifteen-line splitter; everything else is prose. The mark is never the assistant's face. An error is an alert with Retry inside the log; "Responding" is a static marker with the one spinner; "Latest reply" moves the reader, "Scroll to end" moves the view.
 - **The shell's views live in a third layout group, `(shell)`**, because the shell renders its own `main` and the `(view)` layout's would nest it. The preview site adopts the entrance, `groove-b` and the footer, but not the skip link: the catalogue's stop order is `003`'s and starts at the lockup.
 - **The doc ID and the sentence are the owner's answers above.**
@@ -150,10 +163,10 @@ After the `006` spec review (`reviews/006-the-app-shell-and-the-chat-pane-spec-2
 
 ### The design calls for `005`, overlays, navigation and the chat primitives (2026-11-01)
 
-Made by the orchestrating session as design lead, under the owner's delegation, from the four memos of 2026-11-01 (the overlays; the sidebar; the chat primitives; the entrance and the footer), after the owner's answers of the same day. The owner may overturn any of them.
+Made by the design lead, under the owner's delegation, from the four memos of 2026-11-01 (the overlays; the sidebar; the chat primitives; the entrance and the footer), after the owner's answers of the same day. The owner may overturn any of them.
 
 - **The theme mechanism is source of our own, not `mode-watcher`.** A `theme` item: a head script rendered through `<svelte:head>`, a store with `light | dark | system` on the key `pluto-theme`, and a pressed toggle button; the preview app adopts it. *Why:* constitution §4.1, "source, not a package"; the behaviour is sixty lines the preview has mostly run since `001`; `mode-watcher` was last released 2025-06-28 and carries its own copies of two libraries.
-- **No toast.** `sonner` is not served. The pattern is `003`'s: a `Status` present at render for the announcement and an inline `Alert` where the action was taken. *Why:* every accessibility source read asks the implementer to remove the timer, the tab stop per toast and the end-of-page placement, which is most of what the library is. A notices region of our own is a placeholder if an outcome ever lands off-screen.
+- **No toast.** `sonner` is not served. The pattern is `003`'s: a `Status` present at render for the announcement and an inline `Alert` where the action was taken. *Why:* every accessibility source read asks the implementer to remove the timer, the tab stop per toast and the end-of-page placement, which is most of what the library is. A notices region of our own would be specified if an outcome ever lands off-screen.
 - **Every overlay takes `popover`'s and `alert-dialog`'s chrome**: `shadow-elevation` with no border, `bg-scrim` with no blur, `animate-enter` and `animate-exit`. **The sheet fades; it does not slide.** One motion for every overlay, no new keyframes, within the 200 ms budget.
 - **`dialog` is served beside `sheet`.** They are the same eleven files with a side; `006` names the consumer.
 - **A menu's shortcut is words, hidden from the name**, and the menu is named by a group heading or a `label`; the stock `Label` part is dropped. Menu items are 32 px on the `accent` inset, and keep the global focus ring above it.
@@ -162,7 +175,7 @@ Made by the orchestrating session as design lead, under the owner's delegation, 
 - **No base border colour rule in `pluto-theme`.** Every item names its border's token; an app's own bare `border` draws `currentColor`, which is the honest reading of "tokens are the one source".
 - **The conversation log is ours**: a named region holding a named log, follow-bottom in sixty lines with the stock scroller's release rules, a button that is `hidden` at the end, `scroll-padding-bottom` for a sticky composer, smooth scroll only without reduced motion. The package behind the stock item (28 days old, 0.0.1) is not taken.
 - **A user turn is a bubble on the `muted` inset; the assistant's turn is plain prose.** `bubble`'s seven variants are not served: the tints fail the token rule and the solid `primary` spends the accent the send button owns. A turn's header is a heading with `tabindex="-1"`, in mono, so a reader can walk turns and a control can focus the latest.
-- **The composer never disables anything.** One button is Send and becomes Stop; Enter sends unless an input method editor is composing; Escape stops; focus stays; the composer's own `Status` says "Responding", "Stopped", "Response complete". It grows by `field-sizing: content` from 64 to 256 px, proven in the three engines, which closes `002`'s placeholder.
+- **The composer never disables anything.** One button is Send and becomes Stop; Enter sends unless an input method editor is composing; Escape stops; focus stays; the composer's own `Status` says "Responding", "Stopped", "Response complete". It grows by `field-sizing: content` from 64 to 256 px, proven in the three engines, which answers the sizing question `002` had left open.
 - **The doc ID, the footer's sentence and the theme are the owner's answers above**; the entrance and the footer are `006`'s.
 
 After the `005` spec review (`reviews/005-overlays-navigation-and-the-chat-primitives-spec-2026-11-01.md`), two more:
@@ -175,21 +188,21 @@ After the `005` spec review (`reviews/005-overlays-navigation-and-the-chat-primi
 Asked while the `005` and `006` research memos were running, since each shapes a specification. **Answered:**
 
 - **The theme mechanism:** "Just build what you can for now, that other work will come soon." The owner does not decide `mode-watcher`; the design lead builds what the registry can carry today and records the call with `005`. What follows: `005` ships a theme mechanism of its own or adopts `mode-watcher` on the evidence of the overlays memo of 2026-11-01, and says which in `decisions.md`; either can be revisited when "that other work" arrives.
-- **The doc-ID scheme:** "Whatever you recommend." The recommendation, now the scheme: **`PS-<series>-<NNNN>`**, the form the design book gave itself (PS-DB-0002). A series is one counter kept in one repository's `context/`: `DB` the design book; `DS` this registry's specifications, numbered as they already are (`001` is PS-DS-0001); and one short code per app for its pages, numbered in that app's context as they ship (wasipython.dev's home page would be PS-WPD-0001). Uppercase, in mono, as v2 writes it. A footer takes the ID as a string prop; no code depends on the scheme. This closes the open call of `001` decision 28.
-- **The footer's sentence:** "Not yet: optional prop, empty by default." The footer takes a `statement` prop and renders nothing without it. "Pluto Systems is a public benefit corporation." ships nowhere until the owner says it is true.
+- **The doc-ID scheme:** "Whatever you recommend." The recommendation, now the scheme: **`PS-<series>-<NNNN>`**, the form the design book gave itself (PS-DB-0002). A series is one counter kept in one repository's `context/`: `DB` the design book; `DS` this registry's specifications, numbered as they already are (`001` is PS-DS-0001); and one short code per app for its pages, numbered in that app's context as they ship (an app's home page would be `PS-<APP>-0001`). Uppercase, in mono, as v2 writes it. A footer takes the ID as a string prop; no code depends on the scheme. This closes the open call of `001` decision 28.
+- **The footer's sentence:** "Not yet: optional prop, empty by default." The footer takes a `statement` prop and renders nothing without it. "Pluto Systems is a public benefit corporation." ships nowhere by default; an app that passes it as the `statement` shows it.
 
 ### The registry is served from GitHub, and the repository is public (2026-11-01)
 
-Asked when `004` was committed and tagged `v0.4.0` and the owner said "so others can install". The repository `plutosystemsco/design-system` existed on GitHub, private and empty, since 2026-10-28. Put to the owner with options: push and deploy to `ui.plutosystems.co`; push only; push and make the repository public so `add` reads the built JSON from GitHub. **Answered:** "do not deploy to an app, only to github", then "push and make public". What follows:
+Asked when `004` was committed and tagged `v0.4.0` and the owner said "so others can install". The repository `plutosystemsco/design-system` existed on GitHub, private and empty, since 2026-10-28. Put to the owner with options: push and deploy to a host; push only; push and make the repository public so `add` reads the built JSON from GitHub. **Answered:** "do not deploy to an app, only to github", then "push and make public". What follows:
 
 - **The built registry is committed.** `static/r/` and `static/v<version>/` leave `.gitignore` (`001` decision 18 said "generated JSON stays out of git"; this reverses that line, and only it). `bun run build:registry` rewrites tracked files, so a release commit carries its own JSON.
 - **The install URL is a raw GitHub URL.** `REGISTRY_URL=https://raw.githubusercontent.com/plutosystemsco/design-system/v0.4.0/static/r` pins a release by its tag; `.../main/static/r` follows the latest. The CLI appends `/styles/maia` itself. *Why it works:* the CLI fetches with a plain `fetch` and no headers (registry memo §1.8), which a public raw URL answers; a private repository would not.
-- **No deployment.** `ui.plutosystems.co` and `wrangler.jsonc` wait for a deployment specification; `registry.json`'s `homepage` keeps the name. The stale `static/v0.1.0` to `v0.3.0` folders of the working copy were deleted before the first push.
+- **No deployment.** Nothing is hosted; `wrangler.jsonc` stays unused, and `registry.json`'s `homepage` is the repository. The stale `static/v0.1.0` to `v0.3.0` folders of the working copy were deleted before the first push.
 - The repository was made public on 2026-11-01 (the owner's decision of 2026-10-27, "the registry is public", now in effect), and `main` with the tags `v0.1.0` to `v0.4.0` pushed.
 
 ### The design calls for `004`, code and data (2026-10-31)
 
-Made by the orchestrating session as design lead, under the owner's delegation, from the three memos of 2026-10-31 (Shiki and the palette; CodeMirror 6; the data items), when the owner asked to continue the design system and the app's owner decision of the same day put its home page behind this repository's `004`. The owner may overturn any of them.
+Made by the design lead, under the owner's delegation, from the three memos of 2026-10-31 (Shiki and the palette; CodeMirror 6; the data items), when the owner asked to continue the design system. The owner may overturn any of them.
 
 - **The highlight palette is twelve `--code-*` tokens, each a semantic colour, no new hue.** Keywords are `primary`, strings `success`, comments `muted-foreground`, numbers and constants `foreground`, functions `foreground` at medium weight, operators and punctuation `foreground`; diff lines `success`, `destructive` and `primary`; the emphasised or active line is the opaque `card` step. *Why:* the four text tokens pass AA on every code ground in both themes (Shiki memo §4.1); red is kept for errors and deletions, so a number is never red; amber is never text. The same twelve drive Shiki in `code-block` and CodeMirror in `code-editor`, so one token change moves both.
 - **Code sits on the `muted` inset, with no border, and the groove divides its header from its code.** `001` decision 8 names code grounds among the allowed insets; the editor and the output share the ground. Line emphasis is an opaque `card` step with a left marker in the state colour and the `+`/`−` sign, never a tint (R7).
@@ -198,10 +211,10 @@ Made by the orchestrating session as design lead, under the owner's delegation, 
 - **A chart carries a name and a table.** layerchart leaves its marks invisible to assistive technology; every `ChartContainer` takes a required `label` and shows its data in a `details` "Show as table". Series colours are token classes or `var()` props; the stock injected stylesheet goes. No chart motion. Series are told by mark or label, since no two chart colours differ by 3:1.
 - **`scroll-area` is not served.** Its hover-only 10 px scrollbar fails the 24 px target rule and hides from touch and keyboard users. `pluto-theme` gains a `scrollbar` utility (`scrollbar-color: var(--input) var(--muted)`, thin), and the pattern is a native `overflow-auto` box with `tabindex="0"` and a label.
 - **The fuel meter is the native `<meter>`**, styled through pseudo-element rules in `pluto-theme`, on the `muted` track with a `primary` fill, its numbers written beside it. A meter, not a progress bar: a measurement in a known range.
-- **A pressed toggle is inverted** (`bg-foreground text-background`), as the viewer's presets and the tooltip are; stock's `bg-muted` is a 1.20:1 tint. A toggle group's `single` mode keeps bits-ui's `role="group"` of radios and browse-then-select keys, because a preset strip that selects on arrow would fire a query per key.
+- **A pressed toggle is inverted** (`bg-foreground text-background`), as the block viewer's width presets and the tooltip are; stock's `bg-muted` is a 1.20:1 tint. A toggle group's `single` mode keeps bits-ui's `role="group"` of radios and browse-then-select keys, because a preset strip that selects on arrow would fire a query per key.
 - **A popover is a dialog**: `role="dialog"`, labelled by its title when it has one, on the elevation shadow alone (no border, which would draw the hairline twice), 256 px wide by default.
 - **An accordion is wired and grooved**: `aria-controls` and a labelled `region` per item, which bits-ui omits; one caret that points right when closed and down when open, as the error page's details does; grooves between items; no tint on the open item; no animation.
-- **ANSI colour waits.** The sandbox's stderr carries no escape codes; the 32 terminal slots are a later specification's.
+- **No ANSI colour.** No consuming app's output carries escape codes, so the 32 terminal slots are not specified.
 
 After the spec review (`reviews/004-code-and-data-spec-2026-10-31.md`), three more:
 
@@ -222,17 +235,13 @@ After the change review (`reviews/004-code-and-data-pr-2026-10-31.md`), three mo
 
 ### The brand line (2026-10-31)
 
-Decided by the owner, in a session on the YC application, after a run of candidates for the tagline, the one-sentence description and the fifty-character line. Every Pluto Systems page, pitch and block that shows the brand's own words uses these; a product (such as `wasi-python-dev`) keeps its own headline under them.
+Decided by the owner after a run of candidates. Every Pluto Systems page and block that shows the brand's own words uses it; a product keeps its own headline under it.
 
-- **Tagline:** *Work runs on data.* Set with the name: **Pluto Systems. Work runs on data.** Three words and a verb; it states the thesis, that work sits on a data layer and whoever owns that layer matters, and leaves the differentiating to the sentence after it.
-- **The one sentence:** *We build a governed workspace suite for people and their agents.* "Workspace suite" names the category (what Google Workspace and Microsoft 365 are). "Governed" says permissions live on the data. "People and their agents" is the claim no competitor makes: both audiences use the same surface under the same rights.
-- **The fifty-character line** (for forms that cap it): *One governed workspace for people and their agents* (50 characters), or *Cloud operating system kernel for AI agents* (43) when the infrastructure vision should lead.
-- **What sits under it:** vfs is the system of record, one governed data layer that agents and people read, search and write; every Pluto product is a view on it. In prose, the layer is "the kernel" or "the system of record", never "platform".
-- **Words to avoid in brand copy:** "agentic" as an adjective on its own, "it's all about data", "work OS" (Monday.com's positioning), and "productivity software" as the category.
+- **Tagline:** *Work runs on data.* Set with the name: **Pluto Systems. Work runs on data.** Three words and a verb; it states the thesis, that work sits on a data layer.
 
 ### The design calls for `003`, the first blocks (2026-10-28)
 
-Made by the orchestrating session as design lead, under the owner's delegation, from the open questions in `research/2026-10-28-the-blocks-patterns-and-accessibility.md` §8 and `research/2026-10-28-blocks-how-they-are-declared-installed-and-previewed.md` §5, when the owner said "go ahead with 003". The owner may overturn any of them.
+Made by the design lead, under the owner's delegation, from the open questions in `research/2026-10-28-the-blocks-patterns-and-accessibility.md` §8 and `research/2026-10-28-blocks-how-they-are-declared-installed-and-previewed.md` §5, when the owner said "go ahead with 003". The owner may overturn any of them.
 
 - **A block is real source, previewed live, never a picture.** Each block is a `registry:block` item: one thin page plus the components an app will reuse, installed with one `add`, shown on our site in both themes at phone, tablet and desktop widths. The specification decides the page target rule, the import rule, the naming rule and where block source lives, and proves each with the smoke test (`vite build` and `svelte-check` in both scratch apps).
 - **The hero has no mark and nothing moves.** The lockup lives in the header, which is `006`'s app shell, and v2's one entrance per page, the orbit-assemble, belongs to it. The hero is an optional mono eyebrow, an ink `h1`, one sentence, one primary call to action, an optional secondary link, and an optional `media` snippet for real evidence (empty in the preview; the code block is `004`'s). Below `sm`, the display size steps from `text-5xl` to `text-2xl`; there is no size between. The feature grid is a `ul` separated by grooves, not cards.
@@ -256,9 +265,9 @@ Made by the orchestrating session as design lead, under the owner's delegation, 
 
 ### The primitives split in two, and the design calls for `002` (2026-10-28)
 
-Made by the orchestrating session as design lead, under the owner's delegation of 2026-10-27 ("act as principal designer of UI/UX"), after the three memos of 2026-10-28 (blocks, primitives, patterns). Recorded here so the specifications can cite them. The owner may overturn any of them.
+Made by the design lead, under the owner's delegation of 2026-10-27 ("act as principal designer of UI/UX"), after the three memos of 2026-10-28 (blocks, primitives, patterns). Recorded here so the specifications can cite them. The owner may overturn any of them.
 
-- **The primitives are two specifications, and the blocks two.** `002` is the first set: forms, surfaces and feedback, 26 items, which the first blocks and the home page share. `003` is the first blocks: hero and call to action, sign in, sign up, page states, the settings form, plus the block viewer. `004` is code and data: `code-block` with the groove and a token highlight palette, tabs for the editor, chart, popover, accordion, toggle, scroll-area. `005` is overlays and navigation: dropdown-menu, sheet, sidebar, breadcrumb, sonner, the chat primitives. `006` is the second blocks set: the app shell and the chat pane. *Why:* 41 primitives is too large for one builder (`context/README.md`), and this order shows the owner a block soonest while `wasi-python-dev`'s home page waits only on `002` and `004`.
+- **The primitives are two specifications, and the blocks two.** `002` is the first set: forms, surfaces and feedback, 26 items, which the first blocks and the home page share. `003` is the first blocks: hero and call to action, sign in, sign up, page states, the settings form, plus the block viewer. `004` is code and data: `code-block` with the groove and a token highlight palette, tabs for the editor, chart, popover, accordion, toggle, scroll-area. `005` is overlays and navigation: dropdown-menu, sheet, sidebar, breadcrumb, sonner, the chat primitives. `006` is the second blocks set: the app shell and the chat pane. *Why:* 41 primitives is too large for one builder (`context/README.md`), and this order shows the owner a block soonest while a consuming app's home page needs only `002` and `004`.
 - **Every primitive a block names lives in our registry, with its whole tree.** The CLI never falls back to shadcn-svelte's own registry for a bare name (blocks memo §1). So a stock item is never a URL dependency.
 - **Functional progress is not "ambient animation".** v2 §06 bans looping animation that moves while a visitor reads. A spinner on the one control that is busy is a response, and allowed, within the 200 ms budget for its start. A skeleton is static: no shimmer. The streaming indicator is `006`'s call.
 - **Form labels and button text are sentence case.** v2 §04's lowercase rule covers mono furniture: eyebrows, captions, doc IDs, dates, code. A label is an instruction to a reader, so it is prose.
@@ -276,22 +285,22 @@ Made by the orchestrating session as design lead, under the owner's delegation o
 - **No `tw-animate-css`.** Open and close motion uses `001`'s motion tokens with keyframes of our own, inside the 200 ms budget. One dependency fewer, and the budget stays enforced by tokens.
 - **Icons:** `phosphor-svelte`, pinned, named by each item that uses one.
 
-Four more, after the review of the built change (`reviews/002-…-pr-2026-10-28.md`):
+Four more, after the review of the built change (`reviews/002-the-primitives-forms-surfaces-and-feedback-pr-2026-10-28.md`):
 
 - **A tooltip reached by keyboard stays open** (finding 3). bits-ui closes a tooltip on any scroll, and focusing an off-screen trigger scrolls the page, so a sighted keyboard user never sees it. Our wrapper reopens it on the next frame while the trigger keeps keyboard focus. *Why:* SC 1.4.13 asks that content shown on focus stay visible until focus moves.
 - **A set carries its own wiring; only a group control reads it** (finding 1). `FieldSet` puts `aria-describedby` for its description and error on the `<fieldset>` itself, and sets a separate context, `pluto:field-set`, that only a group control such as `radio-group` reads. A checkbox never takes a set's ids; it takes its own `Field`'s, or none. *Why:* two checkboxes that both take the set's `id` are one broken control.
 - **A switch shows invalid only in words** (finding 9). Its track has no border to turn red, and that stays. The rule: a required consent is a checkbox, not a switch. The switch page says so.
 - **A selected table row is told by shape, and by a control** (finding 12). The row keeps the `accent` inset and adds a `primary` left edge, one focus-width wide, so it differs from a hovered row by more than colour. `aria-selected` leaves the `<tr>`: outside a grid it is not announced. A row that can be selected carries a checkbox cell, which tells assistive technology the state. *Why:* v2, state never by colour alone; SC 4.1.2.
 
-Still the owner's, unchanged: the doc-ID scheme (`006`, the footer), coloured dots on ink for the icon, and `mode-watcher` (`005`).
+Three calls were left to the owner at this point: the doc-ID scheme, coloured dots on ink for the icon, and `mode-watcher`. All three are answered above, on 2026-11-01.
 
 ### Blocks, and they shape `002` (2026-10-28)
 
-Asked after the owner saw `001` running and asked whether the system should show mock-ups of pages such as a login page, a call to action and a chat page. The session answered that shadcn calls these **blocks**: composed pages and sections served by the registry as source, previewed live in both themes and installed with one `add`, rather than pictures, which rot when tokens change. Put to the owner with options. **Answered:** blocks shape `002`, then build both; the first set is the **app shell, hero and call to action, sign in and sign up, and the chat pane**, plus "anything else as a principal designer you think is important". What follows: blocks research comes first, so `002`'s primitive list covers what the blocks need (textarea, avatar, label, scroll-area, and whatever the memos find). Then `002`, the primitives, then a blocks specification, each reviewed before build. The session, as design lead, adds to the first set the page states every app needs: empty, error, not found and loading, and a settings form. Mock-ups still have a home, the design canvas, for sketching before a specification.
+Asked after the owner saw `001` running and asked whether the system should show mock-ups of pages such as a login page, a call to action and a chat page. The design lead answered that shadcn calls these **blocks**: composed pages and sections served by the registry as source, previewed live in both themes and installed with one `add`, rather than pictures, which rot when tokens change. Put to the owner with options. **Answered:** blocks shape `002`, then build both; the first set is the **app shell, hero and call to action, sign in and sign up, and the chat pane**, plus "anything else as a principal designer you think is important". What follows: blocks research comes first, so `002`'s primitive list covers what the blocks need (textarea, avatar, label, scroll-area, and whatever the memos find). Then `002`, the primitives, then a blocks specification, each reviewed before build. The design lead adds to the first set the page states every app needs: empty, error, not found and loading, and a settings form. Mock-ups still have a home in sketches drawn before a specification.
 
 ### A fourth ground for `muted`, insets only (2026-10-27)
 
-Raised by the review of `001` (`reviews/001-tokens-and-the-registry-spec-2026-10-27.md`, finding 6): v2 §02 names three grounds, paper, raised white and ink, and the draft added a flattened ink tint for shadcn's `muted` ground. Put to the owner with three options. **Answered:** "This is a decision for you, act as principal designer of UI/UX." The orchestrating session decided as design lead: **allow the tint, for component insets only.** `muted` and `accent` are ink at 6% over paper (`#EAEAE7`) in light and paper at 10% over ink (`#2B2D32`) in dark, flattened. They are used only inside components: skeletons, tab strips, code grounds, hover and selected rows. They are never a page, section or sidebar ground. *Why:* a `muted` equal to the card surface makes skeletons and hover rows invisible without extra borders, which adds more lines than v2 wants; a flattened tint adds no hue and keeps paper and ink at 88% of a surface. The spec records this as a token rule and the literal lint cannot enforce it, so review does.
+Raised by the review of `001` (`reviews/001-tokens-and-the-registry-spec-2026-10-27.md`, finding 6): v2 §02 names three grounds, paper, raised white and ink, and the draft added a flattened ink tint for shadcn's `muted` ground. Put to the owner with three options. **Answered:** "This is a decision for you, act as principal designer of UI/UX." The design lead decided: **allow the tint, for component insets only.** `muted` and `accent` are ink at 6% over paper (`#EAEAE7`) in light and paper at 10% over ink (`#2B2D32`) in dark, flattened. They are used only inside components: skeletons, tab strips, code grounds, hover and selected rows. They are never a page, section or sidebar ground. *Why:* a `muted` equal to the card surface makes skeletons and hover rows invisible without extra borders, which adds more lines than v2 wants; a flattened tint adds no hue and keeps paper and ink at 88% of a surface. The spec records this as a token rule and the literal lint cannot enforce it, so review does.
 
 ### Bun is the runtime, not Node (2026-10-27)
 
@@ -299,26 +308,26 @@ Said by the owner while specification `001` was in review. Its draft decision 1 
 
 ### The design book's open calls, answered (2026-10-27)
 
-Asked with a recommendation after the design canvas was drawn from v2's tokens (the canvas is a private Design artifact, `https://claude.ai/artifact/TXQJcBfKNhExJ7ZsyMrrH2`, five boards: colour, type, space and mark, components, a product home template). **Answered:**
+Asked with a recommendation after a design canvas was drawn from v2's tokens (five boards: colour, type, space and mark, components, a product home template). **Answered:**
 
 - **Type stack:** IBM Plex Sans for headings and the wordmark, Geist for body, JetBrains Mono for labels, code and data. Self-hosted through `@fontsource-variable`.
 - **Spacing base:** a 4 px atom with an 8 px rhythm. The ladder is 4, 8, 12, 16, 24, 32, 48, 64, 96, with nothing off it.
 - **Red and green carry state meaning.** Fills and dots use Tombaugh Red `#E23A2E` and Hydra Green `#1E9E56`. Running text uses text-safe variants, proposed as `#C42A1F` (5.29:1 on paper) and `#157A43` (5.02:1 on paper). State is never told by colour alone.
 - **The registry is public.**
 
-What follows: the tokens-and-registry specification (`001`) takes these as fixed. Still open from v2 §10: the doc-ID scheme, and whether coloured dots may sit on ink for the icon. The canvas proposes, for the specification to confirm: an input border `#878B96` (3.17:1), and a dark theme of paper on ink with lifted accents (`#7A9BFF`, `#FF6E63`, `#4CC982`, raised `#1E2129`, soft text `#A9ADB8`, border `#656A79`), all checked against WCAG 2.2 AA by relative-luminance arithmetic.
+What follows: the tokens-and-registry specification (`001`) takes these as fixed. Two calls from v2 §10 stayed open then, the doc-ID scheme and coloured dots on ink for the icon; both are answered above, on 2026-11-01. The canvas proposes, for the specification to confirm: an input border `#878B96` (3.17:1), and a dark theme of paper on ink with lifted accents (`#7A9BFF`, `#FF6E63`, `#4CC982`, raised `#1E2129`, soft text `#A9ADB8`, border `#656A79`), all checked against WCAG 2.2 AA by relative-luminance arithmetic.
 
 ### Design book v2 is the token source (2026-10-27)
 
-Asked after `research/2026-10-27-a-shadcn-svelte-registry-and-what-pluto-already-has.md`, which found v2 still "proposed" with four open calls. The site's code also falls short of it in three places: a stock dark theme, a four-dot gap of .16 em, and red and green text that fails WCAG AA. **Answered:** accept v2 and fix as we go. What follows: the tokens-and-registry specification takes its tokens from `plutosystemshq/pluto-systems-design-book-v2.html`. It puts each of the four open calls to the owner with a recommendation, and fixes the contrast failures.
+Asked after `research/2026-10-27-a-shadcn-svelte-registry-and-what-pluto-already-has.md`, which found v2 still "proposed" with four open calls. The site's code also falls short of it in three places: a stock dark theme, a four-dot gap of .16 em, and red and green text that fails WCAG AA. **Answered:** accept v2 and fix as we go. What follows: the tokens-and-registry specification takes its tokens from the design book. It puts each of the four open calls to the owner with a recommendation, and fixes the contrast failures.
 
 ### Named dependencies are allowed (2026-10-27)
 
-The owner withdrew "no external dependencies" while scoping `wasi-python-dev`. What follows: constitution §4.6 allows a dependency that a registry item names and pins. Installing stock components from shadcn-svelte's own registry is using a dependency, not copying prior art.
+The owner withdrew "no external dependencies" while scoping the first consuming app. What follows: constitution §4.6 allows a dependency that a registry item names and pins. Installing stock components from shadcn-svelte's own registry is using a dependency, not copying prior art.
 
 ### A separate repository, `plutosystemsco/design-system` (2026-10-27)
 
-Decided while scoping `wasipython.dev`, Pluto Systems' first full web application. **Answered:** the design system is its own repository, built like shadcn: a place where all the styling and components live, developed in tandem with `plutosystemsco/wasi-python-dev`. Its starting material is the existing brand work in the `plutosystemshq` repository: the design book (IBM Plex type, colour, the wordmark and the four-dot mark) and the site's first shadcn-svelte components.
+Decided while scoping Pluto Systems' first full web application. **Answered:** the design system is its own repository, built like shadcn: a place where all the styling and components live, developed alongside the apps that use it. Its starting material is the existing brand work: the design book (IBM Plex type, colour, the wordmark and the four-dot mark) and the company site's first shadcn-svelte components.
 
 ### A shadcn-svelte registry first, a CLI later (2026-10-27)
 

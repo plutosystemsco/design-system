@@ -93,7 +93,7 @@
 </script>
 
 <!--
-  The pointer's affordance (004 decision 10): a small panel raised by
+  The pointer's affordance: a small panel raised by
   elevation, as a popover is. Its indicator is a token class the series' config
   names as `swatch`, rendered only when there is one, so no empty square and
   no style attribute. The table under the figure is the keyboard path.

@@ -3,7 +3,7 @@
 	"name": "kbd",
 	"title": "Kbd",
 	"type": "registry:ui",
-	"author": "Pluto Systems <https://plutosystems.co>",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 	"description": "A keyboard key, or a group of keys, set in the mono face on an inset.",
 	"registryDependencies": [
 		"utils",

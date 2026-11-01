@@ -2,9 +2,8 @@
   import { tv, type VariantProps } from "tailwind-variants/lite";
 
   /**
-   * A two-state button (004 decision 13). Pressed is inverted, the recipe the
-   * viewer's presets and the tooltip use, so the state is told at a glance
-   * and never by a faint tint. `data-state`, not `aria-pressed`: a toggle
+   * A two-state button. Pressed is inverted, the recipe the tooltip uses, so
+   * the state is told at a glance and never by a faint tint. `data-state`, not `aria-pressed`: a toggle
    * group's single mode marks its items `aria-checked`, and bits-ui sets
    * `data-state="on"` in both modes.
    */

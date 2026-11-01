@@ -93,7 +93,7 @@ export const ITEMS_004 = [
   "chart",
   "meter",
 ];
-/** 005's 11 items (decision 4), and their pages. */
+/** 005's 11 items (005 decision 4), and their pages. */
 export const ITEMS_005 = [
   "theme",
   "dropdown-menu",
@@ -107,12 +107,11 @@ export const ITEMS_005 = [
   "marker",
   "composer",
 ];
-/** 006's 2 blocks (decision 3), and their pages. */
+/** 006's 2 blocks (006 decision 3), and their pages. */
 export const ITEMS_006 = ["app-shell", "chat"];
-/** The 26 items 002 adds: every item after the foundation that 003, 004, 005 and 006 did not. */
-/** 007 decision 7: the one new item, and its page. */
+/** 007 decision 7: 007's one item. */
 export const ITEMS_007 = ["code-languages"];
-/** The 26 items 002 adds: every item after the foundation that 003, 004, 005 and 007 did not. */
+/** The 26 items 002 adds: every item after the foundation that 003, 004, 005, 006 and 007 did not. */
 export const ITEMS_002 = ITEMS.slice(7).filter(
   (name) =>
     ![
@@ -129,8 +128,6 @@ export const ITEMS_002 = ITEMS.slice(7).filter(
     !ITEMS_006.includes(name) &&
     !ITEMS_007.includes(name),
 );
-/** Kept for 002's checks: the 26 items 002 added. */
-export const NEW_ITEMS = ITEMS_002;
 /** The 7 items 003 adds. */
 export const ITEMS_003 = [
   "status",
@@ -150,25 +147,26 @@ export const BLOCKS = [
   "settings",
   ...ITEMS_006,
 ];
-/** The 7 new item pages of 003. */
-export const NEW_PAGES = ITEMS_003.map((name) => `/items/${name}/`);
-export const NEW_PAGES_004 = ITEMS_004.map((name) => `/items/${name}/`);
-/** The 11 new item pages of 005. */
-export const NEW_PAGES_005 = ITEMS_005.map((name) => `/items/${name}/`);
-/** The 2 new item pages of 006. */
-export const NEW_PAGES_006 = ITEMS_006.map((name) => `/items/${name}/`);
-/** The new item page of 007. */
-export const NEW_PAGES_007 = ITEMS_007.map((name) => `/items/${name}/`);
+/** The 7 item pages of 003. */
+export const PAGES_003 = ITEMS_003.map((name) => `/items/${name}/`);
+/** The 10 item pages of 004. */
+export const PAGES_004 = ITEMS_004.map((name) => `/items/${name}/`);
+/** The 11 item pages of 005. */
+export const PAGES_005 = ITEMS_005.map((name) => `/items/${name}/`);
+/** The 2 item pages of 006. */
+export const PAGES_006 = ITEMS_006.map((name) => `/items/${name}/`);
+/** The item page of 007. */
+export const PAGES_007 = ITEMS_007.map((name) => `/items/${name}/`);
 /** The site pages: the catalogue and one page per item. */
 export const PAGES = ["/", ...ITEMS.map((name) => `/items/${name}/`)];
 /** The catalogue and 002's 32 item pages. */
 export const PAGES_002 = PAGES.filter(
   (p) =>
-    !NEW_PAGES.includes(p) &&
-    !NEW_PAGES_004.includes(p) &&
-    !NEW_PAGES_005.includes(p) &&
-    !NEW_PAGES_006.includes(p) &&
-    !NEW_PAGES_007.includes(p),
+    !PAGES_003.includes(p) &&
+    !PAGES_004.includes(p) &&
+    !PAGES_005.includes(p) &&
+    !PAGES_006.includes(p) &&
+    !PAGES_007.includes(p),
 );
 
 /** The views (003 decision 16; 006 decision 12), each with its block and label. */
@@ -204,7 +202,7 @@ const SETTINGS_CONTROLS = [
   "input:Name",
   "input:Email address",
   "select:Time zone",
-  "checkbox:When a run fails",
+  "checkbox:When something fails",
   "checkbox:A weekly summary",
   "radio:Match the system",
 ];

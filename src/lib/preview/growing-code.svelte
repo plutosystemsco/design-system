@@ -10,7 +10,7 @@
     label = "Start",
   }: { code: string; language: string; label?: string } = $props();
 
-  // Nothing moves until the visitor asks (v2 §06): the string grows only after
+  // Nothing moves until the visitor asks (the design book §06): the string grows only after
   // the button is pressed, a few characters at a time.
   let shown = $state("");
   let timer: ReturnType<typeof setInterval> | undefined;

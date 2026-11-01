@@ -1,5 +1,5 @@
 /**
- * The real `add` into two scratch apps (decision 25): app A on SvelteKit 3
+ * The real `add` into two scratch apps (001 decision 25): app A on SvelteKit 3
  * with `#lib`, app B on SvelteKit 2 with `$lib`. The CLI is this repository's
  * locked install, run under Bun, against this repository's `vite dev`.
  */

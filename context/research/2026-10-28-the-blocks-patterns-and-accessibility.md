@@ -2,8 +2,8 @@
 
 - **Status:** complete
 - **Date:** 2026-10-28
-- **Owner:** Clay Gendron (research executed by an agent, Claude, sub-agent of the orchestrating session)
-- **Question:** The registry will serve seven first **blocks**: the app shell, the hero with call to action and feature grid, sign in, sign up, the chat pane, the page states (empty, error, not found, loading) and the settings form. For each, what do good systems agree on? Which accessibility rules bind it? What does design book v2 say? How does it change across screen widths?
+- **Author:** the design lead
+- **Question:** The registry will serve seven first **blocks**: the app shell, the hero with call to action and feature grid, sign in, sign up, the chat pane, the page states (empty, error, not found, loading) and the settings form. For each, what do good systems agree on? Which accessibility rules bind it? What does the design book say? How does it change across screen widths?
 - **What it blocks:** the primitive list of `002`, which must cover what these blocks need, and the blocks specification after it (decisions.md, "Blocks, and they shape `002`", 2026-10-28).
 
 ## How to read this memo
@@ -12,14 +12,14 @@ Every claim carries a label.
 
 - **EXECUTED**: we ran it and saw the result, on 2026-10-28, in this repository or its prior-art clone. Mostly `grep` and `ls` over source.
 - **READ**: a source says so. Each source is linked. **Every web source was read on 2026-10-28.** The local sources were read the same day:
-  - design book v2, `plutosystemshq/pluto-systems-design-book-v2.html`, cited as *v2* with its section and line;
-  - the shadcn-svelte clone at `context/prior_art/shadcn-svelte`, commit `6149e14` (MIT, recorded in `prior_art/README.md`), cited as *the clone* with a path under `docs/src/lib/registry/`;
+  - the Pluto Systems design book, version 2, an internal document not published, cited as *the design book* with its section and line;
+  - the shadcn-svelte clone at `context/prior_art/shadcn-svelte`, commit `6149e14` (MIT, recorded in `context/prior_art/README.md`), cited as *the clone* with a path under `docs/src/lib/registry/`;
   - specification `001`, cited by decision number.
 - **INFERRED**: our reasoning.
 
 Prior art is described in words. No markup or code is copied from it.
 
-ChatGPT and Claude.ai could not be studied first-hand. There was no signed-in session, and neither vendor publishes a page of keyboard shortcuts that we could fetch. Third-party guides disagree with each other. So the chat pane leans on published component libraries and accessibility guidance, and treats claims about those two products as weak.
+ChatGPT and Anthropic's chat assistant could not be studied first-hand. No account was used, and neither vendor publishes a page of keyboard shortcuts that we could fetch. Third-party guides disagree with each other. So the chat pane leans on published component libraries and accessibility guidance, and treats claims about those two products as weak.
 
 ### Terms
 
@@ -36,8 +36,8 @@ ChatGPT and Claude.ai could not be studied first-hand. There was no signed-in se
 - **Composer:** the text box and buttons at the bottom of a chat where the user writes a message.
 - **Streaming:** the reply arrives in small pieces, called **tokens**, and is shown as it arrives.
 - **IME:** an input method editor, the software that composes characters for Japanese, Chinese, Korean and other scripts. Enter often confirms its composition.
-- **Groove:** v2's one line primitive, a hairline with a 1 px white line beneath it (v2 §05, line 533).
-- **Ground:** a surface that text sits on. v2 names three: paper, raised white and ink. `muted` is a fourth, for component insets only (decisions.md, 2026-10-27).
+- **Groove:** The design book's one line primitive, a hairline with a 1 px white line beneath it (the design book §05, line 533).
+- **Ground:** a surface that text sits on. The design book names three: paper, raised white and ink. `muted` is a fourth, for component insets only (decisions.md, 2026-10-27).
 - **SC:** a WCAG 2.2 success criterion, cited by number, with its W3C Understanding page.
 
 ## 0. What binds every block
@@ -49,7 +49,7 @@ These hold for all seven. Each block section below adds only what is particular 
 - **Target size.** SC 2.5.8 (AA): a pointer target is at least 24 by 24 CSS px, unless a 24 px circle centred on it touches no other target or circle, or an equivalent control meets the size, or it sits inline in text (READ, [Understanding 2.5.8](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html)).
 - **Focus not obscured.** SC 2.4.11 (AA): a focused component is "not entirely hidden due to author-created content". The page names "sticky footers, sticky headers, and non-modal dialogs" as the usual culprits. CSS `scroll-padding` is a sufficient technique, C43 (READ, [Understanding 2.4.11](https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html)).
 - **Focus appearance.** SC 2.4.13 is **AAA**, not AA. It asks for an indicator at least as large as a 2 CSS px perimeter of the control, changing by 3:1 between focused and unfocused pixels. A solid 2 px outline outside the control meets the size part (READ, [Understanding 2.4.13](https://www.w3.org/WAI/WCAG22/Understanding/focus-appearance.html)). `001` decision 13 already draws a 2 px solid `ring` outline at 2 px offset that passes 3:1 against the grounds. INFERRED: that meets 2.4.13's size, and its contrast where the ground is the unfocused pixel. So blocks can claim it without extra work, as long as no block replaces the global ring.
-- **Reflow.** SC 1.4.10 (AA): content works at 320 CSS px wide with no scrolling in two directions. Data tables, and preformatted text whose layout carries meaning, are exempt (READ, [Understanding 1.4.10](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html)). The page names Python's indentation as such a case. That matters for `wasi-python-dev`'s code output.
+- **Reflow.** SC 1.4.10 (AA): content works at 320 CSS px wide with no scrolling in two directions. Data tables, and preformatted text whose layout carries meaning, are exempt (READ, [Understanding 1.4.10](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html)). The page names Python's indentation as such a case. That matters for a code-running product's output.
 - **Status messages.** SC 4.1.3 (AA): status messages must reach assistive technology without taking focus. `role=status` (ARIA22) suits results and state; `role=log` (ARIA23) suits sequential updates; `role=alert` (ARIA19) suits errors. A listed failure is `role=alert` or `aria-live=assertive` "on content which is not important and time-sensitive" (READ, [Understanding 4.1.3](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html)).
 - **Live regions must exist before they change.** "Establish the live region before updating its content… The most reliable way… is to include them in the initial markup." `polite` speaks "whenever the user is idle"; `assertive` "will interrupt any announcement a screen reader is currently making" (READ, [MDN, ARIA live regions](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Guides/Live_regions)).
 - **Labels.** SC 3.3.2 (A): "Labels or instructions are provided when content requires user input" (READ, [Understanding 3.3.2](https://www.w3.org/WAI/WCAG22/Understanding/labels-or-instructions.html)). INFERRED from its glossary: a placeholder vanishes on typing, so it is not a label.
@@ -58,29 +58,31 @@ These hold for all seven. Each block section below adds only what is particular 
 
 ### 0.2 Design-book rules common to all
 
-- **Grounds.** "Grounds are paper, raised white, or ink." No brand-colour tint as a section background (READ, v2 §03, line 438). `muted` and `accent` are for component insets only: skeletons, tab strips, code grounds, hover and selected rows. Never a page, section or sidebar ground (READ, decisions.md, 2026-10-27; `001` decision 8).
-- **One accent per surface.** "Any other surface spends at most one" of the four colours. The mark is "the page's one full-palette moment" (READ, v2 §01 law 2, line 268). Red and green carry state: "blue acts, red stops, amber cautions, green confirms". "Functional state semantics… are the sanctioned non-mark use of red and green" (READ, v2 §03, line 430). State is never told by colour alone (READ, decisions.md, 2026-10-27).
-- **The budget.** "Paper + ink ≥ 88% of any surface. Headings and hero copy are always Ink" (READ, v2 §03, line 422).
-- **No colour as decoration.** "A coloured element is an action, a state, or the mark." No colour dots on dark grounds (READ, v2 §03, lines 434–439).
-- **Space.** The ladder 4, 8, 12, 16, 24, 32, 48, 64, 96. "Component-internal spacing uses the small steps, layout uses 32+" (READ, v2 §05, line 523; `001` decision 10).
-- **Radius.** 8 px for cards, inputs and buttons. Full round "for dot-derived elements only. Nothing in between" (READ, v2 §05, line 527; `001` decision 9).
-- **Honest pixels.** "Shadows only where elevation means something (menus, dialogs)… Interactive elements look pressable: visible borders, real active states" (READ, v2 §05, line 539).
-- **Motion.** One entrance per page, the mark's orbit-assemble, at most 900 ms. "Everything else is response… each ≤ 200 ms." Reduced motion "gets the composed end state". **Banned:** "scroll-jacking, parallax, ambient/looping animation, animated gradients, anything that moves while the visitor is reading" (READ, v2 §06, lines 562–565).
-- **The ban list.** No glassmorphism: "no frosted glass, no blur panels" (line 651). No terminal cosplay: "no fake prompts as marketing copy, no blinking-cursor headlines… Real terminal output in real docs is welcome" (line 650). Never "sparse and broken": "inputs keep visible borders and labels, links look like links, buttons have shapes" (line 655) (all READ, v2 §09).
-- **Labels are lowercase.** "Eyebrows, captions, doc IDs, dates, code. Labels are lowercase… Prose stays sentence case" (READ, v2 §04, line 470).
-- **Failure states.** "Errors, empty states, and 404s carry the warmest copy in the system… Explain what happened and what to do next; never apologize vaguely" (READ, v2 §07, line 590).
+- **Grounds.** "Grounds are paper, raised white, or ink." No brand-colour tint as a section background (READ, the design book §03, line 438). `muted` and `accent` are for component insets only: skeletons, tab strips, code grounds, hover and selected rows. Never a page, section or sidebar ground (READ, decisions.md, 2026-10-27; `001` decision 8).
+- **One accent per surface.** "Any other surface spends at most one" of the four colours. The mark is "the page's one full-palette moment" (READ, the design book §01 law 2, line 268). Red and green carry state: "blue acts, red stops, amber cautions, green confirms". "Functional state semantics… are the sanctioned non-mark use of red and green" (READ, the design book §03, line 430). State is never told by colour alone (READ, decisions.md, 2026-10-27).
+- **The budget.** "Paper + ink ≥ 88% of any surface. Headings and hero copy are always Ink" (READ, the design book §03, line 422).
+- **No colour as decoration.** "A coloured element is an action, a state, or the mark." No colour dots on dark grounds (READ, the design book §03, lines 434–439).
+- **Space.** The ladder 4, 8, 12, 16, 24, 32, 48, 64, 96. "Component-internal spacing uses the small steps, layout uses 32+" (READ, the design book §05, line 523; `001` decision 10).
+- **Radius.** 8 px for cards, inputs and buttons. Full round "for dot-derived elements only. Nothing in between" (READ, the design book §05, line 527; `001` decision 9).
+- **Honest pixels.** "Shadows only where elevation means something (menus, dialogs)… Interactive elements look pressable: visible borders, real active states" (READ, the design book §05, line 539).
+- **Motion.** One entrance per page, the mark's orbit-assemble, at most 900 ms. "Everything else is response… each ≤ 200 ms." Reduced motion "gets the composed end state". **Banned:** "scroll-jacking, parallax, ambient/looping animation, animated gradients, anything that moves while the visitor is reading" (READ, the design book §06, lines 562–565).
+- **The ban list.** No glassmorphism: "no frosted glass, no blur panels" (line 651). No terminal cosplay: "no fake prompts as marketing copy, no blinking-cursor headlines… Real terminal output in real docs is welcome" (line 650). Never "sparse and broken": "inputs keep visible borders and labels, links look like links, buttons have shapes" (line 655) (all READ, the design book §09).
+- **Labels are lowercase.** "Eyebrows, captions, doc IDs, dates, code. Labels are lowercase… Prose stays sentence case" (READ, the design book §04, line 470).
+- **Failure states.** "Errors, empty states, and 404s carry the warmest copy in the system… Explain what happened and what to do next; never apologize vaguely" (READ, the design book §07, line 590).
 
 **Where the design book is silent on all blocks** (INFERRED):
 
-- Whether "labels are lowercase" covers form-field labels and button text, or only mono eyebrows and captions. The book has no forms.
+- Whether "labels are lowercase" covers form-field labels and button text, or only mono eyebrows and captions. The design book has no forms.
 - Whether a functional error in red on a surface that already spends blue, on its primary button and focus ring, breaks "one accent per surface". We read §03's state semantics as sanctioned outside the budget. The specification should say so.
 - Loops. Spinners, skeleton shimmer and streaming indicators all loop. The ban on "ambient/looping animation" may or may not cover functional progress indicators.
+
+All three are answered since (decisions.md, "The primitives split in two, and the design calls for `002`"): form labels and button text are sentence case; state colour is outside the one-accent budget; and a spinner on the one busy control is a response, not ambient animation, while a skeleton is static.
 
 ### 0.3 Breakpoints
 
 - Tailwind's defaults: `sm` 640 px, `md` 768 px, `lg` 1024 px, `xl` 1280 px, `2xl` 1536 px, all min-width (READ, [Tailwind, responsive design](https://tailwindcss.com/docs/responsive-design)). Container queries run from `@3xs` 256 px to `@7xl` 1280 px (same page).
 - shadcn-svelte's `IsMobile` hook defaults to 768 px (READ, the clone, `hooks/is-mobile.svelte.ts`).
-- v2's own page caps content at 960 px with a 24 px gutter (READ, v2 line 39). Body text is capped at 66 ch (line 45). The stated measure is 60–75 ch (§04, line 465).
+- The design book's own page caps content at 960 px with a 24 px gutter (READ, the design book, line 39). Body text is capped at 66 ch (line 45). The stated measure is 60–75 ch (§04, line 465).
 
 ## 1. The app shell
 
@@ -136,33 +138,33 @@ Sources: the clone's sidebar component and 16 sidebar blocks; [Carbon, UI shell 
 ### 1.3 What the design book binds (READ unless marked)
 
 - **Grounds.** The sidebar is a ground: `sidebar` is `paper` in light and `ink` in dark, "set apart by a groove, not a tint" (`001` decision 8). The header and footer are paper. `sidebar-accent`, the inset, is only for hover and selected rows.
-- **The groove.** The book's own section dividers and footer are its reference: a 1 px ink hairline at 10% with a 1 px raised line beneath (v2 lines 51 and 217; §05 line 535). INFERRED: the header's bottom edge and the footer's top edge are grooves.
-- **The lockup sits top-left in the header.** v2 does not say where it sits. NN/g says to "place the logo prominently in the top-left corner" (READ, [NN/g, homepage principles](https://www.nngroup.com/articles/homepage-design-principles/), Huei-Hsin Wang, 2024-03-15).
-- **Minimum size.** "Below 20 px of lockup height, use the mark alone" (v2 §02, line 361). INFERRED: the 48 px icon rail and the narrow mobile header show the mark alone, labelled.
-- **Clearspace.** "One dot-pair height on all sides of any lockup" (v2 §02, line 356).
-- **The footer.** "Every page: build commit hash, build date, doc ID, link to the site's own source, and one plain sentence: 'Pluto Systems is a public benefit corporation.' Stated as fact, never a badge" (v2 §07, line 586). The book's own footer is the lockup at 20 px beside mono lines, under a groove (v2 lines 217–220, 702).
-- **The dating rule.** "No public surface without a visible last-updated date" (v2 §07, line 596).
-- **No blur.** A sticky header must be opaque (v2 §09, line 651).
-- **Shadows.** The mobile sheet is a dialog, so it may carry elevation (v2 §05, line 539). The sidebar on desktop may not.
-- **Motion.** Sidebar collapse and the sheet's slide are micro-feedback, at most 200 ms (v2 §06, line 563). shadcn animates the sidebar's width over 200 ms, linear (READ, the clone, `sidebar.svelte`), which fits.
-- **Gaps the book does not cover** (INFERRED):
-  - **A vertical groove.** The groove is drawn as a top border with a highlight beneath (`001` decision 13). A sidebar's edge needs a vertical form. Which side takes the highlight is undecided.
-  - **The doc ID in the footer.** The scheme is still an open owner call (handoff.md; `001` decision 28).
-  - **The sheet's scrim.** v2 says nothing about the dimmed overlay behind a modal sheet, and bans blur.
-  - **Whether the header mark animates.** "One per page" is clear for a page load. It is unclear after client-side navigation, and when a hero below also holds the mark.
+- **The groove.** The design book's own section dividers and footer are its reference: a 1 px ink hairline at 10% with a 1 px raised line beneath (the design book, lines 51 and 217; §05 line 535). INFERRED: the header's bottom edge and the footer's top edge are grooves.
+- **The lockup sits top-left in the header.** The design book does not say where it sits. NN/g says to "place the logo prominently in the top-left corner" (READ, [NN/g, homepage principles](https://www.nngroup.com/articles/homepage-design-principles/), Huei-Hsin Wang, 2024-03-15).
+- **Minimum size.** "Below 20 px of lockup height, use the mark alone" (the design book §02, line 361). INFERRED: the 48 px icon rail and the narrow mobile header show the mark alone, labelled.
+- **Clearspace.** "One dot-pair height on all sides of any lockup" (the design book §02, line 356).
+- **The footer.** "Every page: build commit hash, build date, doc ID, link to the site's own source, and one plain sentence: 'Pluto Systems is a public benefit corporation.' Stated as fact, never a badge" (the design book §07, line 586). The design book's own footer is the lockup at 20 px beside mono lines, under a groove (the design book, lines 217–220, 702).
+- **The dating rule.** "No public surface without a visible last-updated date" (the design book §07, line 596).
+- **No blur.** A sticky header must be opaque (the design book §09, line 651).
+- **Shadows.** The mobile sheet is a dialog, so it may carry elevation (the design book §05, line 539). The sidebar on desktop may not.
+- **Motion.** Sidebar collapse and the sheet's slide are micro-feedback, at most 200 ms (the design book §06, line 563). shadcn animates the sidebar's width over 200 ms, linear (READ, the clone, `sidebar.svelte`), which fits.
+- **Gaps the design book does not cover** (INFERRED):
+  - **A vertical groove.** The groove is drawn as a top border with a highlight beneath (`001` decision 13). A sidebar's edge needs a vertical form. Which side takes the highlight is undecided here. `005` decision 5 draws it as `groove-s`, owned by the inset: the hairline, then the light.
+  - **The doc ID in the footer.** The scheme is `PS-<series>-<NNNN>`, and a footer takes the ID as a string prop (decisions.md, "The theme mechanism, the doc-ID scheme and the footer's sentence").
+  - **The sheet's scrim.** The design book says nothing about the dimmed overlay behind a modal sheet, and bans blur. `002` adds a scrim token from ink, with no blur (`002` decision 7).
+  - **Whether the header mark animates.** "One per page" is clear for a page load. It is unclear after client-side navigation, and when a hero below also holds the mark. `006` plays the entrance once per full document load, never on a client-side navigation, and the hero holds no mark (decisions.md, "The design calls for `006`, the app shell and the chat pane"; decisions.md, "The design calls for `003`, the first blocks").
 
 ### 1.4 Responsive behaviour
 
 - **Below 768 px** (`md`) the sidebar becomes a sheet opened from a header button (READ, the clone). Carbon folds header links into the same panel (READ).
 - **At 768 px and above** the sidebar is inline, collapsible to off-canvas or a 48 px icon rail (READ, the clone).
 - INFERRED: at 320 px the header holds the mark alone, the menu button and at most one utility. Utilities beyond that move into the sheet.
-- INFERRED: the footer's mono lines wrap to a single column below `sm`. The book's footer row already wraps (v2 line 218, `flex-wrap:wrap`).
+- INFERRED: the footer's mono lines wrap to a single column below `sm`. The design book's footer row already wraps (the design book, line 218, `flex-wrap:wrap`).
 
 ## 2. The hero, call to action and feature grid
 
 ### 2.1 The converged pattern (READ)
 
-Sources: [NN/g, homepage principles](https://www.nngroup.com/articles/homepage-design-principles/) (2024-03-15); [NN/g, "Get Started" stops users](https://www.nngroup.com/articles/get-started/) (Aurora Harley and Kim Flaherty, 2017-08-20); [GOV.UK, start using a service](https://design-system.service.gov.uk/patterns/start-using-a-service/); [Geist, grid](https://vercel.com/geist/grid.md); v2's own cover (lines 228–243). shadcn's blocks pages list no hero or marketing blocks. Their categories are Featured, Sidebar, Login and Signup on ui.shadcn.com, plus OTP and Calendar on shadcn-svelte.com (READ, [ui.shadcn.com/blocks](https://ui.shadcn.com/blocks); [shadcn-svelte.com/blocks](https://www.shadcn-svelte.com/blocks)). Carbon for IBM.com's lead-space guidance is restricted to IBM staff. A public fragment says it "always sits at the top of the page" and helps users anticipate the content (READ, search result, Carbon for IBM.com example page). It is too thin to rely on.
+Sources: [NN/g, homepage principles](https://www.nngroup.com/articles/homepage-design-principles/) (2024-03-15); [NN/g, "Get Started" stops users](https://www.nngroup.com/articles/get-started/) (Aurora Harley and Kim Flaherty, 2017-08-20); [GOV.UK, start using a service](https://design-system.service.gov.uk/patterns/start-using-a-service/); [Geist, grid](https://vercel.com/geist/grid.md); the design book's own cover (lines 228–243). shadcn's blocks pages list no hero or marketing blocks. Their categories are Featured, Sidebar, Login and Signup on ui.shadcn.com, plus OTP and Calendar on shadcn-svelte.com (READ, [ui.shadcn.com/blocks](https://ui.shadcn.com/blocks); [shadcn-svelte.com/blocks](https://www.shadcn-svelte.com/blocks)). Carbon for IBM.com's lead-space guidance is restricted to IBM staff. A public fragment says it "always sits at the top of the page" and helps users anticipate the content (READ, search result, Carbon for IBM.com example page). It is too thin to rely on.
 
 **What they agree on.**
 
@@ -178,31 +180,31 @@ Sources: [NN/g, homepage principles](https://www.nngroup.com/articles/homepage-d
 
 - **The headline is the page's `h1`** (READ, W3C headings tutorial, §1.2 above).
 - **Link or button.** INFERRED from HTML semantics: a call to action that goes to another page is a link styled as a button, not a `<button>`.
-- **Link purpose.** INFERRED: a specific label serves SC 2.4.4 (link purpose in context) as well as the NN/g advice. Not fetched today.
+- **Link purpose.** INFERRED: a specific label serves SC 2.4.4 (link purpose in context) as well as the NN/g advice. Not fetched for this memo.
 - **Feature items.** INFERRED: a list (`ul`) whose items each carry a heading one rank below the section's. A wholly clickable card holds one link, which gets the focus ring.
 - **Images and video.** Decorative images get empty `alt`. Video that plays by itself for over five seconds needs a pause control (READ, Understanding 2.2.2).
-- **Motion.** The mark's entrance is interaction-free motion. Under reduced motion it shows the composed end state (READ, v2 §06, line 564; `001` decision 14).
+- **Motion.** The mark's entrance is interaction-free motion. Under reduced motion it shows the composed end state (READ, the design book §06, line 564; `001` decision 14).
 
 ### 2.3 What the design book binds (READ unless marked)
 
-- **Display type.** 44 px, Plex Sans 700, −3% tracking, "One per page, Ink only" (v2 §04, line 491). "Headings and hero copy are always Ink, never a brand color" (§03, line 422).
+- **Display type.** 44 px, Plex Sans 700, −3% tracking, "One per page, Ink only" (the design book §04, line 491). "Headings and hero copy are always Ink, never a brand color" (§03, line 422).
 - **One accent.** The primary call to action spends blue. Nothing else in the hero spends colour, except the mark (§01 law 2).
-- **The one hello.** The orbit-assemble entrance is "one per page… ≤ 900 ms total, ease-out, reading order. This page's cover is the reference" (§06, line 562). v2's cover sets the lockup at `clamp(56px, 11vw, 110px)` (line 101) and runs its keyframes only under `prefers-reduced-motion: no-preference` (lines 105–113). One delight slot per view, held by the mark (§01, line 285).
+- **The one hello.** The orbit-assemble entrance is "one per page… ≤ 900 ms total, ease-out, reading order. This page's cover is the reference" (§06, line 562). The design book's cover sets the lockup at `clamp(56px, 11vw, 110px)` (line 101) and runs its keyframes only under `prefers-reduced-motion: no-preference` (lines 105–113). One delight slot per view, held by the mark (§01, line 285).
 - **No tinted sections.** The hero and grid sit on paper or raised white, never a tint (§03, line 438).
 - **Feature icons.** "No colour as decoration" (§03). INFERRED: icons are ink or ink-soft, monochrome. The four dots as bullets would put the four colours together outside the mark, which §03 forbids.
 - **Every element earns its place.** It must "inform, orient, or delight" (§01 law 4). INFERRED: a feature tile with no claim a reader can check is cut.
-- **Terminal cosplay.** "No fake prompts as marketing copy, no blinking-cursor headlines." "Real terminal output in real docs is welcome" (§09, line 650). INFERRED: for `wasi-python-dev`, a hero that shows a real run's real output is allowed. A typed-out fake prompt is not.
-- **Spacing.** Layout steps are 32 and up (§05). v2's own sections are 96 px apart, divided by a groove (line 51).
+- **Terminal cosplay.** "No fake prompts as marketing copy, no blinking-cursor headlines." "Real terminal output in real docs is welcome" (§09, line 650). INFERRED: for a code-running product, a hero that shows a real run's real output is allowed. A typed-out fake prompt is not.
+- **Spacing.** Layout steps are 32 and up (§05). The design book's own sections are 96 px apart, divided by a groove (line 51).
 - **Gaps** (INFERRED):
-  - **Display at phone width.** The scale has one display step, 44 px, and the next is 28. v2's own `h2` uses a fluid `clamp(24px, 4vw, 32px)` (line 43), which is off its own scale. The specification must decide whether the display stays 44 px at 320 px or steps down to 28.
-  - **Where the mark sits in the hero** when the header already holds the lockup. Two lockups on one screen may break "one full-palette moment".
-  - **Hero imagery.** v2 has no rule for screenshots or illustrations.
+  - **Display at phone width.** The scale has one display step, 44 px, and the next is 28. The design book's own `h2` uses a fluid `clamp(24px, 4vw, 32px)` (line 43), which is off its own scale. The specification must decide whether the display stays 44 px at 320 px or steps down to 28. `003` steps it from `text-5xl` to `text-2xl` below `sm` (decisions.md, "The design calls for `003`, the first blocks").
+  - **Where the mark sits in the hero** when the header already holds the lockup. Two lockups on one screen may break "one full-palette moment". `003`'s hero has no mark; the lockup lives in the shell's header (same entry).
+  - **Hero imagery.** The design book has no rule for screenshots or illustrations. `003`'s hero takes an optional `media` snippet for real evidence (same entry).
 
 ### 2.4 Responsive behaviour
 
 - INFERRED from Geist and Tailwind's breakpoints: the grid is 1 column below `sm`, 2 from `sm` or `md`, 3 from `lg`.
 - INFERRED: a split hero, with copy beside a visual, stacks below `lg`, copy first.
-- INFERRED: the text column is capped at 60–75 ch (v2 §04) and the page at 960 px plus gutters (v2 line 39).
+- INFERRED: the text column is capped at 60–75 ch (the design book §04) and the page at 960 px plus gutters (the design book, line 39).
 - INFERRED: calls to action go full width below `sm`, primary first.
 
 ## 3. Sign in
@@ -269,13 +271,13 @@ Sources: the clone's `login-01` to `login-05` and `otp-01` to `otp-05`; [Carbon,
 - **Red says the error.** It is the text-safe `destructive` token for message text, and never alone: text, plus an icon or the field's `aria-invalid` styling (`001` decision 8; decisions.md).
 - **Green says success**, such as "Check your email", in `success` text with a text cue.
 - **One accent.** The submit button spends blue. Social-login buttons are secondary, with borders, not brand colours (§01 law 2; INFERRED for the social buttons).
-- **The lockup above the form.** v2 does not say. INFERRED: the lockup at the top of the column, or in the app shell's header if the shell wraps the page. Not both.
+- **The lockup above the form.** The design book does not say. INFERRED: the lockup at the top of the column, or in the app shell's header if the shell wraps the page. Not both.
 - **Motion.** The submit button's pending state is micro-feedback, at most 200 ms to appear (§06).
-- **Gaps** (INFERRED): third-party logos inside social buttons carry their own colours, which a single-accent surface cannot hold. v2 does not cover them. The specification decides: no social login in the first set, or monochrome marks.
+- **Gaps** (INFERRED): third-party logos inside social buttons carry their own colours, which a single-accent surface cannot hold. The design book does not cover them. The specification decides: no social login in the first set, or monochrome marks. `003` has no social sign-in (decisions.md, "The design calls for `003`, the first blocks").
 
 ### 3.4 Responsive behaviour
 
-- The form column is capped near 384 px (`max-w-sm`) at every width (READ, the clone). Below that, it fills the screen with a 24 px gutter (INFERRED, v2 line 39).
+- The form column is capped near 384 px (`max-w-sm`) at every width (READ, the clone). Below that, it fills the screen with a 24 px gutter (INFERRED, the design book, line 39).
 - A split-screen variant shows its second panel only from `lg` (READ, `login-02`).
 - web.dev warns to keep the submit button clear of the on-screen keyboard (READ).
 
@@ -296,7 +298,7 @@ Sources: the clone's `signup-01` to `signup-05`; [GOV.UK, create accounts](https
 - **No confirm field.** GOV.UK: a confirm-password field "isn't necessary", since the show/hide toggle lets users check (READ, password input). web.dev: "Don't make users re-enter emails or passwords" (READ).
 - **Rules up front.** web.dev: show password rules before typing, tied to the field with `aria-describedby` (READ). GOV.UK: if length is restricted, say so with a validation message, never a silent `maxlength` (READ).
 
-**Where they differ.** shadcn keeps the confirm field. GOV.UK and web.dev drop it. shadcn asks for a full name; GOV.UK asks only for what the service needs. Success: none of the shadcn blocks shows a post-submit state. The usual next screen is "check your email" (INFERRED; GOV.UK has a separate "confirm an email address" pattern, not read today).
+**Where they differ.** shadcn keeps the confirm field. GOV.UK and web.dev drop it. shadcn asks for a full name; GOV.UK asks only for what the service needs. Success: none of the shadcn blocks shows a post-submit state. The usual next screen is "check your email" (INFERRED; GOV.UK has a separate "confirm an email address" pattern, not read for this memo).
 
 ### 4.2 Accessibility rules
 
@@ -307,7 +309,7 @@ Sources: the clone's `signup-01` to `signup-05`; [GOV.UK, create accounts](https
 
 ### 4.3 What the design book binds
 
-As §3.3. INFERRED additions: the helper text is `muted-foreground` (`ink-soft`), the body size. A strength meter that colours itself red, amber and green would spend three colours on one surface and tell state by colour. v2 does not cover strength meters.
+As §3.3. INFERRED additions: the helper text is `muted-foreground` (`ink-soft`), the body size. A strength meter that colours itself red, amber and green would spend three colours on one surface and tell state by colour. The design book does not cover strength meters. `003`'s sign-up has none: the rules are written before the field (decisions.md, "The design calls for `003`, the first blocks").
 
 ### 4.4 Responsive behaviour
 
@@ -356,10 +358,10 @@ Sources:
 - **IME.** MUI says Enter "does not submit while an IME is composing". **The clone's demo checks only `key === "Enter"` and `!shiftKey`** (READ, `chat-demo.svelte`). AI Elements' page does not say.
 - **Disabling.** MUI and the AI SDK disable sending unless ready. Atlassian and Primer say never to disable a form's submit button (READ, [Atlassian, form](https://atlassian.design/components/form/usage); [Primer, saving](https://primer.style/product/ui-patterns/saving/)). Chat convention and form convention disagree.
 
-**ChatGPT and Claude.ai** (READ, weak).
+**ChatGPT and Anthropic's chat assistant** (READ, weak).
 
 - OpenAI's help centre lists ⌘ or Ctrl with `/` for the shortcut list and ⌘ or Ctrl with K for search. A macOS app release note adds "Command + ." to stop a streaming reply (READ, search-result text from help.openai.com. The release-notes page itself returned 403 when fetched).
-- No first-party page for claude.ai shortcuts was found. Third-party guides mostly say Escape stops a reply and disagree on the rest (READ, search results). We rely on neither.
+- No first-party shortcut page for Anthropic's chat assistant was found. Third-party guides mostly say Escape stops a reply and disagree on the rest (READ, search results). We rely on neither.
 
 ### 5.2 Accessibility rules
 
@@ -367,7 +369,7 @@ Sources:
 
 - `log`: "new information is added in a meaningful order"; its implicit `aria-live` is `polite` and `aria-atomic` is `false`; examples include "chat logs, messaging history". **A log requires an accessible name** (READ, [MDN, log role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/log_role)). MDN advises adding a redundant `aria-live="polite"` to `log` and `status` for compatibility (READ, MDN live regions).
 - Telerik uses `role=log` with an `aria-label` and `aria-live=polite` (READ). So does the clone's primitive (READ).
-- INFERRED: a plain list (`ol`) gives item counts and list navigation, but announces nothing. A `log` that is also navigable by heading or article gives both. The choice is open (§8).
+- INFERRED: a plain list (`ol`) gives item counts and list navigation, but announces nothing. A `log` that is also navigable by heading or article gives both. The choice is open here (§8); `005` decision 11 takes a named log inside a named region.
 
 **Streaming and politeness.**
 
@@ -396,7 +398,7 @@ Sources:
 - A **visible send button** is still required, because Enter-to-send cannot be discovered (READ, accessibility.build).
 - **IME guard:** do not send when `event.isComposing` is true **or** `keyCode` is 229. Safari has fired the confirming Enter with `isComposing` false (WebKit bug 165004). Tracking `compositionend` does not help, because it fires before that keydown (READ, [azukiazusa, IME and Enter-to-submit](https://azukiazusa.dev/en/blog/ime-enter-submit), 2026-09-06).
 - INFERRED: Shift+Enter is handled before the IME check, as one project's fix found (READ, search result citing an opencode pull request).
-- Escape inside the composer is free unless a menu is open. INFERRED: binding it to stop while streaming matches third-party reports of Claude.ai, and conflicts with nothing in the APG patterns read.
+- Escape inside the composer is free unless a menu is open. INFERRED: binding it to stop while streaming matches third-party reports of Anthropic's chat assistant, and conflicts with nothing in the APG patterns read.
 
 **Sticky composer.** It can hide a focused link in the log. Use `scroll-padding-bottom` (READ, Understanding 2.4.11, C43).
 
@@ -419,8 +421,8 @@ Sources:
 ### 5.3 What the design book binds (READ unless marked)
 
 - **Grounds.** The log sits on paper. A user bubble could be raised white. `muted` is allowed for **code grounds** (decisions.md).
-  - But v2 §03 says Ink is for "all text, **code grounds**, the icon field" (line 405). So v2 puts code on ink, and decisions.md lists `muted` for code grounds.
-  - INFERRED: these are two readings of where code sits. The specification must pick one, or one per context: real run output on ink, inline snippets on `muted`.
+  - But the design book §03 says Ink is for "all text, **code grounds**, the icon field" (line 405). So the design book puts code on ink, and decisions.md lists `muted` for code grounds.
+  - INFERRED: these are two readings of where code sits. The specification must pick one, or one per context: real run output on ink, inline snippets on `muted`. `004` puts code on the `muted` inset (decisions.md, "The design calls for `004`, code and data"), and `007` adds an ink surface for one dark panel on a light page (decisions.md, "The design calls for `007`, the full highlight palette and the ink surface").
 - **Terminal output is welcome, costume is not** (§09, line 650). INFERRED:
   - Real output from a real run, shown as it is, passes.
   - No phosphor green, no fake prompt glyph, no blinking block cursor.
@@ -430,26 +432,26 @@ Sources:
   - Text arriving is content, not decoration (INFERRED). A looping "thinking" indicator, three pulsing dots or a shimmer is a loop.
   - INFERRED options: a static "responding" label with a static mark; or an indicator that changes only when tokens arrive. Under reduced motion it is static anyway.
 - **The mark as avatar.** "The mark alone is the favicon, avatar, and app icon" (§02, line 362). That is Pluto's own avatar.
-  - INFERRED: whether an assistant inside a Pluto product may speak under the mark is a brand call v2 does not make.
+  - INFERRED: whether an assistant inside a Pluto product may speak under the mark is a brand call the design book does not make. `006` decides it: the mark is never the assistant's face (decisions.md, "The design calls for `006`, the app shell and the chat pane").
   - In dark, the mark is all paper (`001` decision 8).
-  - A round avatar for the user is full-round, which v2 allows "for dot-derived elements only" (line 527). A user avatar is not dot-derived. **Gap.**
+  - A round avatar for the user is full-round, which the design book allows "for dot-derived elements only" (line 527). A user avatar is not dot-derived. **Gap**, closed by `002`: avatars take the 8 px case radius (decisions.md, "The primitives split in two, and the design calls for `002`"). `006`'s chat pane shows no avatar.
 - **Never `::` as code syntax** (§09). INFERRED: the mark never appears inside a code block or prompt.
 - **Colour.**
   - Send is the one accent, blue.
-  - Stop is the open question. v2's roles say "red stops" (line 430). But red is for "errors, destructive actions, incident states" (line 393), and stopping a reply destroys nothing.
-  - INFERRED: stop is a secondary, bordered button, not red. The specification decides.
+  - Stop is the hard case. The design book's roles say "red stops" (line 430). But red is for "errors, destructive actions, incident states" (line 393), and stopping a reply destroys nothing.
+  - INFERRED: stop is a secondary, bordered button, not red. `005` decision 13 makes Stop the `secondary` variant of the one button that is Send.
   - An error reply uses `destructive` text with an icon and a retry button.
 - **No decorative gradients.** The clone's viewport uses a `scroll-fade-b` class, a fade at the bottom edge (READ, `ui/message-scroller/message-scroller-viewport.svelte`). INFERRED: a fade is a gradient, banned as decoration by §05 ("no decorative gradients"). A groove at the composer's top edge replaces it.
 - **Honest pixels.** The composer is a bordered raised box, not a floating card with a shadow (§05, line 539).
 - **Gaps** (INFERRED):
-  - **Message alignment and bubble style.** v2 has no conversational surfaces.
-  - **The streaming indicator.** See above.
-  - **Timestamps.** The dating rule (§07) is about public surfaces, not messages.
+  - **Message alignment and bubble style.** The design book has no conversational surfaces. `005`: a user turn is a bubble on the `muted` inset, and the assistant's turn is plain prose (decisions.md, "The design calls for `005`, overlays, navigation and the chat primitives").
+  - **The streaming indicator.** See above. `006`: a static "Responding" marker, with the composer's button the one busy control (decisions.md, "The design calls for `006`, the app shell and the chat pane").
+  - **Timestamps.** The dating rule (§07) is about public surfaces, not messages. `006`'s turns are headed "you" and "assistant", with no time.
 
 ### 5.4 Responsive behaviour
 
-- INFERRED: on phones the pane is full-bleed. No outer card. The header, log and composer fill the viewport, with the composer pinned to the bottom above the on-screen keyboard. That needs the dynamic viewport unit (`dvh`) or the visual viewport, a detail the specification should test on iOS Safari.
-- INFERRED: from `md` the pane can sit inside the app shell beside the sidebar. The log's text column is capped at 60–75 ch (v2 §04) even when the pane is wide.
+- INFERRED: on phones the pane is full-bleed. No outer card. The header, log and composer fill the viewport, with the composer pinned to the bottom above the on-screen keyboard. That needs the dynamic viewport unit (`dvh`) or the visual viewport, a detail no check of this release covers: iOS Safari is outside its checks (decisions.md, "After the public-readiness review").
+- INFERRED: from `md` the pane can sit inside the app shell beside the sidebar. The log's text column is capped at 60–75 ch (the design book §04) even when the pane is wide.
 - Code blocks scroll sideways inside themselves (READ, Understanding 1.4.10), so the page never does.
 
 ## 6. Page states: empty, error, not found, loading
@@ -517,13 +519,13 @@ Sources:
 - **Unexpected errors are shown as a generic "Internal Error"**: "Unknown error messages and stack traces are not exposed to users". `handleError` may log them and return a custom shape (READ, same page).
 - With adapter-static, `fallback: '404.html'` makes a 404 page for hosts that look for one (READ, [SvelteKit, adapter-static](https://svelte.dev/docs/kit/adapter-static)).
 - Cloudflare Workers static assets with `not_found_handling = "404-page"` serve "the nearest `404.html` file with a `404 Not Found` status" (READ, [Cloudflare, static site generation](https://developers.cloudflare.com/workers/static-assets/routing/static-site-generation/)).
-- This repository's `wrangler.jsonc` sets no `not_found_handling`. Its `vite.config.ts` calls `adapter()` with no `fallback` (EXECUTED, `cat` and `grep`). INFERRED: the not-found block only works as a real 404 once an app's deployment sets both. That belongs to each app's deployment specification, and this registry's.
+- This repository's `wrangler.jsonc` sets no `not_found_handling`. Its `vite.config.ts` calls `adapter()` with no `fallback` (EXECUTED, `cat` and `grep`). INFERRED: the not-found block only works as a real 404 once an app's deployment sets both. That belongs to each app's deployment. This registry is not deployed (decisions.md, "The registry is served from GitHub, and the repository is public"), so it sets neither.
 
-**What an error page must and must not say** (READ: GOV.UK, Geist, SvelteKit, AI SDK; v2 §07):
+**What an error page must and must not say** (READ: GOV.UK, Geist, SvelteKit, AI SDK; the design book §07):
 
 - **Must:** what happened, in plain words; what to do next; whether the user's work was saved; a way out, such as home, retry or contact.
-- **Must not:** status codes as headings; stack traces or raw server messages; blame; vague apology ("never apologize vaguely", v2 line 590); humour (GOV.UK; Geist).
-- **May:** a request ID or build hash in mono, collapsed. INFERRED: that fits v2's structural transparency (§01 law 3, §07's footer).
+- **Must not:** status codes as headings; stack traces or raw server messages; blame; vague apology ("never apologize vaguely", the design book, line 590); humour (GOV.UK; Geist).
+- **May:** a request ID or build hash in mono, collapsed. INFERRED: that fits the design book's structural transparency (§01 law 3, §07's footer).
 
 **Focus and title.**
 
@@ -543,8 +545,8 @@ Sources:
 
 - **The warmest copy.** "Errors, empty states, and 404s carry the warmest copy in the system: Kare put a cartoon bomb on the crash screen. Explain what happened and what to do next; never apologize vaguely" (§07, line 590).
   - That pulls against GOV.UK's and Geist's "no humour".
-  - INFERRED: warmth is in plain, kind, specific words, not jokes. The specification states the line.
-- **Red.** v2 gives red to "errors, destructive actions, incident states" (§03, line 393). GOV.UK keeps red text off 404 and 500 pages.
+  - INFERRED: warmth is in plain, kind, specific words, not jokes. `003` states the line: plain and warm words, no humour, no apology (decisions.md, "The design calls for `003`, the first blocks").
+- **Red.** The design book gives red to "errors, destructive actions, incident states" (§03, line 393). GOV.UK keeps red text off 404 and 500 pages.
   - INFERRED: a not-found page is not an error state of the user's making. It is ink on paper, no red.
   - A section-level failure may use a red state dot (`destructive-fill`) beside ink text, with text that says the state.
 - **Green** says "operational" or "passing" (§03, line 401). The status page uses "the four dots as state indicators: all green, the mark is at rest" (§07, line 589). INFERRED: that is a status page, not a page state, and the first set does not include one.
@@ -552,18 +554,18 @@ Sources:
 - **Illustration.** "No colour as decoration" (§03). "Every element earns its place" (§01). INFERRED: no illustrations. An optional monochrome icon, or the mark at rest, at most. Kare's bomb is cited as tone, not as licence for pictures.
 - **Motion.**
   - A skeleton shimmer is a loop. So is a spinner. Both fall under "ambient/looping animation… anything that moves while the visitor is reading" unless the specification reads progress feedback as response, not performance (§06, lines 563, 565).
-  - INFERRED: a static skeleton (NN/g's preferred kind) obeys v2 outright. A spinner for an action is response to a press, and ends when the action does.
+  - INFERRED: a static skeleton (NN/g's preferred kind) obeys the design book outright. A spinner for an action is response to a press, and ends when the action does.
   - The mark must not become a loader. That would be a second hello, and could imply reordered dots (§02, §09 "motion noise").
 - **Gaps** (INFERRED):
-  - **Loops.** Whether a functional progress loop is allowed at all.
-  - **Copy tone.** Where warmth ends and humour begins.
-  - **Request IDs and build hashes.** Whether error pages show them.
-  - **Placement.** Whether a page-state block is centred or left-aligned. v2's pages are left-aligned throughout.
+  - **Loops.** Whether a functional progress loop is allowed at all. Answered: a spinner only on the control that started an action, and a static skeleton (decisions.md, "The primitives split in two, and the design calls for `002`"; decisions.md, "The design calls for `003`, the first blocks").
+  - **Copy tone.** Where warmth ends and humour begins. Answered above.
+  - **Request IDs and build hashes.** Whether error pages show them. Answered: an error page may show one in mono inside `<details>`, never a stack trace (decisions.md, "The design calls for `003`, the first blocks").
+  - **Placement.** Whether a page-state block is centred or left-aligned. The design book's pages are left-aligned throughout. Answered: left-aligned on a full page, centred in a tile (same entry).
 
 ### 6.4 Responsive behaviour
 
 - INFERRED: page states are a single column at every width, text capped at 60–75 ch.
-- INFERRED: empty states inside small tiles centre their content, per Carbon. Full-page states align with the page's left edge, per Carbon and v2's own layout.
+- INFERRED: empty states inside small tiles centre their content, per Carbon. Full-page states align with the page's left edge, per Carbon and the design book's own layout.
 - INFERRED: skeletons mirror the real layout at each breakpoint. A skeleton that reflows differently from the content makes the page jump when content arrives.
 
 ## 7. The settings form
@@ -597,13 +599,13 @@ Sources: [Shopify, settings template](https://shopify.dev/docs/api/app-home/late
 
 ### 7.3 What the design book binds (READ unless marked)
 
-- **Sections are divided by the groove.** v2's own section dividers are the reference (§05, line 535). INFERRED: grooves between sections, not a card around each, keep the page at paper and ink. Cards are allowed, on raised white, if the specification prefers them.
+- **Sections are divided by the groove.** The design book's own section dividers are the reference (§05, line 535). INFERRED: grooves between sections, not a card around each, keep the page at paper and ink. Cards are allowed, on raised white, if the specification prefers them.
 - **Red is for the destructive section** and its confirm button (§03, line 393). Text plus red, never red alone.
 - **Green is for "Saved"**, as `success` text with a text or icon cue.
 - **One accent.** The save button spends blue (§01 law 2). Toggles' "on" state is functional state. INFERRED: toggles use blue as the action colour, not green.
 - **Interactive elements look pressable** (§05, line 539). Switches and checkboxes keep visible borders (§09, line 655).
 - **Motion.** "Saved" appears in at most 200 ms and does not animate further (§06).
-- **Gaps** (INFERRED): a save bar is a sticky surface; whether it may carry a shadow (it is not a menu or dialog) is undecided. Section annotations in mono lowercase versus sentence case is the "labels are lowercase" question again.
+- **Gaps** (INFERRED): a save bar is a sticky surface; whether it may carry a shadow (it is not a menu or dialog) is undecided. Section annotations in mono lowercase versus sentence case is the "labels are lowercase" question again. Both are answered: `003` saves with one button at the bottom, not a sticky bar (decisions.md, "The design calls for `003`, the first blocks"), and labels are sentence case (decisions.md, "The primitives split in two, and the design calls for `002`").
 
 ### 7.4 Responsive behaviour
 
@@ -622,7 +624,7 @@ Each list is the choice, the states it must show, and the questions still open. 
   - `<header>` (banner) with the lockup top-left as a link home, product links, utilities right;
   - an optional `<nav aria-label>` sidebar, a paper ground with a vertical groove;
   - `<main>`;
-  - `<footer>` (contentinfo) with v2 §07's furniture under a groove.
+  - `<footer>` (contentinfo) with the design book §07's furniture under a groove.
 - **Sidebar behaviour:**
   - collapsible to off-canvas, and to an icon rail only for daily-use apps;
   - the toggle is a button with `aria-expanded` and `aria-controls`;
@@ -634,10 +636,12 @@ Each list is the choice, the states it must show, and the questions still open. 
 - **States:** sidebar expanded, collapsed and mobile-open; header with and without a sidebar; focus visible on the skip link.
 - **Open:**
   - the vertical groove's form;
-  - the doc-ID scheme for the footer (owner call);
+  - the doc-ID scheme for the footer;
   - whether the header mark plays the entrance, and on client-side navigation;
   - the sheet's scrim, given the ban on blur;
   - whether the shortcut conflicts with editor blocks.
+
+  Settled since: the vertical groove is `005`'s `groove-s` (`005` decision 5); the doc ID is `PS-<series>-<NNNN>`, a string prop (decisions.md, "The theme mechanism, the doc-ID scheme and the footer's sentence"); the entrance plays once per full document load (decisions.md, "The design calls for `006`, the app shell and the chat pane"); the scrim is `002`'s token, with no blur (`002` decision 7); Ctrl+B yields to an editable target (decisions.md, "The design calls for `005`, overlays, navigation and the chat primitives").
 
 ### 8.2 The hero and feature grid
 
@@ -649,6 +653,8 @@ Each list is the choice, the states it must show, and the questions still open. 
   - the mark's place when the header also holds the lockup;
   - hero imagery rules;
   - grid separators (grooves, cards or none).
+
+  Settled since (decisions.md, "The design calls for `003`, the first blocks"): the display steps to `text-2xl` below `sm`; the hero has no mark; imagery is an optional `media` snippet for real evidence; the feature grid is a `ul` separated by grooves, not cards.
 
 ### 8.3 Sign in
 
@@ -669,6 +675,8 @@ Each list is the choice, the states it must show, and the questions still open. 
   - disabled or enabled submit while pending;
   - GOV.UK's summary always, or Primer's at three errors or more.
 
+  Settled since (decisions.md, "The design calls for `003`, the first blocks"; decisions.md, "The primitives split in two, and the design calls for `002`"): one step, email and password; no social, passkey or email-link sign-in, so no `webauthn` token; a busy submit stays enabled and ignores re-submits; the error summary always appears.
+
 ### 8.4 Sign up
 
 - **Structure:** an `h1` ("Create an account"); email (`email`), password (`new-password`) with rules shown before typing and tied by `aria-describedby`; **no confirm field**, the show toggle instead; the submit button "Create account"; a link to sign in.
@@ -679,6 +687,8 @@ Each list is the choice, the states it must show, and the questions still open. 
   - code or link verification;
   - whether a strength meter exists (and its colours);
   - terms consent wording and placement.
+
+  Settled since (decisions.md, "The design calls for `003`, the first blocks"): no name; a six-digit code on its own step, with resend; no strength meter; consent is a sentence under the button, shown only when the app gives the terms link.
 
 ### 8.5 The chat pane
 
@@ -695,12 +705,14 @@ Each list is the choice, the states it must show, and the questions still open. 
 - **Open:**
   - `log` or plain list, or both;
   - announcing the whole reply or a cue only;
-  - code grounds on ink (v2 §03) or `muted` (decisions.md);
+  - code grounds on ink (the design book §03) or `muted` (decisions.md);
   - the stop button's colour;
   - whether the assistant speaks under the mark;
   - the round user avatar against the two-radii rule;
   - disabled versus enabled send;
   - whether the streaming indicator exists at all.
+
+  Settled since: a named log inside a named region (`005` decision 11); a cue only, through the composer's own status: "Responding", "Stopped", "Response complete" (`005` decision 13); code on the `muted` inset (`004` decision 8); Stop is the `secondary` variant of the Send button (`005` decision 13); the mark is never the assistant's face, and the pane shows no avatar (decisions.md, "The design calls for `006`, the app shell and the chat pane"); avatars take the 8 px case radius (decisions.md, "The primitives split in two, and the design calls for `002`"); the composer never disables anything (`005` decision 13); the indicator is a static "Responding" marker (decisions.md, "The design calls for `006`, the app shell and the chat pane").
 
 ### 8.6 Page states
 
@@ -724,10 +736,12 @@ Each list is the choice, the states it must show, and the questions still open. 
   - a progress bar with an estimate past 10 s.
 - **Empty:** no data; no results (with the query and a way to clear filters); first use. Announced politely after an async change.
 - **Open:**
-  - whether spinners and shimmers are allowed under v2's ban on loops;
+  - whether spinners and shimmers are allowed under the design book's ban on loops;
   - the copy tone line ("warmest" versus "no humour");
   - whether error pages show request IDs or build hashes;
   - the alignment rule.
+
+  Settled since (decisions.md, "The primitives split in two, and the design calls for `002`"; decisions.md, "The design calls for `003`, the first blocks"): a spinner only on the busy control, and a static skeleton; plain and warm words, no humour; a request ID or build hash in mono inside `<details>`; left-aligned on a full page, centred in a tile.
 
 ### 8.7 The settings form
 
@@ -748,11 +762,13 @@ Each list is the choice, the states it must show, and the questions still open. 
   - toast or inline message (Primer's accessibility warning favours inline);
   - toggles in blue or green.
 
+  Settled since (decisions.md, "The design calls for `003`, the first blocks"; decisions.md, "The primitives split in two, and the design calls for `002`"): one button at the bottom, not a save bar; one column at every width; grooves between sections; "Saved" inline in a polite status region, not a toast; switches are blue.
+
 ### 8.8 Primitives `002` must cover for these blocks
 
 Read off the structures above; INFERRED.
 
-- **Already named:** textarea, avatar, label, scroll-area (decisions.md), button, badge, card, input, separator, code-block, skeleton, spinner (handoff.md).
+- **Already named:** textarea, avatar, label, scroll-area (decisions.md, "Blocks, and they shape `002`"), button, badge, card, input, separator, code-block, skeleton, spinner (the primitives memo of the same day, §6.1).
 - **Added by this memo:**
   - field (label, description and error wiring with `aria-describedby` and `aria-invalid`);
   - an error-summary / alert;
@@ -829,7 +845,7 @@ All web sources read on 2026-10-28. Local sources read the same day.
 
 **Local**
 
-- design book v2, `plutosystemshq/pluto-systems-design-book-v2.html`
-- `specifications/001-tokens-and-the-registry.md`
-- `decisions.md`, `handoff.md`
+- the Pluto Systems design book, version 2 (internal, not published)
+- `context/specifications/001-tokens-and-the-registry.md`
+- `context/decisions.md`
 - `context/prior_art/shadcn-svelte` at `6149e14`

@@ -2,19 +2,19 @@
 
 - **Status:** complete
 - **Date:** 2026-10-28
-- **Owner:** Clay Gendron (research executed by an agent, Claude, sub-agent of the orchestrating session)
-- **Question:** Which stock shadcn-svelte "maia" items must specification `002` restyle to our tokens and serve from our registry, so that it covers (a) `wasi-python-dev`'s home page and `/admin`, and (b) the first blocks set? For each one: its files, its packages, and every class that breaks a `001` token rule. Which needs have no stock item at all?
-- **What it blocks:** specification `002`, the primitives; through it, the blocks specification and `wasi-python-dev`'s home page (its `004`) and analytics (its `005`).
+- **Author:** the design lead
+- **Question:** Which stock shadcn-svelte "maia" items must specification `002` restyle to our tokens and serve from our registry, so that it covers (a) a product home page and an admin page, and (b) the first blocks set? For each one: its files, its packages, and every class that breaks a `001` token rule. Which needs have no stock item at all?
+- **What it blocks:** specification `002`, the primitives; through it, the blocks specification.
 
 ## How to read this memo
 
 Every claim carries a label.
 
-- **EXECUTED**: we ran it and saw the result, on 2026-10-28, macOS (Darwin 25.5.0, arm64), Bun 1.3.14. `bun pm view` ran at 11:23 UTC.
-- **READ**: a source says so. Each source was read on 2026-10-28. Paths in the prior-art clone are relative to `context/prior_art/shadcn-svelte/`, at commit `6149e14` (the CLI 1.7.1 release, `prior_art/README.md`). Paths in the first app are relative to `/Users/claygendron/Git/Repos/wasi-python-dev/context/`, read only.
+- **EXECUTED**: we ran it and saw the result, on 2026-10-28, macOS (Darwin 25.5.0, arm64), Bun 1.3.14.
+- **READ**: a source says so. Each source was read on 2026-10-28. Paths in the prior-art clone are relative to `context/prior_art/shadcn-svelte/`, at commit `6149e14` (the CLI 1.7.1 release, `context/prior_art/README.md`).
 - **INFERRED**: our reasoning.
 
-Scratch work lives in the session scratchpad, folder `research-primitives/`: `scan.ts` (the lint run and the wider scan), `table.ts` (this memo's inventory table), `patterns.ts`, `probe.ts`, and their outputs. Nothing was written to this repository except this memo.
+Scratch work was done in a folder outside this repository, and the scripts were not kept: `scan.ts` (the lint run and the wider scan), `table.ts` (this memo's inventory table), `patterns.ts`, `probe.ts`, and their outputs. Nothing was written to this repository except this memo.
 
 Terms of art used below.
 
@@ -31,26 +31,27 @@ Terms of art used below.
 
 ## In short
 
-- The union list is **41 stock primitives plus 3 support items** (two hooks and a library file). 15 serve both the home page and the blocks, 8 only the home page and `/admin`, and 18 only the blocks. Five more are deferred (section 6.1, INFERRED).
+- The union list is **41 stock primitives plus 3 support items** (two hooks and a library file). 15 serve both the home page and the blocks, 8 only the home page and the admin page, and 18 only the blocks. Five more are deferred (section 6.1, INFERRED).
 - **The lint passes 15 of the 44 as they stand; 29 fail it** (EXECUTED). It finds 150 literals in the 44, and 168 across all 49 inventoried. Only 8 of the 44 are clean by both the lint and the wider scan.
 - **The lint does not see most of what decision 29 names.** `ring-ring/50`, `bg-input/30`, `shadow-2xl`, `backdrop-blur-xs`, `outline-none` and `h-9` all pass it (EXECUTED probe, section 5.2). The wider scan finds 219 more breaking classes in the 44. `002` needs a stronger lint, or review carries the load.
 - **Six needs have no stock item** (READ and INFERRED): the code editor; a code block with our groove and a token-driven highlight palette; a fuel meter; the consent banner; a streamed-reply announcer for the chat pane; and a growing message composer with its submit and stop behaviour. Section 6.2 and 6.4.
 - **Three tokens `002` will likely need** (INFERRED): elevation for menus and dialogs, a scrim for modal overlays, and a highlight palette. `001` left elevation to `002` (`001` decision 13).
 - **bits-ui 2.20.2** is current (published 2026-10-23). It peers on `svelte ^5.33.0`, which our 5.57.3 satisfies (EXECUTED: `bun pm view`, and a clean scratch install).
 
-## 1. What the app needs
+## 1. What a product home page and an admin page need
 
-### 1.1 The sources
+### 1.1 The need
 
-READ, in the first app, all on 2026-10-28:
+INFERRED, on 2026-10-28: what a product home page and an admin page need when the product is a code sandbox. The sandbox is the sample world of this registry's previews: it runs Python under a fuel budget. Such a home page holds:
 
-- `constitution.md` §2, lines 17 to 21: a tagline; an editor with five tabs, NumPy, Pandas, SciPy, scikit-learn and a fifth that picks one of 25 examples; output with the run's metadata beside it; an install section; a comparison table; a security section; first-party analytics; and `/admin`.
-- `constitution.md` §4.1, line 32: plain Python "is labelled as not safe for untrusted code", and "the page links each source".
-- `handoff.md` lines 42 and 43: `004` is the home page; `005` is analytics, the consent banner and `/admin`.
-- `decisions.md`: the fifth tab is "Shuffle" (line 74); the metrics panel shows what `run()` returns today (line 86); a consent banner for every visitor (line 94); the hero's headline and subhead, verbatim (line 98).
-- `research/2026-10-27-what-a-run-reports-and-the-editor-examples.md`: the metrics panel's eight rows in priority order (§6, lines 308 to 325); "a tooltip on 'Fuel'" (line 325); a dice or shuffle icon beside the fifth tab (line 306); the editor must be bundled, not loaded from a CDN (line 163); a visitor's HTML or SVG output only "in a sandboxed frame with scripts off" (line 156).
-- `research/2026-10-27-what-the-market-asks-for-and-the-tagline.md`: the headline and subhead (Recommendation, lines 181 to 198).
-- `research/2026-10-27-first-party-analytics-and-the-admin-page.md`: `/admin`'s metrics (§7, lines 296 to 318): a headline row with change against the previous period, a chart over time, sources with expandable referrers and a UTM tab, countries, pages, devices, editor runs and outcomes, fuel distributions, conversions, filtered traffic, time ranges with a custom range (line 311), click-to-filter (line 313) and a polled "now" tile (line 318). An opt-out on the privacy page (line 263). The memo recommends Cloudflare Access for `/admin` (lines 286 to 290); if the owner accepts it, the app draws no sign-in form.
+- a tagline; an editor with tabs of examples (NumPy, Pandas, SciPy, scikit-learn), and one more tab, "Shuffle", that picks one of 25 examples and shows a dice or shuffle icon; the output, with the run's metadata beside it; an install section; a comparison table; a security section; first-party analytics; and an admin page;
+- a comparison table with a source link per cell;
+- the hero's headline and subhead;
+- a metrics panel of eight label and value rows in priority order, with a tooltip on "Fuel", showing what a run returns;
+- an editor that is bundled, not loaded from a CDN, and a visitor's HTML or SVG output only in a sandboxed frame with scripts off;
+- a consent banner for every visitor, since the page has analytics, and an opt-out on the privacy page.
+
+The admin page's metrics: a headline row with change against the previous period, a chart over time, sources with expandable referrers and a UTM tab, countries, pages, devices, editor runs and outcomes, fuel distributions, conversions, filtered traffic, time ranges with a custom range, click-to-filter and a polled "now" tile.
 
 ### 1.2 Every element, and the primitive that serves it
 
@@ -58,46 +59,46 @@ INFERRED from 1.1, except where a label says otherwise. "Ours" means an item thi
 
 | Page | Element | What it needs | Primitive |
 |---|---|---|---|
-| Home | Header | The lockup, two or three links, a theme toggle | `four-dot` (ours); `button` (ghost and link variants); the toggle is `003`'s (`001` decision 4) |
-| Home | Hero | Headline (`text-5xl`), subhead, two calls to action, a version badge such as "wasi-python 0.1.1" | `button`, `badge` |
-| Home | Editor tabs | Five tabs; "Shuffle" with an icon, re-picking on a second press | `tabs`, with a `button` inside the Shuffle tab or beside the row |
+| Home | Header | The lockup, two or three links, a theme toggle | `four-dot` (ours); `button` (ghost and link variants); the toggle is `005`'s `theme` item |
+| Home | Hero | Headline (`text-5xl`), subhead, two calls to action, a version badge such as "pluto-sandbox 0.1.1" | `button`, `badge` |
+| Home | Editor tabs | Tabs of examples; "Shuffle" with an icon, re-picking on a second press | `tabs`, with a `button` inside the Shuffle tab or beside the row |
 | Home | Editor | Editable Python with highlighting, line numbers and keyboard escape | **no stock item** (section 1.3) |
 | Home | Editor toolbar | Run, Reset, a keyboard hint ("Ctrl Enter") | `button`, `kbd`, `tooltip` for icon-only buttons |
 | Home | Run in progress | A busy state on Run; the output area waiting | `spinner`, `skeleton` |
 | Home | Output | stdout and stderr in mono, scrolled, copyable, "Output cut at 256 KiB" | `code-block` (`variant="destructive"` for stderr), `badge` for the truncation note |
 | Home | Output before any run | "Run the example to see its output" | `empty` |
 | Home | Run metadata | Eight label and value rows: how it ended, fuel of cap, time, memory cap, output size, limits, versions, exit code | `item` rows, `badge` for how it ended, `separator`; a **meter** for fuel (no stock item); `popover` for the fuel explanation |
-| Home | Runner states | Busy, warming (about 5 minutes after a start), rate-limited, network error | `alert` |
-| Home | Install section | `pip install wasi-python` and a short Python snippet, copyable; perhaps pip and uv as tabs | `code-block` with `use-highlighted-code`, `tabs` |
-| Home | Comparison table | Seven or more subjects by breadth, depth, isolation and performance; a source link per cell; "not safe for untrusted code" on plain Python; readable on a phone | `table`, `badge`, `popover` or a footnote link for sources; horizontal scroll from the table's own container |
+| Home | Runner states | Busy, warming, rate-limited, network error | `alert` |
+| Home | Install section | `pip install pluto-sandbox` and a short Python snippet, copyable; perhaps pip and uv as tabs | `code-block` with `use-highlighted-code`, `tabs` |
+| Home | Comparison table | Seven or more subjects by breadth, depth, isolation and performance; a source link per cell; readable on a phone | `table`, `badge`, `popover` or a footnote link for sources; horizontal scroll from the table's own container |
 | Home | Security section | A few claims, each with its mechanism and what opens the seal | `card` or `item`, `accordion` for detail |
-| Home | Footer | Links, the doc ID (`001` decision 28) | `separator` (the groove) |
+| Home | Footer | Links, the doc ID | `separator` (the groove) |
 | Home | Consent banner | Accept and decline, persistent until answered, keyboard reachable, never modal | **no stock item**; composed of `card` and `button` |
 | Privacy page | Opt-out | A labelled on/off control | `switch`, `label` |
-| `/admin` | Headline row | Six tiles, each a number and its change | `card`, `badge` |
-| `/admin` | Over time | Visitors and page views per hour or day | `chart` |
-| `/admin` | Time range | Seven presets and a custom range | `toggle-group` or `native-select`; custom range `range-calendar` in a `popover` (deferred) |
-| `/admin` | Sources, countries, pages, devices | Tables; a source expands to its referrers; a UTM tab | `table`, `collapsible`, `tabs` |
-| `/admin` | Filters | Active filters, each removable | `badge` with a `button` |
-| `/admin` | Editor runs | Runs per tab, outcomes, fuel distributions | `chart`, `table` |
-| `/admin` | Now tile | Visits in the last 5 minutes, polled | `card`, `badge` |
-| `/admin` | Loading and empty | First load; a range with no data | `skeleton`, `empty` |
+| Admin | Headline row | Six tiles, each a number and its change | `card`, `badge` |
+| Admin | Over time | Visitors and page views per hour or day | `chart` |
+| Admin | Time range | Seven presets and a custom range | `toggle-group` or `native-select`; custom range `range-calendar` in a `popover` (deferred) |
+| Admin | Sources, countries, pages, devices | Tables; a source expands to its referrers; a UTM tab | `table`, `collapsible`, `tabs` |
+| Admin | Filters | Active filters, each removable | `badge` with a `button` |
+| Admin | Editor runs | Runs per tab, outcomes, fuel distributions | `chart`, `table` |
+| Admin | Now tile | Visits in the last 5 minutes, polled | `card`, `badge` |
+| Admin | Loading and empty | First load; a range with no data | `skeleton`, `empty` |
 
-### 1.3 What no stock item gives the app
+### 1.3 What no stock item gives these pages
 
-- **A code editor.** The constitution asks that "every example is editable" (line 18). The run memo rules out a CDN copy of CodeMirror 5 (line 163). The stock registry has no editor (READ: the 63 folders under `docs/src/lib/registry/ui/`). INFERRED: the editor is a bundled third-party library, such as CodeMirror 6, wrapped in a component of ours and themed from our tokens. `001` put "the editor and code-block highlight palettes" out of its scope (`001` Scope, Out).
+- **A code editor.** Every example is editable, and the editor is bundled, not loaded from a CDN (§1.1). The stock registry has no editor (READ: the 63 folders under `docs/src/lib/registry/ui/`). INFERRED: the editor is a bundled third-party library, such as CodeMirror 6, wrapped in a component of ours and themed from our tokens. `001` put "the editor and code-block highlight palettes" out of its scope (`001` Scope, Out).
 - **What the stock `code-block` is.** A read-only display of code, terminal output, logs and diffs, with an optional header, title, actions, footer, line numbers, wrapping, and highlighted, added or removed lines (READ: `docs/content/components/code-block.md` lines 27 to 29). Its content is a `<pre>` with `tabindex={0}`, so it scrolls by keyboard (READ: `docs/src/lib/registry/ui/code-block/code-block-content.svelte` lines 49 to 61). Highlighting is optional, through the `use-highlighted-code` hook and a `highlighter` library file on Shiki's JavaScript engine; it renders ANSI colours and can run on the server (READ: `code-block.md` lines 109 to 114 and 377 to 401).
-- **What it is not.** It is not an editor. It has no caret, no input, no undo and no keyboard editing (READ: the component is a `<pre><code>`, lines 31 to 61). Its highlight colours are Shiki's `github-light` and `github-dark` themes, written as inline `style` colours on each token (READ: `docs/src/lib/registry/lib/highlighter.ts` lines 43, 78 and 109). Those are literal colours, which `001`'s "tokens are the one source" forbids. Its border is the form-control `border-input`, not v2's groove (READ: `docs/src/lib/registry/styles/style-maia.css` line 1694).
-- **A meter.** The run memo's row 2 is "Fuel: 4.81 billion instructions of 30 billion" (line 312 onward). The stock `progress` item is a `progressbar`, which means a task advancing. bits-ui 2.20.2 ships a `meter` primitive that renders `role: "meter"` (EXECUTED: installed in the scratchpad, `dist/bits/meter/meter.svelte.js` line 18). No stock item wraps it (READ: no `meter` folder under `ui/`).
-- **The consent banner.** INFERRED: `sonner` (a toast) is the wrong shape. A toast is transient and may be dismissed by time; a consent choice must persist until made. A banner is a landmark region with two buttons and a link. It composes `card` and `button`. Whether it is a block or app code is the blocks specification's call.
-- **A sandboxed output frame**, if `004` chooses to render a visitor's HTML or SVG. The run memo leaves that choice to the specification (line 156; "Still unknown"). It would be an `<iframe sandbox>`, which no stock item gives.
+- **What it is not.** It is not an editor. It has no caret, no input, no undo and no keyboard editing (READ: the component is a `<pre><code>`, lines 31 to 61). Its highlight colours are Shiki's `github-light` and `github-dark` themes, written as inline `style` colours on each token (READ: `docs/src/lib/registry/lib/highlighter.ts` lines 43, 78 and 109). Those are literal colours, which `001`'s "tokens are the one source" forbids. Its border is the form-control `border-input`, not the design book's groove (READ: `docs/src/lib/registry/styles/style-maia.css` line 1694).
+- **A meter.** A run's fuel row reads like "Fuel: 4.81 billion instructions of 30 billion" (INFERRED). The stock `progress` item is a `progressbar`, which means a task advancing. bits-ui 2.20.2 ships a `meter` primitive that renders `role: "meter"` (EXECUTED: installed in a scratch project, `dist/bits/meter/meter.svelte.js` line 18). No stock item wraps it (READ: no `meter` folder under `ui/`).
+- **The consent banner.** INFERRED: `sonner` (a toast) is the wrong shape. A toast is transient and may be dismissed by time; a consent choice must persist until made. A banner is a landmark region with two buttons and a link. It composes `card` and `button`. No `003` block is a consent banner (`003` decision 1), so it is app code.
+- **A sandboxed output frame**, for a page that renders a visitor's HTML or SVG output. It would be an `<iframe sandbox>`, which no stock item gives. No item in this registry renders one.
 - **A run-metadata list.** INFERRED: eight label and value pairs are a description list (`<dl>`). `item` gives styled rows but not `<dl>` semantics. A small stock-free component may be simpler than bending `item`.
 
 ## 2. What the blocks need
 
 ### 2.1 What the stock blocks compose
 
-READ: the import lines of every stock block named in the brief, under `docs/src/lib/registry/blocks/`. Counts are of blocks that import each item.
+READ: the import lines of every stock block of the kinds the first blocks set needs, under `docs/src/lib/registry/blocks/`. Counts are of blocks that import each item.
 
 | Stock blocks | Items they import |
 |---|---|
@@ -115,7 +116,7 @@ Three things the stock blocks show (READ, then INFERRED):
 
 ### 2.2 Our blocks, and what each composes
 
-INFERRED, from 2.1 and the brief. `four-dot` is ours.
+INFERRED, from 2.1 and the first blocks set (decisions.md, "Blocks, and they shape `002`"). `four-dot` is ours.
 
 | Block | Primitives it composes |
 |---|---|
@@ -128,7 +129,7 @@ INFERRED, from 2.1 and the brief. `four-dot` is ours.
 | **Page states** | empty: `empty`, `button`; error: `empty` or `alert`, `button`; not found: `empty`, `button`; loading: `skeleton`, `spinner` |
 | **Settings form** | `card`, `field`, `label`, `input`, `textarea`, `native-select`, `switch`, `checkbox`, `radio-group`, `button`, `separator`; `sonner` for "Saved"; `alert-dialog` for a destructive confirm |
 
-`field` is presentation only: label, description, error. `form` adds `formsnap` and `sveltekit-superforms` for validation (READ: `form.json`). INFERRED: the blocks specification decides whether its settings form needs `form`; `002` can serve `field` alone.
+`field` is presentation only: label, description, error. `form` adds `formsnap` and `sveltekit-superforms` for validation (READ: `form.json`). INFERRED: the blocks specification decides whether its settings form needs `form`; `002` can serve `field` alone. `003`'s settings form does without it, and `form` is not served.
 
 ## 3. The stock inventory
 
@@ -152,11 +153,11 @@ From `001` decision 29 (lines 918 to 926), decision 10 (spacing, lines 329 to 33
 - **tinted border** and **tinted fill/text**: any other `<colour>-<token>/<n>`. The exception is the state tint `bg-destructive/10` (light) or `dark:bg-destructive/20`, which `001` computed and allows off `muted`. It is not counted;
 - **outline removed**: `outline-none` or `outline-hidden`. These remove `001`'s global solid `:focus-visible` outline (decision 13), so the stock halo is the only focus sign left;
 - **ring width**: `ring-1`, `ring-2`, `ring-3`. `ring-0` is not counted;
-- **shadow** and **blur**: `shadow-*` and `backdrop-blur-*`. v2 allows shadows on menus and dialogs only, and `001` left the elevation token to `002` (decision 13, line 521);
-- **size**: a height or width step off the ladder (`h-9`, `size-3.5`). `001` decision 10 exempts sizes from the lint, but the brief asks for them;
+- **shadow** and **blur**: `shadow-*` and `backdrop-blur-*`. the design book allows shadows on menus and dialogs only, and `001` left the elevation token to `002` (decision 13, line 521);
+- **size**: a height or width step off the ladder (`h-9`, `size-3.5`). `001` decision 10 exempts sizes from the lint, but the question asks for every class that breaks a rule;
 - **type step** and **tracking**: `text-lg` and `tracking-tight`, which are not token steps (`001` decision 11);
 - **`dark:`**: a dark variant. Our tokens already flip per theme, so a `dark:` class picks a different token or tint than light does;
-- **rounded-full**: v2's second radius, for dot-derived shapes only. Listed, counted, for review;
+- **rounded-full**: the design book's second radius, for dot-derived shapes only. Listed, counted, for review;
 - **radius (fine)**: every other `rounded-*`. `001` maps all of them to 8 px (decision 9). Listed, not counted.
 
 ### 3.3 The table
@@ -248,7 +249,7 @@ Further single findings worth naming (READ):
 
 ## 4. bits-ui and the other packages, pinned
 
-EXECUTED: `bun pm view <package> version`, then `time`, `peerDependencies` and `license`, on 2026-10-28 at 11:23 UTC, from a scratch folder with its own `package.json` (`bun pm view` refuses to run without one: "Run `bun init`").
+EXECUTED: `bun pm view <package> version`, then `time`, `peerDependencies` and `license`, on 2026-10-28, from a scratch folder with its own `package.json` (`bun pm view` refuses to run without one: "Run `bun init`").
 
 | Package | Latest | Published | Stock items name | Peers | Licence |
 |---|---|---|---|---|---|
@@ -271,17 +272,17 @@ EXECUTED: `bun pm view <package> version`, then `time`, `peerDependencies` and `
 | `tw-animate-css` | 1.4.0 | 2025-09-24 | named by no item; `init` adds it | none | MIT |
 | `tailwind-merge` | 3.7.0 | 2026-09-12 | named by no item; a peer of `tailwind-variants` | | MIT |
 
-**bits-ui and our svelte.** Our svelte is 5.57.3 (`001` decision 4). It satisfies `^5.33.0` (INFERRED from semver). bits-ui 2.20.2 is itself developed against svelte 5.57.2 (EXECUTED: its `package.json` `devDependencies`, installed in the scratchpad). The install of `bits-ui@2.20.2`, `svelte@5.57.3` and `@internationalized/date@3.12.4` there finished with 33 packages and no warning (EXECUTED). Its own dependencies are `runed`, `esm-env`, `tabbable`, `svelte-toolbelt`, `@floating-ui/dom` and `@floating-ui/core` (EXECUTED).
+**bits-ui and our svelte.** Our svelte is 5.57.3 (`001` decision 4). It satisfies `^5.33.0` (INFERRED from semver). bits-ui 2.20.2 is itself developed against svelte 5.57.2 (EXECUTED: its `package.json` `devDependencies`, installed in a scratch project). The install of `bits-ui@2.20.2`, `svelte@5.57.3` and `@internationalized/date@3.12.4` there finished with 33 packages and no warning (EXECUTED). Its own dependencies are `runed`, `esm-env`, `tabbable`, `svelte-toolbelt`, `@floating-ui/dom` and `@floating-ui/core` (EXECUTED).
 
 What the table shows (INFERRED):
 
 - **Every bits-ui item names `@internationalized/date`** because bits-ui peers on it, not because the item uses dates.
-- **`shiki@^3.20.0` cannot take 4.5.0.** A caret on 3.x stops below 4. An app gets 3.23.0 today.
+- **`shiki@^3.20.0` cannot take 4.5.0.** A caret on 3.x stops below 4. An app got 3.23.0 on this date.
 - **`^0.0.1` is exactly 0.0.1.** A caret on a 0.0.x version allows no other release. `@shadcn-svelte/primitives` is three weeks old at its first version.
 - **`vaul-svelte@next` is a dist-tag, not a range.** It moves when its authors publish. `drawer` is set aside partly for this.
-- **`tailwind-variants` needs `tailwind-merge` as a peer.** Our `utils` merges through `cn` instead (`001` decision 20). So an app with a `tailwind-variants` item has two merge engines. Whether Bun installs the missing peer on its own was not checked today, and whether the two engines agree on our custom classes (`tracking-mark`, `text-5xl`) is untested.
+- **`tailwind-variants` needs `tailwind-merge` as a peer.** Our `utils` merges through `cn` instead (`001` decision 20). So an app with a `tailwind-variants` item has two merge engines. Whether Bun installs the missing peer on its own was not checked for this memo, and whether the two engines agree on our custom classes (`tracking-mark`, `text-5xl`) was not tested. `002` decision 2 settles both: the peer is optional, and every item imports `tv` from `tailwind-variants/lite`, which does not merge, so `cn` is the one engine.
 - **`@lucide/svelte` 1.63.0 is hours old.** Only stock blocks name Lucide. Our blocks use phosphor, so it does not reach us.
-- **`sonner` brings `mode-watcher`.** `001` left the choice of `mode-watcher` to `003` (decision 4). Adding `sonner` in `002` makes that choice early.
+- **`sonner` brings `mode-watcher`.** `001` left the choice of `mode-watcher` open. Adding `sonner` in `002` makes that choice early. `005` declined both: `sonner` is not served, and the theme is source of our own (decisions.md, "The design calls for `005`, overlays, navigation and the chat primitives").
 
 ## 5. What our lint rejects as-is
 
@@ -330,31 +331,31 @@ So the two classes decision 29 names first, `ring-ring/50` and `bg-input/30`, pa
 |---|---|---|---|---|---|
 | 1 | `button` | run, reset, calls to action, copy | every block | 6 + 19 | L |
 | 2 | `code-block`, with `use-highlighted-code` and `highlighter` | install, output | chat code output | 7 + 4, and 1 + 1 | M, and L with the groove and palette (6.2) |
-| 3 | `card` | sections, `/admin` tiles, consent banner | sign in, settings, features | 0 + 2 | S |
+| 3 | `card` | sections, admin tiles, consent banner | sign in, settings, features | 0 + 2 | S |
 | 4 | `badge` | version, how a run ended, "not safe" | hero | 2 + 12 | M |
 | 5 | `alert` | runner busy, warming, errors | form errors, error page | 1 + 0 | S |
-| 6 | `empty` | output before a run, `/admin` no data | page states, new chat | 0 + 3 | S |
-| 7 | `skeleton` | output while running, `/admin` loading | loading page, streaming | 0 + 0 | S |
+| 6 | `empty` | output before a run, admin no data | page states, new chat | 0 + 3 | S |
+| 7 | `skeleton` | output while running, admin loading | loading page, streaming | 0 + 0 | S |
 | 8 | `spinner` | Run busy | submit busy | 0 + 0 | S |
 | 9 | `separator` | sections, footer | shell, forms | 0 + 0 | S |
 | 10 | `item` | metadata rows, security points | feature grid | 9 + 4 | M |
 | 11 | `tooltip` | icon-button names | sidebar, chat | 10 + 1 | M |
 | 12 | `kbd` | "Ctrl Enter" | "Enter to send" | 0 + 3 | S |
 | 13 | `switch` | privacy opt-out | settings | 9 + 10 | L |
-| 14 | `collapsible` | `/admin` source rows | sidebar groups | 0 + 0 | S |
-| 15 | `native-select` | `/admin` range | settings | 2 + 9 | M |
+| 14 | `collapsible` | admin source rows | sidebar groups | 0 + 0 | S |
+| 15 | `native-select` | admin range | settings | 2 + 9 | M |
 
-**Needed by the home page and `/admin` only** (8):
+**Needed by the home page and the admin page only** (8):
 
 | # | Primitive | Use | lint + scan | Effort |
 |---|---|---|---|---|
-| 16 | `tabs` | the five editor tabs, install tabs, `/admin` UTM | 7 + 13 | L |
-| 17 | `table` | comparison, `/admin` | 0 + 3 | S |
+| 16 | `tabs` | the editor tabs, install tabs, admin UTM | 7 + 13 | L |
+| 17 | `table` | comparison, admin | 0 + 3 | S |
 | 18 | `popover` | the fuel note, source notes | 1 + 5 | M |
 | 19 | `accordion` | security detail | 0 + 2 | S |
 | 20 | `scroll-area` | long output, if the code block's own scroll is not enough | 2 + 5 | M; may be dropped |
-| 21 | `chart` | `/admin` over time, outcomes, fuel | 11 + 7 | L |
-| 22 | `toggle-group` | `/admin` range presets | 2 + 0 | S |
+| 21 | `chart` | admin over time, outcomes, fuel | 11 + 7 | L |
+| 22 | `toggle-group` | admin range presets | 2 + 0 | S |
 | 23 | `toggle` | needed by `toggle-group` | 1 + 8 | M |
 
 **Needed by the blocks only** (18, plus `is-mobile`):
@@ -380,20 +381,20 @@ So the two classes decision 29 names first, `ring-ring/50` and `bg-input/30`, pa
 | 40 | `sonner` | settings "Saved" | 1 + 0 | S, but brings `mode-watcher` |
 | 41 | `alert-dialog` | settings destructive confirm | 4 + 6 | M |
 
-**Deferred:** `trace` (6 + 3; a chat with tool calls, later), `form` (0 + 0; the settings block decides), `range-calendar` (4 + 10; `/admin`'s custom range, `005` decides), `select` (7 + 13; `native-select` covers both uses), `progress` (1 + 0; the fuel meter replaces it).
+**Deferred**, and none is served as of `v0.7.0`: `trace` (6 + 3; for a chat with tool calls, which no block has), `form` (0 + 0; `003`'s settings form does without it), `range-calendar` (4 + 10; an admin page's custom range), `select` (7 + 13; `native-select` covers both uses), `progress` (1 + 0; the fuel meter replaces it).
 
 Totals for the 44: lint 150 (plus 1 in `.ts`), scan 219. By grade: 20 S, 16 M, 8 L. The grade of `highlighter` (S) ignores the palette work of 6.2.
 
-**Sizing.** 41 primitives is large for "one builder" (`context/README.md`, specifications). The 19 inventoried items with the `ring-ring/50` halo, and the 21 that remove the outline, share one pattern (section 3.4). One recipe fixes it: drop `outline-none`, the `ring-[3px]` halo and `ring-ring/50`, keep `001`'s solid outline, and show invalid state with a solid `border-destructive` plus `FieldError` text. That recipe is most of the scan count. Still, `002` might split into two specifications: the home-page set (items 1 to 23) first, because `wasi-python-dev`'s `004` waits on it, and the blocks set (24 to 41) second.
+**Sizing.** 41 primitives is large for one specification, which `context/README.md` keeps small enough for one builder. The 19 inventoried items with the `ring-ring/50` halo, and the 21 that remove the outline, share one pattern (section 3.4). One recipe fixes it: drop `outline-none`, the `ring-[3px]` halo and `ring-ring/50`, keep `001`'s solid outline, and show invalid state with a solid `border-destructive` plus `FieldError` text. That recipe is most of the scan count. Still, `002` might split into two specifications: the home-page set (items 1 to 23) and the blocks set (24 to 41). It split by another line: `002` took forms, surfaces and feedback, `004` code and data, and `005` overlays, navigation and the chat primitives (decisions.md, "The primitives split in two, and the design calls for `002`").
 
 ### 6.2 Parts no stock item gives
 
-1. **The code editor.** A bundled editor (CodeMirror 6 is the obvious candidate; not researched here) in a component of ours. Needs: tokens for its colours and highlight palette; `001`'s focus outline; a documented way out of the editor by keyboard, since Tab inside it indents; line numbers that match `code-block`'s.
-2. **`code-block` with our groove and palette.** Replace `border-input` with the `groove` utility (`001` decision 13); use `muted` as the code ground, as `001` decision 8 allows; replace Shiki's `github-light` and `github-dark` with a theme whose colours are CSS variables set from tokens (Shiki has a `css-variables` theme; not verified here). The same palette must serve the editor, so the two match.
+1. **The code editor.** A bundled editor (CodeMirror 6 is the obvious candidate; the CodeMirror memo of 2026-10-31 researched it) in a component of ours. Needs: tokens for its colours and highlight palette; `001`'s focus outline; a documented way out of the editor by keyboard, since Tab inside it indents; line numbers that match `code-block`'s.
+2. **`code-block` with our groove and palette.** Replace `border-input` with the `groove` utility (`001` decision 13); use `muted` as the code ground, as `001` decision 8 allows; replace Shiki's `github-light` and `github-dark` with a theme whose colours are CSS variables set from tokens (Shiki has a `css-variables` theme; the Shiki memo of 2026-10-31 verified it, §1.2 and §3). The same palette must serve the editor, so the two match.
 3. **A fuel meter** on bits-ui's `meter`, styled from tokens. Not `progress`.
 4. **The consent banner**, composed of `card` and `button` (section 1.3).
 5. **Three tokens:** an elevation shadow for menus and dialogs (7 items use `shadow-*`); a scrim for modal overlays (4 items use `bg-black/80`); and the highlight palette of item 2.
-6. **An item that names `tw-animate-css`**, or menus that animate with our motion tokens instead (section 3.1).
+6. **An item that names `tw-animate-css`**, or menus that animate with our motion tokens instead (section 3.1). `002` decision 3 takes the second.
 
 ### 6.3 Effort, read from the counts
 
@@ -404,24 +405,24 @@ Totals for the 44: lint 150 (plus 1 in `.ts`), scan 219. By grade: 20 S, 16 M, 8
 
 ### 6.4 What the chat pane needs that no stock item gives
 
-For the blocks specification to decide.
+For the blocks specification to decide. `005` and `006` decided it (decisions.md, "The design calls for `005`, overlays, navigation and the chat primitives"; decisions.md, "The design calls for `006`, the app shell and the chat pane").
 
 - **The conversation view is mostly covered.** `message-scroller`'s content has `role="log"` and `aria-relevant="additions"` by default (READ: `packages/primitives/src/lib/message-scroller/message-scroller.svelte.ts` lines 1358 to 1361). Its viewport is a focusable `region` labelled "Messages" (READ: `message-scroller.test.ts` lines 228 to 232). `aria-busy` passes through (READ: test line 253; `chat-demo.svelte` line 262).
 - **A streamed reply is not announced well.** `aria-relevant="additions"` announces new nodes, not text appended to an existing one. A streamed reply grows one node, so it is silent; switching to `"additions text"` makes it chatty (INFERRED from the ARIA definitions). Needed: `aria-busy="true"` on the log while a reply streams, and a separate polite live region (`role="status"`) that announces once when the reply completes or stops. No stock item does that.
-- **A composer that grows.** `textarea` grows by CSS `field-sizing-content` (READ: `docs/src/lib/registry/ui/textarea/textarea.svelte` line 18). Which engines support `field-sizing` today was not checked; a fallback may be needed. The composer's behaviour, Enter to send and Shift Enter for a new line, is example code (READ: `chat-demo.svelte` lines 319 to 330). Needed: a composer component with a maximum height, send disabled while empty, a Stop button while streaming, and the keyboard contract written down.
+- **A composer that grows.** `textarea` grows by CSS `field-sizing-content` (READ: `docs/src/lib/registry/ui/textarea/textarea.svelte` line 18). Which engines support `field-sizing` was not checked for this memo. The chat memo of 2026-11-01 (§4) measured it in Chromium, WebKit and Firefox, and `005`'s composer grows by `field-sizing: content`. The composer's behaviour, Enter to send and Shift Enter for a new line, is example code (READ: `chat-demo.svelte` lines 319 to 330). Needed: a composer component with a maximum height, send disabled while empty, a Stop button while streaming, and the keyboard contract written down.
 - **A streaming skeleton.** `skeleton` gives the shape. The stock `shimmer` utility (`shadcn-svelte/tailwind.css`) moves; it must obey `001`'s motion budgets and reduced motion.
 - **Code output.** `code-block` at size `sm`, as the chat demo does. Our version carries the groove and the token palette (6.2).
-- **A young dependency.** `message-scroller` is the only stock item on `@shadcn-svelte/primitives`, version 0.0.1, published 2026-10-05 (EXECUTED). The blocks specification should weigh it against a plain scroll container plus its own live region.
+- **A young dependency.** `message-scroller` is the only stock item on `@shadcn-svelte/primitives`, version 0.0.1, published 2026-10-05 (EXECUTED). The blocks specification should weigh it against a plain scroll container plus its own live region. `005` decision 11 takes its own log, not the package.
 
-## 7. What is still unknown
+## 7. What this memo does not settle
 
-- **Whether `bun --bun shadcn-svelte add` from the official registry writes exactly the built JSON read here.** The built files are tracked at `6149e14`; the live registry was not fetched, so it may have moved since 2026-10-23.
-- **How a CodeMirror 6 editor (or another) fits:** bundle size, Svelte 5 wrapping, keyboard escape, theming. A research memo of its own.
-- **Shiki's CSS-variables theme**, and whether its colours can come from our tokens in both themes and pass contrast.
-- **`field-sizing` support** in Firefox and Safari today.
-- **Whether `tailwind-variants`' merge and `cn` agree** on our custom classes.
-- **The elevation and scrim values.** v2 §05 allows shadows on menus and dialogs; the exact values are `002`'s to set and test for contrast.
-- **The icon names.** Each placeholder names a phosphor icon (such as `CaretDownIcon`), which `add` maps to `phosphor-svelte/lib/CaretDown`. That each exists in `phosphor-svelte` 3.1.1 was not checked.
-- **The CLI's handling of an app's existing `tw-animate-css`** when our registry, not `init`, supplies it.
+- **Whether `bun --bun shadcn-svelte add` from the official registry writes exactly the built JSON read here.** Answered at `002`'s install: the live JSON equalled the clone's at `6149e14` for 25 of 26 items; `native-select` differed by one type line (`002` Landing notes, note 3).
+- **How a CodeMirror 6 editor fits:** bundle size, Svelte 5 wrapping, keyboard escape, theming. Answered by the CodeMirror memo of 2026-10-31.
+- **Shiki's CSS-variables theme**, and whether its colours can come from our tokens in both themes and pass contrast. Answered by the Shiki memo of 2026-10-31 (§3 and §4).
+- **`field-sizing` support.** Answered by the chat memo of 2026-11-01 (§4): it works in Chromium, WebKit and Firefox. This release's own checks run in Chromium only (decisions.md, "After the public-readiness review").
+- **Whether `tailwind-variants`' merge and `cn` agree** on our custom classes. Settled by `002` decision 2: items import `tailwind-variants/lite`, so `cn` is the only engine.
+- **The elevation and scrim values.** Set and tested for contrast by `002` decision 7.
+- **The icon names.** Each placeholder names a phosphor icon (such as `CaretDownIcon`), which `add` maps to `phosphor-svelte/lib/CaretDown`. Checked by `bun run check`: `svelte-check` fails on a missing export (`002` decision 20).
+- **The CLI's handling of an app's existing `tw-animate-css`.** Not needed: no item names it, and overlays animate with our own keyframes (`002` decision 3).
 
 **In one line:** `002` restyles 41 stock primitives plus 3 support items; the lint rejects 29 of the 44 as they stand and misses the translucent rings, input tints, shadows and removed outlines decision 29 names; and the editor, a grooved code block with a token palette, a fuel meter, the consent banner and the chat's stream announcer and composer are ours to build.

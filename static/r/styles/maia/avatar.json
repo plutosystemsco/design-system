@@ -3,7 +3,7 @@
 	"name": "avatar",
 	"title": "Avatar",
 	"type": "registry:ui",
-	"author": "Pluto Systems <https://plutosystems.co>",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 	"description": "A person's image or initials at the case radius, alone or in an overlapping group.",
 	"devDependencies": [
 		"bits-ui@^2.20.2",

@@ -3,7 +3,7 @@
 	"name": "alert-dialog",
 	"title": "Alert dialog",
 	"type": "registry:ui",
-	"author": "Pluto Systems <https://plutosystems.co>",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 	"description": "A modal confirm on the scrim that traps focus, starts on Cancel and closes on Escape.",
 	"devDependencies": [
 		"bits-ui@^2.20.2",

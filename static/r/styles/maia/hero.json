@@ -3,7 +3,7 @@
 	"name": "hero",
 	"title": "Hero",
 	"type": "registry:block",
-	"author": "Pluto Systems <https://plutosystems.co>",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 	"description": "A page's opening: an optional eyebrow, the one heading, a sentence, one call to action, and a feature grid divided by grooves.",
 	"registryDependencies": [
 		"utils",

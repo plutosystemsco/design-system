@@ -22,7 +22,7 @@
 </script>
 
 <!--
-  The popover's chrome (004 decision 11): raised by elevation alone, so no
+  The popover's chrome: raised by elevation alone, so no
   border and no halo; 256 px wide at least; 4 px of padding, so an item's 8 px
   radius sits inside the panel's. It fades in and out over the micro budget
   and scrolls past the height Floating UI leaves it. bits-ui renders

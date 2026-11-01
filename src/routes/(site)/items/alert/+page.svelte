@@ -34,7 +34,7 @@
         <WarningCircle aria-hidden="true" />
         <Alert.Title>Error: the run failed</Alert.Title>
         <Alert.Description
-          >3 tests failed in tests/test_wasi.py.</Alert.Description
+          >3 tests failed in tests/test_sandbox.py.</Alert.Description
         >
         <Alert.Action
           ><Button size="sm" variant="secondary">View logs</Button

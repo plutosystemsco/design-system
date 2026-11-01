@@ -7,7 +7,7 @@
   import InputGroupInput from "./input-group-input.svelte";
   import InputGroup from "./input-group.svelte";
 
-  /** The id a `Field` gives its control, under the key "pluto:field" (field decision 11). */
+  /** The id a `Field` gives its control, under the key "pluto:field". */
   type FieldContext = { readonly id: string };
 
   let {

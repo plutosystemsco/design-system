@@ -3,7 +3,7 @@
 	"name": "meter",
 	"title": "Meter",
 	"type": "registry:ui",
-	"author": "Pluto Systems <https://plutosystems.co>",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 	"description": "A measurement within a known range, as the native meter on the muted track with a primary fill, its numbers written beside it.",
 	"registryDependencies": [
 		"utils",
@@ -15,7 +15,7 @@
 	},
 	"files": [
 		{
-			"content": "<script lang=\"ts\">\n  import { cn, type WithElementRef, type WithoutChildren } from \"$UTILS$\";\n  import type { HTMLMeterAttributes } from \"svelte/elements\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    value,\n    min = 0,\n    max = 100,\n    valuetext,\n    ...restProps\n  }: WithoutChildren<WithElementRef<HTMLMeterAttributes, HTMLMeterElement>> & {\n    /** The measurement. */\n    value: number;\n    /** The range's floor. Default 0. */\n    min?: number;\n    /** The range's ceiling. Default 100. */\n    max?: number;\n    /** What a reader hears instead of a percentage, such as \"4.81 billion instructions of 30 billion\". */\n    valuetext?: string;\n  } = $props();\n</script>\n\n<!--\n  The native meter (004 decision 14): a measurement within a known range, not\n  progress. Its track is muted and its fill primary through pluto-theme's\n  rules, with square ends. The app names it with a <label for> or aria-label\n  and writes its numbers beside it; the fill is never the only sign.\n-->\n<meter\n  bind:this={ref}\n  data-slot=\"meter\"\n  {value}\n  {min}\n  {max}\n  aria-valuetext={valuetext}\n  class={cn(\"block h-2 w-full rounded-none\", className)}\n  {...restProps}\n></meter>\n",
+			"content": "<script lang=\"ts\">\n  import { cn, type WithElementRef, type WithoutChildren } from \"$UTILS$\";\n  import type { HTMLMeterAttributes } from \"svelte/elements\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    value,\n    min = 0,\n    max = 100,\n    valuetext,\n    ...restProps\n  }: WithoutChildren<WithElementRef<HTMLMeterAttributes, HTMLMeterElement>> & {\n    /** The measurement. */\n    value: number;\n    /** The range's floor. Default 0. */\n    min?: number;\n    /** The range's ceiling. Default 100. */\n    max?: number;\n    /** What a reader hears instead of a percentage, such as \"48 of 100\". */\n    valuetext?: string;\n  } = $props();\n</script>\n\n<!--\n  The native meter: a measurement within a known range, not\n  progress. Its track is muted and its fill primary through pluto-theme's\n  rules, with square ends. The app names it with a <label for> or aria-label\n  and writes its numbers beside it; the fill is never the only sign.\n-->\n<meter\n  bind:this={ref}\n  data-slot=\"meter\"\n  {value}\n  {min}\n  {max}\n  aria-valuetext={valuetext}\n  class={cn(\"block h-2 w-full rounded-none\", className)}\n  {...restProps}\n></meter>\n",
 			"type": "registry:ui",
 			"target": "meter/meter.svelte"
 		},

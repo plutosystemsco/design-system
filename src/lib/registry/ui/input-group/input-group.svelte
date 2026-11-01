@@ -12,7 +12,7 @@
 
 <!--
   The group takes the input recipe and draws the focus indicator when its text
-  control has focus; the control inside drops its own (decision 8).
+  control has focus; the control inside drops its own.
 -->
 <div
   bind:this={ref}

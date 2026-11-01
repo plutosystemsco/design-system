@@ -3,7 +3,7 @@
 	"name": "empty",
 	"title": "Empty",
 	"type": "registry:ui",
-	"author": "Pluto Systems <https://plutosystems.co>",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 	"description": "An empty state: an icon tile, a heading, a sentence and the next action.",
 	"devDependencies": [
 		"tailwind-variants@^3.3.1"

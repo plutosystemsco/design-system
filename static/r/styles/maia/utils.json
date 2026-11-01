@@ -3,7 +3,7 @@
 	"name": "utils",
 	"title": "Utils",
 	"type": "registry:lib",
-	"author": "Pluto Systems <https://plutosystems.co>",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 	"description": "The cn class-merging helper and the prop-type helpers that components import.",
 	"devDependencies": [
 		"cn@^0.5.0"

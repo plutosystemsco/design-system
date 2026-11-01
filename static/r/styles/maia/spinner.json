@@ -3,7 +3,7 @@
 	"name": "spinner",
 	"title": "Spinner",
 	"type": "registry:ui",
-	"author": "Pluto Systems <https://plutosystems.co>",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 	"description": "A turning icon for the one control that is busy, decorative by default or announced with a label.",
 	"devDependencies": [
 		"phosphor-svelte@^3.1.1"

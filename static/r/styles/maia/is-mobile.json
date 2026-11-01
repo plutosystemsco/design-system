@@ -3,7 +3,7 @@
 	"name": "is-mobile",
 	"title": "Is mobile",
 	"type": "registry:hook",
-	"author": "Pluto Systems <https://plutosystems.co>",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 	"description": "A media-query store that is true below 768 px and false on the server.",
 	"registryDependencies": [
 		"utils",

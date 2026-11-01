@@ -3,7 +3,7 @@
   import { getContext } from "svelte";
   import { cn } from "#lib/utils";
 
-  /** The contract a `Field` sets under the key "pluto:field" (field decision 11). */
+  /** The contract a `Field` sets under the key "pluto:field". */
   type FieldContext = {
     readonly id: string;
     readonly invalid: boolean;

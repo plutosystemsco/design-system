@@ -15,7 +15,7 @@
     child?: Snippet<[{ props: HTMLAnchorAttributes }]>;
   } = $props();
 
-  // At least 24 px tall, a target (R21). The colour alone transitions: a
+  // At least 24 px tall, a target. The colour alone transitions: a
   // transition on every colour would fade the focus mark in too, and it must
   // be there at once.
   const attrs = $derived({

@@ -10,7 +10,7 @@
   }: SheetPrimitive.TitleProps = $props();
 </script>
 
-<!-- A heading in the heading face (R17); bits-ui renders role="heading" aria-level and names the dialog by it. -->
+<!-- A heading in the heading face; bits-ui renders role="heading" aria-level and names the dialog by it. -->
 <SheetPrimitive.Title
   bind:ref
   data-slot="sheet-title"

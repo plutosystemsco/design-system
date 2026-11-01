@@ -92,7 +92,7 @@
 </script>
 
 {#snippet Button({ props }: { props?: Record<string, unknown> })}
-  <!-- The row's own slot and data win over the tooltip trigger's (R20); handlers chain. -->
+  <!-- The row's own slot and data win over the tooltip trigger's; handlers chain. -->
   {@const mergedProps = mergeProps(props ?? {}, buttonProps)}
   {#if child}
     {@render child({ props: mergedProps })}

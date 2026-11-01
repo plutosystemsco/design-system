@@ -3,7 +3,7 @@
 	"name": "badge",
 	"title": "Badge",
 	"type": "registry:ui",
-	"author": "Pluto Systems <https://plutosystems.co>",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 	"description": "A small mono label that names a state in words, outlined in its state colour.",
 	"devDependencies": [
 		"tailwind-variants@^3.3.1"

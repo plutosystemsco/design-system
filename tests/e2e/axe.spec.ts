@@ -1,11 +1,11 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
 import {
-  NEW_PAGES,
-  NEW_PAGES_004,
-  NEW_PAGES_005,
-  NEW_PAGES_006,
-  NEW_PAGES_007,
+  PAGES_003,
+  PAGES_004,
+  PAGES_005,
+  PAGES_006,
+  PAGES_007,
   PAGES_002,
   VIEW_READY,
   VIEWS,
@@ -47,17 +47,17 @@ test.describe("at 1280", () => {
   }
 });
 
-// 003's 7 new item pages, 004's, 005's, 006's and 007's new item pages and the
+// 003's 7 item pages, 004's, 005's, 006's and 007's item pages and the
 // 28 views at 360, 768 and 1280 (006 decision 14 and 007 decision 10).
 for (const width of WIDTHS) {
   test.describe(`at ${width}`, () => {
     test.use({ viewport: { width, height: 900 } });
     for (const path of [
-      ...NEW_PAGES,
-      ...NEW_PAGES_004,
-      ...NEW_PAGES_005,
-      ...NEW_PAGES_006,
-      ...NEW_PAGES_007,
+      ...PAGES_003,
+      ...PAGES_004,
+      ...PAGES_005,
+      ...PAGES_006,
+      ...PAGES_007,
     ]) {
       test(`axe finds 0 violations on ${path}`, async ({ page }) => {
         await open(page, path);

@@ -11,8 +11,8 @@
 </script>
 
 <!--
-  The current page: a span with aria-current and nothing else. Stock's
-  role="link" aria-disabled announced "link, disabled", a false promise.
+  The current page: a span with aria-current and nothing else.
+  shadcn-svelte's role="link" aria-disabled announced "link, disabled", a false promise.
 -->
 <span
   bind:this={ref}

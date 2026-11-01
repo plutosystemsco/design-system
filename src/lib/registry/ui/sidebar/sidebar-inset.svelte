@@ -26,10 +26,9 @@
 
 <!--
   The page beside the sidebar. It owns the vertical groove on its start edge
-  (005 decision 5: the hairline, then the light inside it) while the sidebar
-  is beside it. As a main it is
-  id="main" with tabindex="-1", so the shell's skip link lands focus in every
-  browser.
+  (the hairline, then the light inside it) while the sidebar is beside it.
+  As a main it is id="main" with tabindex="-1", so the shell's skip link
+  lands focus in every browser.
 -->
 <svelte:element
   this={element}

@@ -3,7 +3,7 @@
   import { cn, type WithElementRef, type WithoutChildren } from "#lib/utils";
   import type { HTMLTextareaAttributes } from "svelte/elements";
 
-  /** The contract a `Field` sets under the key "pluto:field" (field decision 11). */
+  /** The contract a `Field` sets under the key "pluto:field". */
   type FieldContext = {
     readonly id: string;
     readonly invalid: boolean;

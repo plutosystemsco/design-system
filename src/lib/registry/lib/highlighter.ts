@@ -32,7 +32,7 @@ function rule(scope: string[], name: string, fontStyle?: "bold" | "underline") {
 }
 
 /**
- * The palette as a theme, by role (007 decision 5). Every colour is a code
+ * The palette as a theme, by role. Every colour is a code
  * slot, and every slot is a role that holds in any language: a type name, a
  * key, a decorator. A deeper selector beats a shallower one, which is how a
  * role escapes its parent's rule (the `f` of an f-string escapes `storage`).
@@ -60,8 +60,7 @@ export const codeTheme: ThemeRegistrationRaw = {
       ],
       "comment",
     ),
-    // Strings, their own quotes (004's checkpoint call: a literal reads as one
-    // thing), regexps, inline code, link titles, the f-string prefix.
+    // Strings, their own quotes (a literal reads as one thing), regexps, inline code, link titles, the f-string prefix.
     rule(
       [
         "string",
@@ -293,8 +292,7 @@ export const codeTheme: ThemeRegistrationRaw = {
 };
 
 /**
- * The slot-to-class table (004 decision 7, grown by 007 decision 5): every
- * slot but `foreground`, written out so Tailwind's scanner sees each class.
+ * The slot-to-class table: every slot but `foreground`, written out so Tailwind's scanner sees each class.
  * A token in the `foreground` slot carries no class: the `pre` is already
  * `text-foreground`.
  */
@@ -338,8 +336,7 @@ export function tokenClass(
   return classes.join(" ");
 }
 
-// The twenty-six languages (007 decision 5). Each one loads the first time it
-// is used; the list costs nothing until a block names a language. Add the
+// The twenty-six languages. Each one loads the first time it is used; the list costs nothing until a block names a language. Add the
 // languages you need beside them.
 const languages = {
   bash: () => import("shiki/langs/shellscript.mjs"),
@@ -407,7 +404,7 @@ async function getHighlighter() {
     return createHighlighterCore({
       themes: [codeTheme],
       langs: [],
-      // Strict: all twenty-six grammars compile under it (007 decision 5).
+      // Strict: all twenty-six grammars compile under it.
       engine: createJavaScriptRegexEngine({ forgiving: false }),
     });
   })();

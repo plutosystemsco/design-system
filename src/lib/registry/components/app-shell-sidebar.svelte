@@ -46,8 +46,8 @@
 </script>
 
 <!--
-  The shell's sidebar on 005's item: a nav landmark named "Main" with the
-  section's name, a search field, two groups with mono lowercase labels (the
+  The shell's sidebar, built on the sidebar item: a nav landmark named "Main"
+  with the section's name, a search field, two groups with mono lowercase labels (the
   links, then a collapsible Preferences group with its sub-items), and the
   account row in its footer opening the account menu. The current row is
   told by aria-current, the inset and the primary edge. From md it sits

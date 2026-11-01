@@ -1,9 +1,12 @@
 # Review of 001 — Tokens and the registry
 
+Reviews [`specifications/001-tokens-and-the-registry.md`](../specifications/001-tokens-and-the-registry.md).
+
+- **Status:** dispositioned; fit to build
 - **Date:** 2026-10-27
-- **Reviewer:** an agent (Claude), a fresh sub-agent of the orchestrating session; not the author
+- **Reviewer:** a reviewer; not the author
 - **Reviewed:** the specification as drafted, 2026-10-27
-- **Re-ran:** all of it in the session scratchpad, under Node 24.9.0 (Homebrew) and Bun 1.3.14. Nothing was written to this repository except this file.
+- **Re-ran:** all of it in a scratch folder outside the repository, under Node 24.9.0 (Homebrew) and Bun 1.3.14. Nothing was written to this repository except this file.
   - A Node script recomputed all 100 rows of decision 12, compositing the tint rows itself → 97 rows agree and 3 disagree (finding 3). The 2 `chart-3` exceptions agree (1.81, 1.95). The 3 reference ratios agree (21.00, 4.54, 4.47).
   - `npm view` on 10 of the 20 packages (kit 3.1.0, svelte-check 4.7.7, adapter-static 4.0.0, vite-plugin-svelte 7.3.1, vitest 5.0.5, prettier-plugin-svelte 4.1.1, @axe-core/playwright 4.14.0, cn 0.5.0, @types/node 24.19.2, typescript 6.0.3), plus kit 2.70.3, adapter-static 3.0.10, @tailwindcss/vite 4.3.3, shadcn-svelte 1.7.1 and @playwright/test 1.64.1 → the engines and peers match the spec. TypeScript's `latest` is 7.0.2. The newest Node 24 is 24.22.1.
   - Imported `shadcn-svelte/schema` 1.7.1 → it exports `registrySchema`, `registryItemSchema` and `registryIndexSchema`, among others.
@@ -35,7 +38,7 @@ The questions for each criterion:
 13. **`cn`** — countable. The same three calls were executed in the run memo §9 (READ).
 14. **axe** — countable: 14 scans. Can be met if swatch text sits on a ground and no scroll container overflows (finding 16) (INFERRED).
 15. **Themes** — countable: 7 × 2 = 14. Can be met (INFERRED).
-16. **The mark** — countable. 4 + 2 + 1 + 1 + 1 + 1 = 10 per theme, as stated (READ). The geometry matches v2's normative CSS (v2 lines 74–86: .30, .08, gap .16, translate .76 = .38 + .30 + .08) (READ). The tolerances are reasonable, because every target is a whole pixel at 100 px. Chromium's synthesized baseline for an empty grid item is unmeasured (run memo §10) (INFERRED).
+16. **The mark** — countable. 4 + 2 + 1 + 1 + 1 + 1 = 10 per theme, as stated (READ). The geometry matches the design book's normative CSS (§02: .30, .08, gap .16, translate .76 = .38 + .30 + .08) (READ). The tolerances are reasonable, because every target is a whole pixel at 100 px. Chromium's synthesized baseline for an empty grid item is unmeasured (run memo §10) (INFERRED).
 17. **Tokens in the browser** — countable: 9 radius classes plus `rounded-full` = 10; 5; 9; 3 + 3 = 6; 2 (READ). Can be met (INFERRED).
 18. **Keyboard** — countable: 8 stops. Fragile. Chromium makes overflowing scroll containers focusable, which would add stops (finding 16) (INFERRED).
 19. **Smoke** — countable: 7 × 2 = 14. Assertion 4 has no defined starting CSS (finding 14). Pre-installing `shadcn-svelte` hides finding 5. It never re-adds, so it misses finding 1 (EXECUTED).
@@ -43,7 +46,7 @@ The questions for each criterion:
 21. **Test files** — countable. It depends on unstated build-order preconditions (finding 13) (INFERRED).
 22. **Deploy config** — countable, but no named test or command checks it. None of the 15 test files covers it (finding 12) (READ).
 23. **Changelog** — countable. No named check, as for 22 (finding 12) (READ).
-24. **In the app** — **cannot be met in the current state.** `wasi-python-dev` has no web app: its tree is `bench/`, `examples/` and `runner/`. Its home page is its specification `003`, after `002`, and that `003` "needs `../design-system`'s `001`" (its `handoff.md`, read 2026-10-27). This criterion needs that app's `svelte-check`, Playwright and axe, which do not exist (finding 2) (READ).
+24. **In the app** — **cannot be met in the current state.** This criterion needs an installing app's `svelte-check`, Playwright and axe. No such app exists yet, and none can be built on this registry before this `001` (finding 2) (INFERRED).
 
 ## Findings, most severe first
 
@@ -62,13 +65,12 @@ The questions for each criterion:
    - Add smoke assertion 9, in each app's built CSS: dark plus reduced motion keeps `--background` at ink.
    - Recount criterion 19 as 9 × 2 = 18.
 
-2. **Criterion 24 cannot be met, and the header says "Depends on: nothing"** (`:8`, `:866`, `:905`). 001 cannot land until `wasi-python-dev` has a SvelteKit app with `svelte-check`, Playwright and axe. That app arrives only with its `003`, which waits on this `001`.
-   Failure: a builder finishes criteria 1–23, then cannot close 24. `002` (which "depends on" 001) is blocked behind another repository's `002` (the edge Worker) and `003`. The cycle is: 001 needs wasi 003, and wasi 003 needs 001.
-   Fix: split "built" from "done", as constitution §4.2 already does ("tested in that app before it is called done").
+2. **Criterion 24 cannot be met, and the header says "Depends on: nothing"** (`:8`, `:866`, `:905`). 001 cannot land until an installing app has a SvelteKit app with `svelte-check`, Playwright and axe. That app arrives only after this `001`.
+   Failure: a builder finishes criteria 1–23, then cannot close 24. `002` (which "depends on" 001) is blocked behind another repository's work. The cycle is: 001 needs an installing app, and that app needs 001.
+   Fix: split "built" from "done" (constitution §4.2).
    - 001 lands as **built** on criteria 1–23. The two scratch apps already prove the install path.
-   - Criterion 24 moves to `wasi-python-dev`'s `003`. That spec installs `pluto-theme` and `four-dot` from `localhost` and cites this registry's version.
+   - Criterion 24 moves to the installing app's own specification. That specification installs `pluto-theme` and `four-dot` from `localhost` and cites this registry's version.
    - 001's landing notes record "done" when that commit exists. The Depends-on line names the reverse dependency.
-   - If the owner wants it the other way round (wasi's scaffold first), that is an AskUserQuestion with this split as the recommended option.
 
 3. **Decision 12's light tint rows were computed at alpha 26/255, not 0.1. Criterion 4's "each ratio equals the table" fails on 3 rows** (`:329`, `:372–375`, `:829`, `:885`).
    Failure (EXECUTED):
@@ -97,19 +99,19 @@ The questions for each criterion:
 5. **`pluto-theme` makes every app import `shadcn-svelte/tailwind.css`, but no item names `shadcn-svelte`** (`:80`, `:515–517`, `:736`, `:893`).
    Failure:
    - `add` merges `shadcnSvelteTailwindCssImport` into the app's CSS whenever an item carries `cssVars` or `css` (`add-registry-items.ts`, after `setupFonts`). EXECUTED: the import appeared.
-   - An app that runs the CLI through `bunx shadcn-svelte@1.7.1`, as decision 23 tells `wasi-python-dev` to, has no `shadcn-svelte` in `node_modules`. Its build then cannot resolve the import (registry memo §6, INFERRED there; INFERRED here).
+   - An app that runs the CLI through `bunx shadcn-svelte@1.7.1`, as decision 23 tells apps to, has no `shadcn-svelte` in `node_modules`. Its build then cannot resolve the import (registry memo §6, INFERRED there; INFERRED here).
    - The smoke apps pre-install `shadcn-svelte`, so they hide this. Constitution §4.6 asks the item to name what it needs.
    Fix:
    - Give `pluto-theme` an explicit `"devDependencies": ["shadcn-svelte@^1.7.1"]`. `build` detects packages only from files, and this item has none. `add` installs a theme item's devDependencies (`add-registry-items.ts:146–148`).
    - `deps.test.ts` then counts 5 packages.
    - The scratch apps start **without** `shadcn-svelte` and run the CLI through `bunx`. Assertion 6 checks that `package.json` gained it.
 
-6. **`wash` and `ink-wash` add a fourth ground, which v2 refuses. The spec makes that call itself** (`:197`, `:201`, `:219`).
+6. **`wash` and `ink-wash` add a fourth ground, which the design book refuses. The spec makes that call itself** (`:197`, `:201`, `:219`).
    Failure:
-   - v2 §03: "grounds are paper, raised white, or ink". The spec quotes the restriction and adds a ground anyway, on an INFERRED reading of "no new hues".
+   - The design book §03: "grounds are paper, raised white, or ink". The spec quotes the restriction and adds a ground anyway, on an INFERRED reading of "no new hues".
    - It also drives the replacement of the owner's proposed green text. `#157A43` fails only on `muted` (4.47) and on its tint (4.40 over paper).
-   - The owner accepted v2 and "fix as we go" for contrast failures. A new ground colour is a design-book change, not a contrast fix.
-   Fix: put it to the owner with AskUserQuestion before building. The options:
+   - The owner accepted the design book and "fix as we go" for contrast failures. A new ground colour is a design-book change, not a contrast fix.
+   Fix: put it to the owner before building, with the recommended option first. The options:
    - **(recommended)** accept `wash` and `ink-wash` for component insets only (tab lists, code grounds, skeletons, hover rows), never as section grounds, recorded in `decisions.md`;
    - `muted` is paper, used only on raised surfaces;
    - no `muted` ground.
@@ -137,15 +139,15 @@ The questions for each criterion:
    Failure: a reader may conclude the order protects them, and add a `blocks` path later.
    Fix: reword. Note that any `#lib/registry/blocks/...` import survives `build` untransformed, which the "no `#lib` in built content" assertion then catches.
 
-10. **The dark-theme state colours sit next to the open owner call on coloured dots** (`:261`, `:264`, `:279–280`). `destructive-fill` and `success-fill` are described as "state dots and fills", and in dark they are lifted red and green on ink. v2 §03 refuses "color dots on dark grounds".
-    - The spec's reading is defensible: v2 also sanctions "functional state semantics", and the owner put the dark theme with lifted accents to the spec to confirm.
+10. **The dark-theme state colours sit next to the open owner call on coloured dots** (`:261`, `:264`, `:279–280`). `destructive-fill` and `success-fill` are described as "state dots and fills", and in dark they are lifted red and green on ink. The design book §03 refuses "color dots on dark grounds".
+    - The spec's reading is defensible: the design book also sanctions "functional state semantics", and the owner put the dark theme with lifted accents to the spec to confirm.
     - But it decides the dark state dot, which `003`'s run metrics will show, without saying so.
-    - Also, v2's own monochrome-on-dark mark (`.paperdots`) uses `--raised` `#FFFFFF`, while the spec uses `paper` `#F7F7F4`.
+    - Also, the design book's own monochrome-on-dark mark (`.paperdots`) uses `--raised` `#FFFFFF`, while the spec uses `paper` `#F7F7F4`.
 
     Failure: none today. A future reading of the icon call ("no dots on ink") would contradict 001's dark tokens.
-    Fix: one sentence in decision 28 saying 001 decides the state-dot case, and why. Ask both parts together when the icon call is put. Cite the `paper` choice against v2's `.paperdots`.
+    Fix: one sentence in decision 28 saying 001 decides the state-dot case, and why. Ask both parts together when the icon call is put. Cite the `paper` choice against the design book's `.paperdots`.
 
-11. **v2 does give a display line height** (`:315`). `.ts-display` is `line-height: 1.15` (v2 line 186). The spec says v2 gives none, and picks 1.1.
+11. **The design book does give a display line height** (`:315`). `.ts-display` is `line-height: 1.15` (the design book §04). The spec says the design book gives none, and picks 1.1.
     Fix: use 1.15, or keep 1.1 with a reason.
 
 12. **Criteria 22 and 23 name no check** (`:903–904`). Decision 27 says "the test needs no JSONC parser", but none of the 15 test files includes it.
@@ -201,7 +203,7 @@ The questions for each criterion:
 ## Constitution checks
 
 - **§4.1 source, not a package:** holds. Items carry source. The font packages and `shadcn-svelte/tailwind.css` are build-time imports, pinned by the app's lock. Nothing reaches back at run time.
-- **§4.2 developed in tandem:** the intent holds. Criterion 24, as placed, deadlocks with `wasi-python-dev`'s `003` (finding 2).
+- **§4.2 driven by need:** the intent holds. Criterion 24, as placed, deadlocks with the app that installs it (finding 2).
 - **§4.3 tokens are the one source:**
   - Holds for colour.
   - The lockup's weight and line height are keyword literals (finding 15).
@@ -215,32 +217,32 @@ The questions for each criterion:
 - **§4.6 dependencies named and pinned:** `pluto-theme` does not name `shadcn-svelte` (finding 5).
 - **§6 never:**
   - No commits.
-  - No copying: `utils` is written to the interface, and the mark follows Pluto's own v2.
+  - No copying: `utils` is written to the interface, and the mark follows the Pluto Systems design book.
   - "Break an installed app silently" is violated by finding 1.
 - **The owner's decisions:**
   - The type stack, the ladder, the red and green fills, the text-safe red and a public registry all match `decisions.md`.
-  - The replaced canvas values are proposals the handoff said the spec could confirm or replace. Each replacement has its arithmetic, and it reproduces (EXECUTED).
-  - The two open calls (doc-ID, coloured dots on ink for the icon) are correctly left undecided, with the deciding spec named.
-  - One call goes beyond the owner's grant: the fourth ground (finding 6). The dark state dots lie next to the open call (finding 10).
-- **v2's rules:**
+  - The replaced canvas values are proposals the canvas offered for the spec to confirm or replace. Each replacement has its arithmetic, and it reproduces (EXECUTED).
+  - The two calls then open (doc-ID, coloured dots on ink for the icon) are correctly left undecided, with the deciding spec named. Both are settled since: the doc-ID scheme is `PS-<series>-<NNNN>` (`decisions.md`, "The theme mechanism, the doc-ID scheme and the footer's sentence"), and the icon's dots on ink use the lifted primitives (`decisions.md`, "After the public-readiness review").
+  - One call goes beyond the owner's grant: the fourth ground (finding 6). The dark state dots lie next to the icon call (finding 10).
+- **The design book's rules:**
   - Two radii: applied by mapping every `rounded-*` to 8 px and leaving `rounded-full`. That is correct, and it matches run memo §5.
-  - Ladder: applied to spacing utilities in items. Leaving `h-*` and `w-*` free is a defensible reading of v2 §05.
+  - Ladder: applied to spacing utilities in items. Leaving `h-*` and `w-*` free is a defensible reading of the design book §05.
   - Mark geometry: exact.
   - On-ink rule: applied to the mark. The functional exemption is defensible but should be said (finding 10).
   - No gradients or glass: `menuColor: "default"` removes the translucent menus.
   - One accent per surface: preview pages are not brand surfaces; nothing in the items breaks it.
-  - Grooves: match v2's CSS (`border-top` plus a 1 px inset highlight).
+  - Grooves: match the design book's CSS (`border-top` plus a 1 px inset highlight).
 
 ## Verdict
 
-Does not land yet: finding 1 (any later `add` turns the dark theme light for reduced-motion users) and finding 2 (criterion 24 cannot be met, and it deadlocks with `wasi-python-dev`'s `003`) are High. Findings 3 to 6 are Medium: the light tint rows do not reproduce at the stated alpha, lint cannot pass, `shadcn-svelte` is not named, and the fourth ground is an owner call.
+Does not land yet: finding 1 (any later `add` turns the dark theme light for reduced-motion users) and finding 2 (criterion 24 cannot be met, and it deadlocks with the app that installs it) are High. Findings 3 to 6 are Medium: the light tint rows do not reproduce at the stated alpha, lint cannot pass, `shadcn-svelte` is not named, and the fourth ground is an owner call.
 
 ## Disposition
 
 Answered by the author, 2026-10-27, in the amended specification (Status "draft, amended 2026-10-27 after review"). The amendment also applies the owner's two newer decisions (Bun is the runtime; a fourth ground for `muted`, insets only) and the toolchain memo's findings (`research/2026-10-27-the-toolchain-under-bun.md`).
 
 1. Fixed: the reduced-motion overrides are emitted under `html:root` (decision 14, with the reason, and decision 15's emission list and a new rule: no `:root` or `.dark` inside an at-rule). `generated.test.ts` asserts that rule and the block's two selectors (criterion 5). Smoke assertion 7 checks that a second `add four-dot -y -o` leaves the app's CSS byte-identical; assertion 8 checks the app's media block holds only `html:root` and `*, ::before, ::after` and no colour variable. The "dark stays dark under reduce" check is made in the browser on the preview app (`tokens.spec.ts`, criterion 17) rather than in the scratch apps' built CSS, which have no browser run. Criterion 19 is now 10 × 2 = 20 (assertions 9 and 10 are the build and a new `svelte-check`).
-2. Fixed: 001 lands as *built* on criteria 1–23 and is *done* when `wasi-python-dev`'s home-page specification installs `pluto-theme` and `four-dot` and passes that app's checks (criterion 24). Stated in the Status line, the Depends-on line (the reverse edge), Terms, Scope ("the step to done") and the landing-notes template (built date; later the done commit). No owner question was needed: the split follows constitution §4.2.
+2. Fixed: 001 lands as *built* on criteria 1–23, and criterion 24 no longer waits on another repository. "Done" is never an app's adoption: criterion 24 is the release, met when the change is tagged `v0.1.0` and the Landing notes cite its review (constitution §2 and §4.2; `decisions.md`, "After the public-readiness review"). No owner question was needed for the split: it follows constitution §4.2.
 3. Fixed: tints composite at exactly 0.1 (light) and 0.2 (dark), channels rounded half up; the test reads the same decimal and computes in integer tenths so halves are exact (decision 12). Light rows 27–30 corrected to `#F2E3DF` 4.55, `#F9EAE9` 4.86, `#E0E9E2` 5.08, `#E7F1EC` 5.46; dark rows reproduce unchanged. All 100 rows re-verified by script against the amended table. The "thinnest pass" prose now says 4.55; the canvas table's 4.37 is now 4.40. `wash` and `ink-wash` are called flattened values with exact derivations (ink at 15/255 over paper; paper at 0.1 over ink) (decision 7).
 4. Fixed: `.prettierignore` gains `context/` with the build and generated paths (decision 26). `build-tokens` formats `registry.json` and `src/app.css` through prettier's API before writing, so both are checked, not ignored, and `generated.test.ts` compares the formatted text (decision 15, criterion 5).
 5. Fixed: `pluto-theme` carries `"devDependencies": ["shadcn-svelte@^1.7.1"]` (decision 19; the schema allows it on any item type and `build` keeps it, READ). `package.json`'s specifier becomes `^1.7.1` under the caret rule (decision 4). The scratch apps hold no `shadcn-svelte`; the smoke test runs this repository's locked CLI with the app as working directory, and assertion 6 checks that the app's `package.json` gained it, assertion 9 that its build resolves the import. `deps.test.ts` counts 5 packages (criterion 12); `registry.test.ts` checks the built field (criterion 7).
@@ -248,8 +250,8 @@ Answered by the author, 2026-10-27, in the amended specification (Status "draft,
 7. Fixed: "no state tint on `muted`, in either theme" stated in decision 8 and decision 29, with the four ratios (4.06, 3.96, 4.44 fail; 4.58 forbidden by rule). The three failing pairs are `contrast.forbidden` in the token file, and `contrast.test.ts` asserts each still fails at its stated ratio (decision 12, criterion 4).
 8. Fixed: decision 20 now says `utils` installs at the app's `utils` alias path plus `.ts` (READ `resolveItemFilePath`), not at the `lib` alias. Decision 29 tells `002` never to run a stock `add` with `-o` here, or to restore `src/lib/utils.ts` afterwards.
 9. Fixed: decision 19 rewords the alias reasoning (a bare `#lib`, replaced last, rewrites only paths no earlier alias matched, e.g. `#lib/registry/blocks/x`) and notes that a `#lib/registry/blocks/...` import survives `build`, which the "no `#lib` in built content" assertion catches.
-10. Fixed: decision 28 says 001 decides the dark state-dot case and why, and that both parts are asked together when the icon call is put. Decision 8 cites the `paper` choice against v2's `.paperdots` (`raised` `#FFFFFF`), with the reason.
-11. Fixed: the display line height is v2's 1.15 (decision 11 table and prose, and the token-file shape).
+10. Fixed: decision 28 says 001 decides the dark state-dot case and why. The icon call is settled since: the mark's coloured dots on ink use the lifted primitives (`decisions.md`, "After the public-readiness review"). Decision 8 cites the `paper` choice against the design book's `.paperdots` (`raised` `#FFFFFF`), with the reason.
+11. Fixed: the display line height is the design book's 1.15 (decision 11 table and prose, and the token-file shape).
 12. Fixed: criteria 22 and 23 are checked by `registry.test.ts` (3 wrangler assertions; 6 item names in the changelog); decision 25 and decision 27 say so. Test-file counts are unchanged at 8 unit, 5 browser, 2 smoke.
 13. Fixed: `registry.test.ts` builds into a temporary folder via `build-registry --out` (decision 18); the watcher plugin builds once in `configureServer` before the server listens, so any `vite dev` serves a fresh registry and `dev` is just `bun --bun vite dev` (decision 23); `webServer.command` is `bun run build && bun --bun vite preview …`; `dev-loop.test.ts` runs on a temporary copy with its own server and port, so the two smoke files share no state (decision 25, "Build order"). `fileParallelism` no longer applies: Vitest is replaced by `bun test`.
 14. Fixed: the scratch apps are committed fixtures under `tests/smoke/fixtures/kit3/` and `kit2/`, with exact versions and committed `bun.lock` files, installed with `--frozen-lockfile`. Their starting `src/app.css` is exactly `@import "tailwindcss";`, and their `tsconfig.json`, `components.json` (with `"style": "maia"`) and file list are stated (decision 25).
@@ -260,3 +262,5 @@ Answered by the author, 2026-10-27, in the amended specification (Status "draft,
 19. Fixed (superseded): under the owner's Bun decision there is no `.nvmrc` and no Node engine; `deps.test.ts` asserts that no `.nvmrc` exists (decision 1, criterion 1).
 
 Constitution note on §4.3 and the preview components: answered in decision 24 (§4.3's "a component" is what an app installs; preview pages are display and measurement fixtures; the geometry fixture's 100 px is a measurement setting).
+
+After the disposition: fit to build.

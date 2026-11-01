@@ -1,5 +1,5 @@
 /**
- * WCAG 2.2 contrast arithmetic (decision 12). Pure: no file access.
+ * WCAG 2.2 contrast arithmetic (001 decision 12). Pure: no file access.
  *
  * Each sRGB channel is linearised; L = 0.2126 R + 0.7152 G + 0.0722 B; the
  * ratio is (L1 + 0.05) / (L2 + 0.05), truncated to two decimals, never

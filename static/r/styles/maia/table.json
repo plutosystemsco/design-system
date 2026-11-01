@@ -3,7 +3,7 @@
 	"name": "table",
 	"title": "Table",
 	"type": "registry:ui",
-	"author": "Pluto Systems <https://plutosystems.co>",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 	"description": "A data table with a caption, header, selectable rows and a footer, scrolling inside itself when it must.",
 	"registryDependencies": [
 		"utils",

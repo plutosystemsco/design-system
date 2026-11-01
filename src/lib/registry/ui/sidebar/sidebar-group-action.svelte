@@ -13,7 +13,7 @@
     child?: Snippet<[{ props: Record<string, unknown> }]>;
   } = $props();
 
-  // A 32 px target (R21) on the group label's row; it names itself with aria-label.
+  // A 32 px target on the group label's row; it names itself with aria-label.
   const mergedProps = $derived({
     class: cn(
       "absolute end-2 top-2 flex size-8 items-center justify-center rounded text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:hidden [&>svg]:size-4 [&>svg]:shrink-0",

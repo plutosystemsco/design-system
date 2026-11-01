@@ -312,12 +312,12 @@
       {
         "theme": "light",
         "pair": ["chart-3", "background"],
-        "why": "amber series are labelled directly (v2 §03; WCAG 1.4.11)"
+        "why": "amber series are labelled directly (the design book §03; WCAG 1.4.11)"
       },
       {
         "theme": "light",
         "pair": ["chart-3", "card"],
-        "why": "amber series are labelled directly (v2 §03; WCAG 1.4.11)"
+        "why": "amber series are labelled directly (the design book §03; WCAG 1.4.11)"
       }
     ],
     "forbidden": [
@@ -328,7 +328,7 @@
         "over": "muted",
         "alpha": 0.1,
         "ratio": 4.06,
-        "why": "no state tint on muted (decision 8)"
+        "why": "no state tint on muted (001 decision 8)"
       },
       {
         "theme": "dark",
@@ -337,7 +337,7 @@
         "over": "muted",
         "alpha": 0.2,
         "ratio": 3.96,
-        "why": "no state tint on muted (decision 8)"
+        "why": "no state tint on muted (001 decision 8)"
       },
       {
         "theme": "dark",
@@ -346,7 +346,7 @@
         "over": "muted",
         "alpha": 0.2,
         "ratio": 4.44,
-        "why": "no state tint on muted (decision 8)"
+        "why": "no state tint on muted (001 decision 8)"
       }
     ],
     "scrim": [

@@ -104,7 +104,7 @@
   <h2 id="contrast" class="text-2xl font-bold tracking-section">Contrast</h2>
   <p class="mt-2 max-w-prose text-muted-foreground">
     WCAG 2.2 ratios, truncated to two decimals. Text needs 4.5, non-text 3.
-    Tints composite at 10% in light and 20% in dark. Amber is the one recorded
+    Tints composite at 10% in light and 20% in dark. Amber is the one known
     exception: an amber series is labelled directly.
   </p>
   <div class="mt-6 dark:hidden">

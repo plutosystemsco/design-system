@@ -2,7 +2,7 @@
 
 - **Status:** complete
 - **Date:** 2026-10-28
-- **Owner:** Clay Gendron (research executed by an agent, Claude, sub-agent of the orchestrating session)
+- **Author:** the design lead
 - **Question:** How do shadcn-svelte blocks work, end to end? What `registry:block` and `registry:page` mean in the schema. Where each kind of file in a block lands on install. Whether a block in our registry can depend on stock primitives by bare name. Which primitives the stock login, sign-up, sidebar, dashboard and OTP blocks compose. How the shadcn-svelte site previews a block. And what this means for a Pluto block.
 - **What it blocks:** specification `002`, the primitives (its list must cover what the blocks need), and the blocks specification after it. See `decisions.md`, "Blocks, and they shape `002`" (2026-10-28).
 
@@ -14,7 +14,7 @@ Every claim carries a label.
 - **READ**: a source says so. Sources are the prior art clone `context/prior_art/shadcn-svelte` (MIT, commit `6149e14`, the CLI 1.7.1 release), read on 2026-10-28. Paths below start at that clone's root, with line numbers. We read and cite; we copied no code.
 - **INFERRED**: our reasoning.
 
-All runs were in the session scratchpad (`.../scratchpad/research-blocks/`). Nothing in this repository was written except this memo. The repository's dev server was started once and rebuilt `static/r/` as it always does on start; `registry.json` and `src/lib/registry/` were not touched (EXECUTED: `git status` identical before and after).
+All runs were in a scratch folder outside this repository. Nothing in this repository was written except this memo. The repository's dev server was started once and rebuilt `static/r/` as it always does on start; `registry.json` and `src/lib/registry/` were not touched (EXECUTED: `git status` identical before and after).
 
 Every CLI run under Bun printed "You are currently using an unsupported runtime. Only Node.js v22 or higher is officially supported." That is expected under `--bun` (toolchain memo §7) and is not repeated below.
 
@@ -146,7 +146,7 @@ READ, all under `docs/src/`:
 
 All EXECUTED.
 
-- **The app.** `tests/smoke/fixtures/kit3` copied to the scratchpad without `node_modules`, `.svelte-kit` or `build`. `bun install --frozen-lockfile` exited 0 (66 packages). `bun --bun node_modules/.bin/svelte-kit sync` exited 0. Its `components.json` aliases: `components` `#lib/components`, `ui` `#lib/components/ui`, `hooks` `#lib/hooks`, `utils` `#lib/utils`, `lib` `#lib`; style `maia`. The folder was made a throwaway git repository so every write showed in `git status`.
+- **The app.** `tests/smoke/fixtures/kit3` copied to the scratch folder without `node_modules`, `.svelte-kit` or `build`. `bun install --frozen-lockfile` exited 0 (66 packages). `bun --bun node_modules/.bin/svelte-kit sync` exited 0. Its `components.json` aliases: `components` `#lib/components`, `ui` `#lib/components/ui`, `hooks` `#lib/hooks`, `utils` `#lib/utils`, `lib` `#lib`; style `maia`. The folder was made a throwaway git repository so every write showed in `git status`.
 - **Our dev server.** `bun run dev --port 5391 --strictPort` from the repository root printed `[registry] build:registry done` and `VITE v8.3.5 ready`. `GET http://localhost:5391/r/styles/maia/index.json` answered 200. The same path on `127.0.0.1` got no answer (curl code 000): Vite listened on `localhost` only.
 - **The flags.** `registry build --help`: `[registry]` (default `./registry.json`), `-c, --cwd`, `-o, --output` (default `./static/r`). The CLI reads each file's `path` relative to the process's working directory (READ, `build.ts:128`), so builds ran from the scratch registry folder, which needed a `package.json` for dependency detection (READ, `deps-resolver.ts:24-25`).
 - **Scratch registry "one".** A `registry.json` with our six items copied from the repository (with copies of `four-dot` and `utils.ts`) and our five aliases (`#lib/registry/components`, `#lib/registry/ui`, `#lib/registry/hooks`, `#lib/utils`, `#lib/registry/lib`). Added: `probe-block` and four variants (below). Built into `serve/one/r/styles/maia/`, the layout `scripts/build-registry.ts` writes (`<out>/r/styles/maia/`). Exit 0.
@@ -155,7 +155,7 @@ All EXECUTED.
 
 `probe-block` had five files:
 
-- `+page.svelte`, `registry:page`, `target: "src/routes/probe/+page.svelte"` (the form the brief proposed), importing `#lib/registry/components/probe-card.svelte`;
+- `+page.svelte`, `registry:page`, `target: "src/routes/probe/+page.svelte"` (the form this memo set out to test), importing `#lib/registry/components/probe-card.svelte`;
 - `probe-card.svelte`, `registry:component`, importing `FourDot` from `#lib/registry/ui/four-dot`, `cn` from `#lib/utils`, and the three files below by their aliases;
 - `probe-ui.svelte`, `registry:ui`;
 - `probe-data.ts`, `registry:lib`;
@@ -240,21 +240,21 @@ All INFERRED. Short on purpose; the blocks specification decides.
 - Width presets as fixed pixel widths that match our breakpoints (not percentages), plus a drag handle and an "open alone" link.
 - Light and dark side by side or switchable, since every block must pass both (constitution §4.4).
 - A code view that shows the **built** item JSON's files with app-side paths, which is what `add` writes, and the `add` command for our registry.
-- No screenshots. A screenshot rots when tokens change, which is why the owner chose live blocks.
+- No screenshots. A screenshot rots when tokens change, which is why the previews are live (decisions.md, "Blocks, and they shape `002`").
 
-**Decisions the blocks specification must make.**
+**Decisions the blocks specification must make.** `003` made each of them.
 
-1. The item shape: page plus components folder, and which blocks are single-file sections.
-2. The page target rule and the page-to-component import rule (a, b or c above).
-3. A naming rule that keeps component files from colliding across blocks.
-4. Where block source lives in this repository (`src/lib/registry/blocks/<name>/`, which exists and is empty) and how `registry.json` lists it: by hand, or crawled and inferred from imports as shadcn-svelte does.
-5. What goes in `meta` (preview height, category, since), since `categories` and `docs` do not survive our build.
-6. The preview route, its layout, its width presets and how theme is passed into the iframe.
-7. How the smoke test installs a block into the kit3 fixture and proves `vite build` and `svelte-check` pass, as `001` does for `four-dot`.
-8. Which primitives `002` must contain for the first set, confirmed against the blocks' drafts.
+1. The item shape: page plus components folder, and which blocks are single-file sections (`003` decisions 1 and 2).
+2. The page target rule and the page-to-component import rule (a, b or c above). `003` decision 3 lets the build compute the target; decision 2 takes (a).
+3. A naming rule that keeps component files from colliding across blocks (`003` decision 2: every component file starts with its block's name).
+4. Where block source lives in this repository (`src/lib/registry/blocks/<name>/`, which existed and was empty on this date) and how `registry.json` lists it: by hand, or crawled and inferred from imports as shadcn-svelte does (`003` decisions 2 and 5: by hand).
+5. What goes in `meta` (preview height, category, since), since `categories` and `docs` do not survive our build (`003` decision 5).
+6. The preview route, its layout, its width presets and how theme is passed into the iframe (`003` decisions 16 and 17).
+7. How the smoke test installs a block into the kit3 fixture and proves `vite build` and `svelte-check` pass, as `001` does for `four-dot` (`003` decision 20).
+8. Which primitives `002` must contain for the first set, confirmed against the blocks' drafts (decisions.md, "The primitives split in two, and the design calls for `002`"; `002` decision 24).
 
 ## Sources
 
 - `context/prior_art/shadcn-svelte` at `6149e14`, MIT, read 2026-10-28: `packages/cli/src/utils/registry/schema.ts`, `packages/cli/src/utils/registry/index.ts`, `packages/cli/src/commands/registry/build.ts`, `packages/cli/src/commands/registry/deps-resolver.ts`, `packages/cli/src/commands/add/index.ts`, `packages/cli/src/utils/add-registry-items.ts`, `packages/cli/src/utils/transformers/transform-imports.ts`, `packages/cli/src/utils/config/utils.ts`, `packages/cli/src/utils/project.ts`, `packages/cli/src/constants.ts`; `docs/scripts/registry.ts`, `docs/scripts/build-registry.ts`, `docs/package.json`; `docs/src/lib/registry/blocks/` (the fourteen blocks named), `registry-block-meta.ts`, `registry-categories.ts`, `registry-utils.ts`; `docs/src/lib/blocks.ts`, `docs/src/params/view.ts`; `docs/src/routes/(view)/`, `docs/src/routes/(app)/(layout)/blocks/`, `docs/src/routes/api/block/[block]/+server.ts`; `docs/src/lib/components/block-viewer*.svelte`, `component-preview.svelte`.
 - The live stock registry, `https://shadcn-svelte.com/registry/styles/maia/<name>.json`, fetched 2026-10-28 for `login-01` and the primitives listed in section 1.4.
-- This repository: `registry.json`, `scripts/build-registry.ts`, `tests/smoke/fixtures/kit3`, `specifications/001-tokens-and-the-registry.md` (decision 1), `research/2026-10-27-the-toolchain-under-bun.md`.
+- This repository: `registry.json`, `scripts/build-registry.ts`, `tests/smoke/fixtures/kit3`, `context/specifications/001-tokens-and-the-registry.md` (decision 1), `context/research/2026-10-27-the-toolchain-under-bun.md`.

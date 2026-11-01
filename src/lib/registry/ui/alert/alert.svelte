@@ -29,7 +29,7 @@
   /**
    * The role each variant takes unless the app passes one: an error is
    * announced when inserted; success and caution are status messages; a
-   * default alert is neither (decision 19).
+   * default alert is neither.
    */
   const ROLE: Record<
     NonNullable<AlertVariant>,

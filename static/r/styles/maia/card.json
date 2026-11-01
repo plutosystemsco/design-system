@@ -3,7 +3,7 @@
 	"name": "card",
 	"title": "Card",
 	"type": "registry:ui",
-	"author": "Pluto Systems <https://plutosystems.co>",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 	"description": "A raised surface with a header, content, footer and an action, whose title is a real heading.",
 	"registryDependencies": [
 		"utils",
