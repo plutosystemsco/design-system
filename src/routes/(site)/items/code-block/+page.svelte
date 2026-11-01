@@ -26,7 +26,7 @@ ZeroDivisionError: division by zero`;
   intro="Code on the muted inset, with no border. The header is divided from the code by the groove. Every colour is a code token, rendered as a class: the install snippet below was highlighted when this page was built, and shipped no highlighter."
 >
   <div class="grid max-w-2xl gap-8">
-    <Specimen caption="default · prerendered with highlightCode" class="w-full">
+    <Specimen caption="default, prerendered with highlightCode" class="w-full">
       <CodeBlock.Root data-testid="install-snippet">
         <CodeBlock.Header>
           <CodeBlock.Title
@@ -39,10 +39,10 @@ ZeroDivisionError: division by zero`;
         <CodeBlock.Content lines={data.install ?? undefined} />
       </CodeBlock.Root>
     </Specimen>
-    <Specimen caption="a diff · added and removed lines" class="w-full">
+    <Specimen caption="a diff, with added and removed lines" class="w-full">
       <CodeBlock.Root data-testid="diff-block">
         <CodeBlock.Header>
-          <CodeBlock.Title>sudoku.py · 2 changes</CodeBlock.Title>
+          <CodeBlock.Title>sudoku.py, 2 changes</CodeBlock.Title>
         </CodeBlock.Header>
         <CodeBlock.Content lineNumbers>
           {#each data.diff ?? [] as line, index (index)}
@@ -58,7 +58,7 @@ ZeroDivisionError: division by zero`;
         </CodeBlock.Content>
       </CodeBlock.Root>
     </Specimen>
-    <Specimen caption="destructive · labelled “Error output”" class="w-full">
+    <Specimen caption="destructive, labelled “Error output”" class="w-full">
       <CodeBlock.Root variant="destructive">
         <CodeBlock.Header>
           <CodeBlock.Title>Error output</CodeBlock.Title>
@@ -75,7 +75,10 @@ ZeroDivisionError: division by zero`;
   intro="Plain code with no language renders as one text node, which streams cheaply. The small size is for a chat message. A wrapped block breaks its long lines instead of scrolling."
 >
   <div class="grid max-w-2xl gap-8">
-    <Specimen caption="plain · no language, no highlighter" class="w-full">
+    <Specimen
+      caption="plain, with no language and no highlighter"
+      class="w-full"
+    >
       <CodeBlock.Root>
         <CodeBlock.Content code={output} />
       </CodeBlock.Root>
@@ -99,7 +102,7 @@ ZeroDivisionError: division by zero`;
     <Specimen caption="with a footer" class="w-full">
       <CodeBlock.Root>
         <CodeBlock.Content lines={data.install ?? undefined} />
-        <CodeBlock.Footer>2 lines · bash</CodeBlock.Footer>
+        <CodeBlock.Footer>2 lines of bash</CodeBlock.Footer>
       </CodeBlock.Root>
     </Specimen>
   </div>
@@ -136,10 +139,13 @@ ZeroDivisionError: division by zero`;
       is decoration: give it <code>aria-hidden="true"</code>.
     </li>
     <li>
-      Highlight colours are the twelve <code>--code-*</code> tokens, each a
-      semantic colour that passes 4.5:1 on the muted ground in both themes. A
+      Highlight colours are the twenty-one <code>--code-*</code> tokens, each a
+      semantic colour that passes 4.5:1 on every code ground in both themes. A
       highlighted token is a class, <code>text-code-keyword</code>, never a
-      <code>style</code>; a token in the body's colour carries no class.
+      <code>style</code>; a token in the body's colour carries no class. The
+      sudoku example shows numbers, built-ins such as <code>print</code> and
+      <code>range</code>, constants and comments by the new rules; a definition
+      is medium weight, a call is not.
     </li>
   </ul>
 </PreviewSection>
@@ -168,7 +174,7 @@ ZeroDivisionError: division by zero`;
         {/each}
       </CodeBlock.Content>
       <CodeBlock.Footer
-        >25 lines · Python · line 23 highlighted</CodeBlock.Footer
+        >25 lines of Python, line 23 highlighted</CodeBlock.Footer
       >
     </CodeBlock.Root>
   </div>

@@ -13,6 +13,7 @@ import {
   ITEMS_004,
   ITEMS_005,
   ITEMS_006,
+  ITEMS_007,
   NEW_ITEMS,
   cssVar,
   open,
@@ -223,6 +224,9 @@ test.describe("heights and targets", () => {
       "sidebar",
       "message-log",
       "composer",
+      // 007 decisions 7 and 9: the ink surface's fixture and the new item.
+      "pluto-theme",
+      "code-languages",
     ]) {
       await open(page, `/items/${item}/`);
       const sizes = await page
@@ -414,7 +418,7 @@ test.describe("elevation on the menu and the scrim on the sheet", () => {
 });
 
 test.describe("motion", () => {
-  test("0 infinitely looping animations outside a spinner on 002's 26 pages, 004's, 005's and 006's", async ({
+  test("0 infinitely looping animations outside a spinner on 002's 26 pages, 004's, 005's, 006's and 007's", async ({
     page,
   }) => {
     const loops: string[] = [];
@@ -423,6 +427,7 @@ test.describe("motion", () => {
       ...ITEMS_004,
       ...ITEMS_005,
       ...ITEMS_006,
+      ...ITEMS_007,
     ]) {
       await open(page, `/items/${item}/`);
       const found = await page.evaluate(() =>

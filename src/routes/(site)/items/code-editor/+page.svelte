@@ -6,12 +6,25 @@
   import ItemHeader from "#lib/preview/item-header.svelte";
   import PreviewSection from "#lib/preview/preview-section.svelte";
   import Specimen from "#lib/preview/specimen.svelte";
-  import { PI, SHORT } from "./example";
+  import * as Field from "#lib/registry/ui/field";
+  import * as NativeSelect from "#lib/registry/ui/native-select";
+  import { PYTHON_CLASS } from "#lib/preview/code-samples";
+  import { EDGE, LONG, SHORT } from "./example";
 
   // One preset, made once: the component reconfigures when it changes.
   const python = pythonSetup();
 
-  let value = $state(PI);
+  // The examples: the class sample; a long file, whose tail is parsed in
+  // idle time; the roles plugin's edge cases. Chosen through reset(), as an
+  // app loads a file.
+  const examples: Record<string, { title: string; code: string }> = {
+    class: { title: "A decorated class", code: PYTHON_CLASS },
+    long: { title: "A long file, 40 lines of 180 characters", code: LONG },
+    edge: { title: "The roles' edge cases", code: EDGE },
+  };
+  let example = $state("class");
+
+  let value = $state(PYTHON_CLASS);
   let editor: CodeEditor | undefined = $state();
   let runs = $state(0);
   const ran = $derived(runs === 1 ? "Ran 1 time" : `Ran ${runs} times`);
@@ -28,11 +41,24 @@
 <PreviewSection
   id="variants"
   title="Variants"
-  intro="CodeMirror 6 on the muted ground the code block shares, every colour and size from the tokens. It grows with its document, scrolls long lines sideways, and binds no Tab. The code is in the page before any script runs, as a plain pre that the editor replaces on mount."
+  intro="CodeMirror 6 on the muted ground the code block shares, every colour and size from the tokens, the same twenty-one slots the code block reads. It grows with its document, scrolls long lines sideways, and binds no Tab. The code is in the page before any script runs, as a plain pre that the editor replaces on mount. The example is a decorated class: a docstring, annotations, a property, self, an f-string and built-ins."
 >
   <div class="grid max-w-2xl gap-8">
-    <Specimen caption="pythonSetup() · bind:value · onrun" class="w-full">
+    <Specimen caption="pythonSetup(), a bound value and onrun" class="w-full">
       <div class="grid w-full gap-3" data-testid="editor-main">
+        <Field.Field class="max-w-xs">
+          <Field.Label>Example</Field.Label>
+          <NativeSelect.Root
+            bind:value={example}
+            data-testid="example-select"
+            onchange={() => editor?.reset(examples[example].code)}
+          >
+            {#each Object.entries(examples) as [id, entry] (id)}
+              <NativeSelect.Option value={id}>{entry.title}</NativeSelect.Option
+              >
+            {/each}
+          </NativeSelect.Root>
+        </Field.Field>
         <CodeEditor
           bind:this={editor}
           bind:value
@@ -46,7 +72,7 @@
           <Button
             size="sm"
             variant="secondary"
-            onclick={() => editor?.reset(PI)}>Reset</Button
+            onclick={() => editor?.reset(examples[example].code)}>Reset</Button
           >
           <Kbd.Group
             ><Kbd.Root>Ctrl</Kbd.Root><Kbd.Root>Enter</Kbd.Root></Kbd.Group
@@ -65,7 +91,7 @@
           data-testid="bound-value"
           class="font-mono text-xs text-muted-foreground"
         >
-          bound value · {lines.length} lines · last line
+          the bound value has {lines.length} lines; its last line is
           <code class="text-foreground">{lines[lines.length - 1]}</code>
         </p>
       </div>

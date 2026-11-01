@@ -53,6 +53,8 @@ export const ITEMS = [
   "code-editor",
   "highlighter",
   "use-highlighted-code",
+  // code (007)
+  "code-languages",
   // data (004)
   "chart",
   "meter",
@@ -108,6 +110,9 @@ export const ITEMS_005 = [
 /** 006's 2 blocks (decision 3), and their pages. */
 export const ITEMS_006 = ["app-shell", "chat"];
 /** The 26 items 002 adds: every item after the foundation that 003, 004, 005 and 006 did not. */
+/** 007 decision 7: the one new item, and its page. */
+export const ITEMS_007 = ["code-languages"];
+/** The 26 items 002 adds: every item after the foundation that 003, 004, 005 and 007 did not. */
 export const ITEMS_002 = ITEMS.slice(7).filter(
   (name) =>
     ![
@@ -121,7 +126,8 @@ export const ITEMS_002 = ITEMS.slice(7).filter(
     ].includes(name) &&
     !ITEMS_004.includes(name) &&
     !ITEMS_005.includes(name) &&
-    !ITEMS_006.includes(name),
+    !ITEMS_006.includes(name) &&
+    !ITEMS_007.includes(name),
 );
 /** Kept for 002's checks: the 26 items 002 added. */
 export const NEW_ITEMS = ITEMS_002;
@@ -151,6 +157,8 @@ export const NEW_PAGES_004 = ITEMS_004.map((name) => `/items/${name}/`);
 export const NEW_PAGES_005 = ITEMS_005.map((name) => `/items/${name}/`);
 /** The 2 new item pages of 006. */
 export const NEW_PAGES_006 = ITEMS_006.map((name) => `/items/${name}/`);
+/** The new item page of 007. */
+export const NEW_PAGES_007 = ITEMS_007.map((name) => `/items/${name}/`);
 /** The site pages: the catalogue and one page per item. */
 export const PAGES = ["/", ...ITEMS.map((name) => `/items/${name}/`)];
 /** The catalogue and 002's 32 item pages. */
@@ -159,7 +167,8 @@ export const PAGES_002 = PAGES.filter(
     !NEW_PAGES.includes(p) &&
     !NEW_PAGES_004.includes(p) &&
     !NEW_PAGES_005.includes(p) &&
-    !NEW_PAGES_006.includes(p),
+    !NEW_PAGES_006.includes(p) &&
+    !NEW_PAGES_007.includes(p),
 );
 
 /** The views (003 decision 16; 006 decision 12), each with its block and label. */

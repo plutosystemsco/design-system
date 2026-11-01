@@ -5,6 +5,7 @@ import {
   NEW_PAGES_004,
   NEW_PAGES_005,
   NEW_PAGES_006,
+  NEW_PAGES_007,
   PAGES_002,
   VIEW_READY,
   VIEWS,
@@ -46,8 +47,8 @@ test.describe("at 1280", () => {
   }
 });
 
-// 003's 7 new item pages, 004's, 005's and 006's new item pages and the 28
-// views at 360, 768 and 1280 (006 decision 14: NEW_PAGES_006 joins the loop).
+// 003's 7 new item pages, 004's, 005's, 006's and 007's new item pages and the
+// 28 views at 360, 768 and 1280 (006 decision 14 and 007 decision 10).
 for (const width of WIDTHS) {
   test.describe(`at ${width}`, () => {
     test.use({ viewport: { width, height: 900 } });
@@ -56,6 +57,7 @@ for (const width of WIDTHS) {
       ...NEW_PAGES_004,
       ...NEW_PAGES_005,
       ...NEW_PAGES_006,
+      ...NEW_PAGES_007,
     ]) {
       test(`axe finds 0 violations on ${path}`, async ({ page }) => {
         await open(page, path);
@@ -115,6 +117,26 @@ for (const [path, id, slot] of [
     await expectNoViolations(page);
   });
 }
+
+// 007 decision 10: the ink surface on the pluto-theme page at 1280, with its
+// popover open (inside the surface) and with its dialog open (under body).
+test.describe("at 1280", () => {
+  test.use({ viewport: { width: 1280, height: 900 } });
+  for (const [id, slot] of [
+    ["surface-popover", "popover-content"],
+    ["surface-dialog", "dialog-content"],
+  ] as const) {
+    test(`axe finds 0 violations on /items/pluto-theme/ with ${id} open`, async ({
+      page,
+    }) => {
+      await open(page, "/items/pluto-theme/");
+      await page.getByTestId(id).click();
+      await page.locator(`[data-slot="${slot}"]`).waitFor();
+      await settled(page);
+      await expectNoViolations(page);
+    });
+  }
+});
 
 // 005 decision 10: the sidebar page at 360 with its sheet open.
 test.describe("at 360", () => {

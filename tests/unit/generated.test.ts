@@ -1,7 +1,7 @@
 import { beforeAll, describe, expect, test } from "bun:test";
 import { readFileSync } from "node:fs";
 import { generateTokenOutputs } from "../../scripts/build-tokens.ts";
-import { blocks } from "../helpers/css.ts";
+import { blocks, topLevelMap } from "../helpers/css.ts";
 
 type CssTree = { [key: string]: string | CssTree };
 type Item = { name: string; cssVars?: unknown; css?: CssTree; font?: unknown };
@@ -139,17 +139,26 @@ describe("002's additions to pluto-theme", () => {
   });
 });
 
-/** 004 decision 5: twelve code tokens, the scrollbar utility and the meter's rules. */
+/** 004 decision 5 and 007 decisions 2 and 4: the 21 code tokens in both theme blocks, the scrollbar utility and the meter's rules. */
 describe("004's additions to pluto-theme", () => {
   const SLOTS: [slot: string, semantic: string][] = [
     ["foreground", "foreground"],
     ["background", "muted"],
-    ["keyword", "primary"],
-    ["string", "success"],
-    ["constant", "foreground"],
-    ["function", "foreground"],
     ["comment", "muted-foreground"],
+    ["keyword", "primary"],
+    ["constant", "primary"],
+    ["string", "success"],
+    ["number", "syntax-orange"],
+    ["escape", "syntax-orange"],
+    ["function", "syntax-amber"],
+    ["builtin", "syntax-purple"],
+    ["type", "syntax-teal"],
+    ["tag", "syntax-teal"],
+    ["property", "syntax-cyan"],
+    ["decorator", "syntax-purple"],
+    ["self", "syntax-purple"],
     ["link", "primary"],
+    ["invalid", "destructive"],
     ["inserted", "success"],
     ["deleted", "destructive"],
     ["changed", "primary"],
@@ -165,7 +174,8 @@ describe("004's additions to pluto-theme", () => {
       css: CssTree;
     };
 
-  test("cssVars.light holds the 12 code-* variables, each var(--<semantic>)", () => {
+  test("cssVars.light holds the 21 code-* variables, each var(--<semantic>)", () => {
+    expect(SLOTS).toHaveLength(21);
     const light = theme().cssVars.light;
     const keys = Object.keys(light).filter((k) => k.startsWith("code-"));
     expect(keys).toEqual(SLOTS.map(([slot]) => `code-${slot}`));
@@ -173,18 +183,40 @@ describe("004's additions to pluto-theme", () => {
       expect(light[`code-${slot}`]).toBe(`var(--${semantic})`);
   });
 
-  test("cssVars.dark holds 0 code-* variables", () => {
-    expect(
-      Object.keys(theme().cssVars.dark).filter((k) => k.startsWith("code-")),
-    ).toEqual([]);
+  // 007 decision 4: a subtree re-substitutes the references with its own values.
+  test("cssVars.dark holds the same 21 code-* variables", () => {
+    const dark = theme().cssVars.dark;
+    const keys = Object.keys(dark).filter((k) => k.startsWith("code-"));
+    expect(keys).toEqual(SLOTS.map(([slot]) => `code-${slot}`));
+    for (const [slot, semantic] of SLOTS)
+      expect(dark[`code-${slot}`]).toBe(`var(--${semantic})`);
   });
 
-  test("cssVars.theme holds the 12 color-code-* utilities, each var(--code-<slot>)", () => {
+  test("cssVars.theme holds the 21 color-code-* utilities, each var(--code-<slot>)", () => {
     const vars = theme().cssVars.theme;
     const keys = Object.keys(vars).filter((k) => k.startsWith("color-code-"));
     expect(keys).toEqual(SLOTS.map(([slot]) => `color-code-${slot}`));
     for (const [slot] of SLOTS)
       expect(vars[`color-code-${slot}`]).toBe(`var(--code-${slot})`);
+  });
+
+  // 007 decision 3: the five syntax pairs sit in both theme blocks.
+  test("cssVars.light and cssVars.dark each hold the 5 syntax-* names", () => {
+    const names = [
+      "syntax-orange",
+      "syntax-amber",
+      "syntax-purple",
+      "syntax-teal",
+      "syntax-cyan",
+    ];
+    for (const block of ["light", "dark"] as const) {
+      const vars = theme().cssVars[block];
+      expect(Object.keys(vars).filter((k) => k.startsWith("syntax-"))).toEqual(
+        names,
+      );
+    }
+    expect(theme().cssVars.light["syntax-amber"]).toBe("#85600B");
+    expect(theme().cssVars.dark["syntax-amber"]).toBe("#F0AE12");
   });
 
   test("css holds @utility scrollbar: the input thumb on the muted track, thin", () => {
@@ -231,14 +263,67 @@ describe("004's additions to pluto-theme", () => {
     expect(bodies[0]).toContain("@apply font-mono;");
   });
 
-  test("src/app.css carries the 12 :root code variables, the utility and the meter rules", () => {
+  test("src/app.css carries the 21 code variables in :root and in .dark, 21 color-code-* lines, 5 syntax-* per theme block, the utility and the meter rules", () => {
     const css = readFileSync("src/app.css", "utf8");
-    for (const [slot, semantic] of SLOTS)
-      expect(css).toContain(`--code-${slot}: var(--${semantic});`);
+    for (const block of [":root", ".dark"]) {
+      const vars = topLevelMap(css, block);
+      const code = [...vars.keys()].filter((k) => k.startsWith("--code-"));
+      expect(code, block).toEqual(SLOTS.map(([slot]) => `--code-${slot}`));
+      for (const [slot, semantic] of SLOTS)
+        expect(vars.get(`--code-${slot}`), block).toBe(`var(--${semantic})`);
+      expect(
+        [...vars.keys()].filter((k) => k.startsWith("--syntax-")),
+        block,
+      ).toHaveLength(5);
+    }
+    const inline = topLevelMap(css, "@theme inline");
+    expect(
+      [...inline.keys()].filter((k) => k.startsWith("--color-code-")),
+    ).toHaveLength(21);
     expect(css).toContain("--color-code-keyword: var(--code-keyword);");
     expect(css).toContain("@utility scrollbar {");
     expect(css).toContain("@layer components {");
     expect(css).toContain('[data-slot="meter"]::-moz-meter-bar');
+  });
+});
+
+/** 007 decision 8: the ink surface's two plain rules, after the theme blocks. */
+describe("007's additions to pluto-theme", () => {
+  const theme = () =>
+    items(readFileSync("registry.json", "utf8")).get("pluto-theme") as Item & {
+      css: CssTree;
+    };
+
+  test("css holds .surface-ink with its 4 declarations and .dark .surface-ink with 1", () => {
+    expect(theme().css[".surface-ink"]).toEqual({
+      "--code-background": "var(--background)",
+      "--code-active-line": "var(--muted)",
+      "background-color": "var(--background)",
+      color: "var(--foreground)",
+    });
+    expect(theme().css[".dark .surface-ink"]).toEqual({
+      "--background": "var(--card)",
+    });
+  });
+
+  test("src/app.css carries each rule once, and .surface-ink { after .dark {", () => {
+    const css = readFileSync("src/app.css", "utf8");
+    expect(css.match(/^\.surface-ink \{/gm)).toHaveLength(1);
+    expect(css.match(/^\.dark \.surface-ink \{/gm)).toHaveLength(1);
+    expect(css.match(/^\.dark \{/gm)).toHaveLength(1);
+    expect(css.indexOf("\n.dark {")).toBeLessThan(
+      css.indexOf("\n.surface-ink {"),
+    );
+    const surface = topLevelMap(css, ".surface-ink");
+    expect([...surface.entries()]).toEqual([
+      ["--code-background", "var(--background)"],
+      ["--code-active-line", "var(--muted)"],
+      ["background-color", "var(--background)"],
+      ["color", "var(--foreground)"],
+    ]);
+    expect([...topLevelMap(css, ".dark .surface-ink").entries()]).toEqual([
+      ["--background", "var(--card)"],
+    ]);
   });
 });
 

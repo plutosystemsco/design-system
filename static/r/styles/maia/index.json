@@ -926,6 +926,28 @@
 		"relativeUrl": "use-highlighted-code.json"
 	},
 	{
+		"name": "code-languages",
+		"title": "Code languages",
+		"type": "registry:lib",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "Any of the highlighter's twenty-six languages for the editor, loaded on demand: a table of ids, aliases and kinds, and loadLanguage.",
+		"devDependencies": [
+			"@codemirror/language-data@^6.5.2",
+			"@codemirror/language@^6.13.1",
+			"@replit/codemirror-lang-svelte@^6.0.0"
+		],
+		"registryDependencies": [
+			"utils",
+			"pluto-theme",
+			"code-editor"
+		],
+		"meta": {
+			"since": "0.7.0",
+			"group": "code"
+		},
+		"relativeUrl": "code-languages.json"
+	},
+	{
 		"name": "chart",
 		"title": "Chart",
 		"type": "registry:ui",

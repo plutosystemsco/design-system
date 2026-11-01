@@ -2,6 +2,18 @@
 
 Each release of the registry, newest first. A change to an item's interface is marked **interface change**.
 
+## 0.7.0 — 2026-11-01
+
+The full highlight palette and the ink surface: editor-grade highlighting across twenty-six languages, and a sanctioned dark panel inside any page.
+
+- `pluto-theme`: additive, not an interface change. The code map grows from twelve to twenty-one slots (`number`, `escape`, `builtin`, `type`, `tag`, `property`, `decorator`, `self` and `invalid` join the twelve), each a semantic colour; five new text-safe hue pairs, `syntax-orange`, `syntax-amber`, `syntax-purple`, `syntax-teal` and `syntax-cyan`, exist for the code slots alone and pass 4.5:1 on all six code grounds in both themes. `constant` moves from ink to blue and `function` from ink to amber; a call loses its weight, a definition keeps it. The slots are now emitted in `cssVars.dark` as well as `cssVars.light`, which corrects 0.4.0's emission: a `var()` inside a custom property is substituted where it is declared, so a `.dark` subtree inside a light page took the light palette. Two plain rules, `.surface-ink` and `.dark .surface-ink`, make `class="dark surface-ink"` an ink surface on any element: every token inside is the dark theme's, the code ground and the editor's ground equal the surface, ink on a light page and `card` on a dark one.
+- `highlighter`: the theme is rewritten by role, so one theme colours every grammar; the lazy list grows from fourteen to twenty-six languages (Go, Rust, Java, C, C++, C#, Ruby, PHP, Kotlin, Swift, TOML and Dockerfile join); the engine is strict (`forgiving: false`), under which all twenty-six grammars compile.
+- `code-editor`: the highlight style is rewritten to the same twenty-one slots; Python's grammar is taught decorator names, annotations, parameters and f-string braces; a roles plugin, `pythonRoles`, tells `self` and `cls`, the built-ins and docstrings, which no tag can; `pythonLanguageConfigured` and `pythonRoles` are exported beside `pythonSetup`. Its seven packages are unchanged.
+- The 0.7.0 `highlighter`, `code-block` and `code-editor` need the 0.7.0 `pluto-theme`: their new classes (`text-code-number`, `text-code-builtin` and the rest) resolve only once the twenty-one slots are in the app's stylesheet. `add` pulls the theme with each of them; an app that copies one file by hand without re-adding the theme sees the old twelve slots and the new roles in the body colour.
+- `code-languages`: new. Any of the twenty-six for the editor, on demand: a table of ids, aliases, kinds and names, and `loadLanguage(name)`, which opens a Lezer grammar through `@codemirror/language-data`, Svelte through `@replit/codemirror-lang-svelte`, and Python as the configured grammar. Eighteen languages get a Lezer grammar, eight a legacy mode.
+- `code-block`: the root reads `bg-code-background` instead of `bg-muted`. The same colour everywhere but inside a surface, where the block goes flush like the editor; a block that should stay an inset there passes `class="bg-muted"`.
+- The lint gains L19: a `syntax-*` colour named in any item file is a violation; the five are reached only through the code slots.
+
 ## 0.6.0 — 2026-11-01
 
 The app shell and the chat pane: the frame every page sits in, with the mark's one entrance and the footer's furniture, and the first conversation surface.

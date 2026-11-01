@@ -1,6 +1,6 @@
 # 007 — The full highlight palette and the ink surface
 
-- **Status:** draft, 2026-11-01, amended the same day after its specification review ([`../reviews/007-the-full-highlight-palette-and-the-ink-surface-spec-2026-11-01.md`](../reviews/007-the-full-highlight-palette-and-the-ink-surface-spec-2026-11-01.md), 11 findings, all fixed here), fit to build once `006` is built
+- **Status:** **built**, 2026-11-01, on the branch `007-palette` over `ab3a400` (`v0.6.0`), in parallel with `006` at the owner's word; amended the same day after its specification review ([`../reviews/007-the-full-highlight-palette-and-the-ink-surface-spec-2026-11-01.md`](../reviews/007-the-full-highlight-palette-and-the-ink-surface-spec-2026-11-01.md), 11 findings, all fixed here), fit to build once `006` is built
 - **Date:** 2026-11-01
 - **Owner:** Clay Gendron (written by an agent, Claude, the orchestrating session, as design lead under the owner's delegation of 2026-10-27)
 - **Kind:** the `code` map grown from twelve slots to twenty-one, with five new text-safe hue pairs; both engines' mappings across twenty-six languages; one new registry item (`code-languages`); the ink surface as two rules in `pluto-theme`; one class change in `code-block`; tests; the 0.7.0 release
@@ -312,4 +312,66 @@ Each is a count, checked by the command named. Criteria 1 to 19 make `007` *buil
 
 ## Landing notes
 
-*Pending.*
+- **Built:** 2026-11-01, on the branch `007-palette` in a git worktree, first over `616b8a0` (`v0.5.0`) in parallel with `006` (decisions.md, "`007` builds in parallel with `006`"), then rebased onto `ab3a400` (`v0.6.0`) and re-run at the combined counts; committed and tagged by the owner. The change review is [`../reviews/007-the-full-highlight-palette-and-the-ink-surface-pr-2026-11-01.md`](../reviews/007-the-full-highlight-palette-and-the-ink-surface-pr-2026-11-01.md): "Does not land yet" on 3 Medium and 6 Low findings; all 9 dispositioned, 8 fixed on the branch and 1 (the Landing notes) this. The design calls are in `decisions.md` ("The design calls for `007`", "After the `007` spec review", "After the `007` build's checkpoint", "After the `007` change review").
+- **Done:** *pending.* Criterion 20 waits on `wasi-python-dev`.
+
+**What the orchestrating session saw, under Bun 1.3.14, 2026-11-01** (EXECUTED by the builder after the rebase; the reviewer re-ran the suites before the fixes, on the branch over `v0.5.0`, at the same counts less `006`'s and the tests the fixes added):
+
+| Check | Result |
+|---|---|
+| `bun run check` | 1663 files, 0 errors, 0 warnings |
+| `bun run lint`, `bun scripts/lint-literals.ts` | exit 0; 0 literals in 301 item files |
+| `bun run build:tokens`, twice | the second run changes 0 files |
+| `bun run build:registry`, `bun run build` | 64 + 64 byte-identical registry files; 92 prerendered pages |
+| `bun install --frozen-lockfile` | no changes (`006`'s lock plus `@codemirror/language-data@6.5.2` and `@replit/codemirror-lang-svelte@6.0.0`) |
+| `bun run test` | unit 624 pass (10 files); browser 1298 passed, 0 failed (11 files × 2 projects); smoke 94 pass (6 files) |
+
+**Criteria, as counted at landing** (the spec's counts were written on `006`'s predictions; these are the combined landed numbers):
+
+| # | Count |
+|---|---|
+| 1 | frozen install no changes; 34 packages; both new packages pinned |
+| 2 | 0 errors, 0 warnings; lint exit 0 |
+| 3 | second `build:tokens` changes 0 files; 53 names per theme, the same 53; 34 primitives; the `code` map 21 of 21 in decision 2's order; 114 of 114 rows at 4.5 or more (minimum 4.52, `property` on dark `muted`); 10 families; 21 / 21 / 21; 5 `syntax-*` per theme block; the two surface rules once each, `.surface-ink {` after `.dark {` |
+| 4 | 74 of 74 bad, 0 of 49 good; 0 violations over 301 files; L19 flags the three forms |
+| 5 | 63 items (1, 3, 3, 2, 47, 7); `code-languages` with its 3 dependencies; `code-editor`'s 7 ranges; 44 dependency names; `since` `0.7.0` on 1; `highlighter.json` with `forgiving: false` once, `true` never |
+| 6 | 64 + 64 byte-identical; `highlighter.json` names 26 languages; `pluto-theme.json`'s `cssVars.dark` holds 21 `code-` keys and its `css` the two rules |
+| 7 | 92 pages; the highlighter page's HTML holds 26 blocks with `text-code-` spans, 0 `style` attributes in the gallery, 0 Shiki chunks |
+| 8 | 63 of 63 |
+| 9 | 450 scans, 0 violations (`006`'s 440 + 6 for the new page + 4 for the surface's two open overlays in two themes) |
+| 10 | 192 (`006`'s 190 + 2) |
+| 11 | 66 catalogue stops; 34 fixtures / 73 stops (the surface's 7, `code-languages`' 2), rings unclipped |
+| 12 | C1 to C4 in 2 of 2 themes; C2's 6 slots on the sudoku, `=` with no class, `font-medium` on `ok` and `solve` and on no call |
+| 13 | E1 to E5 in 2 of 2 themes; E3's 5 role readings and the mechanism check; E5 on the 7,240-character file and the edge cases; 0 literals |
+| 14 | L1 26 of 26; S2 26 of 26 |
+| 15 | S1 in 2 of 2 page themes: 8 light-page readings, the popover inside and the dialog under `body`, the 2 dark-page readings |
+| 16 | criterion 5's check; the gallery's 26 at prerender |
+| 17 | `code-add` 20 of 20 in 2 of 2 scratch apps (48 files; the 2 packages in the app's `package.json`; 1 `@lezer/highlight`; the two rules once each after `.dark`; 21 `.dark` lines; 21 by-product lines; second `add pluto-theme` byte-identical) |
+| 18 | 10, 11 and 6 files; exit 0 |
+| 19 | `0.7.0`; the changelog's entry names the palette, the `cssVars.dark` correction, the surface, the 26 languages and the strict engine, `code-editor` with `pythonRoles`, `code-languages`, `code-block`'s ground class, L19, and the upgrade line; notes 1 and 3 |
+| 20 | open: `wasi-python-dev` |
+
+**Notes:**
+
+1. **The checkpoint after build step 3.** The builder stopped with the tokens, the Shiki theme, the gallery, the code block's ground and the surface section built, 597 unit and the touched browser suites green, with the gallery at 1× and 2× and the surface in both page themes. The orchestrator's reading: on the Python class sample teal type names and cyan attributes read as two colours, with teal the greener, and cyan sits well apart from the keywords' blue; **cyan stays for `property`**, and decision 3's magenta fallback is not taken. The surface is ink on paper with the editor and the block flush, the pill strip and the meter's track on the wash inset, the popover dark inside the panel, the dialog white over the page's scrim. The calls are in `decisions.md`.
+2. **The change review's findings applied.** The roles plugin follows the parse tree (E5 reads line 30 of a long file with no scroll or edit); a docstring after a shebang or a same-line comment is a docstring; a keyword argument named like a built-in stays in the body; the shell's `$*`, `$@` and `$?` are keys; nine captions are clauses; the token file keeps its formatting; the changelog names `pythonRoles` and the upgrade path; `bash` is the shell's one id.
+3. **The development walk.** 92 pages on `vite dev` in both themes, every page warmed first, a fresh page per load: 0 of 184 loads with a page error or a console error or warning.
+4. **Provenance.** No stock file: every file here is ours or a rewrite of `004`'s own files. The two new packages are pinned exactly in `bun.lock`.
+5. **The rebase.** The branch held no commits of its own, so it fast-forwarded from `616b8a0` to `ab3a400` with the work stashed; twelve conflicts were resolved keeping both sides, `006`'s first: the version, the changelog's order, `build-tokens.ts` (the surface rules after `groove-b` and `mark-entrance`, still after `.dark`), the generated `app.css` and `pluto-theme.json` (regenerated, not merged), the page lists and the width loops in three browser suites, and the counts in three unit files. `bun.lock` merged clean.
+6. **Where the build bends a decision, and who allowed it.** Each the least that works; all seen by the review and judged sound. The design calls are in `decisions.md`; the rest, by the builder:
+   1. *C2 was rewritten with the theme in step 2*, since `004`'s assertions broke at once; *the keyboard ring helper reads `--ring` where the element sits*, so the dark ring inside a surface on a light page passes.
+   2. *The surface's two tab panels carry `tabindex={-1}`* (bits-ui's panel is a stop; the fixture counts 7); *the gallery's blocks keep their `pre` stop*; *the samples are 10 to 15 lines*.
+   3. *`@property` tokenises as a decorator mark plus a teal `property`* in Shiki and as one purple decorator in the editor; *`int(c)` and `str(d)` are types to Shiki*, so C2 reads `builtin` on `divmod`, `all`, `range` and `print`; *Shiki's TOML grammar marks a same-line comment after a value `invalid`*, so the sample's comment is on its own line.
+   4. *`code-languages` declares its three packages as `devDependencies` in `registry.json`*: the CLI's import detection reads static imports only, and the Svelte grammar is a dynamic `import()` so it is not bundled everywhere; the CLI installs declared `devDependencies` with `add -D` (the reviewer READ `index.mjs`).
+   5. *`pythonLanguageConfigured` and `pythonRoles` are exported from `code-editor`'s index*; the lib file imports the module directly, since a built file may not import an `/index.js`.
+   6. *The plugin marks `self` and `cls` anywhere, the parameter included* (as Shiki and PyCharm do), and *skips built-in names under `ParamList`, `TypeDef` and `Decorator`*, which the `styleTags` rules own.
+   7. *The `code-languages` page's keyboard fixture is its main specimen*; *L1 waits for the status and the first line, then polls the colours* (the grammar parses on a timer after `reset()`); *the editor page gains an "Example" select* so E5 sets a document through the page rather than CodeMirror's private DOM.
+   8. *The smoke reads the surface rules through a CSS block helper* (the CLI indents an appended plain rule); *it does not read a loaded language from the prerendered page* (the `{#await}` is pending at prerender) and proves the item through the app's build and check instead.
+   9. *The suites ran on a second port* while the `006` build held 4173; a git-ignored config copy, nothing tracked.
+   10. *Cyan stays; the plugin runs at `Prec.highest` and follows the tree; a docstring after comments; keyword arguments in the body; shell specials as keys; one shell id; the token file's formatting kept.* The design lead.
+7. **For the app and later specifications.**
+   - The app's restyle: `add pluto-theme code-block code-editor highlighter use-highlighted-code` from `v0.7.0` rewrites its `--code-*` block (21 lines in `:root` and in `.dark`) and the two surface rules; the run panel is `class="dark surface-ink"` with `BitsConfig defaultPortalTo` around its content and `portalProps={{ to: "body" }}` on any modal; no `.slab` rule is needed. Its test 3's expectations hold under the contract.
+   - A 0.7.0 code item needs the 0.7.0 `pluto-theme`: `add` pulls it; a hand-copied file without it shows the old twelve slots with the new roles in the body colour.
+   - `code-languages` installs about two megabytes of language packages; an app that edits one language keeps `pythonSetup()` alone. Eighteen languages have a Lezer grammar, Svelte a four-year-old third-party one, eight a legacy mode with keywords, strings, numbers and comments.
+   - The editor and the block differ on two tokens by design: `@property` and a built-in type used as a call (`str(d)`), which Shiki scopes as a type.
+   - `ansi`, if ever, adds to the same map.

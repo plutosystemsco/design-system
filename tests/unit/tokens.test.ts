@@ -15,10 +15,54 @@ describe("the token file", () => {
     expect(() => validateTokens(raw)).not.toThrow();
   });
 
-  test("holds 25 primitives, each #RRGGBB or #RRGGBBAA", () => {
+  // 007 decision 3: 004's 25 plus the nine text-safe hue primitives.
+  test("holds 34 primitives, each #RRGGBB or #RRGGBBAA", () => {
     const primitives = Object.entries(tokens.primitives);
-    expect(primitives).toHaveLength(25);
+    expect(primitives).toHaveLength(34);
     for (const [, hex] of primitives) expect(hex).toMatch(HEX);
+  });
+
+  test("holds the 9 primitives of 007 decision 3 at their hexes", () => {
+    expect(
+      Object.fromEntries(
+        Object.entries(tokens.primitives).filter(([name]) =>
+          /^(amber|orange|purple|teal|cyan)-(text|lifted)$/.test(name),
+        ),
+      ),
+    ).toEqual({
+      "amber-text": "#85600B",
+      "orange-text": "#A44F12",
+      "orange-lifted": "#E7792A",
+      "purple-text": "#903ACE",
+      "purple-lifted": "#B780DF",
+      "teal-text": "#15717A",
+      "teal-lifted": "#20A6B3",
+      "cyan-text": "#1B709B",
+      "cyan-lifted": "#269DD8",
+    });
+  });
+
+  // 007 decision 3: the five syntax pairs, reached only through the code slots.
+  test("holds the 5 syntax-* pairs: the text primitive in light, the lifted one (amber itself) in dark", () => {
+    const pairs = Object.keys(tokens.themes.light).filter((n) =>
+      n.startsWith("syntax-"),
+    );
+    expect(pairs).toEqual([
+      "syntax-orange",
+      "syntax-amber",
+      "syntax-purple",
+      "syntax-teal",
+      "syntax-cyan",
+    ]);
+    expect(
+      pairs.map((n) => [tokens.themes.light[n], tokens.themes.dark[n]]),
+    ).toEqual([
+      ["orange-text", "orange-lifted"],
+      ["amber-text", "amber"],
+      ["purple-text", "purple-lifted"],
+      ["teal-text", "teal-lifted"],
+      ["cyan-text", "cyan-lifted"],
+    ]);
   });
 
   test("writes each hex once", () => {
@@ -26,17 +70,18 @@ describe("the token file", () => {
     expect(new Set(values).size).toBe(values.length);
   });
 
+  // 007 decision 3: 48 becomes 53.
   test.each(["light", "dark"] as const)(
-    "%s holds 48 names, each naming a primitive",
+    "%s holds 53 names, each naming a primitive",
     (theme) => {
       const entries = Object.entries(tokens.themes[theme]);
-      expect(entries).toHaveLength(48);
+      expect(entries).toHaveLength(53);
       for (const [, primitive] of entries)
         expect(Object.keys(tokens.primitives)).toContain(primitive);
     },
   );
 
-  test("both themes name the same 48 tokens", () => {
+  test("both themes name the same 53 tokens", () => {
     expect(Object.keys(tokens.themes.dark).sort()).toEqual(
       Object.keys(tokens.themes.light).sort(),
     );
@@ -126,33 +171,42 @@ describe("the token file", () => {
   });
 });
 
-/** 004 decision 5: the `code` map, twelve slots, each a semantic colour. */
+/** 004 decision 5 and 007 decision 2: the `code` map, 21 slots, each a semantic colour. */
 describe("the code map", () => {
   const SLOTS: [slot: string, semantic: string][] = [
     ["foreground", "foreground"],
     ["background", "muted"],
-    ["keyword", "primary"],
-    ["string", "success"],
-    ["constant", "foreground"],
-    ["function", "foreground"],
     ["comment", "muted-foreground"],
+    ["keyword", "primary"],
+    ["constant", "primary"],
+    ["string", "success"],
+    ["number", "syntax-orange"],
+    ["escape", "syntax-orange"],
+    ["function", "syntax-amber"],
+    ["builtin", "syntax-purple"],
+    ["type", "syntax-teal"],
+    ["tag", "syntax-teal"],
+    ["property", "syntax-cyan"],
+    ["decorator", "syntax-purple"],
+    ["self", "syntax-purple"],
     ["link", "primary"],
+    ["invalid", "destructive"],
     ["inserted", "success"],
     ["deleted", "destructive"],
     ["changed", "primary"],
     ["active-line", "card"],
   ];
 
-  test("holds 12 slots, in decision 5's order, each naming its semantic colour", () => {
-    expect(SLOTS).toHaveLength(12);
+  test("holds 21 slots, in 007 decision 2's order, each naming its semantic colour", () => {
+    expect(SLOTS).toHaveLength(21);
     expect(Object.entries(tokens.code)).toEqual(SLOTS);
   });
 
-  test("12 of 12 values are among the 48 semantic names, and none is a primitive or a hex", () => {
+  test("21 of 21 values are among the 53 semantic names, and none is a primitive or a hex", () => {
     const semantic = new Set(Object.keys(tokens.themes.light));
     const values = Object.values(tokens.code);
-    expect(values).toHaveLength(12);
-    expect(values.filter((v) => semantic.has(v))).toHaveLength(12);
+    expect(values).toHaveLength(21);
+    expect(values.filter((v) => semantic.has(v))).toHaveLength(21);
     for (const value of values) {
       expect(value.startsWith("#")).toBe(false);
       expect(value in tokens.primitives).toBe(false);

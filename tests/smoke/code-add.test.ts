@@ -1,12 +1,14 @@
 /**
  * 004 decision 17, smoke: `add code-editor code-block chart popover accordion
- * toggle-group meter` into each of 001's two scratch apps, against this
- * repository's `vite dev`, with the locked CLI under Bun. Together the seven
- * pull use-highlighted-code, highlighter, status, button, spinner, toggle,
- * utils and pluto-theme, and all 9 packages of decision 2. Then the app's
- * prerendered build, its svelte-check, our lint, and the theme's by-product
- * (decision 5): `--color-code-keyword` once, and a second `add pluto-theme`
- * leaves app.css byte-identical.
+ * toggle-group meter code-languages` into each of 001's two scratch apps,
+ * against this repository's `vite dev`, with the locked CLI under Bun.
+ * Together the eight pull use-highlighted-code, highlighter, status, button,
+ * spinner, toggle, utils and pluto-theme, all 9 packages of decision 2 and
+ * the 2 of 007 decision 7. Then the app's prerendered build, its
+ * svelte-check, our lint, the theme's by-product (decision 5), and 007
+ * decision 10's checks: one `@lezer/highlight` in the lock, the surface's two
+ * rules in order, 21 `.dark` lines, 21 by-product lines, and a second
+ * `add pluto-theme` that leaves app.css byte-identical.
  */
 import { afterAll, beforeAll, describe, expect, test } from "bun:test";
 import {
@@ -21,6 +23,7 @@ import {
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { lintFiles, loadRules } from "../../scripts/lint-literals.ts";
+import { blocks, topLevelMap } from "../helpers/css.ts";
 import {
   bin,
   freePort,
@@ -52,7 +55,7 @@ afterAll(async () => {
 
 const PLACEHOLDERS = ["$UTILS$", "$UI$", "$LIB$", "$HOOKS$", "$COMPONENTS$"];
 
-/** The 47 files: each item's files from our registry, plus the hook, the library and utils. */
+/** The 48 files: each item's files from our registry, plus the hook, the two libraries and utils. */
 const EXPECTED: [item: string, count: number][] = [
   ["code-editor", 4],
   ["code-block", 9],
@@ -80,10 +83,11 @@ const FILES: string[] = [
   ),
   "src/lib/hooks/use-highlighted-code.svelte.ts",
   "src/lib/highlighter.ts",
+  "src/lib/code-languages.ts",
   "src/lib/utils.ts",
 ];
 
-/** 004 decision 2's 9 packages at their ranges, and 002's 4. */
+/** 004 decision 2's 9 packages at their ranges, 002's 4, and 007 decision 7's 2. */
 const PACKAGES: [string, string][] = [
   ["shiki", "^4.5.0"],
   ["@codemirror/state", "^6.7.6"],
@@ -98,6 +102,8 @@ const PACKAGES: [string, string][] = [
   ["@internationalized/date", "^3.12.4"],
   ["tailwind-variants", "^3.3.1"],
   ["phosphor-svelte", "^3.1.1"],
+  ["@codemirror/language-data", "^6.5.2"],
+  ["@replit/codemirror-lang-svelte", "^6.0.0"],
 ];
 
 type Run = {
@@ -147,6 +153,7 @@ describe.each([
         "accordion",
         "toggle-group",
         "meter",
+        "code-languages",
         "-y",
         "-o",
       ),
@@ -178,6 +185,7 @@ export const load = async () => ({
   import * as Chart from "${ui}/chart";
   import * as CodeBlock from "${ui}/code-block";
   import { CodeEditor, pythonSetup } from "${ui}/code-editor";
+  import { loadLanguage } from "${alias}/code-languages";
   import { Meter } from "${ui}/meter";
   import * as Popover from "${ui}/popover";
   import * as ToggleGroup from "${ui}/toggle-group";
@@ -189,9 +197,14 @@ export const load = async () => ({
     { day: "Wed", runs: 9 },
   ];
   const python = pythonSetup();
+  const rust = loadLanguage("rust");
+  const unknown = loadLanguage("brainfuck");
 </script>
 
 <CodeEditor value={"print(1)"} label="Python" extensions={python} />
+{#await Promise.all([rust, unknown]) then [support, none]}
+  <p>{support ? "rust loaded" : "no rust"} {none === null ? "unknown is null" : "unknown loaded"}</p>
+{/await}
 
 <CodeBlock.Root>
   <CodeBlock.Content lines={data.lines ?? undefined} lineNumbers />
@@ -280,8 +293,8 @@ export const load = async () => ({
     );
   });
 
-  test("2. 47 files land", () => {
-    expect(FILES).toHaveLength(47);
+  test("2. 48 files land", () => {
+    expect(FILES).toHaveLength(48);
     const missing = FILES.filter((f) => !existsSync(path.join(r.app, f)));
     expect(missing).toEqual([]);
   });
@@ -312,7 +325,7 @@ export const load = async () => ({
     expect(hook).toMatch(new RegExp(`from ["']\\${alias}/highlighter["']`));
   });
 
-  test("4. package.json names the 9 packages of decision 2 and 002's 4 at their ranges; no codemirror, no tailwind-merge", () => {
+  test("4. package.json names the 9 packages of decision 2, 002's 4 and 007's 2 at their ranges; no codemirror, no tailwind-merge", () => {
     const pkg = JSON.parse(
       readFileSync(path.join(r.app, "package.json"), "utf8"),
     );
@@ -340,7 +353,7 @@ export const load = async () => ({
     expect(Number(completed![1])).toBe(0);
   });
 
-  test("7. our lint finds 0 violations in the 47 installed files", () => {
+  test("7. our lint finds 0 violations in the 48 installed files", () => {
     expect(lintFiles(FILES, loadRules(REPO), r.app)).toEqual([]);
   });
 
@@ -352,5 +365,55 @@ export const load = async () => ({
     if (r.theme.code !== 0) console.error(r.theme.output);
     expect(r.theme.code).toBe(0);
     expect(r.cssAfterSecond).toBe(r.cssAfterFirst);
+  });
+
+  // 007 decision 10: the surface's rules, the dark block's slots, the
+  // by-product and one @lezer/highlight.
+  test("9. app.css holds .surface-ink { and .dark .surface-ink { once each, .surface-ink { after .dark {, 21 --code- lines in .dark and 21 derived @theme inline lines", () => {
+    const css = r.cssAfterFirst;
+    // By block, not by line: the CLI indents a plain rule it appends.
+    const preludes = blocks(css).map((b) => b.prelude);
+    expect(preludes.filter((p) => p === ".surface-ink")).toHaveLength(1);
+    expect(preludes.filter((p) => p === ".dark .surface-ink")).toHaveLength(1);
+    expect(preludes.filter((p) => p === ".dark")).toHaveLength(1);
+    expect(preludes.indexOf(".dark")).toBeLessThan(
+      preludes.indexOf(".surface-ink"),
+    );
+    const dark = topLevelMap(css, ".dark");
+    expect(
+      [...dark.keys()].filter((k) => k.startsWith("--code-")),
+    ).toHaveLength(21);
+    expect(dark.get("--code-background")).toBe("var(--muted)");
+    const surface = topLevelMap(css, ".surface-ink");
+    expect(surface.get("--code-background")).toBe("var(--background)");
+    expect(surface.get("--code-active-line")).toBe("var(--muted)");
+    expect(topLevelMap(css, ".dark .surface-ink").get("--background")).toBe(
+      "var(--card)",
+    );
+    const inline = topLevelMap(css, "@theme inline");
+    const derived = [...inline.entries()].filter(([name]) =>
+      name.startsWith("--code-"),
+    );
+    expect(derived).toHaveLength(21);
+    for (const [name, value] of derived) expect(value).toBe(`var(${name})`);
+  });
+
+  // The page's {#await} over loadLanguage is pending at prerender, so the
+  // build (test 5) and svelte-check (test 6) are what prove the item resolves.
+  test("10. bun.lock resolves @lezer/highlight once, and the installed code-languages.ts imports the configured Python through the app's alias", () => {
+    const lock = readFileSync(path.join(r.app, "bun.lock"), "utf8");
+    const entries =
+      lock.match(/^\s+"@lezer\/highlight(?:@[^"]*)?": \[/gm) ?? [];
+    expect(entries).toHaveLength(1);
+    const languages = readFileSync(
+      path.join(r.app, "src/lib/code-languages.ts"),
+      "utf8",
+    );
+    expect(languages).toMatch(
+      new RegExp(
+        `from ["']\\${alias}/components/ui/code-editor/code-editor-python(\\.js)?["']`,
+      ),
+    );
+    expect(languages).toContain('import("@replit/codemirror-lang-svelte")');
   });
 });

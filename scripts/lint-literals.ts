@@ -20,7 +20,11 @@
  * variable form, and `scale`). 004 decision 15 adds its L15 and L16: an
  * injected stylesheet (`<svelte:element this="style">`), and a CSS length or
  * named colour inside a quoted string of a `.ts` or `.svelte.ts` item file,
- * such as a CodeMirror theme object.
+ * such as a CodeMirror theme object. 007 decision 3 adds L19, a text rule: a
+ * `syntax-<hue>` name anywhere in an item file. The five syntax colours exist
+ * for the code slots alone; Tailwind also emits `text-(--syntax-orange)` and
+ * `text-(--color-syntax-orange)`, and a `.ts` theme string may write
+ * `var(--syntax-teal)`, so a class rule would miss them.
  * The CSS-variable form `-(--token)` is always allowed: its value is a token.
  */
 import { readFileSync } from "node:fs";
@@ -210,6 +214,8 @@ const NAMED_COLOURS = new Set(
     "steelblue tan teal thistle tomato turquoise violet wheat white whitesmoke yellow yellowgreen"
   ).split(" "),
 );
+/** 007 decision 3, L19: one of the five syntax colours, in any form. */
+const SYNTAX_COLOUR = /syntax-(?:orange|amber|purple|teal|cyan)\b/g;
 const LENGTH =
   /\d(?:px|rem|em|ex|ch|vh|vw|vmin|vmax|svh|lvh|dvh|cm|mm|in|pt|pc|q|%)(?![a-z])/i;
 const VAR_FORM = /^\(--[\w-]+\)$/;
@@ -502,6 +508,11 @@ export function lintText(
   INJECTED_STYLE.lastIndex = 0;
   for (const match of text.matchAll(INJECTED_STYLE))
     add("injected stylesheet", match.index ?? 0, match[0]);
+
+  // L19 (007): a syntax colour named outside the code slots.
+  SYNTAX_COLOUR.lastIndex = 0;
+  for (const match of text.matchAll(SYNTAX_COLOUR))
+    add("syntax colour", match.index ?? 0, match[0]);
 
   // L16 (004): CSS values in a theme file. Only a `.ts` or `.svelte.ts` file;
   // a `.svelte` file's classes are read by the class rules below.

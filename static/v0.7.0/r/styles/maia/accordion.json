@@ -1,0 +1,55 @@
+{
+	"$schema": "https://shadcn-svelte.com/schema/registry-item.json",
+	"name": "accordion",
+	"title": "Accordion",
+	"type": "registry:ui",
+	"author": "Pluto Systems <https://plutosystems.co>",
+	"description": "Headings that each open a section, divided by grooves, moved by the arrow keys.",
+	"devDependencies": [
+		"bits-ui@^2.20.2",
+		"@internationalized/date@^3.12.4",
+		"phosphor-svelte@^3.1.1"
+	],
+	"registryDependencies": [
+		"utils",
+		"pluto-theme"
+	],
+	"meta": {
+		"since": "0.4.0",
+		"group": "surfaces",
+		"stock": {
+			"registry": "https://shadcn-svelte.com/registry/styles/maia",
+			"item": "accordion",
+			"cli": "1.7.1",
+			"date": "2026-10-31",
+			"sha256": "4c77b3993546acfdb3ea5e0d7e268d4a53f2655856881b9909798fb3cdf1cf7e"
+		}
+	},
+	"files": [
+		{
+			"content": "<script lang=\"ts\">\n  import { Accordion as AccordionPrimitive } from \"bits-ui\";\n  import { cn } from \"$UTILS$\";\n\n  let {\n    ref = $bindable(null),\n    value = $bindable(),\n    class: className,\n    ...restProps\n  }: AccordionPrimitive.RootProps = $props();\n</script>\n\n<!--\n  Headings that each open a section, divided by grooves. No border and no\n  clip: an app that wants a card puts the accordion in one, and nothing may\n  clip a trigger's focus ring.\n-->\n<AccordionPrimitive.Root\n  bind:ref\n  bind:value={value as never}\n  data-slot=\"accordion\"\n  class={cn(\"flex w-full flex-col\", className)}\n  {...restProps}\n/>\n",
+			"type": "registry:ui",
+			"target": "accordion/accordion.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\" module>\n  import { getContext, setContext } from \"svelte\";\n\n  /**\n   * The wiring bits-ui leaves out (004 decision 12): one id per item, made\n   * here and shared, so the trigger says `aria-controls` and the content is a\n   * `region` labelled by the trigger.\n   */\n  export type AccordionItemContext = {\n    readonly triggerId: string;\n    readonly contentId: string;\n  };\n\n  const KEY = \"pluto:accordion-item\";\n\n  export function setAccordionItemContext(\n    context: AccordionItemContext,\n  ): AccordionItemContext {\n    return setContext(KEY, context);\n  }\n\n  export function getAccordionItemContext(): AccordionItemContext | undefined {\n    return getContext<AccordionItemContext | undefined>(KEY);\n  }\n</script>\n\n<script lang=\"ts\">\n  import { Accordion as AccordionPrimitive } from \"bits-ui\";\n  import { cn } from \"$UTILS$\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    ...restProps\n  }: AccordionPrimitive.ItemProps = $props();\n\n  const uid = $props.id();\n  setAccordionItemContext({\n    triggerId: `${uid}-trigger`,\n    contentId: `${uid}-content`,\n  });\n</script>\n\n<!-- Every item after the first carries the groove. No tint on the open item. -->\n<AccordionPrimitive.Item\n  bind:ref\n  data-slot=\"accordion-item\"\n  class={cn(\"not-first:groove\", className)}\n  {...restProps}\n/>\n",
+			"type": "registry:ui",
+			"target": "accordion/accordion-item.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import { Accordion as AccordionPrimitive } from \"bits-ui\";\n  import CaretRight from \"phosphor-svelte/lib/CaretRight\";\n  import { cn, type WithoutChild } from \"$UTILS$\";\n  import { getAccordionItemContext } from \"./accordion-item.svelte\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    level = 3,\n    children,\n    ...restProps\n  }: WithoutChild<AccordionPrimitive.TriggerProps> & {\n    /** The heading level bits-ui renders as role=\"heading\" aria-level. Default 3. */\n    level?: AccordionPrimitive.HeaderProps[\"level\"];\n  } = $props();\n\n  const context = getAccordionItemContext();\n</script>\n\n<!--\n  A heading holding a 48 px button in the heading face. One caret shows the\n  state by shape: it points right when closed and down when open.\n-->\n<AccordionPrimitive.Header {level} class=\"flex\">\n  <AccordionPrimitive.Trigger\n    data-slot=\"accordion-trigger\"\n    bind:ref\n    id={context?.triggerId}\n    aria-controls={context?.contentId}\n    class={cn(\n      \"group/accordion-trigger flex h-12 flex-1 items-center justify-between gap-4 py-0 text-start font-heading text-base font-bold underline-offset-4 hover:underline disabled:pointer-events-none disabled:opacity-50\",\n      className,\n    )}\n    {...restProps}\n  >\n    {@render children?.()}\n    <CaretRight\n      aria-hidden=\"true\"\n      class=\"size-4 shrink-0 text-muted-foreground transition group-aria-expanded/accordion-trigger:rotate-90\"\n    />\n  </AccordionPrimitive.Trigger>\n</AccordionPrimitive.Header>\n",
+			"type": "registry:ui",
+			"target": "accordion/accordion-trigger.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import { Accordion as AccordionPrimitive } from \"bits-ui\";\n  import { cn, type WithoutChild } from \"$UTILS$\";\n  import { getAccordionItemContext } from \"./accordion-item.svelte\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    children,\n    ...restProps\n  }: WithoutChild<AccordionPrimitive.ContentProps> = $props();\n\n  const context = getAccordionItemContext();\n</script>\n\n<!--\n  A region named by its trigger, so a reader can jump from panel to panel\n  (six panels or fewer). No animation: the content appears at once. Its\n  height variables are bits-ui's inline style, not ours.\n-->\n<AccordionPrimitive.Content\n  bind:ref\n  data-slot=\"accordion-content\"\n  id={context?.contentId}\n  role=\"region\"\n  aria-labelledby={context?.triggerId}\n  class=\"text-sm\"\n  {...restProps}\n>\n  <div\n    class={cn(\n      \"pb-4 [&_a]:underline [&_a]:underline-offset-4 [&_p:not(:last-child)]:mb-4\",\n      className,\n    )}\n  >\n    {@render children?.()}\n  </div>\n</AccordionPrimitive.Content>\n",
+			"type": "registry:ui",
+			"target": "accordion/accordion-content.svelte"
+		},
+		{
+			"content": "import Content from \"./accordion-content.svelte\";\nimport Item from \"./accordion-item.svelte\";\nimport Trigger from \"./accordion-trigger.svelte\";\nimport Root from \"./accordion.svelte\";\n\nexport {\n  Root,\n  Content,\n  Item,\n  Trigger,\n  //\n  Root as Accordion,\n  Content as AccordionContent,\n  Item as AccordionItem,\n  Trigger as AccordionTrigger,\n};\n",
+			"type": "registry:ui",
+			"target": "accordion/index.ts"
+		}
+	]
+}

@@ -32,8 +32,9 @@ const ITEMS_001: [string, string][] = [
 ];
 
 /**
- * 003 decision 5's 39 items, 004 decision 4's 10, 005 decision 4's 11 and 006
- * decision 3's 2, in order, each with its group: 62 items in 10 groups.
+ * 003 decision 5's 39 items, 004 decision 4's 10, 005 decision 4's 11, 006
+ * decision 3's 2 and 007 decision 7's 1, in order, each with its group: 63
+ * items in 10 groups.
  */
 const GROUPS: [group: string, names: string[]][] = [
   ["foundation", [...ITEMS_001.map(([n]) => n), "theme"]],
@@ -82,7 +83,13 @@ const GROUPS: [group: string, names: string[]][] = [
   ],
   [
     "code",
-    ["code-block", "code-editor", "highlighter", "use-highlighted-code"],
+    [
+      "code-block",
+      "code-editor",
+      "highlighter",
+      "use-highlighted-code",
+      "code-languages",
+    ],
   ],
   ["data", ["chart", "meter"]],
   [
@@ -123,6 +130,11 @@ const ITEMS_005: [name: string, type: string, title: string][] = [
   ["composer", "registry:ui", "Composer"],
 ];
 const TYPE_005 = new Map(ITEMS_005.map(([n, t]) => [n, t]));
+/** 007 decision 7: the one new item, a library with no meta.stock. */
+const ITEMS_007: [name: string, type: string, title: string][] = [
+  ["code-languages", "registry:lib", "Code languages"],
+];
+const TYPE_007 = new Map(ITEMS_007.map(([n, t]) => [n, t]));
 /** 005 decision 3: the 8 stock-derived items (theme, message-log and composer carry no meta.stock). */
 const STOCK_005 = [
   "dropdown-menu",
@@ -201,7 +213,8 @@ const NEW_ITEMS = GROUPS.slice(1)
       !ITEMS_003.includes(n) &&
       !TYPE_004.has(n) &&
       !TYPE_005.has(n) &&
-      !ITEMS_006.some(([name]) => name === n),
+      !ITEMS_006.some(([name]) => name === n) &&
+      !TYPE_007.has(n),
   );
 const ITEMS: [string, string][] = [
   ...ITEMS_001,
@@ -214,6 +227,7 @@ const ITEMS: [string, string][] = [
           n,
           TYPE_004.get(n) ??
             TYPE_005.get(n) ??
+            TYPE_007.get(n) ??
             (BLOCKS.includes(n) ? "registry:block" : "registry:ui"),
         ] as [string, string],
     ),
@@ -302,8 +316,8 @@ describe("registry.json", () => {
     expect(() => registrySchema.parse(registry)).not.toThrow();
   });
 
-  test("holds the 62 items of 006 decision 3, in order, with their types (1, 3, 2, 2, 47, 7)", () => {
-    expect(ITEMS).toHaveLength(62);
+  test("holds the 63 items of 006 decision 3 and 007 decision 7, in order, with their types (1, 3, 3, 2, 47, 7)", () => {
+    expect(ITEMS).toHaveLength(63);
     const types = ITEMS.map(([, t]) => t);
     expect(
       [
@@ -314,7 +328,7 @@ describe("registry.json", () => {
         "registry:ui",
         "registry:block",
       ].map((t) => types.filter((x) => x === t).length),
-    ).toEqual([1, 3, 2, 2, 47, 7]);
+    ).toEqual([1, 3, 3, 2, 47, 7]);
     expect(
       registry.items.map((i: { name: string; type: string }) => [
         i.name,
@@ -379,9 +393,11 @@ describe("registry.json", () => {
         "marker",
         "composer",
         "code-block",
+        // 007 decision 7's 1: code-languages names code-editor.
+        "code-editor",
       ].sort(),
     );
-    expect(deps.size).toBe(43);
+    expect(deps.size).toBe(44);
     for (const dep of deps) {
       expect(dep).not.toMatch(/^local:/);
       expect(dep).not.toMatch(/^[a-z][a-z0-9+.-]*:/i);
@@ -398,7 +414,7 @@ describe("registry.json", () => {
     for (const item of ui) expect(item.files.length).toBeGreaterThanOrEqual(2);
   });
 
-  test("62 of 62 items carry a meta.group among the 10, as decisions 5, 4, 4 and 3 order them", () => {
+  test("63 of 63 items carry a meta.group among the 10, as decisions 5, 4, 4, 3 and 7 order them", () => {
     expect(GROUPS).toHaveLength(10);
     const groups = new Set(GROUPS.map(([g]) => g));
     for (const item of registry.items as {
@@ -560,6 +576,36 @@ describe("registry.json", () => {
     expect(byName.get("four-dot")?.meta.since).toBe("0.1.0");
   });
 
+  // 007 decision 7: the library, its three registry dependencies, no stock.
+  test("code-languages is a registry:lib since 0.7.0 in group code with utils, pluto-theme and code-editor, 1 file, no meta.stock", () => {
+    const item = (
+      registry.items as {
+        name: string;
+        type: string;
+        title: string;
+        registryDependencies: string[];
+        files: { path: string; type: string }[];
+        meta: { since: string; group: string; stock?: unknown };
+      }[]
+    ).find((i) => i.name === "code-languages")!;
+    expect(item.type).toBe("registry:lib");
+    expect(item.title).toBe("Code languages");
+    expect(item.registryDependencies).toEqual([
+      "utils",
+      "pluto-theme",
+      "code-editor",
+    ]);
+    expect(item.files).toEqual([
+      { path: "src/lib/registry/lib/code-languages.ts", type: "registry:lib" },
+    ]);
+    expect(item.meta).toEqual({ since: "0.7.0", group: "code" });
+    expect(
+      (registry.items as { meta: { since: string } }[]).filter(
+        (i) => i.meta.since === "0.7.0",
+      ),
+    ).toHaveLength(1);
+  });
+
   test("10 of 10 page files carry no target in registry.json", () => {
     const pages = (
       registry.items as {
@@ -594,12 +640,12 @@ describe("the built registry", () => {
     if (out) rmSync(out, { recursive: true, force: true });
   });
 
-  test("63 files under r/styles/maia and 63 byte-identical files under the versioned path", () => {
+  test("64 files under r/styles/maia and 64 byte-identical files under the versioned path", () => {
     const files = readdirSync(latest()).sort();
     expect(files).toEqual(
       ["index.json", ...ITEMS.map(([n]) => `${n}.json`)].sort(),
     );
-    expect(files).toHaveLength(63);
+    expect(files).toHaveLength(64);
     expect(readdirSync(versioned()).sort()).toEqual(files);
     for (const file of files) {
       expect(readFileSync(path.join(versioned(), file))).toEqual(
@@ -613,7 +659,7 @@ describe("the built registry", () => {
     expect(existsSync(path.join(versioned(), "stale.json"))).toBe(false);
   });
 
-  test("each of the 62 built items parses with registryItemSchema", () => {
+  test("each of the 63 built items parses with registryItemSchema", () => {
     for (const [name] of ITEMS) {
       const item = JSON.parse(
         readFileSync(path.join(latest(), `${name}.json`), "utf8"),
@@ -658,6 +704,47 @@ describe("the built registry", () => {
       ...(highlighter.dependencies ?? []),
       ...(highlighter.devDependencies ?? []),
     ]).toEqual(["shiki@^4.5.0"]);
+    // 007 decision 5: the strict engine, and the twenty-six lazy languages,
+    // read from the built file's content (a source check, not a browser one).
+    const source: string = highlighter.files[0].content;
+    expect(source.match(/forgiving: false/g)).toHaveLength(1);
+    expect(source.match(/forgiving: true/g)).toBeNull();
+    const languages = [
+      ...source.matchAll(/import\("shiki\/langs\/([a-z]+)\.mjs"\)/g),
+    ]
+      .map((m) => m[1])
+      .sort();
+    expect(languages).toEqual(
+      [
+        "python",
+        "javascript",
+        "typescript",
+        "tsx",
+        "jsx",
+        "html",
+        "css",
+        "json",
+        "yaml",
+        "toml",
+        "markdown",
+        "shellscript",
+        "sql",
+        "go",
+        "rust",
+        "java",
+        "c",
+        "cpp",
+        "csharp",
+        "ruby",
+        "php",
+        "kotlin",
+        "swift",
+        "svelte",
+        "diff",
+        "docker",
+      ].sort(),
+    );
+    expect(languages).toHaveLength(26);
     const hook = JSON.parse(
       readFileSync(path.join(latest(), "use-highlighted-code.json"), "utf8"),
     );
@@ -665,6 +752,31 @@ describe("the built registry", () => {
       ...(hook.dependencies ?? []),
       ...(hook.devDependencies ?? []),
     ]).toEqual([]);
+  });
+
+  // 007 decision 7: the library's target, its three packages and its import of the configured Python.
+  test("code-languages' target is code-languages.ts; it names @codemirror/language-data, @codemirror/language and @replit/codemirror-lang-svelte, and imports $UI$/code-editor/code-editor-python", () => {
+    const item = JSON.parse(
+      readFileSync(path.join(latest(), "code-languages.json"), "utf8"),
+    );
+    expect(item.files.map((f: { target: string }) => f.target)).toEqual([
+      "code-languages.ts",
+    ]);
+    expect(
+      [...(item.dependencies ?? []), ...(item.devDependencies ?? [])].sort(),
+    ).toEqual([
+      "@codemirror/language-data@^6.5.2",
+      "@codemirror/language@^6.13.1",
+      "@replit/codemirror-lang-svelte@^6.0.0",
+    ]);
+    expect(item.registryDependencies).toEqual([
+      "utils",
+      "pluto-theme",
+      "code-editor",
+    ]);
+    expect(item.files[0].content).toContain(
+      'from "$UI$/code-editor/code-editor-python"',
+    );
   });
 
   test("code-editor names the 7 CodeMirror and Lezer packages of decision 2 at their ranges, and nothing else", () => {
@@ -844,7 +956,7 @@ describe("the built registry", () => {
     expect(built("composer").files).toHaveLength(2);
   });
 
-  test("0 of 63 built files carry $UTILS$.js or an /index.js import", () => {
+  test("0 of 64 built files carry $UTILS$.js or an /index.js import", () => {
     const offending: string[] = [];
     for (const file of readdirSync(latest())) {
       const text = readFileSync(path.join(latest(), file), "utf8");
@@ -896,6 +1008,24 @@ describe("CHANGELOG.md", () => {
     expect(match).not.toBeNull();
     return match![1];
   };
+
+  // 007 decision 11: the six things.
+  test("has a 0.7.0 entry naming the palette, the languages, code-languages, the surface, the block's ground and the emission", () => {
+    const body = entry("0.7.0");
+    for (const text of [
+      "`pluto-theme`",
+      "`code-languages`",
+      "`code-block`",
+      "`code-editor`",
+      "`highlighter`",
+      "`.surface-ink`",
+      "`bg-code-background`",
+      "twenty-one",
+      "twenty-six",
+      "`cssVars.dark`",
+    ])
+      expect(body).toContain(text);
+  });
 
   // 006 decision 15: app-shell, chat, pluto-theme (additive) and four-dot (changed, not an interface change).
   test("has a 0.6.0 entry naming the 2 blocks, pluto-theme and four-dot (4 of 4), the entrance and groove-b", () => {

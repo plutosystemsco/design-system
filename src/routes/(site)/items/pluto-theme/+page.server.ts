@@ -4,11 +4,15 @@ import {
   scrimRows,
 } from "../../../../../scripts/contrast.ts";
 import { readTokens, resolveColor } from "../../../../../scripts/tokens.ts";
+import { highlightCode } from "#lib/registry/lib/highlighter";
+import { SURFACE_CODE } from "./surface";
 import type { PageServerLoad } from "./$types";
 
-export const load: PageServerLoad = () => {
+export const load: PageServerLoad = async () => {
   const tokens = readTokens();
   return {
+    // 007 decision 9: the surface's code block, highlighted at prerender.
+    surface: await highlightCode(SURFACE_CODE, "python"),
     swatches: Object.keys(tokens.themes.light).map((name) => ({
       name,
       light: resolveColor(tokens, "light", name),

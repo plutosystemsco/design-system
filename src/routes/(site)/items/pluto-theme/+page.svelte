@@ -1,10 +1,30 @@
 <script lang="ts">
+  import { BitsConfig } from "bits-ui";
+  import { Button, buttonVariants } from "#lib/registry/ui/button";
+  import * as CodeBlock from "#lib/registry/ui/code-block";
+  import { CodeEditor, pythonSetup } from "#lib/registry/ui/code-editor";
+  import * as Dialog from "#lib/registry/ui/dialog";
+  import * as DropdownMenu from "#lib/registry/ui/dropdown-menu";
+  import * as Field from "#lib/registry/ui/field";
+  import { Input } from "#lib/registry/ui/input";
+  import { Label } from "#lib/registry/ui/label";
+  import { Meter } from "#lib/registry/ui/meter";
+  import * as Popover from "#lib/registry/ui/popover";
+  import * as Tabs from "#lib/registry/ui/tabs";
   import Eyebrow from "#lib/preview/eyebrow.svelte";
   import InstallCommand from "#lib/preview/install-command.svelte";
   import ContrastTable from "#lib/preview/contrast-table.svelte";
+  import { SURFACE_CODE } from "./surface";
   import type { PageProps } from "./$types";
 
   let { data }: PageProps = $props();
+
+  // The ink surface (007 decision 9): one preset, made once; the surface
+  // element is the portal target for every overlay opened inside it.
+  const python = pythonSetup();
+  let surfaceCode = $state(SURFACE_CODE);
+  let surface: HTMLElement | undefined = $state();
+  let verbose = $state(true);
 
   // Class names are written out so Tailwind finds them in this file.
   const sizes: Record<string, { cls: string; font: string }> = {
@@ -241,8 +261,10 @@
 <section class="mt-16" aria-labelledby="code">
   <h2 id="code" class="text-2xl font-bold tracking-section">Code and scroll</h2>
   <p class="mt-2 max-w-prose text-muted-foreground">
-    Twelve code tokens, each a semantic colour, drive the code block and the
-    editor as <code>text-code-*</code> and <code>bg-code-*</code> utilities. The
+    Twenty-one code tokens, each a semantic colour, drive the code block and the
+    editor as <code>text-code-*</code> and <code>bg-code-*</code> utilities.
+    They are written into both theme blocks, so a dark subtree inside a light
+    page takes the dark palette. The
     <code>scrollbar</code> utility colours a native scroll box's thumb and track
     from <code>input</code> and <code>muted</code>; the pattern is
     <code>overflow-auto scrollbar</code> with <code>tabindex="0"</code> and a label.
@@ -280,6 +302,169 @@
       <code class="text-xs">overflow-auto scrollbar</code>
     </div>
   </div>
+</section>
+
+<section class="mt-16" aria-labelledby="surface">
+  <h2 id="surface" class="text-2xl font-bold tracking-section">
+    An ink surface
+  </h2>
+  <p class="mt-2 max-w-prose text-muted-foreground">
+    An ink surface is <code>class="dark surface-ink"</code> on any element.
+    Inside it every token is the dark theme's; the code ground and the editor's
+    ground equal the surface; the surface is ink on a light page and
+    <code>card</code> on a dark one; set <code>--background</code> on the
+    surface to move all three. The <code>muted</code> insets keep their tint
+    inside it: the pill tab strip, the meter's track, a skeleton, a hover row.
+    This is the one place a <code>dark</code> class appears in a preview page: the
+    surface is the dark theme on purpose, in both page themes.
+  </p>
+  <section
+    bind:this={surface}
+    data-testid="keyboard-fixture"
+    class="dark surface-ink mt-6 rounded border border-border p-6"
+  >
+    <BitsConfig defaultPortalTo={surface}>
+      <div class="grid gap-6 lg:grid-cols-2">
+        <div class="grid min-w-0 content-start gap-2">
+          <CodeEditor
+            bind:value={surfaceCode}
+            label="Surface example"
+            extensions={python}
+          />
+          <p class="text-sm text-muted-foreground">
+            The editor sits flush on the surface. Tab leaves it.
+          </p>
+        </div>
+        <CodeBlock.Root data-testid="surface-block">
+          <CodeBlock.Header>
+            <CodeBlock.Title>darts.py</CodeBlock.Title>
+            <CodeBlock.Actions>
+              <CodeBlock.CopyButton code={SURFACE_CODE} />
+            </CodeBlock.Actions>
+          </CodeBlock.Header>
+          <CodeBlock.Content lines={data.surface ?? undefined} />
+        </CodeBlock.Root>
+      </div>
+      <div class="mt-6 grid gap-6 lg:grid-cols-2">
+        <Tabs.Root value="output" class="w-full">
+          <Tabs.List>
+            <Tabs.Trigger value="output">Output</Tabs.Trigger>
+            <Tabs.Trigger value="fuel">Fuel</Tabs.Trigger>
+          </Tabs.List>
+          <Tabs.Content value="output" tabindex={-1}
+            >pi is about 3.142</Tabs.Content
+          >
+          <Tabs.Content value="fuel" tabindex={-1}
+            >4.81 billion instructions of 30 billion.</Tabs.Content
+          >
+        </Tabs.Root>
+        <div class="grid content-start gap-2">
+          <div class="flex items-baseline justify-between gap-4">
+            <Label for="surface-fuel">Fuel</Label>
+            <span class="font-mono text-sm text-muted-foreground"
+              >4.81 billion instructions of 30 billion</span
+            >
+          </div>
+          <Meter
+            id="surface-fuel"
+            value={4.81}
+            max={30}
+            valuetext="4.81 billion instructions of 30 billion"
+          />
+        </div>
+      </div>
+      <div class="mt-6 flex flex-wrap items-center gap-3">
+        <Popover.Root>
+          <Popover.Trigger
+            data-testid="surface-popover"
+            class={buttonVariants({ variant: "secondary", size: "sm" })}
+            >About fuel</Popover.Trigger
+          >
+          <Popover.Content>
+            <Popover.Header>
+              <Popover.Title>Fuel</Popover.Title>
+              <Popover.Description>
+                Fuel is the budget of instructions a run may spend. This popover
+                opened inside the surface, so it takes the surface's theme.
+              </Popover.Description>
+            </Popover.Header>
+          </Popover.Content>
+        </Popover.Root>
+        <DropdownMenu.Root>
+          <DropdownMenu.Trigger
+            data-testid="surface-menu"
+            class={buttonVariants({ variant: "secondary", size: "sm" })}
+            >Run options</DropdownMenu.Trigger
+          >
+          <DropdownMenu.Content label="Run options">
+            <DropdownMenu.CheckboxItem bind:checked={verbose}
+              >Show every step</DropdownMenu.CheckboxItem
+            >
+            <DropdownMenu.Separator />
+            <DropdownMenu.Item>Run again</DropdownMenu.Item>
+            <DropdownMenu.Item>Copy the output</DropdownMenu.Item>
+          </DropdownMenu.Content>
+        </DropdownMenu.Root>
+        <Dialog.Root>
+          <Dialog.Trigger
+            data-testid="surface-dialog"
+            class={buttonVariants({ variant: "secondary", size: "sm" })}
+            >Rename run</Dialog.Trigger
+          >
+          <Dialog.Content portalProps={{ to: "body" }}>
+            <Dialog.Header>
+              <Dialog.Title>Rename run</Dialog.Title>
+              <Dialog.Description
+                >A modal belongs to the page, not to the surface its trigger
+                sits in: it opens in the page's theme, over the page's scrim.</Dialog.Description
+              >
+            </Dialog.Header>
+            <form class="grid gap-6" onsubmit={(e) => e.preventDefault()}>
+              <Field.Field>
+                <Field.Label>Name</Field.Label>
+                <Input value="darts" autocomplete="off" />
+              </Field.Field>
+              <Dialog.Footer>
+                <Dialog.Close class={buttonVariants({ variant: "secondary" })}
+                  >Cancel</Dialog.Close
+                >
+                <Button type="submit">Save</Button>
+              </Dialog.Footer>
+            </form>
+          </Dialog.Content>
+        </Dialog.Root>
+      </div>
+    </BitsConfig>
+  </section>
+  <p class="mt-6 max-w-prose text-sm text-muted-foreground">
+    Overlays: wrap the surface's content in
+    <code>BitsConfig defaultPortalTo</code> with the surface element, and every
+    popover, tooltip and menu opened inside lands inside it, themed like it, at
+    the same position; a modal passes
+    <code>portalProps={'{{ to: "body" }}'}</code> and stays the page's. The
+    surface must carry no <code>transform</code>, <code>filter</code> or
+    <code>contain</code>, or a portalled overlay inside it is clipped or
+    re-anchored. The <code>.surface-ink</code> rule wins over
+    <code>.dark</code> by source order, so it must stay after the
+    <code>.dark</code> block in an app's stylesheet, as the install writes it. A
+    code block that should stay an inset inside a surface, one inside a card or
+    a message, passes <code>class="bg-muted"</code>.
+  </p>
+  <ul class="mt-4 grid max-w-prose list-disc gap-2 pl-6 text-sm">
+    <li>
+      The groove inside a surface is the dark hairline alone, paper at 10% over
+      ink, with no light line beneath it.
+    </li>
+    <li>
+      The focus ring inside a surface is the dark <code>ring</code>, 6.85:1 on
+      ink and 5.22:1 on its muted insets.
+    </li>
+    <li>
+      A scroll box inside a surface draws its bar from the dark
+      <code>input</code> on the dark <code>muted</code>, and
+      <code>color-scheme</code> is dark, so native controls draw dark too.
+    </li>
+  </ul>
 </section>
 
 <section class="mt-16" aria-labelledby="motion">

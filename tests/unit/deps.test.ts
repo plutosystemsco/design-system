@@ -10,7 +10,7 @@ const lock = JSON.parse(
   readFileSync("bun.lock", "utf8").replace(/,(\s*[}\]])/g, "$1"),
 );
 
-// 001 decision 4's 19 packages, 002 decision 2's 4 and 004 decision 2's 9: the version bun.lock pins and the specifier package.json holds.
+// 001 decision 4's 19 packages, 002 decision 2's 4, 004 decision 2's 9 and 007 decision 7's 2: the version bun.lock pins and the specifier package.json holds.
 const PACKAGES: [name: string, version: string, specifier: string][] = [
   ["shadcn-svelte", "1.7.1", "^1.7.1"],
   ["@sveltejs/kit", "3.1.0", "3.1.0"],
@@ -45,6 +45,9 @@ const PACKAGES: [name: string, version: string, specifier: string][] = [
   ["@codemirror/lang-python", "6.2.1", "^6.2.1"],
   ["@lezer/highlight", "1.2.5", "^1.2.5"],
   ["layerchart", "2.9.2", "^2.9.2"],
+  // 007 decision 7: the two packages of code-languages.
+  ["@codemirror/language-data", "6.5.2", "^6.5.2"],
+  ["@replit/codemirror-lang-svelte", "6.0.0", "^6.0.0"],
 ];
 
 function split(dep: string): { name: string; range?: string } {
@@ -54,8 +57,8 @@ function split(dep: string): { name: string; range?: string } {
 }
 
 describe("package.json and bun.lock", () => {
-  test("name exactly the 32 packages, all devDependencies", () => {
-    expect(PACKAGES).toHaveLength(32);
+  test("name exactly the 34 packages, all devDependencies", () => {
+    expect(PACKAGES).toHaveLength(34);
     expect(pkg.dependencies ?? {}).toEqual({});
     expect(Object.keys(pkg.devDependencies).sort()).toEqual(
       PACKAGES.map(([n]) => n).sort(),
@@ -133,8 +136,14 @@ describe("the npm packages items name", () => {
     "@lezer/highlight",
   ];
 
-  // 004 decision 17: 18.
-  test("are 18: shadcn-svelte, cn, the 3 fonts, 002 decision 2's 4, shiki, the 7 of code-editor and layerchart", () => {
+  /** 007 decision 7: the two packages code-languages names beside @codemirror/language. */
+  const LANGUAGES = [
+    "@codemirror/language-data",
+    "@replit/codemirror-lang-svelte",
+  ];
+
+  // 004 decision 17: 18; 007 decision 7: 20.
+  test("are 20: shadcn-svelte, cn, the 3 fonts, 002 decision 2's 4, shiki, the 7 of code-editor, layerchart and the 2 of code-languages", () => {
     expect([...named.keys()].sort()).toEqual(
       [
         "@fontsource-variable/geist",
@@ -149,6 +158,7 @@ describe("the npm packages items name", () => {
         "shiki",
         ...CODEMIRROR,
         "layerchart",
+        ...LANGUAGES,
       ].sort(),
     );
   });
@@ -195,6 +205,7 @@ describe("the npm packages items name", () => {
         "shiki",
         ...CODEMIRROR,
         "layerchart",
+        ...LANGUAGES,
       ].sort(),
     );
     for (const [name, range] of stated)

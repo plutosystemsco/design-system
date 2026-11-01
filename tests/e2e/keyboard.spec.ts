@@ -30,7 +30,9 @@ async function focused(page: Page): Promise<Stop | null> {
  * the focused element, or the ancestor matching `drawnBy` where a container
  * draws the ring for its child (002 decision 8). The ring must be there at
  * once: no item transitions `outline-color`. Only 001's theme toggle, a
- * preview control, fades it in, so for it alone the check waits.
+ * preview control, fades it in, so for it alone the check waits. The ring is
+ * the page's, `colour`, except inside an ink surface (007 decision 8), where
+ * it is the dark ring the element itself computes.
  */
 async function expectRingOutline(
   page: Page,
@@ -52,9 +54,21 @@ async function expectRingOutline(
         requestAnimationFrame(() => requestAnimationFrame(resolve)),
       );
     const style = getComputedStyle(el);
-    return [style.outlineStyle, style.outlineWidth, style.outlineColor];
+    return [
+      style.outlineStyle,
+      style.outlineWidth,
+      style.outlineColor,
+      el.closest(".surface-ink")
+        ? style.getPropertyValue("--ring").trim()
+        : null,
+    ];
   }, drawnBy);
-  expect(outline).toEqual(["solid", "2px", colour]);
+  const [style, width, outlineColour, ownRing] = outline;
+  expect([style, width, outlineColour]).toEqual([
+    "solid",
+    "2px",
+    ownRing ? hexToRgb(ownRing) : colour,
+  ]);
 }
 
 async function ring(page: Page): Promise<string> {
@@ -248,6 +262,22 @@ const FIXTURES: [item: string, stops: string[]][] = [
   ["message-log", ["region:Keyboard messages"]],
   // 005 decision 13: the textarea and the send button.
   ["composer", ["textarea:Message", "button:Send message"]],
+  // 007 decision 9: the ink surface's 7 stops in DOM order. The ring inside
+  // it is the dark ring, which the test reads where the element is.
+  [
+    "pluto-theme",
+    [
+      "textbox:Surface example",
+      "button:Copy code",
+      "pre:*",
+      "tab:Output",
+      "button:About fuel",
+      "button:Run options",
+      "button:Rename run",
+    ],
+  ],
+  // 007 decision 7: the select of the twenty-six, then the editor's content.
+  ["code-languages", ["select:Language", "textbox:Language example"]],
 ];
 
 /** Where a container draws the ring for its focused child (002 decision 8). */
@@ -262,10 +292,14 @@ function drawnBy(
   )
     return '[data-slot="input-group"]';
   if (item === "input-otp") return '[data-slot="input-otp"]';
-  if (item === "code-block" && focused.slot === "code-block-content")
-    return '[data-slot="code-block"]';
+  // 004 decision 8: the block's root draws the ring for its pre (the surface
+  // fixture on the pluto-theme page holds a block too, 007 decision 9).
+  if (focused.slot === "code-block-content") return '[data-slot="code-block"]';
   // 004 decision 9: the whole editor, gutter included, draws the ring.
-  if (item === "code-editor" && focused.signature.startsWith("textbox:"))
+  if (
+    ["code-editor", "pluto-theme", "code-languages"].includes(item) &&
+    focused.signature.startsWith("textbox:")
+  )
     return ".cm-editor";
   return undefined;
 }
@@ -317,11 +351,10 @@ async function expectRingUnclipped(
   expect(problem).toBeNull();
 }
 
-// 005 decision 17: 32 fixtures and 64 stops when 005 lands; after its first
-// run (steps 1 to 4), 004's 24 and 52 plus theme 1, dropdown-menu 1, sheet 1,
-// dialog 1, breadcrumb 2 and sidebar 3.
-const FIXTURE_COUNT = 32;
-const STOP_COUNT = 64;
+// 005 decision 17: 32 fixtures and 64 stops when 005 landed; 007 decision 9
+// adds the ink surface's fixture of 7 stops on the pluto-theme page.
+const FIXTURE_COUNT = 34;
+const STOP_COUNT = 73;
 test(`the ${FIXTURE_COUNT} fixtures hold ${STOP_COUNT} stops`, () => {
   expect(FIXTURES).toHaveLength(FIXTURE_COUNT);
   expect(FIXTURES.reduce((n, [, stops]) => n + stops.length, 0)).toBe(

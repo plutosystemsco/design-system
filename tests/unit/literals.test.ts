@@ -10,10 +10,11 @@ import {
 const rules = loadRules();
 
 /**
+ * 007 decision 7: 301 files, 006's 300 plus code-languages (1).
  * 006 decision 13: 300 files, 005's 286 plus the 14 of app-shell (9) and
  * chat (5).
  */
-const FILE_COUNT = 300;
+const FILE_COUNT = 301;
 
 describe("the item files", () => {
   const files = itemFiles();
@@ -218,7 +219,23 @@ const GOOD_004: Sample[] = [
 const BAD_006: Sample[] = [{ cls: "animate-mark-dock" }];
 const GOOD_006: Sample[] = [{ cls: "mark-entrance", file: "four-dot.svelte" }];
 
-const BAD = [...BAD_001, ...BAD_002, ...BAD_REVIEW, ...BAD_004, ...BAD_006];
+// 007 decision 3: L19, a syntax colour in any form; the code slot's class
+// stays allowed.
+const BAD_007: Sample[] = [
+  { cls: "text-syntax-orange" },
+  { cls: "text-(--syntax-orange)" },
+  { text: 'const theme = { color: "var(--syntax-teal)" };', file: "theme.ts" },
+];
+const GOOD_007: Sample[] = [{ cls: "text-code-number" }];
+
+const BAD = [
+  ...BAD_001,
+  ...BAD_002,
+  ...BAD_REVIEW,
+  ...BAD_004,
+  ...BAD_006,
+  ...BAD_007,
+];
 const GOOD = [
   ...GOOD_001,
   ...GOOD_002,
@@ -226,6 +243,7 @@ const GOOD = [
   ...GOOD_003,
   ...GOOD_004,
   ...GOOD_006,
+  ...GOOD_007,
 ];
 
 describe("the lint itself", () => {
@@ -246,10 +264,19 @@ describe("the lint itself", () => {
     },
   );
 
-  test("71 bad samples flagged and 0 of 48 good ones", () => {
-    expect(BAD).toHaveLength(71);
-    expect(GOOD).toHaveLength(48);
-    expect(BAD.filter((s) => lintSample(s).length > 0)).toHaveLength(71);
+  test("74 bad samples flagged and 0 of 49 good ones", () => {
+    expect(BAD).toHaveLength(74);
+    expect(GOOD).toHaveLength(49);
+    expect(BAD.filter((s) => lintSample(s).length > 0)).toHaveLength(74);
     expect(GOOD.filter((s) => lintSample(s).length > 0)).toHaveLength(0);
+  });
+
+  // L19's three forms each name the rule, and `bg-syntax-orange/10` is L1's.
+  test("L19 names its rule on the 3 forms; the tint form is a translucent tint", () => {
+    for (const sample of BAD_007)
+      expect(lintSample(sample).map((v) => v.rule)).toContain("syntax colour");
+    expect(
+      lintSample({ cls: "bg-syntax-orange/10" }).map((v) => v.rule),
+    ).toEqual(["syntax colour", "translucent tint"]);
   });
 });

@@ -109,7 +109,9 @@ test.describe("the code block", () => {
     await close();
   });
 
-  test("C2. the palette in the browser: 4 of 4 slot colours, the function weight, the muted ground, and no class on =", async ({
+  // 007 decision 10: six slots on the sudoku example; a definition carries
+  // the weight, a call does not.
+  test("C2. the palette in the browser: 6 of 6 slot colours, font-medium on the 2 definitions and on 0 calls, the muted ground, and no class on =", async ({
     page,
   }) => {
     await open(page, PAGE);
@@ -117,8 +119,10 @@ test.describe("the code block", () => {
     const pairs: [cls: string, token: string][] = [
       ["text-code-keyword", "--primary"],
       ["text-code-string", "--success"],
+      ["text-code-number", "--syntax-orange"],
+      ["text-code-builtin", "--syntax-purple"],
+      ["text-code-constant", "--primary"],
       ["text-code-comment", "--muted-foreground"],
-      ["text-code-function", "--foreground"],
     ];
     for (const [cls, token] of pairs) {
       const span = block.locator(`span.${cls}`).first();
@@ -127,12 +131,23 @@ test.describe("the code block", () => {
         hexToRgb(await cssVar(page, token)),
       );
     }
+    const definitions = block.locator("span.text-code-function.font-medium");
+    await expect(definitions).toHaveText(["ok", "solve"]);
+    for (const span of await definitions.all())
+      expect(await computed(span, "font-weight")).toBe("500");
+    const calls = block.locator("span.text-code-function:not(.font-medium)");
+    expect(await calls.count()).toBeGreaterThan(0);
+    for (const span of await calls.all())
+      expect(await computed(span, "font-weight")).toBe("400");
+    expect(
+      await block.locator("span.font-medium:not(.text-code-function)").count(),
+    ).toBe(0);
     expect(
       await computed(
-        block.locator("span.text-code-function").first(),
+        block.locator("span.text-code-builtin").first(),
         "font-weight",
       ),
-    ).toBe("500");
+    ).toBe("400");
     // The checkpoint's call: a string's quotes take the string colour, so the
     // quoted literal is one span, quotes included (Shiki merges tokens of one
     // style). The puzzle string is the block's second line.
@@ -316,6 +331,206 @@ test.describe("the code block", () => {
   });
 });
 
+/** 007 decision 10: S2, the highlighter page's gallery of twenty-six languages. */
+test.describe("the gallery", () => {
+  test("S2. 26 of 26 blocks, each with at least 2 distinct text-code-* classes (diff: 2 of inserted, deleted, comment), 0 style attributes", async ({
+    page,
+  }) => {
+    await open(page, "/items/highlighter/");
+    const gallery = page.getByTestId("gallery");
+    const blocks = gallery.locator('[data-slot="code-block"]');
+    await expect(blocks).toHaveCount(26);
+    const found = await blocks.evaluateAll((all) =>
+      all.map((block) => ({
+        language: block.getAttribute("data-language"),
+        classes: [
+          ...new Set(
+            [...block.querySelectorAll("span[class*='text-code-']")].flatMap(
+              (s) => [...s.classList].filter((c) => c.startsWith("text-code-")),
+            ),
+          ),
+        ],
+      })),
+    );
+    expect(new Set(found.map((f) => f.language)).size).toBe(26);
+    for (const { language, classes } of found) {
+      expect(
+        classes.length,
+        `${language}: ${classes.join(" ")}`,
+      ).toBeGreaterThanOrEqual(2);
+      if (language === "diff")
+        expect(
+          classes.filter((c) =>
+            [
+              "text-code-inserted",
+              "text-code-deleted",
+              "text-code-comment",
+            ].includes(c),
+          ).length,
+        ).toBeGreaterThanOrEqual(2);
+    }
+    expect(await gallery.locator("[style]").count()).toBe(0);
+    // The change review's finding 4: the shell's special parameters are
+    // properties, never a self.
+    const shell = gallery.locator(
+      '[data-slot="code-block"][data-language="bash"]',
+    );
+    expect(await shell.locator("span.text-code-self").count()).toBe(0);
+    await expect(
+      shell.locator("span.text-code-property", { hasText: /^\*$/ }).first(),
+    ).toHaveCount(1);
+    // The gallery's 21-row slot table: foreground, the 20 classed slots, bold, underline.
+    await expect(
+      page.getByTestId("slot-table").locator("tbody tr"),
+    ).toHaveCount(23);
+  });
+});
+
+/** 007 decision 10: L1, the twenty-six languages in the editor. */
+test.describe("the languages", () => {
+  const PAGE = "/items/code-languages/";
+  const LEGACY = [
+    "bash",
+    "toml",
+    "diff",
+    "docker",
+    "ruby",
+    "swift",
+    "kotlin",
+    "csharp",
+  ];
+
+  test("L1. 26 of 26 languages load in the editor with the required distinct token colours", async ({
+    page,
+  }) => {
+    test.setTimeout(120_000);
+    await open(page, PAGE);
+    const fixture = page.getByTestId("keyboard-fixture");
+    const select = fixture.locator("select");
+    const content = fixture.locator(".cm-content");
+    const body = hexToRgb(await cssVar(page, "--foreground"));
+    const inserted = hexToRgb(await cssVar(page, "--success"));
+    const deleted = hexToRgb(await cssVar(page, "--destructive"));
+    const ids = await select
+      .locator("option")
+      .evaluateAll((all) => all.map((o) => (o as HTMLOptionElement).value));
+    expect(ids).toHaveLength(26);
+    const { CODE_SAMPLES } =
+      await import("../../src/lib/preview/code-samples.ts");
+    const sampleOf = (id: string) =>
+      CODE_SAMPLES.find((s) => s.language === id)!;
+    for (const id of ids) {
+      const sample = sampleOf(id);
+      await select.selectOption(id);
+      await expect(fixture.getByTestId("language-loaded")).toHaveText(
+        `${sample.title} loaded`,
+      );
+      const firstLine = sample.code.split("\n")[0];
+      await expect(content.locator(".cm-line").first()).toHaveText(firstLine);
+      // The distinct computed token colours other than the body's. The
+      // highlighter parses on a timer, so the reading is polled.
+      const read = () =>
+        content.evaluate((el, body) => {
+          const set = new Set<string>();
+          for (const span of el.querySelectorAll(".cm-line span")) {
+            const c = getComputedStyle(span).color;
+            if (c !== body && (span.textContent ?? "").trim()) set.add(c);
+          }
+          return [...set];
+        }, body);
+      const required = id === "diff" ? 2 : LEGACY.includes(id) ? 1 : 2;
+      await expect
+        .poll(async () => (await read()).length, {
+          message: id,
+          timeout: 10_000,
+        })
+        .toBeGreaterThanOrEqual(required);
+      const colours = await read();
+      if (id === "diff") {
+        expect(colours).toContain(inserted);
+        expect(colours).toContain(deleted);
+      }
+    }
+  });
+});
+
+/** 007 decision 10: S1, the ink surface on the pluto-theme page. */
+test.describe("the ink surface", () => {
+  const PAGE = "/items/pluto-theme/";
+  const surface = (page: Page) => page.getByTestId("keyboard-fixture");
+  const INK = "rgb(20, 22, 28)";
+  const INK_RAISED = "rgb(30, 33, 41)";
+  const INK_WASH = "rgb(43, 45, 50)";
+  const PAPER_RAISED = "rgb(255, 255, 255)";
+
+  test("S1. the surface's grounds, its overlays' placement and theme", async ({
+    page,
+  }, info) => {
+    const light = info.project.name === "light";
+    await open(page, PAGE);
+    const s = surface(page);
+    await expect(s).toHaveClass(/\bdark\b/);
+    await expect(s).toHaveClass(/\bsurface-ink\b/);
+    const editor = s.locator(".cm-editor");
+    await editor.locator(".cm-content").focus();
+    const ground = light ? INK : INK_RAISED;
+    // The 8 light-page readings (the first 2 are also the dark page's).
+    expect(await computed(s, "background-color")).toBe(ground);
+    expect(await computed(editor, "background-color")).toBe(ground);
+    expect(
+      await computed(editor.locator(".cm-gutters"), "background-color"),
+    ).toBe(ground);
+    expect(
+      await computed(s.locator('[data-slot="code-block"]'), "background-color"),
+    ).toBe(ground);
+    expect(
+      await computed(
+        editor.locator(".cm-activeLine").first(),
+        "background-color",
+      ),
+    ).toBe(INK_WASH);
+    expect(
+      await computed(s.locator("span.text-code-keyword").first(), "color"),
+    ).toBe("rgb(122, 155, 255)");
+    expect(
+      await computed(s.locator('[data-slot="tabs-list"]'), "background-color"),
+    ).toBe(INK_WASH);
+    expect(await computed(s.locator("meter"), "background-color")).toBe(
+      INK_WASH,
+    );
+    expect(await computed(s, "color-scheme")).toBe("dark");
+
+    // The popover opens inside the surface, in the surface's theme.
+    await page.getByTestId("surface-popover").click();
+    const popover = page.locator('[data-slot="popover-content"]');
+    await expect(popover).toBeVisible();
+    expect(await popover.evaluate((el) => !!el.closest(".surface-ink"))).toBe(
+      true,
+    );
+    expect(await computed(popover, "background-color")).toBe(INK_RAISED);
+    await page.keyboard.press("Escape");
+    await expect(popover).toHaveCount(0);
+    await expect(page.getByTestId("surface-popover")).toBeFocused();
+
+    // The dialog opens under body, in the page's theme.
+    await page.getByTestId("surface-dialog").click();
+    const dialog = page.locator('[data-slot="dialog-content"]');
+    await expect(dialog).toBeVisible();
+    // Portalled to body: the nearest of the surface or body above it is body.
+    expect(
+      await dialog.evaluate((el) => [
+        !!el.closest(".surface-ink"),
+        el.closest(".surface-ink, body")?.tagName,
+      ]),
+    ).toEqual([false, "BODY"]);
+    expect(await computed(dialog, "background-color")).toBe(
+      light ? PAPER_RAISED : INK_RAISED,
+    );
+    await page.keyboard.press("Escape");
+    await expect(dialog).toHaveCount(0);
+  });
+});
+
 /** 004 decision 9: the editor. */
 const EDITOR_PAGE = "/items/code-editor/";
 
@@ -367,7 +582,7 @@ test.describe("the code editor", () => {
     await expect(first).toHaveAttribute("role", "group");
     await expect(first).toHaveAttribute("aria-label", "Python example");
     expect(((await first.textContent()) ?? "").split("\n")[0]).toBe(
-      "# Estimate pi by throwing darts at a square.",
+      '"""A fuel ledger: a decorated class, annotations and an f-string."""',
     );
     expect(await raw.locator(".cm-editor").count()).toBe(0);
     await close();
@@ -450,9 +665,59 @@ test.describe("the code editor", () => {
     expect(await computed(keyword, "color")).toBe(
       hexToRgb(await cssVar(page, "--primary")),
     );
-    const fn = editor.locator(".cm-line span", { hasText: /^print$/ }).first();
-    await expect(fn).toHaveCount(1);
-    expect(await computed(fn, "font-weight")).toBe("500");
+    // 007 decision 10: the 5 role readings on the class sample. `print` is a
+    // built-in at normal weight; `self` takes its slot; the docstring reads
+    // as a comment; `str` in an annotation is a type; `dataclass` after `@`
+    // is a decorator.
+    const purple = hexToRgb(await cssVar(page, "--syntax-purple"));
+    const print = editor.locator(".cm-line span.text-code-builtin", {
+      hasText: /^print$/,
+    });
+    await expect(print).toHaveCount(1);
+    expect(await computed(print, "color")).toBe(purple);
+    expect(await computed(print, "font-weight")).toBe("400");
+    // The mechanism (review finding 1): the plugin's mark is the innermost
+    // span, so its class decides the colour; it holds no child span.
+    expect(await print.locator("span").count()).toBe(0);
+    const self = editor.locator(".cm-line span.text-code-self").first();
+    await expect(self).toHaveText("self");
+    expect(await computed(self, "color")).toBe(purple);
+    const docstring = editor.locator(".cm-line span.text-code-comment").first();
+    await expect(docstring).toHaveText(/^"""A fuel ledger/);
+    expect(await computed(docstring, "color")).toBe(
+      hexToRgb(await cssVar(page, "--muted-foreground")),
+    );
+    const str = editor.locator(".cm-line span", { hasText: /^str$/ }).first();
+    await expect(str).toHaveCount(1);
+    expect(await computed(str, "color")).toBe(
+      hexToRgb(await cssVar(page, "--syntax-teal")),
+    );
+    // `dataclass` appears twice: imported on line 2 (the body colour) and
+    // after `@` on line 4 (the decorator colour).
+    const dataclasses = editor.locator(".cm-line span", {
+      hasText: /^dataclass$/,
+    });
+    await expect(dataclasses).toHaveCount(2);
+    const colours = await dataclasses.evaluateAll((all) =>
+      all.map((el) => [
+        el.previousSibling?.textContent?.endsWith("@") ?? false,
+        getComputedStyle(el).color,
+      ]),
+    );
+    const decorated = colours.find(([after]) => after);
+    expect(decorated, "a dataclass after @").toBeDefined();
+    expect(decorated![1]).toBe(purple);
+    const imported = colours.find(([after]) => !after);
+    expect(imported![1]).toBe(hexToRgb(await cssVar(page, "--foreground")));
+    // A definition keeps its weight; a call has none.
+    const definition = editor
+      .locator(".cm-line span", { hasText: /^per_step$/ })
+      .first();
+    expect(await computed(definition, "font-weight")).toBe("500");
+    const call = editor
+      .locator(".cm-line span", { hasText: /^sorted$/ })
+      .first();
+    expect(await computed(call, "font-weight")).toBe("400");
 
     // Our theme's rules, by the theme's own class: CodeMirror gives each theme
     // a `ͼ` class on .cm-editor, and ours is the one whose rules read
@@ -488,6 +753,61 @@ test.describe("the code editor", () => {
       expect(text, text).not.toMatch(/#[0-9a-fA-F]{3,8}\b/);
       expect(text, text).not.toMatch(/\b\d+(\.\d+)?px\b/);
     }
+  });
+
+  // The change review's findings 1 to 3: the roles plugin rebuilds when the
+  // tree grows, a docstring after a comment, and a keyword argument's name.
+  test("E5. the roles plugin on a long file and on the edge cases: line 30's print is a built-in after the idle parse; docstrings after a shebang and a def-line comment read as comments; keyword arguments named like built-ins stay in the body", async ({
+    page,
+  }) => {
+    await open(page, EDITOR_PAGE);
+    const editor = main(page);
+    const select = page.getByTestId("example-select");
+    const purple = hexToRgb(await cssVar(page, "--syntax-purple"));
+    const body = hexToRgb(await cssVar(page, "--foreground"));
+    const comment = hexToRgb(await cssVar(page, "--muted-foreground"));
+
+    await select.selectOption("long");
+    const lines = editor.locator(".cm-line");
+    // CodeMirror renders the lines in and around the viewport, so the line
+    // is found by its text, not its index; line 30 sits past the first 3,000
+    // characters (the 17th line ends them) and inside the rendered range.
+    const thirty = lines.filter({ hasText: 'print("line 30"' });
+    await expect(thirty).toHaveCount(1);
+    const line30 = thirty.locator("span.text-code-builtin", {
+      hasText: /^print$/,
+    });
+    // No scroll, no edit: the idle parse alone brings the mark.
+    await expect(line30).toHaveCount(1, { timeout: 10_000 });
+    expect(await computed(line30, "color")).toBe(purple);
+    expect(await thirty.locator("span.text-code-builtin").count()).toBe(3);
+
+    await select.selectOption("edge");
+    await expect(lines.first()).toHaveText("#!/usr/bin/env python");
+    const shebangDoc = lines.nth(1).locator("span.text-code-comment");
+    await expect(shebangDoc).toHaveText('"""A docstring after a shebang."""', {
+      timeout: 10_000,
+    });
+    expect(await computed(shebangDoc, "color")).toBe(comment);
+    const notedDoc = lines.nth(4).locator("span.text-code-comment");
+    await expect(notedDoc).toHaveText('"""A docstring after a comment."""');
+    const kwargs = lines.nth(5);
+    await expect(kwargs).toContainText('f(type="x", id=3)');
+    expect(await kwargs.locator("span.text-code-builtin").count()).toBe(0);
+    for (const name of ["type", "id"]) {
+      const span = kwargs.locator("span", { hasText: new RegExp(`^${name}$`) });
+      await expect(span).toHaveCount(1);
+      expect(await computed(span, "color")).toBe(body);
+    }
+    const sortedLine = lines.nth(7);
+    await expect(sortedLine).toContainText("sorted(items, key=len)");
+    await expect(sortedLine.locator("span.text-code-builtin")).toHaveText([
+      "sorted",
+      "len",
+    ]);
+    const key = sortedLine.locator("span", { hasText: /^key$/ });
+    await expect(key).toHaveCount(1);
+    expect(await computed(key, "color")).toBe(body);
   });
 
   test("E4. editing and run: typing updates the bound value; Reset clears history; 2 of 2 run keys; readonly", async ({

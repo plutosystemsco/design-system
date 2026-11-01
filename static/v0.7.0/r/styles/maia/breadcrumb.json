@@ -1,0 +1,68 @@
+{
+	"$schema": "https://shadcn-svelte.com/schema/registry-item.json",
+	"name": "breadcrumb",
+	"title": "Breadcrumb",
+	"type": "registry:ui",
+	"author": "Pluto Systems <https://plutosystems.co>",
+	"description": "The path to the current page as a list of links, the current page marked and not a link.",
+	"devDependencies": [
+		"phosphor-svelte@^3.1.1"
+	],
+	"registryDependencies": [
+		"utils",
+		"pluto-theme"
+	],
+	"meta": {
+		"since": "0.5.0",
+		"group": "navigation",
+		"stock": {
+			"registry": "https://shadcn-svelte.com/registry/styles/maia",
+			"item": "breadcrumb",
+			"cli": "1.7.1",
+			"date": "2026-11-01",
+			"sha256": "28861bae3610cabae2215a953f1e236792dbb2baa04ca2d35655c4f402741ac8"
+		}
+	},
+	"files": [
+		{
+			"content": "<script lang=\"ts\">\n  import { cn, type WithElementRef } from \"$UTILS$\";\n  import type { HTMLAttributes } from \"svelte/elements\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    label = \"Breadcrumb\",\n    children,\n    ...restProps\n  }: WithElementRef<HTMLAttributes<HTMLElement>> & {\n    /** The landmark's name. A page with two breadcrumbs names each. */\n    label?: string;\n  } = $props();\n</script>\n\n<!-- A navigation landmark holding the path as a list (APG: a nav with a label, a list, aria-current on the current page). -->\n<nav\n  bind:this={ref}\n  data-slot=\"breadcrumb\"\n  aria-label={label}\n  class={cn(className)}\n  {...restProps}\n>\n  {@render children?.()}\n</nav>\n",
+			"type": "registry:ui",
+			"target": "breadcrumb/breadcrumb.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import { cn, type WithElementRef } from \"$UTILS$\";\n  import type { HTMLOlAttributes } from \"svelte/elements\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    children,\n    ...restProps\n  }: WithElementRef<HTMLOlAttributes> = $props();\n</script>\n\n<ol\n  bind:this={ref}\n  data-slot=\"breadcrumb-list\"\n  class={cn(\n    \"flex flex-wrap items-center gap-2 text-sm wrap-break-word text-muted-foreground\",\n    className,\n  )}\n  {...restProps}\n>\n  {@render children?.()}\n</ol>\n",
+			"type": "registry:ui",
+			"target": "breadcrumb/breadcrumb-list.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import { cn, type WithElementRef } from \"$UTILS$\";\n  import type { HTMLLiAttributes } from \"svelte/elements\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    children,\n    ...restProps\n  }: WithElementRef<HTMLLiAttributes> = $props();\n</script>\n\n<li\n  bind:this={ref}\n  data-slot=\"breadcrumb-item\"\n  class={cn(\"inline-flex items-center gap-2\", className)}\n  {...restProps}\n>\n  {@render children?.()}\n</li>\n",
+			"type": "registry:ui",
+			"target": "breadcrumb/breadcrumb-item.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import { cn, type WithElementRef } from \"$UTILS$\";\n  import type { Snippet } from \"svelte\";\n  import type { HTMLAnchorAttributes } from \"svelte/elements\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    href = undefined,\n    child,\n    children,\n    ...restProps\n  }: WithElementRef<HTMLAnchorAttributes> & {\n    /** Renders a framework link in place of the anchor, with these props. */\n    child?: Snippet<[{ props: HTMLAnchorAttributes }]>;\n  } = $props();\n\n  // At least 24 px tall, a target (R21). The colour alone transitions: a\n  // transition on every colour would fade the focus mark in too, and it must\n  // be there at once.\n  const attrs = $derived({\n    \"data-slot\": \"breadcrumb-link\",\n    class: cn(\n      \"inline-flex min-h-6 items-center transition-[color] hover:text-foreground\",\n      className,\n    ),\n    href,\n    ...restProps,\n  });\n</script>\n\n{#if child}\n  {@render child({ props: attrs })}\n{:else}\n  <a bind:this={ref} {...attrs}>\n    {@render children?.()}\n  </a>\n{/if}\n",
+			"type": "registry:ui",
+			"target": "breadcrumb/breadcrumb-link.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import { cn, type WithElementRef } from \"$UTILS$\";\n  import type { HTMLAttributes } from \"svelte/elements\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    children,\n    ...restProps\n  }: WithElementRef<HTMLAttributes<HTMLSpanElement>> = $props();\n</script>\n\n<!--\n  The current page: a span with aria-current and nothing else. Stock's\n  role=\"link\" aria-disabled announced \"link, disabled\", a false promise.\n-->\n<span\n  bind:this={ref}\n  data-slot=\"breadcrumb-page\"\n  aria-current=\"page\"\n  class={cn(\"text-foreground\", className)}\n  {...restProps}\n>\n  {@render children?.()}\n</span>\n",
+			"type": "registry:ui",
+			"target": "breadcrumb/breadcrumb-page.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import CaretRight from \"phosphor-svelte/lib/CaretRight\";\n  import { cn, type WithElementRef } from \"$UTILS$\";\n  import type { HTMLLiAttributes } from \"svelte/elements\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    children,\n    ...restProps\n  }: WithElementRef<HTMLLiAttributes> = $props();\n</script>\n\n<!-- Decoration, out of the tree: a caret that turns under rtl, or the app's own mark. -->\n<li\n  bind:this={ref}\n  data-slot=\"breadcrumb-separator\"\n  role=\"presentation\"\n  aria-hidden=\"true\"\n  class={cn(\"inline-flex items-center\", className)}\n  {...restProps}\n>\n  {#if children}\n    {@render children?.()}\n  {:else}\n    <CaretRight class=\"size-4 rtl:rotate-180\" />\n  {/if}\n</li>\n",
+			"type": "registry:ui",
+			"target": "breadcrumb/breadcrumb-separator.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import DotsThree from \"phosphor-svelte/lib/DotsThree\";\n  import { cn, type WithElementRef, type WithoutChildren } from \"$UTILS$\";\n  import type { HTMLAttributes } from \"svelte/elements\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    ...restProps\n  }: WithoutChildren<\n    WithElementRef<HTMLAttributes<HTMLSpanElement>>\n  > = $props();\n</script>\n\n<!--\n  Decoration for pages left out of the path. When hidden pages exist, the app\n  wraps it in a DropdownMenu.Trigger named \"Show hidden pages\", 32 px, with a\n  menu of those pages; alone it says nothing.\n-->\n<span\n  bind:this={ref}\n  data-slot=\"breadcrumb-ellipsis\"\n  class={cn(\"inline-flex size-6 items-center justify-center\", className)}\n  {...restProps}\n>\n  <DotsThree aria-hidden=\"true\" class=\"size-4\" />\n</span>\n",
+			"type": "registry:ui",
+			"target": "breadcrumb/breadcrumb-ellipsis.svelte"
+		},
+		{
+			"content": "import Ellipsis from \"./breadcrumb-ellipsis.svelte\";\nimport Item from \"./breadcrumb-item.svelte\";\nimport Link from \"./breadcrumb-link.svelte\";\nimport List from \"./breadcrumb-list.svelte\";\nimport Page from \"./breadcrumb-page.svelte\";\nimport Separator from \"./breadcrumb-separator.svelte\";\nimport Root from \"./breadcrumb.svelte\";\n\nexport {\n  Root,\n  List,\n  Item,\n  Link,\n  Page,\n  Separator,\n  Ellipsis,\n  //\n  Root as Breadcrumb,\n  List as BreadcrumbList,\n  Item as BreadcrumbItem,\n  Link as BreadcrumbLink,\n  Page as BreadcrumbPage,\n  Separator as BreadcrumbSeparator,\n  Ellipsis as BreadcrumbEllipsis,\n};\n",
+			"type": "registry:ui",
+			"target": "breadcrumb/index.ts"
+		}
+	]
+}

@@ -1,0 +1,53 @@
+{
+	"$schema": "https://shadcn-svelte.com/schema/registry-item.json",
+	"name": "alert",
+	"title": "Alert",
+	"type": "registry:ui",
+	"author": "Pluto Systems <https://plutosystems.co>",
+	"description": "A message in default, destructive, success or caution, whose role matches how urgent it is.",
+	"devDependencies": [
+		"tailwind-variants@^3.3.1"
+	],
+	"registryDependencies": [
+		"utils",
+		"pluto-theme"
+	],
+	"meta": {
+		"since": "0.2.0",
+		"group": "feedback",
+		"stock": {
+			"registry": "https://shadcn-svelte.com/registry/styles/maia",
+			"item": "alert",
+			"cli": "1.7.1",
+			"date": "2026-10-28",
+			"sha256": "6011e26ccac50e5bb4a2eabd155126212175a4042682a13986f7b067990258a1"
+		}
+	},
+	"files": [
+		{
+			"content": "<script lang=\"ts\">\n  import { cn, type WithElementRef } from \"$UTILS$\";\n  import type { HTMLAttributes } from \"svelte/elements\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    children,\n    ...restProps\n  }: WithElementRef<HTMLAttributes<HTMLDivElement>> = $props();\n</script>\n\n<div\n  bind:this={ref}\n  data-slot=\"alert-action\"\n  class={cn(\"absolute top-2 right-3\", className)}\n  {...restProps}\n>\n  {@render children?.()}\n</div>\n",
+			"type": "registry:ui",
+			"target": "alert/alert-action.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import { cn, type WithElementRef } from \"$UTILS$\";\n  import type { HTMLAttributes } from \"svelte/elements\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    children,\n    ...restProps\n  }: WithElementRef<HTMLAttributes<HTMLDivElement>> = $props();\n</script>\n\n<div\n  bind:this={ref}\n  data-slot=\"alert-description\"\n  class={cn(\n    \"text-sm text-balance text-muted-foreground md:text-pretty [&_p:not(:last-child)]:mb-4 [&_a]:underline [&_a]:underline-offset-4 [&_a]:hover:text-foreground\",\n    className,\n  )}\n  {...restProps}\n>\n  {@render children?.()}\n</div>\n",
+			"type": "registry:ui",
+			"target": "alert/alert-description.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import { cn, type WithElementRef } from \"$UTILS$\";\n  import type { HTMLAttributes } from \"svelte/elements\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    children,\n    ...restProps\n  }: WithElementRef<HTMLAttributes<HTMLDivElement>> = $props();\n</script>\n\n<div\n  bind:this={ref}\n  data-slot=\"alert-title\"\n  class={cn(\n    \"font-medium group-has-[>svg]/alert:col-start-2 [&_a]:underline [&_a]:underline-offset-4 [&_a]:hover:text-foreground\",\n    className,\n  )}\n  {...restProps}\n>\n  {@render children?.()}\n</div>\n",
+			"type": "registry:ui",
+			"target": "alert/alert-title.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\" module>\n  import { type VariantProps, tv } from \"tailwind-variants/lite\";\n\n  export const alertVariants = tv({\n    base: \"group/alert relative grid w-full gap-1 rounded border px-4 py-3 text-left text-sm has-data-[slot=alert-action]:pr-24 has-[>svg]:grid-cols-[auto_1fr] has-[>svg]:gap-x-3 *:[svg]:row-span-2 *:[svg]:mt-1 *:[svg]:text-current *:[svg:not([class*='size-'])]:size-4\",\n    variants: {\n      variant: {\n        default: \"border-border bg-card text-card-foreground\",\n        destructive:\n          \"border-destructive bg-destructive/10 text-destructive dark:bg-destructive/20 *:data-[slot=alert-description]:text-destructive\",\n        success:\n          \"border-success bg-success/10 text-success dark:bg-success/20 *:data-[slot=alert-description]:text-success\",\n        caution:\n          \"border-border border-l-(length:--focus-width) border-l-caution bg-card text-card-foreground\",\n      },\n    },\n    defaultVariants: {\n      variant: \"default\",\n    },\n  });\n\n  export type AlertVariant = VariantProps<typeof alertVariants>[\"variant\"];\n</script>\n\n<script lang=\"ts\">\n  import { cn, type WithElementRef } from \"$UTILS$\";\n  import type { HTMLAttributes } from \"svelte/elements\";\n\n  /**\n   * The role each variant takes unless the app passes one: an error is\n   * announced when inserted; success and caution are status messages; a\n   * default alert is neither (decision 19).\n   */\n  const ROLE: Record<\n    NonNullable<AlertVariant>,\n    \"alert\" | \"status\" | undefined\n  > = {\n    default: undefined,\n    destructive: \"alert\",\n    success: \"status\",\n    caution: \"status\",\n  };\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    variant = \"default\",\n    children,\n    ...restProps\n  }: WithElementRef<HTMLAttributes<HTMLDivElement>> & {\n    variant?: AlertVariant;\n  } = $props();\n\n  // \"The prop if it was given, else the variant's\", so role={null} renders none.\n  const role = $derived(\n    \"role\" in restProps ? restProps.role : ROLE[variant ?? \"default\"],\n  );\n</script>\n\n<div\n  bind:this={ref}\n  data-slot=\"alert\"\n  data-variant={variant}\n  class={cn(alertVariants({ variant }), className)}\n  {...restProps}\n  {role}\n>\n  {@render children?.()}\n</div>\n",
+			"type": "registry:ui",
+			"target": "alert/alert.svelte"
+		},
+		{
+			"content": "import Action from \"./alert-action.svelte\";\nimport Description from \"./alert-description.svelte\";\nimport Title from \"./alert-title.svelte\";\nimport Root from \"./alert.svelte\";\nexport { alertVariants, type AlertVariant } from \"./alert.svelte\";\n\nexport {\n  Root,\n  Description,\n  Title,\n  Action,\n  //\n  Root as Alert,\n  Description as AlertDescription,\n  Title as AlertTitle,\n  Action as AlertAction,\n};\n",
+			"type": "registry:ui",
+			"target": "alert/index.ts"
+		}
+	]
+}

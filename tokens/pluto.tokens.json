@@ -24,7 +24,16 @@
     "clear": "#00000000",
     "ink-shadow": "#14161C29",
     "ink-scrim": "#14161C80",
-    "ink-scrim-deep": "#14161C99"
+    "ink-scrim-deep": "#14161C99",
+    "amber-text": "#85600B",
+    "orange-text": "#A44F12",
+    "orange-lifted": "#E7792A",
+    "purple-text": "#903ACE",
+    "purple-lifted": "#B780DF",
+    "teal-text": "#15717A",
+    "teal-lifted": "#20A6B3",
+    "cyan-text": "#1B709B",
+    "cyan-lifted": "#269DD8"
   },
   "themes": {
     "light": {
@@ -75,7 +84,12 @@
       "groove-light": "raised",
       "elevation-line": "line",
       "elevation-shadow": "ink-shadow",
-      "scrim": "ink-scrim"
+      "scrim": "ink-scrim",
+      "syntax-orange": "orange-text",
+      "syntax-amber": "amber-text",
+      "syntax-purple": "purple-text",
+      "syntax-teal": "teal-text",
+      "syntax-cyan": "cyan-text"
     },
     "dark": {
       "background": "ink",
@@ -125,18 +139,32 @@
       "groove-light": "clear",
       "elevation-line": "paper-line-input",
       "elevation-shadow": "clear",
-      "scrim": "ink-scrim-deep"
+      "scrim": "ink-scrim-deep",
+      "syntax-orange": "orange-lifted",
+      "syntax-amber": "amber",
+      "syntax-purple": "purple-lifted",
+      "syntax-teal": "teal-lifted",
+      "syntax-cyan": "cyan-lifted"
     }
   },
   "code": {
     "foreground": "foreground",
     "background": "muted",
-    "keyword": "primary",
-    "string": "success",
-    "constant": "foreground",
-    "function": "foreground",
     "comment": "muted-foreground",
+    "keyword": "primary",
+    "constant": "primary",
+    "string": "success",
+    "number": "syntax-orange",
+    "escape": "syntax-orange",
+    "function": "syntax-amber",
+    "builtin": "syntax-purple",
+    "type": "syntax-teal",
+    "tag": "syntax-teal",
+    "property": "syntax-cyan",
+    "decorator": "syntax-purple",
+    "self": "syntax-purple",
     "link": "primary",
+    "invalid": "destructive",
     "inserted": "success",
     "deleted": "destructive",
     "changed": "primary",

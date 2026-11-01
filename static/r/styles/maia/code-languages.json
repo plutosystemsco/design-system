@@ -1,0 +1,29 @@
+{
+	"$schema": "https://shadcn-svelte.com/schema/registry-item.json",
+	"name": "code-languages",
+	"title": "Code languages",
+	"type": "registry:lib",
+	"author": "Pluto Systems <https://plutosystems.co>",
+	"description": "Any of the highlighter's twenty-six languages for the editor, loaded on demand: a table of ids, aliases and kinds, and loadLanguage.",
+	"devDependencies": [
+		"@codemirror/language-data@^6.5.2",
+		"@codemirror/language@^6.13.1",
+		"@replit/codemirror-lang-svelte@^6.0.0"
+	],
+	"registryDependencies": [
+		"utils",
+		"pluto-theme",
+		"code-editor"
+	],
+	"meta": {
+		"since": "0.7.0",
+		"group": "code"
+	},
+	"files": [
+		{
+			"content": "import { LanguageDescription, LanguageSupport } from \"@codemirror/language\";\nimport { languages } from \"@codemirror/language-data\";\nimport { pythonLanguageConfigured } from \"$UI$/code-editor/code-editor-python\";\n\n/**\n * Any of the twenty-six languages the highlighter lists, for the editor, on\n * demand (007 decision 7). `codeLanguages` is the table; `loadLanguage` opens\n * one. Each language is loaded the first time it is asked for and cached;\n * installing this item installs every `@codemirror/lang-*` package and the\n * legacy modes through `@codemirror/language-data`, about two megabytes on\n * disk, so an app that edits one language keeps `pythonSetup()` alone.\n */\n\n/** How a language is parsed: a Lezer grammar, the Svelte grammar, or a CodeMirror 5 mode. */\nexport type CodeLanguageKind = \"lezer\" | \"svelte\" | \"legacy\";\n\nexport type CodeLanguage = {\n  /** The id the highlighter knows. */\n  id: string;\n  /** The names a block or an app may also pass. */\n  aliases: string[];\n  kind: CodeLanguageKind;\n  /** The name `@codemirror/language-data` gives it. */\n  dataName: string;\n};\n\n/** The twenty-six, in the highlighter's order. */\nexport const codeLanguages: CodeLanguage[] = [\n  { id: \"python\", aliases: [\"py\"], kind: \"lezer\", dataName: \"Python\" },\n  {\n    id: \"javascript\",\n    aliases: [\"js\", \"cjs\", \"mjs\"],\n    kind: \"lezer\",\n    dataName: \"JavaScript\",\n  },\n  {\n    id: \"typescript\",\n    aliases: [\"ts\", \"cts\", \"mts\"],\n    kind: \"lezer\",\n    dataName: \"TypeScript\",\n  },\n  { id: \"tsx\", aliases: [], kind: \"lezer\", dataName: \"TSX\" },\n  { id: \"jsx\", aliases: [], kind: \"lezer\", dataName: \"JSX\" },\n  { id: \"html\", aliases: [], kind: \"lezer\", dataName: \"HTML\" },\n  { id: \"css\", aliases: [], kind: \"lezer\", dataName: \"CSS\" },\n  { id: \"json\", aliases: [], kind: \"lezer\", dataName: \"JSON\" },\n  { id: \"yaml\", aliases: [\"yml\"], kind: \"lezer\", dataName: \"YAML\" },\n  { id: \"toml\", aliases: [], kind: \"legacy\", dataName: \"TOML\" },\n  { id: \"markdown\", aliases: [\"md\"], kind: \"lezer\", dataName: \"Markdown\" },\n  {\n    id: \"bash\",\n    aliases: [\"shellscript\", \"sh\", \"shell\", \"zsh\"],\n    kind: \"legacy\",\n    dataName: \"Shell\",\n  },\n  { id: \"sql\", aliases: [], kind: \"lezer\", dataName: \"SQL\" },\n  { id: \"go\", aliases: [], kind: \"lezer\", dataName: \"Go\" },\n  { id: \"rust\", aliases: [\"rs\"], kind: \"lezer\", dataName: \"Rust\" },\n  { id: \"java\", aliases: [], kind: \"lezer\", dataName: \"Java\" },\n  { id: \"c\", aliases: [], kind: \"lezer\", dataName: \"C\" },\n  { id: \"cpp\", aliases: [\"c++\"], kind: \"lezer\", dataName: \"C++\" },\n  { id: \"csharp\", aliases: [\"c#\", \"cs\"], kind: \"legacy\", dataName: \"C#\" },\n  { id: \"ruby\", aliases: [\"rb\"], kind: \"legacy\", dataName: \"Ruby\" },\n  { id: \"php\", aliases: [], kind: \"lezer\", dataName: \"PHP\" },\n  { id: \"kotlin\", aliases: [\"kt\", \"kts\"], kind: \"legacy\", dataName: \"Kotlin\" },\n  { id: \"swift\", aliases: [], kind: \"legacy\", dataName: \"Swift\" },\n  { id: \"svelte\", aliases: [], kind: \"svelte\", dataName: \"Svelte\" },\n  { id: \"diff\", aliases: [], kind: \"legacy\", dataName: \"diff\" },\n  {\n    id: \"docker\",\n    aliases: [\"dockerfile\"],\n    kind: \"legacy\",\n    dataName: \"Dockerfile\",\n  },\n];\n\n/** The table entry for an id or an alias, or null for a name it does not know. */\nexport function findLanguage(name: string): CodeLanguage | null {\n  const wanted = name.toLowerCase();\n  return (\n    codeLanguages.find(\n      (language) => language.id === wanted || language.aliases.includes(wanted),\n    ) ?? null\n  );\n}\n\n/**\n * Loads a language's support for the editor, or null for a name the table\n * does not hold. Three routes: Python is the configured grammar the preset\n * uses, so the editor's Python is one language everywhere; Svelte comes from\n * `@replit/codemirror-lang-svelte`, since `language-data` has no Svelte;\n * every other language goes to `language-data`'s description by its name\n * (a strict match, never a fuzzy one, which would map an unknown name by\n * substring), whose `load()` is one dynamic import, cached by the\n * description. Pass the result as an extension beside a base setup.\n */\nexport async function loadLanguage(\n  name: string,\n): Promise<LanguageSupport | null> {\n  const language = findLanguage(name);\n  if (!language) return null;\n  if (language.id === \"python\")\n    return new LanguageSupport(pythonLanguageConfigured);\n  if (language.id === \"svelte\") {\n    const { svelte } = await import(\"@replit/codemirror-lang-svelte\");\n    return svelte();\n  }\n  const description = LanguageDescription.matchLanguageName(\n    languages,\n    language.dataName,\n    false,\n  );\n  if (!description) return null;\n  return description.load();\n}\n",
+			"type": "registry:lib",
+			"target": "code-languages.ts"
+		}
+	]
+}

@@ -371,53 +371,117 @@ describe("edges over the scrim", () => {
   });
 });
 
-// 004 decision 5: the five text slots on the code ground, `muted`, in each theme.
-const SLOT_ROWS: [theme: "light" | "dark", slot: string, ratio: number][] = [
-  ["light", "foreground", 15.0],
-  ["light", "comment", 6.79],
-  ["light", "keyword", 4.9],
-  ["light", "string", 5.23],
-  ["light", "deleted", 4.71],
-  ["dark", "foreground", 12.83],
-  ["dark", "comment", 6.13],
-  ["dark", "keyword", 5.22],
-  ["dark", "string", 6.55],
-  ["dark", "deleted", 5.53],
-];
+// 007 decision 3: every text slot on every code ground, in each theme. The
+// two grounds of the map (`background`, `active-line`) are not text. The rows
+// are built from the token file, never from the specification's table.
+const GROUNDS = ["muted", "card", "background"] as const;
+const TEXT_SLOTS = Object.keys(tokens.code).filter(
+  (slot) => slot !== "background" && slot !== "active-line",
+);
+const SLOT_ROWS: [theme: "light" | "dark", slot: string, ground: string][] = (
+  ["light", "dark"] as const
+).flatMap((theme) =>
+  TEXT_SLOTS.flatMap((slot) =>
+    GROUNDS.map(
+      (ground) => [theme, slot, ground] as [typeof theme, string, string],
+    ),
+  ),
+);
 
-describe("the code slots on muted", () => {
-  test("10 rows", () => {
-    expect(SLOT_ROWS).toHaveLength(10);
+/** A slot's ratio on a ground in a theme, from the token file. */
+function slotRatio(theme: "light" | "dark", slot: string, ground: string) {
+  return contrastRatio(
+    resolveColor(tokens, theme, tokens.code[slot]),
+    resolveColor(tokens, theme, ground),
+  );
+}
+
+describe("the code slots on the six code grounds", () => {
+  test("114 rows: 19 text slots, 2 themes, 3 grounds", () => {
+    expect(TEXT_SLOTS).toHaveLength(19);
+    expect(SLOT_ROWS).toHaveLength(114);
   });
 
   test.each(SLOT_ROWS)(
-    "%s: the %s slot's colour on muted measures %d, at least 4.5",
-    (theme, slot, ratio) => {
-      const colour = tokens.code[slot];
-      expect(colour).toBeDefined();
-      const measured = contrastRatio(
-        resolveColor(tokens, theme, colour),
-        resolveColor(tokens, theme, "muted"),
-      );
-      expect(measured).toBe(ratio);
-      expect(measured).toBeGreaterThanOrEqual(4.5);
+    "%s: the %s slot's colour on %s measures at least 4.5",
+    (theme, slot, ground) => {
+      expect(slotRatio(theme, slot, ground)).toBeGreaterThanOrEqual(4.5);
     },
   );
 
-  test("the five text slots cover foreground, muted-foreground, primary, success and destructive", () => {
-    const colours = [
-      ...new Set(SLOT_ROWS.map(([, slot]) => tokens.code[slot])),
-    ];
-    expect(colours.sort()).toEqual(
+  test("114 of 114 pass; the tightest is the property slot (cyan) on dark muted at 4.52", () => {
+    const rows = SLOT_ROWS.map(([theme, slot, ground]) => ({
+      theme,
+      slot,
+      ground,
+      ratio: slotRatio(theme, slot, ground),
+    }));
+    expect(rows.filter((r) => r.ratio >= 4.5)).toHaveLength(114);
+    const min = rows.reduce((a, b) => (b.ratio < a.ratio ? b : a));
+    expect(min).toEqual({
+      theme: "dark",
+      slot: "property",
+      ground: "muted",
+      ratio: 4.52,
+    });
+  });
+
+  // The ten families, as the primitives the text slots resolve to.
+  test("the 19 text slots resolve to 10 families in each theme", () => {
+    const families = (theme: "light" | "dark") =>
       [
-        "foreground",
-        "muted-foreground",
-        "primary",
-        "success",
-        "destructive",
+        ...new Set(
+          TEXT_SLOTS.map((slot) => tokens.themes[theme][tokens.code[slot]]),
+        ),
+      ].sort();
+    expect(families("light")).toEqual(
+      [
+        "ink",
+        "ink-soft",
+        "blue",
+        "green-text",
+        "red-text",
+        "orange-text",
+        "amber-text",
+        "purple-text",
+        "teal-text",
+        "cyan-text",
+      ].sort(),
+    );
+    expect(families("dark")).toEqual(
+      [
+        "paper",
+        "paper-soft",
+        "blue-lifted",
+        "green-lifted",
+        "red-lifted",
+        "orange-lifted",
+        "amber",
+        "purple-lifted",
+        "teal-lifted",
+        "cyan-lifted",
       ].sort(),
     );
   });
+
+  // 004 decision 5's five rows still hold, to the hundredth.
+  test.each([
+    ["light", "foreground", 15.0],
+    ["light", "comment", 6.79],
+    ["light", "keyword", 4.9],
+    ["light", "string", 5.23],
+    ["light", "deleted", 4.71],
+    ["dark", "foreground", 12.83],
+    ["dark", "comment", 6.13],
+    ["dark", "keyword", 5.22],
+    ["dark", "string", 6.55],
+    ["dark", "deleted", 5.53],
+  ] as const)(
+    "%s: the %s slot on muted still measures %d",
+    (theme, slot, ratio) => {
+      expect(slotRatio(theme, slot, "muted")).toBe(ratio);
+    },
+  );
 });
 
 // 005 decision 17: four pairs the navigation items put on the page, each

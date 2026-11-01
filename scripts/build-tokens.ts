@@ -98,9 +98,13 @@ export function themeCssVars(tokens: Tokens): {
   theme["animate-enter"] = `pluto-enter var(--motion-micro) ${curve}`;
   theme["animate-exit"] = `pluto-exit var(--motion-micro) ${curve} forwards`;
 
-  // 004 decision 5: the twelve code slots. Each is a reference to a semantic
-  // colour, so it lives in `light` only (`:root` cascades into `.dark`, which
-  // redefines the referenced variable), and each becomes a utility.
+  // 004 decision 5 and 007 decision 4: the code slots. Each is a reference to
+  // a semantic colour and each becomes a utility. The references are written
+  // into both theme blocks: a `var()` inside a custom property is substituted
+  // on the element that declares it, so a slot declared on `:root` alone
+  // computes to the light colour there and that colour inherits into a `.dark`
+  // subtree. Repeated in `.dark`, the slot is re-substituted on the subtree's
+  // root with the dark values.
   const code: Vars = {};
   for (const [slot, semantic] of Object.entries(tokens.code)) {
     code[`code-${slot}`] = `var(--${semantic})`;
@@ -109,7 +113,7 @@ export function themeCssVars(tokens: Tokens): {
 
   return {
     light: { radius, ...colours(tokens, "light"), ...code },
-    dark: colours(tokens, "dark"),
+    dark: { ...colours(tokens, "dark"), ...code },
     theme,
   };
 }
@@ -211,6 +215,23 @@ export function themeCss(tokens: Tokens): CssTree {
           },
         ]),
       ),
+    },
+    // 007 decision 8: the ink surface, `class="dark surface-ink"` on any
+    // element. Two plain rules, not an `@utility`: a utility is layered and
+    // loses to the unlayered `.dark` on the same element. The first rule wins
+    // over `.dark` by source order (equal specificity), so it is printed after
+    // the theme blocks; the second wins by specificity. The code ground and
+    // the editor's ground go flush with the surface; the active line is
+    // `muted`, one step above the ground on either page. On a dark page the
+    // surface is `card`, the raised step, since ink on ink is invisible.
+    ".surface-ink": {
+      "--code-background": "var(--background)",
+      "--code-active-line": "var(--muted)",
+      "background-color": "var(--background)",
+      color: "var(--foreground)",
+    },
+    ".dark .surface-ink": {
+      "--background": "var(--card)",
     },
     // 002 decision 3: the keyframes behind animate-enter and animate-exit.
     "@keyframes pluto-enter": { from: { opacity: "0" } },

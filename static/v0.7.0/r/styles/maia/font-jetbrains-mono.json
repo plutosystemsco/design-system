@@ -1,0 +1,24 @@
+{
+	"$schema": "https://shadcn-svelte.com/schema/registry-item.json",
+	"name": "font-jetbrains-mono",
+	"title": "JetBrains Mono",
+	"type": "registry:font",
+	"author": "Pluto Systems <https://plutosystems.co>",
+	"description": "JetBrains Mono, the face for labels, code and data, self-hosted through Fontsource.",
+	"meta": {
+		"since": "0.1.0",
+		"group": "foundation"
+	},
+	"files": [],
+	"font": {
+		"family": "'JetBrains Mono Variable', ui-monospace, monospace",
+		"provider": "google",
+		"import": "JetBrains_Mono",
+		"variable": "--font-mono",
+		"subsets": [
+			"latin"
+		],
+		"selector": "code, kbd, samp, pre",
+		"dependency": "@fontsource-variable/jetbrains-mono"
+	}
+}
