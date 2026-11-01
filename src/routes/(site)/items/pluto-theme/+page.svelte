@@ -238,6 +238,50 @@
   </div>
 </section>
 
+<section class="mt-16" aria-labelledby="code">
+  <h2 id="code" class="text-2xl font-bold tracking-section">Code and scroll</h2>
+  <p class="mt-2 max-w-prose text-muted-foreground">
+    Twelve code tokens, each a semantic colour, drive the code block and the
+    editor as <code>text-code-*</code> and <code>bg-code-*</code> utilities. The
+    <code>scrollbar</code> utility colours a native scroll box's thumb and track
+    from <code>input</code> and <code>muted</code>; the pattern is
+    <code>overflow-auto scrollbar</code> with <code>tabindex="0"</code> and a label.
+  </p>
+  <div class="mt-6 flex flex-wrap items-start gap-12">
+    <div class="flex flex-col items-start gap-2">
+      <pre
+        class="rounded bg-code-background px-4 py-3 font-mono text-sm text-code-foreground"><code
+          ><span data-token="text-code-keyword" class="text-code-keyword"
+            >def</span
+          > <span class="text-code-function font-medium">area</span>(r):
+<span
+            data-token="bg-code-active-line"
+            class="block bg-code-active-line">    <span
+              class="text-code-keyword">return</span
+            > <span class="text-code-constant">3.14159</span> * r ** <span
+              class="text-code-constant">2</span
+            >  <span class="text-code-comment"># a circle</span></span
+          ></code
+        ></pre>
+      <code class="text-xs">text-code-keyword · bg-code-active-line</code>
+    </div>
+    <div class="flex flex-col items-start gap-2">
+      <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+      <div
+        data-token="scrollbar"
+        role="region"
+        aria-label="A scroll box"
+        tabindex="0"
+        class="w-64 overflow-auto rounded border border-border bg-card p-3 text-sm whitespace-nowrap scrollbar"
+      >
+        A native scroll box whose scrollbar takes the input colour on the muted
+        track. This line is longer than the box so that it scrolls.
+      </div>
+      <code class="text-xs">overflow-auto scrollbar</code>
+    </div>
+  </div>
+</section>
+
 <section class="mt-16" aria-labelledby="motion">
   <h2 id="motion" class="text-2xl font-bold tracking-section">Motion</h2>
   <dl class="mt-6 grid gap-2 text-sm">

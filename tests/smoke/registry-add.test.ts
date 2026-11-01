@@ -153,11 +153,25 @@ describe.each([
     }
   });
 
-  test("4. :root, .dark and @theme inline equal our src/app.css", () => {
+  // 004 decision 5's by-product: the CLI's theme updater derives an inline
+  // theme variable from every cssVars.light key, so the app's @theme inline
+  // gains twelve lines `--code-<slot>: var(--code-<slot>)` beside our
+  // `--color-code-<slot>`. They are harmless (the unlayered :root wins, and
+  // `--code-` is no Tailwind namespace) and expected: exactly those twelve,
+  // and nothing else beyond our own block.
+  test("4. :root, .dark and @theme inline equal our src/app.css, but for the 12 derived code lines", () => {
     const ours = readFileSync(path.join(REPO, "src", "app.css"), "utf8");
     let equal = 0;
     for (const prelude of [":root", ".dark", "@theme inline"]) {
       const theirs = Object.fromEntries(topLevelMap(r.cssAfterFirst, prelude));
+      if (prelude === "@theme inline") {
+        const derived = Object.entries(theirs).filter(([name]) =>
+          name.startsWith("--code-"),
+        );
+        expect(derived).toHaveLength(12);
+        for (const [name, value] of derived) expect(value).toBe(`var(${name})`);
+        for (const [name] of derived) delete theirs[name];
+      }
       expect(theirs).toEqual(Object.fromEntries(topLevelMap(ours, prelude)));
       equal++;
     }

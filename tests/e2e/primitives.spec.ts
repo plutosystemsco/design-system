@@ -9,7 +9,7 @@ import {
   contrastRatio,
   parseHex,
 } from "../../scripts/contrast.ts";
-import { NEW_ITEMS, cssVar, open, settled } from "./pages.ts";
+import { ITEMS_004, NEW_ITEMS, cssVar, open, settled } from "./pages.ts";
 
 type Box = { x: number; y: number; width: number; height: number };
 
@@ -108,7 +108,25 @@ test.describe("heights and targets", () => {
     );
   });
 
-  test("0 keyboard stops in the 15 fixtures are under 24 × 24 px", async ({
+  // 004 decision 13: toggle heights on the ladder.
+  test("a default toggle, a small toggle and a toggle-group item are 48, 32 and 48 px tall", async ({
+    page,
+  }) => {
+    await open(page, "/items/toggle/");
+    const toggle = await box(page.getByTestId("height-toggle"));
+    const sm = await box(page.getByTestId("height-toggle-sm"));
+    expect(near(toggle.height, 48), `toggle is ${toggle.height}`).toBe(true);
+    expect(toggle.width).toBeGreaterThanOrEqual(48);
+    expect(near(sm.height, 32), `sm toggle is ${sm.height}`).toBe(true);
+    expect(sm.width).toBeGreaterThanOrEqual(32);
+    await open(page, "/items/toggle-group/");
+    const item = await box(
+      page.getByTestId("toggle-group-single").locator("button").first(),
+    );
+    expect(near(item.height, 48), `group item is ${item.height}`).toBe(true);
+  });
+
+  test("0 keyboard stops in the 22 fixtures are under 24 × 24 px", async ({
     page,
   }) => {
     const small: string[] = [];
@@ -128,13 +146,21 @@ test.describe("heights and targets", () => {
       "switch",
       "input-otp",
       "alert-dialog",
+      // 004's fixtures.
+      "code-block",
+      "code-editor",
+      "chart",
+      "popover",
+      "accordion",
+      "toggle",
+      "toggle-group",
     ]) {
       await open(page, `/items/${item}/`);
       const sizes = await page
         .getByTestId("keyboard-fixture")
         .evaluate((fixture) => {
           const tabbable = fixture.querySelectorAll<HTMLElement>(
-            'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+            'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), summary, [tabindex]:not([tabindex="-1"])',
           );
           return [...tabbable]
             .filter((el) => el.getAttribute("role") !== "tabpanel")
@@ -272,11 +298,11 @@ test.describe("elevation and scrim", () => {
 });
 
 test.describe("motion", () => {
-  test("0 infinitely looping animations outside a spinner on the 26 new pages", async ({
+  test("0 infinitely looping animations outside a spinner on 002's 26 pages and 004's", async ({
     page,
   }) => {
     const loops: string[] = [];
-    for (const item of NEW_ITEMS) {
+    for (const item of [...NEW_ITEMS, ...ITEMS_004]) {
       await open(page, `/items/${item}/`);
       const found = await page.evaluate(() =>
         [...document.querySelectorAll("*")]

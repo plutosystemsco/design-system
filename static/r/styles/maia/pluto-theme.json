@@ -1,0 +1,274 @@
+{
+	"$schema": "https://shadcn-svelte.com/schema/registry-item.json",
+	"name": "pluto-theme",
+	"title": "Pluto theme",
+	"type": "registry:theme",
+	"author": "Pluto Systems <https://plutosystems.co>",
+	"description": "The Pluto Systems tokens for light and dark: colour, radius, spacing, type, motion, focus and the groove.",
+	"devDependencies": [
+		"shadcn-svelte@^1.7.1"
+	],
+	"registryDependencies": [
+		"font-geist",
+		"font-heading-ibm-plex-sans",
+		"font-jetbrains-mono"
+	],
+	"meta": {
+		"since": "0.1.0",
+		"group": "foundation"
+	},
+	"css": {
+		":root": {
+			"--mark-dot": "0.3em",
+			"--mark-gap": "0.08em",
+			"--mark-rise": "0.38em",
+			"--mark-lockup-gap": "0.16em",
+			"--mark-lift": "calc(var(--mark-rise) + var(--mark-dot) + var(--mark-gap))",
+			"--motion-entrance": "900ms",
+			"--motion-micro": "200ms",
+			"--line-width": "1px",
+			"--focus-width": "2px",
+			"--focus-offset": "2px",
+			"color-scheme": "light"
+		},
+		".dark": {
+			"color-scheme": "dark"
+		},
+		"@media (prefers-reduced-motion: reduce)": {
+			"html:root": {
+				"--motion-entrance": "0ms",
+				"--motion-micro": "0ms"
+			},
+			"*, ::before, ::after": {
+				"animation-duration": "0.01ms !important",
+				"animation-iteration-count": "1 !important",
+				"transition-duration": "0.01ms !important",
+				"scroll-behavior": "auto !important"
+			}
+		},
+		"@utility groove": {
+			"border-top": "var(--line-width) solid var(--groove-line)",
+			"box-shadow": "inset 0 var(--line-width) 0 var(--groove-light)"
+		},
+		"@utility focus-ring": {
+			"outline": "var(--focus-width) solid var(--ring)",
+			"outline-offset": "var(--focus-offset)"
+		},
+		"@utility focus-ring-none": {
+			"outline": "none"
+		},
+		"@utility scrollbar": {
+			"scrollbar-color": "var(--input) var(--muted)",
+			"scrollbar-width": "thin"
+		},
+		"@keyframes pluto-enter": {
+			"from": {
+				"opacity": "0"
+			}
+		},
+		"@keyframes pluto-exit": {
+			"to": {
+				"opacity": "0"
+			}
+		},
+		"@layer base": {
+			"body": {
+				"@apply bg-background text-foreground": {}
+			},
+			"h1, h2, h3, h4, h5, h6": {
+				"@apply font-heading": {}
+			},
+			":focus-visible": {
+				"outline": "var(--focus-width) solid var(--ring)",
+				"outline-offset": "var(--focus-offset)"
+			},
+			"code, kbd, samp, pre": {
+				"font-variant-ligatures": "none"
+			}
+		},
+		"@layer components": {
+			"[data-slot=\"meter\"]": {
+				"appearance": "none",
+				"background": "var(--muted)"
+			},
+			"[data-slot=\"meter\"]::-webkit-meter-bar": {
+				"background": "var(--muted)"
+			},
+			"[data-slot=\"meter\"]::-webkit-meter-optimum-value": {
+				"background": "var(--primary)"
+			},
+			"[data-slot=\"meter\"]::-webkit-meter-suboptimum-value": {
+				"background": "var(--primary)"
+			},
+			"[data-slot=\"meter\"]::-webkit-meter-even-less-good-value": {
+				"background": "var(--primary)"
+			},
+			"[data-slot=\"meter\"]::-moz-meter-bar": {
+				"background": "var(--primary)"
+			}
+		}
+	},
+	"cssVars": {
+		"theme": {
+			"radius": "0.5rem",
+			"radius-xs": "var(--radius)",
+			"radius-sm": "var(--radius)",
+			"radius-md": "var(--radius)",
+			"radius-lg": "var(--radius)",
+			"radius-xl": "var(--radius)",
+			"radius-2xl": "var(--radius)",
+			"radius-3xl": "var(--radius)",
+			"radius-4xl": "var(--radius)",
+			"spacing": "0.25rem",
+			"text-xs": "0.75rem",
+			"text-xs--line-height": "1.5",
+			"text-sm": "0.84375rem",
+			"text-sm--line-height": "1.6",
+			"text-base": "1rem",
+			"text-base--line-height": "1.6",
+			"text-2xl": "1.75rem",
+			"text-2xl--line-height": "1.2",
+			"text-5xl": "2.75rem",
+			"text-5xl--line-height": "1.15",
+			"tracking-display": "-0.03em",
+			"tracking-section": "-0.02em",
+			"tracking-eyebrow": "0.08em",
+			"tracking-mark": "-0.04em",
+			"font-weight-normal": "400",
+			"font-weight-medium": "500",
+			"font-weight-bold": "700",
+			"leading-none": "1",
+			"ease-entrance": "cubic-bezier(0.2, 0.7, 0.3, 1)",
+			"default-transition-duration": "200ms",
+			"shadow-elevation": "0 0 0 var(--line-width) var(--elevation-line), 0 0.75rem 2rem 0 var(--elevation-shadow)",
+			"animate-enter": "pluto-enter var(--motion-micro) cubic-bezier(0.2, 0.7, 0.3, 1)",
+			"animate-exit": "pluto-exit var(--motion-micro) cubic-bezier(0.2, 0.7, 0.3, 1) forwards",
+			"color-code-foreground": "var(--code-foreground)",
+			"color-code-background": "var(--code-background)",
+			"color-code-keyword": "var(--code-keyword)",
+			"color-code-string": "var(--code-string)",
+			"color-code-constant": "var(--code-constant)",
+			"color-code-function": "var(--code-function)",
+			"color-code-comment": "var(--code-comment)",
+			"color-code-link": "var(--code-link)",
+			"color-code-inserted": "var(--code-inserted)",
+			"color-code-deleted": "var(--code-deleted)",
+			"color-code-changed": "var(--code-changed)",
+			"color-code-active-line": "var(--code-active-line)"
+		},
+		"light": {
+			"radius": "0.5rem",
+			"background": "#F7F7F4",
+			"foreground": "#14161C",
+			"card": "#FFFFFF",
+			"card-foreground": "#14161C",
+			"popover": "#FFFFFF",
+			"popover-foreground": "#14161C",
+			"primary": "#2456E6",
+			"primary-foreground": "#FFFFFF",
+			"secondary": "#FFFFFF",
+			"secondary-foreground": "#14161C",
+			"muted": "#EAEAE7",
+			"muted-foreground": "#4A4F5C",
+			"accent": "#EAEAE7",
+			"accent-foreground": "#14161C",
+			"destructive": "#C42A1F",
+			"border": "#14161C1A",
+			"input": "#7C808B",
+			"ring": "#2456E6",
+			"chart-1": "#2456E6",
+			"chart-2": "#E23A2E",
+			"chart-3": "#F0AE12",
+			"chart-4": "#1E9E56",
+			"chart-5": "#4A4F5C",
+			"sidebar": "#F7F7F4",
+			"sidebar-foreground": "#14161C",
+			"sidebar-primary": "#2456E6",
+			"sidebar-primary-foreground": "#FFFFFF",
+			"sidebar-accent": "#EAEAE7",
+			"sidebar-accent-foreground": "#14161C",
+			"sidebar-border": "#14161C1A",
+			"sidebar-ring": "#2456E6",
+			"destructive-foreground": "#FFFFFF",
+			"destructive-fill": "#E23A2E",
+			"success": "#136E3E",
+			"success-foreground": "#FFFFFF",
+			"success-fill": "#1E9E56",
+			"caution": "#F0AE12",
+			"caution-foreground": "#14161C",
+			"raised": "#FFFFFF",
+			"mark-1": "#2456E6",
+			"mark-2": "#E23A2E",
+			"mark-3": "#F0AE12",
+			"mark-4": "#1E9E56",
+			"groove-line": "#14161C1A",
+			"groove-light": "#FFFFFF",
+			"elevation-line": "#14161C1A",
+			"elevation-shadow": "#14161C29",
+			"scrim": "#14161C80",
+			"code-foreground": "var(--foreground)",
+			"code-background": "var(--muted)",
+			"code-keyword": "var(--primary)",
+			"code-string": "var(--success)",
+			"code-constant": "var(--foreground)",
+			"code-function": "var(--foreground)",
+			"code-comment": "var(--muted-foreground)",
+			"code-link": "var(--primary)",
+			"code-inserted": "var(--success)",
+			"code-deleted": "var(--destructive)",
+			"code-changed": "var(--primary)",
+			"code-active-line": "var(--card)"
+		},
+		"dark": {
+			"background": "#14161C",
+			"foreground": "#F7F7F4",
+			"card": "#1E2129",
+			"card-foreground": "#F7F7F4",
+			"popover": "#1E2129",
+			"popover-foreground": "#F7F7F4",
+			"primary": "#7A9BFF",
+			"primary-foreground": "#14161C",
+			"secondary": "#1E2129",
+			"secondary-foreground": "#F7F7F4",
+			"muted": "#2B2D32",
+			"muted-foreground": "#A9ADB8",
+			"accent": "#2B2D32",
+			"accent-foreground": "#F7F7F4",
+			"destructive": "#FF7D73",
+			"border": "#F7F7F41A",
+			"input": "#787C8A",
+			"ring": "#7A9BFF",
+			"chart-1": "#7A9BFF",
+			"chart-2": "#FF7D73",
+			"chart-3": "#F0AE12",
+			"chart-4": "#4CC982",
+			"chart-5": "#A9ADB8",
+			"sidebar": "#14161C",
+			"sidebar-foreground": "#F7F7F4",
+			"sidebar-primary": "#7A9BFF",
+			"sidebar-primary-foreground": "#14161C",
+			"sidebar-accent": "#2B2D32",
+			"sidebar-accent-foreground": "#F7F7F4",
+			"sidebar-border": "#F7F7F41A",
+			"sidebar-ring": "#7A9BFF",
+			"destructive-foreground": "#14161C",
+			"destructive-fill": "#FF7D73",
+			"success": "#4CC982",
+			"success-foreground": "#14161C",
+			"success-fill": "#4CC982",
+			"caution": "#F0AE12",
+			"caution-foreground": "#14161C",
+			"raised": "#1E2129",
+			"mark-1": "#F7F7F4",
+			"mark-2": "#F7F7F4",
+			"mark-3": "#F7F7F4",
+			"mark-4": "#F7F7F4",
+			"groove-line": "#F7F7F41A",
+			"groove-light": "#00000000",
+			"elevation-line": "#787C8A",
+			"elevation-shadow": "#00000000",
+			"scrim": "#14161C99"
+		}
+	},
+	"files": []
+}

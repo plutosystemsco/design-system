@@ -10,7 +10,7 @@ const lock = JSON.parse(
   readFileSync("bun.lock", "utf8").replace(/,(\s*[}\]])/g, "$1"),
 );
 
-// 001 decision 4's 19 packages and 002 decision 2's 4: the version bun.lock pins and the specifier package.json holds.
+// 001 decision 4's 19 packages, 002 decision 2's 4 and 004 decision 2's 9: the version bun.lock pins and the specifier package.json holds.
 const PACKAGES: [name: string, version: string, specifier: string][] = [
   ["shadcn-svelte", "1.7.1", "^1.7.1"],
   ["@sveltejs/kit", "3.1.0", "3.1.0"],
@@ -35,6 +35,16 @@ const PACKAGES: [name: string, version: string, specifier: string][] = [
   ["@internationalized/date", "3.12.4", "^3.12.4"],
   ["tailwind-variants", "3.3.1", "^3.3.1"],
   ["phosphor-svelte", "3.1.1", "^3.1.1"],
+  // 004 decision 2, in its order.
+  ["shiki", "4.5.0", "^4.5.0"],
+  ["@codemirror/state", "6.7.6", "^6.7.6"],
+  ["@codemirror/view", "6.43.15", "^6.43.15"],
+  ["@codemirror/language", "6.13.1", "^6.13.1"],
+  ["@codemirror/commands", "6.11.1", "^6.11.1"],
+  ["@codemirror/autocomplete", "6.20.4", "^6.20.4"],
+  ["@codemirror/lang-python", "6.2.1", "^6.2.1"],
+  ["@lezer/highlight", "1.2.5", "^1.2.5"],
+  ["layerchart", "2.9.2", "^2.9.2"],
 ];
 
 function split(dep: string): { name: string; range?: string } {
@@ -44,8 +54,8 @@ function split(dep: string): { name: string; range?: string } {
 }
 
 describe("package.json and bun.lock", () => {
-  test("name exactly the 23 packages, all devDependencies", () => {
-    expect(PACKAGES).toHaveLength(23);
+  test("name exactly the 32 packages, all devDependencies", () => {
+    expect(PACKAGES).toHaveLength(32);
     expect(pkg.dependencies ?? {}).toEqual({});
     expect(Object.keys(pkg.devDependencies).sort()).toEqual(
       PACKAGES.map(([n]) => n).sort(),
@@ -112,7 +122,19 @@ describe("the npm packages items name", () => {
     if (out) rmSync(out, { recursive: true, force: true });
   });
 
-  test("are 9: shadcn-svelte, cn, the 3 fonts and decision 2's 4", () => {
+  /** 004 decision 2: the 7 CodeMirror and Lezer packages code-editor names. */
+  const CODEMIRROR = [
+    "@codemirror/state",
+    "@codemirror/view",
+    "@codemirror/language",
+    "@codemirror/commands",
+    "@codemirror/autocomplete",
+    "@codemirror/lang-python",
+    "@lezer/highlight",
+  ];
+
+  // 004 decision 17: 18.
+  test("are 18: shadcn-svelte, cn, the 3 fonts, 002 decision 2's 4, shiki, the 7 of code-editor and layerchart", () => {
     expect([...named.keys()].sort()).toEqual(
       [
         "@fontsource-variable/geist",
@@ -124,6 +146,9 @@ describe("the npm packages items name", () => {
         "@internationalized/date",
         "tailwind-variants",
         "phosphor-svelte",
+        "shiki",
+        ...CODEMIRROR,
+        "layerchart",
       ].sort(),
     );
   });
@@ -133,9 +158,10 @@ describe("the npm packages items name", () => {
       expect([...set], `${name} has one range across items`).toHaveLength(1);
   });
 
-  test("no item names tailwind-merge or tw-animate-css", () => {
+  test("no item names tailwind-merge, tw-animate-css or codemirror", () => {
     expect(named.has("tailwind-merge")).toBe(false);
     expect(named.has("tw-animate-css")).toBe(false);
+    expect(named.has("codemirror")).toBe(false);
   });
 
   test("each has a range in package.json", () => {
@@ -153,6 +179,9 @@ describe("the npm packages items name", () => {
         "@internationalized/date",
         "tailwind-variants",
         "phosphor-svelte",
+        "shiki",
+        ...CODEMIRROR,
+        "layerchart",
       ].sort(),
     );
     for (const [name, range] of stated)

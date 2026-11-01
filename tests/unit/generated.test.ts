@@ -128,3 +128,106 @@ describe("002's additions to pluto-theme", () => {
     expect(theme().cssVars.theme[key]).toBe(value);
   });
 });
+
+/** 004 decision 5: twelve code tokens, the scrollbar utility and the meter's rules. */
+describe("004's additions to pluto-theme", () => {
+  const SLOTS: [slot: string, semantic: string][] = [
+    ["foreground", "foreground"],
+    ["background", "muted"],
+    ["keyword", "primary"],
+    ["string", "success"],
+    ["constant", "foreground"],
+    ["function", "foreground"],
+    ["comment", "muted-foreground"],
+    ["link", "primary"],
+    ["inserted", "success"],
+    ["deleted", "destructive"],
+    ["changed", "primary"],
+    ["active-line", "card"],
+  ];
+  const theme = () =>
+    items(readFileSync("registry.json", "utf8")).get("pluto-theme") as Item & {
+      cssVars: {
+        light: Record<string, string>;
+        dark: Record<string, string>;
+        theme: Record<string, string>;
+      };
+      css: CssTree;
+    };
+
+  test("cssVars.light holds the 12 code-* variables, each var(--<semantic>)", () => {
+    const light = theme().cssVars.light;
+    const keys = Object.keys(light).filter((k) => k.startsWith("code-"));
+    expect(keys).toEqual(SLOTS.map(([slot]) => `code-${slot}`));
+    for (const [slot, semantic] of SLOTS)
+      expect(light[`code-${slot}`]).toBe(`var(--${semantic})`);
+  });
+
+  test("cssVars.dark holds 0 code-* variables", () => {
+    expect(
+      Object.keys(theme().cssVars.dark).filter((k) => k.startsWith("code-")),
+    ).toEqual([]);
+  });
+
+  test("cssVars.theme holds the 12 color-code-* utilities, each var(--code-<slot>)", () => {
+    const vars = theme().cssVars.theme;
+    const keys = Object.keys(vars).filter((k) => k.startsWith("color-code-"));
+    expect(keys).toEqual(SLOTS.map(([slot]) => `color-code-${slot}`));
+    for (const [slot] of SLOTS)
+      expect(vars[`color-code-${slot}`]).toBe(`var(--code-${slot})`);
+  });
+
+  test("css holds @utility scrollbar: the input thumb on the muted track, thin", () => {
+    expect(theme().css["@utility scrollbar"]).toEqual({
+      "scrollbar-color": "var(--input) var(--muted)",
+      "scrollbar-width": "thin",
+    });
+  });
+
+  test("css holds the meter's rules in @layer components, with 5 pseudo-elements and no radius", () => {
+    const layer = theme().css["@layer components"] as CssTree;
+    expect(layer).toBeDefined();
+    expect(layer['[data-slot="meter"]']).toEqual({
+      appearance: "none",
+      background: "var(--muted)",
+    });
+    expect(layer['[data-slot="meter"]::-webkit-meter-bar']).toEqual({
+      background: "var(--muted)",
+    });
+    for (const pseudo of [
+      "::-webkit-meter-optimum-value",
+      "::-webkit-meter-suboptimum-value",
+      "::-webkit-meter-even-less-good-value",
+      "::-moz-meter-bar",
+    ])
+      expect(layer[`[data-slot="meter"]${pseudo}`]).toEqual({
+        background: "var(--primary)",
+      });
+    expect(Object.keys(layer).filter((k) => k.includes("::"))).toHaveLength(5);
+    expect(JSON.stringify(layer)).not.toContain("radius");
+  });
+
+  // The checkpoint's call (decisions.md, "No ligatures on code surfaces").
+  test("css's @layer base turns ligatures off for code, kbd, samp, pre; app.css carries the rule once, beside font-mono", () => {
+    const base = theme().css["@layer base"] as CssTree;
+    expect(base["code, kbd, samp, pre"]).toEqual({
+      "font-variant-ligatures": "none",
+    });
+    const css = readFileSync("src/app.css", "utf8");
+    const rule = /code,\s*kbd,\s*samp,\s*pre\s*\{([^}]*)\}/g;
+    const bodies = [...css.matchAll(rule)].map((m) => m[1]);
+    expect(bodies).toHaveLength(1);
+    expect(bodies[0]).toContain("font-variant-ligatures: none;");
+    expect(bodies[0]).toContain("@apply font-mono;");
+  });
+
+  test("src/app.css carries the 12 :root code variables, the utility and the meter rules", () => {
+    const css = readFileSync("src/app.css", "utf8");
+    for (const [slot, semantic] of SLOTS)
+      expect(css).toContain(`--code-${slot}: var(--${semantic});`);
+    expect(css).toContain("--color-code-keyword: var(--code-keyword);");
+    expect(css).toContain("@utility scrollbar {");
+    expect(css).toContain("@layer components {");
+    expect(css).toContain('[data-slot="meter"]::-moz-meter-bar');
+  });
+});

@@ -128,6 +128,20 @@
       "scrim": "ink-scrim-deep"
     }
   },
+  "code": {
+    "foreground": "foreground",
+    "background": "muted",
+    "keyword": "primary",
+    "string": "success",
+    "constant": "foreground",
+    "function": "foreground",
+    "comment": "muted-foreground",
+    "link": "primary",
+    "inserted": "success",
+    "deleted": "destructive",
+    "changed": "primary",
+    "active-line": "card"
+  },
   "radius": { "case": 8 },
   "spacing": { "atom": 4, "ladder": [4, 8, 12, 16, 24, 32, 48, 64, 96] },
   "type": {

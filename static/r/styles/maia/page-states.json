@@ -1,0 +1,50 @@
+{
+	"$schema": "https://shadcn-svelte.com/schema/registry-item.json",
+	"name": "page-states",
+	"title": "Page states",
+	"type": "registry:block",
+	"author": "Pluto Systems <https://plutosystems.co>",
+	"description": "Empty, loading, error and not found as one family, with an error page for SvelteKit's error route.",
+	"devDependencies": [
+		"phosphor-svelte@^3.1.1"
+	],
+	"registryDependencies": [
+		"utils",
+		"pluto-theme",
+		"empty",
+		"button",
+		"skeleton",
+		"status"
+	],
+	"meta": {
+		"since": "0.3.0",
+		"group": "blocks"
+	},
+	"files": [
+		{
+			"content": "<script lang=\"ts\">\n  import PageStatesMessage from \"$COMPONENTS$/page-states-message.svelte\";\n  import { Button } from \"$UI$/button\";\n  import FolderSimple from \"phosphor-svelte/lib/FolderSimple\";\n</script>\n\n<svelte:head><title>Projects</title></svelte:head>\n\n<div class=\"mx-auto flex max-w-5xl flex-col gap-8 px-6 py-16 sm:py-24\">\n  <h1\n    class=\"font-heading text-2xl font-bold tracking-section text-foreground sm:text-5xl sm:tracking-display\"\n  >\n    Projects\n  </h1>\n  <div class=\"rounded border border-border bg-card p-6 sm:p-12\">\n    <PageStatesMessage\n      align=\"center\"\n      level={2}\n      title=\"No projects yet\"\n      description=\"When you create a project, it appears here.\"\n    >\n      {#snippet icon()}\n        <FolderSimple aria-hidden=\"true\" />\n      {/snippet}\n      {#snippet action()}\n        <!-- Your app's one action goes here. -->\n        <Button>Create a project</Button>\n      {/snippet}\n    </PageStatesMessage>\n  </div>\n</div>\n",
+			"type": "registry:page",
+			"target": "page-states/+page.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import { page } from \"$app/state\";\n  import PageStatesError, {\n    errorTitle,\n  } from \"$COMPONENTS$/page-states-error.svelte\";\n</script>\n\n<!--\n  Here it handles errors thrown by this route only. Move it to\n  src/routes/+error.svelte to give every not-found and error page this design.\n-->\n<svelte:head><title>{errorTitle(page.status)}</title></svelte:head>\n\n<div class=\"mx-auto max-w-5xl px-6 py-16 sm:py-24\">\n  <PageStatesError status={page.status} />\n</div>\n",
+			"type": "registry:page",
+			"target": "page-states/+error.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import type { Snippet } from \"svelte\";\n  import * as Empty from \"$UI$/empty\";\n  import CaretDown from \"phosphor-svelte/lib/CaretDown\";\n  import CaretRight from \"phosphor-svelte/lib/CaretRight\";\n  import { cn } from \"$UTILS$\";\n\n  let {\n    title,\n    description,\n    level = 1,\n    align = \"start\",\n    icon,\n    action,\n    link,\n    status,\n    reference,\n    class: className,\n  }: {\n    title: string;\n    /** One or two sentences: what happened, and what to do. */\n    description: string;\n    level?: 1 | 2 | 3 | 4 | 5 | 6;\n    /** \"start\" on a full page; \"center\" in a tile. */\n    align?: \"start\" | \"center\";\n    /** An optional monochrome icon, hidden from assistive technology. */\n    icon?: Snippet;\n    /** The one primary action. */\n    action?: Snippet;\n    /** At most one link. */\n    link?: Snippet;\n    /** A status code, shown in mono under the description. */\n    status?: number;\n    /** A request id or build hash, inside a closed details element. */\n    reference?: string;\n    class?: string;\n  } = $props();\n\n  const start = $derived(align === \"start\");\n  // The disclosure's state, shown by its caret: right when closed, down open.\n  let open = $state(false);\n</script>\n\n<!--\n  The family's one shape: an optional icon, a heading, a sentence or two, one\n  action and at most one link. No red, no apology, no code in the words.\n-->\n<Empty.Root\n  class={cn(\n    \"gap-6 p-0\",\n    start && \"items-start justify-start text-left\",\n    className,\n  )}\n>\n  <Empty.Header class={cn(start && \"max-w-prose items-start\")}>\n    {#if icon}\n      <Empty.Media variant=\"icon\">{@render icon()}</Empty.Media>\n    {/if}\n    <!-- A page's h1 outranks everything under it: 44 px from sm. -->\n    <Empty.Title\n      {level}\n      class={cn(level === 1 && \"sm:text-5xl sm:tracking-display\")}\n      >{title}</Empty.Title\n    >\n    <Empty.Description\n      class={cn(\"text-base\", start && \"max-w-prose text-left\")}\n    >\n      {description}\n    </Empty.Description>\n    {#if status !== undefined}\n      <p class=\"font-mono text-xs text-muted-foreground\">\n        status <code>{status}</code>\n      </p>\n    {/if}\n  </Empty.Header>\n  {#if action || link}\n    <Empty.Content class={cn(start && \"max-w-prose items-start\")}>\n      <div class=\"flex flex-col gap-3 sm:flex-row sm:items-center\">\n        {@render action?.()}\n        {@render link?.()}\n      </div>\n    </Empty.Content>\n  {/if}\n  {#if reference}\n    <details bind:open class=\"text-sm text-muted-foreground\">\n      <summary class=\"inline-flex min-h-6 cursor-pointer items-center gap-2\">\n        {#if open}\n          <CaretDown aria-hidden=\"true\" class=\"size-4\" />\n        {:else}\n          <CaretRight aria-hidden=\"true\" class=\"size-4\" />\n        {/if}\n        <span class=\"underline underline-offset-4\">Technical details</span>\n      </summary>\n      <p class=\"mt-2\">\n        Reference <code class=\"font-mono text-foreground\">{reference}</code>\n      </p>\n    </details>\n  {/if}\n</Empty.Root>\n",
+			"type": "registry:component",
+			"target": "page-states-message.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\" module>\n  /** The heading, and the page's title, for a status. */\n  export function errorTitle(status: number): string {\n    if (status === 404) return \"Page not found\";\n    if (status < 500) return \"This page cannot be shown\";\n    return \"This page did not load\";\n  }\n</script>\n\n<script lang=\"ts\">\n  import { Button } from \"$UI$/button\";\n  import PageStatesMessage from \"$COMPONENTS$/page-states-message.svelte\";\n\n  let {\n    status,\n    reference,\n    homeHref = \"/\",\n    level = 1,\n  }: {\n    status: number;\n    /** A request id or build hash; never a stack trace. */\n    reference?: string;\n    homeHref?: string;\n    level?: 1 | 2 | 3 | 4 | 5 | 6;\n  } = $props();\n\n  // Only a 404 says the page is not there. Another status below 500 says the\n  // page cannot be shown and names the status in mono. Says what happened and\n  // what to do, never whose fault it was.\n  const missing = $derived(status === 404);\n  const failed = $derived(status >= 500);\n  const description = $derived(\n    missing\n      ? \"The address may have a typo, or the page may have moved. Check the address, or start again from the home page.\"\n      : !failed\n        ? \"Check the address, or start again from the home page.\"\n        : reference\n          ? \"Try again in a moment. If it keeps happening, include the reference below when you report it.\"\n          : \"Try again in a moment.\",\n  );\n</script>\n\n<PageStatesMessage\n  title={errorTitle(status)}\n  {description}\n  {level}\n  status={!missing && !failed ? status : undefined}\n  reference={failed ? reference : undefined}\n>\n  {#snippet action()}\n    {#if failed}\n      <Button onclick={() => location.reload()}>Try again</Button>\n    {:else}\n      <Button href={homeHref}>Go to the home page</Button>\n    {/if}\n  {/snippet}\n  {#snippet link()}\n    {#if failed}\n      <Button variant=\"link\" href={homeHref}>Go to the home page</Button>\n    {/if}\n  {/snippet}\n</PageStatesMessage>\n",
+			"type": "registry:component",
+			"target": "page-states-error.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import { onMount, type Snippet } from \"svelte\";\n  import { Skeleton } from \"$UI$/skeleton\";\n  import { Status } from \"$UI$/status\";\n  import { cn } from \"$UTILS$\";\n\n  let {\n    loading,\n    label = \"Loading\",\n    rows = 3,\n    children,\n    class: className,\n  }: {\n    loading: boolean;\n    /** What the hidden status says while loading. */\n    label?: string;\n    /** Skeleton rows while loading. */\n    rows?: number;\n    /** The loaded content. */\n    children: Snippet;\n    class?: string;\n  } = $props();\n\n  // The status region renders empty, and its text arrives after mount, so the\n  // region is in the page before its text changes. Mount this component\n  // before loading starts and drive `loading`, rather than mounting it at the\n  // moment loading begins.\n  let mounted = $state(false);\n  onMount(() => {\n    mounted = true;\n  });\n</script>\n\n<!-- A static skeleton on an inset: no shimmer, no spinner, no control inside. -->\n<div\n  data-slot=\"page-states-loading\"\n  aria-busy={loading ? \"true\" : \"false\"}\n  class={cn(className)}\n>\n  {#if loading}\n    <div class=\"flex flex-col gap-6\">\n      {#each Array.from({ length: rows }, (_, i) => i) as row (row)}\n        <div\n          data-slot=\"page-states-row\"\n          aria-hidden=\"true\"\n          class=\"flex flex-col gap-2\"\n        >\n          <Skeleton class=\"h-6 w-1/2\" />\n          <Skeleton class=\"h-4 w-1/3\" />\n        </div>\n      {/each}\n    </div>\n  {:else}\n    {@render children()}\n  {/if}\n</div>\n<Status text={loading && mounted ? label : \"\"} />\n",
+			"type": "registry:component",
+			"target": "page-states-loading.svelte"
+		}
+	]
+}

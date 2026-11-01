@@ -77,7 +77,19 @@
           "groove-light": "#FFFFFF",
           "elevation-line": "#14161C1A",
           "elevation-shadow": "#14161C29",
-          "scrim": "#14161C80"
+          "scrim": "#14161C80",
+          "code-foreground": "var(--foreground)",
+          "code-background": "var(--muted)",
+          "code-keyword": "var(--primary)",
+          "code-string": "var(--success)",
+          "code-constant": "var(--foreground)",
+          "code-function": "var(--foreground)",
+          "code-comment": "var(--muted-foreground)",
+          "code-link": "var(--primary)",
+          "code-inserted": "var(--success)",
+          "code-deleted": "var(--destructive)",
+          "code-changed": "var(--primary)",
+          "code-active-line": "var(--card)"
         },
         "dark": {
           "background": "#14161C",
@@ -162,7 +174,19 @@
           "default-transition-duration": "200ms",
           "shadow-elevation": "0 0 0 var(--line-width) var(--elevation-line), 0 0.75rem 2rem 0 var(--elevation-shadow)",
           "animate-enter": "pluto-enter var(--motion-micro) cubic-bezier(0.2, 0.7, 0.3, 1)",
-          "animate-exit": "pluto-exit var(--motion-micro) cubic-bezier(0.2, 0.7, 0.3, 1) forwards"
+          "animate-exit": "pluto-exit var(--motion-micro) cubic-bezier(0.2, 0.7, 0.3, 1) forwards",
+          "color-code-foreground": "var(--code-foreground)",
+          "color-code-background": "var(--code-background)",
+          "color-code-keyword": "var(--code-keyword)",
+          "color-code-string": "var(--code-string)",
+          "color-code-constant": "var(--code-constant)",
+          "color-code-function": "var(--code-function)",
+          "color-code-comment": "var(--code-comment)",
+          "color-code-link": "var(--code-link)",
+          "color-code-inserted": "var(--code-inserted)",
+          "color-code-deleted": "var(--code-deleted)",
+          "color-code-changed": "var(--code-changed)",
+          "color-code-active-line": "var(--code-active-line)"
         }
       },
       "css": {
@@ -205,6 +229,10 @@
         "@utility focus-ring-none": {
           "outline": "none"
         },
+        "@utility scrollbar": {
+          "scrollbar-color": "var(--input) var(--muted)",
+          "scrollbar-width": "thin"
+        },
         "@keyframes pluto-enter": {
           "from": {
             "opacity": "0"
@@ -225,6 +253,30 @@
           ":focus-visible": {
             "outline": "var(--focus-width) solid var(--ring)",
             "outline-offset": "var(--focus-offset)"
+          },
+          "code, kbd, samp, pre": {
+            "font-variant-ligatures": "none"
+          }
+        },
+        "@layer components": {
+          "[data-slot=\"meter\"]": {
+            "appearance": "none",
+            "background": "var(--muted)"
+          },
+          "[data-slot=\"meter\"]::-webkit-meter-bar": {
+            "background": "var(--muted)"
+          },
+          "[data-slot=\"meter\"]::-webkit-meter-optimum-value": {
+            "background": "var(--primary)"
+          },
+          "[data-slot=\"meter\"]::-webkit-meter-suboptimum-value": {
+            "background": "var(--primary)"
+          },
+          "[data-slot=\"meter\"]::-webkit-meter-even-less-good-value": {
+            "background": "var(--primary)"
+          },
+          "[data-slot=\"meter\"]::-moz-meter-bar": {
+            "background": "var(--primary)"
           }
         }
       }
@@ -441,6 +493,68 @@
           "cli": "1.7.1",
           "date": "2026-10-28",
           "sha256": "63bc69ecd4aed29655a9213e211965dd728876b91701b39b3d039b663f94dd07"
+        }
+      }
+    },
+    {
+      "name": "toggle",
+      "type": "registry:ui",
+      "title": "Toggle",
+      "description": "A two-state button that says whether it is pressed, inverted when it is.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": ["utils", "pluto-theme"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/toggle/toggle.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/toggle/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.4.0",
+        "group": "actions",
+        "stock": {
+          "registry": "https://shadcn-svelte.com/registry/styles/maia",
+          "item": "toggle",
+          "cli": "1.7.1",
+          "date": "2026-10-31",
+          "sha256": "52a50310423259c847984631df3ca1f6bce00745c0df6d86ea13878411bc454c"
+        }
+      }
+    },
+    {
+      "name": "toggle-group",
+      "type": "registry:ui",
+      "title": "Toggle group",
+      "description": "A row of toggles, one stop for the row, moved by the arrow keys, for one choice or several.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": ["utils", "pluto-theme", "toggle"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/toggle-group/toggle-group.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/toggle-group/toggle-group-item.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/toggle-group/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.4.0",
+        "group": "actions",
+        "stock": {
+          "registry": "https://shadcn-svelte.com/registry/styles/maia",
+          "item": "toggle-group",
+          "cli": "1.7.1",
+          "date": "2026-10-31",
+          "sha256": "684978bfa7ad3ce2a7915e267682afe7df7bb7c2f9813d9718e6f7990e7daa11"
         }
       }
     },
@@ -768,6 +882,104 @@
           "cli": "1.7.1",
           "date": "2026-10-28",
           "sha256": "080843f688905b9ed48c2e7de4c35569340d6827e853efc9af0b8534459a4cd8"
+        }
+      }
+    },
+    {
+      "name": "popover",
+      "type": "registry:ui",
+      "title": "Popover",
+      "description": "A small dialog anchored to its button, raised by the elevation shadow, that returns focus when it closes.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": ["utils", "pluto-theme"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/popover/popover.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/popover/popover-trigger.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/popover/popover-content.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/popover/popover-portal.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/popover/popover-close.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/popover/popover-header.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/popover/popover-title.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/popover/popover-description.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/popover/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.4.0",
+        "group": "surfaces",
+        "stock": {
+          "registry": "https://shadcn-svelte.com/registry/styles/maia",
+          "item": "popover",
+          "cli": "1.7.1",
+          "date": "2026-10-31",
+          "sha256": "04fedc3e4d903c6e1c0454211a79a9bd0c88827dbab3fab1d4e56ac82b8ef609"
+        }
+      }
+    },
+    {
+      "name": "accordion",
+      "type": "registry:ui",
+      "title": "Accordion",
+      "description": "Headings that each open a section, divided by grooves, moved by the arrow keys.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": ["utils", "pluto-theme"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/accordion/accordion.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/accordion/accordion-item.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/accordion/accordion-trigger.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/accordion/accordion-content.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/accordion/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.4.0",
+        "group": "surfaces",
+        "stock": {
+          "registry": "https://shadcn-svelte.com/registry/styles/maia",
+          "item": "accordion",
+          "cli": "1.7.1",
+          "date": "2026-10-31",
+          "sha256": "4c77b3993546acfdb3ea5e0d7e268d4a53f2655856881b9909798fb3cdf1cf7e"
         }
       }
     },
@@ -1447,6 +1659,208 @@
           "date": "2026-10-28",
           "sha256": "2c28b30a1aee5778c114092ff18626560b84dd1430dd826583f7459baf9e0b45"
         }
+      }
+    },
+    {
+      "name": "code-block",
+      "type": "registry:ui",
+      "title": "Code block",
+      "description": "Code, output or a diff on the muted inset, highlighted from the code tokens, with line numbers, a copy button and a header divided by the groove.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": [
+        "utils",
+        "pluto-theme",
+        "use-highlighted-code",
+        "button",
+        "status"
+      ],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/code-block/code-block.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/code-block/code-block-header.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/code-block/code-block-title.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/code-block/code-block-actions.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/code-block/code-block-footer.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/code-block/code-block-copy-button.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/code-block/code-block-content.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/code-block/code-block-line.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/code-block/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.4.0",
+        "group": "code",
+        "stock": {
+          "registry": "https://shadcn-svelte.com/registry/styles/maia",
+          "item": "code-block",
+          "cli": "1.7.1",
+          "date": "2026-10-31",
+          "sha256": "ac3d7e22ea0b93771761faa852ef44e0d9993af0adf801404d51db108cfeff62"
+        }
+      }
+    },
+    {
+      "name": "code-editor",
+      "type": "registry:ui",
+      "title": "Code editor",
+      "description": "A CodeMirror 6 editor themed from the tokens, with line numbers and Python, that prerenders as plain code and leaves Tab unbound.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": ["utils", "pluto-theme"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/code-editor/code-editor.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/code-editor/code-editor-theme.ts",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/code-editor/code-editor-python.ts",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/code-editor/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.4.0",
+        "group": "code"
+      }
+    },
+    {
+      "name": "highlighter",
+      "type": "registry:lib",
+      "title": "Highlighter",
+      "description": "Shiki with the JavaScript engine and a theme whose every colour is a code token, for the server or the browser.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": ["utils", "pluto-theme"],
+      "files": [
+        {
+          "path": "src/lib/registry/lib/highlighter.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "meta": {
+        "since": "0.4.0",
+        "group": "code",
+        "stock": {
+          "registry": "https://shadcn-svelte.com/registry/styles/maia",
+          "item": "highlighter",
+          "cli": "1.7.1",
+          "date": "2026-10-31",
+          "sha256": "9072ce3941fbf079fa5ea85ef36982772a2e1a55e603024726e1ac679079335c"
+        }
+      }
+    },
+    {
+      "name": "use-highlighted-code",
+      "type": "registry:hook",
+      "title": "Use highlighted code",
+      "description": "A hook that highlights a changing string line by line as it grows.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": ["utils", "pluto-theme", "highlighter"],
+      "files": [
+        {
+          "path": "src/lib/registry/hooks/use-highlighted-code.svelte.ts",
+          "type": "registry:hook"
+        }
+      ],
+      "meta": {
+        "since": "0.4.0",
+        "group": "code",
+        "stock": {
+          "registry": "https://shadcn-svelte.com/registry/styles/maia",
+          "item": "use-highlighted-code",
+          "cli": "1.7.1",
+          "date": "2026-10-31",
+          "sha256": "9a7f2378f1881afd300b4ead2bf9790ec7e5d63fb835186e44895127e1306cca"
+        }
+      }
+    },
+    {
+      "name": "chart",
+      "type": "registry:ui",
+      "title": "Chart",
+      "description": "A figure for layerchart with a name and a table of its data, series coloured by token classes, and a tooltip on the elevation shadow.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": ["utils", "pluto-theme"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/chart/chart-container.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/chart/chart-tooltip.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/chart/chart-utils.ts",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/chart/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.4.0",
+        "group": "data",
+        "stock": {
+          "registry": "https://shadcn-svelte.com/registry/styles/maia",
+          "item": "chart",
+          "cli": "1.7.1",
+          "date": "2026-10-31",
+          "sha256": "dccff6d1f478d5469fdd93e3ddca5eb8c42732ae1ca494da79028c5cdc422d51"
+        }
+      }
+    },
+    {
+      "name": "meter",
+      "type": "registry:ui",
+      "title": "Meter",
+      "description": "A measurement within a known range, as the native meter on the muted track with a primary fill, its numbers written beside it.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": ["utils", "pluto-theme"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/meter/meter.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/meter/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.4.0",
+        "group": "data"
       }
     },
     {

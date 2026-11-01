@@ -1,0 +1,39 @@
+{
+	"$schema": "https://shadcn-svelte.com/schema/registry-item.json",
+	"name": "button",
+	"title": "Button",
+	"type": "registry:ui",
+	"author": "Pluto Systems <https://plutosystems.co>",
+	"description": "An action: the surface's one blue primary, a bordered secondary, ghost, destructive or link, at 48 or 32 px, with a busy state that keeps focus.",
+	"devDependencies": [
+		"tailwind-variants@^3.3.1"
+	],
+	"registryDependencies": [
+		"utils",
+		"pluto-theme",
+		"spinner"
+	],
+	"meta": {
+		"since": "0.2.0",
+		"group": "actions",
+		"stock": {
+			"registry": "https://shadcn-svelte.com/registry/styles/maia",
+			"item": "button",
+			"cli": "1.7.1",
+			"date": "2026-10-28",
+			"sha256": "2460d16c3fe61ce9cd6c495820d1e51f2bf3ec4d9a2c5c5bdfd858003f0988d5"
+		}
+	},
+	"files": [
+		{
+			"content": "<script lang=\"ts\" module>\n  import { tv, type VariantProps } from \"tailwind-variants/lite\";\n  import { cn, type WithElementRef } from \"$UTILS$\";\n  import type {\n    HTMLAnchorAttributes,\n    HTMLButtonAttributes,\n  } from \"svelte/elements\";\n\n  export const buttonVariants = tv({\n    base: \"group/button inline-flex shrink-0 items-center justify-center gap-2 rounded border font-medium whitespace-nowrap transition-[color,background-color,border-color,translate] select-none active:not-aria-[haspopup]:translate-y-px aria-invalid:border-destructive disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4\",\n    variants: {\n      variant: {\n        default:\n          \"border-primary bg-primary text-primary-foreground hover:border-foreground\",\n        secondary:\n          \"border-input bg-secondary text-secondary-foreground hover:border-foreground aria-expanded:border-foreground\",\n        ghost:\n          \"border-transparent hover:bg-accent hover:text-accent-foreground aria-expanded:bg-accent aria-expanded:text-accent-foreground\",\n        destructive:\n          \"border-destructive bg-destructive text-destructive-foreground hover:border-foreground\",\n        link: \"border-transparent text-primary underline underline-offset-4\",\n      },\n      size: {\n        default: \"h-12 px-4 text-base\",\n        sm: \"h-8 px-3 text-sm\",\n        icon: \"size-12\",\n        \"icon-sm\": \"size-8\",\n      },\n    },\n    // A link sits flush with the text around it, at every size: no side\n    // padding. Its height, and so its target, stay.\n    compoundVariants: [{ variant: \"link\", class: \"px-0\" }],\n    defaultVariants: {\n      variant: \"default\",\n      size: \"default\",\n    },\n  });\n\n  export type ButtonVariant = VariantProps<typeof buttonVariants>[\"variant\"];\n  export type ButtonSize = VariantProps<typeof buttonVariants>[\"size\"];\n\n  export type ButtonProps = WithElementRef<HTMLButtonAttributes> &\n    WithElementRef<HTMLAnchorAttributes> & {\n      variant?: ButtonVariant;\n      size?: ButtonSize;\n      /**\n       * Busy: the button shows a spinner, sets `aria-busy`, stays enabled and\n       * focused, and ignores clicks, so a form is not submitted twice.\n       */\n      busy?: boolean;\n    };\n</script>\n\n<script lang=\"ts\">\n  import { Spinner } from \"$UI$/spinner\";\n\n  let {\n    class: className,\n    variant = \"default\",\n    size = \"default\",\n    ref = $bindable(null),\n    href = undefined,\n    type = \"button\",\n    disabled,\n    busy = false,\n    onclick,\n    children,\n    ...restProps\n  }: ButtonProps = $props();\n\n  function handleClick(\n    event: MouseEvent & { currentTarget: EventTarget & HTMLButtonElement },\n  ) {\n    if (busy) {\n      // Also stops a form's implicit submission, which clicks the default button.\n      event.preventDefault();\n      return;\n    }\n    (onclick as ((e: typeof event) => void) | null | undefined)?.(event);\n  }\n</script>\n\n{#if href}\n  <a\n    bind:this={ref}\n    data-slot=\"button\"\n    class={cn(buttonVariants({ variant, size }), className)}\n    href={disabled ? undefined : href}\n    aria-disabled={disabled}\n    role={disabled ? \"link\" : undefined}\n    tabindex={disabled ? -1 : undefined}\n    onclick={onclick as HTMLAnchorAttributes[\"onclick\"]}\n    {...restProps}\n  >\n    {@render children?.()}\n  </a>\n{:else}\n  <button\n    bind:this={ref}\n    data-slot=\"button\"\n    class={cn(buttonVariants({ variant, size }), className)}\n    {type}\n    {disabled}\n    aria-busy={busy ? \"true\" : undefined}\n    data-busy={busy ? \"\" : undefined}\n    onclick={handleClick}\n    {...restProps}\n  >\n    {#if busy}\n      <Spinner />\n    {/if}\n    {@render children?.()}\n  </button>\n{/if}\n",
+			"type": "registry:ui",
+			"target": "button/button.svelte"
+		},
+		{
+			"content": "import Root, {\n  type ButtonProps,\n  type ButtonSize,\n  type ButtonVariant,\n  buttonVariants,\n} from \"./button.svelte\";\n\nexport {\n  Root,\n  type ButtonProps as Props,\n  //\n  Root as Button,\n  buttonVariants,\n  type ButtonProps,\n  type ButtonSize,\n  type ButtonVariant,\n};\n",
+			"type": "registry:ui",
+			"target": "button/index.ts"
+		}
+	]
+}

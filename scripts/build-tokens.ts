@@ -86,8 +86,17 @@ export function themeCssVars(tokens: Tokens): {
   theme["animate-enter"] = `pluto-enter var(--motion-micro) ${curve}`;
   theme["animate-exit"] = `pluto-exit var(--motion-micro) ${curve} forwards`;
 
+  // 004 decision 5: the twelve code slots. Each is a reference to a semantic
+  // colour, so it lives in `light` only (`:root` cascades into `.dark`, which
+  // redefines the referenced variable), and each becomes a utility.
+  const code: Vars = {};
+  for (const [slot, semantic] of Object.entries(tokens.code)) {
+    code[`code-${slot}`] = `var(--${semantic})`;
+    theme[`color-code-${slot}`] = `var(--code-${slot})`;
+  }
+
   return {
-    light: { radius, ...colours(tokens, "light") },
+    light: { radius, ...colours(tokens, "light"), ...code },
     dark: colours(tokens, "dark"),
     theme,
   };
@@ -138,6 +147,11 @@ export function themeCss(tokens: Tokens): CssTree {
     "@utility focus-ring-none": {
       outline: "none",
     },
+    // 004 decision 5: a native scroll box's bar from tokens, in place of scroll-area.
+    "@utility scrollbar": {
+      "scrollbar-color": "var(--input) var(--muted)",
+      "scrollbar-width": "thin",
+    },
     // 002 decision 3: the keyframes behind animate-enter and animate-exit.
     "@keyframes pluto-enter": { from: { opacity: "0" } },
     "@keyframes pluto-exit": { to: { opacity: "0" } },
@@ -147,6 +161,36 @@ export function themeCss(tokens: Tokens): CssTree {
       ":focus-visible": {
         outline: "var(--focus-width) solid var(--ring)",
         "outline-offset": "var(--focus-offset)",
+      },
+      // 004's checkpoint: code shows the characters that were typed. JetBrains
+      // Mono's contextual ligatures drew `!=` as one glyph, which copy does
+      // not return. The same rule sits on the editor's scroller.
+      [monoSelector(tokens)]: { "font-variant-ligatures": "none" },
+    },
+    // 004 decision 5: the native meter on the muted track with a primary fill.
+    // Pseudo-elements cannot be classes, and an item may hold no <style>. No
+    // radius: the meter has square ends (decision 14). All three WebKit value
+    // states take primary so an app that sets low/high/optimum gets no browser
+    // green or yellow.
+    "@layer components": {
+      '[data-slot="meter"]': {
+        appearance: "none",
+        background: "var(--muted)",
+      },
+      '[data-slot="meter"]::-webkit-meter-bar': {
+        background: "var(--muted)",
+      },
+      '[data-slot="meter"]::-webkit-meter-optimum-value': {
+        background: "var(--primary)",
+      },
+      '[data-slot="meter"]::-webkit-meter-suboptimum-value': {
+        background: "var(--primary)",
+      },
+      '[data-slot="meter"]::-webkit-meter-even-less-good-value': {
+        background: "var(--primary)",
+      },
+      '[data-slot="meter"]::-moz-meter-bar': {
+        background: "var(--primary)",
       },
     },
   };
@@ -167,6 +211,14 @@ export function fontObject(family: Family): FontObject {
     return { ...rest, selector: family.selector, dependency };
   }
   return font;
+}
+
+/** The selector the mono family applies to: the code surfaces. */
+function monoSelector(tokens: Tokens): string {
+  const mono = Object.values(tokens.type.families).find(
+    (family) => family.variable === "--font-mono",
+  );
+  return mono?.selector ?? "code, kbd, samp, pre";
 }
 
 /** The `@layer base` rules the CLI writes for the font items (run memo §4). */
@@ -221,10 +273,15 @@ export function appCss(tokens: Tokens): string {
     colourTheme[`color-${name}`] = `var(--${name})`;
 
   const { ":root": rootRules, ".dark": darkRules, ...rest } = css;
-  const base = {
-    ...(rest["@layer base"] as CssTree),
-    ...fontBaseRules(tokens),
-  };
+  // A font rule on a selector the theme already styles joins that rule.
+  const base: CssTree = { ...(rest["@layer base"] as CssTree) };
+  for (const [selector, rule] of Object.entries(fontBaseRules(tokens))) {
+    const existing = base[selector];
+    base[selector] = {
+      ...(typeof existing === "object" ? existing : {}),
+      ...(rule as CssTree),
+    };
+  }
   // The CLI places an item's @keyframes inside the app's @theme inline (READ:
   // cli/src/utils/updaters/update-css.ts), so the preview's CSS does too.
   const keyframes: CssTree = {};

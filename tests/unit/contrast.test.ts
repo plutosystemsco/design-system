@@ -6,7 +6,7 @@ import {
   forbiddenRows,
   scrimRows,
 } from "../../scripts/contrast.ts";
-import { readTokens } from "../../scripts/tokens.ts";
+import { readTokens, resolveColor } from "../../scripts/tokens.ts";
 
 const tokens = readTokens();
 
@@ -368,5 +368,54 @@ describe("edges over the scrim", () => {
   test("6 of 6 meet 3:1", () => {
     expect(rows.filter((r) => r.ratio >= r.min)).toHaveLength(6);
     for (const row of rows) expect(row.min).toBe(3);
+  });
+});
+
+// 004 decision 5: the five text slots on the code ground, `muted`, in each theme.
+const SLOT_ROWS: [theme: "light" | "dark", slot: string, ratio: number][] = [
+  ["light", "foreground", 15.0],
+  ["light", "comment", 6.79],
+  ["light", "keyword", 4.9],
+  ["light", "string", 5.23],
+  ["light", "deleted", 4.71],
+  ["dark", "foreground", 12.83],
+  ["dark", "comment", 6.13],
+  ["dark", "keyword", 5.22],
+  ["dark", "string", 6.55],
+  ["dark", "deleted", 5.53],
+];
+
+describe("the code slots on muted", () => {
+  test("10 rows", () => {
+    expect(SLOT_ROWS).toHaveLength(10);
+  });
+
+  test.each(SLOT_ROWS)(
+    "%s: the %s slot's colour on muted measures %d, at least 4.5",
+    (theme, slot, ratio) => {
+      const colour = tokens.code[slot];
+      expect(colour).toBeDefined();
+      const measured = contrastRatio(
+        resolveColor(tokens, theme, colour),
+        resolveColor(tokens, theme, "muted"),
+      );
+      expect(measured).toBe(ratio);
+      expect(measured).toBeGreaterThanOrEqual(4.5);
+    },
+  );
+
+  test("the five text slots cover foreground, muted-foreground, primary, success and destructive", () => {
+    const colours = [
+      ...new Set(SLOT_ROWS.map(([, slot]) => tokens.code[slot])),
+    ];
+    expect(colours.sort()).toEqual(
+      [
+        "foreground",
+        "muted-foreground",
+        "primary",
+        "success",
+        "destructive",
+      ].sort(),
+    );
   });
 });

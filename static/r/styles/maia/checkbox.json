@@ -1,0 +1,40 @@
+{
+	"$schema": "https://shadcn-svelte.com/schema/registry-item.json",
+	"name": "checkbox",
+	"title": "Checkbox",
+	"type": "registry:ui",
+	"author": "Pluto Systems <https://plutosystems.co>",
+	"description": "A 24 px checkbox that tells checked and mixed by shape as well as colour.",
+	"devDependencies": [
+		"bits-ui@^2.20.2",
+		"@internationalized/date@^3.12.4",
+		"phosphor-svelte@^3.1.1"
+	],
+	"registryDependencies": [
+		"utils",
+		"pluto-theme"
+	],
+	"meta": {
+		"since": "0.2.0",
+		"group": "forms",
+		"stock": {
+			"registry": "https://shadcn-svelte.com/registry/styles/maia",
+			"item": "checkbox",
+			"cli": "1.7.1",
+			"date": "2026-10-28",
+			"sha256": "ea812220df060e41c2c02655e4c4d63d0a18dc56edc61333423e1bf48c9d92c9"
+		}
+	},
+	"files": [
+		{
+			"content": "<script lang=\"ts\">\n  import { Checkbox as CheckboxPrimitive } from \"bits-ui\";\n  import CheckIcon from \"phosphor-svelte/lib/Check\";\n  import MinusIcon from \"phosphor-svelte/lib/Minus\";\n  import { getContext } from \"svelte\";\n  import { cn, type WithoutChildrenOrChild } from \"$UTILS$\";\n\n  /** The contract a `Field` sets under the key \"pluto:field\" (field decision 11). */\n  type FieldContext = {\n    readonly id: string;\n    readonly invalid: boolean;\n    readonly describedBy: string | undefined;\n  };\n\n  let {\n    ref = $bindable(null),\n    checked = $bindable(false),\n    indeterminate = $bindable(false),\n    class: className,\n    id,\n    \"aria-describedby\": describedBy,\n    \"aria-invalid\": invalid,\n    ...restProps\n  }: WithoutChildrenOrChild<CheckboxPrimitive.RootProps> = $props();\n\n  const field = getContext<FieldContext | undefined>(\"pluto:field\");\n</script>\n\n<!-- 24 px, so the 8 px case radius draws a rounded square, not a circle. -->\n<CheckboxPrimitive.Root\n  bind:ref\n  data-slot=\"checkbox\"\n  class={cn(\n    \"peer relative flex size-6 shrink-0 items-center justify-center rounded border border-input bg-card text-primary-foreground transition-[background-color,border-color] group-has-disabled/field:opacity-50 aria-invalid:border-destructive disabled:cursor-not-allowed disabled:opacity-50 data-checked:border-primary data-checked:bg-primary data-[state=indeterminate]:border-primary data-[state=indeterminate]:bg-primary\",\n    className,\n  )}\n  id={id ?? field?.id}\n  aria-describedby={describedBy ?? field?.describedBy}\n  aria-invalid={invalid ?? (field?.invalid ? true : undefined)}\n  bind:checked\n  bind:indeterminate\n  {...restProps}\n>\n  {#snippet children({ checked, indeterminate })}\n    <span\n      data-slot=\"checkbox-indicator\"\n      class=\"grid place-content-center text-current\"\n    >\n      {#if checked}\n        <CheckIcon aria-hidden=\"true\" weight=\"bold\" class=\"size-4\" />\n      {:else if indeterminate}\n        <MinusIcon aria-hidden=\"true\" weight=\"bold\" class=\"size-4\" />\n      {/if}\n    </span>\n  {/snippet}\n</CheckboxPrimitive.Root>\n",
+			"type": "registry:ui",
+			"target": "checkbox/checkbox.svelte"
+		},
+		{
+			"content": "import Root from \"./checkbox.svelte\";\nexport {\n  Root,\n  //\n  Root as Checkbox,\n};\n",
+			"type": "registry:ui",
+			"target": "checkbox/index.ts"
+		}
+	]
+}

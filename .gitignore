@@ -27,7 +27,5 @@ context/prior_art/*
 .DS_Store
 
 # Generated registry and test output
-static/r/
-static/v*/
 test-results/
 playwright-report/

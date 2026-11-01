@@ -1,0 +1,55 @@
+{
+	"$schema": "https://shadcn-svelte.com/schema/registry-item.json",
+	"name": "input-otp",
+	"title": "Input OTP",
+	"type": "registry:ui",
+	"author": "Pluto Systems <https://plutosystems.co>",
+	"description": "A six-digit code in 48 px cells over one real input that accepts a pasted code.",
+	"devDependencies": [
+		"phosphor-svelte@^3.1.1",
+		"bits-ui@^2.20.2",
+		"@internationalized/date@^3.12.4"
+	],
+	"registryDependencies": [
+		"utils",
+		"pluto-theme"
+	],
+	"meta": {
+		"since": "0.2.0",
+		"group": "forms",
+		"stock": {
+			"registry": "https://shadcn-svelte.com/registry/styles/maia",
+			"item": "input-otp",
+			"cli": "1.7.1",
+			"date": "2026-10-28",
+			"sha256": "2c28b30a1aee5778c114092ff18626560b84dd1430dd826583f7459baf9e0b45"
+		}
+	},
+	"files": [
+		{
+			"content": "<script lang=\"ts\">\n  import { cn, type WithElementRef } from \"$UTILS$\";\n  import type { HTMLAttributes } from \"svelte/elements\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    children,\n    ...restProps\n  }: WithElementRef<HTMLAttributes<HTMLDivElement>> = $props();\n</script>\n\n<div\n  bind:this={ref}\n  data-slot=\"input-otp-group\"\n  class={cn(\"flex items-center rounded\", className)}\n  {...restProps}\n>\n  {@render children?.()}\n</div>\n",
+			"type": "registry:ui",
+			"target": "input-otp/input-otp-group.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import MinusIcon from \"phosphor-svelte/lib/Minus\";\n  import type { WithElementRef } from \"$UTILS$\";\n  import { cn } from \"$UTILS$\";\n  import type { HTMLAttributes } from \"svelte/elements\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    children,\n    ...restProps\n  }: WithElementRef<HTMLAttributes<HTMLDivElement>> = $props();\n</script>\n\n<div\n  bind:this={ref}\n  data-slot=\"input-otp-separator\"\n  role=\"separator\"\n  class={cn(\n    \"flex items-center text-muted-foreground [&_svg:not([class*='size-'])]:size-4\",\n    className,\n  )}\n  {...restProps}\n>\n  {#if children}\n    {@render children?.()}\n  {:else}\n    <MinusIcon aria-hidden=\"true\" />\n  {/if}\n</div>\n",
+			"type": "registry:ui",
+			"target": "input-otp/input-otp-separator.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import { PinInput as InputOTPPrimitive } from \"bits-ui\";\n  import { cn } from \"$UTILS$\";\n\n  let {\n    ref = $bindable(null),\n    cell,\n    class: className,\n    ...restProps\n  }: InputOTPPrimitive.CellProps = $props();\n</script>\n\n<!-- A 48 px square; the active cell's border is blue, and its caret is static. -->\n<InputOTPPrimitive.Cell\n  {cell}\n  bind:ref\n  data-slot=\"input-otp-slot\"\n  class={cn(\n    \"relative flex size-12 items-center justify-center border-y border-r border-input bg-card text-base text-foreground transition-[border-color] first:rounded-l first:border-l last:rounded-r data-[active=true]:z-10 data-[active=true]:border-ring\",\n    className,\n  )}\n  {...restProps}\n>\n  {#snippet child({ props })}\n    <div {...props} data-active={cell.isActive}>\n      {cell.char}\n      {#if cell.hasFakeCaret}\n        <div\n          class=\"pointer-events-none absolute inset-0 flex items-center justify-center\"\n        >\n          <div class=\"h-4 w-(--focus-width) bg-foreground\"></div>\n        </div>\n      {/if}\n    </div>\n  {/snippet}\n</InputOTPPrimitive.Cell>\n",
+			"type": "registry:ui",
+			"target": "input-otp/input-otp-slot.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import { PinInput as InputOTPPrimitive, REGEXP_ONLY_DIGITS } from \"bits-ui\";\n  import { getContext } from \"svelte\";\n  import { cn } from \"$UTILS$\";\n\n  /** The contract a `Field` sets under the key \"pluto:field\" (field decision 11). */\n  type FieldContext = {\n    readonly id: string;\n    readonly invalid: boolean;\n    readonly describedBy: string | undefined;\n  };\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    value = $bindable(\"\"),\n    maxlength = 6,\n    pattern = REGEXP_ONLY_DIGITS,\n    pasteTransformer = (text: string) => text.replace(/\\D/g, \"\"),\n    inputId,\n    \"aria-describedby\": describedBy,\n    \"aria-invalid\": invalid,\n    ...restProps\n  }: Omit<InputOTPPrimitive.RootProps, \"maxlength\"> & {\n    /** The number of cells. Default 6. */\n    maxlength?: number;\n  } = $props();\n\n  const field = getContext<FieldContext | undefined>(\"pluto:field\");\n</script>\n\n<!--\n  One real input under the cells, with autocomplete=\"one-time-code\" and\n  inputmode=\"numeric\" (bits-ui's defaults). A pasted code loses every\n  non-digit first, so \"123 456\" or a trailing newline still fills six cells.\n  bits-ui gives the input an inline style that hides its focus indicator, so\n  this root draws it, and turns the cells' borders red when the input is\n  invalid.\n-->\n<div\n  data-slot=\"input-otp\"\n  class={cn(\n    \"inline-flex w-fit rounded has-disabled:opacity-50 has-[:focus-visible]:focus-ring\",\n    // Invalid: the hidden input carries aria-invalid; every cell's border turns red.\n    \"has-[input[aria-invalid=true]]:**:data-[slot=input-otp-slot]:border-destructive\",\n    className,\n  )}\n>\n  <InputOTPPrimitive.Root\n    bind:ref\n    bind:value\n    {maxlength}\n    {pattern}\n    {pasteTransformer}\n    inputId={inputId ?? field?.id}\n    data-slot=\"input-otp-input\"\n    class=\"flex items-center gap-3 disabled:cursor-not-allowed\"\n    aria-describedby={describedBy ?? field?.describedBy}\n    aria-invalid={invalid ?? (field?.invalid ? true : undefined)}\n    {...restProps}\n  />\n</div>\n",
+			"type": "registry:ui",
+			"target": "input-otp/input-otp.svelte"
+		},
+		{
+			"content": "import Group from \"./input-otp-group.svelte\";\nimport Separator from \"./input-otp-separator.svelte\";\nimport Slot from \"./input-otp-slot.svelte\";\nimport Root from \"./input-otp.svelte\";\n\nexport {\n  Root,\n  Group,\n  Slot,\n  Separator,\n  Root as InputOTP,\n  Group as InputOTPGroup,\n  Slot as InputOTPSlot,\n  Separator as InputOTPSeparator,\n};\n",
+			"type": "registry:ui",
+			"target": "input-otp/index.ts"
+		}
+	]
+}

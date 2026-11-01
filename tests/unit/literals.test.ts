@@ -9,13 +9,19 @@ import {
 
 const rules = loadRules();
 
-/** 003 decision 5: the files of the 39 items, from registry.json. */
+/**
+ * 004 decision 17: 193 files, 003's 153 plus the 11 of code-block,
+ * highlighter and the hook, the 4 of code-editor, the 19 of popover,
+ * accordion, toggle and toggle-group, the 4 of chart and the 2 of meter.
+ */
+const FILE_COUNT = 193;
+
 describe("the item files", () => {
   const files = itemFiles();
 
-  test("are the 153 files items carry, with no repeats", () => {
-    expect(files).toHaveLength(153);
-    expect(new Set(files).size).toBe(153);
+  test(`are the ${FILE_COUNT} files items carry, with no repeats`, () => {
+    expect(files).toHaveLength(FILE_COUNT);
+    expect(new Set(files).size).toBe(FILE_COUNT);
     for (const file of files) expect(readFileSync(file, "utf8")).toBeTruthy();
   });
 
@@ -25,12 +31,14 @@ describe("the item files", () => {
 });
 
 /** A sample: raw text, or a class linted inside `<span class="…">`, with a file name. */
-type Sample = string | { cls: string; file?: string } | { text: string };
+type Sample =
+  string | { cls: string; file?: string } | { text: string; file?: string };
 
 function lintSample(sample: Sample) {
   if (typeof sample === "string")
     return lintText(sample, "sample.svelte", rules);
-  if ("text" in sample) return lintText(sample.text, "sample.svelte", rules);
+  if ("text" in sample)
+    return lintText(sample.text, sample.file ?? "sample.svelte", rules);
   return lintText(
     `<span class="${sample.cls}"></span>`,
     sample.file ?? "sample.svelte",
@@ -40,8 +48,8 @@ function lintSample(sample: Sample) {
 
 function label(sample: Sample): string {
   if (typeof sample === "string") return sample;
-  if ("text" in sample) return sample.text;
-  return sample.file ? `${sample.cls} in ${sample.file}` : sample.cls;
+  const shown = "text" in sample ? sample.text : sample.cls;
+  return sample.file ? `${shown} in ${sample.file}` : shown;
 }
 
 // 001 decision 25: 27 bad and 12 good.
@@ -172,8 +180,47 @@ const GOOD_003: Sample[] = [
   { cls: "Go to the home page" },
 ];
 
-const BAD = [...BAD_001, ...BAD_002, ...BAD_REVIEW];
-const GOOD = [...GOOD_001, ...GOOD_002, ...GOOD_REVIEW, ...GOOD_003];
+// 004 decision 15: L15, an injected stylesheet; L16, CSS values in a theme
+// file; and the two allowlist additions for code-block's ring.
+const BAD_004: Sample[] = [
+  { text: '<svelte:element this="style" />' },
+  { text: '<svelte:element this={"style"} />' },
+  { text: 'const theme = { fontSize: "13px" };', file: "theme.ts" },
+  { text: 'const theme = { color: "red" };', file: "theme.ts" },
+  {
+    cls: "has-[[data-slot=code-block-content]:focus-visible]:focus-ring",
+    file: "card.svelte",
+  },
+  { cls: "focus-visible:focus-ring-none", file: "card.svelte" },
+];
+const GOOD_004: Sample[] = [
+  {
+    text: 'const theme = { outline: "var(--focus-width) solid var(--ring)" };',
+    file: "theme.ts",
+  },
+  {
+    text: 'const theme = { padding: "0 calc(var(--spacing) * 2)" };',
+    file: "theme.ts",
+  },
+  {
+    text: 'const theme = { textDecoration: "underline wavy" };',
+    file: "theme.ts",
+  },
+  {
+    cls: "has-[[data-slot=code-block-content]:focus-visible]:focus-ring",
+    file: "code-block.svelte",
+  },
+  { cls: "focus-visible:focus-ring-none", file: "code-block-content.svelte" },
+];
+
+const BAD = [...BAD_001, ...BAD_002, ...BAD_REVIEW, ...BAD_004];
+const GOOD = [
+  ...GOOD_001,
+  ...GOOD_002,
+  ...GOOD_REVIEW,
+  ...GOOD_003,
+  ...GOOD_004,
+];
 
 describe("the lint itself", () => {
   test("reads the palette from tailwindcss/theme.css", () => {
@@ -193,10 +240,10 @@ describe("the lint itself", () => {
     },
   );
 
-  test("64 bad samples flagged and 0 of 42 good ones", () => {
-    expect(BAD).toHaveLength(64);
-    expect(GOOD).toHaveLength(42);
-    expect(BAD.filter((s) => lintSample(s).length > 0)).toHaveLength(64);
+  test("70 bad samples flagged and 0 of 47 good ones", () => {
+    expect(BAD).toHaveLength(70);
+    expect(GOOD).toHaveLength(47);
+    expect(BAD.filter((s) => lintSample(s).length > 0)).toHaveLength(70);
     expect(GOOD.filter((s) => lintSample(s).length > 0)).toHaveLength(0);
   });
 });

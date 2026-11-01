@@ -2,6 +2,7 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
 import {
   NEW_PAGES,
+  NEW_PAGES_004,
   PAGES_002,
   VIEWS,
   WIDTHS,
@@ -42,11 +43,12 @@ test.describe("at 1280", () => {
   }
 });
 
-// The 7 new item pages and the 17 views at 360, 768 and 1280: 21 × 3 per theme.
+// 003's 7 new item pages, 004's new item pages and the 18 views at 360, 768
+// and 1280 (004 decision 17: 286 scans when the ten items have landed).
 for (const width of WIDTHS) {
   test.describe(`at ${width}`, () => {
     test.use({ viewport: { width, height: 900 } });
-    for (const path of NEW_PAGES) {
+    for (const path of [...NEW_PAGES, ...NEW_PAGES_004]) {
       test(`axe finds 0 violations on ${path}`, async ({ page }) => {
         await open(page, path);
         // A block's page holds the viewer; let its frame hydrate first.
@@ -67,6 +69,22 @@ for (const width of WIDTHS) {
         await expectNoViolations(page);
       });
     }
+  });
+}
+
+// 004 decision 11: the popover page with each of its three popovers open
+// (aria-dialog-name: every popover has a name).
+for (const id of ["popover-fuel", "popover-form", "popover-start"]) {
+  test(`axe finds 0 violations with the ${id} popover open`, async ({
+    page,
+  }) => {
+    await open(page, "/items/popover/");
+    await page.getByTestId(id).click();
+    const dialog = page.locator('[data-slot="popover-content"]');
+    await dialog.waitFor();
+    await expect(dialog).toHaveAttribute("role", "dialog");
+    await settled(page);
+    await expectNoViolations(page);
   });
 }
 

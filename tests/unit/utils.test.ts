@@ -39,7 +39,7 @@ test("(c) cn keeps a text size and a later text colour", () => {
   expect(out).toContain("text-destructive");
 });
 
-test("(d) 8 of 8 items that use tv import it from tailwind-variants/lite", () => {
+test("(d) 11 of 11 items that use tv import it from tailwind-variants/lite", () => {
   const registry = JSON.parse(readFileSync("registry.json", "utf8"));
   const files: string[] = registry.items.flatMap(
     (i: { files?: { path: string }[] }) => (i.files ?? []).map((f) => f.path),
@@ -54,8 +54,8 @@ test("(d) 8 of 8 items that use tv import it from tailwind-variants/lite", () =>
       const entry = m[2] ?? "";
       if (!typeOnly)
         expect(entry, `${file} imports tv from lite`).toBe("/lite");
-      if (entry === "/lite" && /\btv\b/.test(m[0]))
-        users.add(file.split("/")[4]);
+      // An item counts whether it imports tv or only its types: both must come from lite.
+      if (entry === "/lite") users.add(file.split("/")[4]);
     }
   }
   expect([...users].sort()).toEqual(
@@ -63,11 +63,14 @@ test("(d) 8 of 8 items that use tv import it from tailwind-variants/lite", () =>
       "alert",
       "badge",
       "button",
+      "code-block",
       "empty",
       "field",
       "input-group",
       "item",
       "tabs",
+      "toggle",
+      "toggle-group",
     ].sort(),
   );
 });

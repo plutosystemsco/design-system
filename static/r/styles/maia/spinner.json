@@ -1,0 +1,38 @@
+{
+	"$schema": "https://shadcn-svelte.com/schema/registry-item.json",
+	"name": "spinner",
+	"title": "Spinner",
+	"type": "registry:ui",
+	"author": "Pluto Systems <https://plutosystems.co>",
+	"description": "A turning icon for the one control that is busy, decorative by default or announced with a label.",
+	"devDependencies": [
+		"phosphor-svelte@^3.1.1"
+	],
+	"registryDependencies": [
+		"utils",
+		"pluto-theme"
+	],
+	"meta": {
+		"since": "0.2.0",
+		"group": "feedback",
+		"stock": {
+			"registry": "https://shadcn-svelte.com/registry/styles/maia",
+			"item": "spinner",
+			"cli": "1.7.1",
+			"date": "2026-10-28",
+			"sha256": "bdd31b9901948d74eb3f303ea7b2f5ac4fc1708e7dfc893b4948c9f543a6f4ba"
+		}
+	},
+	"files": [
+		{
+			"content": "<script lang=\"ts\">\n  import SpinnerIcon from \"phosphor-svelte/lib/Spinner\";\n  import { cn } from \"$UTILS$\";\n  import type { ComponentProps } from \"svelte\";\n\n  type SpinnerProps = Omit<ComponentProps<typeof SpinnerIcon>, \"role\"> & {\n    /**\n     * Without a label the spinner is decorative: it sits inside a busy\n     * control that has its own name. With one, it stands alone and its\n     * label is announced from a status region.\n     */\n    label?: string;\n  };\n\n  let { class: className, label, ...restProps }: SpinnerProps = $props();\n</script>\n\n{#if label}\n  <span data-slot=\"spinner\" role=\"status\" class=\"inline-flex items-center\">\n    <SpinnerIcon\n      aria-hidden=\"true\"\n      class={cn(\"size-4 animate-spin\", className)}\n      {...restProps}\n    />\n    <span class=\"sr-only\">{label}</span>\n  </span>\n{:else}\n  <SpinnerIcon\n    data-slot=\"spinner\"\n    aria-hidden=\"true\"\n    class={cn(\"size-4 animate-spin\", className)}\n    {...restProps}\n  />\n{/if}\n",
+			"type": "registry:ui",
+			"target": "spinner/spinner.svelte"
+		},
+		{
+			"content": "export { default as Spinner } from \"./spinner.svelte\";\n",
+			"type": "registry:ui",
+			"target": "spinner/index.ts"
+		}
+	]
+}

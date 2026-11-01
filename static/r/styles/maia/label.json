@@ -1,0 +1,39 @@
+{
+	"$schema": "https://shadcn-svelte.com/schema/registry-item.json",
+	"name": "label",
+	"title": "Label",
+	"type": "registry:ui",
+	"author": "Pluto Systems <https://plutosystems.co>",
+	"description": "A form label in sentence case, dimmed with its disabled control.",
+	"devDependencies": [
+		"bits-ui@^2.20.2",
+		"@internationalized/date@^3.12.4"
+	],
+	"registryDependencies": [
+		"utils",
+		"pluto-theme"
+	],
+	"meta": {
+		"since": "0.2.0",
+		"group": "forms",
+		"stock": {
+			"registry": "https://shadcn-svelte.com/registry/styles/maia",
+			"item": "label",
+			"cli": "1.7.1",
+			"date": "2026-10-28",
+			"sha256": "2518649ae021483bcdf1ce6db76010ddcbb08a78c1adcf0f72bc432c6371abc5"
+		}
+	},
+	"files": [
+		{
+			"content": "<script lang=\"ts\">\n  import { Label as LabelPrimitive } from \"bits-ui\";\n  import { cn } from \"$UTILS$\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    ...restProps\n  }: LabelPrimitive.RootProps = $props();\n</script>\n\n<LabelPrimitive.Root\n  bind:ref\n  data-slot=\"label\"\n  class={cn(\n    \"flex items-center gap-2 text-base font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50\",\n    className,\n  )}\n  {...restProps}\n/>\n",
+			"type": "registry:ui",
+			"target": "label/label.svelte"
+		},
+		{
+			"content": "import Root from \"./label.svelte\";\n\nexport {\n  Root,\n  //\n  Root as Label,\n};\n",
+			"type": "registry:ui",
+			"target": "label/index.ts"
+		}
+	]
+}

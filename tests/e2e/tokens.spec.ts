@@ -168,6 +168,51 @@ test.describe("tokens in the browser", () => {
     );
   });
 
+  // 004 decision 17: the code tokens and the scrollbar utility, in each theme.
+  test("text-code-keyword computes --primary's colour", async ({ page }) => {
+    const [colour, primary] = await page
+      .locator(token("text-code-keyword"))
+      .evaluate((el) => [
+        getComputedStyle(el).color,
+        getComputedStyle(document.documentElement)
+          .getPropertyValue("--primary")
+          .trim(),
+      ]);
+    expect(holdsColour(colour, primary), `${colour} is ${primary}`).toBe(true);
+  });
+
+  test("bg-code-active-line computes --card's colour", async ({ page }) => {
+    const [colour, card] = await page
+      .locator(token("bg-code-active-line"))
+      .evaluate((el) => [
+        getComputedStyle(el).backgroundColor,
+        getComputedStyle(document.documentElement)
+          .getPropertyValue("--card")
+          .trim(),
+      ]);
+    expect(holdsColour(colour, card), `${colour} is ${card}`).toBe(true);
+  });
+
+  test("scrollbar computes scrollbar-color holding --input and --muted, thin", async ({
+    page,
+  }) => {
+    const [colour, width, input, muted] = await page
+      .locator(token("scrollbar"))
+      .evaluate((el) => {
+        const root = getComputedStyle(document.documentElement);
+        const s = getComputedStyle(el);
+        return [
+          s.getPropertyValue("scrollbar-color"),
+          s.getPropertyValue("scrollbar-width"),
+          root.getPropertyValue("--input").trim(),
+          root.getPropertyValue("--muted").trim(),
+        ];
+      });
+    expect(width).toBe("thin");
+    expect(holdsColour(colour, input), `${colour} holds ${input}`).toBe(true);
+    expect(holdsColour(colour, muted), `${colour} holds ${muted}`).toBe(true);
+  });
+
   test("motion reads its budgets by default", async ({ page }) => {
     expect(await motionMs(page)).toEqual([900, 200]);
     await expect(page.locator(token("transition"))).toHaveCSS(

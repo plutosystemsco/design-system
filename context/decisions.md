@@ -2,6 +2,58 @@
 
 The owner's answers and decisions, newest first. A decision that changes the constitution is also recorded in its Status line.
 
+### The registry is served from GitHub, and the repository is public (2026-11-01)
+
+Asked when `004` was committed and tagged `v0.4.0` and the owner said "so others can install". The repository `plutosystemsco/design-system` existed on GitHub, private and empty, since 2026-10-28. Put to the owner with options: push and deploy to `ui.plutosystems.co`; push only; push and make the repository public so `add` reads the built JSON from GitHub. **Answered:** "do not deploy to an app, only to github", then "push and make public". What follows:
+
+- **The built registry is committed.** `static/r/` and `static/v<version>/` leave `.gitignore` (`001` decision 18 said "generated JSON stays out of git"; this reverses that line, and only it). `bun run build:registry` rewrites tracked files, so a release commit carries its own JSON.
+- **The install URL is a raw GitHub URL.** `REGISTRY_URL=https://raw.githubusercontent.com/plutosystemsco/design-system/v0.4.0/static/r` pins a release by its tag; `.../main/static/r` follows the latest. The CLI appends `/styles/maia` itself. *Why it works:* the CLI fetches with a plain `fetch` and no headers (registry memo §1.8), which a public raw URL answers; a private repository would not.
+- **No deployment.** `ui.plutosystems.co` and `wrangler.jsonc` wait for a deployment specification; `registry.json`'s `homepage` keeps the name. The stale `static/v0.1.0` to `v0.3.0` folders of the working copy were deleted before the first push.
+- The repository was made public on 2026-11-01 (the owner's decision of 2026-10-27, "the registry is public", now in effect), and `main` with the tags `v0.1.0` to `v0.4.0` pushed.
+
+### The design calls for `004`, code and data (2026-10-31)
+
+Made by the orchestrating session as design lead, under the owner's delegation, from the three memos of 2026-10-31 (Shiki and the palette; CodeMirror 6; the data items), when the owner asked to continue the design system and the app's owner decision of the same day put its home page behind this repository's `004`. The owner may overturn any of them.
+
+- **The highlight palette is twelve `--code-*` tokens, each a semantic colour, no new hue.** Keywords are `primary`, strings `success`, comments `muted-foreground`, numbers and constants `foreground`, functions `foreground` at medium weight, operators and punctuation `foreground`; diff lines `success`, `destructive` and `primary`; the emphasised or active line is the opaque `card` step. *Why:* the four text tokens pass AA on every code ground in both themes (Shiki memo §4.1); red is kept for errors and deletions, so a number is never red; amber is never text. The same twelve drive Shiki in `code-block` and CodeMirror in `code-editor`, so one token change moves both.
+- **Code sits on the `muted` inset, with no border, and the groove divides its header from its code.** `001` decision 8 names code grounds among the allowed insets; the editor and the output share the ground. Line emphasis is an opaque `card` step with a left marker in the state colour and the `+`/`−` sign, never a tint (R7).
+- **Highlight tokens render as classes, never `style`.** `text-code-<slot>` utilities come from `@theme inline`; the hand-made Shiki theme is thirty lines with `var(--code-*)` colours and bold on functions, rendered as `font-medium`. No italic: `001` installs only the upright JetBrains Mono.
+- **The editor binds no Tab**, prerenders as a `<pre>`, draws the focus ring on the whole editor, uses the browser's own selection and caret (no `drawSelection`, no tint token), grows with its document, and binds `Ctrl-Enter` beside `Mod-Enter`. No `basicSetup`, no completion for now.
+- **A chart carries a name and a table.** layerchart leaves its marks invisible to assistive technology; every `ChartContainer` takes a required `label` and shows its data in a `details` "Show as table". Series colours are token classes or `var()` props; the stock injected stylesheet goes. No chart motion. Series are told by mark or label, since no two chart colours differ by 3:1.
+- **`scroll-area` is not served.** Its hover-only 10 px scrollbar fails the 24 px target rule and hides from touch and keyboard users. `pluto-theme` gains a `scrollbar` utility (`scrollbar-color: var(--input) var(--muted)`, thin), and the pattern is a native `overflow-auto` box with `tabindex="0"` and a label.
+- **The fuel meter is the native `<meter>`**, styled through pseudo-element rules in `pluto-theme`, on the `muted` track with a `primary` fill, its numbers written beside it. A meter, not a progress bar: a measurement in a known range.
+- **A pressed toggle is inverted** (`bg-foreground text-background`), as the viewer's presets and the tooltip are; stock's `bg-muted` is a 1.20:1 tint. A toggle group's `single` mode keeps bits-ui's `role="group"` of radios and browse-then-select keys, because a preset strip that selects on arrow would fire a query per key.
+- **A popover is a dialog**: `role="dialog"`, labelled by its title when it has one, on the elevation shadow alone (no border, which would draw the hairline twice), 256 px wide by default.
+- **An accordion is wired and grooved**: `aria-controls` and a labelled `region` per item, which bits-ui omits; one caret that points right when closed and down when open, as the error page's details does; grooves between items; no tint on the open item; no animation.
+- **ANSI colour waits.** The sandbox's stderr carries no escape codes; the 32 terminal slots are a later specification's.
+
+After the spec review (`reviews/004-code-and-data-spec-2026-10-31.md`), three more:
+
+- **A code surface's root draws its ring, and nothing clips it** (finding 1). The code block's root draws the ring for its `pre`, as `input-group` does; the editor's root has no `overflow-hidden`. *Why:* a 2 px ring at a 2 px offset reaches 4 px past its element, and a clipped ring is no ring. Every fixture stop's ring is tested unclipped from now on, by `003` check 27's rule.
+- **`001` decision 15 reads "not emitted unless referenced"** (finding 4). Tailwind 4 emits an `@theme inline` variable into `@layer theme` when its name appears in a scanned source file; the editor's theme reads five such names (`--spacing`, `--text-sm`, `--text-sm--line-height`, `--font-mono`, `--font-weight-medium`) and otherwise reads `:root` names. An item that reads an inline theme name says so, and the condition is that its file is among Tailwind's sources. `002` decision 3's written-out curve stands.
+- **The meter has square ends** (finding 14). An 8 px bar with the 8 px case radius is a pill, which v2 §05 reserves for dot-derived elements. The four-dot and the radio button stay the only circles.
+
+After the build's checkpoint (build step 3, 2026-10-31), two more:
+
+- **A string's quotes take the string colour.** Decision 6 sent all punctuation to the foreground, and Shiki's deeper scope `punctuation.definition.string` then drew ink quotes around a green body. One more theme rule sends the string's own punctuation to `string`, so a literal reads as one thing. The editor's Lezer grammar already colours the whole string.
+- **No ligatures on code surfaces.** JetBrains Mono's contextual ligatures drew `!=` as `≠` in the checkpoint's screenshots. v2 asks for honest pixels; code shows the characters that were typed, which is also what copy returns. `pluto-theme`'s base rule for `code, kbd, samp, pre` gains `font-variant-ligatures: none`, and the editor's theme sets the same on `.cm-scroller`.
+
+After the change review (`reviews/004-code-and-data-pr-2026-10-31.md`), three more:
+
+- **The editor's prerendered fallback is a named group** (finding 2). ARIA in HTML prohibits a name on a bare `pre`, so the fallback is `<pre role="group" aria-label>`: a group of lines, named as the editor will be. Decision 9's "`<pre aria-label>`" reads so from now on.
+- **A chart's hover band is the `muted` inset** (finding 1). layerchart paints its highlight as the foreground at 5%, a translucent tint on a surface; the container overrides it with `muted`, the hover-row ground `001` decision 8 allows, and the band is drawn behind the marks.
+- **One caret, turned, for every disclosure.** The chart's "Show as table" turns one `CaretRight` 90° when open, as the accordion does; two swapped icons are not used anywhere. And the editor page says what is true of its caret: it is the browser's own, and the editor itself runs no animation.
+
+### The brand line (2026-10-31)
+
+Decided by the owner, in a session on the YC application, after a run of candidates for the tagline, the one-sentence description and the fifty-character line. Every Pluto Systems page, pitch and block that shows the brand's own words uses these; a product (such as `wasi-python-dev`) keeps its own headline under them.
+
+- **Tagline:** *Work runs on data.* Set with the name: **Pluto Systems. Work runs on data.** Three words and a verb; it states the thesis, that work sits on a data layer and whoever owns that layer matters, and leaves the differentiating to the sentence after it.
+- **The one sentence:** *We build a governed workspace suite for people and their agents.* "Workspace suite" names the category (what Google Workspace and Microsoft 365 are). "Governed" says permissions live on the data. "People and their agents" is the claim no competitor makes: both audiences use the same surface under the same rights.
+- **The fifty-character line** (for forms that cap it): *One governed workspace for people and their agents* (50 characters), or *Cloud operating system kernel for AI agents* (43) when the infrastructure vision should lead.
+- **What sits under it:** vfs is the system of record, one governed data layer that agents and people read, search and write; every Pluto product is a view on it. In prose, the layer is "the kernel" or "the system of record", never "platform".
+- **Words to avoid in brand copy:** "agentic" as an adjective on its own, "it's all about data", "work OS" (Monday.com's positioning), and "productivity software" as the category.
+
 ### The design calls for `003`, the first blocks (2026-10-28)
 
 Made by the orchestrating session as design lead, under the owner's delegation, from the open questions in `research/2026-10-28-the-blocks-patterns-and-accessibility.md` §8 and `research/2026-10-28-blocks-how-they-are-declared-installed-and-previewed.md` §5, when the owner said "go ahead with 003". The owner may overturn any of them.

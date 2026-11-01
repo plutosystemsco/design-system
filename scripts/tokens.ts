@@ -52,6 +52,8 @@ export type ScrimRow = {
 export type Tokens = {
   primitives: Record<string, string>;
   themes: Record<Theme, Record<string, string>>;
+  /** 004 decision 5: the highlight slots, each naming a semantic colour. */
+  code: Record<string, string>;
   radius: { case: number };
   spacing: { atom: number; ladder: number[] };
   type: {
@@ -148,6 +150,7 @@ export function validateTokens(raw: unknown): Tokens {
   for (const key of [
     "primitives",
     "themes",
+    "code",
     "radius",
     "spacing",
     "type",
@@ -206,6 +209,21 @@ export function validateTokens(raw: unknown): Tokens {
     names = keys;
   }
   const semantic = new Set(names);
+
+  // code: each slot names a semantic colour, never a primitive or a raw value,
+  // so the theme switch carries through (004 decision 5).
+  const code = object(root.code, "code");
+  for (const [slot, value] of Object.entries(code)) {
+    const key = `code.${slot}`;
+    if (!NAME.test(slot)) throw new TokenError(key, "is not a lowercase name");
+    const ref = string(value, key);
+    if (!semantic.has(ref)) {
+      throw new TokenError(
+        key,
+        `"${ref}" must name a semantic colour, never a primitive or a raw value`,
+      );
+    }
+  }
 
   const radius = object(root.radius, "radius");
   positive(radius.case, "radius.case");

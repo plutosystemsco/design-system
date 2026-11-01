@@ -2,6 +2,23 @@
 
 Each release of the registry, newest first. A change to an item's interface is marked **interface change**.
 
+## 0.4.0 — 2026-10-31
+
+Code and data: the items that show code or a number, a highlight palette that is tokens, and the first app's editor and fuel meter.
+
+- `pluto-theme`: additive, not an interface change. Adds the twelve code tokens (`--code-foreground`, `--code-background`, `--code-keyword`, `--code-string`, `--code-constant`, `--code-function`, `--code-comment`, `--code-link`, `--code-inserted`, `--code-deleted`, `--code-changed`, `--code-active-line`, each a semantic colour, with their `text-code-*` and `bg-code-*` utilities), the `scrollbar` utility (`scrollbar-color` from `input` on `muted`, thin), the `[data-slot="meter"]` rules that paint the native meter from the tokens, and `font-variant-ligatures: none` on code.
+- `code-block`: new. Code, output or a diff on the muted inset, highlighted from the code tokens as classes, with line numbers, a copy button that announces "Copied", emphasised lines by an opaque step and a marker, and a header divided by the groove.
+- `code-editor`: new. A CodeMirror 6 editor themed from the tokens, with line numbers and a Python preset, that prerenders as plain code, draws one ring around the whole editor, binds Ctrl Enter and Cmd Enter to `onrun`, and leaves Tab unbound.
+- `highlighter`: new. Shiki with the JavaScript engine and a theme whose every colour is a code token; `highlightCode` for a server load and `tokenClass` for the class a token takes.
+- `use-highlighted-code`: new. A hook that highlights a changing string line by line as it grows.
+- `chart`: new. A figure for layerchart named by its caption, with its data as a table behind "Show as table", series coloured by token classes or `var()` props, and a tooltip on the elevation shadow. No injected stylesheet, no motion.
+- `meter`: new. The native meter on the muted track with a primary fill and square ends, for a measurement in a known range such as fuel; the app names it and writes its numbers beside it.
+- `popover`: new. A small dialog anchored to its button, 256 px wide, on the elevation shadow alone, named by its title or a `label`, that returns focus when it closes.
+- `accordion`: new. Headings that each open a labelled region, wired with `aria-controls`, divided by grooves, with one caret that turns, moved by the arrow keys.
+- `toggle`: new. A two-state button, inverted when pressed, at 48 and 32 px.
+- `toggle-group`: new. A row of toggles with one stop, moved by the arrow keys, for one choice or several; a selected item is inverted.
+- `scroll-area` is not served. Its hover-only 10 px scrollbar fails the 24 px target rule and hides from touch and keyboard users. Use a native box instead: `overflow-auto scrollbar` with `tabindex="0"` and a label, as `table`'s region and `code-block`'s `pre` do.
+
 ## 0.3.0 — 2026-10-28
 
 The first blocks: whole pages an app installs with one `add` and then owns, and the two components they share.

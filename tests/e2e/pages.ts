@@ -2,7 +2,7 @@ import type { Page } from "@playwright/test";
 
 import { BLOCK_VIEWS, viewPath } from "../../src/lib/preview/blocks.ts";
 
-/** The 39 items in 003 decision 5's order: 40 site pages with the catalogue. */
+/** The 49 items in 004 decision 4's order: one site page each, plus the catalogue. */
 export const ITEMS = [
   // foundation
   "pluto-theme",
@@ -15,6 +15,8 @@ export const ITEMS = [
   "button",
   "tooltip",
   "kbd",
+  "toggle",
+  "toggle-group",
   // surfaces
   "card",
   "separator",
@@ -23,6 +25,8 @@ export const ITEMS = [
   "tabs",
   "collapsible",
   "avatar",
+  "popover",
+  "accordion",
   // feedback
   "alert",
   "alert-dialog",
@@ -43,6 +47,14 @@ export const ITEMS = [
   "radio-group",
   "switch",
   "input-otp",
+  // code (004)
+  "code-block",
+  "code-editor",
+  "highlighter",
+  "use-highlighted-code",
+  // data (004)
+  "chart",
+  "meter",
   // blocks
   "hero",
   "sign-in",
@@ -51,8 +63,32 @@ export const ITEMS = [
   "settings",
 ];
 
-/** The 26 items 002 adds. */
-export const ITEMS_002 = ITEMS.slice(6, 22).concat(ITEMS.slice(24, 34));
+/** 004's 10 items, and their pages. */
+export const ITEMS_004 = [
+  "toggle",
+  "toggle-group",
+  "popover",
+  "accordion",
+  "code-block",
+  "code-editor",
+  "highlighter",
+  "use-highlighted-code",
+  "chart",
+  "meter",
+];
+/** The 26 items 002 adds: every item after the foundation that 003 and 004 did not. */
+export const ITEMS_002 = ITEMS.slice(6).filter(
+  (name) =>
+    ![
+      "status",
+      "error-summary",
+      "hero",
+      "sign-in",
+      "sign-up",
+      "page-states",
+      "settings",
+    ].includes(name) && !ITEMS_004.includes(name),
+);
 /** Kept for 002's checks: the 26 items 002 added. */
 export const NEW_ITEMS = ITEMS_002;
 /** The 7 items 003 adds. */
@@ -67,12 +103,15 @@ export const ITEMS_003 = [
 ];
 /** The 5 blocks, in registry order. */
 export const BLOCKS = ["hero", "sign-in", "sign-up", "page-states", "settings"];
-/** The 7 new item pages. */
+/** The 7 new item pages of 003. */
 export const NEW_PAGES = ITEMS_003.map((name) => `/items/${name}/`);
-/** The 40 site pages: the catalogue and 39 item pages. */
+export const NEW_PAGES_004 = ITEMS_004.map((name) => `/items/${name}/`);
+/** The site pages: the catalogue and one page per item. */
 export const PAGES = ["/", ...ITEMS.map((name) => `/items/${name}/`)];
 /** The catalogue and 002's 32 item pages. */
-export const PAGES_002 = PAGES.filter((p) => !NEW_PAGES.includes(p));
+export const PAGES_002 = PAGES.filter(
+  (p) => !NEW_PAGES.includes(p) && !NEW_PAGES_004.includes(p),
+);
 
 /** The 17 views (003 decision 16), each with its block and label. */
 export const VIEWS = BLOCKS.flatMap((block) =>

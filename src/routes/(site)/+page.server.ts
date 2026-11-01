@@ -10,13 +10,18 @@ type Item = {
   meta?: { group?: string };
 };
 
-/** 002 decision 6's groups and 003 decision 18's sixth, in order, with their headings. */
+/**
+ * 002 decision 6's groups, 003 decision 18's blocks and 004 decision 4's
+ * code and data, in order, with their headings: eight groups.
+ */
 const GROUPS: [key: string, heading: string][] = [
   ["foundation", "Foundation"],
   ["actions", "Actions"],
   ["surfaces", "Surfaces"],
   ["feedback", "Feedback"],
   ["forms", "Forms"],
+  ["code", "Code"],
+  ["data", "Data"],
   ["blocks", "Blocks"],
 ];
 

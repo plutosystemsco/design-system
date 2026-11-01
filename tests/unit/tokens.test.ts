@@ -124,3 +124,52 @@ describe("the token file", () => {
     );
   });
 });
+
+/** 004 decision 5: the `code` map, twelve slots, each a semantic colour. */
+describe("the code map", () => {
+  const SLOTS: [slot: string, semantic: string][] = [
+    ["foreground", "foreground"],
+    ["background", "muted"],
+    ["keyword", "primary"],
+    ["string", "success"],
+    ["constant", "foreground"],
+    ["function", "foreground"],
+    ["comment", "muted-foreground"],
+    ["link", "primary"],
+    ["inserted", "success"],
+    ["deleted", "destructive"],
+    ["changed", "primary"],
+    ["active-line", "card"],
+  ];
+
+  test("holds 12 slots, in decision 5's order, each naming its semantic colour", () => {
+    expect(SLOTS).toHaveLength(12);
+    expect(Object.entries(tokens.code)).toEqual(SLOTS);
+  });
+
+  test("12 of 12 values are among the 48 semantic names, and none is a primitive or a hex", () => {
+    const semantic = new Set(Object.keys(tokens.themes.light));
+    const values = Object.values(tokens.code);
+    expect(values).toHaveLength(12);
+    expect(values.filter((v) => semantic.has(v))).toHaveLength(12);
+    for (const value of values) {
+      expect(value.startsWith("#")).toBe(false);
+      expect(value in tokens.primitives).toBe(false);
+    }
+  });
+
+  test("rejects a slot that names a primitive, a raw hex, or nothing, and a missing map", () => {
+    const primitive = structuredClone(raw);
+    primitive.code.keyword = "blue";
+    expect(() => validateTokens(primitive)).toThrow(/code\.keyword/);
+    const hex = structuredClone(raw);
+    hex.code.string = "#136E3E";
+    expect(() => validateTokens(hex)).toThrow(/code\.string/);
+    const unknown = structuredClone(raw);
+    unknown.code.comment = "no-such-colour";
+    expect(() => validateTokens(unknown)).toThrow(/code\.comment/);
+    const missing = structuredClone(raw);
+    delete missing.code;
+    expect(() => validateTokens(missing)).toThrow(/code/);
+  });
+});

@@ -1,0 +1,38 @@
+{
+	"$schema": "https://shadcn-svelte.com/schema/registry-item.json",
+	"name": "badge",
+	"title": "Badge",
+	"type": "registry:ui",
+	"author": "Pluto Systems <https://plutosystems.co>",
+	"description": "A small mono label that names a state in words, outlined in its state colour.",
+	"devDependencies": [
+		"tailwind-variants@^3.3.1"
+	],
+	"registryDependencies": [
+		"utils",
+		"pluto-theme"
+	],
+	"meta": {
+		"since": "0.2.0",
+		"group": "feedback",
+		"stock": {
+			"registry": "https://shadcn-svelte.com/registry/styles/maia",
+			"item": "badge",
+			"cli": "1.7.1",
+			"date": "2026-10-28",
+			"sha256": "25ef11b96934fbffe94a822a42146d8241888d9b9a26bb1ebc51aa7ad3ed5e76"
+		}
+	},
+	"files": [
+		{
+			"content": "<script lang=\"ts\" module>\n  import { tv, type VariantProps } from \"tailwind-variants/lite\";\n\n  // No tint: a badge sits in rows whose hover and selected ground is the\n  // accent inset, so a state is a border and text in its colour. Caution is\n  // a solid amber fill with ink text, because amber is never text.\n  export const badgeVariants = tv({\n    base: \"group/badge inline-flex w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded border px-2 py-0 font-mono text-xs font-medium whitespace-nowrap [&>svg]:pointer-events-none [&>svg]:size-3\",\n    variants: {\n      variant: {\n        default: \"border-border text-foreground\",\n        destructive: \"border-destructive text-destructive\",\n        success: \"border-success text-success\",\n        caution: \"border-caution bg-caution text-caution-foreground\",\n      },\n    },\n    defaultVariants: {\n      variant: \"default\",\n    },\n  });\n\n  export type BadgeVariant = VariantProps<typeof badgeVariants>[\"variant\"];\n</script>\n\n<script lang=\"ts\">\n  import { cn, type WithElementRef } from \"$UTILS$\";\n  import type { HTMLAttributes } from \"svelte/elements\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    variant = \"default\",\n    children,\n    ...restProps\n  }: WithElementRef<HTMLAttributes<HTMLSpanElement>> & {\n    variant?: BadgeVariant;\n  } = $props();\n</script>\n\n<!-- A label, not an action: its text says the state. -->\n<span\n  bind:this={ref}\n  data-slot=\"badge\"\n  class={cn(badgeVariants({ variant }), className)}\n  {...restProps}\n>\n  {@render children?.()}\n</span>\n",
+			"type": "registry:ui",
+			"target": "badge/badge.svelte"
+		},
+		{
+			"content": "export { default as Badge } from \"./badge.svelte\";\nexport { badgeVariants, type BadgeVariant } from \"./badge.svelte\";\n",
+			"type": "registry:ui",
+			"target": "badge/index.ts"
+		}
+	]
+}

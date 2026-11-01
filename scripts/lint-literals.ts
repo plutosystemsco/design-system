@@ -15,7 +15,12 @@
  * `dark:`, rings, outlines, shadows, backdrops, sizes off the ladder, type
  * steps and tracking off the token scale, animations, `rounded-full` and
  * `focus-ring-none` outside their allowlists, `cn-` markers, and numeric
- * border widths.
+ * border widths. The review of 002's built change added four more (a
+ * `focus-ring` allowlist, offsets off the ladder, palette colours through the
+ * variable form, and `scale`). 004 decision 15 adds its L15 and L16: an
+ * injected stylesheet (`<svelte:element this="style">`), and a CSS length or
+ * named colour inside a quoted string of a `.ts` or `.svelte.ts` item file,
+ * such as a CodeMirror theme object.
  * The CSS-variable form `-(--token)` is always allowed: its value is a token.
  */
 import { readFileSync } from "node:fs";
@@ -46,12 +51,14 @@ export type Rules = {
 /** L11 and L13: the files, by name, in which one otherwise forbidden class is allowed. */
 export const ALLOWLISTS = {
   "rounded-full": ["four-dot.svelte", "radio-group-item.svelte"],
+  // 004 decision 8: the code block's root draws the ring for its `pre`.
   "focus-ring-none": [
     "input-group-input.svelte",
     "input-group-textarea.svelte",
+    "code-block-content.svelte",
   ],
   // The review of the built change, finding 10: R2's "only as decision 8 says".
-  "focus-ring": ["input-group.svelte", "input-otp.svelte"],
+  "focus-ring": ["input-group.svelte", "input-otp.svelte", "code-block.svelte"],
 } as const;
 
 /** L1: the four sanctioned state tints, and the one variant each may carry. */
@@ -161,6 +168,22 @@ const PAINT_ATTRIBUTE =
   /\b(?:fill|stroke|stop-color|flood-color|lighting-color|color)\s*=\s*["']([a-zA-Z]+)["']/g;
 /** `el.style.margin = …`, `el.style.cssText`, `setAttribute("style", …)`. */
 const STYLE_PROPERTY = /\.style\b|setAttribute\(\s*["'`]style["'`]/g;
+/**
+ * 004 decision 15, L15: a `<style>` element written past the STYLE_BLOCK
+ * pattern as `<svelte:element this="style">` or `this={"style"}`, the way
+ * stock's `chart-style.svelte` injected a stylesheet.
+ */
+const INJECTED_STYLE =
+  /<svelte:element\b[^>]*\bthis\s*=\s*(?:["']style["']|\{\s*["']style["']\s*\})/g;
+/**
+ * 004 decision 15, L16: inside a quoted string of a `.ts` item file, a number
+ * followed by a length unit. `0`, `var(--…)`, `calc(…)` with unitless numbers
+ * and keywords such as `solid` or `wavy` carry no unit and pass.
+ */
+const TS_LENGTH = /\d(?:px|rem|em|%|vh|vw|ch|pt)(?![a-zA-Z])/i;
+/** A quoted string in a `.ts` file: double, single or a backtick with no `${`. */
+const TS_STRING =
+  /"((?:[^"\\\n]|\\.)*)"|'((?:[^'\\\n]|\\.)*)'|`((?:[^`\\$]|\\.)*)`/g;
 
 /**
  * The CSS Color 4 named colours. `transparent` and `currentcolor` are not
@@ -471,6 +494,28 @@ export function lintText(
   for (const match of text.matchAll(PAINT_ATTRIBUTE))
     if (NAMED_COLOURS.has(match[1].toLowerCase()))
       add("named colour attribute", match.index ?? 0, match[0]);
+
+  // L15 (004): an injected stylesheet.
+  INJECTED_STYLE.lastIndex = 0;
+  for (const match of text.matchAll(INJECTED_STYLE))
+    add("injected stylesheet", match.index ?? 0, match[0]);
+
+  // L16 (004): CSS values in a theme file. Only a `.ts` or `.svelte.ts` file;
+  // a `.svelte` file's classes are read by the class rules below.
+  if (/\.ts$/.test(file)) {
+    TS_STRING.lastIndex = 0;
+    for (const match of text.matchAll(TS_STRING)) {
+      const value = match[1] ?? match[2] ?? match[3] ?? "";
+      if (TS_LENGTH.test(value))
+        add("css length in a theme file", match.index ?? 0, match[0]);
+      else if (
+        (value.toLowerCase().match(/[a-z]+/g) ?? []).some((word) =>
+          NAMED_COLOURS.has(word),
+        )
+      )
+        add("css named colour in a theme file", match.index ?? 0, match[0]);
+    }
+  }
 
   // Class-like tokens: split on whitespace, quotes and markup punctuation.
   const tokenPattern = /[^\s"'`{}<>=,;]+/g;

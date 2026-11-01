@@ -45,6 +45,11 @@ async function expectRingOutline(
     // Only 001's theme toggle fades its outline in; every item's focus is instant.
     if (el.matches("button[aria-pressed]"))
       await Promise.all(el.getAnimations().map((a) => a.finished));
+    // CodeMirror marks the editor focused on its next measure frame.
+    if (el.matches(".cm-editor") && !el.classList.contains("cm-focused"))
+      await new Promise((resolve) =>
+        requestAnimationFrame(() => requestAnimationFrame(resolve)),
+      );
     const style = getComputedStyle(el);
     return [style.outlineStyle, style.outlineWidth, style.outlineColor];
   }, drawnBy);
@@ -63,7 +68,7 @@ test.describe("the catalogue", () => {
     await open(page, "/");
   });
 
-  test("Tab visits the 41 stops in order, each with the solid ring outline", async ({
+  test(`Tab visits the ${2 + ITEMS.length} stops in order, each with the solid ring outline`, async ({
     page,
   }) => {
     const colour = await ring(page);
@@ -75,7 +80,7 @@ test.describe("the catalogue", () => {
       stops.push(stop!);
       await expectRingOutline(page, colour);
     }
-    expect(stops).toHaveLength(41);
+    expect(stops).toHaveLength(2 + ITEMS.length);
     expect(stops.map((s) => [s.tag, s.href])).toEqual([
       ["a", "/"],
       ["button", null],
@@ -84,7 +89,7 @@ test.describe("the catalogue", () => {
     expect(stops[0].name).toBe("Pluto Systems design system");
     expect(stops[1].name).toBe("Dark theme");
 
-    // No 42nd stop: the catalogue has no other focusable element.
+    // No further stop: the catalogue has no other focusable element.
     await page.keyboard.press("Tab");
     expect(await focused(page)).toBeNull();
   });
@@ -196,25 +201,105 @@ const FIXTURES: [item: string, stops: string[]][] = [
     "error-summary",
     ["input:Project name", "input:Owner email", "button:Create project"],
   ],
+  // 004 decision 8: the copy button in the header, then the pre, whose ring
+  // the root draws. A stop written `tag:*` matches any name: the pre's text
+  // is the whole example.
+  ["code-block", ["button:Copy code", "pre:*"]],
+  // 004 decision 9: Tab in and out of the editor, whose ring the .cm-editor draws.
+  [
+    "code-editor",
+    ["button:Before", "textbox:Keyboard example", "button:After"],
+  ],
+  // 004 decision 10: the bar chart's "Show as table" summary.
+  ["chart", ["summary:Show as table"]],
+  // 004 decisions 11 to 13.
+  ["popover", ["button:Fuel"]],
+  [
+    "accordion",
+    [
+      "button:Your code is sent to the sandbox",
+      "button:The sandbox runs it",
+      "button:The result comes back",
+    ],
+  ],
+  ["toggle", ["button:Bold", "button:Italic"]],
+  // bits-ui parks the row's Tab stop on the first item until a selection moves
+  // it, so the fixture's checked item is its first.
+  ["toggle-group", ["radio:Today"]],
 ];
 
 /** Where a container draws the ring for its focused child (002 decision 8). */
 function drawnBy(
   item: string,
-  focused: { slot: string | null },
+  focused: { slot: string | null; signature: string },
 ): string | undefined {
   if (item === "input-group" && focused.slot === "input-group-control")
     return '[data-slot="input-group"]';
   if (item === "input-otp") return '[data-slot="input-otp"]';
+  if (item === "code-block" && focused.slot === "code-block-content")
+    return '[data-slot="code-block"]';
+  // 004 decision 9: the whole editor, gutter included, draws the ring.
+  if (item === "code-editor" && focused.signature.startsWith("textbox:"))
+    return ".cm-editor";
   return undefined;
 }
 
-const TABBABLE =
-  'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+/**
+ * 003 check 27's rule, asked of every fixture stop (004 decision 17): no
+ * ancestor between the ringed element and <main> computes overflow hidden or
+ * clip, unless the element's rectangle grown by 4 px fits inside it.
+ */
+async function expectRingUnclipped(
+  page: Page,
+  drawnBy?: string,
+): Promise<void> {
+  const problem = await page.evaluate((selector) => {
+    const focused = document.activeElement as HTMLElement;
+    const ringed = (
+      selector ? focused.closest(selector) : focused
+    ) as HTMLElement | null;
+    if (!ringed) return "no element drawing the ring";
+    const r = ringed.getBoundingClientRect();
+    const grown = {
+      left: r.left - 4,
+      right: r.right + 4,
+      top: r.top - 4,
+      bottom: r.bottom + 4,
+    };
+    const main = document.querySelector("main");
+    for (
+      let el = ringed.parentElement;
+      el && el !== main;
+      el = el.parentElement
+    ) {
+      const s = getComputedStyle(el);
+      const clips = [s.overflowX, s.overflowY].some(
+        (o) => o === "hidden" || o === "clip",
+      );
+      if (!clips) continue;
+      const a = el.getBoundingClientRect();
+      const fits =
+        grown.left >= a.left - 0.5 &&
+        grown.right <= a.right + 0.5 &&
+        grown.top >= a.top - 0.5 &&
+        grown.bottom <= a.bottom + 0.5;
+      if (!fits)
+        return `${el.getAttribute("data-slot") ?? el.tagName} clips it`;
+    }
+    return null;
+  }, drawnBy);
+  expect(problem).toBeNull();
+}
 
-test("the 17 fixtures hold 39 stops", () => {
-  expect(FIXTURES).toHaveLength(17);
-  expect(FIXTURES.reduce((n, [, stops]) => n + stops.length, 0)).toBe(39);
+// Tabbable: in the tab order, so not a roving group's parked items (tabindex -1).
+// A details' summary is a native stop (004 decision 10's "Show as table").
+const TABBABLE =
+  'a[href]:not([tabindex="-1"]), button:not([disabled]):not([tabindex="-1"]), input:not([disabled]):not([type="hidden"]):not([tabindex="-1"]), select:not([disabled]):not([tabindex="-1"]), textarea:not([disabled]):not([tabindex="-1"]), summary:not([tabindex="-1"]), [tabindex]:not([tabindex="-1"])';
+
+// 004 decision 17: 24 fixtures and 52 stops.
+test("the 24 fixtures hold 52 stops", () => {
+  expect(FIXTURES).toHaveLength(24);
+  expect(FIXTURES.reduce((n, [, stops]) => n + stops.length, 0)).toBe(52);
 });
 
 for (const [item, expected] of FIXTURES) {
@@ -248,10 +333,15 @@ for (const [item, expected] of FIXTURES) {
         };
       });
       expect(focused.inside, `stop ${i + 1} is inside the fixture`).toBe(true);
-      expect(focused.signature, `stop ${i + 1} is the expected element`).toBe(
-        expected[i],
-      );
+      const want = expected[i];
+      expect(
+        want.endsWith(":*")
+          ? focused.signature.split(":")[0] + ":*"
+          : focused.signature,
+        `stop ${i + 1} is the expected element`,
+      ).toBe(want);
       await expectRingOutline(page, colour, drawnBy(item, focused));
+      await expectRingUnclipped(page, drawnBy(item, focused));
     }
     await page.keyboard.press("Tab");
     const left = await page.evaluate(
@@ -262,7 +352,7 @@ for (const [item, expected] of FIXTURES) {
   });
 }
 
-/** 002 decision 23's 9 behaviours and 003 decision 20's 2. */
+/** 002 decision 23's 9 behaviours, 003 decision 20's 2 and 004 decision 17's 8: 19. */
 test.describe("behaviours", () => {
   test("the busy button ignores Enter and clicks, keeps focus and aria-busy", async ({
     page,
@@ -432,6 +522,156 @@ test.describe("behaviours", () => {
     await expect(regions).toHaveCount(2);
     for (const region of await regions.all())
       await expect(region).toHaveText("Copied to the clipboard");
+  });
+
+  // 004 decision 8. The clipboard is granted, as the code spec grants it.
+  test.describe("with the clipboard granted", () => {
+    test.use({ permissions: ["clipboard-read", "clipboard-write"] });
+
+    test("Enter on the copy button sets the status text to Copied and the button's name", async ({
+      page,
+    }) => {
+      await open(page, "/items/code-block/");
+      // Located by its slot: its name changes on success.
+      const button = fixture(page).locator(
+        '[data-slot="code-block-copy-button"]',
+      );
+      await expect(button).toHaveAccessibleName("Copy code");
+      await button.focus();
+      await page.keyboard.press("Enter");
+      await expect(button).toHaveAccessibleName("Copied");
+      await expect(fixture(page).getByRole("status")).toHaveText("Copied");
+    });
+  });
+
+  // 004 decision 9.
+  test("Tab lands in the editor and Tab again leaves it, document unchanged", async ({
+    page,
+  }) => {
+    await open(page, "/items/code-editor/");
+    const editor = fixture(page).locator(".cm-editor");
+    const content = editor.locator(".cm-content");
+    const before = await content.textContent();
+    await fixture(page).getByRole("button", { name: "Before" }).focus();
+    await page.keyboard.press("Tab");
+    await expect(content).toBeFocused();
+    await page.keyboard.press("Tab");
+    await expect(
+      fixture(page).getByRole("button", { name: "After" }),
+    ).toBeFocused();
+    expect(await content.textContent()).toBe(before);
+  });
+
+  test("Control-Enter raises the run count and inserts no line", async ({
+    page,
+  }) => {
+    await open(page, "/items/code-editor/");
+    const editor = fixture(page).locator(".cm-editor");
+    const content = editor.locator(".cm-content");
+    const lines = () => editor.locator(".cm-line").count();
+    const text = () => content.textContent();
+    const before = { lines: await lines(), text: await text() };
+    await content.focus();
+    await expect(content).toBeFocused();
+    const runs = fixture(page).getByTestId("kb-run-count");
+    await expect(runs).toHaveText(/Ran 0 times/);
+    await page.keyboard.press("Control+Enter");
+    await expect(runs).toHaveText(/Ran 1 time\b/);
+    expect(await lines()).toBe(before.lines);
+    expect(await text()).toBe(before.text);
+  });
+
+  // 004 decision 10.
+  test("Enter on Show as table shows a table with 7 rows", async ({ page }) => {
+    await open(page, "/items/chart/");
+    const summary = fixture(page).locator("summary");
+    await expect(summary).toHaveCount(1);
+    await expect(summary).toHaveText("Show as table");
+    const details = fixture(page).locator("details");
+    expect(
+      await details.evaluate((el) => (el as HTMLDetailsElement).open),
+    ).toBe(false);
+    const table = fixture(page).locator("details table");
+    await expect(table).toBeHidden();
+    await summary.focus();
+    await page.keyboard.press("Enter");
+    await expect(table).toBeVisible();
+    await expect(table.locator("tbody tr")).toHaveCount(7);
+  });
+
+  // 004 decision 11.
+  test("Enter on the popover trigger opens a dialog named by its title with focus on its first stop; Escape closes it and returns focus", async ({
+    page,
+  }) => {
+    await open(page, "/items/popover/");
+    const trigger = fixture(page).getByRole("button", { name: "Fuel" });
+    await trigger.focus();
+    await page.keyboard.press("Enter");
+    const dialog = page.getByRole("dialog", { name: "Fuel" });
+    await expect(dialog).toBeVisible();
+    await expect(dialog).toHaveAttribute("data-slot", "popover-content");
+    const first = dialog.locator(TABBABLE).first();
+    await expect(first).toBeFocused();
+    await page.keyboard.press("Escape");
+    await expect(dialog).toHaveCount(0);
+    await expect(trigger).toBeFocused();
+  });
+
+  // 004 decision 12.
+  test("ArrowDown in the accordion moves focus to the second trigger; Enter expands it and shows the region its aria-controls names", async ({
+    page,
+  }) => {
+    await open(page, "/items/accordion/");
+    const triggers = fixture(page).locator('[data-slot="accordion-trigger"]');
+    await triggers.nth(0).focus();
+    await page.keyboard.press("ArrowDown");
+    await expect(triggers.nth(1)).toBeFocused();
+    await expect(triggers.nth(1)).toHaveAttribute("aria-expanded", "false");
+    const controls = await triggers.nth(1).getAttribute("aria-controls");
+    const region = page.locator(`[id="${controls}"]`);
+    await expect(region).toBeHidden();
+    await page.keyboard.press("Enter");
+    await expect(triggers.nth(1)).toHaveAttribute("aria-expanded", "true");
+    await expect(region).toBeVisible();
+    await expect(region).toHaveAttribute("role", "region");
+  });
+
+  // 004 decision 13.
+  test("Space flips the first toggle's aria-pressed", async ({ page }) => {
+    await open(page, "/items/toggle/");
+    const toggle = fixture(page).getByRole("button").first();
+    await toggle.focus();
+    const before = await toggle.getAttribute("aria-pressed");
+    await page.keyboard.press("Space");
+    await expect(toggle).toHaveAttribute(
+      "aria-pressed",
+      before === "true" ? "false" : "true",
+    );
+  });
+
+  test("ArrowRight in the toggle group moves focus without changing aria-checked, and Space checks the focused item", async ({
+    page,
+  }) => {
+    await open(page, "/items/toggle-group/");
+    const items = fixture(page).getByRole("radio");
+    const checked = fixture(page).locator(
+      '[role="radio"][aria-checked="true"]',
+    );
+    await expect(checked).toHaveCount(1);
+    await checked.focus();
+    const index = await items.evaluateAll((all) =>
+      all.findIndex((el) => el.getAttribute("aria-checked") === "true"),
+    );
+    const next = items.nth((index + 1) % (await items.count()));
+    await page.keyboard.press("ArrowRight");
+    await expect(next).toBeFocused();
+    await expect(next).toHaveAttribute("aria-checked", "false");
+    await expect(checked).toHaveCount(1);
+    await page.keyboard.press("Space");
+    await expect(next).toHaveAttribute("aria-checked", "true");
+    await expect(
+      fixture(page).locator('[role="radio"][aria-checked="true"]'),
+    ).toHaveCount(1);
   });
 
   test("Enter on Create project inserts the error summary and focuses it; Enter on its first link focuses the field", async ({

@@ -1,0 +1,35 @@
+{
+	"$schema": "https://shadcn-svelte.com/schema/registry-item.json",
+	"name": "textarea",
+	"title": "Textarea",
+	"type": "registry:ui",
+	"author": "Pluto Systems <https://plutosystems.co>",
+	"description": "A multi-line text input that grows with its text where the browser can.",
+	"registryDependencies": [
+		"utils",
+		"pluto-theme"
+	],
+	"meta": {
+		"since": "0.2.0",
+		"group": "forms",
+		"stock": {
+			"registry": "https://shadcn-svelte.com/registry/styles/maia",
+			"item": "textarea",
+			"cli": "1.7.1",
+			"date": "2026-10-28",
+			"sha256": "a4f6ad90806eacd9114389931b0a4f939fac0d96c56cb8ff267b2119a5cb40e6"
+		}
+	},
+	"files": [
+		{
+			"content": "<script lang=\"ts\">\n  import { getContext } from \"svelte\";\n  import { cn, type WithElementRef, type WithoutChildren } from \"$UTILS$\";\n  import type { HTMLTextareaAttributes } from \"svelte/elements\";\n\n  /** The contract a `Field` sets under the key \"pluto:field\" (field decision 11). */\n  type FieldContext = {\n    readonly id: string;\n    readonly invalid: boolean;\n    readonly describedBy: string | undefined;\n  };\n\n  let {\n    ref = $bindable(null),\n    value = $bindable(),\n    class: className,\n    id,\n    \"aria-describedby\": describedBy,\n    \"aria-invalid\": invalid,\n    \"data-slot\": dataSlot = \"textarea\",\n    ...restProps\n  }: WithoutChildren<WithElementRef<HTMLTextareaAttributes>> = $props();\n\n  const field = getContext<FieldContext | undefined>(\"pluto:field\");\n</script>\n\n<!--\n  Grows with its text where the browser supports field-sizing; elsewhere it\n  keeps its minimum height and the person can resize it.\n-->\n<textarea\n  bind:this={ref}\n  data-slot={dataSlot}\n  class={cn(\n    \"field-sizing-content flex min-h-16 w-full resize-y rounded border border-input bg-card px-3 py-2 text-base text-foreground transition-[color,background-color,border-color] placeholder:text-muted-foreground aria-invalid:border-destructive disabled:cursor-not-allowed disabled:opacity-50\",\n    className,\n  )}\n  id={id ?? field?.id}\n  aria-describedby={describedBy ?? field?.describedBy}\n  aria-invalid={invalid ?? (field?.invalid ? true : undefined)}\n  bind:value\n  {...restProps}></textarea>\n",
+			"type": "registry:ui",
+			"target": "textarea/textarea.svelte"
+		},
+		{
+			"content": "import Root from \"./textarea.svelte\";\n\nexport {\n  Root,\n  //\n  Root as Textarea,\n};\n",
+			"type": "registry:ui",
+			"target": "textarea/index.ts"
+		}
+	]
+}

@@ -57,6 +57,18 @@
   --elevation-line: #14161c1a;
   --elevation-shadow: #14161c29;
   --scrim: #14161c80;
+  --code-foreground: var(--foreground);
+  --code-background: var(--muted);
+  --code-keyword: var(--primary);
+  --code-string: var(--success);
+  --code-constant: var(--foreground);
+  --code-function: var(--foreground);
+  --code-comment: var(--muted-foreground);
+  --code-link: var(--primary);
+  --code-inserted: var(--success);
+  --code-deleted: var(--destructive);
+  --code-changed: var(--primary);
+  --code-active-line: var(--card);
   --mark-dot: 0.3em;
   --mark-gap: 0.08em;
   --mark-rise: 0.38em;
@@ -160,6 +172,18 @@
     cubic-bezier(0.2, 0.7, 0.3, 1);
   --animate-exit: pluto-exit var(--motion-micro) cubic-bezier(0.2, 0.7, 0.3, 1)
     forwards;
+  --color-code-foreground: var(--code-foreground);
+  --color-code-background: var(--code-background);
+  --color-code-keyword: var(--code-keyword);
+  --color-code-string: var(--code-string);
+  --color-code-constant: var(--code-constant);
+  --color-code-function: var(--code-function);
+  --color-code-comment: var(--code-comment);
+  --color-code-link: var(--code-link);
+  --color-code-inserted: var(--code-inserted);
+  --color-code-deleted: var(--code-deleted);
+  --color-code-changed: var(--code-changed);
+  --color-code-active-line: var(--code-active-line);
   --font-sans: "Geist Variable", system-ui, sans-serif;
   --font-heading: "IBM Plex Sans Variable", system-ui, sans-serif;
   --font-mono: "JetBrains Mono Variable", ui-monospace, monospace;
@@ -252,6 +276,11 @@
   outline: none;
 }
 
+@utility scrollbar {
+  scrollbar-color: var(--input) var(--muted);
+  scrollbar-width: thin;
+}
+
 @layer base {
   body {
     @apply bg-background text-foreground;
@@ -268,13 +297,36 @@
     outline: var(--focus-width) solid var(--ring);
     outline-offset: var(--focus-offset);
   }
-  html {
-    @apply font-sans;
-  }
   code,
   kbd,
   samp,
   pre {
+    font-variant-ligatures: none;
     @apply font-mono;
+  }
+  html {
+    @apply font-sans;
+  }
+}
+
+@layer components {
+  [data-slot="meter"] {
+    appearance: none;
+    background: var(--muted);
+  }
+  [data-slot="meter"]::-webkit-meter-bar {
+    background: var(--muted);
+  }
+  [data-slot="meter"]::-webkit-meter-optimum-value {
+    background: var(--primary);
+  }
+  [data-slot="meter"]::-webkit-meter-suboptimum-value {
+    background: var(--primary);
+  }
+  [data-slot="meter"]::-webkit-meter-even-less-good-value {
+    background: var(--primary);
+  }
+  [data-slot="meter"]::-moz-meter-bar {
+    background: var(--primary);
   }
 }
