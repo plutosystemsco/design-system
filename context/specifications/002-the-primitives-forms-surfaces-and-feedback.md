@@ -273,8 +273,10 @@ A builder applies each rule to each item. A reviewer checks the same list. The l
 | R20 | Every root keeps its stock `data-slot` attribute; new parts add one. | review; tests select by it |
 | R21 | Every pointer target at least 24 by 24 px. This is a house rule, stricter than AA: SC 2.5.8 also passes smaller targets through its spacing and inline exceptions (patterns memo §0.1). We do not rely on those exceptions, because a component cannot know its surroundings. | heights test |
 | R22 | Border widths from tokens: the bare `border` (1 px, the hairline) or the `-(length:--token)` form, such as `border-b-(length:--focus-width)`. No `border-2` or `border-l-4`. | lint |
+| R23 | Copy says what happens. A button or link names its action in active voice (Send, Stop, Scroll to end), and the name holds through the flow (Stop, then Stopped). An error says what went wrong and what to do; an empty state invites an action. No filler, no selling. | review |
+| R24 | Furniture carries information. An eyebrow, a mono row, a divider, a number or tracked text appears only where it encodes something: a mono row is data, a number marks a sequence. Not the generic kit: all-caps labels, an eyebrow over every heading, meta strings joined with middle dots, an arrow after link text, identical cards with one shadow. The book's own furniture (the lowercase mono eyebrow, the footer's rows) is a choice and stays. | review |
 
-*Why a checklist and a lint both:* the lint is countable, which `001`'s acceptance style prefers. But "a zero is not a pass" (primitives memo §6.3): the lint cannot see where a class is used, so R3, R7, R8 and R17 to R19 stay review's.
+*Why a checklist and a lint both:* the lint is countable, which `001`'s acceptance style prefers. But "a zero is not a pass" (primitives memo §6.3): the lint cannot see where a class is used, so R3, R7, R8, R17 to R19, R23 and R24 stay review's. R23 and R24 were added on 2026-11-01 at the owner's word (decisions.md, "Two writing and furniture rules join the checklist").
 
 ### 10. Sizes: control heights on the ladder
 

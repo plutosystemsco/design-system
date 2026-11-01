@@ -32,11 +32,11 @@ const ITEMS_001: [string, string][] = [
 ];
 
 /**
- * 003 decision 5's 39 items and 004 decision 4's 10, in order, each with its
- * group: 49 items in 8 groups.
+ * 003 decision 5's 39 items, 004 decision 4's 10 and 005 decision 4's 11, in
+ * order, each with its group: 60 items in 10 groups.
  */
 const GROUPS: [group: string, names: string[]][] = [
-  ["foundation", ITEMS_001.map(([n]) => n)],
+  ["foundation", [...ITEMS_001.map(([n]) => n), "theme"]],
   ["actions", ["button", "tooltip", "kbd", "toggle", "toggle-group"]],
   [
     "surfaces",
@@ -85,8 +85,42 @@ const GROUPS: [group: string, names: string[]][] = [
     ["code-block", "code-editor", "highlighter", "use-highlighted-code"],
   ],
   ["data", ["chart", "meter"]],
+  [
+    "navigation",
+    ["dropdown-menu", "sheet", "dialog", "breadcrumb", "sidebar", "is-mobile"],
+  ],
+  ["chat", ["message-log", "message", "marker", "composer"]],
   ["blocks", ["hero", "sign-in", "sign-up", "page-states", "settings"]],
 ];
+/** 005 decision 4: the eleven items, with their types and titles. */
+const ITEMS_005: [name: string, type: string, title: string][] = [
+  ["theme", "registry:ui", "Theme"],
+  ["dropdown-menu", "registry:ui", "Dropdown menu"],
+  ["sheet", "registry:ui", "Sheet"],
+  ["dialog", "registry:ui", "Dialog"],
+  ["breadcrumb", "registry:ui", "Breadcrumb"],
+  ["sidebar", "registry:ui", "Sidebar"],
+  ["is-mobile", "registry:hook", "Is mobile"],
+  ["message-log", "registry:ui", "Message log"],
+  ["message", "registry:ui", "Message"],
+  ["marker", "registry:ui", "Marker"],
+  ["composer", "registry:ui", "Composer"],
+];
+const TYPE_005 = new Map(ITEMS_005.map(([n, t]) => [n, t]));
+/** 005 decision 3: the 8 stock-derived items (theme, message-log and composer carry no meta.stock). */
+const STOCK_005 = [
+  "dropdown-menu",
+  "sheet",
+  "dialog",
+  "breadcrumb",
+  "sidebar",
+  "is-mobile",
+  "message",
+  "marker",
+];
+/** 005 decision 3: the stock sha256 of sidebar, read on the install date. */
+const SIDEBAR_STOCK_SHA =
+  "dc3cee148f49114d285fd01659c8bbb72a297b161e6526f20cdeaa02e2d92e2a";
 /** 004 decision 4: the ten items, with their types and titles. */
 const ITEMS_004: [name: string, type: string, title: string][] = [
   ["toggle", "registry:ui", "Toggle"],
@@ -145,9 +179,12 @@ const ITEMS_003 = ["status", "error-summary", ...BLOCKS];
 /** The 26 items 002 added. */
 const NEW_ITEMS = GROUPS.slice(1)
   .flatMap(([, names]) => names)
-  .filter((n) => !ITEMS_003.includes(n) && !TYPE_004.has(n));
+  .filter(
+    (n) => !ITEMS_003.includes(n) && !TYPE_004.has(n) && !TYPE_005.has(n),
+  );
 const ITEMS: [string, string][] = [
   ...ITEMS_001,
+  ["theme", "registry:ui"],
   ...GROUPS.slice(1)
     .flatMap(([, names]) => names)
     .map(
@@ -155,6 +192,7 @@ const ITEMS: [string, string][] = [
         [
           n,
           TYPE_004.get(n) ??
+            TYPE_005.get(n) ??
             (BLOCKS.includes(n) ? "registry:block" : "registry:ui"),
         ] as [string, string],
     ),
@@ -200,7 +238,7 @@ const GROUP_OF = new Map(
   GROUPS.flatMap(([group, names]) => names.map((n) => [n, group] as const)),
 );
 
-/** 002 decision 2's tailwind-variants row, and 004's code-block (its review finding 3). */
+/** 002 decision 2's tailwind-variants row, 004's code-block (its review finding 3), and 005's three. */
 const TV_ITEMS = [
   "button",
   "code-block",
@@ -213,6 +251,9 @@ const TV_ITEMS = [
   "input-group",
   "toggle",
   "toggle-group",
+  "sidebar",
+  "message",
+  "marker",
 ];
 
 describe("registry.json", () => {
@@ -220,8 +261,8 @@ describe("registry.json", () => {
     expect(() => registrySchema.parse(registry)).not.toThrow();
   });
 
-  test("holds the 49 items of 004 decision 4, in order, with their types (1, 3, 2, 1, 37, 5)", () => {
-    expect(ITEMS).toHaveLength(49);
+  test("holds the 60 items of 005 decision 4, in order, with their types (1, 3, 2, 2, 47, 5)", () => {
+    expect(ITEMS).toHaveLength(60);
     const types = ITEMS.map(([, t]) => t);
     expect(
       [
@@ -232,7 +273,7 @@ describe("registry.json", () => {
         "registry:ui",
         "registry:block",
       ].map((t) => types.filter((x) => x === t).length),
-    ).toEqual([1, 3, 2, 1, 37, 5]);
+    ).toEqual([1, 3, 2, 2, 47, 5]);
     expect(
       registry.items.map((i: { name: string; type: string }) => [
         i.name,
@@ -279,9 +320,14 @@ describe("registry.json", () => {
         "use-highlighted-code",
         "highlighter",
         "toggle",
+        // 005 decision 4's 4 (its review, finding 9: spinner was named already; tooltip is the fourth).
+        "sheet",
+        "is-mobile",
+        "tooltip",
+        "kbd",
       ].sort(),
     );
-    expect(deps.size).toBe(27);
+    expect(deps.size).toBe(31);
     for (const dep of deps) {
       expect(dep).not.toMatch(/^local:/);
       expect(dep).not.toMatch(/^[a-z][a-z0-9+.-]*:/i);
@@ -294,12 +340,12 @@ describe("registry.json", () => {
       (i: { type: string }) => i.type === "registry:ui",
     );
     expect(ui).toHaveLength(UI_COUNT);
-    expect(UI_COUNT).toBe(37);
+    expect(UI_COUNT).toBe(47);
     for (const item of ui) expect(item.files.length).toBeGreaterThanOrEqual(2);
   });
 
-  test("49 of 49 items carry a meta.group among the 8, as decisions 5 and 4 order them", () => {
-    expect(GROUPS).toHaveLength(8);
+  test("60 of 60 items carry a meta.group among the 10, as decisions 5, 4 and 4 order them", () => {
+    expect(GROUPS).toHaveLength(10);
     const groups = new Set(GROUPS.map(([g]) => g));
     for (const item of registry.items as {
       name: string;
@@ -366,6 +412,55 @@ describe("registry.json", () => {
     }
   });
 
+  test("11 of 11 005 items carry meta.since 0.5.0, decision 4's titles and groups; 8 carry a 5-field meta.stock dated 2026-11-01, theme, message-log and composer none", () => {
+    const byName = new Map(
+      (
+        registry.items as {
+          name: string;
+          title: string;
+          meta: any;
+          registryDependencies: string[];
+        }[]
+      ).map((i) => [i.name, i]),
+    );
+    expect(ITEMS_005).toHaveLength(11);
+    expect(STOCK_005).toHaveLength(8);
+    for (const [name, type, title] of ITEMS_005) {
+      const item = byName.get(name)!;
+      expect(item.title).toBe(title);
+      expect(item.meta?.since).toBe("0.5.0");
+      expect(item.meta?.group).toBe(GROUP_OF.get(name)!);
+      expect(item.registryDependencies.slice(0, 2)).toEqual([
+        "utils",
+        "pluto-theme",
+      ]);
+      void type;
+      if (!STOCK_005.includes(name)) {
+        expect(item.meta?.stock).toBeUndefined();
+        expect(Object.keys(item.meta).sort()).toEqual(["group", "since"]);
+        continue;
+      }
+      const stock = item.meta.stock;
+      expect(Object.keys(stock).sort()).toEqual(
+        ["cli", "date", "item", "registry", "sha256"].sort(),
+      );
+      expect(stock.registry).toBe(
+        "https://shadcn-svelte.com/registry/styles/maia",
+      );
+      expect(stock.item).toBe(name);
+      expect(stock.cli).toBe(CLI_VERSION);
+      expect(stock.date).toBe("2026-11-01");
+      expect(stock.sha256).toMatch(/^[0-9a-f]{64}$/);
+      if (name === "sidebar") expect(stock.sha256).toBe(SIDEBAR_STOCK_SHA);
+    }
+    // 42 stock-derived items in all: 002's 26, 004's 8, 005's 8.
+    const stocked = (registry.items as { meta: any }[]).filter(
+      (i) => i.meta?.stock,
+    );
+    expect(stocked).toHaveLength(42);
+    expect(NEW_ITEMS.length + STOCK_004.length + STOCK_005.length).toBe(42);
+  });
+
   test("7 of 7 new items carry meta.since 0.3.0, no meta.stock, and decision 5's titles", () => {
     const byName = new Map(
       (registry.items as { name: string; title: string; meta: any }[]).map(
@@ -416,12 +511,12 @@ describe("the built registry", () => {
     if (out) rmSync(out, { recursive: true, force: true });
   });
 
-  test("50 files under r/styles/maia and 50 byte-identical files under the versioned path", () => {
+  test("61 files under r/styles/maia and 61 byte-identical files under the versioned path", () => {
     const files = readdirSync(latest()).sort();
     expect(files).toEqual(
       ["index.json", ...ITEMS.map(([n]) => `${n}.json`)].sort(),
     );
-    expect(files).toHaveLength(50);
+    expect(files).toHaveLength(61);
     expect(readdirSync(versioned()).sort()).toEqual(files);
     for (const file of files) {
       expect(readFileSync(path.join(versioned(), file))).toEqual(
@@ -435,7 +530,7 @@ describe("the built registry", () => {
     expect(existsSync(path.join(versioned(), "stale.json"))).toBe(false);
   });
 
-  test("each of the 49 built items parses with registryItemSchema", () => {
+  test("each of the 60 built items parses with registryItemSchema", () => {
     for (const [name] of ITEMS) {
       const item = JSON.parse(
         readFileSync(path.join(latest(), `${name}.json`), "utf8"),
@@ -452,9 +547,9 @@ describe("the built registry", () => {
     }
   });
 
-  test("every target of the 37 registry:ui items starts <name>/", () => {
+  test("every target of the 47 registry:ui items starts <name>/", () => {
     const ui = ITEMS.filter(([, type]) => type === "registry:ui");
-    expect(ui).toHaveLength(37);
+    expect(ui).toHaveLength(47);
     for (const [name] of ui) {
       const item = JSON.parse(
         readFileSync(path.join(latest(), `${name}.json`), "utf8"),
@@ -567,8 +662,8 @@ describe("the built registry", () => {
     ]);
   });
 
-  test("11 of 11 tailwind-variants items name tailwind-variants@^3.3.1", () => {
-    expect(TV_ITEMS).toHaveLength(11);
+  test("14 of 14 tailwind-variants items name tailwind-variants@^3.3.1", () => {
+    expect(TV_ITEMS).toHaveLength(14);
     for (const name of TV_ITEMS) {
       const item = JSON.parse(
         readFileSync(path.join(latest(), `${name}.json`), "utf8"),
@@ -625,7 +720,47 @@ describe("the built registry", () => {
     }
   });
 
-  test("0 of 50 built files carry $UTILS$.js or an /index.js import", () => {
+  // 005 decision 4 (review finding 9): an app that adds one item into an
+  // empty project must get every file it imports.
+  test("47 of 47 built registry:ui items import only $UI$ names in their own registryDependencies", () => {
+    const ui = ITEMS.filter(([, type]) => type === "registry:ui");
+    expect(ui).toHaveLength(47);
+    const offending: string[] = [];
+    for (const [name] of ui) {
+      const item = JSON.parse(
+        readFileSync(path.join(latest(), `${name}.json`), "utf8"),
+      );
+      const named = new Set<string>(item.registryDependencies ?? []);
+      for (const file of item.files as { content?: string }[]) {
+        for (const m of (file.content ?? "").matchAll(
+          /from\s+["']\$UI\$\/([a-z0-9-]+)/g,
+        )) {
+          if (m[1] !== name && !named.has(m[1]))
+            offending.push(`${name} imports ${m[1]}`);
+        }
+      }
+    }
+    expect(offending).toEqual([]);
+  });
+
+  test("the hook is-mobile's target is is-mobile.svelte.ts; dropdown-menu has 17 files and sidebar 25, with 0 of the two dropped files; theme has 4", () => {
+    const built = (name: string) =>
+      JSON.parse(readFileSync(path.join(latest(), `${name}.json`), "utf8"));
+    expect(
+      built("is-mobile").files.map((f: { target: string }) => f.target),
+    ).toEqual(["is-mobile.svelte.ts"]);
+    const menu = built("dropdown-menu");
+    expect(menu.files).toHaveLength(17);
+    expect(JSON.stringify(menu)).not.toContain("dropdown-menu-label.svelte");
+    const sidebar = built("sidebar");
+    expect(sidebar.files).toHaveLength(25);
+    expect(JSON.stringify(sidebar)).not.toContain("sidebar-rail.svelte");
+    expect(built("theme").files).toHaveLength(4);
+    expect(built("message-log").files).toHaveLength(3);
+    expect(built("composer").files).toHaveLength(2);
+  });
+
+  test("0 of 61 built files carry $UTILS$.js or an /index.js import", () => {
     const offending: string[] = [];
     for (const file of readdirSync(latest())) {
       const text = readFileSync(path.join(latest(), file), "utf8");
@@ -677,6 +812,16 @@ describe("CHANGELOG.md", () => {
     expect(match).not.toBeNull();
     return match![1];
   };
+
+  test("has a 0.5.0 entry naming pluto-theme and the 11 new items (12 of 12), the sonner line and the bubble line, with the older entries unchanged", () => {
+    const body = entry("0.5.0");
+    const names = ["pluto-theme", ...ITEMS_005.map(([n]) => n)];
+    expect(names).toHaveLength(12);
+    for (const name of names) expect(body).toContain(`\`${name}\``);
+    expect(body).toContain("`groove-s`");
+    expect(body).toContain("`sonner`");
+    expect(body).toContain("`bubble`");
+  });
 
   test("has a 0.4.0 entry naming pluto-theme and the 10 new items (11 of 11), and the scroll-area line", () => {
     const body = entry("0.4.0");

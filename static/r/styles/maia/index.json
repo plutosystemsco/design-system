@@ -88,6 +88,23 @@
 		"relativeUrl": "four-dot.json"
 	},
 	{
+		"name": "theme",
+		"title": "Theme",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "The light and dark switch: a head script that sets the theme before paint, a store that follows the system until a choice is made, and a toggle button.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme",
+			"button"
+		],
+		"meta": {
+			"since": "0.5.0",
+			"group": "foundation"
+		},
+		"relativeUrl": "theme.json"
+	},
+	{
 		"name": "button",
 		"title": "Button",
 		"type": "registry:ui",
@@ -946,6 +963,239 @@
 			"group": "data"
 		},
 		"relativeUrl": "meter.json"
+	},
+	{
+		"name": "dropdown-menu",
+		"title": "Dropdown menu",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "A menu opened from a button, on the elevation shadow, moved by the arrow keys, with check and radio items and a shortcut written in words.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme"
+		],
+		"meta": {
+			"since": "0.5.0",
+			"group": "navigation",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "dropdown-menu",
+				"cli": "1.7.1",
+				"date": "2026-11-01",
+				"sha256": "b49ccd52aa8afaaf6628947b4b59321966d12770d4c27a7c75d0087bb467ca6a"
+			}
+		},
+		"relativeUrl": "dropdown-menu.json"
+	},
+	{
+		"name": "sheet",
+		"title": "Sheet",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "A modal panel fixed to one edge of the screen, named by its title, behind the scrim, that returns focus when it closes.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme",
+			"button"
+		],
+		"meta": {
+			"since": "0.5.0",
+			"group": "navigation",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "sheet",
+				"cli": "1.7.1",
+				"date": "2026-11-01",
+				"sha256": "f40ceed7ea0fd3c5f0f719fcd0893c7aa54916e3a11fe7e599ac49e2dc7dbb06"
+			}
+		},
+		"relativeUrl": "sheet.json"
+	},
+	{
+		"name": "dialog",
+		"title": "Dialog",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "A modal window named by its title, behind the scrim, for a task that must finish before the page goes on.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme",
+			"button"
+		],
+		"meta": {
+			"since": "0.5.0",
+			"group": "navigation",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "dialog",
+				"cli": "1.7.1",
+				"date": "2026-11-01",
+				"sha256": "e187867550d50216118f7dc711bb1920daeddb54f4f73af9bc081142dbe9803a"
+			}
+		},
+		"relativeUrl": "dialog.json"
+	},
+	{
+		"name": "breadcrumb",
+		"title": "Breadcrumb",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "The path to the current page as a list of links, the current page marked and not a link.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme"
+		],
+		"meta": {
+			"since": "0.5.0",
+			"group": "navigation",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "breadcrumb",
+				"cli": "1.7.1",
+				"date": "2026-11-01",
+				"sha256": "28861bae3610cabae2215a953f1e236792dbb2baa04ca2d35655c4f402741ac8"
+			}
+		},
+		"relativeUrl": "breadcrumb.json"
+	},
+	{
+		"name": "sidebar",
+		"title": "Sidebar",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "A navigation landmark on the paper ground, set apart by a vertical groove, that collapses off-canvas or to icons and becomes a sheet on a phone.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme",
+			"is-mobile",
+			"sheet",
+			"input",
+			"tooltip",
+			"skeleton",
+			"separator",
+			"button",
+			"kbd"
+		],
+		"meta": {
+			"since": "0.5.0",
+			"group": "navigation",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "sidebar",
+				"cli": "1.7.1",
+				"date": "2026-11-01",
+				"sha256": "dc3cee148f49114d285fd01659c8bbb72a297b161e6526f20cdeaa02e2d92e2a"
+			}
+		},
+		"relativeUrl": "sidebar.json"
+	},
+	{
+		"name": "is-mobile",
+		"title": "Is mobile",
+		"type": "registry:hook",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "A media-query store that is true below 768 px and false on the server.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme"
+		],
+		"meta": {
+			"since": "0.5.0",
+			"group": "navigation",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "is-mobile",
+				"cli": "1.7.1",
+				"date": "2026-11-01",
+				"sha256": "f4a286715fe4b3a1610b94e75565422e0a8cae30d7d05463b7c5c3d909f677b5"
+			}
+		},
+		"relativeUrl": "is-mobile.json"
+	},
+	{
+		"name": "message-log",
+		"title": "Message log",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "A scroll box named \"Messages\" holding a named log, that follows new content until the reader scrolls away, with a button back to the end.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme",
+			"button"
+		],
+		"meta": {
+			"since": "0.5.0",
+			"group": "chat"
+		},
+		"relativeUrl": "message-log.json"
+	},
+	{
+		"name": "message",
+		"title": "Message",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "One turn of a conversation: a heading that says who, the content as full-width prose or a bubble on the muted inset, and a footer.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme"
+		],
+		"meta": {
+			"since": "0.5.0",
+			"group": "chat",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "message",
+				"cli": "1.7.1",
+				"date": "2026-11-01",
+				"sha256": "f1a6680127b3506f22fd5ca973aac55c1f59b019749aea6abdedf091786b3e0d"
+			}
+		},
+		"relativeUrl": "message.json"
+	},
+	{
+		"name": "marker",
+		"title": "Marker",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "A line in a conversation that is not a turn: a status, a divider, a note.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme"
+		],
+		"meta": {
+			"since": "0.5.0",
+			"group": "chat",
+			"stock": {
+				"registry": "https://shadcn-svelte.com/registry/styles/maia",
+				"item": "marker",
+				"cli": "1.7.1",
+				"date": "2026-11-01",
+				"sha256": "a902b81be24f183f68b9bc260b9991c98794586ac5a2f2543be32673650e0b3e"
+			}
+		},
+		"relativeUrl": "marker.json"
+	},
+	{
+		"name": "composer",
+		"title": "Composer",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://plutosystems.co>",
+		"description": "The form a person writes a message in: a textarea that grows, Enter to send, a send button that becomes Stop while a reply runs, and never a disabled control.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme",
+			"field",
+			"input-group",
+			"button",
+			"kbd",
+			"status",
+			"spinner"
+		],
+		"meta": {
+			"since": "0.5.0",
+			"group": "chat"
+		},
+		"relativeUrl": "composer.json"
 	},
 	{
 		"name": "hero",

@@ -222,6 +222,34 @@ test.describe("tokens in the browser", () => {
   });
 });
 
+// 005 decision 5: the vertical groove, read on the sidebar page's inset.
+test.describe("the vertical groove", () => {
+  test("groove-s: the inset's start border is 1 px of --groove-line, and its inset shadow holds --groove-light", async ({
+    page,
+  }) => {
+    await open(page, "/items/sidebar/");
+    const inset = page
+      .getByTestId("shell-main")
+      .locator('[data-slot="sidebar-inset"]');
+    const [width, colour, shadow, line, light] = await inset.evaluate((el) => {
+      const s = getComputedStyle(el);
+      const root = getComputedStyle(document.documentElement);
+      return [
+        s.borderInlineStartWidth,
+        s.borderInlineStartColor,
+        s.boxShadow,
+        root.getPropertyValue("--groove-line").trim(),
+        root.getPropertyValue("--groove-light").trim(),
+      ];
+    });
+    expect(width).toBe("1px");
+    expect(holdsColour(colour, line), `${colour} is ${line}`).toBe(true);
+    expect(shadow).toMatch(/inset$|^.*inset.*$/);
+    expect(shadow).toMatch(/\b1px 0px 0px 0px\b/);
+    expect(holdsColour(shadow, light), `${shadow} holds ${light}`).toBe(true);
+  });
+});
+
 test.describe("under reduced motion", () => {
   test.use({ reducedMotion: "reduce" });
 

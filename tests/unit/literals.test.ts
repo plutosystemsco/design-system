@@ -10,11 +10,11 @@ import {
 const rules = loadRules();
 
 /**
- * 004 decision 17: 193 files, 003's 153 plus the 11 of code-block,
- * highlighter and the hook, the 4 of code-editor, the 19 of popover,
- * accordion, toggle and toggle-group, the 4 of chart and the 2 of meter.
+ * 005 decision 17: 286 files, 004's 193 plus the 93 of theme (4),
+ * dropdown-menu (17), sheet (11), dialog (11), breadcrumb (8), sidebar (25),
+ * is-mobile (1), message-log (3), message (7), marker (4) and composer (2).
  */
-const FILE_COUNT = 193;
+const FILE_COUNT = 286;
 
 describe("the item files", () => {
   const files = itemFiles();

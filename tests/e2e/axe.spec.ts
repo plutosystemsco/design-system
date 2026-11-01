@@ -3,6 +3,7 @@ import { expect, test, type Page } from "@playwright/test";
 import {
   NEW_PAGES,
   NEW_PAGES_004,
+  NEW_PAGES_005,
   PAGES_002,
   VIEWS,
   WIDTHS,
@@ -43,12 +44,12 @@ test.describe("at 1280", () => {
   }
 });
 
-// 003's 7 new item pages, 004's new item pages and the 18 views at 360, 768
-// and 1280 (004 decision 17: 286 scans when the ten items have landed).
+// 003's 7 new item pages, 004's and 005's new item pages and the 18 views at
+// 360, 768 and 1280 (005 decision 17: NEW_PAGES_005 joins the width loop).
 for (const width of WIDTHS) {
   test.describe(`at ${width}`, () => {
     test.use({ viewport: { width, height: 900 } });
-    for (const path of [...NEW_PAGES, ...NEW_PAGES_004]) {
+    for (const path of [...NEW_PAGES, ...NEW_PAGES_004, ...NEW_PAGES_005]) {
       test(`axe finds 0 violations on ${path}`, async ({ page }) => {
         await open(page, path);
         // A block's page holds the viewer; let its frame hydrate first.
@@ -87,6 +88,43 @@ for (const id of ["popover-fuel", "popover-form", "popover-start"]) {
     await expectNoViolations(page);
   });
 }
+
+// 005 decision 17: the open states of the overlays (aria-dialog-name on
+// every sheet and dialog; the menu's roles).
+for (const [path, id, slot] of [
+  ["/items/dropdown-menu/", "menu-account", "dropdown-menu-content"],
+  ["/items/sheet/", "sheet-end", "sheet-content"],
+  ["/items/sheet/", "sheet-start", "sheet-content"],
+  ["/items/dialog/", "dialog-rename", "dialog-content"],
+  ["/items/dialog/", "dialog-terms", "dialog-content"],
+] as const) {
+  test(`axe finds 0 violations on ${path} with ${id} open`, async ({
+    page,
+  }) => {
+    await open(page, path);
+    await page.getByTestId(id).click();
+    await page.locator(`[data-slot="${slot}"]`).waitFor();
+    await settled(page);
+    await expectNoViolations(page);
+  });
+}
+
+// 005 decision 10: the sidebar page at 360 with its sheet open.
+test.describe("at 360", () => {
+  test.use({ viewport: { width: 360, height: 700 } });
+  test("axe finds 0 violations on /items/sidebar/ with the sheet open", async ({
+    page,
+  }) => {
+    await open(page, "/items/sidebar/");
+    await page
+      .getByTestId("shell-main")
+      .locator('[data-slot="sidebar-trigger"]')
+      .click();
+    await page.getByRole("dialog", { name: "Sidebar" }).waitFor();
+    await settled(page);
+    await expectNoViolations(page);
+  });
+});
 
 // 002 decision 23: the alert-dialog page again, with its dialog open.
 test("axe finds 0 violations with the alert dialog open", async ({ page }) => {

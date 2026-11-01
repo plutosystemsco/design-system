@@ -419,3 +419,71 @@ describe("the code slots on muted", () => {
     );
   });
 });
+
+// 005 decision 17: four pairs the navigation items put on the page, each
+// read from the token file in both themes. The hexes equal rows 001 and 002
+// already hold (accent is muted's hex; popover is card's).
+const NAV_ROWS: [
+  label: string,
+  fg: string,
+  bg: string,
+  light: number,
+  dark: number,
+  minimum: number,
+][] = [
+  [
+    "sidebar-accent-foreground on sidebar-accent (the current row)",
+    "sidebar-accent-foreground",
+    "sidebar-accent",
+    15.0,
+    12.83,
+    4.5,
+  ],
+  [
+    "sidebar-primary on sidebar (the current row's edge)",
+    "sidebar-primary",
+    "sidebar",
+    5.51,
+    6.85,
+    3,
+  ],
+  [
+    "destructive on accent (the destructive menu item)",
+    "destructive",
+    "accent",
+    4.71,
+    5.53,
+    4.5,
+  ],
+  [
+    "muted-foreground on popover (the menu's shortcut)",
+    "muted-foreground",
+    "popover",
+    8.18,
+    7.17,
+    4.5,
+  ],
+];
+
+describe("the navigation pairs (005 decision 17)", () => {
+  test("4 rows", () => {
+    expect(NAV_ROWS).toHaveLength(4);
+  });
+
+  test.each(NAV_ROWS)(
+    "%s measures %d light and %d dark, at least the minimum",
+    (_label, fg, bg, light, dark, minimum) => {
+      for (const [theme, expected] of [
+        ["light", light],
+        ["dark", dark],
+      ] as const) {
+        const measured = contrastRatio(
+          resolveColor(tokens, theme, fg),
+          resolveColor(tokens, theme, bg),
+        );
+        expect(measured).toBe(expected);
+        expect(measured).toBeGreaterThanOrEqual(minimum);
+      }
+    },
+  );
+});

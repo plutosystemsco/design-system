@@ -1,0 +1,28 @@
+{
+	"$schema": "https://shadcn-svelte.com/schema/registry-item.json",
+	"name": "status",
+	"title": "Status",
+	"type": "registry:ui",
+	"author": "Pluto Systems <https://plutosystems.co>",
+	"description": "An empty polite live region, present from the first render, whose text the app sets.",
+	"registryDependencies": [
+		"utils",
+		"pluto-theme"
+	],
+	"meta": {
+		"since": "0.3.0",
+		"group": "feedback"
+	},
+	"files": [
+		{
+			"content": "<script lang=\"ts\">\n  import { cn, type WithElementRef } from \"$UTILS$\";\n  import type { HTMLAttributes } from \"svelte/elements\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    text = \"\",\n    visible = false,\n    ...restProps\n  }: WithElementRef<HTMLAttributes<HTMLDivElement>> & {\n    /** What the region says. Empty by default. Set it to announce; set \"\" to clear. */\n    text?: string;\n    /** Shown on screen as well as announced. Default false: visually hidden. */\n    visible?: boolean;\n  } = $props();\n</script>\n\n<!--\n  A polite live region, rendered empty from the first render, so it is in the\n  page before its text changes. A region announces only if it was there before\n  its text changed: mount it first, then set the text. Setting the same text\n  twice is not announced again; put a working message between results.\n-->\n<div\n  bind:this={ref}\n  data-slot=\"status\"\n  role=\"status\"\n  aria-live=\"polite\"\n  aria-atomic=\"true\"\n  class={cn(!visible && \"sr-only\", className)}\n  {...restProps}\n>\n  {text}\n</div>\n",
+			"type": "registry:ui",
+			"target": "status/status.svelte"
+		},
+		{
+			"content": "import Root from \"./status.svelte\";\n\nexport { Root, Root as Status };\n",
+			"type": "registry:ui",
+			"target": "status/index.ts"
+		}
+	]
+}

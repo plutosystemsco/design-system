@@ -164,6 +164,19 @@ describe("the npm packages items name", () => {
     expect(named.has("codemirror")).toBe(false);
   });
 
+  // 005 decision 2: three packages weighed and not added.
+  test("no item names mode-watcher, svelte-sonner or @shadcn-svelte/primitives, and package.json holds none", () => {
+    for (const name of [
+      "mode-watcher",
+      "svelte-sonner",
+      "@shadcn-svelte/primitives",
+      "@lucide/svelte",
+    ]) {
+      expect(named.has(name)).toBe(false);
+      expect(pkg.devDependencies[name]).toBeUndefined();
+    }
+  });
+
   test("each has a range in package.json", () => {
     for (const name of named.keys())
       expect(pkg.devDependencies[name]).toMatch(/^\^\d/);

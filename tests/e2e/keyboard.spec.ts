@@ -5,6 +5,7 @@ import {
   ITEMS,
   open,
   openView,
+  TABBABLE,
   VIEW_STOPS,
   VIEWS,
 } from "./pages.ts";
@@ -226,6 +227,20 @@ const FIXTURES: [item: string, stops: string[]][] = [
   // bits-ui parks the row's Tab stop on the first item until a selection moves
   // it, so the fixture's checked item is its first.
   ["toggle-group", ["radio:Today"]],
+  // 005 decision 6: the theme toggle, a pressed button.
+  ["theme", ["button:Dark theme"]],
+  // 005 decisions 7 and 8: each overlay's trigger.
+  ["dropdown-menu", ["button:Account"]],
+  ["sheet", ["button:Open navigation"]],
+  ["dialog", ["button:Rename project"]],
+  // 005 decision 9: the first link and the ellipsis menu's trigger; the current page is no stop.
+  ["breadcrumb", ["a:Home", "button:Show hidden pages"]],
+  // 005 decision 10: the trigger in the bar above the sidebar, then its two rows.
+  ["sidebar", ["button:Toggle sidebar", "a:Overview", "a:Runs"]],
+  // 005 decision 11: the log's region (its button is hidden at the end).
+  ["message-log", ["region:Keyboard messages"]],
+  // 005 decision 13: the textarea and the send button.
+  ["composer", ["textarea:Message", "button:Send message"]],
 ];
 
 /** Where a container draws the ring for its focused child (002 decision 8). */
@@ -233,7 +248,11 @@ function drawnBy(
   item: string,
   focused: { slot: string | null; signature: string },
 ): string | undefined {
-  if (item === "input-group" && focused.slot === "input-group-control")
+  // The composer's textarea is an input group's control (005 decision 13).
+  if (
+    (item === "input-group" || item === "composer") &&
+    focused.slot === "input-group-control"
+  )
     return '[data-slot="input-group"]';
   if (item === "input-otp") return '[data-slot="input-otp"]';
   if (item === "code-block" && focused.slot === "code-block-content")
@@ -291,15 +310,16 @@ async function expectRingUnclipped(
   expect(problem).toBeNull();
 }
 
-// Tabbable: in the tab order, so not a roving group's parked items (tabindex -1).
-// A details' summary is a native stop (004 decision 10's "Show as table").
-const TABBABLE =
-  'a[href]:not([tabindex="-1"]), button:not([disabled]):not([tabindex="-1"]), input:not([disabled]):not([type="hidden"]):not([tabindex="-1"]), select:not([disabled]):not([tabindex="-1"]), textarea:not([disabled]):not([tabindex="-1"]), summary:not([tabindex="-1"]), [tabindex]:not([tabindex="-1"])';
-
-// 004 decision 17: 24 fixtures and 52 stops.
-test("the 24 fixtures hold 52 stops", () => {
-  expect(FIXTURES).toHaveLength(24);
-  expect(FIXTURES.reduce((n, [, stops]) => n + stops.length, 0)).toBe(52);
+// 005 decision 17: 32 fixtures and 64 stops when 005 lands; after its first
+// run (steps 1 to 4), 004's 24 and 52 plus theme 1, dropdown-menu 1, sheet 1,
+// dialog 1, breadcrumb 2 and sidebar 3.
+const FIXTURE_COUNT = 32;
+const STOP_COUNT = 64;
+test(`the ${FIXTURE_COUNT} fixtures hold ${STOP_COUNT} stops`, () => {
+  expect(FIXTURES).toHaveLength(FIXTURE_COUNT);
+  expect(FIXTURES.reduce((n, [, stops]) => n + stops.length, 0)).toBe(
+    STOP_COUNT,
+  );
 });
 
 for (const [item, expected] of FIXTURES) {
@@ -352,8 +372,327 @@ for (const [item, expected] of FIXTURES) {
   });
 }
 
-/** 002 decision 23's 9 behaviours, 003 decision 20's 2 and 004 decision 17's 8: 19. */
+/** 002 decision 23's 9 behaviours, 003 decision 20's 2, 004 decision 17's 8 and 005 decision 17's 12: 31. */
 test.describe("behaviours", () => {
+  // 005 decision 17, behaviour 1.
+  test("Space on the theme toggle flips aria-pressed and the dark class; Space again restores both", async ({
+    page,
+  }) => {
+    await open(page, "/items/theme/");
+    const toggle = page
+      .getByTestId("keyboard-fixture")
+      .getByRole("button", { name: "Dark theme" });
+    const html = page.locator("html");
+    const wasDark = ((await html.getAttribute("class")) ?? "")
+      .split(/\s+/)
+      .includes("dark");
+    await expect(toggle).toHaveAttribute("aria-pressed", String(wasDark));
+    await toggle.focus();
+    await page.keyboard.press("Space");
+    await expect(toggle).toHaveAttribute("aria-pressed", String(!wasDark));
+    if (wasDark) await expect(html).not.toHaveClass(/(^|\s)dark(\s|$)/);
+    else await expect(html).toHaveClass(/(^|\s)dark(\s|$)/);
+    await page.keyboard.press("Space");
+    await expect(toggle).toHaveAttribute("aria-pressed", String(wasDark));
+    if (wasDark) await expect(html).toHaveClass(/(^|\s)dark(\s|$)/);
+    else await expect(html).not.toHaveClass(/(^|\s)dark(\s|$)/);
+    await expect(toggle).toBeFocused();
+  });
+
+  // 005 decision 17, behaviours 2 and 3.
+  test("Enter on the menu trigger opens the menu with focus on its first item; ArrowDown moves to the second", async ({
+    page,
+  }) => {
+    await open(page, "/items/dropdown-menu/");
+    const trigger = fixture(page).getByRole("button", { name: "Account" });
+    await trigger.focus();
+    await page.keyboard.press("Enter");
+    const menu = page.getByRole("menu");
+    await expect(menu).toBeVisible();
+    const items = menu.locator(
+      '[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"]',
+    );
+    await expect(items.first()).toBeFocused();
+    await page.keyboard.press("ArrowDown");
+    await expect(items.nth(1)).toBeFocused();
+    await expect(items.nth(1)).toHaveAttribute("data-highlighted", "");
+  });
+
+  test("Escape closes the menu and returns focus to the trigger; Tab from the open menu closes it and moves on", async ({
+    page,
+  }) => {
+    await open(page, "/items/dropdown-menu/");
+    const trigger = fixture(page).getByRole("button", { name: "Account" });
+    const menu = page.getByRole("menu");
+    // Tab first, from a fresh open: the menu closes and focus moves on to the
+    // stop after the trigger (bits-ui closes only when such a stop exists).
+    await trigger.focus();
+    await page.keyboard.press("Enter");
+    await expect(menu).toBeVisible();
+    await expect(menu.locator('[role="menuitem"]').first()).toBeFocused();
+    await page.keyboard.press("Tab");
+    await expect(menu).toHaveCount(0);
+    expect(
+      await page.evaluate(
+        () =>
+          !document.activeElement?.closest('[data-testid="keyboard-fixture"]'),
+      ),
+      "Tab left the fixture",
+    ).toBe(true);
+    await expect(trigger).toHaveAttribute("aria-expanded", "false");
+    // Then Escape, from a second open.
+    await trigger.focus();
+    await page.keyboard.press("Enter");
+    await expect(menu).toBeVisible();
+    await expect(menu.locator('[role="menuitem"]').first()).toBeFocused();
+    await page.keyboard.press("Escape");
+    await expect(menu).toHaveCount(0);
+    await expect(trigger).toBeFocused();
+    await expect(trigger).toHaveAttribute("aria-expanded", "false");
+  });
+
+  // 005 decision 17, behaviours 4 and 5.
+  test("Enter on the sheet trigger opens it with focus on its first link; Tab loops through the close button back to the first link", async ({
+    page,
+  }) => {
+    await open(page, "/items/sheet/");
+    const trigger = fixture(page).getByRole("button", {
+      name: "Open navigation",
+    });
+    await trigger.focus();
+    await page.keyboard.press("Enter");
+    const sheet = page.getByRole("dialog", { name: "Navigation" });
+    await expect(sheet).toBeVisible();
+    const first = sheet.locator("a[href]").first();
+    await expect(first).toBeFocused();
+    const stops = await sheet.locator(TABBABLE).count();
+    for (let i = 1; i < stops; i++) await page.keyboard.press("Tab");
+    await expect(sheet.getByRole("button", { name: "Close" })).toBeFocused();
+    await page.keyboard.press("Tab");
+    await expect(first).toBeFocused();
+  });
+
+  test("Escape closes the sheet, focus returns to the trigger, and the content is gone after the fade", async ({
+    page,
+  }) => {
+    await open(page, "/items/sheet/");
+    const trigger = fixture(page).getByRole("button", {
+      name: "Open navigation",
+    });
+    await trigger.focus();
+    await page.keyboard.press("Enter");
+    const sheet = page.locator('[data-slot="sheet-content"]');
+    await expect(sheet).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(sheet).toHaveCount(0);
+    await expect(trigger).toBeFocused();
+    expect(await page.locator('[data-slot="sheet-overlay"]').count()).toBe(0);
+  });
+
+  // 005 decision 17, behaviours 7 and 8.
+  test("Enter on the sidebar trigger sets aria-expanded false and makes the nav inert with 0 stops inside; Enter again restores both", async ({
+    page,
+  }) => {
+    await open(page, "/items/sidebar/");
+    const trigger = fixture(page).getByRole("button", {
+      name: "Toggle sidebar",
+    });
+    const nav = fixture(page).locator("nav[data-slot=sidebar]");
+    await trigger.focus();
+    await expect(trigger).toHaveAttribute("aria-expanded", "true");
+    expect(await nav.getAttribute("inert")).toBeNull();
+    const stops = () =>
+      nav.evaluate(
+        (el, selector) =>
+          [...el.querySelectorAll<HTMLElement>(selector)].filter(
+            (s) => !s.closest("[inert]"),
+          ).length,
+        TABBABLE,
+      );
+    expect(await stops()).toBe(2);
+    await page.keyboard.press("Enter");
+    await expect(trigger).toHaveAttribute("aria-expanded", "false");
+    await expect(nav).toHaveAttribute("inert", "");
+    expect(await stops()).toBe(0);
+    await page.keyboard.press("Tab");
+    expect(
+      await page.evaluate(
+        () => !!document.activeElement?.closest("nav[data-slot=sidebar]"),
+      ),
+    ).toBe(false);
+    await trigger.focus();
+    await page.keyboard.press("Enter");
+    await expect(trigger).toHaveAttribute("aria-expanded", "true");
+    expect(await nav.getAttribute("inert")).toBeNull();
+    expect(await stops()).toBe(2);
+  });
+
+  test.describe("at 360", () => {
+    test.use({ viewport: { width: 360, height: 700 } });
+
+    test("Enter on the sidebar trigger opens the sheet named Sidebar with focus on its first link; Escape returns focus to the trigger", async ({
+      page,
+    }) => {
+      await open(page, "/items/sidebar/");
+      const trigger = fixture(page).getByRole("button", {
+        name: "Toggle sidebar",
+      });
+      await trigger.focus();
+      await page.keyboard.press("Enter");
+      const sheet = page.getByRole("dialog", { name: "Sidebar" });
+      await expect(sheet).toBeVisible();
+      await expect(sheet.locator("a[href]").first()).toBeFocused();
+      await page.keyboard.press("Escape");
+      await expect(sheet).toHaveCount(0);
+      await expect(trigger).toBeFocused();
+    });
+  });
+
+  // 005 decision 17, behaviours 9 and 10.
+  test("End scrolls the log's region to its end; ArrowUp releases the follow, a streamed reply does not move it, and the button appears inside the region", async ({
+    page,
+  }) => {
+    await open(page, "/items/message-log/");
+    const region = fixture(page).getByRole("region", {
+      name: "Keyboard messages",
+    });
+    const state = () =>
+      region.evaluate((el) => ({
+        top: el.scrollTop,
+        atEnd: el.scrollHeight - el.clientHeight - el.scrollTop <= 8,
+      }));
+    await region.focus();
+    await page.keyboard.press("Home");
+    await expect.poll(async () => (await state()).top).toBe(0);
+    // Chromium animates a keyboard scroll; a second key under it is overridden.
+    await page.waitForTimeout(800);
+    await page.keyboard.press("End");
+    await expect.poll(async () => (await state()).atEnd).toBe(true);
+    const button = fixture(page).getByRole("button", { name: "Scroll to end" });
+    await expect(button).toBeHidden();
+    // End while at the end moves nothing and releases nothing (review
+    // finding 1): an appended turn is still followed.
+    await page.waitForTimeout(800);
+    await page.keyboard.press("End");
+    await page.waitForTimeout(200);
+    await page.getByTestId("kb-add").click();
+    await expect.poll(async () => (await state()).atEnd).toBe(true);
+    await expect(button).toBeHidden();
+    // The click moved focus to that button; back to the region.
+    await region.focus();
+    await page.keyboard.press("ArrowUp");
+    await expect.poll(async () => (await state()).atEnd).toBe(false);
+    // Chromium animates a keyboard scroll with a long tail: let it end.
+    await page.waitForTimeout(800);
+    const before = (await state()).top;
+    await page.getByTestId("kb-stream").click();
+    await page.waitForTimeout(500);
+    expect((await state()).top).toBe(before);
+    await expect(button).toBeVisible();
+    const r = (await region.boundingBox())!;
+    const b = (await button.boundingBox())!;
+    expect(b.y + b.height).toBeLessThanOrEqual(r.y + r.height + 0.5);
+    expect(b.x + b.width).toBeLessThanOrEqual(r.x + r.width + 0.5);
+  });
+
+  test("Enter on the log's button returns to the end and hides it", async ({
+    page,
+  }) => {
+    await open(page, "/items/message-log/");
+    const region = fixture(page).getByRole("region", {
+      name: "Keyboard messages",
+    });
+    await region.focus();
+    await page.keyboard.press("ArrowUp");
+    await page.keyboard.press("ArrowUp");
+    const button = fixture(page).getByRole("button", { name: "Scroll to end" });
+    await expect(button).toBeVisible();
+    await page.keyboard.press("Tab");
+    await expect(button).toBeFocused();
+    // Tab moved nothing: the button is outside the scroll box.
+    expect(
+      await region.evaluate(
+        (el) => el.scrollHeight - el.clientHeight - el.scrollTop <= 8,
+      ),
+    ).toBe(false);
+    await page.keyboard.press("Enter");
+    await expect
+      .poll(() =>
+        region.evaluate(
+          (el) => el.scrollHeight - el.clientHeight - el.scrollTop <= 8,
+        ),
+      )
+      .toBe(true);
+    await expect(button).toBeHidden();
+    await expect(region).toBeFocused();
+  });
+
+  // 005 decision 17, behaviours 11 and 12.
+  test("in the composer, Enter sends and clears; Shift Enter adds a line and does not send; a keydown with isComposing does not send", async ({
+    page,
+  }) => {
+    await open(page, "/items/composer/");
+    const textarea = fixture(page).locator("textarea");
+    const sent = page.getByTestId("kb-sent");
+    await textarea.focus();
+    await page.keyboard.type("First");
+    await page.keyboard.press("Shift+Enter");
+    await expect(textarea).toHaveValue("First\n");
+    await expect(sent).toHaveText("");
+    await page.keyboard.type("second");
+    await textarea.evaluate((el) =>
+      el.dispatchEvent(
+        new KeyboardEvent("keydown", {
+          key: "Enter",
+          isComposing: true,
+          bubbles: true,
+          cancelable: true,
+        }),
+      ),
+    );
+    await expect(sent).toHaveText("");
+    await page.keyboard.press("Enter");
+    await expect(sent).toHaveText("First\nsecond");
+    await expect(textarea).toHaveValue("");
+    await expect(textarea).toBeFocused();
+  });
+
+  test("while streaming, Escape stops; the status reads Responding then Stopped", async ({
+    page,
+  }) => {
+    await open(page, "/items/composer/");
+    const textarea = fixture(page).locator("textarea");
+    const button = fixture(page).locator('[data-slot="composer-send"]');
+    const status = fixture(page).getByRole("status");
+    await textarea.focus();
+    await page.keyboard.type("Go");
+    await page.keyboard.press("Enter");
+    await expect(status).toHaveText("Responding");
+    await expect(button).toHaveAccessibleName("Stop response");
+    await page.keyboard.press("Escape");
+    await expect(status).toHaveText("Stopped");
+    await expect(button).toHaveAccessibleName("Send message");
+    await expect(textarea).toBeFocused();
+  });
+
+  // 005 decision 17, behaviour 6.
+  test("Enter on the dialog trigger opens it with focus on the input; Escape returns focus", async ({
+    page,
+  }) => {
+    await open(page, "/items/dialog/");
+    const trigger = fixture(page).getByRole("button", {
+      name: "Rename project",
+    });
+    await trigger.focus();
+    await page.keyboard.press("Enter");
+    const dialog = page.getByRole("dialog", { name: "Rename project" });
+    await expect(dialog).toBeVisible();
+    await expect(dialog.locator("input")).toBeFocused();
+    await page.keyboard.press("Escape");
+    await expect(dialog).toHaveCount(0);
+    await expect(trigger).toBeFocused();
+  });
+
   test("the busy button ignores Enter and clicks, keeps focus and aria-busy", async ({
     page,
   }) => {

@@ -1,10 +1,14 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
   import { Lockup } from "#lib/registry/ui/four-dot";
+  import { ThemeScript } from "#lib/registry/ui/theme";
   import ThemeToggle from "#lib/preview/theme-toggle.svelte";
 
   let { children }: { children: Snippet } = $props();
 </script>
+
+<!-- The theme's head script, once per page (005 decision 16). -->
+<ThemeScript />
 
 <header class="border-b border-border">
   <div

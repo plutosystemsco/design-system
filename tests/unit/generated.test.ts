@@ -231,3 +231,33 @@ describe("004's additions to pluto-theme", () => {
     expect(css).toContain('[data-slot="meter"]::-moz-meter-bar');
   });
 });
+
+/** 005 decision 5: the vertical groove, owned by the inset on its start edge. */
+describe("005's addition to pluto-theme", () => {
+  const theme = () =>
+    items(readFileSync("registry.json", "utf8")).get("pluto-theme") as Item & {
+      css: CssTree;
+    };
+
+  test("css holds @utility groove-s with its two declarations: the hairline first, the light inside it", () => {
+    expect(theme().css["@utility groove-s"]).toEqual({
+      "border-inline-start": "var(--line-width) solid var(--groove-line)",
+      "box-shadow": "inset var(--line-width) 0 0 var(--groove-light)",
+    });
+    expect(Object.keys(theme().css["@utility groove-s"] as CssTree)).toEqual([
+      "border-inline-start",
+      "box-shadow",
+    ]);
+  });
+
+  test("src/app.css carries @utility groove-s once", () => {
+    const css = readFileSync("src/app.css", "utf8");
+    expect(css.match(/@utility groove-s \{/g)).toHaveLength(1);
+    expect(css).toContain(
+      "border-inline-start: var(--line-width) solid var(--groove-line);",
+    );
+    expect(css).toContain(
+      "box-shadow: inset var(--line-width) 0 0 var(--groove-light);",
+    );
+  });
+});

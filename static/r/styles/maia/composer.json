@@ -1,0 +1,37 @@
+{
+	"$schema": "https://shadcn-svelte.com/schema/registry-item.json",
+	"name": "composer",
+	"title": "Composer",
+	"type": "registry:ui",
+	"author": "Pluto Systems <https://plutosystems.co>",
+	"description": "The form a person writes a message in: a textarea that grows, Enter to send, a send button that becomes Stop while a reply runs, and never a disabled control.",
+	"devDependencies": [
+		"phosphor-svelte@^3.1.1"
+	],
+	"registryDependencies": [
+		"utils",
+		"pluto-theme",
+		"field",
+		"input-group",
+		"button",
+		"kbd",
+		"status",
+		"spinner"
+	],
+	"meta": {
+		"since": "0.5.0",
+		"group": "chat"
+	},
+	"files": [
+		{
+			"content": "<script lang=\"ts\" module>\n  /** The Vercel AI SDK's four names for a chat's state. */\n  export type ComposerStatus = \"ready\" | \"submitted\" | \"streaming\" | \"error\";\n</script>\n\n<script lang=\"ts\">\n  import { untrack } from \"svelte\";\n  import ArrowUp from \"phosphor-svelte/lib/ArrowUp\";\n  import Square from \"phosphor-svelte/lib/Square\";\n  import { Button } from \"$UI$/button\";\n  import * as Field from \"$UI$/field\";\n  import * as InputGroup from \"$UI$/input-group\";\n  import { Kbd } from \"$UI$/kbd\";\n  import { Spinner } from \"$UI$/spinner\";\n  import { Status } from \"$UI$/status\";\n  import { cn, type WithElementRef } from \"$UTILS$\";\n  import type { HTMLFormAttributes } from \"svelte/elements\";\n\n  let {\n    ref = $bindable(null),\n    value = $bindable(\"\"),\n    status = \"ready\",\n    onsend,\n    onstop,\n    label = \"Message\",\n    hint,\n    labelVisible = false,\n    placeholder,\n    class: className,\n    onsubmit,\n    ...restProps\n  }: WithElementRef<HTMLFormAttributes, HTMLFormElement> & {\n    /** The draft. Cleared on send. */\n    value?: string;\n    /** The chat's state. `submitted` and `streaming` turn Send into Stop. */\n    status?: ComposerStatus;\n    /** Called with the trimmed text on send. */\n    onsend?: (text: string) => void;\n    /** Called when Stop is pressed, or Escape while a reply runs. */\n    onstop?: () => void;\n    /** The textarea's name. Visually hidden unless `labelVisible`. */\n    label?: string;\n    /** The description under the textarea. Without it, the keys are shown with Kbd. */\n    hint?: string;\n    labelVisible?: boolean;\n    placeholder?: string;\n  } = $props();\n\n  let textarea: HTMLTextAreaElement | null = $state(null);\n  const busy = $derived(status === \"submitted\" || status === \"streaming\");\n\n  /** Moves focus into the textarea. */\n  export function focus(): void {\n    textarea?.focus();\n  }\n\n  // The status words (decision 13's table): \"Responding\" at submitted,\n  // \"Response complete\" at ready after a reply, \"Stopped\" on a Stop press,\n  // and the ready that follows a stop is silent. No two in a row are the same.\n  let statusText = $state(\"\");\n  let previous: ComposerStatus = untrack(() => status);\n  let stopped = false;\n  $effect(() => {\n    const next = status;\n    untrack(() => {\n      if (next === previous) return;\n      if (next === \"submitted\") {\n        statusText = \"Responding\";\n        stopped = false;\n      } else if (\n        next === \"ready\" &&\n        (previous === \"submitted\" || previous === \"streaming\")\n      ) {\n        if (!stopped) statusText = \"Response complete\";\n        stopped = false;\n      }\n      previous = next;\n    });\n  });\n\n  function send(): void {\n    const text = value.trim();\n    textarea?.focus();\n    if (!text) return;\n    onsend?.(text);\n    value = \"\";\n  }\n\n  function stop(): void {\n    stopped = true;\n    statusText = \"Stopped\";\n    onstop?.();\n    textarea?.focus();\n  }\n\n  function handleSubmit(\n    event: SubmitEvent & { currentTarget: EventTarget & HTMLFormElement },\n  ): void {\n    onsubmit?.(event);\n    event.preventDefault();\n    if (busy) return;\n    send();\n  }\n\n  function handleKeydown(event: KeyboardEvent): void {\n    if (event.key === \"Escape\" && busy) {\n      event.preventDefault();\n      stop();\n      return;\n    }\n    if (event.key !== \"Enter\" || event.shiftKey) return;\n    // An input method editor's Enter confirms a candidate, not the message.\n    if (event.isComposing || event.keyCode === 229) return;\n    event.preventDefault();\n    if (busy) return;\n    send();\n  }\n</script>\n\n{#snippet keys()}\n  <Kbd>Enter</Kbd> to send. <Kbd>Shift Enter</Kbd> for a new line.\n{/snippet}\n\n<!--\n  The form a person writes a message in. The textarea grows by field-sizing\n  from 64 px to 256 px and scrolls inside after that (where field-sizing is\n  absent it keeps its minimum and scrolls). One button: Send, the surface's\n  one accent, becomes Stop (secondary, with the spinner while submitted) and\n  back, so focus never moves. Nothing is ever disabled: an empty submit is\n  ignored. Enter sends, Shift Enter breaks a line, Escape stops. Focus stays\n  in the textarea after send and after stop. The composer's file must be among\n  Tailwind's sources, so that max-h-(--container-3xs) emits its variable.\n-->\n<form\n  bind:this={ref}\n  data-slot=\"composer\"\n  data-status={status}\n  class={cn(\"grid gap-2\", className)}\n  onsubmit={handleSubmit}\n  {...restProps}\n>\n  <Field.Field description={hint ?? keys}>\n    <Field.Label class={labelVisible ? undefined : \"sr-only\"}\n      >{label}</Field.Label\n    >\n    <InputGroup.Root class=\"items-end\">\n      <InputGroup.Textarea\n        bind:ref={textarea}\n        bind:value\n        rows={1}\n        {placeholder}\n        class=\"max-h-(--container-3xs) min-h-16 overflow-y-auto scrollbar\"\n        onkeydown={handleKeydown}\n      />\n      <InputGroup.Addon align=\"inline-end\" class=\"self-end py-2\">\n        <Button\n          type={busy ? \"button\" : \"submit\"}\n          variant={busy ? \"secondary\" : \"default\"}\n          size=\"icon\"\n          data-slot=\"composer-send\"\n          data-state={busy ? \"stop\" : \"send\"}\n          aria-label={busy ? \"Stop response\" : \"Send message\"}\n          onclick={busy ? stop : undefined}\n        >\n          {#if status === \"submitted\"}\n            <Spinner />\n          {:else if busy}\n            <Square aria-hidden=\"true\" class=\"size-4\" />\n          {:else}\n            <ArrowUp aria-hidden=\"true\" class=\"size-4\" />\n          {/if}\n        </Button>\n      </InputGroup.Addon>\n    </InputGroup.Root>\n  </Field.Field>\n  <Status text={statusText} />\n</form>\n",
+			"type": "registry:ui",
+			"target": "composer/composer.svelte"
+		},
+		{
+			"content": "import Composer, { type ComposerStatus } from \"./composer.svelte\";\n\nexport { Composer, Composer as Root, type ComposerStatus };\n",
+			"type": "registry:ui",
+			"target": "composer/index.ts"
+		}
+	]
+}

@@ -1,0 +1,44 @@
+{
+	"$schema": "https://shadcn-svelte.com/schema/registry-item.json",
+	"name": "radio-group",
+	"title": "Radio group",
+	"type": "registry:ui",
+	"author": "Pluto Systems <https://plutosystems.co>",
+	"description": "Round radios in a group with one stop, moved and chosen by the arrow keys.",
+	"devDependencies": [
+		"bits-ui@^2.20.2",
+		"@internationalized/date@^3.12.4"
+	],
+	"registryDependencies": [
+		"utils",
+		"pluto-theme"
+	],
+	"meta": {
+		"since": "0.2.0",
+		"group": "forms",
+		"stock": {
+			"registry": "https://shadcn-svelte.com/registry/styles/maia",
+			"item": "radio-group",
+			"cli": "1.7.1",
+			"date": "2026-10-28",
+			"sha256": "def4422105d63b776c7f8104c83ba85426e84a0b97a65856a56df56fb512cab7"
+		}
+	},
+	"files": [
+		{
+			"content": "<script lang=\"ts\">\n  import { RadioGroup as RadioGroupPrimitive } from \"bits-ui\";\n  import { cn, type WithoutChildrenOrChild } from \"$UTILS$\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    ...restProps\n  }: WithoutChildrenOrChild<RadioGroupPrimitive.ItemProps> = $props();\n</script>\n\n<!--\n  Round: the radio's mark is a dot, so it is dot-derived, and the circle tells\n  one of many from a checkbox's square (decisions.md, \"Radio buttons are round\").\n-->\n<RadioGroupPrimitive.Item\n  bind:ref\n  data-slot=\"radio-group-item\"\n  class={cn(\n    \"group/radio-group-item peer relative flex size-6 shrink-0 items-center justify-center rounded-full border border-input bg-card transition-[border-color] group-aria-[invalid=true]/radio-group:border-destructive disabled:cursor-not-allowed disabled:opacity-50 data-checked:border-primary\",\n    className,\n  )}\n  {...restProps}\n>\n  {#snippet children({ checked })}\n    {#if checked}\n      <span\n        data-slot=\"radio-group-indicator\"\n        aria-hidden=\"true\"\n        class=\"size-3 rounded-full bg-primary\"\n      ></span>\n    {/if}\n  {/snippet}\n</RadioGroupPrimitive.Item>\n",
+			"type": "registry:ui",
+			"target": "radio-group/radio-group-item.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import { RadioGroup as RadioGroupPrimitive } from \"bits-ui\";\n  import { getContext } from \"svelte\";\n  import { cn } from \"$UTILS$\";\n\n  /** The contract a `FieldSet` sets under the key \"pluto:field-set\" (field decision 11). */\n  type FieldSetContext = {\n    readonly id: string;\n    readonly invalid: boolean;\n    readonly describedBy: string | undefined;\n    readonly legend: string | undefined;\n  };\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    value = $bindable(\"\"),\n    id,\n    \"aria-describedby\": describedBy,\n    \"aria-invalid\": invalid,\n    \"aria-labelledby\": labelledBy,\n    ...restProps\n  }: RadioGroupPrimitive.RootProps = $props();\n\n  // A radio group is a group control: it takes its set's wiring and its legend's name.\n  const field = getContext<FieldSetContext | undefined>(\"pluto:field-set\");\n</script>\n\n<RadioGroupPrimitive.Root\n  bind:ref\n  bind:value\n  data-slot=\"radio-group\"\n  class={cn(\"group/radio-group grid w-full gap-3\", className)}\n  id={id ?? field?.id}\n  aria-describedby={describedBy ?? field?.describedBy}\n  aria-invalid={invalid ?? (field?.invalid ? true : undefined)}\n  aria-labelledby={labelledBy ?? field?.legend}\n  {...restProps}\n/>\n",
+			"type": "registry:ui",
+			"target": "radio-group/radio-group.svelte"
+		},
+		{
+			"content": "import Item from \"./radio-group-item.svelte\";\nimport Root from \"./radio-group.svelte\";\n\nexport {\n  Root,\n  Item,\n  //\n  Root as RadioGroup,\n  Item as RadioGroupItem,\n};\n",
+			"type": "registry:ui",
+			"target": "radio-group/index.ts"
+		}
+	]
+}

@@ -1,0 +1,115 @@
+{
+	"$schema": "https://shadcn-svelte.com/schema/registry-item.json",
+	"name": "dropdown-menu",
+	"title": "Dropdown menu",
+	"type": "registry:ui",
+	"author": "Pluto Systems <https://plutosystems.co>",
+	"description": "A menu opened from a button, on the elevation shadow, moved by the arrow keys, with check and radio items and a shortcut written in words.",
+	"devDependencies": [
+		"bits-ui@^2.20.2",
+		"@internationalized/date@^3.12.4",
+		"phosphor-svelte@^3.1.1"
+	],
+	"registryDependencies": [
+		"utils",
+		"pluto-theme"
+	],
+	"meta": {
+		"since": "0.5.0",
+		"group": "navigation",
+		"stock": {
+			"registry": "https://shadcn-svelte.com/registry/styles/maia",
+			"item": "dropdown-menu",
+			"cli": "1.7.1",
+			"date": "2026-11-01",
+			"sha256": "b49ccd52aa8afaaf6628947b4b59321966d12770d4c27a7c75d0087bb467ca6a"
+		}
+	},
+	"files": [
+		{
+			"content": "<script lang=\"ts\">\n  import { DropdownMenu as DropdownMenuPrimitive } from \"bits-ui\";\n\n  let {\n    open = $bindable(false),\n    ...restProps\n  }: DropdownMenuPrimitive.RootProps = $props();\n</script>\n\n<DropdownMenuPrimitive.Root bind:open {...restProps} />\n",
+			"type": "registry:ui",
+			"target": "dropdown-menu/dropdown-menu.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import { DropdownMenu as DropdownMenuPrimitive } from \"bits-ui\";\n\n  let {\n    ref = $bindable(null),\n    ...restProps\n  }: DropdownMenuPrimitive.TriggerProps = $props();\n</script>\n\n<!-- bits-ui names it: aria-haspopup=\"menu\", aria-expanded, aria-controls while open. -->\n<DropdownMenuPrimitive.Trigger\n  bind:ref\n  data-slot=\"dropdown-menu-trigger\"\n  {...restProps}\n/>\n",
+			"type": "registry:ui",
+			"target": "dropdown-menu/dropdown-menu-trigger.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import { DropdownMenu as DropdownMenuPrimitive } from \"bits-ui\";\n  import { cn, type WithoutChildrenOrChild } from \"$UTILS$\";\n  import DropdownMenuPortal from \"./dropdown-menu-portal.svelte\";\n  import type { ComponentProps } from \"svelte\";\n\n  let {\n    ref = $bindable(null),\n    sideOffset = 4,\n    align = \"start\",\n    label,\n    portalProps,\n    class: className,\n    ...restProps\n  }: DropdownMenuPrimitive.ContentProps & {\n    /** The menu's name when no group heading names it; the trigger's text otherwise names it to a reader. */\n    label?: string;\n    portalProps?: WithoutChildrenOrChild<\n      ComponentProps<typeof DropdownMenuPortal>\n    >;\n  } = $props();\n</script>\n\n<!--\n  The popover's chrome (004 decision 11): raised by elevation alone, so no\n  border and no halo; 256 px wide at least; 4 px of padding, so an item's 8 px\n  radius sits inside the panel's. It fades in and out over the micro budget\n  and scrolls past the height Floating UI leaves it. bits-ui renders\n  role=\"menu\" and moves focus by the arrow keys; this item adds no key handling.\n\n  The menu renders in place, beside its trigger, not in a portal at the end\n  of body: a menu is no dialog, and content portalled out of every landmark\n  fails axe's region rule, which exempts dialogs alone; in place it reads in\n  order after its trigger. Floating UI positions it fixed either way. Pass\n  portalProps to portal it, where an ancestor would clip or transform it.\n-->\n<DropdownMenuPortal disabled {...portalProps}>\n  <DropdownMenuPrimitive.Content\n    bind:ref\n    data-slot=\"dropdown-menu-content\"\n    aria-label={label}\n    {sideOffset}\n    {align}\n    class={cn(\n      \"z-50 max-h-(--bits-dropdown-menu-content-available-height) min-w-3xs origin-(--bits-dropdown-menu-content-transform-origin) overflow-y-auto rounded bg-popover p-1 text-popover-foreground shadow-elevation scrollbar data-open:animate-enter data-closed:animate-exit\",\n      className,\n    )}\n    {...restProps}\n  />\n</DropdownMenuPortal>\n",
+			"type": "registry:ui",
+			"target": "dropdown-menu/dropdown-menu-content.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import { DropdownMenu as DropdownMenuPrimitive } from \"bits-ui\";\n\n  let { ...restProps }: DropdownMenuPrimitive.PortalProps = $props();\n</script>\n\n<DropdownMenuPrimitive.Portal {...restProps} />\n",
+			"type": "registry:ui",
+			"target": "dropdown-menu/dropdown-menu-portal.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import { DropdownMenu as DropdownMenuPrimitive } from \"bits-ui\";\n\n  let {\n    ref = $bindable(null),\n    ...restProps\n  }: DropdownMenuPrimitive.GroupProps = $props();\n</script>\n\n<!-- role=\"group\", named by its heading when one is rendered inside it. -->\n<DropdownMenuPrimitive.Group\n  bind:ref\n  data-slot=\"dropdown-menu-group\"\n  {...restProps}\n/>\n",
+			"type": "registry:ui",
+			"target": "dropdown-menu/dropdown-menu-group.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import { DropdownMenu as DropdownMenuPrimitive } from \"bits-ui\";\n  import { cn } from \"$UTILS$\";\n  import type { ComponentProps } from \"svelte\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    inset,\n    ...restProps\n  }: ComponentProps<typeof DropdownMenuPrimitive.GroupHeading> & {\n    inset?: boolean;\n  } = $props();\n</script>\n\n<!--\n  The one way to title a menu or a section of one: bits-ui names the group by\n  it. Sentence case, a label to a reader, not mono furniture (R18).\n-->\n<DropdownMenuPrimitive.GroupHeading\n  bind:ref\n  data-slot=\"dropdown-menu-group-heading\"\n  data-inset={inset ? \"\" : undefined}\n  class={cn(\n    \"flex h-8 items-center px-2 text-xs font-medium text-muted-foreground data-inset:ps-8\",\n    className,\n  )}\n  {...restProps}\n/>\n",
+			"type": "registry:ui",
+			"target": "dropdown-menu/dropdown-menu-group-heading.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import { DropdownMenu as DropdownMenuPrimitive } from \"bits-ui\";\n  import { cn } from \"$UTILS$\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    inset,\n    variant = \"default\",\n    ...restProps\n  }: DropdownMenuPrimitive.ItemProps & {\n    /** Starts the text where a checked item's does, 32 px in, so a mixed menu lines up. */\n    inset?: boolean;\n    /** A destructive item is red text on the same accent, with an icon or a telling word beside it (R19). */\n    variant?: \"default\" | \"destructive\";\n  } = $props();\n</script>\n\n<!--\n  A 32 px row (the sm control height). Hover and focus are one state, on the\n  accent inset: bits-ui focuses an item under the pointer and marks it\n  highlighted. The global focus mark (001 decision 13) stays on the focused item above the accent, so\n  keyboard focus is told from pointer hover (R2).\n-->\n<DropdownMenuPrimitive.Item\n  bind:ref\n  data-slot=\"dropdown-menu-item\"\n  data-inset={inset ? \"\" : undefined}\n  data-variant={variant}\n  class={cn(\n    \"group/dropdown-menu-item relative flex h-8 cursor-default items-center gap-2 rounded px-2 text-sm select-none data-highlighted:bg-accent data-highlighted:text-accent-foreground data-inset:ps-8 data-disabled:pointer-events-none data-disabled:opacity-50 data-[variant=destructive]:text-destructive data-[variant=destructive]:data-highlighted:text-destructive [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4\",\n    className,\n  )}\n  {...restProps}\n/>\n",
+			"type": "registry:ui",
+			"target": "dropdown-menu/dropdown-menu-item.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import { DropdownMenu as DropdownMenuPrimitive } from \"bits-ui\";\n\n  let {\n    ref = $bindable(null),\n    value = $bindable([]),\n    ...restProps\n  }: DropdownMenuPrimitive.CheckboxGroupProps = $props();\n</script>\n\n<DropdownMenuPrimitive.CheckboxGroup\n  bind:ref\n  bind:value\n  data-slot=\"dropdown-menu-checkbox-group\"\n  {...restProps}\n/>\n",
+			"type": "registry:ui",
+			"target": "dropdown-menu/dropdown-menu-checkbox-group.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import { DropdownMenu as DropdownMenuPrimitive } from \"bits-ui\";\n  import Check from \"phosphor-svelte/lib/Check\";\n  import Minus from \"phosphor-svelte/lib/Minus\";\n  import { cn, type WithoutChildrenOrChild } from \"$UTILS$\";\n  import type { Snippet } from \"svelte\";\n\n  let {\n    ref = $bindable(null),\n    checked = $bindable(false),\n    indeterminate = $bindable(false),\n    class: className,\n    children: childrenProp,\n    closeOnSelect = false,\n    ...restProps\n  }: WithoutChildrenOrChild<DropdownMenuPrimitive.CheckboxItemProps> & {\n    children?: Snippet;\n  } = $props();\n</script>\n\n<!-- A 32 px row with its check at the start; aria-checked is bits-ui's. -->\n<DropdownMenuPrimitive.CheckboxItem\n  bind:ref\n  {closeOnSelect}\n  bind:checked\n  bind:indeterminate\n  data-slot=\"dropdown-menu-checkbox-item\"\n  class={cn(\n    \"relative flex h-8 cursor-default items-center gap-2 rounded pe-2 ps-8 text-sm select-none data-highlighted:bg-accent data-highlighted:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4\",\n    className,\n  )}\n  {...restProps}\n>\n  {#snippet children({ checked, indeterminate })}\n    <span\n      class=\"pointer-events-none absolute start-2 flex items-center justify-center\"\n      data-slot=\"dropdown-menu-checkbox-item-indicator\"\n    >\n      {#if indeterminate}\n        <Minus aria-hidden=\"true\" class=\"size-4\" />\n      {:else if checked}\n        <Check aria-hidden=\"true\" class=\"size-4\" />\n      {/if}\n    </span>\n    {@render childrenProp?.()}\n  {/snippet}\n</DropdownMenuPrimitive.CheckboxItem>\n",
+			"type": "registry:ui",
+			"target": "dropdown-menu/dropdown-menu-checkbox-item.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import { DropdownMenu as DropdownMenuPrimitive } from \"bits-ui\";\n\n  let {\n    ref = $bindable(null),\n    value = $bindable(),\n    ...restProps\n  }: DropdownMenuPrimitive.RadioGroupProps = $props();\n</script>\n\n<DropdownMenuPrimitive.RadioGroup\n  bind:ref\n  bind:value\n  data-slot=\"dropdown-menu-radio-group\"\n  {...restProps}\n/>\n",
+			"type": "registry:ui",
+			"target": "dropdown-menu/dropdown-menu-radio-group.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import { DropdownMenu as DropdownMenuPrimitive } from \"bits-ui\";\n  import Check from \"phosphor-svelte/lib/Check\";\n  import { cn, type WithoutChild } from \"$UTILS$\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    children: childrenProp,\n    closeOnSelect = false,\n    ...restProps\n  }: WithoutChild<DropdownMenuPrimitive.RadioItemProps> = $props();\n</script>\n\n<!-- As the checkbox item, with the same check: a dot would be round. -->\n<DropdownMenuPrimitive.RadioItem\n  bind:ref\n  {closeOnSelect}\n  data-slot=\"dropdown-menu-radio-item\"\n  class={cn(\n    \"relative flex h-8 cursor-default items-center gap-2 rounded pe-2 ps-8 text-sm select-none data-highlighted:bg-accent data-highlighted:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4\",\n    className,\n  )}\n  {...restProps}\n>\n  {#snippet children({ checked })}\n    <span\n      class=\"pointer-events-none absolute start-2 flex items-center justify-center\"\n      data-slot=\"dropdown-menu-radio-item-indicator\"\n    >\n      {#if checked}\n        <Check aria-hidden=\"true\" class=\"size-4\" />\n      {/if}\n    </span>\n    {@render childrenProp?.({ checked })}\n  {/snippet}\n</DropdownMenuPrimitive.RadioItem>\n",
+			"type": "registry:ui",
+			"target": "dropdown-menu/dropdown-menu-radio-item.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import { DropdownMenu as DropdownMenuPrimitive } from \"bits-ui\";\n  import { cn } from \"$UTILS$\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    ...restProps\n  }: DropdownMenuPrimitive.SeparatorProps = $props();\n</script>\n\n<!-- The hairline (R22), across the panel's padding. -->\n<DropdownMenuPrimitive.Separator\n  bind:ref\n  data-slot=\"dropdown-menu-separator\"\n  class={cn(\"-mx-1 my-1 border-t border-border\", className)}\n  {...restProps}\n/>\n",
+			"type": "registry:ui",
+			"target": "dropdown-menu/dropdown-menu-separator.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import { cn, type WithElementRef } from \"$UTILS$\";\n  import type { HTMLAttributes } from \"svelte/elements\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    children,\n    ...restProps\n  }: WithElementRef<HTMLAttributes<HTMLSpanElement>> = $props();\n</script>\n\n<!--\n  Key names in words (\"Shift Cmd P\"), in mono, hidden from the item's name:\n  symbols read as part of the name are noise. It binds nothing: an app that\n  shows a shortcut binds it and sets aria-keyshortcuts on the item.\n-->\n<span\n  bind:this={ref}\n  data-slot=\"dropdown-menu-shortcut\"\n  aria-hidden=\"true\"\n  class={cn(\n    \"ms-auto font-mono text-xs tracking-mark text-muted-foreground\",\n    className,\n  )}\n  {...restProps}\n>\n  {@render children?.()}\n</span>\n",
+			"type": "registry:ui",
+			"target": "dropdown-menu/dropdown-menu-shortcut.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import { DropdownMenu as DropdownMenuPrimitive } from \"bits-ui\";\n\n  let {\n    open = $bindable(false),\n    ...restProps\n  }: DropdownMenuPrimitive.SubProps = $props();\n</script>\n\n<DropdownMenuPrimitive.Sub bind:open {...restProps} />\n",
+			"type": "registry:ui",
+			"target": "dropdown-menu/dropdown-menu-sub.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import { DropdownMenu as DropdownMenuPrimitive } from \"bits-ui\";\n  import CaretRight from \"phosphor-svelte/lib/CaretRight\";\n  import { cn } from \"$UTILS$\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    inset,\n    children,\n    ...restProps\n  }: DropdownMenuPrimitive.SubTriggerProps & {\n    inset?: boolean;\n  } = $props();\n</script>\n\n<!-- A row that opens a submenu on Right; its caret turns under rtl. -->\n<DropdownMenuPrimitive.SubTrigger\n  bind:ref\n  data-slot=\"dropdown-menu-sub-trigger\"\n  data-inset={inset ? \"\" : undefined}\n  class={cn(\n    \"flex h-8 cursor-default items-center gap-2 rounded px-2 text-sm select-none data-highlighted:bg-accent data-highlighted:text-accent-foreground data-inset:ps-8 data-open:bg-accent data-open:text-accent-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4\",\n    className,\n  )}\n  {...restProps}\n>\n  {@render children?.()}\n  <CaretRight aria-hidden=\"true\" class=\"ms-auto size-4 rtl:rotate-180\" />\n</DropdownMenuPrimitive.SubTrigger>\n",
+			"type": "registry:ui",
+			"target": "dropdown-menu/dropdown-menu-sub-trigger.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import { DropdownMenu as DropdownMenuPrimitive } from \"bits-ui\";\n  import { cn, type WithoutChildrenOrChild } from \"$UTILS$\";\n  import DropdownMenuPortal from \"./dropdown-menu-portal.svelte\";\n  import type { ComponentProps } from \"svelte\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    align = \"start\",\n    // The panel's 4 px of padding, so the first item lines up with its trigger.\n    alignOffset = -4,\n    portalProps,\n    ...restProps\n  }: DropdownMenuPrimitive.SubContentProps & {\n    portalProps?: WithoutChildrenOrChild<\n      ComponentProps<typeof DropdownMenuPortal>\n    >;\n  } = $props();\n</script>\n\n<!--\n  The same chrome as the menu's content. A submenu stays in the portal: its\n  parent menu is a scroll box that contains layout, so a child fixed inside\n  it would be clipped.\n-->\n<DropdownMenuPortal {...portalProps}>\n  <DropdownMenuPrimitive.SubContent\n    bind:ref\n    data-slot=\"dropdown-menu-sub-content\"\n    {align}\n    {alignOffset}\n    class={cn(\n      \"z-50 max-h-(--bits-dropdown-menu-content-available-height) min-w-3xs origin-(--bits-dropdown-menu-content-transform-origin) overflow-y-auto rounded bg-popover p-1 text-popover-foreground shadow-elevation scrollbar data-open:animate-enter data-closed:animate-exit\",\n      className,\n    )}\n    {...restProps}\n  />\n</DropdownMenuPortal>\n",
+			"type": "registry:ui",
+			"target": "dropdown-menu/dropdown-menu-sub-content.svelte"
+		},
+		{
+			"content": "import CheckboxGroup from \"./dropdown-menu-checkbox-group.svelte\";\nimport CheckboxItem from \"./dropdown-menu-checkbox-item.svelte\";\nimport Content from \"./dropdown-menu-content.svelte\";\nimport GroupHeading from \"./dropdown-menu-group-heading.svelte\";\nimport Group from \"./dropdown-menu-group.svelte\";\nimport Item from \"./dropdown-menu-item.svelte\";\nimport Portal from \"./dropdown-menu-portal.svelte\";\nimport RadioGroup from \"./dropdown-menu-radio-group.svelte\";\nimport RadioItem from \"./dropdown-menu-radio-item.svelte\";\nimport Separator from \"./dropdown-menu-separator.svelte\";\nimport Shortcut from \"./dropdown-menu-shortcut.svelte\";\nimport SubContent from \"./dropdown-menu-sub-content.svelte\";\nimport SubTrigger from \"./dropdown-menu-sub-trigger.svelte\";\nimport Sub from \"./dropdown-menu-sub.svelte\";\nimport Trigger from \"./dropdown-menu-trigger.svelte\";\nimport Root from \"./dropdown-menu.svelte\";\n\n// No Label part (005 decision 7): a menu's title is a GroupHeading inside a\n// Group, or the content's `label`.\nexport {\n  Root,\n  Trigger,\n  Content,\n  Portal,\n  Group,\n  GroupHeading,\n  Item,\n  CheckboxGroup,\n  CheckboxItem,\n  RadioGroup,\n  RadioItem,\n  Separator,\n  Shortcut,\n  Sub,\n  SubTrigger,\n  SubContent,\n  //\n  Root as DropdownMenu,\n  Trigger as DropdownMenuTrigger,\n  Content as DropdownMenuContent,\n  Portal as DropdownMenuPortal,\n  Group as DropdownMenuGroup,\n  GroupHeading as DropdownMenuGroupHeading,\n  Item as DropdownMenuItem,\n  CheckboxGroup as DropdownMenuCheckboxGroup,\n  CheckboxItem as DropdownMenuCheckboxItem,\n  RadioGroup as DropdownMenuRadioGroup,\n  RadioItem as DropdownMenuRadioItem,\n  Separator as DropdownMenuSeparator,\n  Shortcut as DropdownMenuShortcut,\n  Sub as DropdownMenuSub,\n  SubTrigger as DropdownMenuSubTrigger,\n  SubContent as DropdownMenuSubContent,\n};\n",
+			"type": "registry:ui",
+			"target": "dropdown-menu/index.ts"
+		}
+	]
+}

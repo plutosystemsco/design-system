@@ -233,6 +233,10 @@
           "scrollbar-color": "var(--input) var(--muted)",
           "scrollbar-width": "thin"
         },
+        "@utility groove-s": {
+          "border-inline-start": "var(--line-width) solid var(--groove-line)",
+          "box-shadow": "inset var(--line-width) 0 0 var(--groove-light)"
+        },
         "@keyframes pluto-enter": {
           "from": {
             "opacity": "0"
@@ -386,6 +390,36 @@
       ],
       "meta": {
         "since": "0.1.0",
+        "group": "foundation"
+      }
+    },
+    {
+      "name": "theme",
+      "type": "registry:ui",
+      "title": "Theme",
+      "description": "The light and dark switch: a head script that sets the theme before paint, a store that follows the system until a choice is made, and a toggle button.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": ["utils", "pluto-theme", "button"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/theme/theme.svelte.ts",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/theme/theme-script.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/theme/theme-toggle.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/theme/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.5.0",
         "group": "foundation"
       }
     },
@@ -1861,6 +1895,578 @@
       "meta": {
         "since": "0.4.0",
         "group": "data"
+      }
+    },
+    {
+      "name": "dropdown-menu",
+      "type": "registry:ui",
+      "title": "Dropdown menu",
+      "description": "A menu opened from a button, on the elevation shadow, moved by the arrow keys, with check and radio items and a shortcut written in words.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": ["utils", "pluto-theme"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/dropdown-menu/dropdown-menu.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/dropdown-menu/dropdown-menu-trigger.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/dropdown-menu/dropdown-menu-content.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/dropdown-menu/dropdown-menu-portal.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/dropdown-menu/dropdown-menu-group.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/dropdown-menu/dropdown-menu-group-heading.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/dropdown-menu/dropdown-menu-item.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/dropdown-menu/dropdown-menu-checkbox-group.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/dropdown-menu/dropdown-menu-checkbox-item.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/dropdown-menu/dropdown-menu-radio-group.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/dropdown-menu/dropdown-menu-radio-item.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/dropdown-menu/dropdown-menu-separator.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/dropdown-menu/dropdown-menu-shortcut.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/dropdown-menu/dropdown-menu-sub.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/dropdown-menu/dropdown-menu-sub-trigger.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/dropdown-menu/dropdown-menu-sub-content.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/dropdown-menu/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.5.0",
+        "group": "navigation",
+        "stock": {
+          "registry": "https://shadcn-svelte.com/registry/styles/maia",
+          "item": "dropdown-menu",
+          "cli": "1.7.1",
+          "date": "2026-11-01",
+          "sha256": "b49ccd52aa8afaaf6628947b4b59321966d12770d4c27a7c75d0087bb467ca6a"
+        }
+      }
+    },
+    {
+      "name": "sheet",
+      "type": "registry:ui",
+      "title": "Sheet",
+      "description": "A modal panel fixed to one edge of the screen, named by its title, behind the scrim, that returns focus when it closes.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": ["utils", "pluto-theme", "button"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/sheet/sheet.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/sheet/sheet-trigger.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/sheet/sheet-content.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/sheet/sheet-overlay.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/sheet/sheet-portal.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/sheet/sheet-close.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/sheet/sheet-header.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/sheet/sheet-footer.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/sheet/sheet-title.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/sheet/sheet-description.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/sheet/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.5.0",
+        "group": "navigation",
+        "stock": {
+          "registry": "https://shadcn-svelte.com/registry/styles/maia",
+          "item": "sheet",
+          "cli": "1.7.1",
+          "date": "2026-11-01",
+          "sha256": "f40ceed7ea0fd3c5f0f719fcd0893c7aa54916e3a11fe7e599ac49e2dc7dbb06"
+        }
+      }
+    },
+    {
+      "name": "dialog",
+      "type": "registry:ui",
+      "title": "Dialog",
+      "description": "A modal window named by its title, behind the scrim, for a task that must finish before the page goes on.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": ["utils", "pluto-theme", "button"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/dialog/dialog.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/dialog/dialog-trigger.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/dialog/dialog-content.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/dialog/dialog-overlay.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/dialog/dialog-portal.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/dialog/dialog-close.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/dialog/dialog-header.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/dialog/dialog-footer.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/dialog/dialog-title.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/dialog/dialog-description.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/dialog/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.5.0",
+        "group": "navigation",
+        "stock": {
+          "registry": "https://shadcn-svelte.com/registry/styles/maia",
+          "item": "dialog",
+          "cli": "1.7.1",
+          "date": "2026-11-01",
+          "sha256": "e187867550d50216118f7dc711bb1920daeddb54f4f73af9bc081142dbe9803a"
+        }
+      }
+    },
+    {
+      "name": "breadcrumb",
+      "type": "registry:ui",
+      "title": "Breadcrumb",
+      "description": "The path to the current page as a list of links, the current page marked and not a link.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": ["utils", "pluto-theme"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/breadcrumb/breadcrumb.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/breadcrumb/breadcrumb-list.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/breadcrumb/breadcrumb-item.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/breadcrumb/breadcrumb-link.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/breadcrumb/breadcrumb-page.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/breadcrumb/breadcrumb-separator.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/breadcrumb/breadcrumb-ellipsis.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/breadcrumb/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.5.0",
+        "group": "navigation",
+        "stock": {
+          "registry": "https://shadcn-svelte.com/registry/styles/maia",
+          "item": "breadcrumb",
+          "cli": "1.7.1",
+          "date": "2026-11-01",
+          "sha256": "28861bae3610cabae2215a953f1e236792dbb2baa04ca2d35655c4f402741ac8"
+        }
+      }
+    },
+    {
+      "name": "sidebar",
+      "type": "registry:ui",
+      "title": "Sidebar",
+      "description": "A navigation landmark on the paper ground, set apart by a vertical groove, that collapses off-canvas or to icons and becomes a sheet on a phone.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": [
+        "utils",
+        "pluto-theme",
+        "is-mobile",
+        "sheet",
+        "input",
+        "tooltip",
+        "skeleton",
+        "separator",
+        "button",
+        "kbd"
+      ],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/sidebar/constants.ts",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/sidebar/context.svelte.ts",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/sidebar/sidebar-provider.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/sidebar/sidebar.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/sidebar/sidebar-header.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/sidebar/sidebar-content.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/sidebar/sidebar-footer.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/sidebar/sidebar-group.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/sidebar/sidebar-group-label.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/sidebar/sidebar-group-action.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/sidebar/sidebar-group-content.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/sidebar/sidebar-menu.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/sidebar/sidebar-menu-item.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/sidebar/sidebar-menu-button.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/sidebar/sidebar-menu-action.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/sidebar/sidebar-menu-badge.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/sidebar/sidebar-menu-sub.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/sidebar/sidebar-menu-sub-item.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/sidebar/sidebar-menu-sub-button.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/sidebar/sidebar-menu-skeleton.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/sidebar/sidebar-separator.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/sidebar/sidebar-input.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/sidebar/sidebar-inset.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/sidebar/sidebar-trigger.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/sidebar/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.5.0",
+        "group": "navigation",
+        "stock": {
+          "registry": "https://shadcn-svelte.com/registry/styles/maia",
+          "item": "sidebar",
+          "cli": "1.7.1",
+          "date": "2026-11-01",
+          "sha256": "dc3cee148f49114d285fd01659c8bbb72a297b161e6526f20cdeaa02e2d92e2a"
+        }
+      }
+    },
+    {
+      "name": "is-mobile",
+      "type": "registry:hook",
+      "title": "Is mobile",
+      "description": "A media-query store that is true below 768 px and false on the server.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": ["utils", "pluto-theme"],
+      "files": [
+        {
+          "path": "src/lib/registry/hooks/is-mobile.svelte.ts",
+          "type": "registry:hook"
+        }
+      ],
+      "meta": {
+        "since": "0.5.0",
+        "group": "navigation",
+        "stock": {
+          "registry": "https://shadcn-svelte.com/registry/styles/maia",
+          "item": "is-mobile",
+          "cli": "1.7.1",
+          "date": "2026-11-01",
+          "sha256": "f4a286715fe4b3a1610b94e75565422e0a8cae30d7d05463b7c5c3d909f677b5"
+        }
+      }
+    },
+    {
+      "name": "message-log",
+      "type": "registry:ui",
+      "title": "Message log",
+      "description": "A scroll box named \"Messages\" holding a named log, that follows new content until the reader scrolls away, with a button back to the end.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": ["utils", "pluto-theme", "button"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/message-log/message-log.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/message-log/follow-bottom.svelte.ts",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/message-log/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.5.0",
+        "group": "chat"
+      }
+    },
+    {
+      "name": "message",
+      "type": "registry:ui",
+      "title": "Message",
+      "description": "One turn of a conversation: a heading that says who, the content as full-width prose or a bubble on the muted inset, and a footer.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": ["utils", "pluto-theme"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/message/message.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/message/message-group.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/message/message-avatar.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/message/message-content.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/message/message-header.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/message/message-footer.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/message/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.5.0",
+        "group": "chat",
+        "stock": {
+          "registry": "https://shadcn-svelte.com/registry/styles/maia",
+          "item": "message",
+          "cli": "1.7.1",
+          "date": "2026-11-01",
+          "sha256": "f1a6680127b3506f22fd5ca973aac55c1f59b019749aea6abdedf091786b3e0d"
+        }
+      }
+    },
+    {
+      "name": "marker",
+      "type": "registry:ui",
+      "title": "Marker",
+      "description": "A line in a conversation that is not a turn: a status, a divider, a note.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": ["utils", "pluto-theme"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/marker/marker.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/marker/marker-icon.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/marker/marker-content.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/marker/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.5.0",
+        "group": "chat",
+        "stock": {
+          "registry": "https://shadcn-svelte.com/registry/styles/maia",
+          "item": "marker",
+          "cli": "1.7.1",
+          "date": "2026-11-01",
+          "sha256": "a902b81be24f183f68b9bc260b9991c98794586ac5a2f2543be32673650e0b3e"
+        }
+      }
+    },
+    {
+      "name": "composer",
+      "type": "registry:ui",
+      "title": "Composer",
+      "description": "The form a person writes a message in: a textarea that grows, Enter to send, a send button that becomes Stop while a reply runs, and never a disabled control.",
+      "author": "Pluto Systems <https://plutosystems.co>",
+      "registryDependencies": [
+        "utils",
+        "pluto-theme",
+        "field",
+        "input-group",
+        "button",
+        "kbd",
+        "status",
+        "spinner"
+      ],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/composer/composer.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/composer/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.5.0",
+        "group": "chat"
       }
     },
     {

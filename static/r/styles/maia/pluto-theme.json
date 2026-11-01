@@ -61,6 +61,10 @@
 			"scrollbar-color": "var(--input) var(--muted)",
 			"scrollbar-width": "thin"
 		},
+		"@utility groove-s": {
+			"border-inline-start": "var(--line-width) solid var(--groove-line)",
+			"box-shadow": "inset var(--line-width) 0 0 var(--groove-light)"
+		},
 		"@keyframes pluto-enter": {
 			"from": {
 				"opacity": "0"

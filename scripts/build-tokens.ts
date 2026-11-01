@@ -152,6 +152,14 @@ export function themeCss(tokens: Tokens): CssTree {
       "scrollbar-color": "var(--input) var(--muted)",
       "scrollbar-width": "thin",
     },
+    // 005 decision 5: the horizontal groove turned on its side. The inset
+    // beside a sidebar owns it on its start edge: the hairline first, then
+    // the light inside it, light from the top-left. An outer shadow on the
+    // sidebar is painted over by its sibling and shows nothing.
+    "@utility groove-s": {
+      "border-inline-start": "var(--line-width) solid var(--groove-line)",
+      "box-shadow": "inset var(--line-width) 0 0 var(--groove-light)",
+    },
     // 002 decision 3: the keyframes behind animate-enter and animate-exit.
     "@keyframes pluto-enter": { from: { opacity: "0" } },
     "@keyframes pluto-exit": { to: { opacity: "0" } },

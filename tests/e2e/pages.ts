@@ -2,7 +2,7 @@ import type { Page } from "@playwright/test";
 
 import { BLOCK_VIEWS, viewPath } from "../../src/lib/preview/blocks.ts";
 
-/** The 49 items in 004 decision 4's order: one site page each, plus the catalogue. */
+/** The items in 005 decision 4's order: one site page each, plus the catalogue. */
 export const ITEMS = [
   // foundation
   "pluto-theme",
@@ -11,6 +11,7 @@ export const ITEMS = [
   "font-jetbrains-mono",
   "utils",
   "four-dot",
+  "theme",
   // actions
   "button",
   "tooltip",
@@ -55,6 +56,18 @@ export const ITEMS = [
   // data (004)
   "chart",
   "meter",
+  // navigation (005)
+  "dropdown-menu",
+  "sheet",
+  "dialog",
+  "breadcrumb",
+  "sidebar",
+  "is-mobile",
+  // chat (005)
+  "message-log",
+  "message",
+  "marker",
+  "composer",
   // blocks
   "hero",
   "sign-in",
@@ -76,8 +89,22 @@ export const ITEMS_004 = [
   "chart",
   "meter",
 ];
-/** The 26 items 002 adds: every item after the foundation that 003 and 004 did not. */
-export const ITEMS_002 = ITEMS.slice(6).filter(
+/** 005's 11 items (decision 4), and their pages. */
+export const ITEMS_005 = [
+  "theme",
+  "dropdown-menu",
+  "sheet",
+  "dialog",
+  "breadcrumb",
+  "sidebar",
+  "is-mobile",
+  "message-log",
+  "message",
+  "marker",
+  "composer",
+];
+/** The 26 items 002 adds: every item after the foundation that 003, 004 and 005 did not. */
+export const ITEMS_002 = ITEMS.slice(7).filter(
   (name) =>
     ![
       "status",
@@ -87,7 +114,9 @@ export const ITEMS_002 = ITEMS.slice(6).filter(
       "sign-up",
       "page-states",
       "settings",
-    ].includes(name) && !ITEMS_004.includes(name),
+    ].includes(name) &&
+    !ITEMS_004.includes(name) &&
+    !ITEMS_005.includes(name),
 );
 /** Kept for 002's checks: the 26 items 002 added. */
 export const NEW_ITEMS = ITEMS_002;
@@ -106,11 +135,16 @@ export const BLOCKS = ["hero", "sign-in", "sign-up", "page-states", "settings"];
 /** The 7 new item pages of 003. */
 export const NEW_PAGES = ITEMS_003.map((name) => `/items/${name}/`);
 export const NEW_PAGES_004 = ITEMS_004.map((name) => `/items/${name}/`);
+/** The 11 new item pages of 005. */
+export const NEW_PAGES_005 = ITEMS_005.map((name) => `/items/${name}/`);
 /** The site pages: the catalogue and one page per item. */
 export const PAGES = ["/", ...ITEMS.map((name) => `/items/${name}/`)];
 /** The catalogue and 002's 32 item pages. */
 export const PAGES_002 = PAGES.filter(
-  (p) => !NEW_PAGES.includes(p) && !NEW_PAGES_004.includes(p),
+  (p) =>
+    !NEW_PAGES.includes(p) &&
+    !NEW_PAGES_004.includes(p) &&
+    !NEW_PAGES_005.includes(p),
 );
 
 /** The 17 views (003 decision 16), each with its block and label. */
@@ -224,10 +258,13 @@ export const GROUND = {
 
 export type ThemeName = keyof typeof GROUND;
 
-/** Opens a page and waits until it has hydrated (the theme toggle marks itself ready). */
+/**
+ * Opens a page and waits until it has hydrated (the theme toggle marks itself
+ * ready). The theme item's page holds several toggles; the header's is first.
+ */
 export async function open(page: Page, path: string): Promise<void> {
   await page.goto(path);
-  await page.locator("button[aria-pressed][data-ready]").waitFor();
+  await page.locator("button[aria-pressed][data-ready]").first().waitFor();
 }
 
 /**
@@ -271,3 +308,10 @@ export async function settled(page: Page): Promise<void> {
     await Promise.all(finite.map((a) => a.finished.catch(() => undefined)));
   });
 }
+
+/**
+ * Tabbable: in the tab order, so not a roving group's parked items (tabindex
+ * -1). A details' summary is a native stop (004 decision 10's "Show as table").
+ */
+export const TABBABLE =
+  'a[href]:not([tabindex="-1"]), button:not([disabled]):not([tabindex="-1"]), input:not([disabled]):not([type="hidden"]):not([tabindex="-1"]), select:not([disabled]):not([tabindex="-1"]), textarea:not([disabled]):not([tabindex="-1"]), summary:not([tabindex="-1"]), [tabindex]:not([tabindex="-1"])';

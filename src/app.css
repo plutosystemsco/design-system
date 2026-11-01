@@ -281,6 +281,11 @@
   scrollbar-width: thin;
 }
 
+@utility groove-s {
+  border-inline-start: var(--line-width) solid var(--groove-line);
+  box-shadow: inset var(--line-width) 0 0 var(--groove-light);
+}
+
 @layer base {
   body {
     @apply bg-background text-foreground;

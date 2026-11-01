@@ -9,7 +9,14 @@ import {
   contrastRatio,
   parseHex,
 } from "../../scripts/contrast.ts";
-import { ITEMS_004, NEW_ITEMS, cssVar, open, settled } from "./pages.ts";
+import {
+  ITEMS_004,
+  ITEMS_005,
+  NEW_ITEMS,
+  cssVar,
+  open,
+  settled,
+} from "./pages.ts";
 
 type Box = { x: number; y: number; width: number; height: number };
 
@@ -126,7 +133,59 @@ test.describe("heights and targets", () => {
     expect(near(item.height, 48), `group item is ${item.height}`).toBe(true);
   });
 
-  test("0 keyboard stops in the 22 fixtures are under 24 × 24 px", async ({
+  // 005 decision 17: menu items 32, the close buttons 32, the send button 48.
+  test("a menu item, the sheet's close button and the dialog's close button are 32 px; the send button is 48", async ({
+    page,
+  }) => {
+    await open(page, "/items/composer/");
+    const send = await box(
+      page.getByTestId("composer-main").locator('[data-slot="composer-send"]'),
+    );
+    expect([near(send.width, 48), near(send.height, 48)]).toEqual([true, true]);
+    await open(page, "/items/dropdown-menu/");
+    await page.getByTestId("menu-account").click();
+    const item = page.getByRole("menuitem").first();
+    await expect(item).toBeVisible();
+    expect(near((await box(item)).height, 32)).toBe(true);
+    await page.keyboard.press("Escape");
+    for (const [path, id, slot] of [
+      ["/items/sheet/", "sheet-end", "sheet-content"],
+      ["/items/dialog/", "dialog-rename", "dialog-content"],
+    ] as const) {
+      await open(page, path);
+      await page.getByTestId(id).click();
+      const close = page
+        .locator(`[data-slot="${slot}"]`)
+        .getByRole("button", { name: "Close" });
+      await expect(close).toBeVisible();
+      const b = await box(close);
+      expect([near(b.width, 32), near(b.height, 32)]).toEqual([true, true]);
+      await page.keyboard.press("Escape");
+    }
+  });
+
+  // 005 decision 17: sidebar rows 48 and 32, the trigger 32.
+  test("a sidebar row is 48 px, a sub-row 32 px, and the trigger 32 px", async ({
+    page,
+  }) => {
+    await open(page, "/items/sidebar/");
+    const shell = page.getByTestId("shell-main");
+    const row = await box(
+      shell.locator('[data-sidebar="menu-button"]:not([aria-current])').first(),
+    );
+    expect(near(row.height, 48), `row is ${row.height}`).toBe(true);
+    const sub = await box(
+      shell.locator('[data-sidebar="menu-sub-button"]').first(),
+    );
+    expect(near(sub.height, 32), `sub-row is ${sub.height}`).toBe(true);
+    const trigger = await box(shell.locator('[data-slot="sidebar-trigger"]'));
+    expect([near(trigger.width, 32), near(trigger.height, 32)]).toEqual([
+      true,
+      true,
+    ]);
+  });
+
+  test("0 keyboard stops in the fixtures are under 24 × 24 px", async ({
     page,
   }) => {
     const small: string[] = [];
@@ -154,6 +213,15 @@ test.describe("heights and targets", () => {
       "accordion",
       "toggle",
       "toggle-group",
+      // 005's fixtures (decision 17).
+      "theme",
+      "dropdown-menu",
+      "sheet",
+      "dialog",
+      "breadcrumb",
+      "sidebar",
+      "message-log",
+      "composer",
     ]) {
       await open(page, `/items/${item}/`);
       const sizes = await page
@@ -162,18 +230,22 @@ test.describe("heights and targets", () => {
           const tabbable = fixture.querySelectorAll<HTMLElement>(
             'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), summary, [tabindex]:not([tabindex="-1"])',
           );
-          return [...tabbable]
-            .filter((el) => el.getAttribute("role") !== "tabpanel")
-            .map((el) => {
-              const target =
-                el.closest('[data-slot="input-otp"]') ?? (el as Element);
-              const r = target.getBoundingClientRect();
-              return {
-                what: `${el.tagName.toLowerCase()}[data-slot=${el.getAttribute("data-slot")}]`,
-                w: r.width,
-                h: r.height,
-              };
-            });
+          return (
+            [...tabbable]
+              .filter((el) => el.getAttribute("role") !== "tabpanel")
+              // A hidden element is no stop: the log's button while at the end.
+              .filter((el) => getComputedStyle(el).display !== "none")
+              .map((el) => {
+                const target =
+                  el.closest('[data-slot="input-otp"]') ?? (el as Element);
+                const r = target.getBoundingClientRect();
+                return {
+                  what: `${el.tagName.toLowerCase()}[data-slot=${el.getAttribute("data-slot")}]`,
+                  w: r.width,
+                  h: r.height,
+                };
+              })
+          );
         });
       expect(sizes.length, `${item} has stops`).toBeGreaterThan(0);
       for (const s of sizes)
@@ -297,12 +369,55 @@ test.describe("elevation and scrim", () => {
   });
 });
 
+// 005 decision 17: the elevation on the open menu and the scrim on the open sheet.
+test.describe("elevation on the menu and the scrim on the sheet", () => {
+  test("the open menu's shadow holds elevation-line; the open sheet's overlay is the scrim, unblurred", async ({
+    page,
+  }) => {
+    await open(page, "/items/dropdown-menu/");
+    await page.getByTestId("menu-account").click();
+    const menu = page.locator('[data-slot="dropdown-menu-content"]');
+    await expect(menu).toBeVisible();
+    await settled(page);
+    const line = await cssVar(page, "--elevation-line");
+    const shadow = await menu.evaluate((el) => getComputedStyle(el).boxShadow);
+    const l = hexChannels(line);
+    const colours = [...shadow.matchAll(/rgba?\([^)]*\)/g)].map((m) =>
+      parseRgb(m[0]),
+    );
+    expect(
+      colours.some(
+        (c) =>
+          c.r === l.r &&
+          c.g === l.g &&
+          c.b === l.b &&
+          Math.abs(c.a - l.a) < 0.01,
+      ),
+      `box-shadow ${shadow} holds ${line}`,
+    ).toBe(true);
+    await page.keyboard.press("Escape");
+
+    await open(page, "/items/sheet/");
+    await page.getByTestId("sheet-end").click();
+    const overlay = page.locator('[data-slot="sheet-overlay"]');
+    await expect(page.locator('[data-slot="sheet-content"]')).toBeVisible();
+    await settled(page);
+    const scrim = await cssVar(page, "--scrim");
+    const o = await overlay.evaluate((el) => ({
+      bg: getComputedStyle(el).backgroundColor,
+      filter: getComputedStyle(el).backdropFilter,
+    }));
+    expectColour(o.bg, scrim);
+    expect(o.filter).toBe("none");
+  });
+});
+
 test.describe("motion", () => {
-  test("0 infinitely looping animations outside a spinner on 002's 26 pages and 004's", async ({
+  test("0 infinitely looping animations outside a spinner on 002's 26 pages, 004's and 005's", async ({
     page,
   }) => {
     const loops: string[] = [];
-    for (const item of [...NEW_ITEMS, ...ITEMS_004]) {
+    for (const item of [...NEW_ITEMS, ...ITEMS_004, ...ITEMS_005]) {
       await open(page, `/items/${item}/`);
       const found = await page.evaluate(() =>
         [...document.querySelectorAll("*")]

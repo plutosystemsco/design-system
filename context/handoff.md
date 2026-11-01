@@ -1,31 +1,39 @@
 # Handoff
 
 - **Status:** replaced at each session's end.
-- **Date:** 2026-10-31
+- **Date:** 2026-11-01
 
 ## State
 
-Specification `004`, code and data, is **built, committed and tagged**: `29116f1` over `fb942f8` (`003`, `v0.3.0`), tag `v0.4.0`, pushed to `plutosystemsco/design-system` on GitHub, which the owner made public on 2026-11-01 (decisions.md). The built registry JSON is now tracked, so an app installs from GitHub with no server running:
+`004` is **built, committed and tagged** `v0.4.0` (`b3d2a8e`), pushed to `plutosystemsco/design-system` on GitHub, public since 2026-11-01. An app installs from GitHub with no server running:
 
 ```
 REGISTRY_URL=https://raw.githubusercontent.com/plutosystemsco/design-system/v0.4.0/static/r bunx --bun shadcn-svelte@1.7.1 add code-editor -y
 ```
 
-`main/static/r` follows the latest. The tree holds the ten items (`code-block`, `code-editor`, `highlighter`, `use-highlighted-code`, `chart`, `meter`, `popover`, `accordion`, `toggle`, `toggle-group`), the twelve `--code-*` tokens with the `scrollbar` utility and the meter's rules in `pluto-theme`, two lint rules, ten item pages, the 0.4.0 changelog, and the session's `context/` documents: three research memos of 2026-10-31, the specification, its two reviews, the design calls in `decisions.md`. All green under Bun 1.3.14: `bun run check` 1478 files 0/0, `bun run lint` and the literal lint, `bun run build` 50 + 50 registry files and 68 pages, `bun run test` unit 442, browser 870, smoke 68 (`specifications/004-code-and-data.md`, Landing notes). Nothing is deployed to `ui.plutosystems.co`; the owner does not want that yet.
+Nothing is deployed to `ui.plutosystems.co`; the owner does not want that.
 
-## Done this session
+**`005` is building in the working tree** (uncommitted). Run 1 (steps 1 to 4: the `theme` item, dropdown-menu, sheet, dialog, sidebar, is-mobile, breadcrumb, `groove-s`) reached its checkpoint green in both themes (1018 browser tests, 340 axe scans at 0); the design calls from the checkpoint are in `decisions.md`. Run 2 (the chat items, the registry and catalogue, the full suites, the changelog, the walk) was launched the same day. Then: a fresh change review, its fixes, the Landing notes, version 0.5.0. **Commit and tag only when the owner asks.**
 
-- Three research memos run by sub-agents: Shiki and a token highlight palette; CodeMirror 6 under Svelte 5; the data items (chart, popover, accordion, toggles, scroll area, a meter). Each labelled EXECUTED / READ / INFERRED.
-- `004` specified from them, reviewed (16 findings, all fixed in the specification), built in three runs with a checkpoint after the code block, reviewed again (9 findings, all fixed), verified twice.
-- The design lead's calls are in `decisions.md` ("The design calls for `004`" and its three follow-up groups): the twelve-slot palette with no new hue, code on the `muted` inset with the groove, tokens as classes never `style`, the editor with no Tab binding and the browser's own selection, a chart that carries a name and a table, `scroll-area` dropped for a `scrollbar` utility, the native `<meter>` with square ends, inverted pressed toggles, the popover as a named dialog, the wired and grooved accordion, string quotes in the string colour, no ligatures on code surfaces, the editor's fallback as a named group, the chart's hover band as `muted`, one turned caret for every disclosure.
-- `001` decision 15's "not emitted" is corrected to "not emitted unless referenced": Tailwind emits an `@theme inline` variable when a scanned source file names it (decisions.md, after the `004` spec review).
+**`006` and `007` are specified and reviewed**, both "fit to build" once their predecessor is built: `006` (the app shell and the chat pane, the mark's entrance, the footer's furniture; 18 review findings fixed) and `007` (the full highlight palette of 21 slots across 26 languages, `code-languages`, the ink surface; 11 findings fixed). Their design calls are in `decisions.md`. The owner's rulings of 2026-11-01 bind `007`: syntax highlighting is a function outside the colour budget, across every major language.
+
+The review checklist gained R23 (copy says what happens) and R24 (furniture carries information) on 2026-11-01 at the owner's word.
+
+## Done this session (2026-11-01)
+
+- The registry published through GitHub raw URLs; the repository made public; `static/r` tracked.
+- Four research memos for `005` and `006`, the two specifications, their reviews, all 35 findings fixed.
+- `005` run 1 built to its checkpoint and accepted; run 2 launched.
+- Two research memos for `007` (the full palette; the ink surface), the specification, its review, 11 findings fixed.
+- The owner's decisions recorded: the doc-ID scheme `PS-<series>-<NNNN>`, the public-benefit sentence as an empty-by-default prop, the theme mechanism left to the design lead, no deployment, the highlighting ruling, R23 and R24.
 
 ## Waiting on the owner
 
-- **Deployment** to `ui.plutosystems.co`: not wanted now (2026-11-01). The registry is read from GitHub. A deployment specification would own the 404 (`003` decision 13) and the host's older versions.
-- **Still open from the design book:** the doc-ID scheme (`006`, the footer) and coloured dots on ink for the icon. `mode-watcher` is `005`'s question.
-- **Completion in the editor** (`python()` with `autocompletion()`): the owner's call if the home page wants it; one import and 4.6 KB (`004` decision 21).
-- **`wasi-python-dev`:** whether `/admin` is gated by Cloudflare Access or by `sign-in` (`003` decision 25). Its home page (its `005`) can now be specified: the editor, the code block, the meter, the popover and the accordion are in the registry.
+- **Commit and tag `v0.5.0`** once `005`'s change review lands; then `v0.6.0` and `v0.7.0` in turn. The app pins the tag it needs; it asked for `006`'s and `007`'s work "in a tagged release".
+- **Deployment** to `ui.plutosystems.co`: not wanted now.
+- **The design book §03** gains one line for the highlighting ruling (the book's repository, the owner's).
+- **Coloured dots on ink** for the icon (`006` leaves the favicon to the app's `app.html`).
+- **`wasi-python-dev`:** its restyle waits on `v0.7.0`; `/admin`'s gate (`003` decision 25).
 
 ## Known risks
 
@@ -38,7 +46,7 @@ REGISTRY_URL=https://raw.githubusercontent.com/plutosystemsco/design-system/v0.4
 
 ## Next
 
-1. **`wasi-python-dev`'s home-page specification** (its `005`): installs `code-editor`, `code-block`, `meter`, `popover`, `accordion`, `hero` and `page-states` from this registry; closes `001` criterion 24, `002` criterion 25, `003` criterion 28 and `004` criterion 26. `004` Landing note 6 lists what the app should know.
-2. **`005`, overlays and navigation:** dropdown-menu (on `popover`'s chrome), sheet, sidebar with `is-mobile` and the `scrollbar` utility, breadcrumb, sonner (and `mode-watcher`), the chat primitives, a `field-sizing` support memo for the composer.
-3. **`006`, the app shell and the chat pane:** the lockup and the orbit-assemble entrance; the footer needs the doc-ID owner call; `code-block` at `sm` in messages and the hook for streamed code; the `status` item and the view machinery are ready.
-4. **Placeholder memos when there is time:** Firefox and Safari over the code surfaces; a screen-reader pass; `ansi` output with its 32 slots if an app needs terminal colour.
+1. **`005` run 2's report**: screenshots and bends; then a fresh change review (`reviews/005-…-pr-2026-11-01.md`), fixes, Landing notes, 0.5.0; ask the owner to commit and tag.
+2. **Build `006`** in two runs with a checkpoint after step 3 (the entrance and the shell's header); change review; landing; 0.6.0.
+3. **Build `007`** per its build order with the checkpoint after step 3 (the gallery's teal against cyan; the surface); change review; landing; 0.7.0.
+4. **Placeholder memos when there is time:** Firefox and Safari over the code surfaces and the ink surface; a screen-reader pass; `ansi`.
