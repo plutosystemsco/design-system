@@ -8,7 +8,7 @@
       id: "overview",
       title: "Overview",
       text: "Three projects are active this week.",
-      link: { label: "Open the catalogue", href: "/" },
+      link: { label: "Go to the home page", href: "/" },
     },
     {
       id: "activity",

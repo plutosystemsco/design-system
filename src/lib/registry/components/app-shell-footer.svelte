@@ -1,30 +1,40 @@
 <script lang="ts">
-  import { Lockup } from "#lib/registry/ui/four-dot";
+  import type { Snippet } from "svelte";
+  import { FourDot } from "#lib/registry/ui/four-dot";
   import { cn } from "#lib/utils";
   import type { HTMLAttributes } from "svelte/elements";
 
   let {
+    appName,
+    logo,
     commit,
     builtAt,
     docId,
     sourceHref,
     statement,
-    tagline = "Work runs on data.",
+    tagline = "",
+    endorsed = false,
     class: className,
     ...restProps
   }: HTMLAttributes<HTMLElement> & {
+    /** The product's name: the wordmark without a logo, the logo's accessible name with one. */
+    appName: string;
+    /** The product's logo, the header's snippet; it renders here for "footer". */
+    logo?: Snippet<[place: "header" | "footer"]>;
     /** The build's commit, shown as given; without it, no row. */
     commit?: string;
     /** The commit's date, ISO 8601, shown as its date in a <time>; without it, no row. */
     builtAt?: string;
-    /** The doc ID, `PS-<series>-<NNNN>`; without it, no row. */
+    /** A doc ID in the product's own scheme (Pluto Systems' is `PS-<series>-<NNNN>`), shown as given; without it, no row. */
     docId?: string;
-    /** The site's own source; the link reads its host and path. */
+    /** The product's own source; the link reads its host and path. */
     sourceHref?: string;
     /** One plain sentence under the rows, only when it is true; empty by default. */
     statement?: string;
-    /** The brand line beside the lockup, which is the name; pass "" to show none. */
+    /** The product's own line beside its name; empty by default. */
     tagline?: string;
+    /** Shows "A Pluto Systems product" under the rows; off by default. */
+    endorsed?: boolean;
   } = $props();
 
   // The link's text: the host and path, never the scheme.
@@ -42,12 +52,14 @@
 </script>
 
 <!--
-  The contentinfo: the lockup (not a link; the header's is) with the brand
-  line beside it, and the build's furniture at the end in mono, lowercase
-  labels typed as such: commit, built, doc, source, each row only when its
-  value is given. The row wraps to one column on a phone. The build date on
-  every page shows when it was last updated: no public surface without a visible
-  last-updated date.
+  The contentinfo: the product's logo or its name as a wordmark (not a link;
+  the header's is), its own line beside it when given, and the build's
+  furniture at the end in mono, lowercase labels typed as such: commit,
+  built, doc, source, each row only when its value is given. The row wraps
+  to one column on a phone. The build date on every page shows when it was
+  last updated: no public surface without a visible last-updated date. Under
+  the rows, the endorsement when turned on, whose four dots dock in when it
+  is hovered, then the statement when given.
 -->
 <footer
   data-slot="app-shell-footer"
@@ -56,8 +68,24 @@
 >
   <div class="mx-auto max-w-5xl px-6 pt-12 pb-16">
     <div class="flex flex-wrap items-center justify-between gap-6">
-      <div class="flex flex-wrap items-baseline gap-x-4 gap-y-2">
-        <Lockup class="text-2xl" />
+      <div class="flex min-w-0 flex-wrap items-baseline gap-x-4 gap-y-2">
+        {#if logo}
+          <span
+            role="img"
+            aria-label={appName}
+            data-shell="logo"
+            class="inline-flex items-center"
+          >
+            {@render logo("footer")}
+          </span>
+        {:else}
+          <span
+            data-shell="wordmark"
+            class="min-w-0 font-heading text-2xl leading-none font-bold tracking-mark wrap-anywhere"
+          >
+            {appName}
+          </span>
+        {/if}
         {#if tagline}
           <p class="text-sm">{tagline}</p>
         {/if}
@@ -98,8 +126,22 @@
         </dl>
       {/if}
     </div>
-    {#if statement}
-      <p class="mt-6 text-sm">{statement}</p>
+    {#if endorsed || statement}
+      <div class="mt-6 flex flex-col gap-2">
+        {#if endorsed}
+          <p
+            data-shell="endorsement"
+            class="flex w-fit items-baseline gap-(--mark-lockup-gap) text-sm text-muted-foreground"
+          >
+            A Pluto Systems product<FourDot
+              class="mark-reveal -translate-y-(--mark-lift)"
+            />
+          </p>
+        {/if}
+        {#if statement}
+          <p class="text-sm">{statement}</p>
+        {/if}
+      </div>
     {/if}
   </div>
 </footer>

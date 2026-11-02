@@ -97,15 +97,15 @@ const frameIsDark = (page: Page) =>
 const parentIsDark = (page: Page) =>
   page.evaluate(() => document.documentElement.classList.contains("dark"));
 
-// 006 decision 14: 7 blocks, 30 files, 17 + 4 + 6 = 27 state switches.
-test("the tables cover the 7 blocks: 30 files, 27 state switches", () => {
+// 006 decision 14: 7 blocks, 30 files, 17 + 4 + 6 = 27 state switches; 008 adds 2 shell views: 29.
+test("the tables cover the 7 blocks: 30 files, 29 state switches", () => {
   expect(Object.keys(APP_PATHS)).toEqual(BLOCKS);
   expect(Object.values(APP_PATHS).flat()).toHaveLength(30);
   expect(
     BLOCKS.map((b) => BLOCK_VIEWS[b]!.length)
       .filter((n) => n > 1)
       .reduce((a, b) => a + b, 0),
-  ).toBe(27);
+  ).toBe(29);
 });
 
 for (const block of BLOCKS) {

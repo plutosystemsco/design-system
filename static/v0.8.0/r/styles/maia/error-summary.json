@@ -1,0 +1,32 @@
+{
+	"$schema": "https://shadcn-svelte.com/schema/registry-item.json",
+	"name": "error-summary",
+	"title": "Error summary",
+	"type": "registry:ui",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+	"description": "The box a failed submit puts at the top of a form: a heading, the form's message and a link to each invalid field, focused when it appears.",
+	"devDependencies": [
+		"phosphor-svelte@^3.1.1"
+	],
+	"registryDependencies": [
+		"utils",
+		"pluto-theme",
+		"alert"
+	],
+	"meta": {
+		"since": "0.3.0",
+		"group": "feedback"
+	},
+	"files": [
+		{
+			"content": "<script lang=\"ts\" module>\n  /** \"Error: \" and the title while a summary is shown, else the title. */\n  export function titleFor(title: string, failed: boolean): string {\n    return failed ? `Error: ${title}` : title;\n  }\n</script>\n\n<script lang=\"ts\">\n  import { Alert } from \"$UI$/alert\";\n  import { cn, type WithElementRef } from \"$UTILS$\";\n  import WarningCircle from \"phosphor-svelte/lib/WarningCircle\";\n  import type { HTMLAttributes } from \"svelte/elements\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    errors = [],\n    message,\n    title = \"There is a problem\",\n    level = 2,\n    announce = true,\n    ...restProps\n  }: WithElementRef<HTMLAttributes<HTMLDivElement>> & {\n    /** A link per invalid field, in field order: the field's id and its inline error. */\n    errors?: { id: string; message: string }[];\n    /** The form-level message, such as a credential failure. */\n    message?: string;\n    /** Default \"There is a problem\". */\n    title?: string;\n    /** The title's heading level. Default 2. */\n    level?: 1 | 2 | 3 | 4 | 5 | 6;\n    /** Default true: role=\"alert\". False when rendered from initial props. */\n    announce?: boolean;\n  } = $props();\n\n  // The fragment moves the scroll position but may not focus an input, so\n  // the link focuses its field itself; the browser scrolls it into view.\n  function focusField(event: MouseEvent, id: string) {\n    const field = document.getElementById(id);\n    if (!field) return;\n    event.preventDefault();\n    field.focus();\n  }\n</script>\n\n<!--\n  The box a failed submit puts at the top of a form. The form inserts it with\n  announce, so role=\"alert\" is never on content present at load, and moves\n  focus to it after every failed submit. An app that renders errors from its\n  server passes announce={false} and moves focus here itself.\n-->\n{#if errors.length > 0 || message}\n  <Alert\n    bind:ref\n    variant=\"destructive\"\n    data-slot=\"error-summary\"\n    role={announce ? \"alert\" : null}\n    tabindex={-1}\n    class={cn(className)}\n    {...restProps}\n  >\n    <WarningCircle aria-hidden=\"true\" />\n    <svelte:element\n      this={`h${level}`}\n      data-slot=\"error-summary-title\"\n      class=\"col-start-2 font-heading text-base font-bold\"\n    >\n      {title}\n    </svelte:element>\n    <div class=\"col-start-2 grid gap-2\">\n      {#if message}\n        <p>{message}</p>\n      {/if}\n      {#if errors.length > 0}\n        <ul class=\"grid gap-1\">\n          {#each errors as error (error.id)}\n            <li>\n              <a\n                href=\"#{error.id}\"\n                class=\"inline-flex min-h-6 items-center underline underline-offset-4\"\n                onclick={(event) => focusField(event, error.id)}\n                >{error.message}</a\n              >\n            </li>\n          {/each}\n        </ul>\n      {/if}\n    </div>\n  </Alert>\n{/if}\n",
+			"type": "registry:ui",
+			"target": "error-summary/error-summary.svelte"
+		},
+		{
+			"content": "import Root, { titleFor } from \"./error-summary.svelte\";\n\nexport { Root, Root as ErrorSummary, titleFor };\n",
+			"type": "registry:ui",
+			"target": "error-summary/index.ts"
+		}
+	]
+}

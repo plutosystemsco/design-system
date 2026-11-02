@@ -2,6 +2,15 @@
 
 Each release of the registry, newest first. A change to an item's interface is marked **interface change**.
 
+## 0.8.0 — 2026-11-01
+
+Product identity: the shell carries each Pluto Systems product's own logo, name and words. The tokens stay shared.
+
+- `app-shell`: **interface change.** The footer takes `appName` (required), a `logo` snippet and `endorsed`, and its `tagline` defaults to empty, since "Work runs on data." is Pluto Systems' line, not a product's. The header takes the same `logo` snippet. Each shows the product's logo, named by `appName`, or `appName` itself as a wordmark in the heading face; a long name truncates in the header and wraps in the footer. The snippet receives its place, `"header"` or `"footer"`, so only the header plays an entrance. The header's change is visible: its props are unchanged, and the Pluto Systems lockup and its entrance are gone. To keep them, pass a `logo` snippet holding `<Lockup entrance={place === "header"} class="text-2xl" />` and `appName="Pluto Systems"`. With `endorsed`, the footer adds "A Pluto Systems product" under its rows; where a pointer can hover, the mark's four dots dock in beside the words, the last at 200 ms. The layout ships `APP_NAME = "Sandbox"`, a `LOGO` constant, no source link and no tagline; the example page's link reads "Go to the home page".
+- `pluto-theme`: additive, not an interface change. The `mark-reveal` utility: the entrance's path and shares on the 200 ms response budget, its hover rules inside `@media (hover: hover)`. No new token.
+- `hero`: the block page's sample copy describes the page itself, not this registry: "Say what your product does in one line", and an action that goes to the home page.
+- The preview site's own footer passes Pluto Systems' identity: the lockup and "Work runs on data.". Two shell views join: "Lockup as logo" and "Endorsed".
+
 ## 0.7.1 — 2026-11-01
 
 Ready to read in public. No item's interface changes.

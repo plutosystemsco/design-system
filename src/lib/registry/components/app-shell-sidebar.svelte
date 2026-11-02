@@ -33,7 +33,7 @@
     user?: AppShellUser | null;
     /** Off-canvas (the default) or to icons; the shell's choice. */
     collapsible?: "offcanvas" | "icon";
-    /** The section's name, in the heading face; not the lockup, which the header shows. */
+    /** The section's name, in the heading face; not the product's name, which the header shows. */
     heading?: string;
     /** The sub-items of the Preferences group; replace their hrefs with your routes. */
     preferences?: AppShellLink[];

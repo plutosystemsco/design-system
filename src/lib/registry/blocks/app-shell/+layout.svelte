@@ -14,7 +14,16 @@
   // and first replace LINKS and the sidebar's hrefs with your own routes: an
   // anchor such as #overview in a root layout fails the prerender of every
   // page that has no such id.
-  const APP_NAME = "Pluto app";
+  // Your product's name: the header's and the footer's wordmark, or your
+  // logo's accessible name. It contains any words your logo shows.
+  const APP_NAME = "Sandbox";
+  // Your product's logo, at most 36 px tall and 176 px wide; without it, APP_NAME is the
+  // wordmark. Import your logo as a component, write a snippet in the markup
+  // below, and pass it here:
+  //   {#snippet logo(place: "header" | "footer")}<Logo class="h-8 w-auto" />{/snippet}
+  //   const LOGO = logo;
+  // `place` is "header" or "footer"; only the header may play an entrance.
+  const LOGO: Snippet<[place: "header" | "footer"]> | undefined = undefined;
   const LINKS = [
     { label: "Overview", href: "#overview" },
     { label: "Activity", href: "#activity" },
@@ -32,10 +41,15 @@
     commit: /^\d+$/.test(version) ? undefined : version,
     // The commit's own date, set by vite.config.ts; without it, no row.
     builtAt: import.meta.env.VITE_BUILT_AT as string | undefined,
-    // Your doc ID, `PS-<series>-<NNNN>`; without it, no row.
+    // Your doc ID, in your own scheme; Pluto Systems' is
+    // `PS-<series>-<NNNN>`; without it, no row.
     docId: undefined,
-    // Your app's repository. Shipped as the design system's.
-    sourceHref: "https://github.com/plutosystemsco/design-system",
+    // Your product's repository; without it, no row.
+    sourceHref: undefined,
+    // Your product's own line beside its name; "" shows none.
+    tagline: "",
+    // true shows "A Pluto Systems product" under the rows.
+    endorsed: false,
     // One plain sentence, only when it is true.
     statement: undefined,
   };
@@ -56,6 +70,7 @@
   <AppShellSkipLink />
   <AppShellHeader
     appName={APP_NAME}
+    logo={LOGO}
     links={LINKS}
     {current}
     sidebar={Boolean(SIDEBAR)}
@@ -98,7 +113,7 @@
       {@render children()}
     </main>
   {/if}
-  <AppShellFooter {...FOOTER} />
+  <AppShellFooter appName={APP_NAME} logo={LOGO} {...FOOTER} />
 {/snippet}
 
 <!--

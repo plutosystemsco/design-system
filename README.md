@@ -1,6 +1,8 @@
 # Pluto Systems design system
 
-The tokens, styles and Svelte components of Pluto Systems applications, served as a [shadcn-svelte](https://shadcn-svelte.com) registry. An app installs a component and owns its source.
+The tokens, styles and Svelte components of every Pluto Systems product, served as a [shadcn-svelte](https://shadcn-svelte.com) registry. An app installs a component and owns its source.
+
+Each product brings its own identity: its logo, its name and its words. The app shell shows the product's logo, or its name as a wordmark, and can carry the line "A Pluto Systems product" in its footer. The tokens (colour, type, spacing, radius, motion) are shared by every product.
 
 ## What is here
 
@@ -27,12 +29,12 @@ bun run lint       # prettier
 An app installs an item from GitHub, pinned to a release by its tag. The built JSON under `static/` is committed with each release, so no server runs.
 
 ```
-REGISTRY_URL=https://raw.githubusercontent.com/plutosystemsco/design-system/v0.7.1/static/r bunx --bun shadcn-svelte@1.7.1 add four-dot -y -o
-REGISTRY_URL=https://raw.githubusercontent.com/plutosystemsco/design-system/v0.7.1/static/r bunx --bun shadcn-svelte@1.7.1 add button field alert-dialog -y
-REGISTRY_URL=https://raw.githubusercontent.com/plutosystemsco/design-system/v0.7.1/static/r bunx --bun shadcn-svelte@1.7.1 add app-shell code-editor -y
+REGISTRY_URL=https://raw.githubusercontent.com/plutosystemsco/design-system/v0.8.0/static/r bunx --bun shadcn-svelte@1.7.1 add four-dot -y -o
+REGISTRY_URL=https://raw.githubusercontent.com/plutosystemsco/design-system/v0.8.0/static/r bunx --bun shadcn-svelte@1.7.1 add button field alert-dialog -y
+REGISTRY_URL=https://raw.githubusercontent.com/plutosystemsco/design-system/v0.8.0/static/r bunx --bun shadcn-svelte@1.7.1 add app-shell code-editor -y
 ```
 
-`main/static/r` in place of `v0.7.1/static/r` follows the latest commit. With `bun run dev` running, `REGISTRY_URL=http://localhost:5173/r` installs from this machine instead.
+`main/static/r` in place of `v0.8.0/static/r` follows the latest commit. With `bun run dev` running, `REGISTRY_URL=http://localhost:5173/r` installs from this machine instead.
 
 The first `add` brings the theme and the fonts with it. An item's dependencies, such as `field`'s `label` and `separator`, come from this registry too; nothing is fetched from shadcn-svelte's own. Leave out `-o` after the first install: without it the CLI lists the files that already exist and asks before it overwrites any, which matters for a block, since it lands a route and up to seventeen primitives you may have changed.
 

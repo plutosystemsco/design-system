@@ -221,6 +221,10 @@ const GOOD_004: Sample[] = [
 // dock is still flagged.
 const BAD_006: Sample[] = [{ cls: "animate-mark-dock" }];
 const GOOD_006: Sample[] = [{ cls: "mark-entrance", file: "four-dot.svelte" }];
+// 008 decision 5: `mark-reveal`, the hover reveal, joins the list.
+const GOOD_008: Sample[] = [
+  { cls: "mark-reveal", file: "app-shell-footer.svelte" },
+];
 
 // 007 decision 3: L19, a syntax colour in any form; the code slot's class
 // stays allowed.
@@ -246,6 +250,7 @@ const GOOD = [
   ...GOOD_003,
   ...GOOD_004,
   ...GOOD_006,
+  ...GOOD_008,
   ...GOOD_007,
 ];
 
@@ -267,9 +272,9 @@ describe("the lint itself", () => {
     },
   );
 
-  test("74 bad samples flagged and 0 of 49 good ones", () => {
+  test("74 bad samples flagged and 0 of 50 good ones", () => {
     expect(BAD).toHaveLength(74);
-    expect(GOOD).toHaveLength(49);
+    expect(GOOD).toHaveLength(50);
     expect(BAD.filter((s) => lintSample(s).length > 0)).toHaveLength(74);
     expect(GOOD.filter((s) => lintSample(s).length > 0)).toHaveLength(0);
   });

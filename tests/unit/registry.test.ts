@@ -1,4 +1,5 @@
 import { afterAll, beforeAll, describe, expect, test } from "bun:test";
+import { execSync } from "node:child_process";
 import {
   existsSync,
   mkdirSync,
@@ -1010,6 +1011,22 @@ describe("CHANGELOG.md", () => {
   };
 
   // 007 decision 11: the six things.
+  // 008 decision 9: the release says the shell's change is an interface change and how to keep the lockup.
+  test("has a 0.8.0 entry naming app-shell as an interface change, the restore, mark-reveal and the hero", () => {
+    const body = entry("0.8.0");
+    for (const text of [
+      "`app-shell`: **interface change.**",
+      "`appName`",
+      "`logo`",
+      "`endorsed`",
+      '<Lockup entrance={place === "header"}',
+      "A Pluto Systems product",
+      "`mark-reveal`",
+      "`hero`",
+    ])
+      expect(body).toContain(text);
+  });
+
   test("has a 0.7.0 entry naming the palette, the languages, code-languages, the surface, the block's ground and the emission", () => {
     const body = entry("0.7.0");
     for (const text of [
@@ -1073,5 +1090,30 @@ describe("CHANGELOG.md", () => {
   test("still has a 0.1.0 entry naming each of the 6 items", () => {
     const body = entry("0.1.0");
     for (const [name] of ITEMS_001) expect(body).toContain(`\`${name}\``);
+  });
+});
+
+/**
+ * 008 change review, finding 1: a released snapshot is frozen. Each tag's
+ * `static/<tag>/` matches the tag, so a build under a stale version can never
+ * rewrite one unseen.
+ */
+describe("released snapshots", () => {
+  const tags = execSync("git tag --list 'v*'", { encoding: "utf8" })
+    .split("\n")
+    .filter(Boolean);
+  const frozen = tags.filter((t) => existsSync(`static/${t}`));
+  test("at least one released snapshot exists", () => {
+    expect(frozen.length).toBeGreaterThan(0);
+  });
+  test.each(frozen)("static/%s matches its tag", (tag) => {
+    const diff = execSync(`git diff --name-only ${tag} -- static/${tag}`, {
+      encoding: "utf8",
+    });
+    const untracked = execSync(
+      `git ls-files --others --exclude-standard -- static/${tag}`,
+      { encoding: "utf8" },
+    );
+    expect(diff + untracked).toBe("");
   });
 });

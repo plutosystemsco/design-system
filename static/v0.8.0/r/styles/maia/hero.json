@@ -1,0 +1,34 @@
+{
+	"$schema": "https://shadcn-svelte.com/schema/registry-item.json",
+	"name": "hero",
+	"title": "Hero",
+	"type": "registry:block",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+	"description": "A page's opening: an optional eyebrow, the one heading, a sentence, one call to action, and a feature grid divided by grooves.",
+	"registryDependencies": [
+		"utils",
+		"pluto-theme",
+		"button"
+	],
+	"meta": {
+		"since": "0.3.0",
+		"group": "blocks"
+	},
+	"files": [
+		{
+			"content": "<script lang=\"ts\">\n  import HeroFeatures from \"$COMPONENTS$/hero-features.svelte\";\n  import HeroSection from \"$COMPONENTS$/hero-section.svelte\";\n\n  const features = [\n    {\n      title: \"One heading.\",\n      description: \"The page's only h1, 28 px on a phone and 44 px from sm.\",\n    },\n    {\n      title: \"One action.\",\n      description:\n        \"A primary link named by where it goes, and an optional second link beside it.\",\n    },\n    {\n      title: \"Three short claims.\",\n      description: \"Each a title and one sentence your product can prove.\",\n    },\n  ];\n</script>\n\n<svelte:head><title>Say what your product does in one line</title></svelte:head>\n\n<div class=\"mx-auto flex max-w-5xl flex-col gap-16 px-6 py-16 sm:py-24\">\n  <HeroSection\n    eyebrow=\"sandbox\"\n    title=\"Say what your product does in one line\"\n    description=\"The opening of a product's home page: one heading, one sentence and one action. Replace these words with your own.\"\n    action={{ label: \"Go to the home page\", href: \"/\" }}\n    secondary={{ label: \"See what the page holds\", href: \"#hero-features\" }}\n  />\n  <HeroFeatures id=\"hero-features\" title=\"What the page holds\" {features} />\n</div>\n",
+			"type": "registry:page",
+			"target": "hero/+page.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import type { Snippet } from \"svelte\";\n  import type { HTMLAttributes } from \"svelte/elements\";\n  import { Button } from \"$UI$/button\";\n  import { cn } from \"$UTILS$\";\n\n  type Link = { label: string; href: string };\n\n  let {\n    eyebrow,\n    title,\n    description,\n    action,\n    secondary,\n    media,\n    class: className,\n    ...restProps\n  }: Omit<HTMLAttributes<HTMLElement>, \"title\"> & {\n    /** A short mono line above the heading, lowercase. */\n    eyebrow?: string;\n    /** The page's one heading. */\n    title: string;\n    /** One sentence. */\n    description: string;\n    /** The one primary call to action: a link named by its result. */\n    action: Link;\n    /** An optional secondary link. */\n    secondary?: Link;\n    /** Real evidence beside the copy from lg, such as a code block. */\n    media?: Snippet;\n    class?: string;\n  } = $props();\n</script>\n\n<!--\n  A page's opening: no mark, and nothing moves. The heading is 28 px below sm\n  and 44 px from sm, with no size between.\n-->\n<section\n  data-slot=\"hero-section\"\n  class={cn(\n    \"flex flex-col gap-12\",\n    media && \"lg:grid lg:grid-cols-2 lg:items-center lg:gap-12\",\n    className,\n  )}\n  {...restProps}\n>\n  <div class=\"flex flex-col gap-6\">\n    {#if eyebrow}\n      <p\n        class=\"font-mono text-xs font-medium tracking-eyebrow text-muted-foreground lowercase\"\n      >\n        {eyebrow}\n      </p>\n    {/if}\n    <h1\n      class=\"font-heading text-2xl font-bold tracking-section text-foreground sm:text-5xl sm:tracking-display\"\n    >\n      {title}\n    </h1>\n    <p class=\"max-w-prose text-muted-foreground\">{description}</p>\n    <div class=\"flex flex-col gap-3 sm:flex-row sm:items-center\">\n      <Button href={action.href} class=\"w-full sm:w-auto\">{action.label}</Button\n      >\n      {#if secondary}\n        <Button variant=\"link\" href={secondary.href} class=\"self-start\"\n          >{secondary.label}</Button\n        >\n      {/if}\n    </div>\n  </div>\n  {#if media}\n    <div>{@render media()}</div>\n  {/if}\n</section>\n",
+			"type": "registry:component",
+			"target": "hero-section.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import type { Component } from \"svelte\";\n  import { cn } from \"$UTILS$\";\n\n  type Feature = {\n    title: string;\n    description: string;\n    /** A decorative, monochrome icon, such as one from phosphor-svelte. */\n    icon?: Component<{ class?: string; \"aria-hidden\"?: \"true\" }>;\n  };\n\n  let {\n    title,\n    id,\n    features,\n    class: className,\n  }: {\n    /** The section's heading. */\n    title: string;\n    /** The section's id, for a link to it. */\n    id?: string;\n    features: Feature[];\n    class?: string;\n  } = $props();\n</script>\n\n<!--\n  A ruled list, not cards: each feature has a groove across its top. One\n  column below sm, two from sm, three from lg.\n-->\n<section\n  {id}\n  data-slot=\"hero-features\"\n  class={cn(\"flex flex-col gap-8\", className)}\n>\n  <h2 class=\"font-heading text-2xl font-bold tracking-section text-foreground\">\n    {title}\n  </h2>\n  <ul\n    role=\"list\"\n    class=\"grid grid-cols-1 gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-3\"\n  >\n    {#each features as feature (feature.title)}\n      <li class=\"groove flex flex-col gap-3 pt-6\">\n        {#if feature.icon}\n          <feature.icon class=\"size-6 text-foreground\" aria-hidden=\"true\" />\n        {/if}\n        <h3 class=\"font-heading text-base font-bold text-foreground\">\n          {feature.title}\n        </h3>\n        <p class=\"text-muted-foreground\">{feature.description}</p>\n      </li>\n    {/each}\n  </ul>\n</section>\n",
+			"type": "registry:component",
+			"target": "hero-features.svelte"
+		}
+	]
+}

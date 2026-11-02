@@ -1,4 +1,5 @@
 <script lang="ts">
+  import type { Snippet } from "svelte";
   import { version } from "$app/env";
   import { page } from "$app/state";
   import AppShellFooter from "#lib/registry/components/app-shell-footer.svelte";
@@ -14,18 +15,26 @@
    * A state view of the shell (006 decision 12): a copy of the block's
    * +layout.svelte markup with its constants as props, around the block's
    * example page. The default view renders the shipped files themselves.
+   * 008 decision 8: the identity varies by view, so it is props too.
    */
   let {
     sidebar = false,
     sidebarOpen = true,
     user = null,
+    appName = "Sandbox",
+    logo,
+    tagline = "",
+    endorsed = false,
   }: {
     sidebar?: false | "offcanvas" | "icon";
     sidebarOpen?: boolean;
     user?: { name: string; email: string } | null;
+    appName?: string;
+    logo?: Snippet<[place: "header" | "footer"]>;
+    tagline?: string;
+    endorsed?: boolean;
   } = $props();
 
-  const APP_NAME = "Pluto app";
   const LINKS = [
     { label: "Overview", href: "#overview" },
     { label: "Activity", href: "#activity" },
@@ -45,7 +54,8 @@
 {#snippet shell()}
   <AppShellSkipLink />
   <AppShellHeader
-    appName={APP_NAME}
+    {appName}
+    {logo}
     links={LINKS}
     {current}
     sidebar={Boolean(sidebar)}
@@ -82,7 +92,7 @@
       <Page />
     </main>
   {/if}
-  <AppShellFooter {...FOOTER} />
+  <AppShellFooter {appName} {logo} {tagline} {endorsed} {...FOOTER} />
 {/snippet}
 
 {#if sidebar}

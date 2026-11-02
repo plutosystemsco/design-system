@@ -1115,12 +1115,13 @@ async function drawnByContainer(page: Page): Promise<string | undefined> {
   return inOtp ? '[data-slot="input-otp"]' : undefined;
 }
 
-// 003's 83 stops over 18 views, and 006 decision 14's 70 over the shell's 4 and the chat's 6.
-test("the 28 views hold 153 stops", () => {
+// 003's 83 stops over 18 views, and 006 decision 14's 70 over the shell's 4 and the chat's 6;
+// 008 takes the shipped shell's source link (69) and adds two views of 8 (85).
+test("the 30 views hold 168 stops", () => {
   expect(VIEWS.map((v) => v.path)).toEqual(Object.keys(VIEW_STOPS));
   expect(
     Object.values(VIEW_STOPS).reduce((n, stops) => n + stops.length, 0),
-  ).toBe(153);
+  ).toBe(168);
 });
 
 /** 006 decision 14: the chat's four keyboard behaviours (5 to 8). */
@@ -1199,7 +1200,7 @@ test.describe("the shell", () => {
 
   test.describe("at 360", () => {
     test.use({ viewport: { width: 360, height: 700 } });
-    test('2. Enter on the menu button opens the sheet named "Pluto app" with focus on its first link; Escape returns focus', async ({
+    test('2. Enter on the menu button opens the sheet named "Sandbox" with focus on its first link; Escape returns focus', async ({
       page,
     }) => {
       await openView(page, "/view/app-shell/");
@@ -1208,7 +1209,7 @@ test.describe("the shell", () => {
       await expect(menu).toHaveAttribute("aria-expanded", "false");
       await menu.focus();
       await page.keyboard.press("Enter");
-      const sheet = page.getByRole("dialog", { name: "Pluto app" });
+      const sheet = page.getByRole("dialog", { name: "Sandbox" });
       await expect(sheet).toBeVisible();
       await expect(menu).toHaveAttribute("aria-expanded", "true");
       await expect(sheet.getByRole("link").first()).toBeFocused();
@@ -1310,13 +1311,13 @@ test.describe("viewer toolbars", () => {
 });
 
 // 003's 42, plus app-shell (4 states, 3 widths, Open alone, the frame: 9) and
-// chat (6 states and the same 5: 11): 62. The frame and Open alone are stops
-// on every toolbar.
-test("the 7 viewer toolbars hold 62 stops", () => {
+// chat (6 states and the same 5: 11): 62. 008 adds two shell states: 64. The
+// frame and Open alone are stops on every toolbar.
+test("the 7 viewer toolbars hold 64 stops", () => {
   const counts = BLOCKS.map((b) => {
     const n = (BLOCK_VIEWS[b] ?? []).length;
     return (n > 1 ? n : 0) + 5;
   });
-  expect(counts).toEqual([5, 9, 9, 10, 9, 9, 11]);
-  expect(counts.reduce((a, b) => a + b, 0)).toBe(62);
+  expect(counts).toEqual([5, 9, 9, 10, 9, 11, 11]);
+  expect(counts.reduce((a, b) => a + b, 0)).toBe(64);
 });

@@ -39,6 +39,8 @@ export const BLOCK_VIEWS: Record<string, BlockView[]> = {
     { path: "sidebar", label: "Sidebar" },
     { path: "sidebar-icon", label: "Sidebar as icons" },
     { path: "signed-in", label: "Signed in" },
+    { path: "lockup", label: "Lockup as logo" },
+    { path: "endorsed", label: "Endorsed" },
   ],
   chat: [
     { path: "", label: "Empty" },

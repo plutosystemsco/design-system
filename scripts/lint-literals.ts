@@ -363,7 +363,8 @@ function classRule002(
   // L10, animation. 002 decision 9's motion list (R14): animate-enter,
   // animate-exit, the spinner's animate-spin, and (006 decision 4) the mark's
   // `mark-entrance`, a @utility of its own name that this rule does not see:
-  // four delays and four offsets fit no single animate-* utility.
+  // four delays and four offsets fit no single animate-* utility. 008 decision
+  // 5 adds `mark-reveal`, the hover reveal, a @utility for the same reason.
   const animate = /^animate-(.+)$/.exec(utility);
   if (animate && !["enter", "exit", "spin"].includes(animate[1]))
     return "animation";

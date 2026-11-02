@@ -36,7 +36,15 @@
   {@render children()}
 </main>
 
+<!-- 008 decision 8: the site is Pluto Systems' own, so its footer carries the lockup (no entrance) and the brand line. -->
+{#snippet logo()}
+  <Lockup class="text-2xl" />
+{/snippet}
+
 <AppShellFooter
+  appName="Pluto Systems"
+  {logo}
+  tagline="Work runs on data."
   {commit}
   {builtAt}
   sourceHref="https://github.com/plutosystemsco/design-system"

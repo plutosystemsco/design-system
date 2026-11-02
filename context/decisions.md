@@ -2,6 +2,22 @@
 
 The owner's answers and decisions, newest first. A decision that changes the constitution is also recorded in its Status line. "The design book" and "v2" both mean the Pluto Systems design book, version 2, the source of the brand's rules; a section of it is cited as "§03".
 
+### One system, many products (2026-11-01)
+
+The design system serves every Pluto Systems product, not one site. A product may have its own logo, name and copy. The owner's rulings:
+
+- **Identity only.** A product sets its logo, its name and its copy. Colours, type, spacing, radius and motion stay shared, from the one token file, checked for contrast in both themes. A product accent waits for its own specification, written when a product needs one (constitution §4.2).
+- **Its own logo, with its name as the fallback.** The shell takes a product's logo as a snippet: an SVG, an image or markup. Without one, it sets the product's name as a text wordmark in the heading face.
+- **An optional endorsement.** The footer can carry one line, "A Pluto Systems product", off by default and turned on with one prop. When a reader hovers the line, the four dots of the Pluto mark appear beside it.
+
+After the specification review of `008` (`reviews/008-product-identity-spec-2026-11-01.md`), three more rulings:
+
+- **The hover reveal is a response, at most 200 ms.** The dots take the entrance's path with every timing scaled to `--motion-micro`: 110 ms per dot, delays 30 to 90 ms, the last at its place at 200 ms. The design book §06 keeps its one 900 ms entrance per page, and §09's "no second entrance animation" holds.
+- **The endorsement is not the lockup.** It is words with the mark beside them, not the "pluto" wordmark, so the 20 px minimum for the lockup does not bind. The line stays small, under the footer's rows.
+- **No amendment to the constitution.** Its §1 already serves "every Pluto Systems application". The rule lives here and in `008`.
+
+The design lead adds, under the same ruling: the system's own names stay (`pluto-theme`, the `pluto:` context keys, the `four-dot` item). They name the system a product is built from, not the product.
+
 ### After the public-readiness review (2026-11-01)
 
 The repository was read in full before public viewing. The owner's rulings:

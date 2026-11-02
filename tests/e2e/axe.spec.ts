@@ -164,7 +164,7 @@ test.describe("at 360", () => {
   }) => {
     await openView(page, "/view/app-shell/");
     await page.getByRole("button", { name: "Menu" }).click();
-    await page.getByRole("dialog", { name: "Pluto app" }).waitFor();
+    await page.getByRole("dialog", { name: "Sandbox" }).waitFor();
     await settled(page);
     await expectNoViolations(page);
   });

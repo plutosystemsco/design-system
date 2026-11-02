@@ -1,0 +1,22 @@
+{
+	"$schema": "https://shadcn-svelte.com/schema/registry-item.json",
+	"name": "utils",
+	"title": "Utils",
+	"type": "registry:lib",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+	"description": "The cn class-merging helper and the prop-type helpers that components import.",
+	"devDependencies": [
+		"cn@^0.5.0"
+	],
+	"meta": {
+		"since": "0.1.0",
+		"group": "foundation"
+	},
+	"files": [
+		{
+			"content": "export { cn } from \"cn\";\n\n/** `T` without its `child` snippet prop. */\nexport type WithoutChild<T> = T extends { child?: unknown }\n  ? Omit<T, \"child\">\n  : T;\n\n/** `T` without its `children` snippet prop. */\nexport type WithoutChildren<T> = T extends { children?: unknown }\n  ? Omit<T, \"children\">\n  : T;\n\n/** `T` without either snippet prop. */\nexport type WithoutChildrenOrChild<T> = WithoutChildren<WithoutChild<T>>;\n\n/** `T` plus an optional, bindable reference to the element it renders. */\nexport type WithElementRef<T, U extends HTMLElement = HTMLElement> = T & {\n  ref?: U | null;\n};\n",
+			"type": "registry:lib",
+			"target": "utils.ts"
+		}
+	]
+}

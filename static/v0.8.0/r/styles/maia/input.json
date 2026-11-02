@@ -1,0 +1,35 @@
+{
+	"$schema": "https://shadcn-svelte.com/schema/registry-item.json",
+	"name": "input",
+	"title": "Input",
+	"type": "registry:ui",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+	"description": "A 48 px text input on the raised ground with a visible border and a red one when invalid.",
+	"registryDependencies": [
+		"utils",
+		"pluto-theme"
+	],
+	"meta": {
+		"since": "0.2.0",
+		"group": "forms",
+		"stock": {
+			"registry": "https://shadcn-svelte.com/registry/styles/maia",
+			"item": "input",
+			"cli": "1.7.1",
+			"date": "2026-10-28",
+			"sha256": "6488fa56b28dfe363577c9d858cb1645f8882962dbce519fcf523343df7f1ff4"
+		}
+	},
+	"files": [
+		{
+			"content": "<script lang=\"ts\">\n  import { getContext } from \"svelte\";\n  import { cn, type WithElementRef } from \"$UTILS$\";\n  import type {\n    HTMLInputAttributes,\n    HTMLInputTypeAttribute,\n  } from \"svelte/elements\";\n\n  type InputType = Exclude<HTMLInputTypeAttribute, \"file\">;\n\n  type Props = WithElementRef<\n    Omit<HTMLInputAttributes, \"type\"> &\n      (\n        | { type: \"file\"; files?: FileList }\n        | { type?: InputType; files?: undefined }\n      )\n  >;\n\n  /** The contract a `Field` sets under the key \"pluto:field\". */\n  type FieldContext = {\n    readonly id: string;\n    readonly invalid: boolean;\n    readonly describedBy: string | undefined;\n  };\n\n  let {\n    ref = $bindable(null),\n    value = $bindable(),\n    type,\n    files = $bindable(),\n    class: className,\n    id,\n    \"aria-describedby\": describedBy,\n    \"aria-invalid\": invalid,\n    \"data-slot\": dataSlot = \"input\",\n    ...restProps\n  }: Props = $props();\n\n  const field = getContext<FieldContext | undefined>(\"pluto:field\");\n\n  const wiring = $derived({\n    id: id ?? field?.id,\n    \"aria-describedby\": describedBy ?? field?.describedBy,\n    \"aria-invalid\": invalid ?? (field?.invalid ? true : undefined),\n  });\n\n  const recipe =\n    \"h-12 w-full min-w-0 rounded border border-input bg-card px-3 text-base text-foreground transition-[color,background-color,border-color] placeholder:text-muted-foreground aria-invalid:border-destructive disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50\";\n</script>\n\n{#if type === \"file\"}\n  <input\n    bind:this={ref}\n    data-slot={dataSlot}\n    class={cn(\n      recipe,\n      \"file:mr-3 file:inline-flex file:h-full file:items-center file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground\",\n      className,\n    )}\n    type=\"file\"\n    bind:files\n    bind:value\n    {...wiring}\n    {...restProps}\n  />\n{:else}\n  <input\n    bind:this={ref}\n    data-slot={dataSlot}\n    class={cn(recipe, className)}\n    {type}\n    bind:value\n    {...wiring}\n    {...restProps}\n  />\n{/if}\n",
+			"type": "registry:ui",
+			"target": "input/input.svelte"
+		},
+		{
+			"content": "import Root from \"./input.svelte\";\n\nexport {\n  Root,\n  //\n  Root as Input,\n};\n",
+			"type": "registry:ui",
+			"target": "input/index.ts"
+		}
+	]
+}

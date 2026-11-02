@@ -1,6 +1,6 @@
 {
   "name": "pluto-design-system",
-  "version": "0.7.1",
+  "version": "0.8.0",
   "private": true,
   "license": "Apache-2.0",
   "description": "The Pluto Systems design system: tokens, styles and Svelte components, served as a shadcn-svelte registry.",

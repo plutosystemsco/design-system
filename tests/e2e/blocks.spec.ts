@@ -550,7 +550,7 @@ test.describe("hero", () => {
         .locator('[data-slot="hero-features"] ul')
         .evaluate((ul) => getComputedStyle(ul).gridTemplateColumns);
       expect(columns.trim().split(/\s+/)).toHaveLength(tracks);
-      const cta = page.getByRole("link", { name: "Browse the components" });
+      const cta = page.getByRole("link", { name: "Go to the home page" });
       const ctaWidth = (await box(cta)).width;
       const rowWidth = await cta.evaluate(
         (el) => el.parentElement!.getBoundingClientRect().width,
@@ -569,8 +569,8 @@ async function load(page: Page, path: string): Promise<void> {
 }
 
 test.describe("all blocks", () => {
-  // 28 views (the shell's 4 and the chat's 6 among them) and 003's 7 item pages: 35.
-  test("24. no infinite animation outside a spinner on the 28 views and 003's 7 item pages", async ({
+  // 30 views (the shell's 6 and the chat's 6 among them) and 003's 7 item pages: 37.
+  test("24. no infinite animation outside a spinner on the 30 views and 003's 7 item pages", async ({
     page,
   }) => {
     const loops: string[] = [];
@@ -587,7 +587,7 @@ test.describe("all blocks", () => {
       );
       for (const f of found) loops.push(`${path}: ${f}`);
     }
-    expect(PAGES_24).toHaveLength(35);
+    expect(PAGES_24).toHaveLength(37);
     expect(loops).toEqual([]);
   });
 
@@ -606,7 +606,7 @@ test.describe("all blocks", () => {
     expect(wide).toEqual([]);
   });
 
-  test("26. targets: each of the 153 view stops is at least 24 × 24 px at 360", async ({
+  test("26. targets: each of the 168 view stops is at least 24 × 24 px at 360", async ({
     page,
   }) => {
     await page.setViewportSize({ width: 360, height: 900 });
@@ -627,7 +627,7 @@ test.describe("all blocks", () => {
       }
     }
     expect(small).toEqual([]);
-    expect(counted).toBe(153);
+    expect(counted).toBe(168);
   });
 
   test("27. rings are not clipped: 40 of 40 sign-in and sign-up stops at 360", async ({
@@ -971,7 +971,7 @@ test.describe("the app shell", () => {
     });
   }
 
-  test("A3. the footer: a time with a datetime, the commit in a code and not all digits, the source link's href, 0 statements, the lockup not a link; the views' doc row reads PS-DS-0006 and the shipped layout shows none", async ({
+  test("A3. the footer: a time with a datetime, the commit in a code and not all digits, 0 statements, the wordmark not a link and no source row on the shipped layout; the views' doc row reads PS-DS-0006 and their source link is the design system's", async ({
     page,
   }) => {
     await openView(page, SHELL);
@@ -986,25 +986,18 @@ test.describe("the app shell", () => {
     await expect(commit).toHaveCount(1);
     expect(await commit.textContent()).toMatch(/^[0-9a-f]{7,40}$/);
     expect(await commit.textContent()).not.toMatch(/^\d+$/);
-    await expect(footer.locator("dt")).toHaveText([
-      "commit",
-      "built",
-      "source",
-    ]);
-    await expect(footer.getByRole("link")).toHaveCount(1);
-    await expect(footer.getByRole("link")).toHaveAttribute(
-      "href",
-      "https://github.com/plutosystemsco/design-system",
-    );
-    await expect(footer.getByRole("link")).toHaveText(
-      "github.com/plutosystemsco/design-system",
-    );
+    await expect(footer.locator("dt")).toHaveText(["commit", "built"]);
+    await expect(footer.getByRole("link")).toHaveCount(0);
     await expect(
       footer.locator("p").filter({ hasText: /corporation/ }),
     ).toHaveCount(0);
-    await expect(footer.locator('[data-slot="lockup"]')).toHaveCount(1);
+    await expect(footer.locator('[data-shell="wordmark"]')).toHaveText(
+      "Sandbox",
+    );
     expect(
-      await footer.locator('[data-slot="lockup"]').evaluate((el) => el.tagName),
+      await footer
+        .locator('[data-shell="wordmark"]')
+        .evaluate((el) => el.tagName),
     ).toBe("SPAN");
 
     await openView(page, "/view/app-shell/signed-in/");
@@ -1016,12 +1009,23 @@ test.describe("the app shell", () => {
       "source",
     ]);
     await expect(signedIn.locator("dd").nth(2)).toHaveText("PS-DS-0006");
+    await expect(signedIn.getByRole("link")).toHaveAttribute(
+      "href",
+      "https://github.com/plutosystemsco/design-system",
+    );
+    await expect(signedIn.getByRole("link")).toHaveText(
+      "github.com/plutosystemsco/design-system",
+    );
   });
 
-  test('A4. the tagline reads "Work runs on data." once, beside a lockup that is not a link', async ({
+  test('A4. the shipped layout shows no tagline; the lockup view reads "Work runs on data." once, beside a lockup that is not a link', async ({
     page,
   }) => {
     await openView(page, SHELL);
+    expect(await page.getByRole("contentinfo").textContent()).not.toContain(
+      "Work runs on data.",
+    );
+    await openView(page, "/view/app-shell/lockup/");
     const footer = page.getByRole("contentinfo");
     const text = (await footer.textContent()) ?? "";
     expect(text.match(/Work runs on data\./g)).toHaveLength(1);
@@ -1031,7 +1035,7 @@ test.describe("the app shell", () => {
     );
   });
 
-  test('A5. at 360 the primary nav is hidden and the menu button opens a dialog named "Pluto app" holding the 3 links', async ({
+  test('A5. at 360 the primary nav is hidden and the menu button opens a dialog named "Sandbox" holding the 3 links', async ({
     page,
   }) => {
     await page.setViewportSize({ width: 360, height: 700 });
@@ -1040,7 +1044,7 @@ test.describe("the app shell", () => {
     const menu = page.getByRole("button", { name: "Menu" });
     expect(await box(menu)).toMatchObject({ width: 32, height: 32 });
     await menu.click();
-    const dialog = page.getByRole("dialog", { name: "Pluto app" });
+    const dialog = page.getByRole("dialog", { name: "Sandbox" });
     await expect(dialog).toBeVisible();
     await expect(
       dialog.getByRole("navigation", { name: "Primary" }).getByRole("link"),
@@ -1246,7 +1250,7 @@ test.describe("the chat", () => {
     ).toHaveText("Response complete");
   });
 
-  test("C9. rings are not clipped on the 10 views of 006 at 360", async ({
+  test("C9. rings are not clipped on the 12 views of 006 and 008 at 360", async ({
     page,
   }) => {
     await page.setViewportSize({ width: 360, height: 900 });
@@ -1304,6 +1308,6 @@ test.describe("the chat", () => {
       }
     }
     expect(clipped).toEqual([]);
-    expect(counted).toBe(70);
+    expect(counted).toBe(85);
   });
 });

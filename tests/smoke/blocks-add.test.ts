@@ -163,7 +163,7 @@ const EXPECTED_DEPS: Record<string, number> = {
 
 /** The prerendered pages and their one h1. */
 const H1: Record<string, string> = {
-  hero: "Components you copy in and own",
+  hero: "Say what your product does in one line",
   "sign-in": "Sign in",
   "sign-up": "Create an account",
   "page-states": "Projects",
@@ -353,7 +353,7 @@ describe.each([
   // 006 decision 14, assertions 3 and 4: no vite lines in the scratch app,
   // so the shell's footer shows no commit (Kit's default name is all digits)
   // and no built row; the skip link is the first element of body.
-  test("6b. the shell's page holds the skip link first in body, a footer, and no commit or built row; its vite.config.ts has no git line", () => {
+  test("6b. the shell's page holds the skip link first in body, a footer with the wordmark Sandbox, and no commit, built or source row; its vite.config.ts has no git line", () => {
     if (!BLOCKS.includes("app-shell")) {
       // A narrowed run without app-shell: say so, and prove the narrowing.
       console.log(`6b: SMOKE_BLOCKS=${BLOCKS.join()} leaves out app-shell`);
@@ -374,7 +374,11 @@ describe.each([
     expect(body).toContain("<footer");
     expect(body).not.toMatch(/<dt[^>]*>commit<\/dt>/);
     expect(body).not.toMatch(/<dt[^>]*>built<\/dt>/);
-    expect(body).toMatch(/<dt[^>]*>source<\/dt>/);
+    // 008 decision 6: the product's footer ships no source row, and its
+    // identity is the product's wordmark.
+    expect(body).not.toMatch(/<dt[^>]*>source<\/dt>/);
+    expect(body).toMatch(/data-shell="wordmark"[^>]*>\s*Sandbox\s*</);
+    expect(body).not.toContain("Work runs on data.");
     // No word stands in for a missing commit.
     expect(body).not.toContain("unknown");
     expect(
@@ -420,10 +424,37 @@ describe.each([
     ]);
   });
 
+  // 008 criterion 17: the CLI writes the hover reveal intact, its hover rules
+  // inside (hover: hover).
+  test("9b. app.css holds @utility mark-reveal once with 4 offsets, and one top-level (hover: hover) block holding its 5 hover rules", () => {
+    const css = readFileSync(path.join(r.app, "src", "app.css"), "utf8");
+    expect(css.match(/@utility mark-reveal\s*\{/g)).toHaveLength(1);
+    const reveal = blocks(css).find(
+      (b) => b.prelude === "@utility mark-reveal",
+    )!;
+    expect(
+      reveal.children.filter((c) =>
+        /^& > .*:nth-child\([1-4]\)$/.test(c.prelude),
+      ),
+    ).toHaveLength(4);
+    const hover = blocks(css).filter(
+      (b) => b.prelude === "@media (hover: hover)",
+    );
+    expect(hover).toHaveLength(1);
+    expect(
+      hover[0]!.children.filter((c) =>
+        c.prelude.startsWith(":hover > .mark-reveal > "),
+      ),
+    ).toHaveLength(5);
+  });
+
   // 006 decision 14, assertion 10: a second add is byte-identical.
-  test("10. a second add changes 0 of the block files", async () => {
+  // 008 change review, finding 6: the theme's CSS is compared too.
+  test("10. a second add changes 0 of the block files and leaves app.css byte-identical", async () => {
+    const CSS = path.join("src", "app.css");
+    const FILES_10 = [...BLOCK_FILES, CSS];
     const before = Object.fromEntries(
-      BLOCK_FILES.map((f) => [f, readFileSync(path.join(r.app, f), "utf8")]),
+      FILES_10.map((f) => [f, readFileSync(path.join(r.app, f), "utf8")]),
     );
     const again = await run(
       bin(REPO, "shadcn-svelte", "add", ...BLOCKS, "-y", "-o"),
@@ -431,7 +462,7 @@ describe.each([
       { REGISTRY_URL: `http://localhost:${port}/r` },
     );
     expect(again.code).toBe(0);
-    const changed = BLOCK_FILES.filter(
+    const changed = FILES_10.filter(
       (f) => readFileSync(path.join(r.app, f), "utf8") !== before[f],
     );
     expect(changed).toEqual([]);

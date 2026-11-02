@@ -1,0 +1,39 @@
+{
+	"$schema": "https://shadcn-svelte.com/schema/registry-item.json",
+	"name": "separator",
+	"title": "Separator",
+	"type": "registry:ui",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+	"description": "The groove between sections, decorative by default, or a plain vertical hairline.",
+	"devDependencies": [
+		"bits-ui@^2.20.2",
+		"@internationalized/date@^3.12.4"
+	],
+	"registryDependencies": [
+		"utils",
+		"pluto-theme"
+	],
+	"meta": {
+		"since": "0.2.0",
+		"group": "surfaces",
+		"stock": {
+			"registry": "https://shadcn-svelte.com/registry/styles/maia",
+			"item": "separator",
+			"cli": "1.7.1",
+			"date": "2026-10-28",
+			"sha256": "6f53e106cb04597615e9f28d1cd1a34e04e9f81b7ceea1787935dd0e79b1521e"
+		}
+	},
+	"files": [
+		{
+			"content": "<script lang=\"ts\">\n  import { Separator as SeparatorPrimitive } from \"bits-ui\";\n  import { cn } from \"$UTILS$\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    // Decorative unless the app says it means something: bits-ui's own default is false.\n    decorative = true,\n    \"data-slot\": dataSlot = \"separator\",\n    ...restProps\n  }: SeparatorPrimitive.RootProps = $props();\n</script>\n\n<SeparatorPrimitive.Root\n  bind:ref\n  data-slot={dataSlot}\n  {decorative}\n  class={cn(\n    \"shrink-0 data-horizontal:groove data-horizontal:w-full data-horizontal:pt-(--line-width) data-vertical:self-stretch data-vertical:border-l data-vertical:border-border\",\n    className,\n  )}\n  {...restProps}\n/>\n",
+			"type": "registry:ui",
+			"target": "separator/separator.svelte"
+		},
+		{
+			"content": "import Root from \"./separator.svelte\";\n\nexport {\n  Root,\n  //\n  Root as Separator,\n};\n",
+			"type": "registry:ui",
+			"target": "separator/index.ts"
+		}
+	]
+}

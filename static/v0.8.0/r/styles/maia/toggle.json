@@ -1,0 +1,40 @@
+{
+	"$schema": "https://shadcn-svelte.com/schema/registry-item.json",
+	"name": "toggle",
+	"title": "Toggle",
+	"type": "registry:ui",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+	"description": "A two-state button that says whether it is pressed, inverted when it is.",
+	"devDependencies": [
+		"bits-ui@^2.20.2",
+		"@internationalized/date@^3.12.4",
+		"tailwind-variants@^3.3.1"
+	],
+	"registryDependencies": [
+		"utils",
+		"pluto-theme"
+	],
+	"meta": {
+		"since": "0.4.0",
+		"group": "actions",
+		"stock": {
+			"registry": "https://shadcn-svelte.com/registry/styles/maia",
+			"item": "toggle",
+			"cli": "1.7.1",
+			"date": "2026-10-31",
+			"sha256": "52a50310423259c847984631df3ca1f6bce00745c0df6d86ea13878411bc454c"
+		}
+	},
+	"files": [
+		{
+			"content": "<script lang=\"ts\" module>\n  import { tv, type VariantProps } from \"tailwind-variants/lite\";\n\n  /**\n   * A two-state button. Pressed is inverted, the recipe the tooltip uses, so\n   * the state is told at a glance and never by a faint tint. `data-state`, not `aria-pressed`: a toggle\n   * group's single mode marks its items `aria-checked`, and bits-ui sets\n   * `data-state=\"on\"` in both modes.\n   */\n  export const toggleVariants = tv({\n    base: \"group/toggle inline-flex items-center justify-center gap-2 rounded font-medium whitespace-nowrap transition-[color,background-color,border-color] hover:bg-accent hover:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 data-[state=on]:bg-foreground data-[state=on]:text-background [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4\",\n    variants: {\n      variant: {\n        default: \"bg-transparent\",\n        outline: \"border border-input bg-transparent\",\n      },\n      size: {\n        default: \"h-12 min-w-12 px-4 text-base\",\n        sm: \"h-8 min-w-8 px-3 text-sm\",\n      },\n    },\n    defaultVariants: {\n      variant: \"default\",\n      size: \"default\",\n    },\n  });\n\n  export type ToggleVariant = VariantProps<typeof toggleVariants>[\"variant\"];\n  export type ToggleSize = VariantProps<typeof toggleVariants>[\"size\"];\n  export type ToggleVariants = VariantProps<typeof toggleVariants>;\n</script>\n\n<script lang=\"ts\">\n  import { Toggle as TogglePrimitive } from \"bits-ui\";\n  import { cn } from \"$UTILS$\";\n\n  let {\n    ref = $bindable(null),\n    pressed = $bindable(false),\n    class: className,\n    size = \"default\",\n    variant = \"default\",\n    ...restProps\n  }: TogglePrimitive.RootProps & {\n    variant?: ToggleVariant;\n    size?: ToggleSize;\n  } = $props();\n</script>\n\n<!-- A native button with aria-pressed; an icon-only toggle needs an aria-label. -->\n<TogglePrimitive.Root\n  bind:ref\n  bind:pressed\n  data-slot=\"toggle\"\n  class={cn(toggleVariants({ variant, size }), className)}\n  {...restProps}\n/>\n",
+			"type": "registry:ui",
+			"target": "toggle/toggle.svelte"
+		},
+		{
+			"content": "import Root from \"./toggle.svelte\";\nexport {\n  toggleVariants,\n  type ToggleSize,\n  type ToggleVariant,\n  type ToggleVariants,\n} from \"./toggle.svelte\";\n\nexport {\n  Root,\n  //\n  Root as Toggle,\n};\n",
+			"type": "registry:ui",
+			"target": "toggle/index.ts"
+		}
+	]
+}

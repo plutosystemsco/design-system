@@ -207,10 +207,12 @@ const SETTINGS_CONTROLS = [
   "radio:Match the system",
 ];
 /** 006 decision 14: the shell's stops. The sidebar's Preferences group is closed, so its sub-items are not stops. */
-const SHELL_TOP = ["a:Skip to main content", "a:Pluto app"];
+// 008 decision 8: the home link is the product's wordmark, "Sandbox"; the
+// shipped layout has no source row, the views keep one.
+const SHELL_TOP = ["a:Skip to main content", "a:Sandbox"];
 const SHELL_NAV = ["a:Overview", "a:Activity", "a:Members"];
 const SHELL_END = [
-  "a:Open the catalogue",
+  "a:Go to the home page",
   "a:github.com/plutosystemsco/design-system",
 ];
 /** 006 decision 14: the chat's stops; the pre inside the thread's code block is a stop (004 decision 8). */
@@ -227,7 +229,7 @@ const CHAT_BUSY = [
   "button:Stop response",
 ];
 export const VIEW_STOPS: Record<string, string[]> = {
-  "/view/hero/": ["a:Browse the components", "a:See what is included"],
+  "/view/hero/": ["a:Go to the home page", "a:See what the page holds"],
   "/view/sign-in/": SIGN_IN,
   "/view/sign-in/errors/": [
     "a:Enter your email address",
@@ -285,7 +287,7 @@ export const VIEW_STOPS: Record<string, string[]> = {
     ...SHELL_TOP,
     ...SHELL_NAV,
     "button:Dark theme",
-    ...SHELL_END,
+    "a:Go to the home page",
   ],
   "/view/app-shell/sidebar/": [
     ...SHELL_TOP,
@@ -313,6 +315,20 @@ export const VIEW_STOPS: Record<string, string[]> = {
     ...SHELL_NAV,
     "button:Dark theme",
     "button:Account menu",
+    ...SHELL_END,
+  ],
+  "/view/app-shell/lockup/": [
+    "a:Skip to main content",
+    "a:Pluto Systems",
+    ...SHELL_NAV,
+    "button:Dark theme",
+    ...SHELL_END,
+  ],
+  "/view/app-shell/endorsed/": [
+    "a:Skip to main content",
+    "a:Sandbox Analytics Workbench",
+    ...SHELL_NAV,
+    "button:Dark theme",
     ...SHELL_END,
   ],
   "/view/chat/": CHAT_READY,

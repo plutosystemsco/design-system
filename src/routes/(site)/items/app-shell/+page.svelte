@@ -21,19 +21,30 @@
       <code>h1</code>: the page does.
     </li>
     <li>
-      The lockup plays the page's one entrance, the four dots docking over 900
-      ms, once per full document load: SvelteKit keeps the layout's lockup
-      across client-side navigation. Under reduced motion the composed mark
-      shows before any frame. A page that breaks out of the layout with
-      <code>+page@.svelte</code>, a route in another layout group, or a
-      <code>{"{#key}"}</code> around the layout's content would replay it.
+      The shell shows your product's identity. The home link holds your logo
+      (the <code>LOGO</code> snippet), named by <code>APP_NAME</code>, or,
+      without one, <code>APP_NAME</code> itself as a wordmark in the heading
+      face. A long name truncates in the header and wraps in the footer. A logo
+      should be at most 36 px tall, as the lockup at <code>text-2xl</code> (34.6
+      px) is, and at most 176 px wide, so it fits beside the controls at 320 px;
+      <code>APP_NAME</code> must contain any words the logo shows.
     </li>
     <li>
-      The header's row is 64 px, grooved on its bottom edge; the lockup is the
-      home link, named by <code>APP_NAME</code>. Below <code>md</code> the links fold
-      into a sheet opened by a 32 px "Menu" button that says it opens a dialog; Escape
-      returns focus to it. Not sticky by default; with a sidebar it is sticky, since
-      the sidebar beside it is.
+      A product whose logo is the Pluto Systems lockup writes
+      <code>{'<Lockup entrance={place === "header"} />'}</code> in its snippet:
+      the header's lockup then plays the page's one entrance, the four dots
+      docking over 900 ms, once per full document load, and the footer's does
+      not. Under reduced motion the composed mark shows before any frame. A page
+      that breaks out of the layout with <code>+page@.svelte</code>, a route in
+      another layout group, or a <code>{"{#key}"}</code> around the layout's content
+      would replay it.
+    </li>
+    <li>
+      The header's row is 64 px, grooved on its bottom edge; the home link is at
+      least 48 px tall. Below <code>md</code> the links fold into a sheet opened by
+      a 32 px "Menu" button that says it opens a dialog; Escape returns focus to it.
+      Not sticky by default; with a sidebar it is sticky, since the sidebar beside
+      it is.
     </li>
     <li>
       The account menu is a 24 px avatar in a 32 px button named "Account menu",
@@ -45,13 +56,22 @@
       The footer's rows are mono furniture: <code>commit</code>,
       <code>built</code> (a <code>time</code> with its ISO date),
       <code>doc</code> and <code>source</code>, each only when its value is
-      given, so every page carries its build date. The brand line beside the
-      lockup is "Work runs on data."; pass <code>tagline=""</code> to show none. The
-      lockup here is not a link: the header's is.
+      given, so every page carries its build date. Your product's own line sits
+      beside its name when you pass <code>tagline</code>. The name here is not a
+      link: the header's is.
     </li>
     <li>
-      A doc ID is <code>PS-&lt;series&gt;-&lt;NNNN&gt;</code>: a series is one
-      counter with its own short code (<code>DS</code> is this registry's specifications).
+      With <code>endorsed</code> the footer adds "A Pluto Systems product" under the
+      rows. Where a pointer can hover, the four dots of the mark dock in beside the
+      words when the line is hovered, the last at its place at 200 ms, and leave when
+      it is not. The dots are hidden from assistive technology, so the line reads
+      as its words, and it takes no focus. Under reduced motion the dots appear without
+      moving.
+    </li>
+    <li>
+      A doc ID is in your own scheme; Pluto Systems' is
+      <code>PS-&lt;series&gt;-&lt;NNNN&gt;</code>, where a series is one counter
+      with its own short code (<code>DS</code> is this registry's specifications).
       The footer shows the string it is given.
     </li>
     <li>
@@ -70,7 +90,9 @@
     </li>
     <li>
       Edit the constants at the top of the layout: <code>APP_NAME</code>,
-      <code>LINKS</code>, <code>SIDEBAR</code> (<code>false</code>,
+      <code>LOGO</code>, <code>LINKS</code>, <code>SIDEBAR</code> (<code
+        >false</code
+      >,
       <code>"offcanvas"</code> or <code>"icon"</code>), <code>STICKY</code>,
       <code>USER</code> and <code>FOOTER</code>. The server load reads the
       sidebar's cookie, so the first paint is right.

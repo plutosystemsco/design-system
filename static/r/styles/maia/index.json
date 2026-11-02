@@ -1333,7 +1333,7 @@
 		"title": "App shell",
 		"type": "registry:block",
 		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-		"description": "The frame every page sits in: a skip link, a header with the lockup's one entrance and a theme toggle, an optional sidebar, the main area, and a footer that states the build.",
+		"description": "The frame every page sits in: a skip link, a header with the product's logo or name and a theme toggle, an optional sidebar, the main area, and a footer that states the build.",
 		"registryDependencies": [
 			"utils",
 			"pluto-theme",

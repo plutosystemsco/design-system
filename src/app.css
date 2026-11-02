@@ -402,6 +402,67 @@
   }
 }
 
+@utility mark-reveal {
+  & > [data-slot="four-dot-dot"] {
+    opacity: 0;
+    transform: translate(
+        calc(var(--mark-orbit) * var(--_ox)),
+        calc(var(--mark-orbit) * var(--_oy))
+      )
+      scale(0.4);
+    transition-property: opacity, transform;
+    transition-duration: calc(var(--motion-micro) * var(--motion-entrance-dot));
+    transition-timing-function: var(--ease-entrance);
+  }
+  & > [data-slot="four-dot-dot"]:nth-child(1) {
+    --_ox: -1;
+    --_oy: 0.6;
+  }
+  & > [data-slot="four-dot-dot"]:nth-child(2) {
+    --_ox: 0.8;
+    --_oy: -0.8;
+  }
+  & > [data-slot="four-dot-dot"]:nth-child(3) {
+    --_ox: -0.6;
+    --_oy: -1;
+  }
+  & > [data-slot="four-dot-dot"]:nth-child(4) {
+    --_ox: 1;
+    --_oy: 0.8;
+  }
+}
+
+@media (hover: hover) {
+  :hover > .mark-reveal > [data-slot="four-dot-dot"] {
+    opacity: 1;
+    transform: none;
+  }
+  :hover > .mark-reveal > [data-slot="four-dot-dot"]:nth-child(1) {
+    transition-delay: calc(
+      var(--motion-micro) *
+        (var(--motion-entrance-start) + 0 * var(--motion-entrance-stagger))
+    );
+  }
+  :hover > .mark-reveal > [data-slot="four-dot-dot"]:nth-child(2) {
+    transition-delay: calc(
+      var(--motion-micro) *
+        (var(--motion-entrance-start) + 1 * var(--motion-entrance-stagger))
+    );
+  }
+  :hover > .mark-reveal > [data-slot="four-dot-dot"]:nth-child(3) {
+    transition-delay: calc(
+      var(--motion-micro) *
+        (var(--motion-entrance-start) + 2 * var(--motion-entrance-stagger))
+    );
+  }
+  :hover > .mark-reveal > [data-slot="four-dot-dot"]:nth-child(4) {
+    transition-delay: calc(
+      var(--motion-micro) *
+        (var(--motion-entrance-start) + 3 * var(--motion-entrance-stagger))
+    );
+  }
+}
+
 .surface-ink {
   --code-background: var(--background);
   --code-active-line: var(--muted);

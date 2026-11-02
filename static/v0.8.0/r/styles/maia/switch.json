@@ -1,0 +1,39 @@
+{
+	"$schema": "https://shadcn-svelte.com/schema/registry-item.json",
+	"name": "switch",
+	"title": "Switch",
+	"type": "registry:ui",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+	"description": "An on and off setting: a blue track with a thumb that moves to the end.",
+	"devDependencies": [
+		"bits-ui@^2.20.2",
+		"@internationalized/date@^3.12.4"
+	],
+	"registryDependencies": [
+		"utils",
+		"pluto-theme"
+	],
+	"meta": {
+		"since": "0.2.0",
+		"group": "forms",
+		"stock": {
+			"registry": "https://shadcn-svelte.com/registry/styles/maia",
+			"item": "switch",
+			"cli": "1.7.1",
+			"date": "2026-10-28",
+			"sha256": "1668514c6a437712b065b450da9f7243d5074bf63722236fc34b1861794f19e9"
+		}
+	},
+	"files": [
+		{
+			"content": "<script lang=\"ts\">\n  import { Switch as SwitchPrimitive } from \"bits-ui\";\n  import { getContext } from \"svelte\";\n  import { cn, type WithoutChildrenOrChild } from \"$UTILS$\";\n\n  /** The contract a `Field` sets under the key \"pluto:field\". */\n  type FieldContext = {\n    readonly id: string;\n    readonly invalid: boolean;\n    readonly describedBy: string | undefined;\n  };\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    checked = $bindable(false),\n    id,\n    \"aria-describedby\": describedBy,\n    \"aria-invalid\": invalid,\n    ...restProps\n  }: WithoutChildrenOrChild<SwitchPrimitive.RootProps> = $props();\n\n  const field = getContext<FieldContext | undefined>(\"pluto:field\");\n</script>\n\n<!--\n  A 32 × 64 track with a 24 × 24 thumb inset 4 px, both at the case radius, no\n  track border. On is blue and the thumb moves to the end.\n-->\n<SwitchPrimitive.Root\n  bind:ref\n  bind:checked\n  data-slot=\"switch\"\n  class={cn(\n    \"peer group/switch relative inline-flex h-8 w-16 shrink-0 items-center rounded p-1 transition-[background-color] data-checked:bg-primary data-unchecked:bg-input data-disabled:cursor-not-allowed data-disabled:opacity-50\",\n    className,\n  )}\n  id={id ?? field?.id}\n  aria-describedby={describedBy ?? field?.describedBy}\n  aria-invalid={invalid ?? (field?.invalid ? true : undefined)}\n  {...restProps}\n>\n  <SwitchPrimitive.Thumb\n    data-slot=\"switch-thumb\"\n    class=\"pointer-events-none block size-6 rounded transition-transform data-checked:translate-x-8 data-checked:bg-primary-foreground data-unchecked:translate-x-0 data-unchecked:bg-card\"\n  />\n</SwitchPrimitive.Root>\n",
+			"type": "registry:ui",
+			"target": "switch/switch.svelte"
+		},
+		{
+			"content": "import Root from \"./switch.svelte\";\n\nexport {\n  Root,\n  //\n  Root as Switch,\n};\n",
+			"type": "registry:ui",
+			"target": "switch/index.ts"
+		}
+	]
+}

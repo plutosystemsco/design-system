@@ -150,7 +150,8 @@ test.describe("accessible names", () => {
 
 /**
  * 006 decision 5: the entrance. Four animations named pluto-mark-dock on the
- * shell's lockup, 495 ms each, delayed 135 to 405 ms, the last ending at
+ * shell's lockup (008: on the lockup view, whose logo is the lockup; the
+ * document's count of four proves the footer's copy plays none), 495 ms each, delayed 135 to 405 ms, the last ending at
  * 900 ms, every dot composed after `finished`; none under reduce, with the
  * dots composed at `load`; and one per full load: a client-side navigation
  * on the site keeps the lockup node and starts nothing.
@@ -168,10 +169,18 @@ const DOTS = `[...document.querySelectorAll('header [data-slot="four-dot-dot"]')
   .map((d) => [getComputedStyle(d).opacity, getComputedStyle(d).transform])`;
 
 test.describe("the entrance", () => {
-  test("4 of 4 dots run pluto-mark-dock for 495 ms, delayed 135 to 405 ms, ending by 900 ms, and land composed", async ({
+  // 008 criterion 2: the shipped shell shows a wordmark, so nothing docks.
+  test("the shipped shell runs 0 pluto-mark-dock animations", async ({
     page,
   }) => {
     await openView(page, "/view/app-shell/");
+    expect(await page.evaluate(ANIMATIONS)).toEqual([]);
+  });
+
+  test("4 of 4 dots run pluto-mark-dock for 495 ms, delayed 135 to 405 ms, ending by 900 ms, and land composed", async ({
+    page,
+  }) => {
+    await openView(page, "/view/app-shell/lockup/");
     const timings = (await page.evaluate(ANIMATIONS)) as Timing[];
     expect(timings).toHaveLength(4);
     for (const t of timings) {
@@ -183,6 +192,19 @@ test.describe("the entrance", () => {
       135, 225, 315, 405,
     ]);
     expect(Math.round(Math.max(...timings.map((t) => t.end)))).toBe(900);
+    // 008 criterion 5: all four in the banner, none in the footer's lockup.
+    expect(
+      await page.evaluate(() =>
+        document
+          .getAnimations()
+          .filter(
+            (a) => (a as CSSAnimation).animationName === "pluto-mark-dock",
+          )
+          .every((a) =>
+            ((a.effect as KeyframeEffect).target as Element).closest("header"),
+          ),
+      ),
+    ).toBe(true);
     await page.evaluate(() =>
       Promise.all(document.getAnimations().map((a) => a.finished)),
     );
@@ -216,7 +238,7 @@ test.describe("the entrance", () => {
           };
         });
       });
-      await openView(page, "/view/app-shell/");
+      await openView(page, "/view/app-shell/lockup/");
       const atLoad = (await page.evaluate(
         () => (window as unknown as { atLoad: unknown }).atLoad,
       )) as { animations: number; dots: [string, string][] };

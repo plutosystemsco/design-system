@@ -1,0 +1,40 @@
+{
+	"$schema": "https://shadcn-svelte.com/schema/registry-item.json",
+	"name": "kbd",
+	"title": "Kbd",
+	"type": "registry:ui",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+	"description": "A keyboard key, or a group of keys, set in the mono face on an inset.",
+	"registryDependencies": [
+		"utils",
+		"pluto-theme"
+	],
+	"meta": {
+		"since": "0.2.0",
+		"group": "actions",
+		"stock": {
+			"registry": "https://shadcn-svelte.com/registry/styles/maia",
+			"item": "kbd",
+			"cli": "1.7.1",
+			"date": "2026-10-28",
+			"sha256": "63bc69ecd4aed29655a9213e211965dd728876b91701b39b3d039b663f94dd07"
+		}
+	},
+	"files": [
+		{
+			"content": "<script lang=\"ts\">\n  import { cn, type WithElementRef } from \"$UTILS$\";\n  import type { HTMLAttributes } from \"svelte/elements\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    children,\n    ...restProps\n  }: WithElementRef<HTMLAttributes<HTMLElement>> = $props();\n</script>\n\n<kbd\n  bind:this={ref}\n  data-slot=\"kbd-group\"\n  class={cn(\"inline-flex items-center gap-1\", className)}\n  {...restProps}\n>\n  {@render children?.()}\n</kbd>\n",
+			"type": "registry:ui",
+			"target": "kbd/kbd-group.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import { cn, type WithElementRef } from \"$UTILS$\";\n  import type { HTMLAttributes } from \"svelte/elements\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    children,\n    ...restProps\n  }: WithElementRef<HTMLAttributes<HTMLElement>> = $props();\n</script>\n\n<kbd\n  bind:this={ref}\n  data-slot=\"kbd\"\n  class={cn(\n    \"pointer-events-none inline-flex w-fit min-w-6 items-center justify-center gap-1 rounded border border-border bg-muted px-1 font-mono text-xs font-medium text-muted-foreground select-none [&_svg:not([class*='size-'])]:size-3\",\n    className,\n  )}\n  {...restProps}\n>\n  {@render children?.()}\n</kbd>\n",
+			"type": "registry:ui",
+			"target": "kbd/kbd.svelte"
+		},
+		{
+			"content": "import Group from \"./kbd-group.svelte\";\nimport Root from \"./kbd.svelte\";\n\nexport {\n  Root,\n  Group,\n  //\n  Root as Kbd,\n  Group as KbdGroup,\n};\n",
+			"type": "registry:ui",
+			"target": "kbd/index.ts"
+		}
+	]
+}

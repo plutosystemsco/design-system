@@ -218,6 +218,46 @@ export function themeCss(tokens: Tokens): CssTree {
         ]),
       ),
     },
+    // 008 decision 5: the mark's hover reveal, a response, not an entrance.
+    // The entrance's path and shares on the micro budget: each dot glides in
+    // from its orbit offset when the parent is hovered, the last at its place
+    // at 200 ms, and leaves at the same pace with no delay. Only where the
+    // primary pointer can hover, as Tailwind's own `hover:` variant does.
+    "@utility mark-reveal": {
+      '& > [data-slot="four-dot-dot"]': {
+        opacity: "0",
+        transform:
+          "translate(calc(var(--mark-orbit) * var(--_ox)), calc(var(--mark-orbit) * var(--_oy))) scale(0.4)",
+        "transition-property": "opacity, transform",
+        "transition-duration":
+          "calc(var(--motion-micro) * var(--motion-entrance-dot))",
+        "transition-timing-function": "var(--ease-entrance)",
+      },
+      ...Object.fromEntries(
+        ENTRANCE_OFFSETS.map(([ox, oy], i) => [
+          `& > [data-slot="four-dot-dot"]:nth-child(${i + 1})`,
+          { "--_ox": String(ox), "--_oy": String(oy) },
+        ]),
+      ),
+    },
+    // 008 decision 5: the reveal's hover rules, as plain rules in a top-level
+    // media query. The CLI writes an `@media` nested in an `@utility` as a
+    // selector and flattens its rules out of it, so they live here, unlayered,
+    // where they also win over the utility's rest state.
+    "@media (hover: hover)": {
+      ':hover > .mark-reveal > [data-slot="four-dot-dot"]': {
+        opacity: "1",
+        transform: "none",
+      },
+      ...Object.fromEntries(
+        ENTRANCE_OFFSETS.map((_, i) => [
+          `:hover > .mark-reveal > [data-slot="four-dot-dot"]:nth-child(${i + 1})`,
+          {
+            "transition-delay": `calc(var(--motion-micro) * (var(--motion-entrance-start) + ${i} * var(--motion-entrance-stagger)))`,
+          },
+        ]),
+      ),
+    },
     // 007 decision 8: the ink surface, `class="dark surface-ink"` on any
     // element. Two plain rules, not an `@utility`: a utility is layered and
     // loses to the unlayered `.dark` on the same element. The first rule wins

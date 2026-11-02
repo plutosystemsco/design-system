@@ -1,0 +1,63 @@
+{
+	"$schema": "https://shadcn-svelte.com/schema/registry-item.json",
+	"name": "empty",
+	"title": "Empty",
+	"type": "registry:ui",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+	"description": "An empty state: an icon tile, a heading, a sentence and the next action.",
+	"devDependencies": [
+		"tailwind-variants@^3.3.1"
+	],
+	"registryDependencies": [
+		"utils",
+		"pluto-theme"
+	],
+	"meta": {
+		"since": "0.2.0",
+		"group": "feedback",
+		"stock": {
+			"registry": "https://shadcn-svelte.com/registry/styles/maia",
+			"item": "empty",
+			"cli": "1.7.1",
+			"date": "2026-10-28",
+			"sha256": "b99cf98c30eea08caeef03e3694be76cbb6fb16aae3c4afb98a9be02f560ad96"
+		}
+	},
+	"files": [
+		{
+			"content": "<script lang=\"ts\">\n  import { cn, type WithElementRef } from \"$UTILS$\";\n  import type { HTMLAttributes } from \"svelte/elements\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    children,\n    ...restProps\n  }: WithElementRef<HTMLAttributes<HTMLDivElement>> = $props();\n</script>\n\n<div\n  bind:this={ref}\n  data-slot=\"empty-content\"\n  class={cn(\n    \"flex w-full max-w-sm min-w-0 flex-col items-center gap-4 text-sm text-balance\",\n    className,\n  )}\n  {...restProps}\n>\n  {@render children?.()}\n</div>\n",
+			"type": "registry:ui",
+			"target": "empty/empty-content.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import { cn, type WithElementRef } from \"$UTILS$\";\n  import type { HTMLAttributes } from \"svelte/elements\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    children,\n    ...restProps\n  }: WithElementRef<HTMLAttributes<HTMLDivElement>> = $props();\n</script>\n\n<div\n  bind:this={ref}\n  data-slot=\"empty-description\"\n  class={cn(\n    \"text-sm text-muted-foreground [&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-primary\",\n    className,\n  )}\n  {...restProps}\n>\n  {@render children?.()}\n</div>\n",
+			"type": "registry:ui",
+			"target": "empty/empty-description.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import { cn, type WithElementRef } from \"$UTILS$\";\n  import type { HTMLAttributes } from \"svelte/elements\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    children,\n    ...restProps\n  }: WithElementRef<HTMLAttributes<HTMLDivElement>> = $props();\n</script>\n\n<div\n  bind:this={ref}\n  data-slot=\"empty-header\"\n  class={cn(\"flex max-w-sm flex-col items-center gap-2\", className)}\n  {...restProps}\n>\n  {@render children?.()}\n</div>\n",
+			"type": "registry:ui",
+			"target": "empty/empty-header.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\" module>\n  import { tv, type VariantProps } from \"tailwind-variants/lite\";\n\n  export const emptyMediaVariants = tv({\n    base: \"mb-2 flex shrink-0 items-center justify-center [&_svg]:pointer-events-none [&_svg]:shrink-0\",\n    variants: {\n      variant: {\n        default: \"bg-transparent\",\n        icon: \"flex size-12 shrink-0 items-center justify-center rounded bg-muted text-foreground [&_svg:not([class*='size-'])]:size-6\",\n      },\n    },\n    defaultVariants: {\n      variant: \"default\",\n    },\n  });\n\n  export type EmptyMediaVariant = VariantProps<\n    typeof emptyMediaVariants\n  >[\"variant\"];\n</script>\n\n<script lang=\"ts\">\n  import { cn, type WithElementRef } from \"$UTILS$\";\n  import type { HTMLAttributes } from \"svelte/elements\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    children,\n    variant = \"default\",\n    ...restProps\n  }: WithElementRef<HTMLAttributes<HTMLDivElement>> & {\n    variant?: EmptyMediaVariant;\n  } = $props();\n</script>\n\n<div\n  bind:this={ref}\n  data-slot=\"empty-icon\"\n  data-variant={variant}\n  class={cn(emptyMediaVariants({ variant }), className)}\n  {...restProps}\n>\n  {@render children?.()}\n</div>\n",
+			"type": "registry:ui",
+			"target": "empty/empty-media.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import { cn, type WithElementRef } from \"$UTILS$\";\n  import type { HTMLAttributes } from \"svelte/elements\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    level = 2,\n    children,\n    ...restProps\n  }: WithElementRef<HTMLAttributes<HTMLHeadingElement>> & {\n    /** The heading level, so a page state's title can be its h1. Default 2. */\n    level?: 1 | 2 | 3 | 4 | 5 | 6;\n  } = $props();\n</script>\n\n<svelte:element\n  this={`h${level}`}\n  bind:this={ref}\n  data-slot=\"empty-title\"\n  class={cn(\"font-heading text-2xl font-bold tracking-section\", className)}\n  {...restProps}\n>\n  {@render children?.()}\n</svelte:element>\n",
+			"type": "registry:ui",
+			"target": "empty/empty-title.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n  import { cn, type WithElementRef } from \"$UTILS$\";\n  import type { HTMLAttributes } from \"svelte/elements\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    children,\n    ...restProps\n  }: WithElementRef<HTMLAttributes<HTMLDivElement>> = $props();\n</script>\n\n<div\n  bind:this={ref}\n  data-slot=\"empty\"\n  class={cn(\n    \"flex w-full min-w-0 flex-1 flex-col items-center justify-center gap-4 rounded border-dashed p-12 text-center text-balance\",\n    className,\n  )}\n  {...restProps}\n>\n  {@render children?.()}\n</div>\n",
+			"type": "registry:ui",
+			"target": "empty/empty.svelte"
+		},
+		{
+			"content": "import Content from \"./empty-content.svelte\";\nimport Description from \"./empty-description.svelte\";\nimport Header from \"./empty-header.svelte\";\nimport Media from \"./empty-media.svelte\";\nimport Title from \"./empty-title.svelte\";\nimport Root from \"./empty.svelte\";\n\nexport {\n  Root,\n  Header,\n  Media,\n  Title,\n  Description,\n  Content,\n  //\n  Root as Empty,\n  Header as EmptyHeader,\n  Media as EmptyMedia,\n  Title as EmptyTitle,\n  Description as EmptyDescription,\n  Content as EmptyContent,\n};\n",
+			"type": "registry:ui",
+			"target": "empty/index.ts"
+		}
+	]
+}

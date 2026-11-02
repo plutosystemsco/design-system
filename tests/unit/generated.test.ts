@@ -438,7 +438,8 @@ describe("006's additions to pluto-theme", () => {
       "@keyframes pluto-mark-dock",
     );
     expect(css.match(/@utility mark-entrance \{/g)).toHaveLength(1);
-    expect(css.match(/:nth-child\([1-4]\)/g)).toHaveLength(4);
+    // Four on mark-entrance; 008 adds eight for mark-reveal (offsets and delays).
+    expect(css.match(/:nth-child\([1-4]\)/g)).toHaveLength(12);
     expect(css.match(/@utility groove-b \{/g)).toHaveLength(1);
     expect(css).toContain(
       "box-shadow: 0 var(--line-width) 0 var(--groove-light);",
@@ -451,5 +452,52 @@ describe("006's additions to pluto-theme", () => {
       "*, ::before, ::after",
       '.mark-entrance [data-slot="four-dot-dot"]',
     ]);
+  });
+});
+
+/**
+ * 008 decision 5, criterion 16: the hover reveal. One utility, the entrance's
+ * offsets, its shares on the micro budget, the hover rules inside
+ * `(hover: hover)`; the reduce block is unchanged.
+ */
+describe("008's mark-reveal", () => {
+  const theme = () =>
+    items(readFileSync("registry.json", "utf8")).get("pluto-theme") as Item & {
+      css: CssTree;
+    };
+  const DOT = '[data-slot="four-dot-dot"]';
+  test("css holds @utility mark-reveal (the rest state and the entrance's 4 offsets) and a top-level (hover: hover) block of its hover rules", () => {
+    const reveal = theme().css["@utility mark-reveal"] as CssTree;
+    const entrance = theme().css["@utility mark-entrance"] as CssTree;
+    expect(reveal[`& > ${DOT}`]).toEqual({
+      opacity: "0",
+      transform:
+        "translate(calc(var(--mark-orbit) * var(--_ox)), calc(var(--mark-orbit) * var(--_oy))) scale(0.4)",
+      "transition-property": "opacity, transform",
+      "transition-duration":
+        "calc(var(--motion-micro) * var(--motion-entrance-dot))",
+      "transition-timing-function": "var(--ease-entrance)",
+    });
+    for (let i = 1; i <= 4; i++) {
+      const key = `& > ${DOT}:nth-child(${i})`;
+      const e = entrance[key] as Record<string, string>;
+      expect(reveal[key]).toEqual({ "--_ox": e["--_ox"], "--_oy": e["--_oy"] });
+    }
+    // The hover rules are top-level, outside the utility: the CLI flattens an
+    // @media nested in an @utility.
+    expect(Object.keys(reveal)).toHaveLength(5);
+    const hover = theme().css["@media (hover: hover)"] as CssTree;
+    const REVEAL = `:hover > .mark-reveal > ${DOT}`;
+    expect(hover[REVEAL]).toEqual({ opacity: "1", transform: "none" });
+    for (let i = 1; i <= 4; i++) {
+      expect(hover[`${REVEAL}:nth-child(${i})`]).toEqual({
+        "transition-delay": `calc(var(--motion-micro) * (var(--motion-entrance-start) + ${i - 1} * var(--motion-entrance-stagger)))`,
+      });
+    }
+  });
+
+  test("src/app.css holds @utility mark-reveal once", () => {
+    const css = readFileSync("src/app.css", "utf8");
+    expect(css.match(/@utility mark-reveal \{/g)).toHaveLength(1);
   });
 });

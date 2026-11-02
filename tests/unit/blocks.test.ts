@@ -198,15 +198,15 @@ describe("8. the views", () => {
       "+page.svelte",
     );
 
-  test("BLOCK_VIEWS lists the 7 blocks in registry order, with 28 views", () => {
+  test("BLOCK_VIEWS lists the 7 blocks in registry order, with 30 views", () => {
     expect(Object.keys(BLOCK_VIEWS)).toEqual(BLOCKS);
-    expect(views).toHaveLength(28);
+    expect(views).toHaveLength(30);
   });
 
-  test("28 of 28 views have their route file, under (view) or (shell)", () => {
+  test("30 of 30 views have their route file, under (view) or (shell)", () => {
     expect(
       views.filter((v) => existsSync(routeFile(v.block, v.path))),
-    ).toHaveLength(28);
+    ).toHaveLength(30);
   });
 
   test("0 other +page.svelte files under src/routes/(view)/view/ or src/routes/(shell)/view/", () => {
@@ -256,4 +256,44 @@ test("11. app-shell's +layout.server.ts imports nothing from ./$types, and +layo
   expect(blockFiles.filter((f) => read(f.path).includes("./$types"))).toEqual(
     [],
   );
+});
+
+/**
+ * 008 criterion 15: a product installs the shell and the hero without
+ * Pluto Systems' identity. The endorsement's own words and the doc ID
+ * comment's naming of Pluto Systems' scheme are the only mentions.
+ */
+describe("008: no brand copy in the shipped shell and hero", () => {
+  const FILES = [
+    "src/lib/registry/blocks/app-shell/+layout.svelte",
+    "src/lib/registry/blocks/app-shell/+layout.server.ts",
+    "src/lib/registry/blocks/app-shell/+page.svelte",
+    "src/lib/registry/components/app-shell-header.svelte",
+    "src/lib/registry/components/app-shell-footer.svelte",
+    "src/lib/registry/components/app-shell-sidebar.svelte",
+    "src/lib/registry/components/app-shell-nav.svelte",
+    "src/lib/registry/components/app-shell-user-menu.svelte",
+    "src/lib/registry/components/app-shell-skip-link.svelte",
+    "src/lib/registry/blocks/hero/+page.svelte",
+    "src/lib/registry/components/hero-section.svelte",
+    "src/lib/registry/components/hero-features.svelte",
+  ];
+  // Each exception only in the file that owns it.
+  const ALLOWED: Record<string, string[]> = {
+    "src/lib/registry/components/app-shell-footer.svelte": [
+      "A Pluto Systems product",
+      "Pluto Systems' is",
+    ],
+    "src/lib/registry/blocks/app-shell/+layout.svelte": [
+      "A Pluto Systems product",
+      "Pluto Systems' is",
+    ],
+  };
+  test.each(FILES)("%s carries no Pluto Systems identity", (file) => {
+    let text = readFileSync(file, "utf8");
+    for (const a of ALLOWED[file] ?? []) text = text.split(a).join("");
+    expect(text).not.toContain("Work runs on data.");
+    expect(text).not.toContain("plutosystemsco");
+    expect(text).not.toContain("Pluto Systems");
+  });
 });
