@@ -17,6 +17,9 @@
 	"meta": {
 		"since": "0.5.0",
 		"group": "navigation",
+		"modes": [
+			"productive"
+		],
 		"stock": {
 			"registry": "https://shadcn-svelte.com/registry/styles/maia",
 			"item": "dropdown-menu",

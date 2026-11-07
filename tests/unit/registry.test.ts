@@ -34,11 +34,15 @@ const ITEMS_001: [string, string][] = [
 
 /**
  * 003 decision 5's 39 items, 004 decision 4's 10, 005 decision 4's 11, 006
- * decision 3's 2 and 007 decision 7's 1, in order, each with its group: 63
- * items in 10 groups.
+ * decision 3's 2, 007 decision 7's 1, 009 decision 10's 1 and 010 decision
+ * 1's 10 and 011 decision 8's 1, in order, each with its group: 75 items
+ * in 11 groups.
  */
 const GROUPS: [group: string, names: string[]][] = [
-  ["foundation", [...ITEMS_001.map(([n]) => n), "theme"]],
+  [
+    "foundation",
+    [...ITEMS_001.map(([n]) => n), "theme", "read-token", "liquid-glass"],
+  ],
   ["actions", ["button", "tooltip", "kbd", "toggle", "toggle-group"]],
   [
     "surfaces",
@@ -98,6 +102,21 @@ const GROUPS: [group: string, names: string[]][] = [
     ["dropdown-menu", "sheet", "dialog", "breadcrumb", "sidebar", "is-mobile"],
   ],
   ["chat", ["message-log", "message", "marker", "composer"]],
+  // 010 decision 1 and decision 10: the compositions before the blocks.
+  [
+    "compositions",
+    [
+      "stage",
+      "stage-card",
+      "marketing-bar",
+      "stage-hero",
+      "proof-band",
+      "live-console",
+      "name-strip",
+      "cta-band",
+      "marketing-footer",
+    ],
+  ],
   [
     "blocks",
     [
@@ -108,6 +127,7 @@ const GROUPS: [group: string, names: string[]][] = [
       "settings",
       "app-shell",
       "chat",
+      "product-home",
     ],
   ],
 ];
@@ -202,9 +222,53 @@ const TARGETS_004: Record<string, string> = {
   highlighter: "highlighter.ts",
   "use-highlighted-code": "use-highlighted-code.svelte.ts",
 };
-/** 003 decision 5: the 2 new components and the 5 blocks; 006's 2 join BLOCKS. */
+/**
+ * 010 decision 1: the nine compositions, each with its title and its
+ * registry dependencies, and the block. Every one is expressive-only, since
+ * 0.11.0 (released with 009 and 011); the compositions are in their own
+ * group, the block in `blocks`.
+ */
+const ITEMS_010: [name: string, title: string, deps: string[]][] = [
+  ["stage", "Stage", []],
+  ["stage-card", "Stage card", ["code-block", "button", "status"]],
+  // 012 decisions 3 and 4: the hero's words and the bar sit on glass.
+  ["marketing-bar", "Marketing bar", ["button", "sheet", "liquid-glass"]],
+  ["stage-hero", "Stage hero", ["button", "liquid-glass"]],
+  ["proof-band", "Proof band", ["read-token"]],
+  [
+    "live-console",
+    "Live console",
+    ["tabs", "code-block", "button", "meter", "status", "read-token"],
+  ],
+  ["name-strip", "Name strip", []],
+  ["cta-band", "Call to action band", ["button"]],
+  ["marketing-footer", "Marketing footer", []],
+  [
+    "product-home",
+    "Product home",
+    [
+      "stage",
+      "stage-card",
+      "marketing-bar",
+      "stage-hero",
+      "proof-band",
+      "live-console",
+      "name-strip",
+      "cta-band",
+      "marketing-footer",
+      "four-dot",
+      // 012 decision 7 and criterion 9: the block declares the glass its
+      // hero and bar use.
+      "liquid-glass",
+    ],
+  ],
+];
+const NAMES_010 = ITEMS_010.map(([n]) => n);
+/** The items held to the expressive profile alone: 010's ten and 011's liquid-glass. */
+const EXPRESSIVE_ONLY = [...NAMES_010, "liquid-glass"];
+/** 003 decision 5: the 2 new components and the 5 blocks; 006's 2 and 010's 1 join BLOCKS. */
 const BLOCKS_003 = ["hero", "sign-in", "sign-up", "page-states", "settings"];
-const BLOCKS = [...BLOCKS_003, ...ITEMS_006.map(([n]) => n)];
+const BLOCKS = [...BLOCKS_003, ...ITEMS_006.map(([n]) => n), "product-home"];
 const ITEMS_003 = ["status", "error-summary", ...BLOCKS_003];
 /** 002's 26 items. */
 const ITEMS_002 = GROUPS.slice(1)
@@ -215,11 +279,14 @@ const ITEMS_002 = GROUPS.slice(1)
       !TYPE_004.has(n) &&
       !TYPE_005.has(n) &&
       !ITEMS_006.some(([name]) => name === n) &&
-      !TYPE_007.has(n),
+      !TYPE_007.has(n) &&
+      !NAMES_010.includes(n),
   );
 const ITEMS: [string, string][] = [
   ...ITEMS_001,
   ["theme", "registry:ui"],
+  ["read-token", "registry:lib"],
+  ["liquid-glass", "registry:ui"],
   ...GROUPS.slice(1)
     .flatMap(([, names]) => names)
     .map(
@@ -289,6 +356,8 @@ const BLOCK_FILES: Record<string, { pages: string[]; components: string[] }> = {
       "chat-types.ts",
     ],
   },
+  // 010 decision 1: one page file; its parts are the compositions, items of their own.
+  "product-home": { pages: ["+page.svelte"], components: [] },
 };
 const GROUP_OF = new Map(
   GROUPS.flatMap(([group, names]) => names.map((n) => [n, group] as const)),
@@ -317,8 +386,8 @@ describe("registry.json", () => {
     expect(() => registrySchema.parse(registry)).not.toThrow();
   });
 
-  test("holds the 63 items of 006 decision 3 and 007 decision 7, in order, with their types (1, 3, 3, 2, 47, 7)", () => {
-    expect(ITEMS).toHaveLength(63);
+  test("holds the 75 items of 006 decision 3, 007 decision 7, 009 decision 10, 010 decision 1 and 011 decision 8, in order, with their types (1, 3, 4, 2, 57, 8)", () => {
+    expect(ITEMS).toHaveLength(75);
     const types = ITEMS.map(([, t]) => t);
     expect(
       [
@@ -329,7 +398,7 @@ describe("registry.json", () => {
         "registry:ui",
         "registry:block",
       ].map((t) => types.filter((x) => x === t).length),
-    ).toEqual([1, 3, 3, 2, 47, 7]);
+    ).toEqual([1, 3, 4, 2, 57, 8]);
     expect(
       registry.items.map((i: { name: string; type: string }) => [
         i.name,
@@ -396,9 +465,25 @@ describe("registry.json", () => {
         "code-block",
         // 007 decision 7's 1: code-languages names code-editor.
         "code-editor",
+        // 010 decision 1's 12: read-token, tabs and meter, and the nine
+        // compositions product-home names.
+        "read-token",
+        "tabs",
+        "meter",
+        "stage",
+        "stage-card",
+        "marketing-bar",
+        "stage-hero",
+        "proof-band",
+        "live-console",
+        "name-strip",
+        "cta-band",
+        "marketing-footer",
+        // 012 decisions 3, 4 and 7: the hero, the bar and the block name the glass.
+        "liquid-glass",
       ].sort(),
     );
-    expect(deps.size).toBe(44);
+    expect(deps.size).toBe(57);
     for (const dep of deps) {
       expect(dep).not.toMatch(/^local:/);
       expect(dep).not.toMatch(/^[a-z][a-z0-9+.-]*:/i);
@@ -411,12 +496,12 @@ describe("registry.json", () => {
       (i: { type: string }) => i.type === "registry:ui",
     );
     expect(ui).toHaveLength(UI_COUNT);
-    expect(UI_COUNT).toBe(47);
+    expect(UI_COUNT).toBe(57);
     for (const item of ui) expect(item.files.length).toBeGreaterThanOrEqual(2);
   });
 
-  test("63 of 63 items carry a meta.group among the 10, in the order their specifications give", () => {
-    expect(GROUPS).toHaveLength(10);
+  test("75 of 75 items carry a meta.group among the 11, in the order their specifications give", () => {
+    expect(GROUPS).toHaveLength(11);
     const groups = new Set(GROUPS.map(([g]) => g));
     for (const item of registry.items as {
       name: string;
@@ -425,6 +510,49 @@ describe("registry.json", () => {
       expect(groups.has(item.meta?.group)).toBe(true);
       expect(item.meta.group).toBe(GROUP_OF.get(item.name)!);
     }
+  });
+
+  // 009 decision 9, criterion 6: every item declares its lint profile. A
+  // visual item is productive, but for button; an item with no markup is
+  // mode-agnostic. A missing meta.modes fails here. 010 decision 1: its ten
+  // items are expressive-only.
+  test("every item carries meta.modes as 009 decision 9 and 010 decision 1 assign", () => {
+    const BOTH = ["productive", "expressive"];
+    const AGNOSTIC = [
+      "pluto-theme",
+      "font-geist",
+      "font-heading-ibm-plex-sans",
+      "font-jetbrains-mono",
+      "utils",
+      "highlighter",
+      "use-highlighted-code",
+      "code-languages",
+      "is-mobile",
+      "read-token",
+    ];
+    const items = registry.items as {
+      name: string;
+      meta: { modes?: string[] };
+    }[];
+    const expected = (name: string) =>
+      EXPRESSIVE_ONLY.includes(name)
+        ? ["expressive"]
+        : AGNOSTIC.includes(name) || name === "button"
+          ? BOTH
+          : ["productive"];
+    for (const item of items)
+      expect(item.meta.modes, item.name).toEqual(expected(item.name));
+    expect(
+      items.filter((i) => i.meta.modes?.includes("expressive")).length,
+    ).toBe(AGNOSTIC.length + 1 + EXPRESSIVE_ONLY.length);
+    // Only 010's ten and 011's liquid-glass are expressive-only: every other
+    // item is held to L22.
+    expect(
+      items
+        .filter((i) => i.meta.modes?.join() === "expressive")
+        .map((i) => i.name)
+        .sort(),
+    ).toEqual([...EXPRESSIVE_ONLY].sort());
   });
 
   test("26 of 26 of 002's items carry meta.since 0.2.0 and a 5-field meta.stock", () => {
@@ -465,7 +593,11 @@ describe("registry.json", () => {
       expect(item.meta?.group).toBe(GROUP_004[name] ?? "code");
       if (!STOCK_004.includes(name)) {
         expect(item.meta?.stock).toBeUndefined();
-        expect(Object.keys(item.meta).sort()).toEqual(["group", "since"]);
+        expect(Object.keys(item.meta).sort()).toEqual([
+          "group",
+          "modes",
+          "since",
+        ]);
         continue;
       }
       const stock = item.meta.stock;
@@ -507,7 +639,11 @@ describe("registry.json", () => {
       ]);
       if (!STOCK_005.includes(name)) {
         expect(item.meta?.stock).toBeUndefined();
-        expect(Object.keys(item.meta).sort()).toEqual(["group", "since"]);
+        expect(Object.keys(item.meta).sort()).toEqual([
+          "group",
+          "modes",
+          "since",
+        ]);
         continue;
       }
       const stock = item.meta.stock;
@@ -542,7 +678,11 @@ describe("registry.json", () => {
       const item = byName.get(name)!;
       expect(item.meta?.since).toBe("0.3.0");
       expect(item.meta?.stock).toBeUndefined();
-      expect(Object.keys(item.meta).sort()).toEqual(["group", "since"]);
+      expect(Object.keys(item.meta).sort()).toEqual([
+        "group",
+        "modes",
+        "since",
+      ]);
       expect(item.title).toBe(TITLES[name]!);
     }
   });
@@ -567,7 +707,11 @@ describe("registry.json", () => {
       expect(item.meta?.since).toBe("0.6.0");
       expect(item.meta?.group).toBe("blocks");
       expect(item.meta?.stock).toBeUndefined();
-      expect(Object.keys(item.meta).sort()).toEqual(["group", "since"]);
+      expect(Object.keys(item.meta).sort()).toEqual([
+        "group",
+        "modes",
+        "since",
+      ]);
       expect(item.registryDependencies.slice(0, 2)).toEqual([
         "utils",
         "pluto-theme",
@@ -585,7 +729,12 @@ describe("registry.json", () => {
         title: string;
         registryDependencies: string[];
         files: { path: string; type: string }[];
-        meta: { since: string; group: string; stock?: unknown };
+        meta: {
+          since: string;
+          group: string;
+          modes: string[];
+          stock?: unknown;
+        };
       }[]
     ).find((i) => i.name === "code-languages")!;
     expect(item.type).toBe("registry:lib");
@@ -598,7 +747,11 @@ describe("registry.json", () => {
     expect(item.files).toEqual([
       { path: "src/lib/registry/lib/code-languages.ts", type: "registry:lib" },
     ]);
-    expect(item.meta).toEqual({ since: "0.7.0", group: "code" });
+    expect(item.meta).toEqual({
+      since: "0.7.0",
+      group: "code",
+      modes: ["productive", "expressive"],
+    });
     expect(
       (registry.items as { meta: { since: string } }[]).filter(
         (i) => i.meta.since === "0.7.0",
@@ -606,18 +759,160 @@ describe("registry.json", () => {
     ).toHaveLength(1);
   });
 
-  test("10 of 10 page files carry no target in registry.json", () => {
+  // 009 decision 10: the library, its two registry dependencies, no stock.
+  // 011 decision 14: released with 009 to 012 as 0.11.0.
+  test("read-token is a registry:lib since 0.11.0 in group foundation with utils and pluto-theme, 1 file, no package, no meta.stock", () => {
+    const item = (
+      registry.items as {
+        name: string;
+        type: string;
+        title: string;
+        registryDependencies: string[];
+        dependencies?: string[];
+        devDependencies?: string[];
+        files: { path: string; type: string }[];
+        meta: { since: string; group: string; modes: string[] };
+      }[]
+    ).find((i) => i.name === "read-token")!;
+    expect(item.type).toBe("registry:lib");
+    expect(item.title).toBe("Read token");
+    expect(item.registryDependencies).toEqual(["utils", "pluto-theme"]);
+    expect(item.dependencies ?? []).toEqual([]);
+    expect(item.devDependencies ?? []).toEqual([]);
+    expect(item.files).toEqual([
+      { path: "src/lib/registry/lib/read-token.ts", type: "registry:lib" },
+    ]);
+    expect(item.meta).toEqual({
+      since: "0.11.0",
+      group: "foundation",
+      modes: ["productive", "expressive"],
+    });
+  });
+
+  // 010 decision 1: the ten items, their titles, types, groups, profile,
+  // release and registry dependencies, exactly; the files under their folder.
+  test("10 of 10 010 items carry meta.since 0.11.0, modes [expressive], their group, title and registry dependencies, and no meta.stock", () => {
+    const byName = new Map(
+      (
+        registry.items as {
+          name: string;
+          type: string;
+          title: string;
+          registryDependencies: string[];
+          files: { path: string; type: string; target?: string }[];
+          meta: Record<string, unknown>;
+        }[]
+      ).map((i) => [i.name, i]),
+    );
+    expect(ITEMS_010).toHaveLength(10);
+    for (const [name, title, deps] of ITEMS_010) {
+      const item = byName.get(name)!;
+      const block = name === "product-home";
+      expect(item.type).toBe(block ? "registry:block" : "registry:ui");
+      expect(item.title).toBe(title);
+      expect(item.registryDependencies).toEqual([
+        "utils",
+        "pluto-theme",
+        ...deps,
+      ]);
+      expect(item.meta).toEqual({
+        since: "0.11.0",
+        group: block ? "blocks" : "compositions",
+        modes: ["expressive"],
+      });
+      expect(item.files).toEqual(
+        block
+          ? [
+              {
+                path: "src/lib/registry/blocks/product-home/+page.svelte",
+                type: "registry:page",
+                target: "product-home/+page.svelte",
+              },
+            ]
+          : [
+              {
+                path: `src/lib/registry/ui/${name}/${name}.svelte`,
+                type: "registry:ui",
+              },
+              {
+                path: `src/lib/registry/ui/${name}/index.ts`,
+                type: "registry:ui",
+              },
+            ],
+      );
+    }
+  });
+
+  // 011 decision 8: the glass, an expressive-only foundation item.
+  test("liquid-glass is a registry:ui since 0.11.0 in group foundation, expressive-only, with pluto-theme and read-token, 2 files, no package, no meta.stock", () => {
+    const item = (
+      registry.items as {
+        name: string;
+        type: string;
+        title: string;
+        registryDependencies: string[];
+        dependencies?: string[];
+        devDependencies?: string[];
+        files: { path: string; type: string }[];
+        meta: Record<string, unknown>;
+      }[]
+    ).find((i) => i.name === "liquid-glass")!;
+    expect(item.type).toBe("registry:ui");
+    expect(item.title).toBe("Liquid glass");
+    expect(item.registryDependencies).toEqual(["pluto-theme", "read-token"]);
+    expect(item.dependencies ?? []).toEqual([]);
+    expect(item.devDependencies ?? []).toEqual([]);
+    expect(item.files).toEqual(
+      ["pointer-light.ts", "index.ts"].map((file) => ({
+        path: `src/lib/registry/ui/liquid-glass/${file}`,
+        type: "registry:ui",
+      })),
+    );
+    expect(item.meta).toEqual({
+      since: "0.11.0",
+      group: "foundation",
+      modes: ["expressive"],
+    });
+  });
+
+  // 011 decision 14, criterion 14: 0.9.0 and 0.10.0 were never released;
+  // every item they added, and 011's, says 0.11.0.
+  test("12 of 12 items carry meta.since 0.11.0: read-token, 010's ten and liquid-glass; none says 0.9.0 or 0.10.0", () => {
+    const since = (
+      registry.items as { name: string; meta: { since: string } }[]
+    )
+      .filter((i) => i.meta.since === "0.11.0")
+      .map((i) => i.name)
+      .sort();
+    expect(since).toEqual(["read-token", ...NAMES_010, "liquid-glass"].sort());
+    expect(
+      (registry.items as { meta: { since: string } }[]).filter((i) =>
+        ["0.9.0", "0.10.0"].includes(i.meta.since),
+      ),
+    ).toEqual([]);
+  });
+
+  // 003 decision 3: build computes <block>/<base name> for a page file of a
+  // block with more than one file. 010 decision 1: the CLI gives a one-file
+  // item its bare base name, which would write an app's home page, so
+  // product-home's one file, the one single-file block, names its target.
+  test("10 of 11 page files carry no target in registry.json; product-home's, the one single-file block, is product-home/+page.svelte", () => {
     const pages = (
       registry.items as {
+        name: string;
         type: string;
         files: { type: string; target?: string }[];
       }[]
     )
       .filter((i) => i.type === "registry:block")
-      .flatMap((i) => i.files)
+      .flatMap((i) => i.files.map((f) => ({ block: i.name, ...f })))
       .filter((f) => f.type === "registry:page");
-    expect(pages).toHaveLength(10);
-    expect(pages.filter((f) => f.target !== undefined)).toEqual([]);
+    expect(pages).toHaveLength(11);
+    expect(
+      pages
+        .filter((f) => f.target !== undefined)
+        .map((f) => [f.block, f.target]),
+    ).toEqual([["product-home", "product-home/+page.svelte"]]);
   });
 });
 
@@ -640,12 +935,12 @@ describe("the built registry", () => {
     if (out) rmSync(out, { recursive: true, force: true });
   });
 
-  test("64 files under r/styles/maia and 64 byte-identical files under the versioned path", () => {
+  test("76 files under r/styles/maia and 76 byte-identical files under the versioned path", () => {
     const files = readdirSync(latest()).sort();
     expect(files).toEqual(
       ["index.json", ...ITEMS.map(([n]) => `${n}.json`)].sort(),
     );
-    expect(files).toHaveLength(64);
+    expect(files).toHaveLength(76);
     expect(readdirSync(versioned()).sort()).toEqual(files);
     for (const file of files) {
       expect(readFileSync(path.join(versioned(), file))).toEqual(
@@ -659,7 +954,7 @@ describe("the built registry", () => {
     expect(existsSync(path.join(versioned(), "stale.json"))).toBe(false);
   });
 
-  test("each of the 63 built items parses with registryItemSchema", () => {
+  test("each of the 75 built items parses with registryItemSchema", () => {
     for (const [name] of ITEMS) {
       const item = JSON.parse(
         readFileSync(path.join(latest(), `${name}.json`), "utf8"),
@@ -676,9 +971,9 @@ describe("the built registry", () => {
     }
   });
 
-  test("every target of the 47 registry:ui items starts <name>/", () => {
+  test("every target of the 57 registry:ui items starts <name>/", () => {
     const ui = ITEMS.filter(([, type]) => type === "registry:ui");
-    expect(ui).toHaveLength(47);
+    expect(ui).toHaveLength(57);
     for (const [name] of ui) {
       const item = JSON.parse(
         readFileSync(path.join(latest(), `${name}.json`), "utf8"),
@@ -868,7 +1163,8 @@ describe("the built registry", () => {
   });
 
   // 20 components: 10 from 003's blocks, 6 from app-shell, 4 from chat.
-  test("10 of 10 page files build to <block>/<base name>, 20 of 20 components to bare <block>- names, and 0 targets begin ~/ or src/", () => {
+  // 010's block adds one page file and no component.
+  test("11 of 11 page files build to <block>/<base name>, 20 of 20 components to bare <block>- names, and 0 targets begin ~/ or src/", () => {
     let pages = 0;
     let components = 0;
     const rooted: string[] = [];
@@ -893,7 +1189,7 @@ describe("the built registry", () => {
         }
       }
     }
-    expect([pages, components]).toEqual([10, 20]);
+    expect([pages, components]).toEqual([11, 20]);
     expect(rooted).toEqual([]);
   });
 
@@ -918,9 +1214,9 @@ describe("the built registry", () => {
 
   // 005 decision 4: an app that adds one item into an
   // empty project must get every file it imports.
-  test("47 of 47 built registry:ui items import only $UI$ names in their own registryDependencies", () => {
+  test("57 of 57 built registry:ui items import only $UI$ names in their own registryDependencies", () => {
     const ui = ITEMS.filter(([, type]) => type === "registry:ui");
-    expect(ui).toHaveLength(47);
+    expect(ui).toHaveLength(57);
     const offending: string[] = [];
     for (const [name] of ui) {
       const item = JSON.parse(
@@ -935,6 +1231,65 @@ describe("the built registry", () => {
             offending.push(`${name} imports ${m[1]}`);
         }
       }
+    }
+    expect(offending).toEqual([]);
+  });
+
+  // 010 decision 1 (review finding 2): a library or hook import is an item
+  // the importer pulls, by its own dependencies or through theirs, so an app
+  // that adds one item gets every file it imports. The `$UI$` check above is
+  // direct; a lib or hook may arrive through a named item (code-block's
+  // highlighter types come with use-highlighted-code).
+  test("75 of 75 built items import only $LIB$ and $HOOKS$ files of items they pull", () => {
+    const built = (name: string) =>
+      JSON.parse(readFileSync(path.join(latest(), `${name}.json`), "utf8")) as {
+        registryDependencies?: string[];
+        files: { content?: string; target?: string }[];
+      };
+    const pulled = (name: string) => {
+      const seen = new Set<string>();
+      const visit = (n: string) => {
+        if (seen.has(n)) return;
+        seen.add(n);
+        for (const d of built(n).registryDependencies ?? []) visit(d);
+      };
+      visit(name);
+      return seen;
+    };
+    // A lib's or hook's file is named after its item.
+    const owner = (file: string) =>
+      file.replace(/\.svelte\.ts$|\.ts$|\.js$/, "").replace(/\.svelte$/, "");
+    const offending: string[] = [];
+    let imports = 0;
+    for (const [name] of ITEMS) {
+      const reach = pulled(name);
+      for (const file of built(name).files)
+        for (const m of (file.content ?? "").matchAll(
+          /from\s+["']\$(LIB|HOOKS)\$\/([a-z0-9.-]+)["']/g,
+        )) {
+          imports++;
+          if (!reach.has(owner(m[2]!)))
+            offending.push(`${name} imports $${m[1]}$/${m[2]}`);
+        }
+    }
+    expect(offending).toEqual([]);
+    expect(imports).toBeGreaterThan(0);
+  });
+
+  // 010 decision 1: each of the ten names every item it imports, directly.
+  test("10 of 10 010 items import only items in their own registryDependencies", () => {
+    const offending: string[] = [];
+    for (const name of NAMES_010) {
+      const item = JSON.parse(
+        readFileSync(path.join(latest(), `${name}.json`), "utf8"),
+      );
+      const named = new Set<string>(item.registryDependencies ?? []);
+      for (const file of item.files as { content?: string }[])
+        for (const m of (file.content ?? "").matchAll(
+          /from\s+["']\$(UI|LIB|HOOKS)\$\/([a-z0-9-]+)/g,
+        ))
+          if (m[2] !== name && !named.has(m[2]!))
+            offending.push(`${name} imports $${m[1]}$/${m[2]}`);
     }
     expect(offending).toEqual([]);
   });
@@ -956,7 +1311,7 @@ describe("the built registry", () => {
     expect(built("composer").files).toHaveLength(2);
   });
 
-  test("0 of 64 built files carry $UTILS$.js or an /index.js import", () => {
+  test("0 of 76 built files carry $UTILS$.js or an /index.js import", () => {
     const offending: string[] = [];
     for (const file of readdirSync(latest())) {
       const text = readFileSync(path.join(latest(), file), "utf8");
@@ -1009,6 +1364,123 @@ describe("CHANGELOG.md", () => {
     expect(match).not.toBeNull();
     return match![1];
   };
+
+  // 011 decision 14, criterion 14: 0.9.0 and 0.10.0 were never released;
+  // their entries fold into one 0.11.0 entry, which names decision 12's five
+  // visible changes, and what 009, 010 and 011 add.
+  test("has no 0.9.0 or 0.10.0 entry, and 0.11.0 is the newest", () => {
+    const text = readFileSync("CHANGELOG.md", "utf8");
+    expect(text).not.toMatch(/^## 0\.9\.0\b/m);
+    expect(text).not.toMatch(/^## 0\.10\.0\b/m);
+    const versions = [...text.matchAll(/^## (\d+\.\d+\.\d+)\b/gm)].map(
+      (m) => m[1],
+    );
+    expect(versions[0]).toBe("0.11.0");
+  });
+
+  test("the 0.11.0 entry names decision 12's five visible changes", () => {
+    const body = entry("0.11.0");
+    for (const text of [
+      // 1. every colour, and the dark ground
+      "`#F3F0E8`",
+      "`graphite`",
+      "`#16140F`",
+      // 2. overlays in light lose their shadow, gain the input edge
+      "no shadow",
+      "`line-input`",
+      // 3. grooves lose their light line
+      "`groove-light`",
+      // 4. the lockup's mark, and the footer endorsement
+      "87%",
+      "endorsement",
+      // 5. the dots overshoot as they land
+      "overshoot",
+      "`--ease-spring`",
+    ])
+      expect(body, text).toContain(text);
+  });
+
+  test("the 0.11.0 entry names what 009, 010 and 011 add", () => {
+    const body = entry("0.11.0");
+    for (const name of [...NAMES_010, "read-token", "liquid-glass"])
+      expect(body, name).toContain(`\`${name}\``);
+    for (const text of [
+      "`pluto-theme`",
+      "`button`",
+      "`rounded-action`",
+      "`--radius-action`",
+      "`rounded-[var(--radius-action,var(--radius))]`",
+      "merges",
+      "`meta.modes`",
+      "L22",
+      "L23",
+      "L24",
+      'data-mode="expressive"',
+      "`--font-face-display`",
+      "`compositions`",
+      '`meta.modes: ["expressive"]`',
+      "`run`",
+      "`field-1`",
+      "`surface-plain`",
+      "`glass`",
+      "`type-poster`",
+      "`pointerLight`",
+      // 012: the compositions as it leaves them.
+      "`ground`",
+      "`field`",
+      "`poster`",
+      "`busy-edge`",
+      "glass panel",
+    ])
+      expect(body, text).toContain(text);
+    // H1: no action is a pill.
+    expect(body).not.toMatch(/\bpills?\b/);
+  });
+
+  // 012 decision 9: nothing of the stage appears in the one 0.11.0 entry.
+  test("the 0.11.0 entry names nothing of the stage", () => {
+    const body = entry("0.11.0");
+    for (const word of [
+      "surface-stage",
+      "bloom",
+      "rim",
+      "energized",
+      "veil",
+      "--radius-stage",
+      "lit object",
+      // "Frost only, no lens" (decisions.md, 2026-11-07).
+      "lens",
+      "lit card",
+      "darker than",
+    ])
+      expect(body, word).not.toMatch(
+        new RegExp(`(^|[^\\w-])${word.replace(/-/g, "\\-")}($|[^\\w-])`),
+      );
+  });
+
+  // 011 decision 14, criterion 14: R25 joins 002 decision 9's checklist.
+  test("002's checklist holds R25, fields and glass, after R24", () => {
+    const spec = readFileSync(
+      "context/specifications/002-the-primitives-forms-surfaces-and-feedback.md",
+      "utf8",
+    );
+    const r24 = spec.indexOf("| R24 |");
+    const r25 = spec.indexOf("| R25 |");
+    expect(r24).toBeGreaterThan(-1);
+    expect(r25).toBeGreaterThan(r24);
+    const row = spec.slice(r25, spec.indexOf("\n", r25));
+    for (const text of [
+      "expressive",
+      "`surface-plain`",
+      "never a control directly",
+      "never inside glass",
+      "`.dark`",
+      "`paper`",
+      "`raised`",
+      "image",
+    ])
+      expect(row, text).toContain(text);
+  });
 
   // 007 decision 11: the six things.
   // 008 decision 9: the release says the shell's change is an interface change and how to keep the lockup.

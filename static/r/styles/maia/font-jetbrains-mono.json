@@ -7,7 +7,11 @@
 	"description": "JetBrains Mono, the face for labels, code and data, self-hosted through Fontsource.",
 	"meta": {
 		"since": "0.1.0",
-		"group": "foundation"
+		"group": "foundation",
+		"modes": [
+			"productive",
+			"expressive"
+		]
 	},
 	"files": [],
 	"font": {

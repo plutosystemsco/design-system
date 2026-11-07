@@ -1,5 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
-import { GROUND, open, type ThemeName } from "./pages.ts";
+import { GROUND, open, openView, settled, type ThemeName } from "./pages.ts";
 
 const PAGE = "/items/pluto-theme/";
 const token = (name: string) => `[data-token="${name}"]`;
@@ -271,5 +271,59 @@ test.describe("under reduced motion", () => {
       "background-color",
       GROUND[theme],
     );
+  });
+});
+
+/**
+ * 011 decision 4, criterion 4 (I5, "hairlines and flat fields, no shadow"):
+ * in the light theme an open overlay is told from the page by its edge
+ * alone, the input-strength line, and its shadow layer is clear; the groove
+ * draws the hairline alone.
+ */
+test.describe("flat product screens in the light theme (011 criterion 4)", () => {
+  test.skip(({ colorScheme }) => colorScheme !== "light", "light theme only");
+
+  /** The drawn layers of a box-shadow: Tailwind's empty ring and inset layers dropped. */
+  const layers = (shadow: string) =>
+    shadow
+      .split(/,(?![^(]*\))/)
+      .map((l) => l.trim())
+      .filter((l) => !/\) 0px 0px 0px 0px$/.test(l));
+  const alpha = (layer: string) => {
+    const m = /rgba?\(([^)]*)\)/.exec(layer)!;
+    const parts = m[1].split(",").map((x) => parseFloat(x));
+    return parts.length === 4 ? parts[3] : 1;
+  };
+
+  for (const [path, trigger, slot] of [
+    ["/items/popover/", "popover-fuel", "popover-content"],
+    ["/items/dropdown-menu/", "menu-account", "dropdown-menu-content"],
+    ["/items/dialog/", "dialog-rename", "dialog-content"],
+  ] as const) {
+    test(`an open ${slot}: the first layer is #857E70, the second clear`, async ({
+      page,
+    }) => {
+      await open(page, path);
+      await page.getByTestId(trigger).click();
+      const content = page.locator(`[data-slot="${slot}"]`);
+      await expect(content).toBeVisible();
+      await settled(page);
+      const drawn = layers(
+        await content.evaluate((el) => getComputedStyle(el).boxShadow),
+      );
+      expect(drawn).toHaveLength(2);
+      expect(drawn[0]).toBe("rgb(133, 126, 112) 0px 0px 0px 1px");
+      expect(drawn[1]).toMatch(/\b0px 12px 32px 0px$/);
+      expect(alpha(drawn[1])).toBe(0);
+    });
+  }
+
+  test("a groove-b element's box-shadow colour is clear", async ({ page }) => {
+    await openView(page, "/view/app-shell/");
+    const header = page.locator("header.groove-b, header .groove-b").first();
+    const shadow = await header.evaluate(
+      (el) => getComputedStyle(el).boxShadow,
+    );
+    expect(alpha(shadow)).toBe(0);
   });
 });

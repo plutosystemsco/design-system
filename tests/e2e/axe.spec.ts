@@ -6,6 +6,9 @@ import {
   PAGES_005,
   PAGES_006,
   PAGES_007,
+  PAGES_009,
+  PAGES_010,
+  PAGES_011,
   PAGES_002,
   VIEW_READY,
   VIEWS,
@@ -47,8 +50,10 @@ test.describe("at 1280", () => {
   }
 });
 
-// 003's 7 item pages, 004's, 005's, 006's and 007's item pages and the
-// 28 views at 360, 768 and 1280 (006 decision 14 and 007 decision 10).
+// 003's 7 item pages, 004's, 005's, 006's, 007's, 009's, 010's and 011's item pages
+// and the 31 views at 360, 768 and 1280 (006 decision 14, 007 decision 10,
+// 009 criterion 14 and 010 criterion 8; the compositions' own views are
+// scanned in compositions.spec.ts).
 for (const width of WIDTHS) {
   test.describe(`at ${width}`, () => {
     test.use({ viewport: { width, height: 900 } });
@@ -58,6 +63,9 @@ for (const width of WIDTHS) {
       ...PAGES_005,
       ...PAGES_006,
       ...PAGES_007,
+      ...PAGES_009,
+      ...PAGES_010,
+      ...PAGES_011,
     ]) {
       test(`axe finds 0 violations on ${path}`, async ({ page }) => {
         await open(page, path);

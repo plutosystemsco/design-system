@@ -7,7 +7,11 @@
 	"description": "IBM Plex Sans, the heading face, self-hosted through Fontsource.",
 	"meta": {
 		"since": "0.1.0",
-		"group": "foundation"
+		"group": "foundation",
+		"modes": [
+			"productive",
+			"expressive"
+		]
 	},
 	"files": [],
 	"font": {

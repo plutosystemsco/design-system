@@ -2,6 +2,118 @@
 
 The owner's answers and decisions, newest first. A decision that changes the constitution is also recorded in its Status line. "The design book" and "v2" both mean the Pluto Systems design book, version 2, the source of the brand's rules; a section of it is cited as "§03".
 
+### Frost only: the lens is removed (2026-11-07)
+
+After the bar lost its lens, the scripted scroll in headless Chromium still ran 13 of 100 frames over 20 ms (worst 33 to 50 ms), all while the hero's lensed panel was on screen; without the lens, none (EXECUTED by the `012` builder). Asked whether to keep the lens and verify on a real GPU, drop it, or run it only when the page is still, **the owner:** "Frost only, no lens."
+
+- Liquid glass is frosted and lit at the rim. No displacement filter, in any engine.
+- Removed before release: `GlassLens`, the `expressive.glass.lens` tokens and the `--glass-lens-*` variables, the lens rule and its sticky-bar exclusion, `data-glass-lens`, and every test, page and changelog line that names them. `pointerLight` stays.
+- `011` decision 8's lens and `012` decision 7's `GlassLens` are superseded by this entry; `012`'s build removes them, and both specifications' landing notes say so.
+
+### After the `012` build's checkpoint (2026-11-07)
+
+The design lead looked at `/view/product-home/` at 1440, 1024 and 390 px in both themes, the hero and the bar cropped at 1440, the bar in dark over graphite and over the hero, and `/identity/light/` and `/identity/motion/` before and after (pixel-identical). The hero reads as decided: words on frosted glass over the blue field, the object clear of the glass, the field's colour seen through the overlap. The bar floats; in dark it shows the lifted four and is told from graphite by its edge, and its text reads.
+
+- **The sticky bar's glass takes no lens.** With the lens on in Chromium, the scripted scroll had mean frames of 19.5 to 19.8 ms and 16 or 17 of 100 frames over 20 ms (worst 50 to 67 ms), all while the bar's lensed glass passed over the hero's lensed glass; with the lens off, 16.67 ms and none over 20 ms (EXECUTED by the builder, headless). The bar moves over the content on every scroll frame, so it keeps its frost and loses the lens; glass in the content keeps it. The lens rule in `pluto-theme` excludes glass inside `[data-sticky-bar]`. The frame time is measured again after the change.
+- **Accepted:** the Phase A deviations the builder listed (decisions 5 to 8 pulled forward where Phase A's tests or decision 1's removals needed them; `border border-border`, since a bare `border` draws ink in this theme; "rim" reworded to "edge" in `liquid-glass`'s comment and description, which criterion 1's tokeniser reads; six registry descriptions reworded; 20 `glassOverGlass` rows with the canvas case; the two figures `contrast.ts` rounds differently; the 2000 px scroll at 390 × 640; the poster view without an object; `data-ground` on `stage`).
+
+### After the `011` build's checkpoint 2 (2026-11-07)
+
+The design lead looked at the `pluto-theme` page's expressive section, the `liquid-glass` page, the header lockup at 2x and the footer endorsement, in both themes. The four fields read in both themes; a card and a glass inside each field take the theme's own roles back; the lockup matches the exhibit's E6; the product header's mark is paper in dark (`008`). Calls on the builder's Phase B deviations:
+
+- **Accepted:** `glass` also sets `color: var(--foreground)`, so untagged text in glass on a field is not the legend; the entrance as a timing-less shorthand naming both keyframes plus a timing longhand, because Tailwind 4.3.3 keeps a theme `@keyframes` only when an `animation` shorthand names it (EXECUTED by the builder), with the same fallback the specification intends; the lint's new `items` and `allowances` parameters; eleven ring-on-glass rows; `meta.since` on twelve items, `liquid-glass` included; the changelog dated "unreleased" until the tag; card titles at `level={5}` for heading order; `data-slot="glass-lens"`; the two tests that read the keyframes' easing and normalise the `@supports` prelude.
+- **Watched at `012`'s checkpoint:** dark glass on the graphite canvas (`#16140FD6` over `#16140F`) is told from the ground only by its edge. Over the lifted fields it reads clearly. The floating bar in dark is where it will show.
+
+### After the `011` build's checkpoint 1 (2026-11-07)
+
+The design lead looked at `button`, `card`, `dialog` (open), `code-block` and the app-shell view at 1440 px in both themes, with the palette, the roles, flat overlays and H1 built. The warm canvas and graphite read as one family; overlays read flat by their edge alone; the code palette holds. Calls on the builder's deviations:
+
+- **Accepted:** decision 11's forbidden reshape done early (`measured` and `ruleOnly`), because the palette moved it; the three "pill actions" descriptions in `registry.json` corrected with decision 1's list; the `pluto-theme` copy that the palette made false (elevation, groove, the ink surface, the ring figures); the A2 groove pins at Chromium's painted value, one step below the arithmetic, as the old test pinned.
+- **Accepted, to be named in the landing notes:** the extra test groups criterion 15 did not list (`blocks.spec.ts` A2, the primitive count 34 → 35, `007`'s nine-primitive test, the `syntax-amber` hexes).
+- **Accepted with a note:** the dark expressive marks come from a constant in `build-tokens.ts` that names the four lifted primitives and reads their values from the token file, so no hex is written twice.
+- **Recorded:** the e2e edits were written before the code but not seen failing first; only the unit suite was (159 failures). Phase B runs its new e2e tests red before its code.
+
+### One release, 0.11.0, and the calls of the `011` and `012` spec reviews (2026-11-07)
+
+Asked how `009` and `010` ship, given that `011` and `012` change them (`reviews/012-the-compositions-on-brand-spec-2026-11-06.md`, finding 8). **The owner:** one release, 0.11.0.
+
+- 0.9.0 and 0.10.0 are never tagged. Their changelog entries fold into 0.11.0. Every item they added carries `meta.since: "0.11.0"`. The built snapshots `static/v0.9.0/` and `static/v0.10.0/`, never published, are deleted.
+- So nothing `009` and `010` built has been released, and `012` may remove or change any of it without an interface-change note.
+
+Calls the design lead makes under the owner's rulings, from the two spec reviews (`reviews/011-the-brand-spec-2026-11-06.md`, `reviews/012-…-spec-2026-11-06.md`):
+
+- **Three text tones move from B3's values.** Deep Field's `red-text` `#C81F34` and `green-text` `#007651` fail AA on their own 10% tints over the warm canvas (4.26, 4.34) and green on `muted` (4.49); `cyan-text` `#1B709B` fails as a code slot on the new `muted` (4.35). Each moves to a passing value as close to B3's as was found: `red-text` `#C11E31`, `green-text` `#007351`, `cyan-text` `#1A6C97` (`011` decision 2; the lighter red and green were the reviewer's, re-measured). The four brand colours themselves are B3's exactly.
+- **I5's "hairline only" reaches the groove.** The light theme's `groove-light`, a white line beside every groove, becomes clear, as the dark theme's already is.
+- **The forbidden status tints stay forbidden by rule.** On the new palette two dark rows pass; the ban (`001` decision 8) is kept as a structure rule, with the light row as its measured witness.
+- **"Glass never on glass" means nesting.** A glass element never has a glass ancestor. A sticky glass bar passing over a glass panel as the page scrolls is allowed: the second tint only makes the backdrop more like the tint, and a measured row proves the bar's text there.
+- **The four colours of the mark show in dark on expressive pages.** `008` set the dark theme's mark to paper for product screens, and that stays. Under `data-mode="expressive"` in the dark theme the mark takes the lifted four, as the coloured dots on dark grounds have since the public-readiness review.
+
+### The identity: round two answered (2026-11-06)
+
+The owner answered round two (`handoff.md`, round two; the three research memos of 2026-11-06).
+
+- **E6, risen colon, closer and lower.** Lowercase "pluto", bold. The mark at .26 em dots and .07 em gap (N1's proportion), .10 em from the word, its top .16 em above the ascender (.90 em above the baseline).
+- **No signature device, for now.** None of F1 to F10 works. The brand goes without one until a need names it; the device memo stays as research.
+- **G5, flat colour tile.** An 8 px tile in the app's hue with a white Phosphor glyph, ink on yellow. Two apps per hue: Docs and Search blue, Sheets and Chat green, Slides and Files yellow, Mail and Calendar red. The radius scales with the icon: 8 px at 64, 6 at 48, 4 at 32, 2 at 16. An icon is one drawing scaled as a whole, so H1 holds at the master size.
+- **I5 with I9: platinum flat, liquid platinum on expressive pages only.** The warm canvas `#F3F0E8` and graphite `#16140F` replace Deep Field's paper and ink grounds. Every product screen is flat: hairlines and flat fields, no shadow, no glass. Liquid glass (frosted tint, a rim highlight that moves only with the pointer, a Chromium-only lens over a frosted fallback) appears only on expressive pages, over flat colour fields. No keys. Glass carries ink, inkSoft and blue text only, and turns opaque under reduced transparency, forced colours, or no backdrop-filter.
+- **The mark is a logo, exempt from the 3:1 graphic rule.**
+- **One yellow, Deep Field's `#F19E20`, everywhere, with no adjustment.** Asked whether another yellow would serve better on light grounds, the design lead measured the candidates (EXECUTED, 2026-11-06, WCAG 2.2 formula): a yellow reaches 3:1 on `#F3F0E8` only as amber-gold `#C27B00` (3.01) or mustard `#AD8500` (3.01), which read as orange-brown and olive beside the other three. Offered a deep yellow for meaning on light, or a ring, the owner's word: "just keep it as is, no adjustments." The constitution's §4.4 still binds: where yellow carries meaning on a light ground (a status, a chart series), colour is never the only signal; a label, a legend or a value carries it too, as the registry's status and chart items already do.
+
+### The identity: the owner's first answers (2026-11-06)
+
+The owner answered the fourteen questions of `research/2026-11-01-the-identity-options.md` at `/identity`. Ten are settled. Four go to a second round of options.
+
+**Settled.**
+
+- **A4, open platform, branded suite.** Every workspace product is Pluto-branded (Pluto Docs, Pluto Sheets). Each open-source core technology keeps its own name, as `vfs` does.
+- **B3, Deep Field.** The four colours take the Deep Field values measured in `research/2026-11-01-how-the-four-colours-are-tuned.md`.
+- **C2, four-colour moments.** Product screens stay neutral. The four colours appear together only in owned moments.
+- **D1, kept.** IBM Plex Sans, Geist and JetBrains Mono stay. No typeface is commissioned. The owner's answer held a line reading "1" before "Kept: Plex, Geist, JetBrains"; the design lead reads both as D1.
+- **H1, exact.** One 8 px case radius; round only for dot shapes.
+- **J4 springs for the dots only; J2 for everything else.** The mark and anything made of its dots may spring. Every other animation answers the visitor and nothing else.
+- **K3, poster.** The expressive mode's display type may reach 160 px.
+- **L3, warm and human.**
+- **M1 to M4, all four.** Product truth, figures, people at work and abstract data are all sanctioned. Each page chooses the one that fits its job.
+- **N1, kept.** The dots keep today's order (blue, red / yellow, green) and spacing (dot .30 em, gap .08 em). The research found a fragment of this mark can read as Google's before it reads as Pluto's; the owner keeps it knowing that.
+
+**Second round.**
+
+- **E, the wordmark.** E1, the risen colon, stays, with lowercase "pluto". The mark comes in closer to the word, as it sits in E3. Variants of E1's spacing go on the wordmark board.
+- **F, the signature device.** None of F1 to F5 speaks to the owner. New options, themed on space or on Pluto itself.
+- **G, product icons.** Basic glyphs from Phosphor (an MIT-licensed icon family). The icons are not tied to the four dots: G1's mark cell is out. Options for the tile around the glyph go on the board. Phosphor is already a named, pinned dependency: `phosphor-svelte`, added by `002` for interface icons (research/2026-11-06-phosphor-icons-and-the-product-icon-tile.md).
+- **I, light and depth.** The owner likes flat objects, coloured backgrounds and glass, but not how the boards draw them. Asked to name a feeling, the owner's words: "some how invoking early computing with the off white chunky keyboards and square apple II. I like the rainbow colors with the off white canvas. We should bridge that gap from that to newer liquid glass style design." That is the brief for the new options. Prior art is studied, never copied: no option reproduces another company's logo, stripes or product.
+
+### After the `010` build's checkpoint (2026-11-01)
+
+The design lead looked at `/view/product-home/` at 1440 and 390 px in both themes, idle, running and done. Calls:
+
+- **The bar floats over the first stage.** In the light theme the sticky bar over the page's ground read as a grey band above a black stage. `marketing-bar` gains `overlay`, `stage-hero` gains `underBar`, and the block sets both (`010` decisions 4 and 5, criterion 4).
+- **The Python card splits its first line** so no line scrolls in the half-width card: `db = DatabaseStorage(url=DATABASE_URL)` then `fs = VirtualFileSystem(storage=db)`.
+- **`stage-card` drops `read-token`** from its dependencies; it reads no token.
+- **`product-home`'s smoke test is its own file.** `blocks-add`'s check that a block imports its `components/<block>-…` files does not fit a block made of ui items.
+- The builder's other choices stand: the sample copy it chose, "Ran. 1 line." in the singular, the bloom lit after success and dark after failure, a tab change clearing the console's output, and code samples that hold no path literal under the blocks' link rule.
+
+### After the `009` build's checkpoint (2026-11-01)
+
+The design lead looked at the `pluto-theme` and `button` pages in both themes after decisions 2, 7, 8 and 9 were built. Productive screens are unchanged; every button measures 8 px. Two calls:
+
+- **The version moves to 0.9.0 at the start of the build,** not at its commit, so the dev server's registry rebuild writes `static/v0.9.0/` and never overwrites the frozen `static/v0.8.0/`.
+- **`cn` does not merge `rounded-action` with `rounded-none`** (EXECUTED by the builder). Superseded after the change review: `button` now uses `rounded-[var(--radius-action,var(--radius))]`, which carries its own 8 px fallback and which `cn` merges, so no override note is needed (`009` decision 8, change review finding 1).
+
+The identity exhibit adds six font packages, not seven (`geist` was already listed); `009` criterion 15 is corrected.
+
+### The identity is commissioned, with options (2026-11-01)
+
+The owner commissioned the design lead to build Pluto Systems' identity, answering `research/2026-11-01-what-a-product-site-needs-to-compete.md`. The owner's rulings:
+
+- **One constraint: compete with Google.** The owner's words: "the only constraint is 'we need to compete with Google'; operate under no other constraints on design choices." The design book's five laws, its colour budget, its motion budget and its ban list become prior art to weigh, not limits. The constitution's engineering rules still hold: source not a package, tokens the one source, WCAG 2.2 AA and keyboard use in both themes, every input pinned.
+- **The mark keeps its four colours.** The four-dot mark keeps a blue, a red, a yellow and a green, as Google's and Microsoft's marks keep theirs. Their exact values are open.
+- **Options, not one answer.** Each identity question is answered with three to five options. The owner reviews them together at the end, gives feedback, and the brand is refined from it.
+- **What Pluto Systems is.** A workspace suite on one centrally governed data layer, built for agentic search. The thesis and tagline: **"Work runs on data."** Data means structured data and, increasingly, the unstructured but tokenizable content AI models understand and act on. The data platform has interfaces and indexes built for AI and agentic search (a multimodal CLI served over MCP, with grep, glob and search over enterprise-scale data), and one cloud-ready kernel as the single gate for permissions and governance across every product. The `vfs` repository is that platform; a workspace suite, in the manner of Microsoft Office, is built on it.
+- **How far before review.** Research, the option boards, and the specification, review and build of the direction-agnostic architecture (expressive mode, its tokens and lint profile, the brand slots and the page compositions) on today's assets. The owner's picks then fill the slots.
+- **Where the options live.** A route in this repository's preview app, `/identity`. It is a research exhibit, not a registry item, so the literal lint does not cover it.
+- **Nothing goes to GitHub** until the owner asks.
+
 ### One system, many products (2026-11-01)
 
 The design system serves every Pluto Systems product, not one site. A product may have its own logo, name and copy. The owner's rulings:

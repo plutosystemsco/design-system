@@ -15,10 +15,11 @@ describe("the token file", () => {
     expect(() => validateTokens(raw)).not.toThrow();
   });
 
-  // 007 decision 3: 004's 25 plus the nine text-safe hue primitives.
-  test("holds 34 primitives, each #RRGGBB or #RRGGBBAA", () => {
+  // 007 decision 3: 004's 25 plus the nine text-safe hue primitives; 011
+  // decision 2 adds graphite, the dark canvas.
+  test("holds 35 primitives, each #RRGGBB or #RRGGBBAA", () => {
     const primitives = Object.entries(tokens.primitives);
-    expect(primitives).toHaveLength(34);
+    expect(primitives).toHaveLength(35);
     for (const [, hex] of primitives) expect(hex).toMatch(HEX);
   });
 
@@ -30,14 +31,14 @@ describe("the token file", () => {
         ),
       ),
     ).toEqual({
-      "amber-text": "#85600B",
+      "amber-text": "#915B00",
       "orange-text": "#A44F12",
       "orange-lifted": "#E7792A",
       "purple-text": "#903ACE",
       "purple-lifted": "#B780DF",
       "teal-text": "#15717A",
       "teal-lifted": "#20A6B3",
-      "cyan-text": "#1B709B",
+      "cyan-text": "#1A6C97",
       "cyan-lifted": "#269DD8",
     });
   });
@@ -113,29 +114,113 @@ describe("the token file", () => {
     expect(tokens.spacing.atom).toBe(4);
     expect(tokens.spacing.ladder).toEqual([4, 8, 12, 16, 24, 32, 48, 64, 96]);
     expect(tokens.radius.case).toBe(8);
+    // 011 decision 7 (E6): the lockup's mark at 0.87 of the word, lower and
+    // closer; the standalone mark's dot and gap are unchanged (N1).
     expect(tokens.mark).toEqual({
       dot: 0.3,
       gap: 0.08,
-      rise: 0.38,
-      lockupGap: 0.16,
+      lockupScale: 0.87,
+      rise: 0.36,
+      lockupGap: 0.1,
       orbit: 0.5,
     });
   });
 
-  test("holds the elevation and scrim colours of 002 decision 7", () => {
-    expect(tokens.primitives["ink-shadow"]).toBe("#14161C29");
-    expect(tokens.primitives["ink-scrim"]).toBe("#14161C80");
-    expect(tokens.primitives["ink-scrim-deep"]).toBe("#14161C99");
+  // 011 decision 2: the ink-* colours follow ink. Decision 4 (I5, flat
+  // product screens): the light theme's overlays lose their shadow and take
+  // the input-strength edge, and its groove loses its white line.
+  test("holds the elevation and scrim colours of 002 decision 7, flat in both themes (011 decision 4)", () => {
+    expect(tokens.primitives["ink-shadow"]).toBe("#0B0F1729");
+    expect(tokens.primitives["ink-scrim"]).toBe("#0B0F1780");
+    expect(tokens.primitives["ink-scrim-deep"]).toBe("#0B0F1799");
     expect(
-      ["elevation-line", "elevation-shadow", "scrim"].map((n) => [
-        tokens.themes.light[n],
-        tokens.themes.dark[n],
-      ]),
+      ["elevation-line", "elevation-shadow", "groove-light", "scrim"].map(
+        (n) => [tokens.themes.light[n], tokens.themes.dark[n]],
+      ),
     ).toEqual([
-      ["line", "paper-line-input"],
-      ["ink-shadow", "clear"],
+      ["line-input", "paper-line-input"],
+      ["clear", "clear"],
+      ["clear", "clear"],
       ["ink-scrim", "ink-scrim-deep"],
     ]);
+  });
+
+  // 011 decision 2: the palette of 0.11.0, every primitive the decision names.
+  test("holds 011 decision 2's palette and the new graphite", () => {
+    expect(
+      Object.fromEntries(
+        [
+          "ink",
+          "ink-soft",
+          "paper",
+          "raised",
+          "wash",
+          "line",
+          "line-input",
+          "blue",
+          "red",
+          "amber",
+          "green",
+          "red-text",
+          "green-text",
+          "amber-text",
+          "cyan-text",
+          "ink-raised",
+          "ink-wash",
+          "paper-soft",
+          "paper-line",
+          "paper-line-input",
+          "blue-lifted",
+          "red-lifted",
+          "green-lifted",
+          "ink-shadow",
+          "ink-scrim",
+          "ink-scrim-deep",
+          "graphite",
+        ].map((name) => [name, tokens.primitives[name]]),
+      ),
+    ).toEqual({
+      ink: "#0B0F17",
+      "ink-soft": "#505661",
+      paper: "#F3F0E8",
+      raised: "#FFFFFF",
+      wash: "#E9E5DB",
+      line: "#0B0F171A",
+      "line-input": "#857E70",
+      blue: "#2D48D4",
+      red: "#C92035",
+      amber: "#F19E20",
+      green: "#008058",
+      "red-text": "#C11E31",
+      "green-text": "#007351",
+      "amber-text": "#915B00",
+      "cyan-text": "#1A6C97",
+      "ink-raised": "#221F19",
+      "ink-wash": "#2C2821",
+      "paper-soft": "#A39D90",
+      "paper-line": "#F3F0E81A",
+      "paper-line-input": "#7A7366",
+      "blue-lifted": "#93B0FF",
+      "red-lifted": "#FF9491",
+      "green-lifted": "#60C498",
+      "ink-shadow": "#0B0F1729",
+      "ink-scrim": "#0B0F1780",
+      "ink-scrim-deep": "#0B0F1799",
+      graphite: "#16140F",
+    });
+  });
+
+  // 011 decision 3: the dark canvas is graphite; ink stays the foreground
+  // that sits on light fills.
+  test("the dark theme's background and sidebar are graphite; every other role keeps its primitive", () => {
+    expect([tokens.themes.dark.background, tokens.themes.dark.sidebar]).toEqual(
+      ["graphite", "graphite"],
+    );
+    expect(tokens.themes.dark["primary-foreground"]).toBe("ink");
+    expect(tokens.themes.light.background).toBe("paper");
+    expect(
+      Object.entries(tokens.themes.dark).filter(([, p]) => p === "graphite"),
+    ).toHaveLength(2);
   });
 
   test("elevation holds 2 ladder steps", () => {
@@ -264,5 +349,201 @@ describe("the entrance", () => {
     const over = structuredClone(raw);
     over.motion.entranceStagger = 0.2;
     expect(() => validateTokens(over)).toThrow(/budget/);
+  });
+});
+
+/** 009 decisions 3 to 7: the `expressive` group, its own values beside today's palette. */
+describe("the expressive group", () => {
+  // 011 decisions 6 and 8 add the fields and the glass; decision 9 the
+  // poster step. 012 decision 1 removes the stage, its light, the stage
+  // radius and the veil's blur.
+  test("validates, with its six parts", () => {
+    expect(Object.keys(raw.expressive)).toEqual([
+      "display",
+      "motion",
+      "size",
+      "gutter",
+      "field",
+      "glass",
+    ]);
+    expect(Object.keys(tokens.expressive.display.steps)).toEqual([
+      "display",
+      "section",
+      "proof",
+      "poster",
+    ]);
+  });
+
+  // 012 decision 1: the stage, its light, the stage radius and the veil's
+  // blur leave the file, the type and the validator.
+  test("holds no stage, light, radius or blur, and the validator does not ask for them", () => {
+    for (const part of ["stage", "light", "radius", "blur"])
+      expect(part in raw.expressive, part).toBe(false);
+    expect("stage" in raw.contrast).toBe(false);
+  });
+
+  test("adds no primitive and no theme role", () => {
+    // 011 decision 2 adds one, graphite; the theme roles stay 53.
+    expect(Object.keys(tokens.primitives)).toHaveLength(35);
+    expect(Object.keys(tokens.themes.light)).toHaveLength(53);
+  });
+
+  test("display names the heading family; each step is 600", () => {
+    expect(tokens.expressive.display.family).toBe("heading");
+    for (const step of Object.values(tokens.expressive.display.steps))
+      expect(step.weight).toBe(600);
+  });
+
+  test("rejects a display family that is not a role, a step past its max, and a missing group", () => {
+    const family = structuredClone(raw);
+    family.expressive.display.family = "display";
+    expect(() => validateTokens(family)).toThrow(/expressive\.display\.family/);
+    const step = structuredClone(raw);
+    step.expressive.display.steps.section.minPx = 80;
+    expect(() => validateTokens(step)).toThrow(
+      /expressive\.display\.steps\.section/,
+    );
+    const ease = structuredClone(raw);
+    ease.expressive.motion.easeStandard = [0.2, 0.7];
+    expect(() => validateTokens(ease)).toThrow(
+      /expressive\.motion\.easeStandard/,
+    );
+    const missing = structuredClone(raw);
+    delete missing.expressive;
+    expect(() => validateTokens(missing)).toThrow(/expressive/);
+  });
+});
+
+/** 011 decisions 6, 8, 9 and 10: the shapes the brand adds to the expressive group. */
+describe("011's expressive shapes", () => {
+  test("decision 6: four fields per theme, each a [fill, legend] pair of primitives", () => {
+    expect(raw.expressive.field).toEqual({
+      light: {
+        "field-1": ["blue", "raised"],
+        "field-2": ["red", "raised"],
+        "field-3": ["amber", "ink"],
+        "field-4": ["green", "raised"],
+      },
+      dark: {
+        "field-1": ["blue-lifted", "graphite"],
+        "field-2": ["red-lifted", "graphite"],
+        "field-3": ["amber", "graphite"],
+        "field-4": ["green-lifted", "graphite"],
+      },
+    });
+  });
+
+  // The owner: "Frost only, no lens" (decisions.md, 2026-11-07).
+  test("decision 8: the glass per theme and its blur; no lens", () => {
+    expect(raw.expressive.glass).toEqual({
+      light: {
+        tint: "#F3F0E8DB",
+        rim: "#FFFFFFCC",
+        edge: "#0B0F1714",
+        fallback: "#FBFAF6",
+        light: "#FFFFFF8C",
+        shadow: ["#0B0F170F", "#0B0F1747"],
+      },
+      dark: {
+        tint: "#16140FD6",
+        rim: "#FFFFFF1F",
+        edge: "#FFFFFF14",
+        fallback: "ink-raised",
+        light: "#FFFFFF33",
+        shadow: ["#00000000", "#000000B3"],
+      },
+      blur: 16,
+    });
+    expect(raw.expressive.motion.light).toBe(600);
+  });
+
+  test("decision 9: the poster step, for launches only", () => {
+    expect(raw.expressive.display.steps.poster).toEqual({
+      minPx: 56,
+      vw: 12,
+      maxPx: 160,
+      lineHeight: 0.9,
+      tracking: -0.05,
+      weight: 600,
+    });
+  });
+
+  test("decision 10: the spring", () => {
+    expect(raw.expressive.motion.spring).toEqual({
+      dampingRatio: 0.65,
+      settle: 0.002,
+      samples: 32,
+    });
+  });
+
+  test("decision 11: the field and glass contrast sets name their rows", () => {
+    expect(raw.contrast.field).toHaveLength(8);
+    expect(raw.contrast.glass).toHaveLength(33);
+    expect(
+      raw.contrast.glass.filter((r: { theme: string }) => r.theme === "light"),
+    ).toHaveLength(18);
+  });
+
+  // 012 decision 4: the bar's text on its glass over the hero's glass over
+  // the canvas and each field, both themes: foreground and primary only.
+  test("012 decision 4: glassOverGlass names 20 rows, and rejects a muted row or a ground that is not the canvas or a field", () => {
+    expect(raw.contrast.glassOverGlass).toHaveLength(20);
+    const muted = structuredClone(raw);
+    muted.contrast.glassOverGlass[0].text = "muted-foreground";
+    expect(() => validateTokens(muted)).toThrow(
+      /contrast\.glassOverGlass\[0\]\.text/,
+    );
+    const ground = structuredClone(raw);
+    ground.contrast.glassOverGlass[0].over = "foreground";
+    expect(() => validateTokens(ground)).toThrow(
+      /contrast\.glassOverGlass\[0\]\.over/,
+    );
+  });
+
+  test("rejects a field that is not a pair of primitives, a glass colour that is neither a primitive nor a hex, a fifth field, a spring ratio of 1 or more, and a fractional sample count", () => {
+    const pair = structuredClone(raw);
+    pair.expressive.field.light["field-1"] = ["blue"];
+    expect(() => validateTokens(pair)).toThrow(
+      /expressive\.field\.light\.field-1/,
+    );
+    const hex = structuredClone(raw);
+    hex.expressive.field.dark["field-2"] = ["#FF9491", "graphite"];
+    expect(() => validateTokens(hex)).toThrow(
+      /expressive\.field\.dark\.field-2/,
+    );
+    const fifth = structuredClone(raw);
+    fifth.expressive.field.light["field-5"] = ["blue", "raised"];
+    expect(() => validateTokens(fifth)).toThrow(/expressive\.field\.light/);
+    const tint = structuredClone(raw);
+    tint.expressive.glass.light.tint = "frosted";
+    expect(() => validateTokens(tint)).toThrow(
+      /expressive\.glass\.light\.tint/,
+    );
+    const shadow = structuredClone(raw);
+    shadow.expressive.glass.dark.shadow = ["#000000B3"];
+    expect(() => validateTokens(shadow)).toThrow(
+      /expressive\.glass\.dark\.shadow/,
+    );
+    const ratio = structuredClone(raw);
+    ratio.expressive.motion.spring.dampingRatio = 1;
+    expect(() => validateTokens(ratio)).toThrow(
+      /expressive\.motion\.spring\.dampingRatio/,
+    );
+    const samples = structuredClone(raw);
+    samples.expressive.motion.spring.samples = 32.5;
+    expect(() => validateTokens(samples)).toThrow(
+      /expressive\.motion\.spring\.samples/,
+    );
+    const poster = structuredClone(raw);
+    delete poster.expressive.display.steps.poster;
+    expect(() => validateTokens(poster)).toThrow(
+      /expressive\.display\.steps\.poster/,
+    );
+    const scale = structuredClone(raw);
+    delete scale.mark.lockupScale;
+    expect(() => validateTokens(scale)).toThrow(/mark\.lockupScale/);
+    const row = structuredClone(raw);
+    row.contrast.glass[0].over = "nowhere";
+    expect(() => validateTokens(row)).toThrow(/contrast\.glass\[0\]\.over/);
   });
 });

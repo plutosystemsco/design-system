@@ -11,7 +11,10 @@
 	],
 	"meta": {
 		"since": "0.1.0",
-		"group": "foundation"
+		"group": "foundation",
+		"modes": [
+			"productive"
+		]
 	},
 	"files": [
 		{
@@ -20,7 +23,7 @@
 			"target": "four-dot/four-dot.svelte"
 		},
 		{
-			"content": "<script lang=\"ts\" module>\n  import type { HTMLAnchorAttributes, HTMLAttributes } from \"svelte/elements\";\n  import type { FourDotTone } from \"./four-dot.svelte\";\n\n  export type LockupProps = HTMLAttributes<HTMLElement> &\n    Pick<HTMLAnchorAttributes, \"href\" | \"target\" | \"rel\"> & {\n      /** The link's accessible name, when `href` makes the lockup a link. It contains the visible word. */\n      label?: string;\n      tone?: FourDotTone;\n      /** Passed to the mark: the page's one entrance. */\n      entrance?: boolean;\n    };\n</script>\n\n<script lang=\"ts\">\n  import { cn } from \"$UTILS$\";\n  import FourDot from \"./four-dot.svelte\";\n\n  let {\n    href,\n    target,\n    rel,\n    label = \"Pluto Systems\",\n    tone = \"brand\",\n    entrance = false,\n    class: className,\n    ...rest\n  }: LockupProps = $props();\n\n  const classes = $derived(\n    cn(\n      \"inline-flex items-baseline gap-(--mark-lockup-gap) font-heading font-bold tracking-mark leading-none\",\n      className,\n    ),\n  );\n</script>\n\n{#snippet content()}\n  pluto<FourDot {tone} {entrance} class=\"-translate-y-(--mark-lift)\" />\n{/snippet}\n\n{#if href}\n  <a\n    data-slot=\"lockup\"\n    {href}\n    {target}\n    {rel}\n    aria-label={label}\n    class={classes}\n    {...rest}\n  >\n    {@render content()}\n  </a>\n{:else}\n  <span data-slot=\"lockup\" class={classes} {...rest}>\n    {@render content()}\n  </span>\n{/if}\n",
+			"content": "<script lang=\"ts\" module>\n  import type { HTMLAnchorAttributes, HTMLAttributes } from \"svelte/elements\";\n  import type { FourDotTone } from \"./four-dot.svelte\";\n\n  export type LockupProps = HTMLAttributes<HTMLElement> &\n    Pick<HTMLAnchorAttributes, \"href\" | \"target\" | \"rel\"> & {\n      /** The link's accessible name, when `href` makes the lockup a link. It contains the visible word. */\n      label?: string;\n      tone?: FourDotTone;\n      /** Passed to the mark: the page's one entrance. */\n      entrance?: boolean;\n    };\n</script>\n\n<script lang=\"ts\">\n  import { cn } from \"$UTILS$\";\n  import FourDot from \"./four-dot.svelte\";\n\n  let {\n    href,\n    target,\n    rel,\n    label = \"Pluto Systems\",\n    tone = \"brand\",\n    entrance = false,\n    class: className,\n    ...rest\n  }: LockupProps = $props();\n\n  const classes = $derived(\n    cn(\n      \"inline-flex items-baseline gap-(--mark-lockup-gap) font-heading font-bold tracking-mark leading-none\",\n      className,\n    ),\n  );\n</script>\n\n<!--\n  The word, then the mark at --mark-lockup-size, a fraction of the word, set\n  --mark-lockup-gap from it and lifted by --mark-lift in its own em: the colon\n  risen beside the word.\n-->\n{#snippet content()}\n  pluto<FourDot\n    {tone}\n    {entrance}\n    class=\"text-(length:--mark-lockup-size) -translate-y-(--mark-lift)\"\n  />\n{/snippet}\n\n{#if href}\n  <a\n    data-slot=\"lockup\"\n    {href}\n    {target}\n    {rel}\n    aria-label={label}\n    class={classes}\n    {...rest}\n  >\n    {@render content()}\n  </a>\n{:else}\n  <span data-slot=\"lockup\" class={classes} {...rest}>\n    {@render content()}\n  </span>\n{/if}\n",
 			"type": "registry:ui",
 			"target": "four-dot/lockup.svelte"
 		},

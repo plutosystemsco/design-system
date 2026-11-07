@@ -52,14 +52,18 @@ export function blocks(css: string): Block[] {
 }
 
 /**
- * Normalises a value as a CSS parser reads it: collapses whitespace, writes
- * every quote as `"`, and lowercases hex colours (prettier lowercases them in
- * a formatted file; the CLI writes them as the registry holds them).
+ * Normalises a value as a CSS parser reads it: collapses whitespace, drops it
+ * just inside parentheses (prettier wraps a long `linear(…)` there; the CLI
+ * does not), writes every quote as `"`, and lowercases hex colours (prettier
+ * lowercases them in a formatted file; the CLI writes them as the registry
+ * holds them).
  */
 export function normaliseValue(value: string): string {
   return value
     .trim()
     .replace(/\s+/g, " ")
+    .replace(/\(\s+/g, "(")
+    .replace(/\s+\)/g, ")")
     .replace(/'/g, '"')
     .replace(/#[0-9a-fA-F]{3,8}\b/g, (hex) => hex.toLowerCase());
 }

@@ -13,6 +13,10 @@
 	"meta": {
 		"since": "0.4.0",
 		"group": "code",
+		"modes": [
+			"productive",
+			"expressive"
+		],
 		"stock": {
 			"registry": "https://shadcn-svelte.com/registry/styles/maia",
 			"item": "use-highlighted-code",

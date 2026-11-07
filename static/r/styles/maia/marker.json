@@ -15,6 +15,9 @@
 	"meta": {
 		"since": "0.5.0",
 		"group": "chat",
+		"modes": [
+			"productive"
+		],
 		"stock": {
 			"registry": "https://shadcn-svelte.com/registry/styles/maia",
 			"item": "marker",

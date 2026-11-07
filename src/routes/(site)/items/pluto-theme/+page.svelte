@@ -1,6 +1,9 @@
 <script lang="ts">
   import { BitsConfig } from "bits-ui";
   import { Button, buttonVariants } from "#lib/registry/ui/button";
+  import * as Card from "#lib/registry/ui/card";
+  import { FourDot } from "#lib/registry/ui/four-dot";
+  import { pointerLight } from "#lib/registry/ui/liquid-glass";
   import * as CodeBlock from "#lib/registry/ui/code-block";
   import { CodeEditor, pythonSetup } from "#lib/registry/ui/code-editor";
   import * as Dialog from "#lib/registry/ui/dialog";
@@ -25,6 +28,19 @@
   let surfaceCode = $state(SURFACE_CODE);
   let surface: HTMLElement | undefined = $state();
   let verbose = $state(true);
+
+  const MOTION = ["press", "slide", "busy", "reveal", "fill"] as const;
+
+  // 011 decision 13: the four fields, their class names written out so
+  // Tailwind finds them in this file, and the colour each is named for.
+  const FIELDS = [
+    { n: 1, cls: "field-1", name: "Blue" },
+    { n: 2, cls: "field-2", name: "Red" },
+    { n: 3, cls: "field-3", name: "Yellow" },
+    { n: 4, cls: "field-4", name: "Green" },
+  ] as const;
+  // Bumped by the replay button: the keyed mark remounts and enters again.
+  let replays = $state(0);
 
   // Class names are written out so Tailwind finds them in this file.
   const sizes: Record<string, { cls: string; font: string }> = {
@@ -114,12 +130,16 @@
     <ContrastTable rows={data.contrast.dark} caption="Dark theme" />
   </div>
   <h3 class="mt-8 text-base font-bold">Forbidden: state tints on muted</h3>
+  <p class="mt-2 max-w-prose text-sm text-muted-foreground">
+    Forbidden by rule. The light row is the measured witness and stays below
+    4.5; the dark pairs pass on this palette and stay forbidden all the same.
+  </p>
   <ul class="mt-2 grid gap-1 text-sm">
     {#each data.forbidden as row (row.theme + row.label)}
       <li>
-        <code>{row.theme}</code> · {row.label} · <code>{row.bg}</code> · {row.ratio.toFixed(
-          2,
-        )}
+        <code>{row.theme}</code> · {row.label} · <code>{row.bg}</code> · {row.ruleOnly
+          ? "by rule"
+          : row.ratio.toFixed(2)}
       </li>
     {/each}
   </ul>
@@ -130,10 +150,10 @@
     Elevation and scrim
   </h2>
   <p class="mt-2 max-w-prose text-muted-foreground">
-    Menus and dialogs only. In light, a hairline and a shadow {data.elevation.y}
-    px down with a {data.elevation.blur} px blur; in dark, a hairline on the raised
-    ground, because a shadow on ink is invisible. The scrim dims the page behind a
-    modal dialog.
+    Menus and dialogs only. Product screens are flat: in both themes an overlay
+    is told from the page by its edge alone, a hairline at the input's strength,
+    with no shadow. The shadow layer stays in the utility, clear, so its shape
+    is the same in both themes. The scrim dims the page behind a modal dialog.
   </p>
   <div class="mt-6 flex flex-wrap items-start gap-12">
     <div class="flex flex-col items-start gap-2">
@@ -250,8 +270,8 @@
 <section class="mt-16" aria-labelledby="groove">
   <h2 id="groove" class="text-2xl font-bold tracking-section">Groove</h2>
   <p class="mt-2 text-muted-foreground">
-    The one line primitive: a hairline with a 1 px highlight beneath it on
-    paper, a plain hairline on ink.
+    The one line primitive: a plain hairline, in both themes. Product screens
+    are flat, so no highlight line sits beneath it.
   </p>
   <div class="groove mt-6 pt-4 text-sm text-muted-foreground">
     Content below a groove.
@@ -311,12 +331,11 @@
   <p class="mt-2 max-w-prose text-muted-foreground">
     An ink surface is <code>class="dark surface-ink"</code> on any element.
     Inside it every token is the dark theme's; the code ground and the editor's
-    ground equal the surface; the surface is ink on a light page and
+    ground equal the surface; the surface is graphite on a light page and
     <code>card</code> on a dark one; set <code>--background</code> on the
     surface to move all three. The <code>muted</code> insets keep their tint
     inside it: the pill tab strip, the meter's track, a skeleton, a hover row.
-    This is the one place a <code>dark</code> class appears in a preview page: the
-    surface is the dark theme on purpose, in both page themes.
+    Here a <code>dark</code> class is the dark theme on purpose, in both page themes.
   </p>
   <section
     bind:this={surface}
@@ -453,11 +472,11 @@
   <ul class="mt-4 grid max-w-prose list-disc gap-2 pl-6 text-sm">
     <li>
       The groove inside a surface is the dark hairline alone, paper at 10% over
-      ink, with no light line beneath it.
+      graphite.
     </li>
     <li>
-      The focus ring inside a surface is the dark <code>ring</code>, 6.85:1 on
-      ink and 5.22:1 on its muted insets.
+      The focus ring inside a surface is the dark <code>ring</code>, 8.67:1 on
+      graphite and 6.90:1 on its muted insets.
     </li>
     <li>
       A scroll box inside a surface draws its bar from the dark
@@ -493,4 +512,247 @@
   >
     A transition at the micro budget.
   </p>
+</section>
+
+<section class="mt-16" aria-labelledby="expressive">
+  <h2 id="expressive" class="text-2xl font-bold tracking-section">
+    Expressive mode
+  </h2>
+  <p class="mt-2 max-w-prose text-muted-foreground">
+    A second voice on the same tokens, for home pages, launches and marketing
+    sections. <code>data-mode="expressive"</code> on an element sets the mode's
+    values for its subtree and <code>data-mode="productive"</code> resets them.
+    The display steps, the press, the colour fields and the glass are named
+    utilities. Only an item declared
+    <code>["expressive"]</code> may use them (L22); every other rule binds both modes.
+  </p>
+
+  <h3 class="mt-8 text-base font-bold">The display steps</h3>
+  <p class="mt-2 max-w-prose text-sm text-muted-foreground">
+    <code>type-display</code>, <code>type-section</code> and
+    <code>type-proof</code>: fluid sizes for headlines, section titles and
+    figures. The display face is a slot, <code>--font-face-display</code>, the
+    heading face today.
+  </p>
+  <div data-mode="expressive" class="mt-4 grid gap-4">
+    <p data-testid="type-display" class="type-display">Work runs on data.</p>
+    <p data-testid="type-section" class="type-section">One governed layer</p>
+    <p data-testid="type-proof" class="type-proof">4.81B</p>
+  </div>
+
+  <h3 class="mt-8 text-base font-bold">One button, two volumes</h3>
+  <p class="mt-2 max-w-prose text-sm text-muted-foreground">
+    <code>button</code>'s corner reads <code>--radius-action</code>: one 8 px
+    case radius in productive mode, in expressive mode and in a productive
+    island inside it. Round is only for dot shapes. Other surfaces take the same
+    radius with <code>rounded-action</code>.
+  </p>
+  <div class="mt-4 flex flex-wrap items-start gap-12">
+    <figure data-testid="mode-productive" data-mode="productive">
+      <Button>Save changes</Button>
+      <figcaption class="mt-2">
+        <code class="text-xs">productive</code>
+      </figcaption>
+    </figure>
+    <figure data-testid="mode-expressive" data-mode="expressive">
+      <Button>Save changes</Button>
+      <figcaption class="mt-2">
+        <code class="text-xs">expressive</code>
+      </figcaption>
+    </figure>
+    <div data-mode="expressive">
+      <figure data-testid="mode-island" data-mode="productive">
+        <Button>Save changes</Button>
+        <figcaption class="mt-2">
+          <code class="text-xs">productive inside expressive</code>
+        </figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <div data-mode="expressive" data-testid="brand">
+    <h3 class="mt-8 text-base font-bold">The poster step</h3>
+    <p class="mt-2 max-w-prose text-sm text-muted-foreground">
+      <code>type-poster</code>, for launches and campaigns only: 56 px on a
+      phone, 12vw between, 160 px at most.
+    </p>
+    <p data-testid="type-poster" class="type-poster mt-4">Launch</p>
+
+    <h3 class="mt-8 text-base font-bold">Colour fields</h3>
+    <p class="mt-2 max-w-prose text-sm text-muted-foreground">
+      <code>field-1</code> to <code>field-4</code>: a flat area of one brand
+      colour, in the mark's order. Inside, the roles a heading, a paragraph, a
+      link and the focus ring read are the field's legend, the one colour
+      measured on it. An opaque surface carries <code>surface-plain</code> and
+      gets the theme's own roles back; so does glass. A control sits on a
+      surface or on glass, never on the field itself. The theme is set on
+      <code>html</code>
+      or on a wrapper outside the expressive subtree: a field never shares an element
+      with <code>.dark</code>, and the dark theme's four-colour marks need
+      <code>.dark</code> on or above the mode element (R25).
+    </p>
+    <div class="mt-4 grid gap-4 lg:grid-cols-2">
+      {#each FIELDS as field (field.n)}
+        <section
+          data-testid="field-{field.n}"
+          aria-labelledby="field-{field.n}-heading"
+          class="{field.cls} grid gap-4 rounded p-6"
+        >
+          <h4
+            id="field-{field.n}-heading"
+            data-probe="heading"
+            class="font-heading text-2xl font-bold text-foreground"
+          >
+            {field.name}, <code class="text-base">{field.cls}</code>
+          </h4>
+          <p data-probe="text" class="max-w-prose text-muted-foreground">
+            Text on the field takes its legend. A link here is the legend too,
+            underlined:
+            <a
+              data-probe="link"
+              href="/items/card/"
+              class="text-primary underline">the card a field holds</a
+            >.
+          </p>
+          <Card.Root data-probe="card" class="surface-plain">
+            <Card.Header>
+              <Card.Title level={5} data-probe="card-title"
+                >A card on the field</Card.Title
+              >
+              <Card.Description data-probe="card-description"
+                >Its own ground and the theme's own roles.</Card.Description
+              >
+            </Card.Header>
+            <Card.Content>
+              <a
+                data-probe="card-link"
+                href="/items/card/"
+                class="text-sm text-primary underline">Open the card's page</a
+              >
+            </Card.Content>
+          </Card.Root>
+          <div
+            data-probe="glass"
+            class="glass grid gap-1 p-4"
+            {@attach pointerLight}
+          >
+            <p data-probe="glass-title" class="font-heading font-bold">
+              Glass on the field
+            </p>
+            <p
+              data-probe="glass-description"
+              class="text-sm text-muted-foreground"
+            >
+              Frosted over the colour; its edge lights where the pointer moves.
+            </p>
+            <a
+              data-probe="glass-link"
+              href="/items/liquid-glass/"
+              class="w-fit text-sm text-primary underline">Open liquid glass</a
+            >
+          </div>
+        </section>
+      {/each}
+    </div>
+
+    <h3 class="mt-8 text-base font-bold">Glass on the canvas</h3>
+    <p class="mt-2 max-w-prose text-sm text-muted-foreground">
+      <code>glass</code> with <code>pointerLight</code>: the same panel on the
+      page's own ground. It carries <code>foreground</code>,
+      <code>muted-foreground</code> and <code>primary</code> text only.
+    </p>
+    <div
+      data-testid="glass-canvas"
+      class="glass mt-4 grid max-w-prose gap-1 p-6"
+      {@attach pointerLight}
+    >
+      <p class="font-heading font-bold">Work runs on data.</p>
+      <p class="text-sm text-muted-foreground">
+        One governed layer under every product.
+      </p>
+      <a
+        href="/items/liquid-glass/"
+        class="w-fit text-sm text-primary underline">How the glass is drawn</a
+      >
+    </div>
+
+    <h3 class="mt-8 text-base font-bold">The spring</h3>
+    <p class="mt-2 max-w-prose text-sm text-muted-foreground">
+      The mark's dots dock on <code>--ease-spring</code>, overshooting slightly
+      as they land; their opacity keeps the entrance curve. Only the dots spring
+      (L23). In the dark theme an expressive page shows the mark's four colours.
+    </p>
+    <div class="mt-4 flex flex-wrap items-center gap-6">
+      {#key replays}
+        <FourDot entrance data-testid="spring-mark" class="text-5xl" />
+      {/key}
+      <Button variant="secondary" size="sm" onclick={() => replays++}
+        >Replay the entrance</Button
+      >
+    </div>
+  </div>
+
+  <h3 class="mt-8 text-base font-bold">Fields and glass, measured</h3>
+  {#each data.expressive.brand as set (set.theme)}
+    <div
+      class={set.theme === "light"
+        ? "mt-4 grid gap-6 dark:hidden"
+        : "mt-4 hidden gap-6 dark:grid"}
+    >
+      <ContrastTable
+        rows={set.fields}
+        caption="The fields: legend on fill, {set.theme}"
+      />
+      <ContrastTable
+        rows={set.glass}
+        caption="The glass: over each ground, its fallback and the ring, {set.theme}"
+      />
+    </div>
+  {/each}
+
+  <h3 class="mt-8 text-base font-bold">Display, motion and press</h3>
+  <ul class="mt-4 grid gap-1 text-sm">
+    {#each Object.entries(data.expressive.steps) as [step, value] (step)}
+      <li>
+        <code>type-{step}</code> · {value.minPx} to {value.maxPx} px at {value.vw}vw
+        · {value.lineHeight} / {value.tracking} em · {value.weight}{value.tabular
+          ? " · tabular figures"
+          : ""}
+      </li>
+    {/each}
+  </ul>
+  <dl class="mt-4 grid gap-1 text-sm">
+    {#each MOTION as name (name)}
+      <div class="flex flex-wrap gap-2">
+        <dt><code>--motion-{name}</code></dt>
+        <dd>{data.expressive.motion[name]} ms</dd>
+      </div>
+    {/each}
+    <div class="flex flex-wrap gap-2">
+      <dt><code>--ease-standard</code></dt>
+      <dd>cubic-bezier({data.expressive.motion.easeStandard.join(", ")})</dd>
+    </div>
+    <div class="flex flex-wrap gap-2">
+      <dt><code>--motion-light</code></dt>
+      <dd>{data.expressive.motion.light} ms</dd>
+    </div>
+    <div class="flex flex-wrap gap-2">
+      <dt><code>--ease-spring</code></dt>
+      <dd>
+        a damped spring, ζ {data.expressive.motion.spring.dampingRatio}, as
+        <code>linear()</code>
+      </dd>
+    </div>
+    <div class="flex flex-wrap gap-2">
+      <dt><code>--press-scale</code></dt>
+      <dd>{data.expressive.motion.pressScale}, 1 under reduced motion</dd>
+    </div>
+  </dl>
+  <button
+    type="button"
+    data-testid="press"
+    class="action-press mt-4 rounded border border-input bg-card px-4 py-2 text-sm"
+  >
+    Press and hold
+  </button>
 </section>

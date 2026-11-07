@@ -10,11 +10,15 @@ import { readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import * as prettier from "prettier";
 import {
+  FIELDS,
   readTokens,
+  resolveColor,
+  resolveExpressive,
   THEMES,
   TOKENS_PATH,
-  resolveColor,
   type Family,
+  type Fluid,
+  type Theme,
   type Tokens,
 } from "./tokens.ts";
 
@@ -36,6 +40,92 @@ type FontObject = {
 const RADIUS_STEPS = ["xs", "sm", "md", "lg", "xl", "2xl", "3xl", "4xl"];
 
 /**
+ * 011 decision 3: the primitives the mark's four dots take on a dark
+ * expressive ground, in the mark's order. The dark theme's product screens
+ * keep paper (008).
+ */
+const EXPRESSIVE_DARK_MARKS = [
+  "blue-lifted",
+  "red-lifted",
+  "amber",
+  "green-lifted",
+] as const;
+
+/**
+ * 011 decision 10: the step response of a damped spring as a `linear()`
+ * easing. x(t) = 1 − e^(−ζωt) (cos(ω_d t) + ζ/√(1 − ζ²) sin(ω_d t)), with
+ * ω_d = ω√(1 − ζ²), sampled at `samples + 1` even times from 0 to T, where
+ * ωT = ln(1 / settle) / ζ; each value rounded to four decimals, the last 1.
+ */
+export function springEase({
+  dampingRatio: zeta,
+  settle,
+  samples,
+}: Tokens["expressive"]["motion"]["spring"]): string {
+  const end = Math.log(1 / settle) / zeta;
+  const damped = Math.sqrt(1 - zeta * zeta);
+  const points = Array.from({ length: samples + 1 }, (_, k) => {
+    if (k === samples) return 1;
+    const u = (end * k) / samples;
+    const x =
+      1 -
+      Math.exp(-zeta * u) *
+        (Math.cos(damped * u) + (zeta / damped) * Math.sin(damped * u));
+    return Math.round(x * 10000) / 10000;
+  });
+  return `linear(${points.join(", ")})`;
+}
+
+/** The roles a field sets to its legend, and that `surface-plain` restores (011 decision 6). */
+const FIELD_ROLES = [
+  "foreground",
+  "muted-foreground",
+  "card-foreground",
+  "primary",
+  "ring",
+] as const;
+/**
+ * `--surface-*`'s roles: the field's, the primary fill's text, which a field
+ * sets to its own colour, and the border, which it sets to its legend at 24%.
+ */
+const SURFACE_ROLES = [...FIELD_ROLES, "primary-foreground", "border"] as const;
+
+/**
+ * 011 decisions 6 and 8: the per-theme brand variables. A field's fill and
+ * legend; the `--surface-*` copies, each `var(--<role>)` so that it is
+ * substituted where it is declared, on `:root` or `.dark`, and inherits as
+ * the theme's own value into a field that resets the role; and the glass.
+ */
+function brandTheme(tokens: Tokens, theme: Theme): Record<string, string> {
+  const { field, glass } = tokens.expressive;
+  const out: Record<string, string> = {};
+  for (const name of FIELDS) {
+    const [fill, legend] = field[theme][name];
+    out[`--${name}`] = tokens.primitives[fill];
+    out[`--${name}-foreground`] = tokens.primitives[legend];
+  }
+  for (const role of SURFACE_ROLES) out[`--surface-${role}`] = `var(--${role})`;
+  const own = glass[theme];
+  for (const part of ["tint", "rim", "edge", "fallback", "light"] as const)
+    out[`--glass-${part}`] = resolveExpressive(tokens, own[part]);
+  const [near, far] = own.shadow.map((c) => resolveExpressive(tokens, c));
+  out["--glass-shadow"] = `0 1px 0 ${near}, 0 16px 32px -16px ${far}`;
+  return out;
+}
+
+/** The roles of `surface-plain`, restored from the `--surface-*` copies. */
+function surfacePlain(): Record<string, string> {
+  return Object.fromEntries(
+    SURFACE_ROLES.map((role) => [`--${role}`, `var(--surface-${role})`]),
+  );
+}
+
+/** The mark's four variables set from four hexes, in the mark's order. */
+function marks(hexes: readonly string[]): Record<string, string> {
+  return Object.fromEntries(hexes.map((hex, i) => [`--mark-${i + 1}`, hex]));
+}
+
+/**
  * 006 decision 4: where each dot starts, as multiples of `--mark-orbit`, in
  * the design book's directions and reading order: blue from the lower left,
  * red from the upper right, amber from the upper left, green from the lower
@@ -48,11 +138,18 @@ const ENTRANCE_OFFSETS: [x: number, y: number][] = [
   [1, 0.8],
 ];
 
+/** 006 decision 4: one dot's share of the entrance budget. */
+const ENTRANCE_DOT =
+  "calc(var(--motion-entrance) * var(--motion-entrance-dot))";
+
 /** Pixels become rem at the default 16 px root (001 decision 9). */
 const rem = (px: number) => `${px / 16}rem`;
 const em = (n: number) => `${n}em`;
 const ms = (n: number) => `${n}ms`;
 const px = (n: number) => `${n}px`;
+/** 009 decision 5: a fluid size, its ends in rem. */
+const clamp = ({ minPx, vw, maxPx }: Fluid) =>
+  `clamp(${rem(minPx)}, ${vw}vw, ${rem(maxPx)})`;
 
 function colours(tokens: Tokens, theme: (typeof THEMES)[number]): Vars {
   const out: Vars = {};
@@ -119,15 +216,71 @@ export function themeCssVars(tokens: Tokens): {
   };
 }
 
+/**
+ * 009 decision 2: expressive mode's runtime variables, every one in
+ * `css[":root"]`. Not in `cssVars`, where the CLI would make each a utility
+ * that L22 could not see; not in `@theme inline`, where a value is inlined
+ * and a subtree could not set it again. 012 decision 1 removes the stage, its
+ * light, the stage radius and the veil's blur.
+ */
+function expressiveRoot(tokens: Tokens): Record<string, string> {
+  const { display, motion, size, gutter } = tokens.expressive;
+  const out: Record<string, string> = {};
+  // Decision 5: the display slot holds the heading family's string. A subtree
+  // that sets it again changes every display line inside it.
+  out["--font-face-display"] = tokens.type.families[display.family].family;
+  for (const [step, value] of Object.entries(display.steps)) {
+    out[`--type-${step}-size`] = clamp(value);
+    out[`--type-${step}-leading`] = String(value.lineHeight);
+    out[`--type-${step}-tracking`] = em(value.tracking);
+  }
+  // Decision 6: motion, shape and size.
+  out["--motion-press"] = ms(motion.press);
+  out["--motion-slide"] = ms(motion.slide);
+  out["--motion-busy"] = ms(motion.busy);
+  out["--motion-reveal"] = ms(motion.reveal);
+  out["--motion-fill"] = ms(motion.fill);
+  // 011 decision 8: how long the glass's rim stays lit after the pointer stops.
+  out["--motion-light"] = ms(motion.light);
+  out["--ease-standard"] = `cubic-bezier(${motion.easeStandard.join(", ")})`;
+  // 011 decision 10: the spring, for the mark's dots only (L23).
+  out["--ease-spring"] = springEase(motion.spring);
+  out["--press-scale"] = String(motion.pressScale);
+  // Decision 7: the mode's one value, productive on `:root`.
+  out["--radius-action"] = "var(--radius)";
+  out["--size-bar"] = rem(size.bar);
+  out["--size-action"] = rem(size.action);
+  out["--size-action-small"] = rem(size.actionSmall);
+  out["--size-track"] = rem(size.track);
+  // A hero under a sticky bar fills the screen.
+  out["--size-hero-fill"] = "calc(100svh - var(--size-bar))";
+  out["--gutter-stage"] = clamp(gutter);
+  // 011 decisions 6 and 8: the light theme's fields, surface copies and glass,
+  // then the glass's blur, the same in both themes. Frost only: no lens
+  // (decisions.md, 2026-11-07).
+  Object.assign(out, brandTheme(tokens, "light"));
+  out["--glass-blur"] = px(tokens.expressive.glass.blur);
+  return out;
+}
+
 /** `pluto-theme`'s `css`. No rule nested in an at-rule may use `:root` or `.dark` (001 decision 14). */
 export function themeCss(tokens: Tokens): CssTree {
   const { mark, motion, line, focus } = tokens;
+  const steps = tokens.expressive.display.steps;
+  const darkMark = [1, 2, 3, 4].map((n) =>
+    resolveColor(tokens, "dark", `mark-${n}`),
+  );
   return {
     ":root": {
       "--mark-dot": em(mark.dot),
       "--mark-gap": em(mark.gap),
       "--mark-rise": em(mark.rise),
       "--mark-lockup-gap": em(mark.lockupGap),
+      // 011 decision 7: the lockup sets its mark at a fraction of the word.
+      // The em is resolved where the size is used: on the lockup's mark,
+      // against the word around it.
+      "--mark-lockup-scale": String(mark.lockupScale),
+      "--mark-lockup-size": "calc(var(--mark-lockup-scale) * 1em)",
       "--mark-lift":
         "calc(var(--mark-rise) + var(--mark-dot) + var(--mark-gap))",
       // 006 decision 4: how far a dot travels before it docks.
@@ -142,15 +295,26 @@ export function themeCss(tokens: Tokens): CssTree {
       "--line-width": px(line.width),
       "--focus-width": px(focus.width),
       "--focus-offset": px(focus.offset),
+      ...expressiveRoot(tokens),
       "color-scheme": "light",
     },
     ".dark": {
+      ...brandTheme(tokens, "dark"),
       "color-scheme": "dark",
     },
     "@media (prefers-reduced-motion: reduce)": {
+      // 009 decision 6: the five new durations join the two at 0ms, so a
+      // script that reads them sees 0, and a press never scales.
       "html:root": {
         "--motion-entrance": "0ms",
         "--motion-micro": "0ms",
+        "--motion-press": "0ms",
+        "--motion-slide": "0ms",
+        "--motion-busy": "0ms",
+        "--motion-reveal": "0ms",
+        "--motion-fill": "0ms",
+        "--motion-light": "0ms",
+        "--press-scale": "1",
       },
       "*, ::before, ::after": {
         "animation-duration": "0.01ms !important",
@@ -203,9 +367,15 @@ export function themeCss(tokens: Tokens): CssTree {
     // animate-* utility cannot carry four delays and four offsets (002
     // decision 9's motion rule, R14).
     "@utility mark-entrance": {
+      // 011 decision 10: two animations, the dock on the spring and the fade
+      // on the entrance curve, since colour and light never bounce. The
+      // shorthand names both with no timing, so Tailwind keeps their
+      // @keyframes (it reads names from `animation` alone); the timing is a
+      // longhand after it, so an engine without linear() runs both on the
+      // initial ease instead of dropping the animation.
       '& > [data-slot="four-dot-dot"]': {
-        animation:
-          "pluto-mark-dock calc(var(--motion-entrance) * var(--motion-entrance-dot)) var(--ease-entrance) both",
+        animation: `pluto-mark-dock ${ENTRANCE_DOT} both, pluto-mark-fade ${ENTRANCE_DOT} both`,
+        "animation-timing-function": "var(--ease-spring), var(--ease-entrance)",
       },
       ...Object.fromEntries(
         ENTRANCE_OFFSETS.map(([ox, oy], i) => [
@@ -231,7 +401,10 @@ export function themeCss(tokens: Tokens): CssTree {
         "transition-property": "opacity, transform",
         "transition-duration":
           "calc(var(--motion-micro) * var(--motion-entrance-dot))",
-        "transition-timing-function": "var(--ease-entrance)",
+        // 011 decision 10: the opacity on the entrance curve, the transform
+        // on the spring.
+        "transition-timing-function":
+          "var(--ease-entrance), var(--ease-spring)",
       },
       ...Object.fromEntries(
         ENTRANCE_OFFSETS.map(([ox, oy], i) => [
@@ -275,18 +448,153 @@ export function themeCss(tokens: Tokens): CssTree {
     ".dark .surface-ink": {
       "--background": "var(--card)",
     },
+    // 009 decision 7: the mode. `data-mode="expressive"` sets the mode's
+    // values for its subtree and `data-mode="productive"` resets them, so a
+    // productive island inside a stage stays productive: a variable inherits
+    // from its nearest ancestor. 011 decision 5 (H1): the action radius is the
+    // case radius in both modes; the rule stays, so a later decision can move
+    // a value into the mode.
+    '[data-mode="productive"]': {
+      "--radius-action": "var(--radius)",
+    },
+    '[data-mode="expressive"]': {
+      "--radius-action": "var(--radius)",
+    },
+    // 011 decision 3: in the dark theme an expressive subtree shows the four
+    // colours as the lifted four; after it, a productive island goes back to
+    // the dark theme's paper. Plain rules at (0,2,0): they beat the `.dark`
+    // block on the element that carries both.
+    '.dark [data-mode="expressive"], [data-mode="expressive"].dark': marks(
+      EXPRESSIVE_DARK_MARKS.map((name) => tokens.primitives[name]),
+    ),
+    '.dark [data-mode="productive"], [data-mode="productive"].dark':
+      marks(darkMark),
+    // 009 decision 7: the action radius. The fallback keeps 8 px corners in
+    // an app that re-installs button but declines the theme update.
+    "@utility rounded-action": {
+      "border-radius": "var(--radius-action, var(--radius))",
+    },
+    // 009 decision 6: a sticky bar that marks itself never hides focus
+    // (WCAG 2.4.11).
+    "html:has([data-sticky-bar])": {
+      "scroll-padding-top": "var(--size-bar)",
+    },
+    // 009 decision 6: an action that gives under the finger. Under reduced
+    // motion `--press-scale` is 1.
+    "@utility action-press": {
+      transition: "transform var(--motion-press) var(--ease-standard)",
+      "&:active": { transform: "scale(var(--press-scale))" },
+    },
+    // 009 decision 5: the display steps, `type-*`, since `cn` reads a
+    // `text-<word>` as a colour and would drop the step. Each reads the
+    // display slot and its step's fluid size; the weight lives here.
+    ...Object.fromEntries(
+      Object.entries(steps).map(([step, value]) => [
+        `@utility type-${step}`,
+        {
+          "font-family": "var(--font-face-display)",
+          "font-size": `var(--type-${step}-size)`,
+          "line-height": `var(--type-${step}-leading)`,
+          "letter-spacing": `var(--type-${step}-tracking)`,
+          "font-weight": String(value.weight),
+          ...(value.tabular ? { "font-variant-numeric": "tabular-nums" } : {}),
+        },
+      ]),
+    ),
+    // 011 decision 6: the four colour fields. Each paints its fill and sets
+    // the roles its text, links and ring read to its legend, the only colour
+    // measured on it. A field never shares an element with `.dark`: the
+    // unlayered `.dark` would win over this layered utility.
+    ...Object.fromEntries(
+      FIELDS.map((name) => [
+        `@utility ${name}`,
+        {
+          "background-color": `var(--${name})`,
+          color: `var(--${name}-foreground)`,
+          ...Object.fromEntries(
+            FIELD_ROLES.map((role) => [
+              `--${role}`,
+              `var(--${name}-foreground)`,
+            ]),
+          ),
+          "--border": `color-mix(in srgb, var(--${name}-foreground) 24%, transparent)`,
+          // A primary fill on the field (a badge, a meter) inverts to the one
+          // pair measured on it: the legend as fill, the field as its text.
+          "--primary-foreground": `var(--${name})`,
+        },
+      ]),
+    ),
+    // 011 decision 6: an opaque surface inside a field takes the theme's own
+    // roles back. The item that paints the ground carries it.
+    "@utility surface-plain": surfacePlain(),
+    // 011 decision 8 (I9): liquid glass, expressive only. A frosted tint, a
+    // lit edge, the case radius, and the theme's own roles (surface-plain's)
+    // with the text colour set from them. The specular rim is the ::after,
+    // masked to the border ring so light never falls on the text; it shows
+    // only while `pointerLight` sets --glass-lit.
+    "@utility glass": {
+      position: "relative",
+      isolation: "isolate",
+      "background-color": "var(--glass-tint)",
+      "-webkit-backdrop-filter": "blur(var(--glass-blur))",
+      "backdrop-filter": "blur(var(--glass-blur))",
+      border: "var(--line-width) solid var(--glass-edge)",
+      "border-radius": "var(--radius)",
+      "box-shadow": "inset 0 1px 0 var(--glass-rim), var(--glass-shadow)",
+      ...surfacePlain(),
+      color: "var(--foreground)",
+      "&::after": {
+        content: '""',
+        position: "absolute",
+        inset: "calc(-1 * var(--line-width))",
+        padding: "var(--line-width)",
+        "border-radius": "inherit",
+        "pointer-events": "none",
+        background:
+          "radial-gradient(160px circle at var(--glass-x, 50%) var(--glass-y, 0%), var(--glass-light), transparent 70%)",
+        // The prefixed pair first: Firefox reads -webkit-mask as mask, so the
+        // standard declaration must come last.
+        "-webkit-mask":
+          "linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)",
+        "-webkit-mask-composite": "xor",
+        mask: "linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0)",
+        opacity: "var(--glass-lit, 0)",
+        transition: "opacity var(--motion-reveal) var(--ease-standard)",
+      },
+    },
+    // 011 decision 8: the glass turns opaque where blur is unsupported, under
+    // reduced transparency and under forced colours. Plain rules printed
+    // after the utility, so they win over it.
+    "@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)))":
+      { ".glass": glassOpaque() },
+    "@media (prefers-reduced-transparency: reduce)": {
+      ".glass": glassOpaque(),
+    },
+    "@media (forced-colors: active)": {
+      ".glass": { ...glassOpaque(), "border-color": "CanvasText" },
+    },
+    // 012 decision 5: a flat card answers a run with an edge drawn inside it,
+    // in the primary, against its own ground; no shadow at rest. A utility,
+    // since L3 bans ring-* classes.
+    "@utility busy-edge": {
+      transition: "box-shadow var(--motion-busy) var(--ease-standard)",
+      "&[data-busy]": {
+        "box-shadow": "inset 0 0 0 calc(2 * var(--line-width)) var(--primary)",
+      },
+    },
     // 002 decision 3: the keyframes behind animate-enter and animate-exit.
     "@keyframes pluto-enter": { from: { opacity: "0" } },
     "@keyframes pluto-exit": { to: { opacity: "0" } },
-    // 006 decision 4: a dot's start, hidden and small at its orbit offset. No
-    // `to`: the end state is the composed mark.
+    // 006 decision 4: a dot's start, small at its orbit offset. No `to`: the
+    // end state is the composed mark. 011 decision 10 splits the opacity
+    // into its own keyframes, so the dock alone takes the spring.
     "@keyframes pluto-mark-dock": {
       from: {
-        opacity: "0",
         transform:
           "translate(calc(var(--mark-orbit) * var(--_ox)), calc(var(--mark-orbit) * var(--_oy))) scale(0.4)",
       },
     },
+    "@keyframes pluto-mark-fade": { from: { opacity: "0" } },
     "@layer base": {
       body: { "@apply bg-background text-foreground": {} },
       "h1, h2, h3, h4, h5, h6": { "@apply font-heading": {} },
@@ -325,6 +633,15 @@ export function themeCss(tokens: Tokens): CssTree {
         background: "var(--primary)",
       },
     },
+  };
+}
+
+/** 011 decision 8: the glass's opaque fallback. */
+function glassOpaque(): Record<string, string> {
+  return {
+    "background-color": "var(--glass-fallback)",
+    "-webkit-backdrop-filter": "none",
+    "backdrop-filter": "none",
   };
 }
 

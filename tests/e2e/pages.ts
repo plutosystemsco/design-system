@@ -1,6 +1,11 @@
 import type { Page } from "@playwright/test";
 
-import { BLOCK_VIEWS, viewPath } from "../../src/lib/preview/blocks.ts";
+import {
+  BLOCK_VIEWS,
+  COMPOSITION_VIEWS,
+  COMPOSITIONS_ROOT,
+  viewPath,
+} from "../../src/lib/preview/blocks.ts";
 
 /** The items in 005 decision 4's order: one site page each, plus the catalogue. */
 export const ITEMS = [
@@ -12,6 +17,10 @@ export const ITEMS = [
   "utils",
   "four-dot",
   "theme",
+  // foundation (009)
+  "read-token",
+  // foundation (011)
+  "liquid-glass",
   // actions
   "button",
   "tooltip",
@@ -70,6 +79,16 @@ export const ITEMS = [
   "message",
   "marker",
   "composer",
+  // compositions (010)
+  "stage",
+  "stage-card",
+  "marketing-bar",
+  "stage-hero",
+  "proof-band",
+  "live-console",
+  "name-strip",
+  "cta-band",
+  "marketing-footer",
   // blocks
   "hero",
   "sign-in",
@@ -78,6 +97,8 @@ export const ITEMS = [
   "settings",
   "app-shell",
   "chat",
+  // blocks (010)
+  "product-home",
 ];
 
 /** 004's 10 items, and their pages. */
@@ -111,8 +132,26 @@ export const ITEMS_005 = [
 export const ITEMS_006 = ["app-shell", "chat"];
 /** 007 decision 7: 007's one item. */
 export const ITEMS_007 = ["code-languages"];
-/** The 26 items 002 adds: every item after the foundation that 003, 004, 005, 006 and 007 did not. */
-export const ITEMS_002 = ITEMS.slice(7).filter(
+/** 009 decision 10: 009's one item. */
+export const ITEMS_009 = ["read-token"];
+/** 011 decision 8: 011's one item. */
+export const ITEMS_011 = ["liquid-glass"];
+/** 010 decision 1: the nine compositions, in registry order. */
+export const COMPOSITIONS = [
+  "stage",
+  "stage-card",
+  "marketing-bar",
+  "stage-hero",
+  "proof-band",
+  "live-console",
+  "name-strip",
+  "cta-band",
+  "marketing-footer",
+];
+/** 010 decision 1: the nine compositions and the block. */
+export const ITEMS_010 = [...COMPOSITIONS, "product-home"];
+/** The 26 items 002 adds: every item after the foundation (seven, and 009's read-token) that 003, 004, 005, 006, 007 and 010 did not. */
+export const ITEMS_002 = ITEMS.slice(8).filter(
   (name) =>
     ![
       "status",
@@ -126,7 +165,9 @@ export const ITEMS_002 = ITEMS.slice(7).filter(
     !ITEMS_004.includes(name) &&
     !ITEMS_005.includes(name) &&
     !ITEMS_006.includes(name) &&
-    !ITEMS_007.includes(name),
+    !ITEMS_007.includes(name) &&
+    !ITEMS_010.includes(name) &&
+    !ITEMS_011.includes(name),
 );
 /** The 7 items 003 adds. */
 export const ITEMS_003 = [
@@ -138,7 +179,7 @@ export const ITEMS_003 = [
   "page-states",
   "settings",
 ];
-/** The 7 blocks, in registry order. */
+/** The 8 blocks, in registry order (010 adds product-home). */
 export const BLOCKS = [
   "hero",
   "sign-in",
@@ -146,6 +187,7 @@ export const BLOCKS = [
   "page-states",
   "settings",
   ...ITEMS_006,
+  "product-home",
 ];
 /** The 7 item pages of 003. */
 export const PAGES_003 = ITEMS_003.map((name) => `/items/${name}/`);
@@ -157,6 +199,12 @@ export const PAGES_005 = ITEMS_005.map((name) => `/items/${name}/`);
 export const PAGES_006 = ITEMS_006.map((name) => `/items/${name}/`);
 /** The item page of 007. */
 export const PAGES_007 = ITEMS_007.map((name) => `/items/${name}/`);
+/** The item page of 009. */
+export const PAGES_009 = ITEMS_009.map((name) => `/items/${name}/`);
+/** The 10 item pages of 010. */
+export const PAGES_010 = ITEMS_010.map((name) => `/items/${name}/`);
+/** The item page of 011. */
+export const PAGES_011 = ITEMS_011.map((name) => `/items/${name}/`);
 /** The site pages: the catalogue and one page per item. */
 export const PAGES = ["/", ...ITEMS.map((name) => `/items/${name}/`)];
 /** The catalogue and 002's 32 item pages. */
@@ -166,7 +214,10 @@ export const PAGES_002 = PAGES.filter(
     !PAGES_004.includes(p) &&
     !PAGES_005.includes(p) &&
     !PAGES_006.includes(p) &&
-    !PAGES_007.includes(p),
+    !PAGES_007.includes(p) &&
+    !PAGES_009.includes(p) &&
+    !PAGES_010.includes(p) &&
+    !PAGES_011.includes(p),
 );
 
 /** The views (003 decision 16; 006 decision 12), each with its block and label. */
@@ -176,6 +227,15 @@ export const VIEWS = BLOCKS.flatMap((block) =>
     state: view.path,
     label: view.label,
     path: viewPath(block, view.path),
+  })),
+);
+
+/** 010 decision 10: each composition's views, under /view/compositions/. */
+export const COMPOSITION_VIEW_LIST = COMPOSITIONS.flatMap((item) =>
+  (COMPOSITION_VIEWS[item] ?? []).map((view) => ({
+    item,
+    label: view.label,
+    path: viewPath(COMPOSITIONS_ROOT, view.path),
   })),
 );
 
@@ -228,6 +288,61 @@ const CHAT_BUSY = [
   "textarea:Message",
   "button:Stop response",
 ];
+/**
+ * Waits until the product home's Python card is highlighted: its pre's text
+ * is then its four lines, one span each, with no newline between them, as
+ * the stop list reads it.
+ */
+export async function waitForHighlight(page: Page): Promise<void> {
+  await page
+    .locator('[data-slot="stage-card"] [data-slot="code-block-line"]')
+    .nth(4)
+    .waitFor();
+}
+
+/**
+ * 010 criterion 9: the product home's stops at md and wider, in DOM order.
+ * The bar's skip link, home link, two links and two actions; the hero's two
+ * actions; the shell card's copy button and code; the Python card's copy
+ * button, Run and code; the console's active tab, its command and Run; the
+ * call to action; the footer's three links. Each code block's pre is a stop
+ * (004 decision 8); the console's tab panels are not (decisions.md, after
+ * the 007 checkpoint).
+ */
+const PRODUCT_HOME_HERO = [
+  "a:Read the docs",
+  "a:See the source",
+  "button:Copy code",
+  "pre:pip install git+https://github.com/ClayGendron/vfs",
+  "button:Copy code",
+  "button:Run",
+  'pre:db = DatabaseStorage(url=DATABASE_URL)fs = VirtualFileSystem(storage=db)result = await fs.grep("renewal")for path in result.paths: print(path)',
+  "tab:Find renewals",
+  'pre:await fs.grep("renewal")',
+  "button:Run",
+  "a:Read the docs",
+  "a:Docs",
+  "a:Source",
+  "a:About",
+];
+export const PRODUCT_HOME_STOPS_WIDE = [
+  "a:Skip to content",
+  "a:Pluto Systems",
+  "a:The layer",
+  "a:Try it",
+  "a:Read the docs",
+  "a:See the source",
+  ...PRODUCT_HOME_HERO,
+];
+/** Below md the links and the secondary action fold into the sheet (010 decision 4). */
+export const PRODUCT_HOME_STOPS_NARROW = [
+  "a:Skip to content",
+  "a:Pluto Systems",
+  "a:See the source",
+  "button:Menu",
+  ...PRODUCT_HOME_HERO,
+];
+
 export const VIEW_STOPS: Record<string, string[]> = {
   "/view/hero/": ["a:Go to the home page", "a:See what the page holds"],
   "/view/sign-in/": SIGN_IN,
@@ -351,6 +466,7 @@ export const VIEW_STOPS: Record<string, string[]> = {
     "textarea:Message",
     "button:Send message",
   ],
+  "/view/product-home/": PRODUCT_HOME_STOPS_WIDE,
 };
 
 /** The three widths the viewer and the tests use. */
@@ -366,10 +482,10 @@ export async function openView(page: Page, path: string): Promise<void> {
   await page.locator(VIEW_READY).waitFor();
 }
 
-/** The grounds, as Chromium computes them. */
+/** The grounds, as Chromium computes them: the warm canvas and graphite (011 decision 2). */
 export const GROUND = {
-  light: "rgb(247, 247, 244)",
-  dark: "rgb(20, 22, 28)",
+  light: "rgb(243, 240, 232)",
+  dark: "rgb(22, 20, 15)",
 } as const;
 
 export type ThemeName = keyof typeof GROUND;

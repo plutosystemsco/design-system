@@ -2,7 +2,9 @@
  * 003 decision 20, unit file 5: the blocks, statically, over registry.json,
  * the block and error-summary sources, and a registry built into a temporary
  * folder. 006 decision 14 widens it to 7 blocks and 30 files, with page files
- * that may be layouts or server loads, and components that may be .ts.
+ * that may be layouts or server loads, and components that may be .ts. 010
+ * adds product-home, one page file whose parts are items of their own: 8
+ * blocks, 31 files; and the compositions' views.
  */
 import { afterAll, beforeAll, describe, expect, test } from "bun:test";
 import {
@@ -16,7 +18,10 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { buildRegistry } from "../../scripts/build-registry.ts";
 import { lintFiles, loadRules } from "../../scripts/lint-literals.ts";
-import { BLOCK_VIEWS } from "../../src/lib/preview/blocks.ts";
+import {
+  BLOCK_VIEWS,
+  COMPOSITION_VIEWS,
+} from "../../src/lib/preview/blocks.ts";
 import { toAppFiles, type BuiltFile } from "../../src/lib/server/built-item.ts";
 
 type Item = {
@@ -36,6 +41,7 @@ const BLOCKS = [
   "settings",
   "app-shell",
   "chat",
+  "product-home",
 ];
 const blocks = items.filter((i) => i.type === "registry:block");
 const blockFiles = blocks.flatMap((b) =>
@@ -58,9 +64,9 @@ afterAll(() => {
   if (out) rmSync(out, { recursive: true, force: true });
 });
 
-test("the registry holds the 7 blocks, in order, with 30 files", () => {
+test("the registry holds the 8 blocks, in order, with 31 files", () => {
   expect(blocks.map((b) => b.name)).toEqual(BLOCKS);
-  expect(blockFiles).toHaveLength(30);
+  expect(blockFiles).toHaveLength(31);
 });
 
 describe("1. dependencies suffice", () => {
@@ -115,7 +121,7 @@ describe("2. no block uses another", () => {
   });
 });
 
-test("3. no unshipped file: 0 <img and 0 asset paths in the 30 block files", () => {
+test("3. no unshipped file: 0 <img and 0 asset paths in the 31 block files", () => {
   const found: string[] = [];
   const asset =
     /(["'`])[^"'`\n]*\.(svg|png|jpg|jpeg|webp|gif|avif|ico|woff|woff2)\1/gi;
@@ -127,7 +133,7 @@ test("3. no unshipped file: 0 <img and 0 asset paths in the 30 block files", () 
   expect(found).toEqual([]);
 });
 
-test('4. the link rule: every quoted string beginning with / in the 30 block files is "/"', () => {
+test('4. the link rule: every quoted string beginning with / in the 31 block files is "/"', () => {
   const found: string[] = [];
   for (const f of blockFiles)
     for (const m of read(f.path).matchAll(/(["'`])(\/[^"'`\n]*)\1/g))
@@ -150,8 +156,8 @@ describe("5. the naming rule", () => {
       );
   });
 
-  test("10 of 10 page files are src/lib/registry/blocks/<block>/+(page|error|layout)(.server)?.(svelte|ts)", () => {
-    expect(pages).toHaveLength(10);
+  test("11 of 11 page files are src/lib/registry/blocks/<block>/+(page|error|layout)(.server)?.(svelte|ts)", () => {
+    expect(pages).toHaveLength(11);
     for (const f of pages)
       expect(f.path).toMatch(
         new RegExp(
@@ -166,20 +172,20 @@ describe("5. the naming rule", () => {
   });
 });
 
-test("6. the lint: 30 of 30 block files with 0 violations", () => {
+test("6. the lint: 31 of 31 block files with 0 violations", () => {
   const files = blockFiles.map((f) => f.path);
-  expect(files).toHaveLength(30);
+  expect(files).toHaveLength(31);
   expect(lintFiles(files, loadRules())).toEqual([]);
 });
 
-test("7. the voice: 0 banned words in the 30 block files and the 2 error-summary files", () => {
+test("7. the voice: 0 banned words in the 31 block files and the 2 error-summary files", () => {
   const banned =
     /\b(sorry|oops|whoops|something went wrong|on our side|signed in as|meets wcag)\b/i;
   const files = [
     ...blockFiles.map((f) => f.path),
     ...items.find((i) => i.name === "error-summary")!.files.map((f) => f.path),
   ];
-  expect(files).toHaveLength(32);
+  expect(files).toHaveLength(33);
   expect(files.filter((f) => banned.test(read(f)))).toEqual([]);
 });
 
@@ -188,8 +194,16 @@ describe("8. the views", () => {
     list.map((v) => ({ block, ...v })),
   );
   // 006 decision 12: the shell's views live in the (shell) group, since the
-  // shell renders its own main; every other view in (view).
-  const GROUP: Record<string, string> = { "app-shell": "(shell)" };
+  // shell renders its own main; every other view in (view). 010 decision 9:
+  // the product home renders its own main too.
+  const GROUP: Record<string, string> = {
+    "app-shell": "(shell)",
+    "product-home": "(shell)",
+  };
+  // 010 decision 10: each composition's views, under (shell)/view/compositions/.
+  const compositionViews = Object.values(COMPOSITION_VIEWS).flat();
+  const compositionFile = (state: string) =>
+    path.join("src/routes/(shell)/view/compositions", state, "+page.svelte");
   const routeFile = (block: string, state: string) =>
     path.join(
       `src/routes/${GROUP[block] ?? "(view)"}/view`,
@@ -198,19 +212,48 @@ describe("8. the views", () => {
       "+page.svelte",
     );
 
-  test("BLOCK_VIEWS lists the 7 blocks in registry order, with 30 views", () => {
+  test("BLOCK_VIEWS lists the 8 blocks in registry order, with 31 views", () => {
     expect(Object.keys(BLOCK_VIEWS)).toEqual(BLOCKS);
-    expect(views).toHaveLength(30);
+    expect(views).toHaveLength(31);
   });
 
-  test("30 of 30 views have their route file, under (view) or (shell)", () => {
+  test("31 of 31 views have their route file, under (view) or (shell)", () => {
     expect(
       views.filter((v) => existsSync(routeFile(v.block, v.path))),
-    ).toHaveLength(30);
+    ).toHaveLength(31);
+  });
+
+  // 012 decision 8: stage gains a view of its five grounds, stage-hero one
+  // with the poster title: 13.
+  test("COMPOSITION_VIEWS lists the 9 compositions in registry order, with 13 views, each with its route file", () => {
+    expect(Object.keys(COMPOSITION_VIEWS)).toEqual(
+      items
+        .filter(
+          (i) =>
+            (i as Item & { meta: { group: string } }).meta.group ===
+            "compositions",
+        )
+        .map((i) => i.name),
+    );
+    expect(compositionViews).toHaveLength(13);
+    expect(
+      compositionViews.filter((v) => existsSync(compositionFile(v.path))),
+    ).toHaveLength(13);
+    expect(COMPOSITION_VIEWS.stage!.map((v) => v.path)).toEqual([
+      "stage",
+      "stage/grounds",
+    ]);
+    expect(COMPOSITION_VIEWS["stage-hero"]!.map((v) => v.path)).toEqual([
+      "stage-hero",
+      "stage-hero/poster",
+    ]);
   });
 
   test("0 other +page.svelte files under src/routes/(view)/view/ or src/routes/(shell)/view/", () => {
-    const expected = new Set(views.map((v) => routeFile(v.block, v.path)));
+    const expected = new Set([
+      ...views.map((v) => routeFile(v.block, v.path)),
+      ...compositionViews.map((v) => compositionFile(v.path)),
+    ]);
     const found: string[] = [];
     const walk = (dir: string) => {
       if (!existsSync(dir)) return;
@@ -226,9 +269,9 @@ describe("8. the views", () => {
   });
 });
 
-test("9. the code view maps 30 of 30 block files to an app path and leaves 0 placeholders", () => {
+test("9. the code view maps 31 of 31 block files to an app path and leaves 0 placeholders", () => {
   const mapped = BLOCKS.flatMap((name) => toAppFiles(built(name).files));
-  expect(mapped).toHaveLength(30);
+  expect(mapped).toHaveLength(31);
   for (const file of mapped) {
     expect(file.appPath).toMatch(
       /^(src\/routes\/[a-z-]+\/\+(page|error|layout)(\.server)?\.(svelte|ts)|src\/lib\/components\/[a-z-]+\.(svelte|ts))$/,

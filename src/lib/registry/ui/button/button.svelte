@@ -7,7 +7,7 @@
   } from "svelte/elements";
 
   export const buttonVariants = tv({
-    base: "group/button inline-flex shrink-0 items-center justify-center gap-2 rounded border font-medium whitespace-nowrap transition-[color,background-color,border-color,translate] select-none active:not-aria-[haspopup]:translate-y-px aria-invalid:border-destructive disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+    base: "group/button inline-flex shrink-0 items-center justify-center gap-2 rounded-[var(--radius-action,var(--radius))] border font-medium whitespace-nowrap transition-[color,background-color,border-color,translate] select-none active:not-aria-[haspopup]:translate-y-px aria-invalid:border-destructive disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
     variants: {
       variant: {
         default:

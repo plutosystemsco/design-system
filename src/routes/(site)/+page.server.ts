@@ -12,8 +12,8 @@ type Item = {
 
 /**
  * 002 decision 6's groups, 003 decision 18's blocks, 004 decision 4's code
- * and data and 005 decision 4's navigation and chat, in order, with their
- * headings: ten groups.
+ * and data and 005 decision 4's navigation and chat, and 010's compositions, in
+ * order, with their headings: eleven groups.
  */
 const GROUPS: [key: string, heading: string][] = [
   ["foundation", "Foundation"],
@@ -25,6 +25,8 @@ const GROUPS: [key: string, heading: string][] = [
   ["data", "Data"],
   ["navigation", "Navigation"],
   ["chat", "Chat"],
+  // 010 decision 10: the compositions, before the blocks.
+  ["compositions", "Compositions"],
   ["blocks", "Blocks"],
 ];
 

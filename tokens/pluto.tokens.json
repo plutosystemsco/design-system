@@ -1,39 +1,40 @@
 {
   "primitives": {
-    "ink": "#14161C",
-    "ink-soft": "#4A4F5C",
-    "paper": "#F7F7F4",
+    "ink": "#0B0F17",
+    "ink-soft": "#505661",
+    "paper": "#F3F0E8",
     "raised": "#FFFFFF",
-    "blue": "#2456E6",
-    "red": "#E23A2E",
-    "amber": "#F0AE12",
-    "green": "#1E9E56",
-    "red-text": "#C42A1F",
-    "green-text": "#136E3E",
-    "wash": "#EAEAE7",
-    "line": "#14161C1A",
-    "line-input": "#7C808B",
-    "ink-raised": "#1E2129",
-    "ink-wash": "#2B2D32",
-    "paper-soft": "#A9ADB8",
-    "paper-line": "#F7F7F41A",
-    "paper-line-input": "#787C8A",
-    "blue-lifted": "#7A9BFF",
-    "red-lifted": "#FF7D73",
-    "green-lifted": "#4CC982",
+    "blue": "#2D48D4",
+    "red": "#C92035",
+    "amber": "#F19E20",
+    "green": "#008058",
+    "red-text": "#C11E31",
+    "green-text": "#007351",
+    "wash": "#E9E5DB",
+    "line": "#0B0F171A",
+    "line-input": "#857E70",
+    "ink-raised": "#221F19",
+    "ink-wash": "#2C2821",
+    "paper-soft": "#A39D90",
+    "paper-line": "#F3F0E81A",
+    "paper-line-input": "#7A7366",
+    "blue-lifted": "#93B0FF",
+    "red-lifted": "#FF9491",
+    "green-lifted": "#60C498",
     "clear": "#00000000",
-    "ink-shadow": "#14161C29",
-    "ink-scrim": "#14161C80",
-    "ink-scrim-deep": "#14161C99",
-    "amber-text": "#85600B",
+    "ink-shadow": "#0B0F1729",
+    "ink-scrim": "#0B0F1780",
+    "ink-scrim-deep": "#0B0F1799",
+    "amber-text": "#915B00",
     "orange-text": "#A44F12",
     "orange-lifted": "#E7792A",
     "purple-text": "#903ACE",
     "purple-lifted": "#B780DF",
     "teal-text": "#15717A",
     "teal-lifted": "#20A6B3",
-    "cyan-text": "#1B709B",
-    "cyan-lifted": "#269DD8"
+    "cyan-text": "#1A6C97",
+    "cyan-lifted": "#269DD8",
+    "graphite": "#16140F"
   },
   "themes": {
     "light": {
@@ -81,9 +82,9 @@
       "mark-3": "amber",
       "mark-4": "green",
       "groove-line": "line",
-      "groove-light": "raised",
-      "elevation-line": "line",
-      "elevation-shadow": "ink-shadow",
+      "groove-light": "clear",
+      "elevation-line": "line-input",
+      "elevation-shadow": "clear",
       "scrim": "ink-scrim",
       "syntax-orange": "orange-text",
       "syntax-amber": "amber-text",
@@ -92,7 +93,7 @@
       "syntax-cyan": "cyan-text"
     },
     "dark": {
-      "background": "ink",
+      "background": "graphite",
       "foreground": "paper",
       "card": "ink-raised",
       "card-foreground": "paper",
@@ -115,7 +116,7 @@
       "chart-3": "amber",
       "chart-4": "green-lifted",
       "chart-5": "paper-soft",
-      "sidebar": "ink",
+      "sidebar": "graphite",
       "sidebar-foreground": "paper",
       "sidebar-primary": "blue-lifted",
       "sidebar-primary-foreground": "ink",
@@ -224,13 +225,100 @@
   "mark": {
     "dot": 0.3,
     "gap": 0.08,
-    "rise": 0.38,
-    "lockupGap": 0.16,
+    "lockupScale": 0.87,
+    "rise": 0.36,
+    "lockupGap": 0.1,
     "orbit": 0.5
   },
   "line": { "width": 1 },
   "focus": { "width": 2, "offset": 2 },
   "elevation": { "y": 12, "blur": 32 },
+  "expressive": {
+    "display": {
+      "family": "heading",
+      "steps": {
+        "display": {
+          "minPx": 48,
+          "vw": 6,
+          "maxPx": 92,
+          "lineHeight": 0.95,
+          "tracking": -0.045,
+          "weight": 600
+        },
+        "section": {
+          "minPx": 36,
+          "vw": 4,
+          "maxPx": 56,
+          "lineHeight": 1.05,
+          "tracking": -0.035,
+          "weight": 600
+        },
+        "proof": {
+          "minPx": 56,
+          "vw": 6,
+          "maxPx": 96,
+          "lineHeight": 1,
+          "tracking": -0.04,
+          "weight": 600,
+          "tabular": true
+        },
+        "poster": {
+          "minPx": 56,
+          "vw": 12,
+          "maxPx": 160,
+          "lineHeight": 0.9,
+          "tracking": -0.05,
+          "weight": 600
+        }
+      }
+    },
+    "motion": {
+      "press": 160,
+      "slide": 220,
+      "busy": 400,
+      "reveal": 600,
+      "fill": 700,
+      "easeStandard": [0.2, 0.7, 0.2, 1],
+      "pressScale": 0.98,
+      "spring": { "dampingRatio": 0.65, "settle": 0.002, "samples": 32 },
+      "light": 600
+    },
+    "size": { "bar": 72, "action": 52, "actionSmall": 38, "track": 6 },
+    "gutter": { "minPx": 16, "vw": 4, "maxPx": 56 },
+    "field": {
+      "light": {
+        "field-1": ["blue", "raised"],
+        "field-2": ["red", "raised"],
+        "field-3": ["amber", "ink"],
+        "field-4": ["green", "raised"]
+      },
+      "dark": {
+        "field-1": ["blue-lifted", "graphite"],
+        "field-2": ["red-lifted", "graphite"],
+        "field-3": ["amber", "graphite"],
+        "field-4": ["green-lifted", "graphite"]
+      }
+    },
+    "glass": {
+      "light": {
+        "tint": "#F3F0E8DB",
+        "rim": "#FFFFFFCC",
+        "edge": "#0B0F1714",
+        "fallback": "#FBFAF6",
+        "light": "#FFFFFF8C",
+        "shadow": ["#0B0F170F", "#0B0F1747"]
+      },
+      "dark": {
+        "tint": "#16140FD6",
+        "rim": "#FFFFFF1F",
+        "edge": "#FFFFFF14",
+        "fallback": "ink-raised",
+        "light": "#FFFFFF33",
+        "shadow": ["#00000000", "#000000B3"]
+      },
+      "blur": 16
+    }
+  },
   "contrast": {
     "text": [
       ["foreground", "background"],
@@ -320,34 +408,103 @@
         "why": "amber series are labelled directly (the design book §03; WCAG 1.4.11)"
       }
     ],
-    "forbidden": [
-      {
-        "theme": "light",
-        "text": "destructive",
-        "tint": "destructive",
-        "over": "muted",
-        "alpha": 0.1,
-        "ratio": 4.06,
-        "why": "no state tint on muted (001 decision 8)"
-      },
-      {
-        "theme": "dark",
-        "text": "destructive",
-        "tint": "destructive",
-        "over": "muted",
-        "alpha": 0.2,
-        "ratio": 3.96,
-        "why": "no state tint on muted (001 decision 8)"
-      },
-      {
-        "theme": "dark",
-        "text": "success",
-        "tint": "success",
-        "over": "muted",
-        "alpha": 0.2,
-        "ratio": 4.44,
-        "why": "no state tint on muted (001 decision 8)"
-      }
+    "forbidden": {
+      "measured": [
+        {
+          "theme": "light",
+          "text": "destructive",
+          "tint": "destructive",
+          "over": "muted",
+          "alpha": 0.1,
+          "ratio": 4.08,
+          "why": "no state tint on muted (001 decision 8)"
+        }
+      ],
+      "ruleOnly": [
+        {
+          "theme": "dark",
+          "text": "destructive",
+          "tint": "destructive",
+          "over": "muted",
+          "alpha": 0.2,
+          "why": "no state tint on muted (001 decision 8), kept by rule (011 decision 11)"
+        },
+        {
+          "theme": "dark",
+          "text": "success",
+          "tint": "success",
+          "over": "muted",
+          "alpha": 0.2,
+          "why": "no state tint on muted (001 decision 8), kept by rule (011 decision 11)"
+        }
+      ]
+    },
+    "field": [
+      { "theme": "light", "field": "field-1" },
+      { "theme": "light", "field": "field-2" },
+      { "theme": "light", "field": "field-3" },
+      { "theme": "light", "field": "field-4" },
+      { "theme": "dark", "field": "field-1" },
+      { "theme": "dark", "field": "field-2" },
+      { "theme": "dark", "field": "field-3" },
+      { "theme": "dark", "field": "field-4" }
+    ],
+    "glass": [
+      { "theme": "light", "text": "foreground", "over": "background" },
+      { "theme": "light", "text": "foreground", "over": "field-1" },
+      { "theme": "light", "text": "foreground", "over": "field-2" },
+      { "theme": "light", "text": "foreground", "over": "field-3" },
+      { "theme": "light", "text": "foreground", "over": "field-4" },
+      { "theme": "light", "text": "foreground", "over": "foreground" },
+      { "theme": "light", "text": "muted-foreground", "over": "background" },
+      { "theme": "light", "text": "muted-foreground", "over": "field-1" },
+      { "theme": "light", "text": "muted-foreground", "over": "field-2" },
+      { "theme": "light", "text": "muted-foreground", "over": "field-3" },
+      { "theme": "light", "text": "muted-foreground", "over": "field-4" },
+      { "theme": "light", "text": "muted-foreground", "over": "foreground" },
+      { "theme": "light", "text": "primary", "over": "background" },
+      { "theme": "light", "text": "primary", "over": "field-1" },
+      { "theme": "light", "text": "primary", "over": "field-2" },
+      { "theme": "light", "text": "primary", "over": "field-3" },
+      { "theme": "light", "text": "primary", "over": "field-4" },
+      { "theme": "light", "text": "primary", "over": "foreground" },
+      { "theme": "dark", "text": "foreground", "over": "background" },
+      { "theme": "dark", "text": "foreground", "over": "field-1" },
+      { "theme": "dark", "text": "foreground", "over": "field-2" },
+      { "theme": "dark", "text": "foreground", "over": "field-3" },
+      { "theme": "dark", "text": "foreground", "over": "field-4" },
+      { "theme": "dark", "text": "muted-foreground", "over": "background" },
+      { "theme": "dark", "text": "muted-foreground", "over": "field-1" },
+      { "theme": "dark", "text": "muted-foreground", "over": "field-2" },
+      { "theme": "dark", "text": "muted-foreground", "over": "field-3" },
+      { "theme": "dark", "text": "muted-foreground", "over": "field-4" },
+      { "theme": "dark", "text": "primary", "over": "background" },
+      { "theme": "dark", "text": "primary", "over": "field-1" },
+      { "theme": "dark", "text": "primary", "over": "field-2" },
+      { "theme": "dark", "text": "primary", "over": "field-3" },
+      { "theme": "dark", "text": "primary", "over": "field-4" }
+    ],
+    "glassOverGlass": [
+      { "theme": "light", "text": "foreground", "over": "background" },
+      { "theme": "light", "text": "foreground", "over": "field-1" },
+      { "theme": "light", "text": "foreground", "over": "field-2" },
+      { "theme": "light", "text": "foreground", "over": "field-3" },
+      { "theme": "light", "text": "foreground", "over": "field-4" },
+      { "theme": "light", "text": "primary", "over": "background" },
+      { "theme": "light", "text": "primary", "over": "field-1" },
+      { "theme": "light", "text": "primary", "over": "field-2" },
+      { "theme": "light", "text": "primary", "over": "field-3" },
+      { "theme": "light", "text": "primary", "over": "field-4" },
+      { "theme": "dark", "text": "foreground", "over": "background" },
+      { "theme": "dark", "text": "foreground", "over": "field-1" },
+      { "theme": "dark", "text": "foreground", "over": "field-2" },
+      { "theme": "dark", "text": "foreground", "over": "field-3" },
+      { "theme": "dark", "text": "foreground", "over": "field-4" },
+      { "theme": "dark", "text": "primary", "over": "background" },
+      { "theme": "dark", "text": "primary", "over": "field-1" },
+      { "theme": "dark", "text": "primary", "over": "field-2" },
+      { "theme": "dark", "text": "primary", "over": "field-3" },
+      { "theme": "dark", "text": "primary", "over": "field-4" }
     ],
     "scrim": [
       {

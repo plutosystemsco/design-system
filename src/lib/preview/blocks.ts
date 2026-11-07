@@ -50,7 +50,45 @@ export const BLOCK_VIEWS: Record<string, BlockView[]> = {
     { path: "stopped", label: "Stopped" },
     { path: "error", label: "Error" },
   ],
+  // 010 decision 9: the product's home page, in the (shell) group, since the
+  // block renders its own header, main and footer.
+  "product-home": [{ path: "", label: "Default" }],
 };
+
+/**
+ * 010 decision 10: each composition's views, under `/view/compositions/`,
+ * in registry order. `path` is the folder under that root; the viewer shows
+ * them with `block` set to "compositions". Two hold a state whose scripted
+ * run rejects (010 decisions 3 and 7).
+ */
+export const COMPOSITION_VIEWS: Record<string, BlockView[]> = {
+  // 012 decision 8: a stage on each of its five grounds.
+  stage: [
+    { path: "stage", label: "Default" },
+    { path: "stage/grounds", label: "Grounds" },
+  ],
+  "stage-card": [
+    { path: "stage-card", label: "Ready" },
+    { path: "stage-card/failing", label: "Run fails" },
+  ],
+  "marketing-bar": [{ path: "marketing-bar", label: "Default" }],
+  // 012 decision 8: the poster title, for launches.
+  "stage-hero": [
+    { path: "stage-hero", label: "Default" },
+    { path: "stage-hero/poster", label: "Poster" },
+  ],
+  "proof-band": [{ path: "proof-band", label: "Default" }],
+  "live-console": [
+    { path: "live-console", label: "Ready" },
+    { path: "live-console/failing", label: "Run fails" },
+  ],
+  "name-strip": [{ path: "name-strip", label: "Default" }],
+  "cta-band": [{ path: "cta-band", label: "Default" }],
+  "marketing-footer": [{ path: "marketing-footer", label: "Default" }],
+};
+
+/** The viewer's `block` for a composition: its views live under `/view/compositions/`. */
+export const COMPOSITIONS_ROOT = "compositions";
 
 /** A view's URL: `/view/<block>/` or `/view/<block>/<state>/`. */
 export function viewPath(block: string, path: string): string {

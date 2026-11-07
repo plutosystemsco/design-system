@@ -1,6 +1,6 @@
 # 002 — The primitives: forms, surfaces and feedback
 
-- **Status:** built, reviewed and released as `v0.2.0` (`7857ea4`). Built 2026-10-28; amended 2026-11-01 (R23 and R24, decision 9). The change review is [`../reviews/002-the-primitives-forms-surfaces-and-feedback-pr-2026-10-28.md`](../reviews/002-the-primitives-forms-surfaces-and-feedback-pr-2026-10-28.md), all 12 findings dispositioned
+- **Status:** built, reviewed and released as `v0.2.0` (`7857ea4`). Built 2026-10-28; amended 2026-11-01 (R23 and R24, decision 9) and 2026-11-07 (R25, decision 9, by `011` decision 12). The change review is [`../reviews/002-the-primitives-forms-surfaces-and-feedback-pr-2026-10-28.md`](../reviews/002-the-primitives-forms-surfaces-and-feedback-pr-2026-10-28.md), all 12 findings dispositioned
 - **Date:** 2026-10-28
 - **Author:** the design lead
 - **Kind:** 26 stock components installed and restyled to the tokens; two new tokens; a stronger literal lint; a preview page per item; the 0.2.0 release
@@ -275,8 +275,9 @@ A builder applies each rule to each item. A reviewer checks the same list. The l
 | R22 | Border widths from tokens: the bare `border` (1 px, the hairline) or the `-(length:--token)` form, such as `border-b-(length:--focus-width)`. No `border-2` or `border-l-4`. | lint |
 | R23 | Copy says what happens. A button or link names its action in active voice (Send, Stop, Scroll to end), and the name holds through the flow (Stop, then Stopped). An error says what went wrong and what to do; an empty state invites an action. No filler, no selling. | review |
 | R24 | Furniture carries information. An eyebrow, a mono row, a divider, a number or tracked text appears only where it encodes something: a mono row is data, a number marks a sequence. Not the generic kit: all-caps labels, an eyebrow over every heading, meta strings joined with middle dots, an arrow after link text, identical cards with one shadow. The design book's own furniture (the lowercase mono eyebrow, the footer's rows) is a choice and stays. | review |
+| R25 | Fields and glass (`011` decision 12). Fields (`field-1` to `field-4`) and `glass` only in an expressive item. A field holds text in its roles, `surface-plain` surfaces with their own opaque ground (`bg-card`), and glass; never a control directly. Glass never inside glass. Text on glass in `foreground`, `muted-foreground` and `primary` only. A field never on the element that carries `.dark`: the theme is set on `html` or on a wrapper outside the expressive subtree, which the dark theme's lifted marks also need (`.dark` on or above the mode element). Dark glass never over a light-theme ground, a `paper` or `raised` surface, or an image. | lint (L22); review |
 
-*Why a checklist and a lint both:* the lint is countable, which `001`'s acceptance style prefers. But "a zero is not a pass" (primitives memo §6.3): the lint cannot see where a class is used, so R3, R7, R8, R17 to R19, R23 and R24 stay review's. R23 and R24 were added on 2026-11-01 at the owner's word (decisions.md, "Two writing and furniture rules join the checklist").
+*Why a checklist and a lint both:* the lint is countable, which `001`'s acceptance style prefers. But "a zero is not a pass" (primitives memo §6.3): the lint cannot see where a class is used, so R3, R7, R8, R17 to R19, R23 and R24 stay review's. R23 and R24 were added on 2026-11-01 at the owner's word (decisions.md, "Two writing and furniture rules join the checklist"). R25 joined on 2026-11-07 with `011`, the brand; the lint holds its first clause (L22), and review the rest.
 
 ### 10. Sizes: control heights on the ladder
 

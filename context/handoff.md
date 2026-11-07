@@ -1,33 +1,37 @@
 # Handoff
 
 - **Status:** the state of the work, replaced at each release.
-- **Date:** 2026-11-01
+- **Date:** 2026-11-07
 
 ## State
 
-Seven specifications are built, reviewed and released: `v0.1.0` to `v0.7.0`, then `v0.7.1`, the public-readiness release (its rulings are in `decisions.md`, "After the public-readiness review"). The eighth, `008`, product identity, is built and reviewed and prepared as `v0.8.0`. Each earlier release has its change review with every finding dispositioned and its Landing notes written; `008`'s change review is the last step before its tag.
+`v0.11.0` (2026-11-07) is the last release. It holds `009` to `012` in one release (`decisions.md`, "One release, 0.11.0", 2026-11-07). 0.9.0 and 0.10.0 are never tagged; their snapshots are deleted. `package.json` reads 0.11.0, `static/v0.11.0/` is built, and the changelog has one 0.11.0 entry.
 
-`008` makes the design system every Pluto Systems product's, not one site's. The shell shows a product's own logo, or its name as a wordmark, and can carry "A Pluto Systems product" in its footer, whose four dots dock in on hover as a 200 ms response. The tokens stay shared. Its rulings are in `decisions.md`, "One system, many products".
+1. **`009`, expressive mode and the brand slots.** Built and change-reviewed. `data-mode="expressive"` is a second voice on the same tokens. Lint rule L22 keeps expressive-only classes out of productive items.
+2. **`010`, the stage compositions.** Built and change-reviewed. Nine compositions and the `product-home` block.
+3. **The identity, settled.** The owner answered all fourteen questions over two rounds (`decisions.md`, 2026-11-06). The exhibit at `/identity` is the research record.
+4. **`011`, the brand.** Built, change-reviewed, every finding fixed or answered.
+   - Deep Field's hues on the warm canvas `#F3F0E8` and graphite `#16140F`.
+   - Four colour fields, `field-1` to `field-4`, with `surface-plain` to restore the theme's roles.
+   - Frosted glass on expressive pages only, with opaque fallbacks. The lens was removed by the owner's ruling ("Frost only", 2026-11-07).
+   - `type-poster`, a spring ease for the dots only (L23), and the E6 risen-colon lockup.
+5. **`012`, the compositions on brand.** Built, change-reviewed, every finding fixed. The compositions and `product-home` now use the fields, `surface-plain` and glass. `009`'s stage and light tokens are removed.
 
-The tree holds 63 items in ten groups and 94 prerendered pages. An app installs from a tag with no server running:
+The tree holds 75 items. The last full runs: unit 892 pass; `check` 0 errors; lint clean; literal lint 0 violations and 1 allowance (L24); e2e 1966 passed, 4 skipped; smoke 111 pass.
 
-```
-REGISTRY_URL=https://raw.githubusercontent.com/plutosystemsco/design-system/v0.8.0/static/r bunx --bun shadcn-svelte@1.7.1 add pluto-theme code-editor app-shell -y
-```
+## Waiting on the owner
 
-Nothing is deployed to a host, by the owner's decision.
+- Nothing.
 
-## What this release checks, and what it does not
+## What this work checks, and what it does not
 
-- Every page is checked in Chromium, in both themes, by the browser suites, axe and the keyboard walk. The meter was also checked in WebKit. Firefox, Safari and iOS Safari are not checked.
-- No screen reader has been run; the tests prove the DOM contract (names, roles, states, live regions).
-- The editor highlights 18 languages through a Lezer grammar and Svelte through a third-party one; eight more (Shell, TOML, diff, Dockerfile, Ruby, Swift, Kotlin, C#) run in a legacy mode that colours keywords, strings, numbers and comments only. The `code-languages` page says which.
-- Docstrings are coloured as comments by Shiki and as strings by the Lezer Python grammar. Both are correct to their grammars.
-- The browser suites run against the production build. The development server's pages are walked by hand before a release.
-- The chart draws nothing on the server: a prerendered chart page shows its caption and table until hydration.
+- Every page is checked in Chromium, in both themes, by the browser suites, axe and the keyboard walk. Firefox, Safari and iOS Safari are not checked. No screen reader has been run.
+- The glass's Firefox mask order is written to the standard, but it is not run in Firefox.
+- The exhibit's boards were checked by screenshot only; they have no tests of their own, by design.
+- The last fixes to `011` and `012` were not re-reviewed by a reviewer; the counts are the builder's.
 
 ## Next
 
-- `008`'s change review, then its tag when the owner asks.
-- A palette specification, `009`, once the owner chooses among the code palettes the three palette memos of 2026-11-01 propose (`research/2026-11-01-how-a-code-palette-is-made.md`, `research/2026-11-01-how-brands-colour-their-code.md`, `research/2026-11-01-blue-on-ink-meets-github.md`).
-- A fault found by the brand palette's research: in this registry's highlighter, an apostrophe inside a TypeScript `//` comment turns the next line into a comment, and the lines after it lose their colour. Stock Shiki tokenises the same lines correctly. It needs its own specification.
+- **The product icons (G5)**, their own specification: the flat colour tile, Phosphor glyphs (already pinned by `002`), the eight-app colour map and the radius that scales with the icon.
+- **A signature device** stays open. The owner set it aside for now (F, 2026-11-06).
+- Carried over from `v0.8.0`: the code-palette specification, and the highlighter fault where an apostrophe inside a TypeScript `//` comment breaks the following lines.

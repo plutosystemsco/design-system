@@ -8,6 +8,7 @@ import {
   TABBABLE,
   VIEW_STOPS,
   VIEWS,
+  waitForHighlight,
 } from "./pages.ts";
 import { BLOCK_VIEWS } from "../../src/lib/preview/blocks.ts";
 
@@ -31,8 +32,9 @@ async function focused(page: Page): Promise<Stop | null> {
  * draws the ring for its child (002 decision 8). The ring must be there at
  * once: no item transitions `outline-color`. Only 001's theme toggle, a
  * preview control, fades it in, so for it alone the check waits. The ring is
- * the page's, `colour`, except inside an ink surface (007 decision 8), where
- * it is the dark ring the element itself computes.
+ * the page's, `colour`, except on a ground that sets its own: an ink surface
+ * (007 decision 8), a colour field, glass or an opaque surface-plain surface
+ * (011), where it is the ring that ground computes.
  */
 async function expectRingOutline(
   page: Page,
@@ -54,12 +56,31 @@ async function expectRingOutline(
         requestAnimationFrame(() => requestAnimationFrame(resolve)),
       );
     const style = getComputedStyle(el);
+    // The ring where the element sits (012 decision 1): read on its nearest
+    // ground, never on the element itself, which draws from the same variable
+    // (the 012 change review's finding 2). An ink surface, a field, glass and
+    // a surface-plain surface with an opaque ground of its own each set
+    // --ring for their subtree (007, 011); with none, the page's ring.
+    const GROUND =
+      ".surface-ink, .field-1, .field-2, .field-3, .field-4, .surface-plain, .glass";
+    const opaque = (colour: string) => {
+      const alpha = /^rgba\(.*,\s*([\d.]+)\)$/.exec(colour);
+      return alpha ? Number(alpha[1]) === 1 : colour !== "transparent";
+    };
+    let ground = el.parentElement?.closest(GROUND) ?? null;
+    while (
+      ground &&
+      ground.classList.contains("surface-plain") &&
+      !ground.classList.contains("glass") &&
+      !opaque(getComputedStyle(ground).backgroundColor)
+    )
+      ground = ground.parentElement?.closest(GROUND) ?? null;
     return [
       style.outlineStyle,
       style.outlineWidth,
       style.outlineColor,
-      el.closest(".surface-ink")
-        ? style.getPropertyValue("--ring").trim()
+      ground
+        ? getComputedStyle(ground).getPropertyValue("--ring").trim()
         : null,
     ];
   }, drawnBy);
@@ -77,6 +98,38 @@ async function ring(page: Page): Promise<string> {
   );
   return hexToRgb(hex);
 }
+
+// The 012 change review's finding 2: the helper reads the expected ring
+// from the ground the element sits on, so a subtree that sets a wrong ring
+// on the focused element itself is caught.
+test.describe("the ring helper", () => {
+  test("fails when the focused element overrides --ring, and passes without the override", async ({
+    page,
+  }) => {
+    await open(page, "/");
+    const colour = await ring(page);
+    await page.keyboard.press("Tab");
+    await expectRingOutline(page, colour);
+    await page.evaluate(() =>
+      (document.activeElement as HTMLElement).style.setProperty(
+        "--ring",
+        "#ff00ff",
+      ),
+    );
+    expect(
+      await page.evaluate(
+        () => getComputedStyle(document.activeElement!).outlineColor,
+      ),
+    ).toBe("rgb(255, 0, 255)");
+    let failed = false;
+    try {
+      await expectRingOutline(page, colour);
+    } catch {
+      failed = true;
+    }
+    expect(failed).toBe(true);
+  });
+});
 
 test.describe("the catalogue", () => {
   test.beforeEach(async ({ page }) => {
@@ -1117,11 +1170,12 @@ async function drawnByContainer(page: Page): Promise<string | undefined> {
 
 // 003's 83 stops over 18 views, and 006 decision 14's 70 over the shell's 4 and the chat's 6;
 // 008 takes the shipped shell's source link (69) and adds two views of 8 (85).
-test("the 30 views hold 168 stops", () => {
+// 010 criterion 9 adds the product home's 20 at 1280: 188.
+test("the 31 views hold 188 stops", () => {
   expect(VIEWS.map((v) => v.path)).toEqual(Object.keys(VIEW_STOPS));
   expect(
     Object.values(VIEW_STOPS).reduce((n, stops) => n + stops.length, 0),
-  ).toBe(168);
+  ).toBe(188);
 });
 
 /** 006 decision 14: the chat's four keyboard behaviours (5 to 8). */
@@ -1265,6 +1319,8 @@ test.describe("block views at 1280", () => {
       page,
     }) => {
       await openView(page, view.path);
+      // 010: the Python card's pre reads its highlighted lines.
+      if (view.path === "/view/product-home/") await waitForHighlight(page);
       const colour = await ring(page);
       for (let i = 0; i < expected.length; i++) {
         await page.keyboard.press("Tab");
@@ -1312,12 +1368,12 @@ test.describe("viewer toolbars", () => {
 
 // 003's 42, plus app-shell (4 states, 3 widths, Open alone, the frame: 9) and
 // chat (6 states and the same 5: 11): 62. 008 adds two shell states: 64. The
-// frame and Open alone are stops on every toolbar.
-test("the 7 viewer toolbars hold 64 stops", () => {
+// frame and Open alone are stops on every toolbar. 010's product-home adds 5: 69.
+test("the 8 viewer toolbars hold 69 stops", () => {
   const counts = BLOCKS.map((b) => {
     const n = (BLOCK_VIEWS[b] ?? []).length;
     return (n > 1 ? n : 0) + 5;
   });
-  expect(counts).toEqual([5, 9, 9, 10, 9, 11, 11]);
-  expect(counts.reduce((a, b) => a + b, 0)).toBe(64);
+  expect(counts).toEqual([5, 9, 9, 10, 9, 11, 11, 5]);
+  expect(counts.reduce((a, b) => a + b, 0)).toBe(69);
 });

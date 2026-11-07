@@ -10,7 +10,7 @@ const lock = JSON.parse(
   readFileSync("bun.lock", "utf8").replace(/,(\s*[}\]])/g, "$1"),
 );
 
-// 001 decision 4's 19 packages, 002 decision 2's 4, 004 decision 2's 9 and 007 decision 7's 2: the version bun.lock pins and the specifier package.json holds.
+// 001 decision 4's 19 packages, 002 decision 2's 4, 004 decision 2's 9, 007 decision 7's 2 and the identity exhibit's 6 (decisions.md, "The identity is commissioned"; 009 criterion 15): the version bun.lock pins and the specifier package.json holds.
 const PACKAGES: [name: string, version: string, specifier: string][] = [
   ["shadcn-svelte", "1.7.1", "^1.7.1"],
   ["@sveltejs/kit", "3.1.0", "3.1.0"],
@@ -48,6 +48,14 @@ const PACKAGES: [name: string, version: string, specifier: string][] = [
   // 007 decision 7: the two packages of code-languages.
   ["@codemirror/language-data", "6.5.2", "^6.5.2"],
   ["@replit/codemirror-lang-svelte", "6.0.0", "^6.0.0"],
+  // The identity exhibit's six typeface packages, for its option boards at
+  // `/identity`. No registry item names them, so they are pinned exactly.
+  ["@fontsource-variable/figtree", "5.3.0", "5.3.0"],
+  ["@fontsource-variable/funnel-display", "5.3.0", "5.3.0"],
+  ["@fontsource-variable/funnel-sans", "5.3.0", "5.3.0"],
+  ["@fontsource-variable/geist-mono", "5.3.0", "5.3.0"],
+  ["@fontsource-variable/instrument-sans", "5.3.0", "5.3.0"],
+  ["@fontsource/ibm-plex-mono", "5.3.0", "5.3.0"],
 ];
 
 function split(dep: string): { name: string; range?: string } {
@@ -57,8 +65,8 @@ function split(dep: string): { name: string; range?: string } {
 }
 
 describe("package.json and bun.lock", () => {
-  test("name exactly the 34 packages, all devDependencies", () => {
-    expect(PACKAGES).toHaveLength(34);
+  test("name exactly the 40 packages, all devDependencies", () => {
+    expect(PACKAGES).toHaveLength(40);
     expect(pkg.dependencies ?? {}).toEqual({});
     expect(Object.keys(pkg.devDependencies).sort()).toEqual(
       PACKAGES.map(([n]) => n).sort(),

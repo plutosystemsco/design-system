@@ -7,7 +7,7 @@
  * channel rounded to the nearest integer, halves up.
  */
 import type { Theme, Tokens } from "./tokens.ts";
-import { resolveColor } from "./tokens.ts";
+import { FIELDS, resolveColor, resolveExpressive } from "./tokens.ts";
 
 export type Rgba = { r: number; g: number; b: number; a: number };
 
@@ -185,12 +185,22 @@ export type ForbiddenRow = {
   fg: string;
   bg: string;
   ratio: number;
-  stated: number;
+  /** The token file's ratio for a measured row; none for a rule-only pair. */
+  stated?: number;
+  /** 011 decision 11: forbidden by rule, whatever it measures. */
+  ruleOnly: boolean;
 };
 
-/** The forbidden state tints on `muted`, recomputed. Each must still fail. */
+/**
+ * The forbidden state tints on `muted`, recomputed: the measured rows first,
+ * each of which must still fail, then the rule-only pairs.
+ */
 export function forbiddenRows(tokens: Tokens): ForbiddenRow[] {
-  return tokens.contrast.forbidden.map((f) => {
+  const { measured, ruleOnly } = tokens.contrast.forbidden;
+  return [
+    ...measured.map((f) => ({ f, stated: f.ratio as number | undefined })),
+    ...ruleOnly.map((f) => ({ f, stated: undefined })),
+  ].map(({ f, stated }) => {
     const over = opaque(tokens, f.theme, f.over);
     const bg = compositeTenths(
       opaque(tokens, f.theme, f.tint, over),
@@ -204,7 +214,8 @@ export function forbiddenRows(tokens: Tokens): ForbiddenRow[] {
       fg,
       bg,
       ratio: contrastRatio(fg, bg),
-      stated: f.ratio,
+      ...(stated === undefined ? {} : { stated }),
+      ruleOnly: stated === undefined,
     };
   });
 }
@@ -241,4 +252,157 @@ export function scrimRows(tokens: Tokens): ScrimContrastRow[] {
       min: row.min,
     };
   });
+}
+
+/** Numbers rows and marks each against its own minimum. */
+function measured(
+  rows: Omit<ContrastRow, "n" | "ratio" | "result">[],
+): ContrastRow[] {
+  return rows.map((row, i) => {
+    const ratio = contrastRatio(row.fg, row.bg);
+    return {
+      n: i + 1,
+      ...row,
+      ratio,
+      result: ratio >= row.minimum ? ("pass" as const) : ("fail" as const),
+    };
+  });
+}
+
+/** 011 decision 6: a field's fill and legend hexes in a theme. */
+function fieldHexes(
+  tokens: Tokens,
+  theme: Theme,
+  field: string,
+): { fill: string; legend: string } {
+  const [fill, legend] =
+    tokens.expressive.field[theme][field as (typeof FIELDS)[number]];
+  return {
+    fill: tokens.primitives[fill].toUpperCase(),
+    legend: tokens.primitives[legend].toUpperCase(),
+  };
+}
+
+/**
+ * 011 decision 11: each field's legend on its fill, as text (4.5) and as the
+ * focus ring drawn on the field (3). The text row also measures a primary
+ * fill on the field, which inverts the pair (the legend as fill, the field's
+ * colour as text): the ratio is symmetric.
+ */
+export function fieldRows(tokens: Tokens): ContrastRow[] {
+  return measured(
+    tokens.contrast.field.flatMap(({ theme, field }) => {
+      const { fill, legend } = fieldHexes(tokens, theme, field);
+      return [
+        {
+          theme,
+          kind: "text" as const,
+          label: `${field}-foreground on ${field}`,
+          fg: legend,
+          bg: fill,
+          minimum: 4.5,
+        },
+        {
+          theme,
+          kind: "non-text" as const,
+          label: `${field}-foreground ring on ${field}`,
+          fg: legend,
+          bg: fill,
+          minimum: 3,
+        },
+      ];
+    }),
+  );
+}
+
+/** The opaque ground a glass row names: the canvas, a field's fill, or the foreground. */
+function glassGround(tokens: Tokens, theme: Theme, over: string): string {
+  return (FIELDS as readonly string[]).includes(over)
+    ? fieldHexes(tokens, theme, over).fill
+    : resolveColor(tokens, theme, over).toUpperCase();
+}
+
+/** The glass's tint composited over a ground, by the eight-digit rule. */
+function glassOver(tokens: Tokens, theme: Theme, over: string): string {
+  return compositeAlphaByte(
+    resolveExpressive(tokens, tokens.expressive.glass[theme].tint),
+    glassGround(tokens, theme, over),
+  );
+}
+
+/**
+ * 011 decision 11: text in the theme's own roles (the `--surface-*` copies
+ * that `glass` restores) on the glass's tint over each ground it may lie on.
+ */
+export function glassRows(tokens: Tokens): ContrastRow[] {
+  return measured(
+    tokens.contrast.glass.map(({ theme, text, over }) => ({
+      theme,
+      kind: "text" as const,
+      label: `${text} on glass over ${over}`,
+      fg: resolveColor(tokens, theme, text).toUpperCase(),
+      bg: glassOver(tokens, theme, over),
+      minimum: 4.5,
+    })),
+  );
+}
+
+/**
+ * 012 decision 4: the sticky bar's text, `foreground` and `primary`, on its
+ * glass passing over the hero's glass, which lies on the canvas or a field:
+ * the theme's tint composited over the ground, then again over that.
+ */
+export function glassOverGlassRows(tokens: Tokens): ContrastRow[] {
+  return measured(
+    tokens.contrast.glassOverGlass.map(({ theme, text, over }) => {
+      const tint = resolveExpressive(
+        tokens,
+        tokens.expressive.glass[theme].tint,
+      );
+      return {
+        theme,
+        kind: "text" as const,
+        label: `${text} on glass over glass over ${over}`,
+        fg: resolveColor(tokens, theme, text).toUpperCase(),
+        bg: compositeAlphaByte(tint, glassOver(tokens, theme, over)),
+        minimum: 4.5,
+      };
+    }),
+  );
+}
+
+/** 011 decision 11: the three glass roles on the opaque fallback, in each theme. */
+export function glassFallbackRows(tokens: Tokens): ContrastRow[] {
+  return measured(
+    (["light", "dark"] as const).flatMap((theme) =>
+      ["foreground", "muted-foreground", "primary"].map((text) => ({
+        theme,
+        kind: "text" as const,
+        label: `${text} on glass-fallback`,
+        fg: resolveColor(tokens, theme, text).toUpperCase(),
+        bg: resolveExpressive(
+          tokens,
+          tokens.expressive.glass[theme].fallback,
+        ).toUpperCase(),
+        minimum: 4.5,
+      })),
+    ),
+  );
+}
+
+/** 011 decision 11: the theme's ring on the glass over each ground the glass set names. */
+export function glassRingRows(tokens: Tokens): ContrastRow[] {
+  const grounds = [
+    ...new Set(tokens.contrast.glass.map((r) => `${r.theme} ${r.over}`)),
+  ].map((key) => key.split(" ") as [Theme, string]);
+  return measured(
+    grounds.map(([theme, over]) => ({
+      theme,
+      kind: "non-text" as const,
+      label: `ring on glass over ${over}`,
+      fg: resolveColor(tokens, theme, "ring").toUpperCase(),
+      bg: glassOver(tokens, theme, over),
+      minimum: 3,
+    })),
+  );
 }

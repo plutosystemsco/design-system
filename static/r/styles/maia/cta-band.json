@@ -1,0 +1,32 @@
+{
+	"$schema": "https://shadcn-svelte.com/schema/registry-item.json",
+	"name": "cta-band",
+	"title": "Call to action band",
+	"type": "registry:ui",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+	"description": "A closing section: a heading in the section step, an optional sentence and one or two actions.",
+	"registryDependencies": [
+		"utils",
+		"pluto-theme",
+		"button"
+	],
+	"meta": {
+		"since": "0.11.0",
+		"group": "compositions",
+		"modes": [
+			"expressive"
+		]
+	},
+	"files": [
+		{
+			"content": "<script lang=\"ts\" module>\n  import type { ButtonVariant } from \"$UI$/button\";\n\n  /** A call to action: a link styled as a button. The first is filled by default. */\n  export type CtaBandAction = {\n    label: string;\n    href: string;\n    variant?: ButtonVariant;\n  };\n</script>\n\n<script lang=\"ts\">\n  import { Button } from \"$UI$/button\";\n  import { cn, type WithElementRef } from \"$UTILS$\";\n  import type { HTMLAttributes } from \"svelte/elements\";\n\n  let {\n    ref = $bindable(null),\n    title,\n    description,\n    actions,\n    headingLevel = 2,\n    class: className,\n    ...restProps\n  }: WithElementRef<Omit<HTMLAttributes<HTMLElement>, \"title\" | \"children\">> & {\n    title: string;\n    description?: string;\n    /** One or two. */\n    actions: CtaBandAction[];\n    headingLevel?: 2 | 3;\n  } = $props();\n\n  const uid = $props.id();\n</script>\n\n<!--\n  A closing section, named by its heading in the section step. Its actions\n  are at the action height with the 8 px case radius, each pressed in its own\n  wrapper; the band sets the expressive mode itself, so they take the mode's\n  volume on any ground. No ground of its own: a parent places it.\n-->\n<section\n  bind:this={ref}\n  data-slot=\"cta-band\"\n  data-mode=\"expressive\"\n  aria-labelledby=\"{uid}-title\"\n  class={cn(\"flex flex-col items-start gap-6\", className)}\n  {...restProps}\n>\n  <svelte:element\n    this={headingLevel === 2 ? \"h2\" : \"h3\"}\n    id=\"{uid}-title\"\n    class=\"type-section text-balance\"\n  >\n    {title}\n  </svelte:element>\n  {#if description}\n    <p class=\"max-w-prose text-muted-foreground\">{description}</p>\n  {/if}\n  <div class=\"flex flex-wrap gap-3\">\n    {#each actions as action, index (index)}\n      <span class=\"action-press inline-flex\">\n        <Button\n          href={action.href}\n          variant={action.variant ?? (index === 0 ? \"default\" : \"secondary\")}\n          class=\"h-(--size-action) px-6\">{action.label}</Button\n        >\n      </span>\n    {/each}\n  </div>\n</section>\n",
+			"type": "registry:ui",
+			"target": "cta-band/cta-band.svelte"
+		},
+		{
+			"content": "import Root, { type CtaBandAction } from \"./cta-band.svelte\";\n\nexport {\n  Root,\n  type CtaBandAction,\n  //\n  Root as CtaBand,\n};\n",
+			"type": "registry:ui",
+			"target": "cta-band/index.ts"
+		}
+	]
+}

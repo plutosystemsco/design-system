@@ -12,7 +12,10 @@
 	],
 	"meta": {
 		"since": "0.3.0",
-		"group": "blocks"
+		"group": "blocks",
+		"modes": [
+			"productive"
+		]
 	},
 	"files": [
 		{

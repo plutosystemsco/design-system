@@ -15,7 +15,11 @@
 		],
 		"meta": {
 			"since": "0.1.0",
-			"group": "foundation"
+			"group": "foundation",
+			"modes": [
+				"productive",
+				"expressive"
+			]
 		},
 		"relativeUrl": "pluto-theme.json"
 	},
@@ -28,7 +32,11 @@
 		"registryDependencies": [],
 		"meta": {
 			"since": "0.1.0",
-			"group": "foundation"
+			"group": "foundation",
+			"modes": [
+				"productive",
+				"expressive"
+			]
 		},
 		"relativeUrl": "font-geist.json"
 	},
@@ -41,7 +49,11 @@
 		"registryDependencies": [],
 		"meta": {
 			"since": "0.1.0",
-			"group": "foundation"
+			"group": "foundation",
+			"modes": [
+				"productive",
+				"expressive"
+			]
 		},
 		"relativeUrl": "font-heading-ibm-plex-sans.json"
 	},
@@ -54,7 +66,11 @@
 		"registryDependencies": [],
 		"meta": {
 			"since": "0.1.0",
-			"group": "foundation"
+			"group": "foundation",
+			"modes": [
+				"productive",
+				"expressive"
+			]
 		},
 		"relativeUrl": "font-jetbrains-mono.json"
 	},
@@ -67,7 +83,11 @@
 		"registryDependencies": [],
 		"meta": {
 			"since": "0.1.0",
-			"group": "foundation"
+			"group": "foundation",
+			"modes": [
+				"productive",
+				"expressive"
+			]
 		},
 		"relativeUrl": "utils.json"
 	},
@@ -83,7 +103,10 @@
 		],
 		"meta": {
 			"since": "0.1.0",
-			"group": "foundation"
+			"group": "foundation",
+			"modes": [
+				"productive"
+			]
 		},
 		"relativeUrl": "four-dot.json"
 	},
@@ -100,9 +123,51 @@
 		],
 		"meta": {
 			"since": "0.5.0",
-			"group": "foundation"
+			"group": "foundation",
+			"modes": [
+				"productive"
+			]
 		},
 		"relativeUrl": "theme.json"
+	},
+	{
+		"name": "read-token",
+		"title": "Read token",
+		"type": "registry:lib",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+		"description": "Reads the theme's runtime variables from script: a token's value, a duration in milliseconds, an easing curve, and a tween that animates a number over them.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme"
+		],
+		"meta": {
+			"since": "0.11.0",
+			"group": "foundation",
+			"modes": [
+				"productive",
+				"expressive"
+			]
+		},
+		"relativeUrl": "read-token.json"
+	},
+	{
+		"name": "liquid-glass",
+		"title": "Liquid glass",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+		"description": "A frosted panel for expressive pages: an edge lit where the pointer moves, and an opaque ground under reduced transparency or forced colours. Needs Svelte 5.29 or later, for attachments.",
+		"registryDependencies": [
+			"pluto-theme",
+			"read-token"
+		],
+		"meta": {
+			"since": "0.11.0",
+			"group": "foundation",
+			"modes": [
+				"expressive"
+			]
+		},
+		"relativeUrl": "liquid-glass.json"
 	},
 	{
 		"name": "button",
@@ -118,6 +183,10 @@
 		"meta": {
 			"since": "0.2.0",
 			"group": "actions",
+			"modes": [
+				"productive",
+				"expressive"
+			],
 			"stock": {
 				"registry": "https://shadcn-svelte.com/registry/styles/maia",
 				"item": "button",
@@ -141,6 +210,9 @@
 		"meta": {
 			"since": "0.2.0",
 			"group": "actions",
+			"modes": [
+				"productive"
+			],
 			"stock": {
 				"registry": "https://shadcn-svelte.com/registry/styles/maia",
 				"item": "tooltip",
@@ -164,6 +236,9 @@
 		"meta": {
 			"since": "0.2.0",
 			"group": "actions",
+			"modes": [
+				"productive"
+			],
 			"stock": {
 				"registry": "https://shadcn-svelte.com/registry/styles/maia",
 				"item": "kbd",
@@ -187,6 +262,9 @@
 		"meta": {
 			"since": "0.4.0",
 			"group": "actions",
+			"modes": [
+				"productive"
+			],
 			"stock": {
 				"registry": "https://shadcn-svelte.com/registry/styles/maia",
 				"item": "toggle",
@@ -211,6 +289,9 @@
 		"meta": {
 			"since": "0.4.0",
 			"group": "actions",
+			"modes": [
+				"productive"
+			],
 			"stock": {
 				"registry": "https://shadcn-svelte.com/registry/styles/maia",
 				"item": "toggle-group",
@@ -234,6 +315,9 @@
 		"meta": {
 			"since": "0.2.0",
 			"group": "surfaces",
+			"modes": [
+				"productive"
+			],
 			"stock": {
 				"registry": "https://shadcn-svelte.com/registry/styles/maia",
 				"item": "card",
@@ -257,6 +341,9 @@
 		"meta": {
 			"since": "0.2.0",
 			"group": "surfaces",
+			"modes": [
+				"productive"
+			],
 			"stock": {
 				"registry": "https://shadcn-svelte.com/registry/styles/maia",
 				"item": "separator",
@@ -281,6 +368,9 @@
 		"meta": {
 			"since": "0.2.0",
 			"group": "surfaces",
+			"modes": [
+				"productive"
+			],
 			"stock": {
 				"registry": "https://shadcn-svelte.com/registry/styles/maia",
 				"item": "item",
@@ -304,6 +394,9 @@
 		"meta": {
 			"since": "0.2.0",
 			"group": "surfaces",
+			"modes": [
+				"productive"
+			],
 			"stock": {
 				"registry": "https://shadcn-svelte.com/registry/styles/maia",
 				"item": "table",
@@ -327,6 +420,9 @@
 		"meta": {
 			"since": "0.2.0",
 			"group": "surfaces",
+			"modes": [
+				"productive"
+			],
 			"stock": {
 				"registry": "https://shadcn-svelte.com/registry/styles/maia",
 				"item": "tabs",
@@ -350,6 +446,9 @@
 		"meta": {
 			"since": "0.2.0",
 			"group": "surfaces",
+			"modes": [
+				"productive"
+			],
 			"stock": {
 				"registry": "https://shadcn-svelte.com/registry/styles/maia",
 				"item": "collapsible",
@@ -373,6 +472,9 @@
 		"meta": {
 			"since": "0.2.0",
 			"group": "surfaces",
+			"modes": [
+				"productive"
+			],
 			"stock": {
 				"registry": "https://shadcn-svelte.com/registry/styles/maia",
 				"item": "avatar",
@@ -396,6 +498,9 @@
 		"meta": {
 			"since": "0.4.0",
 			"group": "surfaces",
+			"modes": [
+				"productive"
+			],
 			"stock": {
 				"registry": "https://shadcn-svelte.com/registry/styles/maia",
 				"item": "popover",
@@ -419,6 +524,9 @@
 		"meta": {
 			"since": "0.4.0",
 			"group": "surfaces",
+			"modes": [
+				"productive"
+			],
 			"stock": {
 				"registry": "https://shadcn-svelte.com/registry/styles/maia",
 				"item": "accordion",
@@ -442,6 +550,9 @@
 		"meta": {
 			"since": "0.2.0",
 			"group": "feedback",
+			"modes": [
+				"productive"
+			],
 			"stock": {
 				"registry": "https://shadcn-svelte.com/registry/styles/maia",
 				"item": "alert",
@@ -466,6 +577,9 @@
 		"meta": {
 			"since": "0.2.0",
 			"group": "feedback",
+			"modes": [
+				"productive"
+			],
 			"stock": {
 				"registry": "https://shadcn-svelte.com/registry/styles/maia",
 				"item": "alert-dialog",
@@ -489,6 +603,9 @@
 		"meta": {
 			"since": "0.2.0",
 			"group": "feedback",
+			"modes": [
+				"productive"
+			],
 			"stock": {
 				"registry": "https://shadcn-svelte.com/registry/styles/maia",
 				"item": "badge",
@@ -512,6 +629,9 @@
 		"meta": {
 			"since": "0.2.0",
 			"group": "feedback",
+			"modes": [
+				"productive"
+			],
 			"stock": {
 				"registry": "https://shadcn-svelte.com/registry/styles/maia",
 				"item": "empty",
@@ -535,6 +655,9 @@
 		"meta": {
 			"since": "0.2.0",
 			"group": "feedback",
+			"modes": [
+				"productive"
+			],
 			"stock": {
 				"registry": "https://shadcn-svelte.com/registry/styles/maia",
 				"item": "skeleton",
@@ -558,6 +681,9 @@
 		"meta": {
 			"since": "0.2.0",
 			"group": "feedback",
+			"modes": [
+				"productive"
+			],
 			"stock": {
 				"registry": "https://shadcn-svelte.com/registry/styles/maia",
 				"item": "spinner",
@@ -580,7 +706,10 @@
 		],
 		"meta": {
 			"since": "0.3.0",
-			"group": "feedback"
+			"group": "feedback",
+			"modes": [
+				"productive"
+			]
 		},
 		"relativeUrl": "status.json"
 	},
@@ -597,7 +726,10 @@
 		],
 		"meta": {
 			"since": "0.3.0",
-			"group": "feedback"
+			"group": "feedback",
+			"modes": [
+				"productive"
+			]
 		},
 		"relativeUrl": "error-summary.json"
 	},
@@ -614,6 +746,9 @@
 		"meta": {
 			"since": "0.2.0",
 			"group": "forms",
+			"modes": [
+				"productive"
+			],
 			"stock": {
 				"registry": "https://shadcn-svelte.com/registry/styles/maia",
 				"item": "label",
@@ -639,6 +774,9 @@
 		"meta": {
 			"since": "0.2.0",
 			"group": "forms",
+			"modes": [
+				"productive"
+			],
 			"stock": {
 				"registry": "https://shadcn-svelte.com/registry/styles/maia",
 				"item": "field",
@@ -662,6 +800,9 @@
 		"meta": {
 			"since": "0.2.0",
 			"group": "forms",
+			"modes": [
+				"productive"
+			],
 			"stock": {
 				"registry": "https://shadcn-svelte.com/registry/styles/maia",
 				"item": "input",
@@ -685,6 +826,9 @@
 		"meta": {
 			"since": "0.2.0",
 			"group": "forms",
+			"modes": [
+				"productive"
+			],
 			"stock": {
 				"registry": "https://shadcn-svelte.com/registry/styles/maia",
 				"item": "textarea",
@@ -711,6 +855,9 @@
 		"meta": {
 			"since": "0.2.0",
 			"group": "forms",
+			"modes": [
+				"productive"
+			],
 			"stock": {
 				"registry": "https://shadcn-svelte.com/registry/styles/maia",
 				"item": "input-group",
@@ -734,6 +881,9 @@
 		"meta": {
 			"since": "0.2.0",
 			"group": "forms",
+			"modes": [
+				"productive"
+			],
 			"stock": {
 				"registry": "https://shadcn-svelte.com/registry/styles/maia",
 				"item": "native-select",
@@ -757,6 +907,9 @@
 		"meta": {
 			"since": "0.2.0",
 			"group": "forms",
+			"modes": [
+				"productive"
+			],
 			"stock": {
 				"registry": "https://shadcn-svelte.com/registry/styles/maia",
 				"item": "checkbox",
@@ -780,6 +933,9 @@
 		"meta": {
 			"since": "0.2.0",
 			"group": "forms",
+			"modes": [
+				"productive"
+			],
 			"stock": {
 				"registry": "https://shadcn-svelte.com/registry/styles/maia",
 				"item": "radio-group",
@@ -803,6 +959,9 @@
 		"meta": {
 			"since": "0.2.0",
 			"group": "forms",
+			"modes": [
+				"productive"
+			],
 			"stock": {
 				"registry": "https://shadcn-svelte.com/registry/styles/maia",
 				"item": "switch",
@@ -826,6 +985,9 @@
 		"meta": {
 			"since": "0.2.0",
 			"group": "forms",
+			"modes": [
+				"productive"
+			],
 			"stock": {
 				"registry": "https://shadcn-svelte.com/registry/styles/maia",
 				"item": "input-otp",
@@ -852,6 +1014,9 @@
 		"meta": {
 			"since": "0.4.0",
 			"group": "code",
+			"modes": [
+				"productive"
+			],
 			"stock": {
 				"registry": "https://shadcn-svelte.com/registry/styles/maia",
 				"item": "code-block",
@@ -874,7 +1039,10 @@
 		],
 		"meta": {
 			"since": "0.4.0",
-			"group": "code"
+			"group": "code",
+			"modes": [
+				"productive"
+			]
 		},
 		"relativeUrl": "code-editor.json"
 	},
@@ -891,6 +1059,10 @@
 		"meta": {
 			"since": "0.4.0",
 			"group": "code",
+			"modes": [
+				"productive",
+				"expressive"
+			],
 			"stock": {
 				"registry": "https://shadcn-svelte.com/registry/styles/maia",
 				"item": "highlighter",
@@ -915,6 +1087,10 @@
 		"meta": {
 			"since": "0.4.0",
 			"group": "code",
+			"modes": [
+				"productive",
+				"expressive"
+			],
 			"stock": {
 				"registry": "https://shadcn-svelte.com/registry/styles/maia",
 				"item": "use-highlighted-code",
@@ -943,7 +1119,11 @@
 		],
 		"meta": {
 			"since": "0.7.0",
-			"group": "code"
+			"group": "code",
+			"modes": [
+				"productive",
+				"expressive"
+			]
 		},
 		"relativeUrl": "code-languages.json"
 	},
@@ -960,6 +1140,9 @@
 		"meta": {
 			"since": "0.4.0",
 			"group": "data",
+			"modes": [
+				"productive"
+			],
 			"stock": {
 				"registry": "https://shadcn-svelte.com/registry/styles/maia",
 				"item": "chart",
@@ -982,7 +1165,10 @@
 		],
 		"meta": {
 			"since": "0.4.0",
-			"group": "data"
+			"group": "data",
+			"modes": [
+				"productive"
+			]
 		},
 		"relativeUrl": "meter.json"
 	},
@@ -999,6 +1185,9 @@
 		"meta": {
 			"since": "0.5.0",
 			"group": "navigation",
+			"modes": [
+				"productive"
+			],
 			"stock": {
 				"registry": "https://shadcn-svelte.com/registry/styles/maia",
 				"item": "dropdown-menu",
@@ -1023,6 +1212,9 @@
 		"meta": {
 			"since": "0.5.0",
 			"group": "navigation",
+			"modes": [
+				"productive"
+			],
 			"stock": {
 				"registry": "https://shadcn-svelte.com/registry/styles/maia",
 				"item": "sheet",
@@ -1047,6 +1239,9 @@
 		"meta": {
 			"since": "0.5.0",
 			"group": "navigation",
+			"modes": [
+				"productive"
+			],
 			"stock": {
 				"registry": "https://shadcn-svelte.com/registry/styles/maia",
 				"item": "dialog",
@@ -1070,6 +1265,9 @@
 		"meta": {
 			"since": "0.5.0",
 			"group": "navigation",
+			"modes": [
+				"productive"
+			],
 			"stock": {
 				"registry": "https://shadcn-svelte.com/registry/styles/maia",
 				"item": "breadcrumb",
@@ -1101,6 +1299,9 @@
 		"meta": {
 			"since": "0.5.0",
 			"group": "navigation",
+			"modes": [
+				"productive"
+			],
 			"stock": {
 				"registry": "https://shadcn-svelte.com/registry/styles/maia",
 				"item": "sidebar",
@@ -1124,6 +1325,10 @@
 		"meta": {
 			"since": "0.5.0",
 			"group": "navigation",
+			"modes": [
+				"productive",
+				"expressive"
+			],
 			"stock": {
 				"registry": "https://shadcn-svelte.com/registry/styles/maia",
 				"item": "is-mobile",
@@ -1147,7 +1352,10 @@
 		],
 		"meta": {
 			"since": "0.5.0",
-			"group": "chat"
+			"group": "chat",
+			"modes": [
+				"productive"
+			]
 		},
 		"relativeUrl": "message-log.json"
 	},
@@ -1164,6 +1372,9 @@
 		"meta": {
 			"since": "0.5.0",
 			"group": "chat",
+			"modes": [
+				"productive"
+			],
 			"stock": {
 				"registry": "https://shadcn-svelte.com/registry/styles/maia",
 				"item": "message",
@@ -1187,6 +1398,9 @@
 		"meta": {
 			"since": "0.5.0",
 			"group": "chat",
+			"modes": [
+				"productive"
+			],
 			"stock": {
 				"registry": "https://shadcn-svelte.com/registry/styles/maia",
 				"item": "marker",
@@ -1215,9 +1429,199 @@
 		],
 		"meta": {
 			"since": "0.5.0",
-			"group": "chat"
+			"group": "chat",
+			"modes": [
+				"productive"
+			]
 		},
 		"relativeUrl": "composer.json"
+	},
+	{
+		"name": "stage",
+		"title": "Stage",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+		"description": "A full-bleed expressive section on the canvas or one of the four colour fields, following the page's theme.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme"
+		],
+		"meta": {
+			"since": "0.11.0",
+			"group": "compositions",
+			"modes": [
+				"expressive"
+			]
+		},
+		"relativeUrl": "stage.json"
+	},
+	{
+		"name": "stage-card",
+		"title": "Stage card",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+		"description": "Code on a flat card for a stage, with a copy button and, given a run function, a Run button whose output and outcome the card shows and says.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme",
+			"code-block",
+			"button",
+			"status"
+		],
+		"meta": {
+			"since": "0.11.0",
+			"group": "compositions",
+			"modes": [
+				"expressive"
+			]
+		},
+		"relativeUrl": "stage-card.json"
+	},
+	{
+		"name": "marketing-bar",
+		"title": "Marketing bar",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+		"description": "A product site's sticky top bar, a floating glass panel: a skip link, the logo, named links and actions, folding into a sheet on a phone.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme",
+			"button",
+			"sheet",
+			"liquid-glass"
+		],
+		"meta": {
+			"since": "0.11.0",
+			"group": "compositions",
+			"modes": [
+				"expressive"
+			]
+		},
+		"relativeUrl": "marketing-bar.json"
+	},
+	{
+		"name": "stage-hero",
+		"title": "Stage hero",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+		"description": "A page's first screen on a stage: an eyebrow, the display heading, a sentence and actions on glass, an object on a colour field, and a strip along the bottom.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme",
+			"button",
+			"liquid-glass"
+		],
+		"meta": {
+			"since": "0.11.0",
+			"group": "compositions",
+			"modes": [
+				"expressive"
+			]
+		},
+		"relativeUrl": "stage-hero.json"
+	},
+	{
+		"name": "proof-band",
+		"title": "Proof band",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+		"description": "Two to four numbers in the proof step, each with what it counts, that count up once when they first come into view.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme",
+			"read-token"
+		],
+		"meta": {
+			"since": "0.11.0",
+			"group": "compositions",
+			"modes": [
+				"expressive"
+			]
+		},
+		"relativeUrl": "proof-band.json"
+	},
+	{
+		"name": "live-console",
+		"title": "Live console",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+		"description": "A working console shown on a stage: example commands in tabs, a Run button, meters that fill to the result, and its lines.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme",
+			"tabs",
+			"code-block",
+			"button",
+			"meter",
+			"status",
+			"read-token"
+		],
+		"meta": {
+			"since": "0.11.0",
+			"group": "compositions",
+			"modes": [
+				"expressive"
+			]
+		},
+		"relativeUrl": "live-console.json"
+	},
+	{
+		"name": "name-strip",
+		"title": "Name strip",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+		"description": "A named list of names in mono that wraps, for the bottom of a hero.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme"
+		],
+		"meta": {
+			"since": "0.11.0",
+			"group": "compositions",
+			"modes": [
+				"expressive"
+			]
+		},
+		"relativeUrl": "name-strip.json"
+	},
+	{
+		"name": "cta-band",
+		"title": "Call to action band",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+		"description": "A closing section: a heading in the section step, an optional sentence and one or two actions.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme",
+			"button"
+		],
+		"meta": {
+			"since": "0.11.0",
+			"group": "compositions",
+			"modes": [
+				"expressive"
+			]
+		},
+		"relativeUrl": "cta-band.json"
+	},
+	{
+		"name": "marketing-footer",
+		"title": "Marketing footer",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+		"description": "A product site's footer: the logo, groups of links each a named nav, and the build facts the app shell's footer shows.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme"
+		],
+		"meta": {
+			"since": "0.11.0",
+			"group": "compositions",
+			"modes": [
+				"expressive"
+			]
+		},
+		"relativeUrl": "marketing-footer.json"
 	},
 	{
 		"name": "hero",
@@ -1232,7 +1636,10 @@
 		],
 		"meta": {
 			"since": "0.3.0",
-			"group": "blocks"
+			"group": "blocks",
+			"modes": [
+				"productive"
+			]
 		},
 		"relativeUrl": "hero.json"
 	},
@@ -1255,7 +1662,10 @@
 		],
 		"meta": {
 			"since": "0.3.0",
-			"group": "blocks"
+			"group": "blocks",
+			"modes": [
+				"productive"
+			]
 		},
 		"relativeUrl": "sign-in.json"
 	},
@@ -1279,7 +1689,10 @@
 		],
 		"meta": {
 			"since": "0.3.0",
-			"group": "blocks"
+			"group": "blocks",
+			"modes": [
+				"productive"
+			]
 		},
 		"relativeUrl": "sign-up.json"
 	},
@@ -1299,7 +1712,10 @@
 		],
 		"meta": {
 			"since": "0.3.0",
-			"group": "blocks"
+			"group": "blocks",
+			"modes": [
+				"productive"
+			]
 		},
 		"relativeUrl": "page-states.json"
 	},
@@ -1324,7 +1740,10 @@
 		],
 		"meta": {
 			"since": "0.3.0",
-			"group": "blocks"
+			"group": "blocks",
+			"modes": [
+				"productive"
+			]
 		},
 		"relativeUrl": "settings.json"
 	},
@@ -1349,7 +1768,10 @@
 		],
 		"meta": {
 			"since": "0.6.0",
-			"group": "blocks"
+			"group": "blocks",
+			"modes": [
+				"productive"
+			]
 		},
 		"relativeUrl": "app-shell.json"
 	},
@@ -1373,8 +1795,41 @@
 		],
 		"meta": {
 			"since": "0.6.0",
-			"group": "blocks"
+			"group": "blocks",
+			"modes": [
+				"productive"
+			]
 		},
 		"relativeUrl": "chat.json"
+	},
+	{
+		"name": "product-home",
+		"title": "Product home",
+		"type": "registry:block",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+		"description": "A product's home page: the glass bar, a stage hero with two code cards on a colour field and a strip, a proof band, a live console on a stage, a call to action and the footer.",
+		"registryDependencies": [
+			"utils",
+			"pluto-theme",
+			"stage",
+			"stage-card",
+			"marketing-bar",
+			"stage-hero",
+			"proof-band",
+			"live-console",
+			"name-strip",
+			"cta-band",
+			"marketing-footer",
+			"four-dot",
+			"liquid-glass"
+		],
+		"meta": {
+			"since": "0.11.0",
+			"group": "blocks",
+			"modes": [
+				"expressive"
+			]
+		},
+		"relativeUrl": "product-home.json"
 	}
 ]

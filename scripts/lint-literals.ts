@@ -25,9 +25,25 @@
  * L20 and L21: an injected stylesheet (`<svelte:element this="style">`), and a
  * CSS length or named colour inside a quoted string of a `.ts` or `.svelte.ts`
  * item file, such as a CodeMirror theme object.
+ * 009 decision 9 adds L22, expressive volume: the utilities that make a
+ * surface loud, and the attribute `data-mode="expressive"`, fail in any file
+ * of an item whose `meta.modes` is not exactly ["expressive"]. Every other
+ * rule binds every profile. A utility read as a class object's key
+ * (`class={{ glass: lit }}`) counts, and so does the attribute in any form:
+ * unquoted, braced, a spread object's key, a `setAttribute("data-mode", …)`
+ * call, or any assignment to `dataset.mode`.
+ * 011 decisions 6, 8 and 9 add seven names to L22's list: `type-poster`,
+ * `field-1` to `field-4`, `surface-plain` and `glass`. 011 decision 10 adds
+ * L23, a text rule: `ease-spring` in any file of an item other than
+ * `four-dot` and `pluto-theme`, since springs are for the mark's dots. 011
+ * decision 8 adds L24, one counted allowance: `.style.setProperty("--glass-`
+ * in `liquid-glass`'s `pointer-light.ts` passes the style rule; every other
+ * `.style` still fails. Each allowance is reported, so it stays counted.
+ * 012 decision 1 takes the stage and its light off L22's list; decision 5
+ * adds `busy-edge`.
  * The CSS-variable form `-(--token)` is always allowed: its value is a token.
  */
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { readTokens, TOKENS_PATH } from "./tokens.ts";
 
@@ -37,6 +53,9 @@ export type Violation = {
   rule: string;
   text: string;
 };
+
+/** 009 decision 9: the modes an item supports, its lint profile. */
+export type Mode = "productive" | "expressive";
 
 export type Rules = {
   palettes: string[];
@@ -64,6 +83,55 @@ export const ALLOWLISTS = {
   // 002 decision 8: containers that draw the ring for a child.
   "focus-ring": ["input-group.svelte", "input-otp.svelte", "code-block.svelte"],
 } as const;
+
+/**
+ * 009 decision 9, L22: the class tokens of expressive volume. `rounded-action`
+ * is not one: it is the mode's variable, which any profile may use.
+ */
+const EXPRESSIVE_CLASSES = new Set([
+  "type-display",
+  "type-section",
+  "type-proof",
+  "action-press",
+  // 011: the brand's expressive tools. 012 decision 1 removes the stage and
+  // its light (`bloom`, `rim`, `energized`, `veil`, `surface-stage`): they
+  // are no longer utilities.
+  "type-poster",
+  "field-1",
+  "field-2",
+  "field-3",
+  "field-4",
+  "surface-plain",
+  "glass",
+  // 012 decision 5: the busy edge of a flat card.
+  "busy-edge",
+]);
+
+/** 011 decision 10, L23: the spring, in any form. */
+const SPRING = /ease-spring\b/g;
+/** L23: the items whose files may name the spring: the mark's dots and the theme. */
+const SPRING_ITEMS = new Set(["four-dot", "pluto-theme"]);
+/**
+ * 011 decision 8, L24: the one style write, the pointer light's custom
+ * properties on the glass. Matched where STYLE_PROPERTY matched `.style`.
+ */
+const GLASS_WRITE = /^\.style\.setProperty\(\s*["'`]--glass-/;
+const GLASS_WRITE_FILE = "pointer-light.ts";
+const GLASS_WRITE_ITEM = "liquid-glass";
+/**
+ * L22's attribute: a subtree set to expressive, in markup (quoted or not), a
+ * Svelte expression or an object's key (`{ "data-mode": "expressive" }`); or
+ * the mode set from script, whatever the value, since a variable can hold it.
+ */
+const EXPRESSIVE_ATTRIBUTE = new RegExp(
+  [
+    /data-mode["'`]?\]?\s*[=:]\s*(?:\{\s*)?["'`]?expressive\b/.source,
+    /\bsetAttribute\(\s*["'`]data-mode["'`]/.source,
+    /\bdataset(?:\.mode|\[\s*["'`]mode["'`]\s*\])\s*(?:\?\?|\|\||&&)?=(?!=)/
+      .source,
+  ].join("|"),
+  "g",
+);
 
 /** L1: the four sanctioned state tints, and the one variant each may carry. */
 const SANCTIONED_TINTS: Record<string, string> = {
@@ -264,6 +332,58 @@ export function itemFiles(root: string = process.cwd()): string[] {
   return registry.items.flatMap((item: { files?: { path: string }[] }) =>
     (item.files ?? []).map((f) => f.path),
   );
+}
+
+/** 011 decision 10: the items that list each file, for L23 and L24. */
+export function itemOwners(
+  root: string = process.cwd(),
+): Map<string, readonly string[]> {
+  const file = path.join(root, "registry.json");
+  if (!existsSync(file)) return new Map();
+  const registry = JSON.parse(readFileSync(file, "utf8")) as {
+    items: { name: string; files?: { path: string }[] }[];
+  };
+  const owners = new Map<string, string[]>();
+  for (const item of registry.items)
+    for (const { path: f } of item.files ?? [])
+      owners.set(f, [...(owners.get(f) ?? []), item.name]);
+  return owners;
+}
+
+/**
+ * 009 decision 9: each item file's lint profile, from its item's
+ * `meta.modes`. A file two items list takes the strictest: it is
+ * expressive-only only if every item that lists it is.
+ */
+export function itemProfiles(
+  root: string = process.cwd(),
+): Map<string, readonly Mode[]> {
+  const file = path.join(root, "registry.json");
+  // An installed app has no registry: each of its files takes the
+  // productive profile, the strictest.
+  if (!existsSync(file)) return new Map();
+  const registry = JSON.parse(readFileSync(file, "utf8")) as {
+    items: { files?: { path: string }[]; meta?: { modes?: Mode[] } }[];
+  };
+  const profiles = new Map<string, readonly Mode[]>();
+  for (const item of registry.items) {
+    const modes = item.meta?.modes ?? ["productive"];
+    for (const { path: file } of item.files ?? []) {
+      const known = profiles.get(file);
+      profiles.set(
+        file,
+        known && expressiveOnly(known) && !expressiveOnly(modes)
+          ? modes
+          : (known ?? modes),
+      );
+    }
+  }
+  return profiles;
+}
+
+/** True when a profile is exactly ["expressive"], the one that L22 does not bind. */
+function expressiveOnly(modes: readonly Mode[]): boolean {
+  return modes.length === 1 && modes[0] === "expressive";
 }
 
 /**
@@ -476,15 +596,34 @@ function lineOf(text: string, index: number): number {
   return text.slice(0, index).split("\n").length;
 }
 
-/** Lints one file's text. */
+/**
+ * Lints one file's text. `modes` is the file's lint profile (009 decision
+ * 9); a file outside the registry is held to the productive one. `items` are
+ * the items that list the file (L23, L24); a file outside every item has
+ * none. An allowance L24 grants is pushed onto `allowances`, when given.
+ */
 export function lintText(
   text: string,
   file = "<text>",
   rules: Rules = loadRules(),
+  modes: readonly Mode[] = ["productive"],
+  items: readonly string[] = [],
+  allowances?: Violation[],
 ): Violation[] {
   const found: Violation[] = [];
+  const at = (rule: string, index: number, match: string): Violation => ({
+    file,
+    line: lineOf(text, index),
+    rule,
+    text: match.trim(),
+  });
   const add = (rule: string, index: number, match: string) =>
-    found.push({ file, line: lineOf(text, index), rule, text: match.trim() });
+    found.push(at(rule, index, match));
+  // L24: only the one file of the one item, every item that lists it being it.
+  const glassWriter =
+    path.basename(file) === GLASS_WRITE_FILE &&
+    items.length > 0 &&
+    items.every((item) => item === GLASS_WRITE_ITEM);
 
   for (const [pattern, rule] of [
     [HEX, "hex colour"],
@@ -495,8 +634,25 @@ export function lintText(
     [STYLE_PROPERTY, "style property"],
   ] as const) {
     pattern.lastIndex = 0;
-    for (const match of text.matchAll(pattern))
-      add(rule, match.index ?? 0, match[0]);
+    for (const match of text.matchAll(pattern)) {
+      const index = match.index ?? 0;
+      if (
+        pattern === STYLE_PROPERTY &&
+        glassWriter &&
+        GLASS_WRITE.test(text.slice(index))
+      ) {
+        allowances?.push(at("L24", index, match[0]));
+        continue;
+      }
+      add(rule, index, match[0]);
+    }
+  }
+
+  // L23 (011): the spring outside the mark's dots and the theme.
+  if (!(items.length > 0 && items.every((item) => SPRING_ITEMS.has(item)))) {
+    SPRING.lastIndex = 0;
+    for (const match of text.matchAll(SPRING))
+      add("spring outside the dots", match.index ?? 0, match[0]);
   }
 
   PAINT_ATTRIBUTE.lastIndex = 0;
@@ -531,30 +687,85 @@ export function lintText(
     }
   }
 
+  // L22 (009): expressive volume outside an expressive-only item.
+  const loud = !expressiveOnly(modes);
+  if (loud) {
+    EXPRESSIVE_ATTRIBUTE.lastIndex = 0;
+    for (const match of text.matchAll(EXPRESSIVE_ATTRIBUTE))
+      add("expressive volume", match.index ?? 0, match[0]);
+  }
+
   // Class-like tokens: split on whitespace, quotes and markup punctuation.
-  const tokenPattern = /[^\s"'`{}<>=,;]+/g;
-  for (const match of text.matchAll(tokenPattern)) {
+  for (const match of text.matchAll(TOKEN_PATTERN)) {
     const rule = classViolation(match[0], rules, file);
     if (rule) add(rule, match.index ?? 0, match[0]);
+    // A class object's key (`{ glass: lit }`) ends in one colon: read it
+    // without, so `glass:` is the utility, not an empty variant.
+    else if (
+      loud &&
+      EXPRESSIVE_CLASSES.has(splitClass(match[0].replace(/:$/, "")).utility)
+    )
+      add("expressive volume", match.index ?? 0, match[0]);
   }
   return found;
 }
 
-/** Lints files, by path relative to `root`. */
+/** Class-like tokens: split on whitespace, quotes and markup punctuation. */
+const TOKEN_PATTERN = /[^\s"'`{}<>=,;]+/g;
+
+/**
+ * The utility of every class-like token in a text, read as the lint reads
+ * it: variants and `!` dropped, and a class object's key (`{ glass: lit }`)
+ * read without its colon. 012 criterion 1 reads removed class names with it.
+ */
+export function classTokens(text: string): string[] {
+  return [...text.matchAll(TOKEN_PATTERN)].map(
+    (match) => splitClass(match[0].replace(/:$/, "")).utility,
+  );
+}
+
+/**
+ * Lints files, by path relative to `root`, each with its item's profile and
+ * owners. L24's allowances are pushed onto `allowances`, when given. An
+ * installed app has no registry, so a caller that knows where each item
+ * landed passes the profiles and the owners itself (012: `liquid-glass`
+ * lands with the compositions).
+ */
 export function lintFiles(
   files: string[],
   rules: Rules = loadRules(),
   root: string = process.cwd(),
+  profiles: Map<string, readonly Mode[]> = itemProfiles(root),
+  allowances?: Violation[],
+  owners: Map<string, readonly string[]> = itemOwners(root),
 ): Violation[] {
   return files.flatMap((file) =>
-    lintText(readFileSync(path.join(root, file), "utf8"), file, rules),
+    lintText(
+      readFileSync(path.join(root, file), "utf8"),
+      file,
+      rules,
+      profiles.get(file),
+      owners.get(file),
+      allowances,
+    ),
   );
 }
 
 if (import.meta.main) {
-  const violations = lintFiles(itemFiles());
+  const allowances: Violation[] = [];
+  const violations = lintFiles(
+    itemFiles(),
+    undefined,
+    undefined,
+    undefined,
+    allowances,
+  );
   for (const v of violations)
     console.log(`${v.file}:${v.line}  ${v.rule}  ${v.text}`);
-  console.log(`${violations.length} literal(s) in registry item files`);
+  for (const a of allowances)
+    console.log(`${a.file}:${a.line}  allowed by ${a.rule}  ${a.text}`);
+  console.log(
+    `${violations.length} literal(s) in registry item files; ${allowances.length} allowance(s)`,
+  );
   process.exit(violations.length ? 1 : 0);
 }

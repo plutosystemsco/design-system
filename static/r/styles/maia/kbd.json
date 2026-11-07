@@ -12,6 +12,9 @@
 	"meta": {
 		"since": "0.2.0",
 		"group": "actions",
+		"modes": [
+			"productive"
+		],
 		"stock": {
 			"registry": "https://shadcn-svelte.com/registry/styles/maia",
 			"item": "kbd",

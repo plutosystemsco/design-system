@@ -35,8 +35,17 @@
   );
 </script>
 
+<!--
+  The word, then the mark at --mark-lockup-size, a fraction of the word, set
+  --mark-lockup-gap from it and lifted by --mark-lift in its own em: the colon
+  risen beside the word.
+-->
 {#snippet content()}
-  pluto<FourDot {tone} {entrance} class="-translate-y-(--mark-lift)" />
+  pluto<FourDot
+    {tone}
+    {entrance}
+    class="text-(length:--mark-lockup-size) -translate-y-(--mark-lift)"
+  />
 {/snippet}
 
 {#if href}

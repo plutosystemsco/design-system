@@ -15,7 +15,10 @@
 	],
 	"meta": {
 		"since": "0.5.0",
-		"group": "foundation"
+		"group": "foundation",
+		"modes": [
+			"productive"
+		]
 	},
 	"files": [
 		{

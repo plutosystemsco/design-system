@@ -30,15 +30,25 @@ export type TintPair = {
 
 export type Exception = { theme: Theme; pair: [string, string]; why: string };
 
-export type Forbidden = {
+/** A state tint on a ground that no item may draw (001 decision 8). */
+export type ForbiddenRule = {
   theme: Theme;
   text: string;
   tint: string;
   over: string;
   alpha: number;
-  ratio: number;
   why: string;
 };
+
+/** A forbidden pair with its measured ratio, which must stay below 4.5. */
+export type Forbidden = ForbiddenRule & { ratio: number };
+
+/**
+ * 011 decision 11: the ban is kept as a rule. `measured` rows are its
+ * witnesses, each recomputed and below 4.5; `ruleOnly` pairs are forbidden
+ * whatever they measure.
+ */
+export type ForbiddenSet = { measured: Forbidden[]; ruleOnly: ForbiddenRule[] };
 
 /** An elevated surface's edge against a ground under the scrim (002 decision 7). */
 export type ScrimRow = {
@@ -47,6 +57,85 @@ export type ScrimRow = {
   over: string;
   scrim: string;
   min: number;
+};
+
+/** 011 decision 11: a field's legend on its fill, as text and as a ring. */
+export type FieldRow = { theme: Theme; field: string };
+
+/**
+ * 011 decision 11: a role's text on the glass's tint composited over a
+ * ground: `background`, a field, or (light only) `foreground`.
+ */
+export type GlassRow = { theme: Theme; text: string; over: string };
+
+/**
+ * 012 decision 4: a role's text on the sticky bar's glass passing over the
+ * hero's glass, which lies on the canvas or a field: the tint composited
+ * twice over the ground. The bar's text is `foreground` or `primary`.
+ */
+export type GlassOverGlassRow = { theme: Theme; text: string; over: string };
+
+/** 011 decision 6: a field's `[fill, legend]`, both primitives. */
+export type FieldPair = [fill: string, legend: string];
+
+/**
+ * 011 decision 8: the glass in one theme. Each colour names a primitive or is
+ * a hex literal; the shadow is the two layers' colours.
+ */
+export type GlassTheme = {
+  tint: string;
+  rim: string;
+  edge: string;
+  fallback: string;
+  light: string;
+  shadow: [string, string];
+};
+
+/** The four fields' names, in the mark's order. */
+export const FIELDS = ["field-1", "field-2", "field-3", "field-4"] as const;
+
+/** 009 decision 5: a fluid size, `clamp(min, vw, max)`, its ends in px. */
+export type Fluid = { minPx: number; vw: number; maxPx: number };
+
+/** 009 decision 5: a display step. The weight lives here, not in `type.weight`. */
+export type DisplayStep = Fluid & {
+  lineHeight: number;
+  tracking: number;
+  weight: number;
+  tabular?: boolean;
+};
+
+/**
+ * 009 decisions 3 to 7: expressive mode's values, every one emitted as a
+ * runtime variable on `:root`. 012 decision 1 removes the stage, its light,
+ * the stage radius and the veil's blur.
+ */
+export type Expressive = {
+  display: {
+    /** The family role whose string fills `--font-face-display`. */
+    family: keyof Tokens["type"]["families"];
+    /** 011 decision 9 adds `poster`, for launches only. */
+    steps: Record<"display" | "section" | "proof" | "poster", DisplayStep>;
+  };
+  motion: {
+    press: number;
+    slide: number;
+    busy: number;
+    reveal: number;
+    fill: number;
+    easeStandard: [number, number, number, number];
+    pressScale: number;
+    /** 011 decision 10: the spring the dots dock on. */
+    spring: { dampingRatio: number; settle: number; samples: number };
+    /** 011 decision 8: how long the glass's rim stays lit after the pointer stops, in ms. */
+    light: number;
+  };
+  size: { bar: number; action: number; actionSmall: number; track: number };
+  gutter: Fluid;
+  /** 011 decision 6: the four colour fields, per theme. */
+  field: Record<Theme, Record<(typeof FIELDS)[number], FieldPair>>;
+  /** 011 decision 8: the liquid glass. */
+  glass: Record<Theme, GlassTheme> & { blur: number };
 };
 
 export type Tokens = {
@@ -76,6 +165,8 @@ export type Tokens = {
   mark: {
     dot: number;
     gap: number;
+    /** 011 decision 7: the lockup's mark, as a fraction of the word. */
+    lockupScale: number;
     rise: number;
     lockupGap: number;
     orbit: number;
@@ -83,13 +174,17 @@ export type Tokens = {
   line: { width: number };
   focus: { width: number; offset: number };
   elevation: { y: number; blur: number };
+  expressive: Expressive;
   contrast: {
     text: [string, string][];
     tints: TintPair[];
     nonText: [string, string][];
     exceptions: Exception[];
-    forbidden: Forbidden[];
+    forbidden: ForbiddenSet;
     scrim: ScrimRow[];
+    field: FieldRow[];
+    glass: GlassRow[];
+    glassOverGlass: GlassOverGlassRow[];
   };
 };
 
@@ -173,6 +268,7 @@ export function validateTokens(raw: unknown): Tokens {
     "line",
     "focus",
     "elevation",
+    "expressive",
     "contrast",
   ]) {
     if (!(key in root)) throw new TokenError(key, "is missing");
@@ -304,7 +400,14 @@ export function validateTokens(raw: unknown): Tokens {
     );
 
   const mark = object(root.mark, "mark");
-  for (const field of ["dot", "gap", "rise", "lockupGap", "orbit"])
+  for (const field of [
+    "dot",
+    "gap",
+    "lockupScale",
+    "rise",
+    "lockupGap",
+    "orbit",
+  ])
     positive(mark[field], `mark.${field}`);
 
   positive(object(root.line, "line").width, "line.width");
@@ -320,6 +423,8 @@ export function validateTokens(raw: unknown): Tokens {
     if (!ladder.has(n))
       throw new TokenError(`elevation.${field}`, "must be a ladder step");
   }
+
+  validateExpressive(root.expressive, primitives, families);
 
   // contrast: every name it uses must be a semantic token.
   const contrast = object(root.contrast, "contrast");
@@ -353,16 +458,21 @@ export function validateTokens(raw: unknown): Tokens {
     pairs([exception.pair], `${key}.pair`);
     string(exception.why, `${key}.why`);
   });
-  array(contrast.forbidden, "contrast.forbidden").forEach((value, i) => {
-    const key = `contrast.forbidden[${i}]`;
-    const forbidden = object(value, key);
-    theme(forbidden.theme, `${key}.theme`);
-    for (const field of ["text", "tint", "over"])
-      semanticName(forbidden[field], `${key}.${field}`);
-    tenths(forbidden.alpha, `${key}.alpha`);
-    positive(forbidden.ratio, `${key}.ratio`);
-    string(forbidden.why, `${key}.why`);
-  });
+  const forbidden = object(contrast.forbidden, "contrast.forbidden");
+  for (const part of ["measured", "ruleOnly"] as const) {
+    array(forbidden[part], `contrast.forbidden.${part}`).forEach((value, i) => {
+      const key = `contrast.forbidden.${part}[${i}]`;
+      const row = object(value, key);
+      theme(row.theme, `${key}.theme`);
+      for (const field of ["text", "tint", "over"])
+        semanticName(row[field], `${key}.${field}`);
+      tenths(row.alpha, `${key}.alpha`);
+      if (part === "measured") positive(row.ratio, `${key}.ratio`);
+      else if ("ratio" in row)
+        throw new TokenError(`${key}.ratio`, "a rule-only pair holds no ratio");
+      string(row.why, `${key}.why`);
+    });
+  }
   array(contrast.scrim, "contrast.scrim").forEach((value, i) => {
     const key = `contrast.scrim[${i}]`;
     const row = object(value, key);
@@ -372,7 +482,189 @@ export function validateTokens(raw: unknown): Tokens {
     positive(row.min, `${key}.min`);
   });
 
+  // 011 decision 11: the field set names a field; the glass set a role's text
+  // over the canvas, a field or (light only) the foreground.
+  array(contrast.field, "contrast.field").forEach((value, i) => {
+    const key = `contrast.field[${i}]`;
+    const row = object(value, key);
+    theme(row.theme, `${key}.theme`);
+    if (!(FIELDS as readonly Json[]).includes(row.field))
+      throw new TokenError(`${key}.field`, "must name field-1 to field-4");
+  });
+  array(contrast.glass, "contrast.glass").forEach((value, i) => {
+    const key = `contrast.glass[${i}]`;
+    const row = object(value, key);
+    const t = theme(row.theme, `${key}.theme`);
+    if (
+      !["foreground", "muted-foreground", "primary"].includes(
+        row.text as string,
+      )
+    )
+      throw new TokenError(
+        `${key}.text`,
+        "must be foreground, muted-foreground or primary",
+      );
+    const grounds: Json[] = ["background", ...FIELDS];
+    if (t === "light") grounds.push("foreground");
+    if (!grounds.includes(row.over))
+      throw new TokenError(
+        `${key}.over`,
+        "must be background, a field, or (light only) foreground",
+      );
+  });
+
+  // 012 decision 4: the bar's text, foreground or primary, on its glass over
+  // the hero's glass over the canvas or a field.
+  array(contrast.glassOverGlass, "contrast.glassOverGlass").forEach(
+    (value, i) => {
+      const key = `contrast.glassOverGlass[${i}]`;
+      const row = object(value, key);
+      theme(row.theme, `${key}.theme`);
+      if (!["foreground", "primary"].includes(row.text as string))
+        throw new TokenError(`${key}.text`, "must be foreground or primary");
+      if (!(["background", ...FIELDS] as Json[]).includes(row.over))
+        throw new TokenError(`${key}.over`, "must be background or a field");
+    },
+  );
+
   return root as unknown as Tokens;
+}
+
+/** A fluid size: positive ends, the minimum below the maximum. */
+function fluid(value: Json, key: string): Record<string, Json> {
+  const entry = object(value, key);
+  const min = positive(entry.minPx, `${key}.minPx`);
+  positive(entry.vw, `${key}.vw`);
+  const max = positive(entry.maxPx, `${key}.maxPx`);
+  if (min >= max) throw new TokenError(key, "minPx must be below maxPx");
+  return entry;
+}
+
+/**
+ * 009 decisions 5 to 7 and 011's brand: the `expressive` group. Its display
+ * face names a family role, not a font of its own (review finding 5).
+ */
+function validateExpressive(
+  value: Json,
+  primitives: Record<string, Json>,
+  families: Record<string, Json>,
+): void {
+  const group = object(value, "expressive");
+
+  const display = object(group.display, "expressive.display");
+  const family = string(display.family, "expressive.display.family");
+  if (!(family in families))
+    throw new TokenError(
+      "expressive.display.family",
+      `"${family}" must name a role of type.families`,
+    );
+  const steps = object(display.steps, "expressive.display.steps");
+  for (const step of ["display", "section", "proof", "poster"]) {
+    const key = `expressive.display.steps.${step}`;
+    const entry = fluid(steps[step], key);
+    positive(entry.lineHeight, `${key}.lineHeight`);
+    number(entry.tracking, `${key}.tracking`);
+    positive(entry.weight, `${key}.weight`);
+    if ("tabular" in entry && typeof entry.tabular !== "boolean")
+      throw new TokenError(`${key}.tabular`, "must be true or false");
+  }
+
+  const motion = object(group.motion, "expressive.motion");
+  for (const field of ["press", "slide", "busy", "reveal", "fill"])
+    positive(motion[field], `expressive.motion.${field}`);
+  const ease = array(motion.easeStandard, "expressive.motion.easeStandard");
+  if (ease.length !== 4)
+    throw new TokenError(
+      "expressive.motion.easeStandard",
+      "must hold 4 numbers",
+    );
+  ease.forEach((n, i) => number(n, `expressive.motion.easeStandard[${i}]`));
+  const scale = positive(motion.pressScale, "expressive.motion.pressScale");
+  if (scale > 1)
+    throw new TokenError("expressive.motion.pressScale", "must be 1 or less");
+  // 011 decision 10: an underdamped spring, settling within a fraction.
+  const spring = object(motion.spring, "expressive.motion.spring");
+  for (const field of ["dampingRatio", "settle"]) {
+    const n = positive(spring[field], `expressive.motion.spring.${field}`);
+    if (n >= 1)
+      throw new TokenError(
+        `expressive.motion.spring.${field}`,
+        "must be a fraction below 1",
+      );
+  }
+  const samples = positive(spring.samples, "expressive.motion.spring.samples");
+  if (!Number.isInteger(samples))
+    throw new TokenError(
+      "expressive.motion.spring.samples",
+      "must be a whole number",
+    );
+  positive(motion.light, "expressive.motion.light");
+
+  const size = object(group.size, "expressive.size");
+  for (const field of ["bar", "action", "actionSmall", "track"])
+    positive(size[field], `expressive.size.${field}`);
+  fluid(group.gutter, "expressive.gutter");
+  validateField(group.field, primitives);
+  validateGlass(group.glass, primitives);
+}
+
+/** 011 decision 6: per theme, exactly the four fields, each a [fill, legend] of primitives. */
+function validateField(value: Json, primitives: Record<string, Json>): void {
+  const field = object(value, "expressive.field");
+  for (const t of THEMES) {
+    const map = object(field[t], `expressive.field.${t}`);
+    if (Object.keys(map).sort().join() !== [...FIELDS].join())
+      throw new TokenError(
+        `expressive.field.${t}`,
+        "must hold field-1 to field-4, and nothing else",
+      );
+    for (const name of FIELDS) {
+      const key = `expressive.field.${t}.${name}`;
+      const pair = array(map[name], key);
+      if (
+        pair.length !== 2 ||
+        !pair.every((p) => typeof p === "string" && p in primitives)
+      )
+        throw new TokenError(
+          key,
+          "must be a [fill, legend] pair of primitives",
+        );
+    }
+  }
+}
+
+/**
+ * 011 decision 8: the glass's colours per theme and its blur. Frost only: the
+ * lens is removed (decisions.md, 2026-11-07).
+ */
+function validateGlass(value: Json, primitives: Record<string, Json>): void {
+  const glass = object(value, "expressive.glass");
+  const colour = (v: Json, key: string) => {
+    const ref = string(v, key);
+    if (!(ref in primitives) && !HEX.test(ref))
+      throw new TokenError(
+        key,
+        `"${ref}" must name a primitive or be #RRGGBB or #RRGGBBAA`,
+      );
+  };
+  for (const t of THEMES) {
+    const own = object(glass[t], `expressive.glass.${t}`);
+    for (const field of ["tint", "rim", "edge", "fallback", "light"])
+      colour(own[field], `expressive.glass.${t}.${field}`);
+    const shadow = array(own.shadow, `expressive.glass.${t}.shadow`);
+    if (shadow.length !== 2)
+      throw new TokenError(
+        `expressive.glass.${t}.shadow`,
+        "must hold two colours",
+      );
+    shadow.forEach((c, i) => colour(c, `expressive.glass.${t}.shadow[${i}]`));
+  }
+  positive(glass.blur, "expressive.glass.blur");
+}
+
+/** The hex an `expressive` colour takes: its primitive's, or its own literal. */
+export function resolveExpressive(tokens: Tokens, value: string): string {
+  return tokens.primitives[value] ?? value;
 }
 
 /** Reads and validates the token file. Relative paths resolve against the working directory. */

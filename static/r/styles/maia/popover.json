@@ -16,6 +16,9 @@
 	"meta": {
 		"since": "0.4.0",
 		"group": "surfaces",
+		"modes": [
+			"productive"
+		],
 		"stock": {
 			"registry": "https://shadcn-svelte.com/registry/styles/maia",
 			"item": "popover",

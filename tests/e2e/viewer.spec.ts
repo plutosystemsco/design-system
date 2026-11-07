@@ -21,6 +21,7 @@ const TITLES: Record<string, string> = {
   settings: "Settings",
   "app-shell": "App shell",
   chat: "Chat",
+  "product-home": "Product home",
 };
 
 /** Where each block's files land in an app (003 decision 17), in the item's order. */
@@ -69,6 +70,8 @@ const APP_PATHS: Record<string, string[]> = {
     "src/lib/components/chat-text.svelte",
     "src/lib/components/chat-types.ts",
   ],
+  // 010 decision 1: one page file; the compositions install as items.
+  "product-home": ["src/routes/product-home/+page.svelte"],
 };
 
 const frame = (page: Page) => page.locator('[data-testid="viewer"] iframe');
@@ -98,9 +101,10 @@ const parentIsDark = (page: Page) =>
   page.evaluate(() => document.documentElement.classList.contains("dark"));
 
 // 006 decision 14: 7 blocks, 30 files, 17 + 4 + 6 = 27 state switches; 008 adds 2 shell views: 29.
-test("the tables cover the 7 blocks: 30 files, 29 state switches", () => {
+// 010 adds product-home: one file, one view.
+test("the tables cover the 8 blocks: 31 files, 29 state switches", () => {
   expect(Object.keys(APP_PATHS)).toEqual(BLOCKS);
-  expect(Object.values(APP_PATHS).flat()).toHaveLength(30);
+  expect(Object.values(APP_PATHS).flat()).toHaveLength(31);
   expect(
     BLOCKS.map((b) => BLOCK_VIEWS[b]!.length)
       .filter((n) => n > 1)

@@ -13,9 +13,15 @@
         "@codemirror/language-data": "^6.5.2",
         "@codemirror/state": "^6.7.6",
         "@codemirror/view": "^6.43.15",
+        "@fontsource-variable/figtree": "5.3.0",
+        "@fontsource-variable/funnel-display": "5.3.0",
+        "@fontsource-variable/funnel-sans": "5.3.0",
         "@fontsource-variable/geist": "^5.3.0",
+        "@fontsource-variable/geist-mono": "5.3.0",
         "@fontsource-variable/ibm-plex-sans": "^5.3.0",
+        "@fontsource-variable/instrument-sans": "5.3.0",
         "@fontsource-variable/jetbrains-mono": "^5.3.0",
+        "@fontsource/ibm-plex-mono": "5.3.0",
         "@internationalized/date": "^3.12.4",
         "@lezer/highlight": "^1.2.5",
         "@playwright/test": "1.64.1",
@@ -115,11 +121,23 @@
 
     "@floating-ui/utils": ["@floating-ui/utils@0.2.12", "", {}, "sha512-HpCo8tmWzLVad5s2d19EhAz5zqrrQ6s69qd6moPMQvkOuSwDT1YgRfWSVuc4ennqrgv3OHppiOGMQ7oC13yIww=="],
 
+    "@fontsource-variable/figtree": ["@fontsource-variable/figtree@5.3.0", "", {}, "sha512-VRVodD7OiG7apQwE8/2fMjaqpY/a0qRJqL5HtYj8CKIVps+9amaFcdfKmDIf7iqYQx6iPLlArVXAfKeIZmVcNQ=="],
+
+    "@fontsource-variable/funnel-display": ["@fontsource-variable/funnel-display@5.3.0", "", {}, "sha512-o/12lyrfflx5QAQFa+hAl0uBeWoBUAm5w71j+KssBseo++XJT3tnveDSg5IAnAdiclQHfFuEZiL5Wn2BjuFxtw=="],
+
+    "@fontsource-variable/funnel-sans": ["@fontsource-variable/funnel-sans@5.3.0", "", {}, "sha512-NOgHy3KWMAJdl33XSESit33nI8vlFZh8/0E3tLD7z5jJA5gQoLeUkFcZtxehVVkyYpAZ747tF8O/kAHXXa96ZA=="],
+
     "@fontsource-variable/geist": ["@fontsource-variable/geist@5.3.0", "", {}, "sha512-j0m+vLQuG5XAYoHtGCVu0spvlGreR3EzpECUVzkFmI1mTVnAO38l/NEPDCFgZ177JxzYJCLSmTQibIiYPilGrA=="],
+
+    "@fontsource-variable/geist-mono": ["@fontsource-variable/geist-mono@5.3.0", "", {}, "sha512-vBbuwDEo9AkrqADMXOrlAR3DFcJi4/JxeuU43FoiQERnNwsfXNnvxvReZG02cQKmyk4DZkZdBZX3oTDvy2zBAw=="],
 
     "@fontsource-variable/ibm-plex-sans": ["@fontsource-variable/ibm-plex-sans@5.3.0", "", {}, "sha512-agG8tXFEo0hD9+J7npa4vbbWult52eMLVaQ6WQRlhs/iCAojrMAoejru85W9HTVXHfyUj96KM7gp/KGAS87XaQ=="],
 
+    "@fontsource-variable/instrument-sans": ["@fontsource-variable/instrument-sans@5.3.0", "", {}, "sha512-u4gKbDBTNFGkg997tfQn3eHOhHuquWUFTRT/rwzuKtrxX5P2ekfs2x+LgBPP4P32+cC+vUwF1Cr+IdRoPQbrGw=="],
+
     "@fontsource-variable/jetbrains-mono": ["@fontsource-variable/jetbrains-mono@5.3.0", "", {}, "sha512-F32xpS2NsGYoQi2ADSkKTgpJj7ozajsGgDJ8woTnqjmIB+dxDIqImjl4pXZVEExu8UFZ2ndhmX18EBS/hdz3Lw=="],
+
+    "@fontsource/ibm-plex-mono": ["@fontsource/ibm-plex-mono@5.3.0", "", {}, "sha512-eTgnZjZEGk1QtD3ZstF+Vclo2HLAni8YMy34/DxllwZvyz1lR/1RF/xTiAquOBO7MvqBx8D2Ig2WCPMVfdZu7Q=="],
 
     "@internationalized/date": ["@internationalized/date@3.12.4", "", { "dependencies": { "@swc/helpers": "^0.5.0" } }, "sha512-M1dEn4c1U1HsSlaVR8upZtSqvXrTkHDfv18H01uCSJyjVLDxnBR38v/fMxecmlwXKR4i9HeZcmgQAPE6A+aGJQ=="],
 

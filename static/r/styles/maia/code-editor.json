@@ -20,7 +20,10 @@
 	],
 	"meta": {
 		"since": "0.4.0",
-		"group": "code"
+		"group": "code",
+		"modes": [
+			"productive"
+		]
 	},
 	"files": [
 		{

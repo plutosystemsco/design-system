@@ -10,7 +10,11 @@
 	],
 	"meta": {
 		"since": "0.1.0",
-		"group": "foundation"
+		"group": "foundation",
+		"modes": [
+			"productive",
+			"expressive"
+		]
 	},
 	"files": [
 		{

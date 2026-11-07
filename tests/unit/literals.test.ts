@@ -1,7 +1,10 @@
 import { describe, expect, test } from "bun:test";
-import { readFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import path from "node:path";
 import {
   itemFiles,
+  itemProfiles,
   lintFiles,
   lintText,
   loadRules,
@@ -13,11 +16,17 @@ const rules = loadRules();
 // a row of 002's rule table.
 
 /**
+ * "Frost only, no lens" (decisions.md, 2026-11-07): 323 files, as liquid-glass
+ * loses glass-lens.svelte.
+ * 011 decision 8: 324 files, 010's 321 plus liquid-glass (3).
+ * 010 decision 1: 321 files, 009's 302 plus the nine compositions (two each)
+ * and product-home's page (1).
+ * 009 decision 10: 302 files, 007's 301 plus read-token (1).
  * 007 decision 7: 301 files, 006's 300 plus code-languages (1).
  * 006 decision 13: 300 files, 005's 286 plus the 14 of app-shell (9) and
  * chat (5).
  */
-const FILE_COUNT = 301;
+const FILE_COUNT = 323;
 
 describe("the item files", () => {
   const files = itemFiles();
@@ -28,8 +37,16 @@ describe("the item files", () => {
     for (const file of files) expect(readFileSync(file, "utf8")).toBeTruthy();
   });
 
-  test("hold 0 literal colours or sizes", () => {
-    expect(lintFiles(files, rules)).toEqual([]);
+  // 011 criterion 7: zero violations, zero exceptions, and L24's one
+  // counted allowance, in liquid-glass's pointer-light.ts.
+  test("hold 0 literal colours or sizes, and 1 counted allowance (L24)", () => {
+    const allowances: ReturnType<typeof lintFiles> = [];
+    expect(lintFiles(files, rules, undefined, undefined, allowances)).toEqual(
+      [],
+    );
+    expect(allowances.map((a) => [a.file, a.rule])).toEqual([
+      ["src/lib/registry/ui/liquid-glass/pointer-light.ts", "L24"],
+    ]);
   });
 });
 
@@ -286,5 +303,281 @@ describe("the lint itself", () => {
     expect(
       lintSample({ cls: "bg-syntax-orange/10" }).map((v) => v.rule),
     ).toEqual(["syntax colour", "translucent tint"]);
+  });
+});
+
+/**
+ * 009 decision 9, criterion 5: L22, expressive volume. Its class tokens and
+ * the attribute fail in a file of any item whose `meta.modes` is not exactly
+ * ["expressive"], and pass in one that is. 012 decision 1 removes the stage
+ * and its light from the list: `bloom`, `rim`, `energized`, `veil` and
+ * `surface-stage` are no longer utilities.
+ */
+const L22_CLASSES = [
+  "type-display",
+  "type-section",
+  "type-proof",
+  "action-press",
+  // 011 decisions 6, 8 and 9: the brand's expressive tools.
+  "type-poster",
+  "field-1",
+  "field-2",
+  "field-3",
+  "field-4",
+  "surface-plain",
+  "glass",
+  // 012 decision 5: the busy edge is expressive volume.
+  "busy-edge",
+];
+const L22_SAMPLES: Sample[] = [
+  ...L22_CLASSES.map((cls) => ({ cls })),
+  { text: '<section data-mode="expressive"></section>' },
+];
+
+describe("L22, expressive volume", () => {
+  const lint = (sample: Sample, modes: ("productive" | "expressive")[]) => {
+    const [text, file] =
+      typeof sample === "string"
+        ? [sample, "sample.svelte"]
+        : "text" in sample
+          ? [sample.text, sample.file ?? "sample.svelte"]
+          : [`<span class="${sample.cls}"></span>`, "sample.svelte"];
+    return lintText(text, file, rules, modes);
+  };
+
+  test("12 class tokens and 1 attribute", () => {
+    expect(L22_CLASSES).toHaveLength(12);
+    expect(L22_SAMPLES).toHaveLength(13);
+  });
+
+  // 012 decision 1: the five removed names are plain words to the lint now.
+  test.each(["bloom", "rim", "energized", "veil", "surface-stage"])(
+    "passes %s in a productive item: it is no longer L22's",
+    (cls) => {
+      expect(lint({ cls }, ["productive"])).toEqual([]);
+    },
+  );
+
+  test.each(L22_SAMPLES.map((s) => [label(s), s] as const))(
+    "fails %s in a productive item",
+    (_, sample) => {
+      expect(lint(sample, ["productive"]).map((v) => v.rule)).toEqual([
+        "expressive volume",
+      ]);
+    },
+  );
+
+  test.each(L22_SAMPLES.map((s) => [label(s), s] as const))(
+    "fails %s in an item of both modes",
+    (_, sample) => {
+      expect(
+        lint(sample, ["productive", "expressive"]).map((v) => v.rule),
+      ).toEqual(["expressive volume"]);
+    },
+  );
+
+  test.each(L22_SAMPLES.map((s) => [label(s), s] as const))(
+    "passes %s in an expressive-only item",
+    (_, sample) => {
+      expect(lint(sample, ["expressive"])).toEqual([]);
+    },
+  );
+
+  // Review finding 3: the ordinary ways round the rule. Each is a count of
+  // L22 violations in a productive item, in an item of both modes, and none
+  // in an expressive-only one.
+  const BYPASSES: [string, string, number][] = [
+    [
+      "six names as keys of a class object",
+      '<div class={{ glass: lit, "field-1": true, "surface-plain": open, "type-poster": busy, "type-display": big, \'action-press\': p }}></div>',
+      6,
+    ],
+    ["an unquoted attribute", "<section data-mode=expressive></section>", 1],
+    ["a spread object", '<div {...{ "data-mode": "expressive" }}></div>', 1],
+    ["a braced string", '<div data-mode={"expressive"}></div>', 1],
+    [
+      "a setAttribute call",
+      '<script>el.setAttribute("data-mode", mode);</script>',
+      1,
+    ],
+    [
+      "a dataset.mode assignment",
+      '<script>el.dataset.mode = "expressive";</script>',
+      1,
+    ],
+    [
+      "a dataset.mode assignment from a variable",
+      "<script>node.dataset.mode = mode;</script>",
+      1,
+    ],
+  ];
+
+  test.each(BYPASSES)("fails %s", (_, text, count) => {
+    for (const modes of [
+      ["productive"],
+      ["productive", "expressive"],
+    ] as const) {
+      const rules = lint({ text }, [...modes]).map((v) => v.rule);
+      expect(rules).toEqual(Array(count).fill("expressive volume"));
+    }
+    expect(lint({ text }, ["expressive"])).toEqual([]);
+  });
+
+  test("reading the mode, or setting it productive, passes", () => {
+    for (const text of [
+      '<script>const m = el.dataset.mode === "expressive";</script>',
+      '<script>el.getAttribute("data-mode");</script>',
+      '<div {...{ "data-mode": "productive" }}></div>',
+      "<section data-mode=productive></section>",
+      "<div class={{ hidden: !open }}></div>",
+    ])
+      expect(lint({ text }, ["productive"])).toEqual([]);
+  });
+
+  test("a variant does not hide a token: md:type-display and hover:glass fail", () => {
+    for (const cls of ["md:type-display", "hover:glass", "!field-2"])
+      expect(lint({ cls }, ["productive"]).map((v) => v.rule)).toEqual([
+        "expressive volume",
+      ]);
+  });
+
+  test("the default profile is productive, and the mode's own utility and the variable forms pass", () => {
+    expect(lintText('<span class="glass"></span>', "x.svelte", rules)).toEqual([
+      expect.objectContaining({ rule: "expressive volume", text: "glass" }),
+    ] as never);
+    for (const cls of [
+      "rounded-action",
+      // button's radius (review finding 1): neither L7 nor L22 reads it.
+      "rounded-[var(--radius-action,var(--radius))]",
+      "h-(--size-bar)",
+      "duration-(--motion-press)",
+      "px-(--gutter-stage)",
+    ])
+      expect(lint({ cls }, ["productive"])).toEqual([]);
+    expect(
+      lint({ text: '<div data-mode="productive"></div>' }, ["productive"]),
+    ).toEqual([]);
+  });
+
+  test("the registry's profiles: every item file is linted with its item's modes", () => {
+    const profiles = itemProfiles();
+    expect(profiles.size).toBe(itemFiles().length);
+    expect(profiles.get("src/lib/registry/ui/button/button.svelte")).toEqual([
+      "productive",
+      "expressive",
+    ]);
+    expect(
+      profiles.get("src/lib/registry/ui/sidebar/sidebar-trigger.svelte"),
+    ).toEqual(["productive"]);
+  });
+});
+
+// 009 decision 9: an installed app has no registry.json; its files take the
+// productive profile, so the smoke tests' lint of an app holds L22.
+test("itemProfiles of a folder with no registry.json is empty, and lintFiles there holds L22", () => {
+  const app = mkdtempSync(path.join(tmpdir(), "pluto-l22-"));
+  try {
+    writeFileSync(path.join(app, "card.svelte"), '<div class="glass"></div>');
+    expect(itemProfiles(app).size).toBe(0);
+    expect(lintFiles(["card.svelte"], rules, app).map((v) => v.rule)).toEqual([
+      "expressive volume",
+    ]);
+  } finally {
+    rmSync(app, { recursive: true, force: true });
+  }
+});
+
+/** 011 decision 10, L23: springs are for dots. */
+describe("L23, the spring outside the dots", () => {
+  const SAMPLES = [
+    '<span class="ease-(--ease-spring)"></span>',
+    "const curve = readToken('ease-spring');",
+    "transition: transform 1s var(--ease-spring);",
+  ];
+
+  test.each(SAMPLES)("fails %s in a productive item's file", (text) => {
+    expect(
+      lintText(text, "sample.svelte", rules, ["productive"], ["card"]).map(
+        (v) => v.rule,
+      ),
+    ).toEqual(["spring outside the dots"]);
+  });
+
+  test.each(SAMPLES)(
+    "fails %s in an expressive-only item's file too",
+    (text) => {
+      expect(
+        lintText(text, "sample.svelte", rules, ["expressive"], ["stage"]).map(
+          (v) => v.rule,
+        ),
+      ).toEqual(["spring outside the dots"]);
+    },
+  );
+
+  test.each(SAMPLES)("passes %s in four-dot and in pluto-theme", (text) => {
+    for (const item of ["four-dot", "pluto-theme"])
+      expect(
+        lintText(text, "sample.svelte", rules, ["productive"], [item]),
+      ).toEqual([]);
+  });
+
+  test("a file outside every item, or listed by four-dot and another item, fails", () => {
+    const text = SAMPLES[0];
+    expect(lintText(text, "x.svelte", rules).map((v) => v.rule)).toEqual([
+      "spring outside the dots",
+    ]);
+    expect(
+      lintText(
+        text,
+        "x.svelte",
+        rules,
+        ["productive"],
+        ["four-dot", "card"],
+      ).map((v) => v.rule),
+    ).toEqual(["spring outside the dots"]);
+  });
+});
+
+/** 011 decision 8, L24: the one style write, the glass's pointer light. */
+describe("L24, the one style write", () => {
+  const FILE = "src/lib/registry/ui/liquid-glass/pointer-light.ts";
+  const CALL =
+    'element.style.setProperty(`--glass-${name}`, value);\nnode.style.setProperty("--glass-lit", "0");';
+
+  test("passes in liquid-glass's pointer-light.ts, counting each call as an allowance", () => {
+    const allowances: ReturnType<typeof lintText> = [];
+    expect(
+      lintText(CALL, FILE, rules, ["expressive"], ["liquid-glass"], allowances),
+    ).toEqual([]);
+    expect(allowances.map((a) => [a.rule, a.line])).toEqual([
+      ["L24", 1],
+      ["L24", 2],
+    ]);
+  });
+
+  test("fails the same call in any other file, or in a file of that name in another item", () => {
+    for (const [file, items] of [
+      ["src/lib/registry/ui/stage/light.ts", ["stage"]],
+      ["src/lib/registry/ui/liquid-glass/index.ts", ["liquid-glass"]],
+      ["src/lib/registry/ui/stage/pointer-light.ts", ["stage"]],
+    ] as const)
+      expect(
+        lintText(CALL, file, rules, ["expressive"], items).map((v) => v.rule),
+        file,
+      ).toEqual(["style property", "style property"]);
+  });
+
+  test("allows no other style write in pointer-light.ts", () => {
+    for (const text of [
+      'element.style.setProperty("--x", "1");',
+      'element.style.opacity = "1";',
+      'element.style.removeProperty("--glass-lit");',
+    ])
+      expect(
+        lintText(text, FILE, rules, ["expressive"], ["liquid-glass"]).map(
+          (v) => v.rule,
+        ),
+        text,
+      ).toEqual(["style property"]);
   });
 });

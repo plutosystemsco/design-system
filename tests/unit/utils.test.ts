@@ -90,3 +90,32 @@ test("(e) a start border width written after the border shorthand survives cn; w
   const dropped = cn("border-s-(length:--focus-width)", "border").split(/\s+/);
   expect(dropped).not.toContain("border-s-(length:--focus-width)");
 });
+
+// 009 decision 8, after the build's review (finding 1): button's radius is
+// the arbitrary `rounded-[var(--radius-action,var(--radius))]`, which cn
+// reads as a radius, so an app's own `rounded-*` on button merges and wins.
+const BUTTON_RADIUS = "rounded-[var(--radius-action,var(--radius))]";
+
+test("(f) cn merges button's radius with an app's rounded-*: the app's class wins", () => {
+  expect(cn(BUTTON_RADIUS, "rounded-none")).toBe("rounded-none");
+  expect(cn(BUTTON_RADIUS, "rounded-[4px]")).toBe("rounded-[4px]");
+  expect(cn(BUTTON_RADIUS, "rounded-(--chip-radius)")).toBe(
+    "rounded-(--chip-radius)",
+  );
+});
+
+// Review finding 1: the fallback lives in the component, so an app whose
+// stylesheet has no `@utility rounded-action` still gets 8 px corners.
+test("button's classes compile to its radius with Tailwind alone, no theme", async () => {
+  const { compile } = await import("tailwindcss");
+  const source = readFileSync(
+    "src/lib/registry/ui/button/button.svelte",
+    "utf8",
+  );
+  const base = /base:\s*"([^"]+)"/.exec(source)?.[1] ?? "";
+  expect(base.split(/\s+/)).toContain(BUTTON_RADIUS);
+  const css = (await compile("@tailwind utilities;", {})).build(
+    base.split(/\s+/),
+  );
+  expect(css).toContain("border-radius: var(--radius-action,var(--radius));");
+});

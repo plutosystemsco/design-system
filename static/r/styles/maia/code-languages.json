@@ -17,7 +17,11 @@
 	],
 	"meta": {
 		"since": "0.7.0",
-		"group": "code"
+		"group": "code",
+		"modes": [
+			"productive",
+			"expressive"
+		]
 	},
 	"files": [
 		{

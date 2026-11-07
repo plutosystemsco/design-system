@@ -11,7 +11,10 @@
 	],
 	"meta": {
 		"since": "0.3.0",
-		"group": "feedback"
+		"group": "feedback",
+		"modes": [
+			"productive"
+		]
 	},
 	"files": [
 		{

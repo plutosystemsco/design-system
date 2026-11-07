@@ -25,64 +25,65 @@
       "files": [],
       "meta": {
         "since": "0.1.0",
-        "group": "foundation"
+        "group": "foundation",
+        "modes": ["productive", "expressive"]
       },
       "cssVars": {
         "light": {
           "radius": "0.5rem",
-          "background": "#F7F7F4",
-          "foreground": "#14161C",
+          "background": "#F3F0E8",
+          "foreground": "#0B0F17",
           "card": "#FFFFFF",
-          "card-foreground": "#14161C",
+          "card-foreground": "#0B0F17",
           "popover": "#FFFFFF",
-          "popover-foreground": "#14161C",
-          "primary": "#2456E6",
+          "popover-foreground": "#0B0F17",
+          "primary": "#2D48D4",
           "primary-foreground": "#FFFFFF",
           "secondary": "#FFFFFF",
-          "secondary-foreground": "#14161C",
-          "muted": "#EAEAE7",
-          "muted-foreground": "#4A4F5C",
-          "accent": "#EAEAE7",
-          "accent-foreground": "#14161C",
-          "destructive": "#C42A1F",
-          "border": "#14161C1A",
-          "input": "#7C808B",
-          "ring": "#2456E6",
-          "chart-1": "#2456E6",
-          "chart-2": "#E23A2E",
-          "chart-3": "#F0AE12",
-          "chart-4": "#1E9E56",
-          "chart-5": "#4A4F5C",
-          "sidebar": "#F7F7F4",
-          "sidebar-foreground": "#14161C",
-          "sidebar-primary": "#2456E6",
+          "secondary-foreground": "#0B0F17",
+          "muted": "#E9E5DB",
+          "muted-foreground": "#505661",
+          "accent": "#E9E5DB",
+          "accent-foreground": "#0B0F17",
+          "destructive": "#C11E31",
+          "border": "#0B0F171A",
+          "input": "#857E70",
+          "ring": "#2D48D4",
+          "chart-1": "#2D48D4",
+          "chart-2": "#C92035",
+          "chart-3": "#F19E20",
+          "chart-4": "#008058",
+          "chart-5": "#505661",
+          "sidebar": "#F3F0E8",
+          "sidebar-foreground": "#0B0F17",
+          "sidebar-primary": "#2D48D4",
           "sidebar-primary-foreground": "#FFFFFF",
-          "sidebar-accent": "#EAEAE7",
-          "sidebar-accent-foreground": "#14161C",
-          "sidebar-border": "#14161C1A",
-          "sidebar-ring": "#2456E6",
+          "sidebar-accent": "#E9E5DB",
+          "sidebar-accent-foreground": "#0B0F17",
+          "sidebar-border": "#0B0F171A",
+          "sidebar-ring": "#2D48D4",
           "destructive-foreground": "#FFFFFF",
-          "destructive-fill": "#E23A2E",
-          "success": "#136E3E",
+          "destructive-fill": "#C92035",
+          "success": "#007351",
           "success-foreground": "#FFFFFF",
-          "success-fill": "#1E9E56",
-          "caution": "#F0AE12",
-          "caution-foreground": "#14161C",
+          "success-fill": "#008058",
+          "caution": "#F19E20",
+          "caution-foreground": "#0B0F17",
           "raised": "#FFFFFF",
-          "mark-1": "#2456E6",
-          "mark-2": "#E23A2E",
-          "mark-3": "#F0AE12",
-          "mark-4": "#1E9E56",
-          "groove-line": "#14161C1A",
-          "groove-light": "#FFFFFF",
-          "elevation-line": "#14161C1A",
-          "elevation-shadow": "#14161C29",
-          "scrim": "#14161C80",
+          "mark-1": "#2D48D4",
+          "mark-2": "#C92035",
+          "mark-3": "#F19E20",
+          "mark-4": "#008058",
+          "groove-line": "#0B0F171A",
+          "groove-light": "#00000000",
+          "elevation-line": "#857E70",
+          "elevation-shadow": "#00000000",
+          "scrim": "#0B0F1780",
           "syntax-orange": "#A44F12",
-          "syntax-amber": "#85600B",
+          "syntax-amber": "#915B00",
           "syntax-purple": "#903ACE",
           "syntax-teal": "#15717A",
-          "syntax-cyan": "#1B709B",
+          "syntax-cyan": "#1A6C97",
           "code-foreground": "var(--foreground)",
           "code-background": "var(--muted)",
           "code-comment": "var(--muted-foreground)",
@@ -106,56 +107,56 @@
           "code-active-line": "var(--card)"
         },
         "dark": {
-          "background": "#14161C",
-          "foreground": "#F7F7F4",
-          "card": "#1E2129",
-          "card-foreground": "#F7F7F4",
-          "popover": "#1E2129",
-          "popover-foreground": "#F7F7F4",
-          "primary": "#7A9BFF",
-          "primary-foreground": "#14161C",
-          "secondary": "#1E2129",
-          "secondary-foreground": "#F7F7F4",
-          "muted": "#2B2D32",
-          "muted-foreground": "#A9ADB8",
-          "accent": "#2B2D32",
-          "accent-foreground": "#F7F7F4",
-          "destructive": "#FF7D73",
-          "border": "#F7F7F41A",
-          "input": "#787C8A",
-          "ring": "#7A9BFF",
-          "chart-1": "#7A9BFF",
-          "chart-2": "#FF7D73",
-          "chart-3": "#F0AE12",
-          "chart-4": "#4CC982",
-          "chart-5": "#A9ADB8",
-          "sidebar": "#14161C",
-          "sidebar-foreground": "#F7F7F4",
-          "sidebar-primary": "#7A9BFF",
-          "sidebar-primary-foreground": "#14161C",
-          "sidebar-accent": "#2B2D32",
-          "sidebar-accent-foreground": "#F7F7F4",
-          "sidebar-border": "#F7F7F41A",
-          "sidebar-ring": "#7A9BFF",
-          "destructive-foreground": "#14161C",
-          "destructive-fill": "#FF7D73",
-          "success": "#4CC982",
-          "success-foreground": "#14161C",
-          "success-fill": "#4CC982",
-          "caution": "#F0AE12",
-          "caution-foreground": "#14161C",
-          "raised": "#1E2129",
-          "mark-1": "#F7F7F4",
-          "mark-2": "#F7F7F4",
-          "mark-3": "#F7F7F4",
-          "mark-4": "#F7F7F4",
-          "groove-line": "#F7F7F41A",
+          "background": "#16140F",
+          "foreground": "#F3F0E8",
+          "card": "#221F19",
+          "card-foreground": "#F3F0E8",
+          "popover": "#221F19",
+          "popover-foreground": "#F3F0E8",
+          "primary": "#93B0FF",
+          "primary-foreground": "#0B0F17",
+          "secondary": "#221F19",
+          "secondary-foreground": "#F3F0E8",
+          "muted": "#2C2821",
+          "muted-foreground": "#A39D90",
+          "accent": "#2C2821",
+          "accent-foreground": "#F3F0E8",
+          "destructive": "#FF9491",
+          "border": "#F3F0E81A",
+          "input": "#7A7366",
+          "ring": "#93B0FF",
+          "chart-1": "#93B0FF",
+          "chart-2": "#FF9491",
+          "chart-3": "#F19E20",
+          "chart-4": "#60C498",
+          "chart-5": "#A39D90",
+          "sidebar": "#16140F",
+          "sidebar-foreground": "#F3F0E8",
+          "sidebar-primary": "#93B0FF",
+          "sidebar-primary-foreground": "#0B0F17",
+          "sidebar-accent": "#2C2821",
+          "sidebar-accent-foreground": "#F3F0E8",
+          "sidebar-border": "#F3F0E81A",
+          "sidebar-ring": "#93B0FF",
+          "destructive-foreground": "#0B0F17",
+          "destructive-fill": "#FF9491",
+          "success": "#60C498",
+          "success-foreground": "#0B0F17",
+          "success-fill": "#60C498",
+          "caution": "#F19E20",
+          "caution-foreground": "#0B0F17",
+          "raised": "#221F19",
+          "mark-1": "#F3F0E8",
+          "mark-2": "#F3F0E8",
+          "mark-3": "#F3F0E8",
+          "mark-4": "#F3F0E8",
+          "groove-line": "#F3F0E81A",
           "groove-light": "#00000000",
-          "elevation-line": "#787C8A",
+          "elevation-line": "#7A7366",
           "elevation-shadow": "#00000000",
-          "scrim": "#14161C99",
+          "scrim": "#0B0F1799",
           "syntax-orange": "#E7792A",
-          "syntax-amber": "#F0AE12",
+          "syntax-amber": "#F19E20",
           "syntax-purple": "#B780DF",
           "syntax-teal": "#20A6B3",
           "syntax-cyan": "#269DD8",
@@ -242,8 +243,10 @@
         ":root": {
           "--mark-dot": "0.3em",
           "--mark-gap": "0.08em",
-          "--mark-rise": "0.38em",
-          "--mark-lockup-gap": "0.16em",
+          "--mark-rise": "0.36em",
+          "--mark-lockup-gap": "0.1em",
+          "--mark-lockup-scale": "0.87",
+          "--mark-lockup-size": "calc(var(--mark-lockup-scale) * 1em)",
           "--mark-lift": "calc(var(--mark-rise) + var(--mark-dot) + var(--mark-gap))",
           "--mark-orbit": "0.5em",
           "--motion-entrance": "900ms",
@@ -254,15 +257,94 @@
           "--line-width": "1px",
           "--focus-width": "2px",
           "--focus-offset": "2px",
+          "--font-face-display": "'IBM Plex Sans Variable', system-ui, sans-serif",
+          "--type-display-size": "clamp(3rem, 6vw, 5.75rem)",
+          "--type-display-leading": "0.95",
+          "--type-display-tracking": "-0.045em",
+          "--type-section-size": "clamp(2.25rem, 4vw, 3.5rem)",
+          "--type-section-leading": "1.05",
+          "--type-section-tracking": "-0.035em",
+          "--type-proof-size": "clamp(3.5rem, 6vw, 6rem)",
+          "--type-proof-leading": "1",
+          "--type-proof-tracking": "-0.04em",
+          "--type-poster-size": "clamp(3.5rem, 12vw, 10rem)",
+          "--type-poster-leading": "0.9",
+          "--type-poster-tracking": "-0.05em",
+          "--motion-press": "160ms",
+          "--motion-slide": "220ms",
+          "--motion-busy": "400ms",
+          "--motion-reveal": "600ms",
+          "--motion-fill": "700ms",
+          "--motion-light": "600ms",
+          "--ease-standard": "cubic-bezier(0.2, 0.7, 0.2, 1)",
+          "--ease-spring": "linear(0, 0.0391, 0.1362, 0.2654, 0.407, 0.5466, 0.6745, 0.7852, 0.876, 0.9467, 0.9985, 1.0338, 1.0552, 1.0657, 1.068, 1.0646, 1.0575, 1.0485, 1.0388, 1.0294, 1.0208, 1.0135, 1.0076, 1.003, 0.9996, 0.9974, 0.9961, 0.9955, 0.9954, 0.9957, 0.9962, 0.9968, 1)",
+          "--press-scale": "0.98",
+          "--radius-action": "var(--radius)",
+          "--size-bar": "4.5rem",
+          "--size-action": "3.25rem",
+          "--size-action-small": "2.375rem",
+          "--size-track": "0.375rem",
+          "--size-hero-fill": "calc(100svh - var(--size-bar))",
+          "--gutter-stage": "clamp(1rem, 4vw, 3.5rem)",
+          "--field-1": "#2D48D4",
+          "--field-1-foreground": "#FFFFFF",
+          "--field-2": "#C92035",
+          "--field-2-foreground": "#FFFFFF",
+          "--field-3": "#F19E20",
+          "--field-3-foreground": "#0B0F17",
+          "--field-4": "#008058",
+          "--field-4-foreground": "#FFFFFF",
+          "--surface-foreground": "var(--foreground)",
+          "--surface-muted-foreground": "var(--muted-foreground)",
+          "--surface-card-foreground": "var(--card-foreground)",
+          "--surface-primary": "var(--primary)",
+          "--surface-ring": "var(--ring)",
+          "--surface-primary-foreground": "var(--primary-foreground)",
+          "--surface-border": "var(--border)",
+          "--glass-tint": "#F3F0E8DB",
+          "--glass-rim": "#FFFFFFCC",
+          "--glass-edge": "#0B0F1714",
+          "--glass-fallback": "#FBFAF6",
+          "--glass-light": "#FFFFFF8C",
+          "--glass-shadow": "0 1px 0 #0B0F170F, 0 16px 32px -16px #0B0F1747",
+          "--glass-blur": "16px",
           "color-scheme": "light"
         },
         ".dark": {
+          "--field-1": "#93B0FF",
+          "--field-1-foreground": "#16140F",
+          "--field-2": "#FF9491",
+          "--field-2-foreground": "#16140F",
+          "--field-3": "#F19E20",
+          "--field-3-foreground": "#16140F",
+          "--field-4": "#60C498",
+          "--field-4-foreground": "#16140F",
+          "--surface-foreground": "var(--foreground)",
+          "--surface-muted-foreground": "var(--muted-foreground)",
+          "--surface-card-foreground": "var(--card-foreground)",
+          "--surface-primary": "var(--primary)",
+          "--surface-ring": "var(--ring)",
+          "--surface-primary-foreground": "var(--primary-foreground)",
+          "--surface-border": "var(--border)",
+          "--glass-tint": "#16140FD6",
+          "--glass-rim": "#FFFFFF1F",
+          "--glass-edge": "#FFFFFF14",
+          "--glass-fallback": "#221F19",
+          "--glass-light": "#FFFFFF33",
+          "--glass-shadow": "0 1px 0 #00000000, 0 16px 32px -16px #000000B3",
           "color-scheme": "dark"
         },
         "@media (prefers-reduced-motion: reduce)": {
           "html:root": {
             "--motion-entrance": "0ms",
-            "--motion-micro": "0ms"
+            "--motion-micro": "0ms",
+            "--motion-press": "0ms",
+            "--motion-slide": "0ms",
+            "--motion-busy": "0ms",
+            "--motion-reveal": "0ms",
+            "--motion-fill": "0ms",
+            "--motion-light": "0ms",
+            "--press-scale": "1"
           },
           "*, ::before, ::after": {
             "animation-duration": "0.01ms !important",
@@ -299,7 +381,8 @@
         },
         "@utility mark-entrance": {
           "& > [data-slot=\"four-dot-dot\"]": {
-            "animation": "pluto-mark-dock calc(var(--motion-entrance) * var(--motion-entrance-dot)) var(--ease-entrance) both"
+            "animation": "pluto-mark-dock calc(var(--motion-entrance) * var(--motion-entrance-dot)) both, pluto-mark-fade calc(var(--motion-entrance) * var(--motion-entrance-dot)) both",
+            "animation-timing-function": "var(--ease-spring), var(--ease-entrance)"
           },
           "& > [data-slot=\"four-dot-dot\"]:nth-child(1)": {
             "--_ox": "-1",
@@ -328,7 +411,7 @@
             "transform": "translate(calc(var(--mark-orbit) * var(--_ox)), calc(var(--mark-orbit) * var(--_oy))) scale(0.4)",
             "transition-property": "opacity, transform",
             "transition-duration": "calc(var(--motion-micro) * var(--motion-entrance-dot))",
-            "transition-timing-function": "var(--ease-entrance)"
+            "transition-timing-function": "var(--ease-entrance), var(--ease-spring)"
           },
           "& > [data-slot=\"four-dot-dot\"]:nth-child(1)": {
             "--_ox": "-1",
@@ -374,6 +457,178 @@
         ".dark .surface-ink": {
           "--background": "var(--card)"
         },
+        "[data-mode=\"productive\"]": {
+          "--radius-action": "var(--radius)"
+        },
+        "[data-mode=\"expressive\"]": {
+          "--radius-action": "var(--radius)"
+        },
+        ".dark [data-mode=\"expressive\"], [data-mode=\"expressive\"].dark": {
+          "--mark-1": "#93B0FF",
+          "--mark-2": "#FF9491",
+          "--mark-3": "#F19E20",
+          "--mark-4": "#60C498"
+        },
+        ".dark [data-mode=\"productive\"], [data-mode=\"productive\"].dark": {
+          "--mark-1": "#F3F0E8",
+          "--mark-2": "#F3F0E8",
+          "--mark-3": "#F3F0E8",
+          "--mark-4": "#F3F0E8"
+        },
+        "@utility rounded-action": {
+          "border-radius": "var(--radius-action, var(--radius))"
+        },
+        "html:has([data-sticky-bar])": {
+          "scroll-padding-top": "var(--size-bar)"
+        },
+        "@utility action-press": {
+          "transition": "transform var(--motion-press) var(--ease-standard)",
+          "&:active": {
+            "transform": "scale(var(--press-scale))"
+          }
+        },
+        "@utility type-display": {
+          "font-family": "var(--font-face-display)",
+          "font-size": "var(--type-display-size)",
+          "line-height": "var(--type-display-leading)",
+          "letter-spacing": "var(--type-display-tracking)",
+          "font-weight": "600"
+        },
+        "@utility type-section": {
+          "font-family": "var(--font-face-display)",
+          "font-size": "var(--type-section-size)",
+          "line-height": "var(--type-section-leading)",
+          "letter-spacing": "var(--type-section-tracking)",
+          "font-weight": "600"
+        },
+        "@utility type-proof": {
+          "font-family": "var(--font-face-display)",
+          "font-size": "var(--type-proof-size)",
+          "line-height": "var(--type-proof-leading)",
+          "letter-spacing": "var(--type-proof-tracking)",
+          "font-weight": "600",
+          "font-variant-numeric": "tabular-nums"
+        },
+        "@utility type-poster": {
+          "font-family": "var(--font-face-display)",
+          "font-size": "var(--type-poster-size)",
+          "line-height": "var(--type-poster-leading)",
+          "letter-spacing": "var(--type-poster-tracking)",
+          "font-weight": "600"
+        },
+        "@utility field-1": {
+          "background-color": "var(--field-1)",
+          "color": "var(--field-1-foreground)",
+          "--foreground": "var(--field-1-foreground)",
+          "--muted-foreground": "var(--field-1-foreground)",
+          "--card-foreground": "var(--field-1-foreground)",
+          "--primary": "var(--field-1-foreground)",
+          "--ring": "var(--field-1-foreground)",
+          "--border": "color-mix(in srgb, var(--field-1-foreground) 24%, transparent)",
+          "--primary-foreground": "var(--field-1)"
+        },
+        "@utility field-2": {
+          "background-color": "var(--field-2)",
+          "color": "var(--field-2-foreground)",
+          "--foreground": "var(--field-2-foreground)",
+          "--muted-foreground": "var(--field-2-foreground)",
+          "--card-foreground": "var(--field-2-foreground)",
+          "--primary": "var(--field-2-foreground)",
+          "--ring": "var(--field-2-foreground)",
+          "--border": "color-mix(in srgb, var(--field-2-foreground) 24%, transparent)",
+          "--primary-foreground": "var(--field-2)"
+        },
+        "@utility field-3": {
+          "background-color": "var(--field-3)",
+          "color": "var(--field-3-foreground)",
+          "--foreground": "var(--field-3-foreground)",
+          "--muted-foreground": "var(--field-3-foreground)",
+          "--card-foreground": "var(--field-3-foreground)",
+          "--primary": "var(--field-3-foreground)",
+          "--ring": "var(--field-3-foreground)",
+          "--border": "color-mix(in srgb, var(--field-3-foreground) 24%, transparent)",
+          "--primary-foreground": "var(--field-3)"
+        },
+        "@utility field-4": {
+          "background-color": "var(--field-4)",
+          "color": "var(--field-4-foreground)",
+          "--foreground": "var(--field-4-foreground)",
+          "--muted-foreground": "var(--field-4-foreground)",
+          "--card-foreground": "var(--field-4-foreground)",
+          "--primary": "var(--field-4-foreground)",
+          "--ring": "var(--field-4-foreground)",
+          "--border": "color-mix(in srgb, var(--field-4-foreground) 24%, transparent)",
+          "--primary-foreground": "var(--field-4)"
+        },
+        "@utility surface-plain": {
+          "--foreground": "var(--surface-foreground)",
+          "--muted-foreground": "var(--surface-muted-foreground)",
+          "--card-foreground": "var(--surface-card-foreground)",
+          "--primary": "var(--surface-primary)",
+          "--ring": "var(--surface-ring)",
+          "--primary-foreground": "var(--surface-primary-foreground)",
+          "--border": "var(--surface-border)"
+        },
+        "@utility glass": {
+          "position": "relative",
+          "isolation": "isolate",
+          "background-color": "var(--glass-tint)",
+          "-webkit-backdrop-filter": "blur(var(--glass-blur))",
+          "backdrop-filter": "blur(var(--glass-blur))",
+          "border": "var(--line-width) solid var(--glass-edge)",
+          "border-radius": "var(--radius)",
+          "box-shadow": "inset 0 1px 0 var(--glass-rim), var(--glass-shadow)",
+          "--foreground": "var(--surface-foreground)",
+          "--muted-foreground": "var(--surface-muted-foreground)",
+          "--card-foreground": "var(--surface-card-foreground)",
+          "--primary": "var(--surface-primary)",
+          "--ring": "var(--surface-ring)",
+          "--primary-foreground": "var(--surface-primary-foreground)",
+          "--border": "var(--surface-border)",
+          "color": "var(--foreground)",
+          "&::after": {
+            "content": "\"\"",
+            "position": "absolute",
+            "inset": "calc(-1 * var(--line-width))",
+            "padding": "var(--line-width)",
+            "border-radius": "inherit",
+            "pointer-events": "none",
+            "background": "radial-gradient(160px circle at var(--glass-x, 50%) var(--glass-y, 0%), var(--glass-light), transparent 70%)",
+            "-webkit-mask": "linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)",
+            "-webkit-mask-composite": "xor",
+            "mask": "linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0)",
+            "opacity": "var(--glass-lit, 0)",
+            "transition": "opacity var(--motion-reveal) var(--ease-standard)"
+          }
+        },
+        "@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)))": {
+          ".glass": {
+            "background-color": "var(--glass-fallback)",
+            "-webkit-backdrop-filter": "none",
+            "backdrop-filter": "none"
+          }
+        },
+        "@media (prefers-reduced-transparency: reduce)": {
+          ".glass": {
+            "background-color": "var(--glass-fallback)",
+            "-webkit-backdrop-filter": "none",
+            "backdrop-filter": "none"
+          }
+        },
+        "@media (forced-colors: active)": {
+          ".glass": {
+            "background-color": "var(--glass-fallback)",
+            "-webkit-backdrop-filter": "none",
+            "backdrop-filter": "none",
+            "border-color": "CanvasText"
+          }
+        },
+        "@utility busy-edge": {
+          "transition": "box-shadow var(--motion-busy) var(--ease-standard)",
+          "&[data-busy]": {
+            "box-shadow": "inset 0 0 0 calc(2 * var(--line-width)) var(--primary)"
+          }
+        },
         "@keyframes pluto-enter": {
           "from": {
             "opacity": "0"
@@ -386,8 +641,12 @@
         },
         "@keyframes pluto-mark-dock": {
           "from": {
-            "opacity": "0",
             "transform": "translate(calc(var(--mark-orbit) * var(--_ox)), calc(var(--mark-orbit) * var(--_oy))) scale(0.4)"
+          }
+        },
+        "@keyframes pluto-mark-fade": {
+          "from": {
+            "opacity": "0"
           }
         },
         "@layer base": {
@@ -438,7 +697,8 @@
       "files": [],
       "meta": {
         "since": "0.1.0",
-        "group": "foundation"
+        "group": "foundation",
+        "modes": ["productive", "expressive"]
       },
       "font": {
         "family": "'Geist Variable', system-ui, sans-serif",
@@ -459,7 +719,8 @@
       "files": [],
       "meta": {
         "since": "0.1.0",
-        "group": "foundation"
+        "group": "foundation",
+        "modes": ["productive", "expressive"]
       },
       "font": {
         "family": "'IBM Plex Sans Variable', system-ui, sans-serif",
@@ -480,7 +741,8 @@
       "files": [],
       "meta": {
         "since": "0.1.0",
-        "group": "foundation"
+        "group": "foundation",
+        "modes": ["productive", "expressive"]
       },
       "font": {
         "family": "'JetBrains Mono Variable', ui-monospace, monospace",
@@ -507,7 +769,8 @@
       ],
       "meta": {
         "since": "0.1.0",
-        "group": "foundation"
+        "group": "foundation",
+        "modes": ["productive", "expressive"]
       }
     },
     {
@@ -533,7 +796,8 @@
       ],
       "meta": {
         "since": "0.1.0",
-        "group": "foundation"
+        "group": "foundation",
+        "modes": ["productive"]
       }
     },
     {
@@ -563,7 +827,50 @@
       ],
       "meta": {
         "since": "0.5.0",
-        "group": "foundation"
+        "group": "foundation",
+        "modes": ["productive"]
+      }
+    },
+    {
+      "name": "read-token",
+      "type": "registry:lib",
+      "title": "Read token",
+      "description": "Reads the theme's runtime variables from script: a token's value, a duration in milliseconds, an easing curve, and a tween that animates a number over them.",
+      "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+      "registryDependencies": ["utils", "pluto-theme"],
+      "files": [
+        {
+          "path": "src/lib/registry/lib/read-token.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "meta": {
+        "since": "0.11.0",
+        "group": "foundation",
+        "modes": ["productive", "expressive"]
+      }
+    },
+    {
+      "name": "liquid-glass",
+      "type": "registry:ui",
+      "title": "Liquid glass",
+      "description": "A frosted panel for expressive pages: an edge lit where the pointer moves, and an opaque ground under reduced transparency or forced colours. Needs Svelte 5.29 or later, for attachments.",
+      "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+      "registryDependencies": ["pluto-theme", "read-token"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/liquid-glass/pointer-light.ts",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/liquid-glass/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.11.0",
+        "group": "foundation",
+        "modes": ["expressive"]
       }
     },
     {
@@ -586,6 +893,7 @@
       "meta": {
         "since": "0.2.0",
         "group": "actions",
+        "modes": ["productive", "expressive"],
         "stock": {
           "registry": "https://shadcn-svelte.com/registry/styles/maia",
           "item": "button",
@@ -631,6 +939,7 @@
       "meta": {
         "since": "0.2.0",
         "group": "actions",
+        "modes": ["productive"],
         "stock": {
           "registry": "https://shadcn-svelte.com/registry/styles/maia",
           "item": "tooltip",
@@ -664,6 +973,7 @@
       "meta": {
         "since": "0.2.0",
         "group": "actions",
+        "modes": ["productive"],
         "stock": {
           "registry": "https://shadcn-svelte.com/registry/styles/maia",
           "item": "kbd",
@@ -693,6 +1003,7 @@
       "meta": {
         "since": "0.4.0",
         "group": "actions",
+        "modes": ["productive"],
         "stock": {
           "registry": "https://shadcn-svelte.com/registry/styles/maia",
           "item": "toggle",
@@ -726,6 +1037,7 @@
       "meta": {
         "since": "0.4.0",
         "group": "actions",
+        "modes": ["productive"],
         "stock": {
           "registry": "https://shadcn-svelte.com/registry/styles/maia",
           "item": "toggle-group",
@@ -779,6 +1091,7 @@
       "meta": {
         "since": "0.2.0",
         "group": "surfaces",
+        "modes": ["productive"],
         "stock": {
           "registry": "https://shadcn-svelte.com/registry/styles/maia",
           "item": "card",
@@ -808,6 +1121,7 @@
       "meta": {
         "since": "0.2.0",
         "group": "surfaces",
+        "modes": ["productive"],
         "stock": {
           "registry": "https://shadcn-svelte.com/registry/styles/maia",
           "item": "separator",
@@ -873,6 +1187,7 @@
       "meta": {
         "since": "0.2.0",
         "group": "surfaces",
+        "modes": ["productive"],
         "stock": {
           "registry": "https://shadcn-svelte.com/registry/styles/maia",
           "item": "item",
@@ -930,6 +1245,7 @@
       "meta": {
         "since": "0.2.0",
         "group": "surfaces",
+        "modes": ["productive"],
         "stock": {
           "registry": "https://shadcn-svelte.com/registry/styles/maia",
           "item": "table",
@@ -971,6 +1287,7 @@
       "meta": {
         "since": "0.2.0",
         "group": "surfaces",
+        "modes": ["productive"],
         "stock": {
           "registry": "https://shadcn-svelte.com/registry/styles/maia",
           "item": "tabs",
@@ -1008,6 +1325,7 @@
       "meta": {
         "since": "0.2.0",
         "group": "surfaces",
+        "modes": ["productive"],
         "stock": {
           "registry": "https://shadcn-svelte.com/registry/styles/maia",
           "item": "collapsible",
@@ -1053,6 +1371,7 @@
       "meta": {
         "since": "0.2.0",
         "group": "surfaces",
+        "modes": ["productive"],
         "stock": {
           "registry": "https://shadcn-svelte.com/registry/styles/maia",
           "item": "avatar",
@@ -1110,6 +1429,7 @@
       "meta": {
         "since": "0.4.0",
         "group": "surfaces",
+        "modes": ["productive"],
         "stock": {
           "registry": "https://shadcn-svelte.com/registry/styles/maia",
           "item": "popover",
@@ -1151,6 +1471,7 @@
       "meta": {
         "since": "0.4.0",
         "group": "surfaces",
+        "modes": ["productive"],
         "stock": {
           "registry": "https://shadcn-svelte.com/registry/styles/maia",
           "item": "accordion",
@@ -1192,6 +1513,7 @@
       "meta": {
         "since": "0.2.0",
         "group": "feedback",
+        "modes": ["productive"],
         "stock": {
           "registry": "https://shadcn-svelte.com/registry/styles/maia",
           "item": "alert",
@@ -1265,6 +1587,7 @@
       "meta": {
         "since": "0.2.0",
         "group": "feedback",
+        "modes": ["productive"],
         "stock": {
           "registry": "https://shadcn-svelte.com/registry/styles/maia",
           "item": "alert-dialog",
@@ -1294,6 +1617,7 @@
       "meta": {
         "since": "0.2.0",
         "group": "feedback",
+        "modes": ["productive"],
         "stock": {
           "registry": "https://shadcn-svelte.com/registry/styles/maia",
           "item": "badge",
@@ -1343,6 +1667,7 @@
       "meta": {
         "since": "0.2.0",
         "group": "feedback",
+        "modes": ["productive"],
         "stock": {
           "registry": "https://shadcn-svelte.com/registry/styles/maia",
           "item": "empty",
@@ -1372,6 +1697,7 @@
       "meta": {
         "since": "0.2.0",
         "group": "feedback",
+        "modes": ["productive"],
         "stock": {
           "registry": "https://shadcn-svelte.com/registry/styles/maia",
           "item": "skeleton",
@@ -1401,6 +1727,7 @@
       "meta": {
         "since": "0.2.0",
         "group": "feedback",
+        "modes": ["productive"],
         "stock": {
           "registry": "https://shadcn-svelte.com/registry/styles/maia",
           "item": "spinner",
@@ -1429,7 +1756,8 @@
       ],
       "meta": {
         "since": "0.3.0",
-        "group": "feedback"
+        "group": "feedback",
+        "modes": ["productive"]
       }
     },
     {
@@ -1451,7 +1779,8 @@
       ],
       "meta": {
         "since": "0.3.0",
-        "group": "feedback"
+        "group": "feedback",
+        "modes": ["productive"]
       }
     },
     {
@@ -1474,6 +1803,7 @@
       "meta": {
         "since": "0.2.0",
         "group": "forms",
+        "modes": ["productive"],
         "stock": {
           "registry": "https://shadcn-svelte.com/registry/styles/maia",
           "item": "label",
@@ -1543,6 +1873,7 @@
       "meta": {
         "since": "0.2.0",
         "group": "forms",
+        "modes": ["productive"],
         "stock": {
           "registry": "https://shadcn-svelte.com/registry/styles/maia",
           "item": "field",
@@ -1572,6 +1903,7 @@
       "meta": {
         "since": "0.2.0",
         "group": "forms",
+        "modes": ["productive"],
         "stock": {
           "registry": "https://shadcn-svelte.com/registry/styles/maia",
           "item": "input",
@@ -1601,6 +1933,7 @@
       "meta": {
         "since": "0.2.0",
         "group": "forms",
+        "modes": ["productive"],
         "stock": {
           "registry": "https://shadcn-svelte.com/registry/styles/maia",
           "item": "textarea",
@@ -1660,6 +1993,7 @@
       "meta": {
         "since": "0.2.0",
         "group": "forms",
+        "modes": ["productive"],
         "stock": {
           "registry": "https://shadcn-svelte.com/registry/styles/maia",
           "item": "input-group",
@@ -1697,6 +2031,7 @@
       "meta": {
         "since": "0.2.0",
         "group": "forms",
+        "modes": ["productive"],
         "stock": {
           "registry": "https://shadcn-svelte.com/registry/styles/maia",
           "item": "native-select",
@@ -1726,6 +2061,7 @@
       "meta": {
         "since": "0.2.0",
         "group": "forms",
+        "modes": ["productive"],
         "stock": {
           "registry": "https://shadcn-svelte.com/registry/styles/maia",
           "item": "checkbox",
@@ -1759,6 +2095,7 @@
       "meta": {
         "since": "0.2.0",
         "group": "forms",
+        "modes": ["productive"],
         "stock": {
           "registry": "https://shadcn-svelte.com/registry/styles/maia",
           "item": "radio-group",
@@ -1788,6 +2125,7 @@
       "meta": {
         "since": "0.2.0",
         "group": "forms",
+        "modes": ["productive"],
         "stock": {
           "registry": "https://shadcn-svelte.com/registry/styles/maia",
           "item": "switch",
@@ -1829,6 +2167,7 @@
       "meta": {
         "since": "0.2.0",
         "group": "forms",
+        "modes": ["productive"],
         "stock": {
           "registry": "https://shadcn-svelte.com/registry/styles/maia",
           "item": "input-otp",
@@ -1892,6 +2231,7 @@
       "meta": {
         "since": "0.4.0",
         "group": "code",
+        "modes": ["productive"],
         "stock": {
           "registry": "https://shadcn-svelte.com/registry/styles/maia",
           "item": "code-block",
@@ -1928,7 +2268,8 @@
       ],
       "meta": {
         "since": "0.4.0",
-        "group": "code"
+        "group": "code",
+        "modes": ["productive"]
       }
     },
     {
@@ -1947,6 +2288,7 @@
       "meta": {
         "since": "0.4.0",
         "group": "code",
+        "modes": ["productive", "expressive"],
         "stock": {
           "registry": "https://shadcn-svelte.com/registry/styles/maia",
           "item": "highlighter",
@@ -1972,6 +2314,7 @@
       "meta": {
         "since": "0.4.0",
         "group": "code",
+        "modes": ["productive", "expressive"],
         "stock": {
           "registry": "https://shadcn-svelte.com/registry/styles/maia",
           "item": "use-highlighted-code",
@@ -2001,7 +2344,8 @@
       ],
       "meta": {
         "since": "0.7.0",
-        "group": "code"
+        "group": "code",
+        "modes": ["productive", "expressive"]
       }
     },
     {
@@ -2032,6 +2376,7 @@
       "meta": {
         "since": "0.4.0",
         "group": "data",
+        "modes": ["productive"],
         "stock": {
           "registry": "https://shadcn-svelte.com/registry/styles/maia",
           "item": "chart",
@@ -2060,7 +2405,8 @@
       ],
       "meta": {
         "since": "0.4.0",
-        "group": "data"
+        "group": "data",
+        "modes": ["productive"]
       }
     },
     {
@@ -2143,6 +2489,7 @@
       "meta": {
         "since": "0.5.0",
         "group": "navigation",
+        "modes": ["productive"],
         "stock": {
           "registry": "https://shadcn-svelte.com/registry/styles/maia",
           "item": "dropdown-menu",
@@ -2208,6 +2555,7 @@
       "meta": {
         "since": "0.5.0",
         "group": "navigation",
+        "modes": ["productive"],
         "stock": {
           "registry": "https://shadcn-svelte.com/registry/styles/maia",
           "item": "sheet",
@@ -2273,6 +2621,7 @@
       "meta": {
         "since": "0.5.0",
         "group": "navigation",
+        "modes": ["productive"],
         "stock": {
           "registry": "https://shadcn-svelte.com/registry/styles/maia",
           "item": "dialog",
@@ -2326,6 +2675,7 @@
       "meta": {
         "since": "0.5.0",
         "group": "navigation",
+        "modes": ["productive"],
         "stock": {
           "registry": "https://shadcn-svelte.com/registry/styles/maia",
           "item": "breadcrumb",
@@ -2458,6 +2808,7 @@
       "meta": {
         "since": "0.5.0",
         "group": "navigation",
+        "modes": ["productive"],
         "stock": {
           "registry": "https://shadcn-svelte.com/registry/styles/maia",
           "item": "sidebar",
@@ -2483,6 +2834,7 @@
       "meta": {
         "since": "0.5.0",
         "group": "navigation",
+        "modes": ["productive", "expressive"],
         "stock": {
           "registry": "https://shadcn-svelte.com/registry/styles/maia",
           "item": "is-mobile",
@@ -2515,7 +2867,8 @@
       ],
       "meta": {
         "since": "0.5.0",
-        "group": "chat"
+        "group": "chat",
+        "modes": ["productive"]
       }
     },
     {
@@ -2558,6 +2911,7 @@
       "meta": {
         "since": "0.5.0",
         "group": "chat",
+        "modes": ["productive"],
         "stock": {
           "registry": "https://shadcn-svelte.com/registry/styles/maia",
           "item": "message",
@@ -2595,6 +2949,7 @@
       "meta": {
         "since": "0.5.0",
         "group": "chat",
+        "modes": ["productive"],
         "stock": {
           "registry": "https://shadcn-svelte.com/registry/styles/maia",
           "item": "marker",
@@ -2632,7 +2987,241 @@
       ],
       "meta": {
         "since": "0.5.0",
-        "group": "chat"
+        "group": "chat",
+        "modes": ["productive"]
+      }
+    },
+    {
+      "name": "stage",
+      "type": "registry:ui",
+      "title": "Stage",
+      "description": "A full-bleed expressive section on the canvas or one of the four colour fields, following the page's theme.",
+      "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+      "registryDependencies": ["utils", "pluto-theme"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/stage/stage.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/stage/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.11.0",
+        "group": "compositions",
+        "modes": ["expressive"]
+      }
+    },
+    {
+      "name": "stage-card",
+      "type": "registry:ui",
+      "title": "Stage card",
+      "description": "Code on a flat card for a stage, with a copy button and, given a run function, a Run button whose output and outcome the card shows and says.",
+      "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+      "registryDependencies": [
+        "utils",
+        "pluto-theme",
+        "code-block",
+        "button",
+        "status"
+      ],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/stage-card/stage-card.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/stage-card/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.11.0",
+        "group": "compositions",
+        "modes": ["expressive"]
+      }
+    },
+    {
+      "name": "marketing-bar",
+      "type": "registry:ui",
+      "title": "Marketing bar",
+      "description": "A product site's sticky top bar, a floating glass panel: a skip link, the logo, named links and actions, folding into a sheet on a phone.",
+      "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+      "registryDependencies": [
+        "utils",
+        "pluto-theme",
+        "button",
+        "sheet",
+        "liquid-glass"
+      ],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/marketing-bar/marketing-bar.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/marketing-bar/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.11.0",
+        "group": "compositions",
+        "modes": ["expressive"]
+      }
+    },
+    {
+      "name": "stage-hero",
+      "type": "registry:ui",
+      "title": "Stage hero",
+      "description": "A page's first screen on a stage: an eyebrow, the display heading, a sentence and actions on glass, an object on a colour field, and a strip along the bottom.",
+      "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+      "registryDependencies": [
+        "utils",
+        "pluto-theme",
+        "button",
+        "liquid-glass"
+      ],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/stage-hero/stage-hero.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/stage-hero/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.11.0",
+        "group": "compositions",
+        "modes": ["expressive"]
+      }
+    },
+    {
+      "name": "proof-band",
+      "type": "registry:ui",
+      "title": "Proof band",
+      "description": "Two to four numbers in the proof step, each with what it counts, that count up once when they first come into view.",
+      "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+      "registryDependencies": ["utils", "pluto-theme", "read-token"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/proof-band/proof-band.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/proof-band/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.11.0",
+        "group": "compositions",
+        "modes": ["expressive"]
+      }
+    },
+    {
+      "name": "live-console",
+      "type": "registry:ui",
+      "title": "Live console",
+      "description": "A working console shown on a stage: example commands in tabs, a Run button, meters that fill to the result, and its lines.",
+      "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+      "registryDependencies": [
+        "utils",
+        "pluto-theme",
+        "tabs",
+        "code-block",
+        "button",
+        "meter",
+        "status",
+        "read-token"
+      ],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/live-console/live-console.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/live-console/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.11.0",
+        "group": "compositions",
+        "modes": ["expressive"]
+      }
+    },
+    {
+      "name": "name-strip",
+      "type": "registry:ui",
+      "title": "Name strip",
+      "description": "A named list of names in mono that wraps, for the bottom of a hero.",
+      "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+      "registryDependencies": ["utils", "pluto-theme"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/name-strip/name-strip.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/name-strip/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.11.0",
+        "group": "compositions",
+        "modes": ["expressive"]
+      }
+    },
+    {
+      "name": "cta-band",
+      "type": "registry:ui",
+      "title": "Call to action band",
+      "description": "A closing section: a heading in the section step, an optional sentence and one or two actions.",
+      "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+      "registryDependencies": ["utils", "pluto-theme", "button"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/cta-band/cta-band.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/cta-band/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.11.0",
+        "group": "compositions",
+        "modes": ["expressive"]
+      }
+    },
+    {
+      "name": "marketing-footer",
+      "type": "registry:ui",
+      "title": "Marketing footer",
+      "description": "A product site's footer: the logo, groups of links each a named nav, and the build facts the app shell's footer shows.",
+      "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+      "registryDependencies": ["utils", "pluto-theme"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/marketing-footer/marketing-footer.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/marketing-footer/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.11.0",
+        "group": "compositions",
+        "modes": ["expressive"]
       }
     },
     {
@@ -2658,7 +3247,8 @@
       ],
       "meta": {
         "since": "0.3.0",
-        "group": "blocks"
+        "group": "blocks",
+        "modes": ["productive"]
       }
     },
     {
@@ -2690,7 +3280,8 @@
       ],
       "meta": {
         "since": "0.3.0",
-        "group": "blocks"
+        "group": "blocks",
+        "modes": ["productive"]
       }
     },
     {
@@ -2727,7 +3318,8 @@
       ],
       "meta": {
         "since": "0.3.0",
-        "group": "blocks"
+        "group": "blocks",
+        "modes": ["productive"]
       }
     },
     {
@@ -2768,7 +3360,8 @@
       ],
       "meta": {
         "since": "0.3.0",
-        "group": "blocks"
+        "group": "blocks",
+        "modes": ["productive"]
       }
     },
     {
@@ -2806,7 +3399,8 @@
       ],
       "meta": {
         "since": "0.3.0",
-        "group": "blocks"
+        "group": "blocks",
+        "modes": ["productive"]
       }
     },
     {
@@ -2868,7 +3462,8 @@
       ],
       "meta": {
         "since": "0.6.0",
-        "group": "blocks"
+        "group": "blocks",
+        "modes": ["productive"]
       }
     },
     {
@@ -2913,7 +3508,42 @@
       ],
       "meta": {
         "since": "0.6.0",
-        "group": "blocks"
+        "group": "blocks",
+        "modes": ["productive"]
+      }
+    },
+    {
+      "name": "product-home",
+      "type": "registry:block",
+      "title": "Product home",
+      "description": "A product's home page: the glass bar, a stage hero with two code cards on a colour field and a strip, a proof band, a live console on a stage, a call to action and the footer.",
+      "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+      "registryDependencies": [
+        "utils",
+        "pluto-theme",
+        "stage",
+        "stage-card",
+        "marketing-bar",
+        "stage-hero",
+        "proof-band",
+        "live-console",
+        "name-strip",
+        "cta-band",
+        "marketing-footer",
+        "four-dot",
+        "liquid-glass"
+      ],
+      "files": [
+        {
+          "path": "src/lib/registry/blocks/product-home/+page.svelte",
+          "type": "registry:page",
+          "target": "product-home/+page.svelte"
+        }
+      ],
+      "meta": {
+        "since": "0.11.0",
+        "group": "blocks",
+        "modes": ["expressive"]
       }
     }
   ]

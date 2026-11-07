@@ -457,9 +457,11 @@ test.describe("the languages", () => {
 test.describe("the ink surface", () => {
   const PAGE = "/items/pluto-theme/";
   const surface = (page: Page) => page.getByTestId("keyboard-fixture");
-  const INK = "rgb(20, 22, 28)";
-  const INK_RAISED = "rgb(30, 33, 41)";
-  const INK_WASH = "rgb(43, 45, 50)";
+  // 011 decisions 2 and 3: the dark ground is graphite, the raised step and
+  // the wash are warm.
+  const INK = "rgb(22, 20, 15)";
+  const INK_RAISED = "rgb(34, 31, 25)";
+  const INK_WASH = "rgb(44, 40, 33)";
   const PAPER_RAISED = "rgb(255, 255, 255)";
 
   test("S1. the surface's grounds, its overlays' placement and theme", async ({
@@ -490,7 +492,7 @@ test.describe("the ink surface", () => {
     ).toBe(INK_WASH);
     expect(
       await computed(s.locator("span.text-code-keyword").first(), "color"),
-    ).toBe("rgb(122, 155, 255)");
+    ).toBe("rgb(147, 176, 255)");
     expect(
       await computed(s.locator('[data-slot="tabs-list"]'), "background-color"),
     ).toBe(INK_WASH);

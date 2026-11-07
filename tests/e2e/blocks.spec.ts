@@ -15,6 +15,7 @@ import {
   cssVar,
   hexToRgb,
   PAGES_003,
+  PRODUCT_HOME_STOPS_NARROW,
   open,
   openView,
   VIEW_STOPS,
@@ -569,8 +570,8 @@ async function load(page: Page, path: string): Promise<void> {
 }
 
 test.describe("all blocks", () => {
-  // 30 views (the shell's 6 and the chat's 6 among them) and 003's 7 item pages: 37.
-  test("24. no infinite animation outside a spinner on the 30 views and 003's 7 item pages", async ({
+  // 31 views (the shell's 6, the chat's 6 and 010's product home among them) and 003's 7 item pages: 38.
+  test("24. no infinite animation outside a spinner on the 31 views and 003's 7 item pages", async ({
     page,
   }) => {
     const loops: string[] = [];
@@ -587,11 +588,11 @@ test.describe("all blocks", () => {
       );
       for (const f of found) loops.push(`${path}: ${f}`);
     }
-    expect(PAGES_24).toHaveLength(37);
+    expect(PAGES_24).toHaveLength(38);
     expect(loops).toEqual([]);
   });
 
-  test("25. reflow: no horizontal scroll at 320 px on 35 of 35 pages", async ({
+  test("25. reflow: no horizontal scroll at 320 px on 38 of 38 pages", async ({
     page,
   }) => {
     await page.setViewportSize({ width: 320, height: 900 });
@@ -606,14 +607,19 @@ test.describe("all blocks", () => {
     expect(wide).toEqual([]);
   });
 
-  test("26. targets: each of the 168 view stops is at least 24 × 24 px at 360", async ({
+  // 010: below md the product home's bar folds its links and secondary
+  // action into the sheet, so at 360 it holds its narrow list: 186.
+  test("26. targets: each of the 186 view stops at 360 is at least 24 × 24 px", async ({
     page,
   }) => {
     await page.setViewportSize({ width: 360, height: 900 });
     const small: string[] = [];
     let counted = 0;
     for (const view of VIEWS) {
-      const stops = VIEW_STOPS[view.path] ?? [];
+      const stops =
+        view.path === "/view/product-home/"
+          ? PRODUCT_HOME_STOPS_NARROW
+          : (VIEW_STOPS[view.path] ?? []);
       await openView(page, view.path);
       for (let i = 0; i < stops.length; i++) {
         await page.keyboard.press("Tab");
@@ -627,7 +633,7 @@ test.describe("all blocks", () => {
       }
     }
     expect(small).toEqual([]);
-    expect(counted).toBe(168);
+    expect(counted).toBe(186);
   });
 
   test("27. rings are not clipped: 40 of 40 sign-in and sign-up stops at 360", async ({
@@ -909,7 +915,7 @@ test.describe("the app shell", () => {
   });
 
   for (const width of [360, 1280] as const) {
-    test(`A2. at ${width}: the header row is 64 px; its bottom edge is the hairline, then the light below it in light and alone in dark`, async ({
+    test(`A2. at ${width}: the header row is 64 px; its bottom edge is the hairline alone, in both themes (011 decision 4)`, async ({
       page,
     }, info) => {
       await page.setViewportSize({ width, height: 900 });
@@ -932,18 +938,16 @@ test.describe("the app shell", () => {
           .map((c) => c.trim())
           .join(", "),
       ).toBe(line.replace(/rgb\(|\)/g, ""));
+      // 011 decision 4 (I5): the groove's light is clear in both themes.
       await expect(header).toHaveCSS(
         "box-shadow",
-        `${hexToRgb(await cssVar(page, "--groove-light"))
-          .replace("rgb(", info.project.name === "dark" ? "rgba(" : "rgb(")
-          .replace(
-            ")",
-            info.project.name === "dark" ? ", 0)" : ")",
-          )} 0px 1px 0px 0px`,
+        "rgba(0, 0, 0, 0) 0px 1px 0px 0px",
       );
       // The pixels: the row under the header's box is the hairline over the
-      // ground (#dfdfde light, #2a2c32 dark: the sidebar memo's seam), then
-      // the light (#ffffff) in light, the ground again in dark.
+      // ground, then the ground again, in both themes. The hairline is ink at
+      // 10% on the warm canvas and paper at 10% on graphite, as Chromium
+      // paints them (EXECUTED: one step below the arithmetic's #dcdad3 and
+      // #2c2a25 in some channels).
       // @ts-expect-error playwright-core ships no types for its bundled PNG.
       const bundle = await import("playwright-core/lib/utilsBundle");
       const PNG = bundle.PNG as {
@@ -962,12 +966,14 @@ test.describe("the app shell", () => {
         [png.data[i * 4], png.data[i * 4 + 1], png.data[i * 4 + 2]]
           .map((c: number) => c.toString(16).padStart(2, "0"))
           .join("");
-      const ground = info.project.name === "dark" ? "#14161c" : "#f7f7f4";
-      expect([px(0), px(1), px(2), px(3)]).toEqual(
-        info.project.name === "dark"
-          ? [ground, "#2a2c32", ground, ground]
-          : [ground, "#dfdfde", "#ffffff", ground],
-      );
+      const dark = info.project.name === "dark";
+      const ground = dark ? "#16140f" : "#f3f0e8";
+      expect([px(0), px(1), px(2), px(3)]).toEqual([
+        ground,
+        dark ? "#2c2925" : "#dbd9d2",
+        ground,
+        ground,
+      ]);
     });
   }
 

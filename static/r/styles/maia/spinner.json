@@ -15,6 +15,9 @@
 	"meta": {
 		"since": "0.2.0",
 		"group": "feedback",
+		"modes": [
+			"productive"
+		],
 		"stock": {
 			"registry": "https://shadcn-svelte.com/registry/styles/maia",
 			"item": "spinner",
