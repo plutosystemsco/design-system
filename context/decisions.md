@@ -2,6 +2,14 @@
 
 The owner's answers and decisions, newest first. A decision that changes the constitution is also recorded in its Status line. "The design book" and "v2" both mean the Pluto Systems design book, version 2, the source of the brand's rules; a section of it is cited as "§03".
 
+### The code ground in light mode is the owner's to change, and code on a white card is for this system to work out (2026-11-14)
+
+Raised from the vfs docs site, which installs this system at `v0.11.0`. The owner, on seeing its code blocks: "we need to update design system to have code blocks in light mode be white or lighter than the background, not darker." The research is `research/2026-11-14-a-white-code-ground-in-light-mode.md`. Its questions were put to the owner with options and a recommendation.
+
+- **The light-mode code ground, and whether dark mode follows it.** Asked whether to use white with dark mode unchanged, the `card` colour in both themes, a new tint, or no change, **the owner:** "I'll fix this in the design system". The owner makes this change himself. Nothing is built from the memo's recommendation until he does.
+- **Code on a white card, in `live-console` and `stage-card`.** Asked whether those blocks keep today's `muted` inset, take the page colour, sit flush with a hairline, or sit flush with none, **the owner:** "please mark this as something the design system needs to figure out". It is not decided. It waits as a placeholder memo, `research/2026-11-14-code-on-a-white-card-once-the-code-ground-is-white.md`, and the specification that changes the code ground waits on it.
+- **A second need from the same site** is recorded beside it and has not been asked of the owner: with scripts turned off, a reader whose system is dark gets the light theme, because the `theme` item sets the `dark` class by script alone. It waits as `research/2026-11-14-the-theme-with-scripts-turned-off.md`.
+
 ### Frost only: the lens is removed (2026-11-07)
 
 After the bar lost its lens, the scripted scroll in headless Chromium still ran 13 of 100 frames over 20 ms (worst 33 to 50 ms), all while the hero's lensed panel was on screen; without the lens, none (EXECUTED by the `012` builder). Asked whether to keep the lens and verify on a real GPU, drop it, or run it only when the page is still, **the owner:** "Frost only, no lens."
