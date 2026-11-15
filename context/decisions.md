@@ -2,6 +2,16 @@
 
 The owner's answers and decisions, newest first. A decision that changes the constitution is also recorded in its Status line. "The design book" and "v2" both mean the Pluto Systems design book, version 2, the source of the brand's rules; a section of it is cited as "§03".
 
+### Four calls from the site-polish synthesis (2026-11-15)
+
+Asked after `research/2026-11-15-site-polish-synthesis.md`. **The owner** took the recommended option on all four:
+- **The `error-summary` fix lands before the tag,** as its own small specification (`019`) after `018`. Two defects, shipped since 0.3.0: `role="alert"` sits on the item's root, so the whole box is announced; and `focusField` focuses the input without bringing its label into view, so the label can sit under a sticky bar. Installed apps get the fix in 0.12.0, with a changelog interface line.
+- **Each component page shows one "Changed in 0.x.y" line,** generated from the changelog and linking to its entry. This amends the 2026-11-14 ruling of "a changelog page only".
+- **Each page has one "Suggest a change" link.** It opens a new GitHub issue on `plutosystemsco/design-system` with the page's address filled in. No per-component discussions.
+- **The accessibility status is its own specification after the tag,** first in 0.13.0, with the high-contrast scheme and a forced-colours pass, since all three test the same things. It must solve the ordering: the site builds before the browser tests run.
+
+The order before the tag is now: the follow-up commit, `018`, `019`, the tag.
+
 ### Accessibility status, a high-contrast scheme, and scoped schemes (2026-11-15)
 
 Three calls left open after the prior-art memos of 2026-11-15.
@@ -18,6 +28,15 @@ Three calls left open after the prior-art memos of 2026-11-15.
 - An attribute on any element sets `color-scheme`, so any subtree can be light or dark.
 - Registry items stop using Tailwind's `dark:` variant; a test forbids it. Every difference between schemes lives in the tokens.
 - High contrast is a second axis on the same attribute pattern, since `light-dark()` takes only two values.
+
+The memo landed the same day. It confirms the recommendation in Chromium, Firefox and WebKit, and corrects it in five places:
+- **Contrast is set on `<html>` only,** never on a subtree. It is a reader's setting, and a subtree that redeclares tokens brings back the trap `light-dark()` removes.
+- **The scope rule also sets `color` and `background-color`,** in `@layer base`, because inherited `color` does not follow the scope.
+- **Portals still need routing,** since `light-dark()` does nothing for an overlay mounted under `<body>`.
+- **`readToken` must return a resolved colour,** which is an interface change.
+- **Browsers without `light-dark()` get a generated fallback,** and `dark:` is banned only in `src/lib/registry/`, not on the site.
+
+Its open questions (browser floor, how long `.dark` stays an alias, the high-contrast colours, the non-text target) go to the owner when that specification starts in 0.13.0.
 
 ### No status mark, and items gain prop doc comments (2026-11-15)
 
