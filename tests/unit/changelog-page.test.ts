@@ -93,7 +93,10 @@ describe("018: a changelog to scan", () => {
         expect(r.date).toEqual({ text: "Unreleased", datetime: null });
       }
     }
-    expect(view.releases[0].date.text).toBe("Unreleased");
+    expect(view.releases[0].date).toEqual({
+      text: "2026-11-15",
+      datetime: "2026-11-15",
+    });
     expect(view.releases[1].date).toEqual({
       text: "2026-11-07",
       datetime: "2026-11-07",

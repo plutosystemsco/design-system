@@ -1399,9 +1399,9 @@ describe("CHANGELOG.md", () => {
   // 011 decision 14, criterion 14: 0.9.0 and 0.10.0 were never released;
   // their entries fold into one 0.11.0 entry, which names decision 12's five
   // visible changes, and what 009, 010 and 011 add.
-  // 014 decisions 12 and 13: 0.12.0, "unreleased" until the tag, is the
+  // 014 decisions 12 and 13: 0.12.0, dated at its tag (2026-11-15), is the
   // newest; 0.11.0 follows it.
-  test("has no 0.9.0 or 0.10.0 entry; 0.12.0 is the newest, unreleased, and 0.11.0 is next", () => {
+  test("has no 0.9.0 or 0.10.0 entry; 0.12.0 is the newest, released, and 0.11.0 is next", () => {
     const text = readFileSync("CHANGELOG.md", "utf8");
     expect(text).not.toMatch(/^## 0\.9\.0\b/m);
     expect(text).not.toMatch(/^## 0\.10\.0\b/m);
@@ -1409,7 +1409,7 @@ describe("CHANGELOG.md", () => {
       (m) => m[1],
     );
     expect(versions.slice(0, 2)).toEqual(["0.12.0", "0.11.0"]);
-    expect(text).toMatch(/^## 0\.12\.0 — unreleased$/m);
+    expect(text).toMatch(/^## 0\.12\.0 — 2026-11-15$/m);
   });
 
   // 014 criterion 13: one 0.12.0 entry, shared with 013; one bullet per item,
@@ -1753,11 +1753,17 @@ describe("014: the white code ground", () => {
     expect(offenders).toEqual([]);
   });
 
-  test("package.json reads 0.12.0; the registry build has written static/v0.12.0/; no v0.12.0 tag exists", () => {
+  // The tag is made at release (2026-11-15): when it exists, the tagged
+  // commit's package.json reads 0.12.0 and its changelog dates 0.12.0.
+  test("package.json reads 0.12.0; the registry build has written static/v0.12.0/; a v0.12.0 tag, if made, is a dated 0.12.0", () => {
     expect(JSON.parse(read("package.json")).version).toBe("0.12.0");
     expect(existsSync("static/v0.12.0/r/styles/maia/index.json")).toBe(true);
     const tags = execSync("git tag --list 'v0.12.0'", { encoding: "utf8" });
-    expect(tags.trim()).toBe("");
+    if (tags.trim() === "") return;
+    const show = (f: string) =>
+      execSync(`git show v0.12.0:${f}`, { encoding: "utf8" });
+    expect(JSON.parse(show("package.json")).version).toBe("0.12.0");
+    expect(show("CHANGELOG.md")).toMatch(/^## 0\.12\.0 — \d{4}-\d{2}-\d{2}$/m);
   });
 
   test("registry.json's code-block description names the code ground and the hairline, not the muted inset", () => {
