@@ -153,7 +153,13 @@ async function walk(page: Page, expected: string[]): Promise<void> {
         el.getAttribute("aria-label") ??
         (labelled ? document.getElementById(labelled)?.textContent : null) ??
         (el as HTMLInputElement).labels?.[0]?.textContent ??
-        el.textContent ??
+        // The name as read: a <noscript> holds markup, not text, while
+        // scripts run (018's index tiles).
+        (() => {
+          const c = el.cloneNode(true) as HTMLElement;
+          c.querySelectorAll("noscript").forEach((n) => n.remove());
+          return c.textContent;
+        })() ??
         ""
       )
         .trim()
@@ -269,7 +275,9 @@ test("on the four-dot page, Tab reaches the lockup link, with the same outline",
   await open(page, componentPath("four-dot"));
   const colour = await ring(page);
   let reached = false;
-  for (let i = 0; i < 20 && !reached; i++) {
+  // From main's start: the left nav before it holds 76 stops (018).
+  await page.locator("#main").focus();
+  for (let i = 0; i < 40 && !reached; i++) {
     await page.keyboard.press("Tab");
     reached = await page.evaluate(
       () =>
@@ -942,7 +950,8 @@ test.describe("behaviours", () => {
       expect(
         await trigger.evaluate((el) => el.getBoundingClientRect().top),
       ).toBeGreaterThan(900);
-      for (let i = 0; i < 30; i++) {
+      // The left nav's filter and 76 links come first (018).
+      for (let i = 0; i < 120; i++) {
         await page.keyboard.press("Tab");
         const inside = await page.evaluate(
           () =>

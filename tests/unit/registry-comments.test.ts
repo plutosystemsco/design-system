@@ -247,8 +247,25 @@ describe("the 0.12.0 changelog entry", () => {
 
   test("it holds the site's paragraph: its name, its /r/ path or GitHub, and the Markdown twins", () => {
     const para =
-      entry.split("\n\n").find((p) => p.includes("Pluto Systems design")) ?? "";
+      entry.split("\n\n").find((p) => p.includes("The design site")) ?? "";
     for (const words of ["/v0.12.0/r", "GitHub", "Markdown twin", "llms.txt"])
       expect(para, words).toContain(words);
+  });
+});
+
+// 018 decision 17: the name changes, and the code names do not.
+describe("018: the Kuiper Design System", () => {
+  test("the 0.12.0 entry names the system, and says its code names wait for 0.13.0", () => {
+    const log = readFileSync(path.join(ROOT, "CHANGELOG.md"), "utf8");
+    const entry = log.slice(log.indexOf("## 0.12.0"), log.indexOf("## 0.11.0"));
+    const line =
+      entry.split("\n\n").find((p) => p.includes("Kuiper Design System")) ?? "";
+    for (const words of [
+      "`pluto-theme`",
+      "`pluto:`",
+      "0.13.0",
+      "migration guide",
+    ])
+      expect(line, words).toContain(words);
   });
 });

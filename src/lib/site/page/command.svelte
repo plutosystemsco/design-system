@@ -38,6 +38,6 @@
     role="region"
     aria-label={label}
     data-language="bash"
-    class="pe-12 wrap-anywhere"
+    class="pe-12 wrap-anywhere!"
   />
 </CodeBlock.Root>

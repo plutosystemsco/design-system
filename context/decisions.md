@@ -2,11 +2,47 @@
 
 The owner's answers and decisions, newest first. A decision that changes the constitution is also recorded in its Status line. "The design book" and "v2" both mean the Pluto Systems design book, version 2, the source of the brand's rules; a section of it is cited as "§03".
 
+### The Kuiper Design System (2026-11-15)
+
+**The owner:** "Also, I was to call this the Kuiper Design System." Asked what the name covers, the lockup and the address:
+- **The name now, the code names in 0.13.0.** From 0.12.0 the system is called the Kuiper Design System: the site's title, the README, the changelog, `llms.txt`, the constitution (§1, Status line amended) and `AGENTS.md`. Code names that installed apps depend on stay `pluto` in 0.12.0: the registry `pluto`, `pluto-theme`, the `pluto:` context keys, `tokens/pluto.tokens.json`. They are renamed in 0.13.0 by their own specification, with a migration guide for installed apps.
+- **The lockup waits for mock-ups.** "Let's mock some ideas up later and I'll approve." The header keeps today's lockup in 0.12.0. Lockup ideas for the Kuiper name are drawn later and put to the owner.
+- **The address stays** `pluto-systems-design.claygendron.workers.dev`.
+
+Pluto Systems remains the company and its brand: the four-dot mark, the colours and the type. Kuiper is the design system's name.
+
+**The home hero.** **The owner:** "And I want the hero to be Design with Kuiper". The home page's headline becomes "Design / with / Kuiper" on its three poster lines, replacing "Build / with / Pluto.". **The owner:** "no period after Kuiper". It lands in `018`.
+
+### `018` checkpoint 2, the design lead's rulings (2026-11-15)
+
+Seen: the Components index at 1440, 768 and 390 in both themes, ten thumbnails beside their pages, search for "dia" and "modal", Foundations Type and Colour, and the forced-colours shots.
+- **The thumbnails are redrawn to fill their tile.** Today most show a small cluster in the top-left of an empty stage: Dialog is two small buttons on paper, and the font items are one line of tiny text.
+  - Crop each picture to its content's box, add even padding, centre it, and scale it up to fill the tile (at most 2×).
+  - No text in a tile is smaller than about 9 px at its displayed size.
+  - An item may name a better state in `example-order.ts`. Overlays (dialog, alert dialog, sheet, popover, dropdown, select, tooltip, hover card, command and the like) are photographed open. Font items show a large "Aa" and a short line in their own face.
+- **The index's first row loads without script.** Its pictures are chosen by the theme class in CSS, so the right scheme's picture loads at once; the rest stay lazy. The LCP budget is set from the new measurement, not raised to 3.4 s.
+- **On landings, the bar turns opaque once the band has scrolled out of view.** On the index, content showed through the glass bar behind the lockup. The glass stays over the band.
+- **The "select" alias is dropped,** since it starts a word of its own target, which the spec's rule forbids.
+- **The lockup link keeps "pluto, Kuiper Design System"** until the owner approves a Kuiper lockup.
+- The other calls in the builder's report stand: `example-order.ts`, stage photographs at 1000 px, `text-2xl` samples, `specimens.spec.ts`, Popover and `--scrim` for "dia", and 017's ladder figure on Type.
+
+### `018` checkpoint 1, the design lead's rulings (2026-11-15)
+
+Seen at 1440 and 390 in both themes (Button, Dialog, Brand Colour, Foundations Type, Start install, changelog, the sheet open):
+- **The left nav and the component-first page are accepted as built.** Button's first example starts at 419 px at 1440 and 487 px at 390.
+- **Brand bands beside the nav (criterion 22) are accepted as built:** each band runs from the content column's start edge to the viewport's end and still reads bold.
+- **Button's budget is 380 kB** (option a: the measured 378 kB median plus 2 kB). A server-only nav is not available per component in Svelte 5, and an HTML string would ride in the page data as well as the markup.
+- **The page tools are one treatment.** "Copy page" (a button) and "View as Markdown" (a link) read as two different things today, one black and one blue. Both become quiet controls of the same height, weight and colour, each with a leading icon. "Copy page" says "Copied" in its status region.
+- **The components filter gets a leading search icon and a placeholder,** so an empty box doesn't read as a stray field.
+- **On the phone, "On this page" uses the site's own chevron,** not the browser's default triangle, matching the sheet.
+
 ### Four calls from the site-polish synthesis (2026-11-15)
 
 Asked after `research/2026-11-15-site-polish-synthesis.md`. **The owner** took the recommended option on all four:
 - **The `error-summary` fix lands before the tag,** as its own small specification (`019`) after `018`. Two defects, shipped since 0.3.0: `role="alert"` sits on the item's root, so the whole box is announced; and `focusField` focuses the input without bringing its label into view, so the label can sit under a sticky bar. Installed apps get the fix in 0.12.0, with a changelog interface line.
 - **Each component page shows one "Changed in 0.x.y" line,** generated from the changelog and linking to its entry. This amends the 2026-11-14 ruling of "a changelog page only".
+  - Refined after `018`'s spec review (finding 4): on 52 of 75 items "Changed in" would repeat "Since", since they have not changed since they arrived. Explained to the owner ("I dont understand the problem, the first release is 0.1.0. It's either in that release or later."); the design lead's reading: the facts line always shows "Since 0.x.0", linked to its release, and adds "Changed in 0.y.0" only where a later release changed the item. The owner may still ask for both on every page.
+  - **The owner then ruled:** "Just have Updated X.Y.Z so it is the same for everything." Every component page shows one "Updated 0.x.y" line: the newest release that changed the item, or the release it arrived in if none did, linked to that changelog entry. The label is the same on every page. "Since" is unchanged.
 - **Each page has one "Suggest a change" link.** It opens a new GitHub issue on `plutosystemsco/design-system` with the page's address filled in. No per-component discussions.
 - **The accessibility status is its own specification after the tag,** first in 0.13.0, with the high-contrast scheme and a forced-colours pass, since all three test the same things. It must solve the ordering: the site builds before the browser tests run.
 

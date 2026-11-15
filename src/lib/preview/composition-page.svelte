@@ -32,16 +32,16 @@
 </script>
 
 {#snippet preview()}
-  <p class="max-w-prose text-muted-foreground">
-    The composition in a view of its own, at a phone, tablet or desktop width,
-    in the site's theme. It is expressive only: it belongs on a home page or a
-    launch, not in an app's screens. Open alone shows the view at any width.
-  </p>
   <BlockViewer
     block={COMPOSITIONS_ROOT}
     {title}
     views={COMPOSITION_VIEWS[name] ?? []}
   />
+  <p class="mt-3 max-w-(--site-measure) text-sm text-muted-foreground">
+    The composition in a view of its own, at a phone, tablet or desktop width,
+    in the site's theme. It is expressive only: it belongs on a home page or a
+    launch, not in an app's screens. Open alone shows the view at any width.
+  </p>
 {/snippet}
 
 <Component {name} {preview} {when} {dos} {donts} {accessibility} />

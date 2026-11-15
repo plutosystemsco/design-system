@@ -18,11 +18,16 @@ export const BUDGETS: Record<
   { transfer: number; lcp: number; cls: number }
 > = {
   "/": { transfer: 355, lcp: 1027, cls: 0.02 },
-  "/components/": { transfer: 320, lcp: 1138, cls: 0.02 },
+  // From 018 checkpoint 2, with the thumbnails: 395 kB (the median 359 plus
+  // 10%) and LCP 2,988 ms (the median 2,716 plus 10%, as ruled): a first-row
+  // picture, chosen by the theme's class in CSS, is the largest paint.
+  "/components/": { transfer: 395, lcp: 2988, cls: 0.02 },
   // Ruled 365 kB after 015 step 3, then 370 kB after its change review, when
   // each example view came to load only its own example (decisions.md, "The
   // Button page's transfer budget is 365 kB", "Raised again to 370 kB").
-  "/components/button/": { transfer: 370, lcp: 1157, cls: 0.02 },
+  // 380 kB from 018: the left nav and the page's new parts, every
+  // component page's cost (decisions.md, "018 checkpoint 1").
+  "/components/button/": { transfer: 380, lcp: 1157, cls: 0.02 },
   "/components/code-block/": { transfer: 360, lcp: 1186, cls: 0.02 },
 };
 

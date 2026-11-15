@@ -39,7 +39,7 @@
     data-mode="productive"
     class="mx-auto max-w-7xl px-(--gutter-stage) pt-12 pb-20"
   >
-    <div class="grid max-w-prose gap-4">
+    <div class="grid max-w-(--site-measure) gap-4">
       <h2 class="text-2xl font-semibold tracking-section">Roles, not values</h2>
       <p>
         A part never names a colour. It names a role, such as the page's
@@ -53,7 +53,7 @@
       </p>
     </div>
     {#if pages.length}
-      <ul class="groove-b mt-12 max-w-prose">
+      <ul class="groove-b mt-12 max-w-(--site-measure)">
         {#each pages as p (p.path)}
           <li class="groove py-3">
             <a href={p.path} class="font-medium text-foreground hover:underline"

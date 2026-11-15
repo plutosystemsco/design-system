@@ -1,9 +1,18 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import * as Dialog from "#lib/registry/ui/dialog";
+  import { Kbd } from "#lib/registry/ui/kbd";
   import { DOORS } from "../doors.ts";
-  import { search } from "../search.ts";
+  import {
+    componentName,
+    groupHits,
+    keyLegend,
+    marks,
+    search,
+    type SearchHit,
+  } from "../search.ts";
   import type { SearchEntry } from "../search/types.ts";
+  import { addCommand } from "../site.ts";
 
   let {
     open = $bindable(false),
@@ -35,20 +44,45 @@
 
   let query = $state("");
   let active = $state(0);
-  const results = $derived(index ? search(index, query).slice(0, 20) : []);
+  // The best 20 by rank, then grouped by door; the arrows walk the groups'
+  // order, so `active` indexes `flat`.
+  const groups = $derived(
+    groupHits(index ? search(index, query).slice(0, 20) : []),
+  );
+  const flat = $derived(groups.flatMap((g) => g.hits));
+  /** A hit's place in `flat`, for its option's id. */
+  const at = $derived(new Map(flat.map((h, i) => [h.path, i])));
+  /** What the copy key said, until the query or the active result moves. */
+  let copied = $state("");
   $effect(() => {
     void query;
     active = 0;
   });
+  $effect(() => {
+    void active;
+    void query;
+    copied = "";
+  });
+
+  // The copy key is Command-C on macOS and Control-C elsewhere.
+  const mac =
+    typeof navigator !== "undefined" &&
+    /Mac|iPhone|iPad/.test(navigator.platform);
+  const current = $derived(flat[active]);
+  const legend = $derived(
+    keyLegend(!!current && componentName(current) !== null, mac),
+  );
 
   const status = $derived(
     failed
       ? "Search could not load. Check your connection and try again."
-      : !query.trim()
-        ? ""
-        : results.length
-          ? `${results.length} result${results.length === 1 ? "" : "s"}`
-          : `No results for "${query.trim()}". Try a component's name, or browse the four sections.`,
+      : copied
+        ? copied
+        : !query.trim()
+          ? ""
+          : flat.length
+            ? `${flat.length} result${flat.length === 1 ? "" : "s"}`
+            : `No results for "${query.trim()}". Try a component's name, or browse the four sections.`,
   );
 
   const door = (id: SearchEntry["door"]) => DOORS.find((d) => d.id === id);
@@ -59,23 +93,58 @@
     goto(entry.path);
   }
 
+  /**
+   * Command-C (Control-C) on a component result, with nothing selected in
+   * the field, copies its add command. With text selected it copies the
+   * text, as usual. The write happens in the key's own handler.
+   */
+  function copyCommand(e: KeyboardEvent, hit: SearchHit | undefined) {
+    const name = hit && componentName(hit);
+    if (!hit || !name || !input) return;
+    if (input.selectionStart !== input.selectionEnd) return;
+    e.preventDefault();
+    navigator.clipboard.writeText(addCommand(name)).then(
+      () => (copied = `Copied the command for ${hit.title}`),
+      () =>
+        (copied = `The command for ${hit.title} could not be copied. Open its page to copy it there.`),
+    );
+  }
+
   function onkeydown(e: KeyboardEvent) {
     if (e.key === "ArrowDown") {
       e.preventDefault();
-      active = Math.min(active + 1, results.length - 1);
+      active = Math.min(active + 1, flat.length - 1);
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
       active = Math.max(active - 1, 0);
     } else if (e.key === "Enter") {
       e.preventDefault();
-      choose(results[active]);
+      choose(flat[active]);
+    } else if (
+      e.key.toLowerCase() === "c" &&
+      (mac ? e.metaKey && !e.ctrlKey : e.ctrlKey && !e.metaKey) &&
+      !e.altKey &&
+      !e.shiftKey
+    ) {
+      copyCommand(e, flat[active]);
     }
   }
+
+  const MARK =
+    "bg-transparent font-semibold text-foreground forced-colors:bg-[Mark] forced-colors:text-[MarkText]";
 </script>
+
+<!-- Text with each word-start match of the query in a <mark>. -->
+{#snippet marked(
+  text: string,
+)}{#each marks(text, query) as run, i (i)}{#if run.mark}<mark class={MARK}
+        >{run.text}</mark
+      >{:else}{run.text}{/if}{/each}{/snippet}
 
 <!--
   The palette: a dialog holding an input and its results, in the combobox
-  pattern. ArrowUp and ArrowDown move, Enter opens, Escape closes.
+  pattern, grouped by door. ArrowUp and ArrowDown move across the groups,
+  Enter opens, Escape closes; the legend at the foot names the keys.
 -->
 <Dialog.Root
   bind:open
@@ -108,11 +177,10 @@
       {onkeydown}
       role="combobox"
       aria-label="Search the site"
-      aria-expanded={results.length > 0}
+      aria-expanded={flat.length > 0}
       aria-controls="site-search-results"
-      aria-activedescendant={results.length
-        ? `site-search-${active}`
-        : undefined}
+      aria-activedescendant={flat.length ? `site-search-${active}` : undefined}
+      aria-describedby="site-search-keys"
       aria-autocomplete="list"
       autocomplete="off"
       placeholder="Search components, pages and guides"
@@ -121,37 +189,65 @@
     <p role="status" aria-live="polite" class="text-sm text-muted-foreground">
       {status}
     </p>
-    <ul
+    <div
       id="site-search-results"
       role="listbox"
       aria-label="Results"
-      class="grid max-h-[60svh] gap-1 overflow-y-auto"
+      class="grid max-h-[60svh] gap-3 overflow-y-auto"
     >
-      {#each results as r, i (r.path)}
-        {@const d = door(r.door)}
-        <!-- The input holds focus; a result is chosen by keys or a click. -->
-        <!-- svelte-ignore a11y_click_events_have_key_events -->
-        <li
-          id="site-search-{i}"
-          role="option"
-          aria-selected={i === active}
-          onclick={() => choose(r)}
-          onpointermove={() => (active = i)}
-          class="cursor-pointer rounded px-3 py-2 aria-selected:bg-accent aria-selected:text-accent-foreground"
-        >
-          <span class="flex items-baseline justify-between gap-3">
-            <span class="font-medium">{r.title}</span>
-            {#if d}
-              <span
-                class="inline-flex shrink-0 items-center gap-1.5 text-xs text-muted-foreground"
-                ><span class="site-dot" data-door={d.n} aria-hidden="true"
-                ></span>{d.name}</span
-              >
-            {/if}
-          </span>
-          <span class="mt-0.5 line-clamp-2 block text-sm text-muted-foreground"
-            >{r.summary}</span
+      {#each groups as g (g.door ?? "site")}
+        {@const d = door(g.door)}
+        {@const gid = `site-search-group-${g.door ?? "site"}`}
+        <ul role="group" aria-labelledby={gid} class="grid gap-1">
+          <li
+            role="presentation"
+            id={gid}
+            class="inline-flex items-center gap-1.5 px-3 text-xs text-muted-foreground"
           >
+            {#if d}<span class="site-dot" data-door={d.n} aria-hidden="true"
+              ></span>{/if}{g.name}
+          </li>
+          {#each g.hits as r (r.path)}
+            {@const i = at.get(r.path) ?? 0}
+            <!-- The input holds focus; a result is chosen by keys or a click. -->
+            <!-- svelte-ignore a11y_click_events_have_key_events -->
+            <li
+              id="site-search-{i}"
+              role="option"
+              aria-selected={i === active}
+              onclick={() => choose(r)}
+              onpointermove={() => (active = i)}
+              class="cursor-pointer rounded px-3 py-2 aria-selected:bg-accent aria-selected:text-accent-foreground"
+            >
+              <span data-slot="search-title" class="block font-medium"
+                >{@render marked(r.title)}</span
+              >
+              {#if r.alias}
+                <span
+                  data-slot="search-alias"
+                  class="block text-xs text-muted-foreground"
+                  >Also called {@render marked(r.alias)}</span
+                >
+              {/if}
+              <span
+                data-slot="search-summary"
+                class="mt-0.5 line-clamp-2 block text-sm text-muted-foreground"
+                >{@render marked(r.summary)}</span
+              >
+            </li>
+          {/each}
+        </ul>
+      {/each}
+    </div>
+    <ul
+      id="site-search-keys"
+      class="flex flex-wrap gap-x-4 gap-y-1 border-t border-border pt-3 text-xs text-muted-foreground"
+    >
+      {#each legend as k (k.spoken)}
+        <li data-slot="search-key" class="inline-flex items-center gap-1.5">
+          <span aria-hidden="true" class="inline-flex gap-1"
+            >{#each k.keys as key (key)}<Kbd>{key}</Kbd>{/each}</span
+          ><span class="sr-only">{k.spoken}: </span>{k.does}
         </li>
       {/each}
     </ul>

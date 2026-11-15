@@ -124,3 +124,49 @@ describe("017: the page list", () => {
     for (const p of added) expect(p.parent).toBe(`/${p.door}/`);
   });
 });
+
+describe("018 decision 1: navOrder", () => {
+  test("each door lists its landing, then every entry of that door, each once", async () => {
+    const { navOrder } = await import("../../src/lib/site/sitemap.ts");
+    const want: Record<string, number> = {
+      start: 6,
+      components: 76,
+      brand: 10,
+      foundations: 8,
+    };
+    for (const d of DOORS) {
+      const list = navOrder(d.id);
+      expect(list.length, d.id).toBe(want[d.id]);
+      expect(list[0].path).toBe(d.path);
+      expect(new Set(list.map((p) => p.path)).size).toBe(list.length);
+      expect(list.map((p) => p.path).sort()).toEqual(
+        SITEMAP.filter((p) => p.door === d.id)
+          .map((p) => p.path)
+          .sort(),
+      );
+    }
+  });
+
+  test("Components lists its pages under the 11 groups, in GROUPS order, each in registry order", async () => {
+    const { navOrder } = await import("../../src/lib/site/sitemap.ts");
+    const pages = navOrder("components").slice(1);
+    const order = GROUPS.map((g) => g.id);
+    const groups = pages.map((p) => order.indexOf(p.group!));
+    expect(groups).toEqual([...groups].sort((a, b) => a - b));
+    expect(new Set(groups).size).toBe(11);
+    for (const g of GROUPS)
+      expect(pages.filter((p) => p.group === g.id).map((p) => p.path)).toEqual(
+        registry.items
+          .filter((i) => i.meta.group === g.id)
+          .map((i) => componentPath(i.name)),
+      );
+  });
+
+  test("the changelog's list is the four landings, then the changelog", async () => {
+    const { navOrder } = await import("../../src/lib/site/sitemap.ts");
+    expect(navOrder(null).map((p) => p.path)).toEqual([
+      ...DOORS.map((d) => d.path),
+      "/changelog/",
+    ]);
+  });
+});

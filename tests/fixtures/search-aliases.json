@@ -1,0 +1,22 @@
+[
+  {
+    "alias": "modal",
+    "path": "/components/dialog/",
+    "title": "Dialog"
+  },
+  {
+    "alias": "popup",
+    "path": "/components/popover/",
+    "title": "Popover"
+  },
+  {
+    "alias": "loader",
+    "path": "/components/spinner/",
+    "title": "Spinner"
+  },
+  {
+    "alias": "drawer",
+    "path": "/components/sheet/",
+    "title": "Sheet"
+  }
+]

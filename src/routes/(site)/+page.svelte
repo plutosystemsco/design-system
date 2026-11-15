@@ -48,9 +48,9 @@
     class="mx-auto grid overflow-x-clip max-w-7xl grid-cols-[minmax(0,1fr)] items-start gap-y-8 px-(--gutter-stage) pt-[calc(var(--site-bar-room)+var(--spacing)*12)] pb-24 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-x-12"
   >
     <h1 id="home-title" class="type-poster text-foreground lg:col-start-1">
-      <span class="block">Build</span>
+      <span class="block">Design</span>
       <span class="block">with</span>
-      <span class="block">Pluto.</span>
+      <span class="block">Kuiper</span>
     </h1>
     <p
       class="max-w-(--container-xl) text-xl leading-normal text-muted-foreground lg:col-start-1"
@@ -95,7 +95,7 @@
   <section aria-labelledby="gives" class="groove">
     <div class="mx-auto max-w-7xl px-(--gutter-stage) py-16">
       <h2 id="gives" class="type-section">What one command gives you</h2>
-      <p class="mt-3 max-w-prose text-muted-foreground">
+      <p class="mt-3 max-w-(--site-measure) text-muted-foreground">
         Adding a part writes its source into your app. You own those files: read
         them, change them, keep them. Nothing reaches back here when your app
         runs.
@@ -104,7 +104,7 @@
         class="mt-10 grid grid-cols-[minmax(0,1fr)] gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,4fr)_minmax(0,3fr)]"
       >
         <div class="min-w-0">
-          <h3 class="mb-3 font-sans text-base font-semibold">The command</h3>
+          <h3 class="site-h3 mb-3">The command</h3>
           <Command
             code={data.add.code}
             lines={data.add.lines}
@@ -112,7 +112,7 @@
           />
         </div>
         <div class="min-w-0">
-          <h3 class="mb-3 font-sans text-base font-semibold">Files you own</h3>
+          <h3 class="site-h3 mb-3">Files you own</h3>
           <ul class="groove-b">
             {#each data.gives.files as file (file)}
               <li class="groove py-3 font-mono text-sm wrap-anywhere">
@@ -125,7 +125,7 @@
           </p>
         </div>
         <div class="min-w-0">
-          <h3 class="mb-3 font-sans text-base font-semibold">What it brings</h3>
+          <h3 class="site-h3 mb-3">What it brings</h3>
           <ul class="groove-b">
             {#each data.gives.brings as name (name)}
               <li class="groove py-3">

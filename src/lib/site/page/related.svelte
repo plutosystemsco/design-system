@@ -11,7 +11,7 @@
 
 <div class="grid gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
   <div class="min-w-0">
-    <h3 class="font-sans text-base font-semibold">It brings</h3>
+    <h3 class="site-h3">It brings</h3>
     {#if brings.length || packages.length}
       <ul class="groove-b mt-3">
         {#each brings as b (b.name)}
@@ -31,7 +31,7 @@
     {/if}
   </div>
   <div class="min-w-0">
-    <h3 class="font-sans text-base font-semibold">Brought by</h3>
+    <h3 class="site-h3">Brought by</h3>
     {#if broughtBy.length}
       <ul
         class="groove-b mt-3 grid grid-cols-[repeat(auto-fill,minmax(min(100%,var(--container-3xs)),1fr))] gap-x-6"

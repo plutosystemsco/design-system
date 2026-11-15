@@ -33,7 +33,7 @@
   data-slot="site-rail"
   data-md="skip"
   aria-label="On this page"
-  class="hidden text-sm lg:sticky lg:top-[calc(var(--site-bar-room)+var(--spacing)*6)] lg:block lg:self-start"
+  class="hidden text-sm xl:sticky xl:top-[calc(var(--site-bar-room)+var(--spacing)*6)] xl:block xl:self-start"
 >
   {#if list.length}
     <h2 class="font-sans text-sm font-medium">On this page</h2>

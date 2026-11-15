@@ -298,12 +298,12 @@ test.describe("accessible names", () => {
     await expect(link).toHaveAccessibleName("Pluto Systems");
   });
 
-  test('the header lockup is a link named "Pluto Systems design"', async ({
+  test('the header lockup is a link named "pluto, Kuiper Design System"', async ({
     page,
   }) => {
     const link = page.getByRole("banner").getByRole("link");
     await expect(link).toHaveCount(1);
-    await expect(link).toHaveAccessibleName("Pluto Systems design");
+    await expect(link).toHaveAccessibleName("pluto, Kuiper Design System");
   });
 });
 

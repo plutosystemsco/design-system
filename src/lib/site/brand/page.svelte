@@ -1,6 +1,8 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
   import Brand from "../page/brand.svelte";
+  import PageTools from "../page/page-tools.svelte";
+  import PrevNext from "../page/prev-next.svelte";
   import { sitePage } from "../sitemap.ts";
 
   let { path, children }: { path: string; children: Snippet } = $props();
@@ -14,9 +16,16 @@
 -->
 <Brand title={page.title}>
   <div class="mx-auto max-w-7xl px-(--gutter-stage)">
-    <p data-claim="none" class="mt-6 max-w-prose text-xl text-muted-foreground">
+    <p
+      data-claim="none"
+      class="mt-6 max-w-(--site-measure) text-xl text-muted-foreground"
+    >
       {page.summary}
     </p>
+    <div class="mt-4"><PageTools {path} /></div>
   </div>
   {@render children()}
+  <div class="mx-auto max-w-7xl px-(--gutter-stage) pb-16">
+    <PrevNext {path} />
+  </div>
 </Brand>

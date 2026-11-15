@@ -100,15 +100,29 @@
     <h2 id="by-job" class="text-2xl font-semibold tracking-section">
       Roles by job
     </h2>
+    <p class="mt-4">
+      Each role is shown in both themes, with its value. A text role shows "Aa"
+      on the surface it is read on, with the pair's measured contrast.
+    </p>
     {#each groups as g (g.id)}
-      <h3 id={g.id} class="mt-10 text-lg font-semibold">{g.title}</h3>
+      <h3 id={g.id} class="site-h3 mt-10">{g.title}</h3>
       <Table label={g.title} head={["Role", "Its job", "Light", "Dark"]}>
         {#each g.rows as r (r.id)}
           <tr data-role-row={r.name}>
             <td><code>{r.name}</code></td>
             <td>{r.words}</td>
-            <td><Swatch value={r.light} theme="light" /></td>
-            <td><Swatch value={r.dark} theme="dark" /></td>
+            {#each ["light", "dark"] as const as theme (theme)}
+              <td
+                ><Swatch
+                  size="specimen"
+                  value={r[theme]}
+                  {theme}
+                  on={r.pair?.[theme].on}
+                  surface={r.pair?.surface}
+                  ratio={r.pair?.[theme].ratio}
+                /></td
+              >
+            {/each}
           </tr>
         {/each}
       </Table>
@@ -143,7 +157,7 @@
       </ul>
     </div>
     {#each [{ theme: "Light", rows: light }, { theme: "Dark", rows: dark }] as t (t.theme)}
-      <h3 class="mt-10 text-lg font-semibold">{t.theme}</h3>
+      <h3 class="site-h3 mt-10">{t.theme}</h3>
       <Table
         label="Contrast, {t.theme.toLowerCase()}"
         head={["Pair", "Kind", "Ratio", "Needs", "Result"]}

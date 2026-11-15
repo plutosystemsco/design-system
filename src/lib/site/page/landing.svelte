@@ -41,7 +41,10 @@
 
 {#snippet name()}{door.name}{/snippet}
 
-<Band {door} title={title ?? name} {fact} {sentence} {glass} />
-<div>
+<!-- From lg the band spans both columns, and the content takes the page's. -->
+<div class="lg:col-span-2 lg:col-start-1 lg:row-start-1">
+  <Band {door} title={title ?? name} {fact} {sentence} {glass} />
+</div>
+<div class="min-w-0 lg:col-start-2 lg:row-start-2 lg:pe-(--site-edge)">
   {@render children()}
 </div>

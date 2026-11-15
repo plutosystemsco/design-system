@@ -82,16 +82,16 @@ describe("015: examples are files", () => {
     expect(bad).toEqual([]);
   });
 
-  test("every shown source is followed by the SvelteKit 2 line", () => {
+  // 018 decision 7 amends this: the line leaves the frames and is said once
+  // per page, in the Install section.
+  test("the SvelteKit 2 line is in no frame, and once in a component page's Install section", () => {
     const frame = readFileSync("src/lib/site/page/frame.svelte", "utf8");
-    const code =
-      frame.indexOf("<Command") >= 0
-        ? frame.indexOf("<Command")
-        : frame.indexOf('data-slot="frame-code"');
-    const line = frame.indexOf("In a SvelteKit 2 app, read");
-    expect(code).toBeGreaterThan(0);
-    expect(line).toBeGreaterThan(code);
-    expect(frame.split("In a SvelteKit 2 app, read")).toHaveLength(2);
+    expect(frame).not.toContain("In a SvelteKit 2 app, read");
+    const page = readFileSync("src/lib/site/page/component.svelte", "utf8");
+    expect(page.split("In a SvelteKit 2 app, read")).toHaveLength(2);
+    const install = page.indexOf('aria-labelledby="install"');
+    expect(install).toBeGreaterThan(0);
+    expect(page.indexOf("In a SvelteKit 2 app, read")).toBeGreaterThan(install);
   });
 
   test("every example with no switch is of decision 12's kinds; every example with a switch imports no theme module", () => {

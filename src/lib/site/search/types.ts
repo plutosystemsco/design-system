@@ -11,6 +11,11 @@ export type SearchEntry = {
   door: DoorId | null;
   /** One sentence. */
   summary: string;
+  /**
+   * Names other systems give this page's part, which its title does not
+   * already match (018 decision 8, `aliases.ts`). Absent when there are none.
+   */
+  aliases?: string[];
 };
 
 /** A module in `search/sources/`: it gives entries, and imports no `$app/*`. */

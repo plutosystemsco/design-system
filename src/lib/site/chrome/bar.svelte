@@ -8,13 +8,23 @@
   import { DOORS, type DoorId } from "../doors.ts";
   import { SITE_NAME } from "../site.ts";
   import DoorLink from "./door-link.svelte";
+  import SideNav from "./side-nav.svelte";
   import Search from "./search.svelte";
 
   let {
     current = null,
     landing = false,
     entrance = true,
+    path = null,
+    navLabel = "",
+    productive = false,
   }: {
+    /** The page is productive: once it scrolls, the panel turns opaque (018 decision 10). */
+    productive?: boolean;
+    /** The page's path, for the menus; none on the 404. */
+    path?: string | null;
+    /** The left nav's name, which the menu takes from md to lg; none on the home page and the 404. */
+    navLabel?: string;
     /** The door the page belongs to. */
     current?: DoorId | null;
     /** The page is that door's landing. */
@@ -24,6 +34,40 @@
   } = $props();
 
   let menuOpen = $state(false);
+  let doorOpen = $state(false);
+
+  // 018 decision 10: on a productive page, once it has scrolled, the panel
+  // takes the glass's own opaque ground, so no example shows through it.
+  // An observer on a sentinel at the page's top, not a scroll listener.
+  let sentinel: HTMLElement | undefined = $state();
+  let bar: HTMLElement | undefined = $state();
+  let scrolled = $state(false);
+  $effect(() => {
+    // A landing's band holds the glass's showcase: the panel turns opaque
+    // only once the band has left the room under the bar (018 checkpoint 2).
+    const band = landing
+      ? document.querySelector<HTMLElement>('[data-slot="band"]')
+      : null;
+    const target = productive ? sentinel : band;
+    if (!target) {
+      scrolled = false;
+      return;
+    }
+    const room = band ? (bar?.offsetHeight ?? 0) : 0;
+    const io = new IntersectionObserver(
+      ([e]) => (scrolled = !e.isIntersecting),
+      { rootMargin: `-${room}px 0px 0px 0px` },
+    );
+    io.observe(target);
+    return () => io.disconnect();
+  });
+  // The phone menu's pages load when it first opens, not with every page.
+  let AllPages: typeof import("./all-pages.svelte").default | null =
+    $state(null);
+  $effect(() => {
+    if (menuOpen && !AllPages)
+      import("./all-pages.svelte").then((m) => (AllPages = m.default));
+  });
   const currentOf = (id: DoorId) =>
     id === current ? (landing ? "page" : "true") : undefined;
 </script>
@@ -36,6 +80,12 @@
   sheet behind "Menu".
 -->
 <div
+  bind:this={sentinel}
+  aria-hidden="true"
+  class="pointer-events-none absolute top-0 h-px w-px"
+></div>
+<div
+  bind:this={bar}
   data-slot="site-bar"
   data-sticky-bar
   data-mode="expressive"
@@ -49,13 +99,14 @@
   >
   <div class="mx-auto max-w-7xl px-(--gutter-stage)">
     <div
-      class="glass pointer-events-auto flex h-(--size-bar) items-center gap-2 ps-3 pe-2 md:gap-4 lg:gap-6"
+      data-scrolled={scrolled ? "" : undefined}
+      class="glass pointer-events-auto flex h-(--size-bar) items-center gap-2 ps-3 pe-2 transition-[background-color] duration-(--motion-micro) data-scrolled:bg-(--glass-fallback) md:gap-4 lg:gap-6"
       {@attach pointerLight}
     >
       <header class="flex shrink-0">
         <Lockup
           href="/"
-          label={SITE_NAME}
+          label={`pluto, ${SITE_NAME}`}
           {entrance}
           class="rounded px-2 py-2 text-2xl text-foreground"
         />
@@ -69,6 +120,7 @@
         <div class="ms-auto flex items-center gap-1">
           <Search shortcut />
           <ThemeToggle />
+          <!-- Below md: every page, by door (018 decision 2). -->
           <Sheet.Root bind:open={menuOpen}>
             <Sheet.Trigger>
               {#snippet child({ props })}
@@ -83,24 +135,52 @@
                 </Button>
               {/snippet}
             </Sheet.Trigger>
-            <Sheet.Content side="end">
+            <Sheet.Content side="end" class="overflow-y-auto">
               <Sheet.Header class="sr-only">
                 <Sheet.Title>{SITE_NAME}</Sheet.Title>
               </Sheet.Header>
-              <ul class="flex flex-col items-start gap-1">
-                {#each DOORS as door (door.id)}
-                  <li>
-                    <DoorLink
-                      {door}
-                      current={currentOf(door.id)}
-                      class="min-h-12 text-base"
-                      onclick={() => (menuOpen = false)}
-                    />
-                  </li>
-                {/each}
-              </ul>
+              <div class="px-2 pb-8">
+                {#if AllPages}
+                  <AllPages
+                    door={current}
+                    current={path ?? ""}
+                    onfollow={() => (menuOpen = false)}
+                  />
+                {/if}
+              </div>
             </Sheet.Content>
           </Sheet.Root>
+          <!-- From md to lg: the door's own pages, which the left nav holds from lg. -->
+          {#if navLabel && path}
+            <Sheet.Root bind:open={doorOpen}>
+              <Sheet.Trigger>
+                {#snippet child({ props })}
+                  <Button
+                    {...props}
+                    variant="ghost"
+                    size="icon-sm"
+                    aria-label={navLabel}
+                    class="hidden md:inline-flex lg:hidden"
+                  >
+                    <List aria-hidden="true" />
+                  </Button>
+                {/snippet}
+              </Sheet.Trigger>
+              <Sheet.Content side="end" class="overflow-y-auto">
+                <Sheet.Header class="sr-only">
+                  <Sheet.Title>{navLabel}</Sheet.Title>
+                </Sheet.Header>
+                <div class="px-2 pb-8">
+                  <SideNav
+                    door={current}
+                    current={path}
+                    label={navLabel}
+                    onfollow={() => (doorOpen = false)}
+                  />
+                </div>
+              </Sheet.Content>
+            </Sheet.Root>
+          {/if}
         </div>
       </nav>
     </div>

@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import type { Page } from "@playwright/test";
 
 import {
@@ -10,11 +11,23 @@ import { DOORS } from "../../src/lib/site/doors.ts";
 import {
   componentPath,
   GROUPS,
+  navOrder,
   SITEMAP,
   type SitePage,
 } from "../../src/lib/site/sitemap.ts";
 
 export { componentPath, SITEMAP, type SitePage };
+
+const REGISTRY_ITEMS = (
+  JSON.parse(readFileSync("registry.json", "utf8")) as {
+    items: {
+      name: string;
+      title: string;
+      description: string;
+      meta: { modes: string[]; since: string };
+    }[];
+  }
+).items;
 
 /** The items in 005 decision 4's order: one site page each, plus the catalogue. */
 export const ITEMS = [
@@ -575,7 +588,7 @@ export const TABBABLE =
  */
 export const BAR_STOPS = [
   "a:Skip to content",
-  "a:Pluto Systems design",
+  "a:pluto, Kuiper Design System",
   ...DOORS.map((d) => `a:${d.name}`),
   "button:Search",
   "button:Dark theme",
@@ -597,8 +610,20 @@ export const FOOTER_STOPS = [
   "a:This release's registry",
   "a:Changelog",
   "a:llms.txt",
+  "a:Suggest a change on GitHub",
   "a:github.com/plutosystemsco/design-system",
 ];
+
+/** 018 decision 1: the left nav's stops, in navOrder; the Components filter first where it shows. */
+export function NAV_STOPS(
+  door: Parameters<typeof navOrder>[0],
+  filter = false,
+): string[] {
+  return [
+    ...(filter ? ["input:Filter components"] : []),
+    ...navOrder(door).map((p) => `a:${p.title}`),
+  ];
+}
 
 /** A code block's two stops: its copy button, then its scrolling code. */
 const CODE_BLOCK = ["button:Copy code", "region:*"];
@@ -636,10 +661,15 @@ export const HOME_STOPS = [
  */
 export const COMPONENTS_STOPS = [
   ...BAR_STOPS,
+  ...NAV_STOPS("components"),
   ...CODE_BLOCK,
   "input:Filter components",
-  ...SITEMAP.filter((p) => p.parent === "/components/").map(
-    (p) => `a:${p.title}`,
-  ),
+  // 018 decision 13: a tile is one link, named by all its text.
+  ...SITEMAP.filter((p) => p.parent === "/components/").map((p) => {
+    const item = REGISTRY_ITEMS.find(
+      (i) => `/components/${i.name}/` === p.path,
+    )!;
+    return `a:${item.title} ${item.description} ${item.meta.modes.join(", ")}. Since ${item.meta.since}`;
+  }),
   ...FOOTER_STOPS,
 ];

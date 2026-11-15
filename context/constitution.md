@@ -1,12 +1,12 @@
 # Constitution
 
-- **Status:** in force since 2026-10-27. Amended 2026-10-27 (§4.6 allows named dependencies) 2026-11-01 (§2 and §4.2: the goal names no single app, and "done" is proven in this repository) and 2026-11-14 (§3: the repository hosts one public design site).
+- **Status:** in force since 2026-10-27. Amended 2026-10-27 (§4.6 allows named dependencies) 2026-11-01 (§2 and §4.2: the goal names no single app, and "done" is proven in this repository) and 2026-11-14 (§3: the repository hosts one public design site) and 2026-11-15 (§1: the system is named the Kuiper Design System).
 - **Owner:** Pluto Systems, PBC
 - **Scope:** every document, script and line of code in this repository, and everyone working on it. The other documents under `context/` obey this one. It changes only by a decision recorded in `decisions.md` and noted in its Status line.
 
 ## 1. Mission
 
-The Pluto Systems design system: the tokens, styles and Svelte components every Pluto Systems application is built from, delivered the way shadcn delivers them. An app copies the source in and owns it.
+The Kuiper Design System, Pluto Systems' design system: the tokens, styles and Svelte components every Pluto Systems application is built from, delivered the way shadcn delivers them. An app copies the source in and owns it.
 
 ## 2. The goal, stated so it can be checked
 

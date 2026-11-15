@@ -140,6 +140,7 @@
 -->
 <section
   data-slot="frame"
+  data-example={example.id}
   id={example.id}
   aria-labelledby="example-{example.id}"
   class="min-w-0 rounded border border-border bg-card"
@@ -215,7 +216,4 @@
         >{/each}, this site's sample data. Your app supplies its own.
     </p>
   {/if}
-  <p class="groove px-5 py-2 text-xs text-muted-foreground">
-    In a SvelteKit 2 app, read <code>$lib</code> for <code>#lib</code>.
-  </p>
 </section>

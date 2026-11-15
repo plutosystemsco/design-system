@@ -34,7 +34,9 @@
       <Breadcrumb door={door("brand")} />
       <h1 class="mt-4 type-display">{title}</h1>
       {#if summary}
-        <p class="mt-6 max-w-prose text-xl text-muted-foreground">{summary}</p>
+        <p class="mt-6 max-w-(--site-measure) text-xl text-muted-foreground">
+          {summary}
+        </p>
       {/if}
     </header>
   {/if}

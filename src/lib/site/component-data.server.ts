@@ -10,6 +10,7 @@ import {
   type HighlightedLine,
 } from "#lib/registry/lib/highlighter";
 import { apiTables, type ApiTable } from "./api.server.ts";
+import { parseChangelog, updatedIn } from "./changelog.ts";
 import { filesYouOwn, related } from "./files.ts";
 import {
   exampleMeta,
@@ -46,6 +47,8 @@ export type ComponentData = {
   brings: { name: string; title: string }[];
   broughtBy: { name: string; title: string }[];
   packages: string[];
+  /** The release the item last changed in, else the one it arrived in (018 decision 4). */
+  updated: string;
 };
 
 export const EXAMPLES_DIR = "src/lib/site/examples";
@@ -101,5 +104,10 @@ export async function componentData(name: string): Promise<ComponentData> {
     brings: r.brings.map((n) => ({ name: n, title: title(n) })),
     broughtBy: r.broughtBy.map((n) => ({ name: n, title: title(n) })),
     packages: item.dependencies ?? [],
+    updated: updatedIn(
+      name,
+      (item as unknown as { meta: { since: string } }).meta.since,
+      parseChangelog(readFileSync(path.resolve("CHANGELOG.md"), "utf8")),
+    )!,
   };
 }

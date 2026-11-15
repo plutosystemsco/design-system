@@ -16,7 +16,7 @@
   class="mx-auto max-w-7xl px-(--gutter-stage) pt-[calc(var(--site-bar-room)+var(--spacing)*16)] pb-24"
 >
   <h1 class="type-section">No page here.</h1>
-  <p class="mt-4 max-w-prose text-lg text-muted-foreground">
+  <p class="mt-4 max-w-(--site-measure) text-lg text-muted-foreground">
     This address doesn't match a page. Search for it, or start from one of the
     four sections.
   </p>

@@ -43,7 +43,7 @@
     data-mode="productive"
     class="mx-auto max-w-7xl px-(--gutter-stage) pt-12 pb-20"
   >
-    <div class="grid max-w-prose gap-4">
+    <div class="grid max-w-(--site-measure) gap-4">
       <h2 class="text-2xl font-semibold tracking-section">Two commands</h2>
       <p>
         The first adds the theme: every colour, size and font, as CSS variables
@@ -64,7 +64,7 @@
       </p>
     </div>
     {#if guides.length}
-      <ul class="groove-b mt-12 max-w-prose">
+      <ul class="groove-b mt-12 max-w-(--site-measure)">
         {#each guides as g (g.path)}
           <li class="groove py-3">
             <a href={g.path} class="font-medium text-foreground hover:underline"

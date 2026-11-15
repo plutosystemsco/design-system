@@ -1,6 +1,6 @@
-# Pluto Systems design system
+# Kuiper Design System
 
-The tokens, styles and Svelte components of every Pluto Systems product, served as a [shadcn-svelte](https://shadcn-svelte.com) registry. An app installs a component and owns its source.
+Pluto Systems' design system. The tokens, styles and Svelte components of every Pluto Systems product, served as a [shadcn-svelte](https://shadcn-svelte.com) registry. An app installs a component and owns its source.
 
 Each product brings its own identity: its logo, its name and its words. The app shell shows the product's logo, or its name as a wordmark, and can carry the line "A Pluto Systems product" in its footer. The tokens (colour, type, spacing, radius, motion) are shared by every product.
 

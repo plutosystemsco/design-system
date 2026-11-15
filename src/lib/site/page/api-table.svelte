@@ -3,6 +3,10 @@
 
   let { tables }: { tables: ApiTable[] } = $props();
 
+  // 018 decision 7: a table whose rows have no description leaves the
+  // column out, header and cells; it returns when doc comments land.
+  const described = (t: ApiTable) => t.rows.some((r) => r.doc.trim());
+
   // Inline code in a doc comment, as the reader sees it.
   // An element named bare, such as <time>, reads as code too.
   const parts = (text: string) =>
@@ -19,7 +23,7 @@
       >{:else}{p}{/if}{/each}{/snippet}
 
 {#if tables.length === 0}
-  <p class="max-w-prose text-muted-foreground">
+  <p class="max-w-(--site-measure) text-muted-foreground">
     This item takes no props and exports nothing to call: you use it by adding
     it.
   </p>
@@ -48,7 +52,7 @@
             <th scope="col">Name</th>
             <th scope="col">Type</th>
             <th scope="col">Default</th>
-            <th scope="col">What it does</th>
+            {#if described(table)}<th scope="col">What it does</th>{/if}
           </tr>
         </thead>
         <tbody>
@@ -67,12 +71,14 @@
                     >Default
                   </span><code>{row.default}</code>{/if}</td
               >
-              <td>{@render prose(row.doc)}</td>
+              {#if described(table)}<td>{@render prose(row.doc)}</td>{/if}
             </tr>
           {/each}
           {#if table.inherits}
             <tr>
-              <td colspan="4">{@render prose(table.inherits)}</td>
+              <td colspan={described(table) ? 4 : 3}
+                >{@render prose(table.inherits)}</td
+              >
             </tr>
           {/if}
         </tbody>

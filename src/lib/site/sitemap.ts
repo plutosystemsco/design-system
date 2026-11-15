@@ -254,3 +254,22 @@ SITEMAP.push(
     spec: "017",
   })),
 );
+
+/**
+ * 018 decision 1: a door's pages in the one order every consumer reads (the
+ * left nav, the phone sheet, previous and next): the landing, then its
+ * pages; Components' under the registry's groups, in `GROUPS` order, each
+ * group in registry order. With no door (the changelog), the four landings
+ * and the changelog.
+ */
+export function navOrder(door: DoorId | null): SitePage[] {
+  if (!door)
+    return [...DOORS.map((d) => sitePage(d.path)!), sitePage("/changelog/")!];
+  const landing = sitePage(DOORS.find((d) => d.id === door)!.path)!;
+  const pages = doorPages(door);
+  if (door !== "components") return [landing, ...pages];
+  return [
+    landing,
+    ...GROUPS.flatMap((g) => pages.filter((p) => p.group === g.id)),
+  ];
+}

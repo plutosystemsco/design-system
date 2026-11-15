@@ -21,7 +21,7 @@
       <section
         data-slot="colour-band"
         aria-labelledby="band-{fd.n}"
-        class="field-{fd.n} py-20"
+        class="field-{fd.n} py-20 lg:-me-(--site-edge) lg:pe-(--site-edge)"
       >
         <div
           class="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)] items-end gap-10 px-(--gutter-stage) lg:grid-cols-[minmax(0,1fr)_minmax(0,var(--container-md))]"

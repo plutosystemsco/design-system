@@ -244,7 +244,7 @@ test.describe("015: llms.txt", () => {
 
   test("criterion 20: an H1, a blockquote, 4 door sections, Registry and Optional", () => {
     const t = llms();
-    expect(t.startsWith("# Pluto Systems design\n\n> ")).toBe(true);
+    expect(t.startsWith("# Kuiper Design System\n\n> ")).toBe(true);
     const h2 = [...t.matchAll(/^## (.+)$/gm)].map((m) => m[1]);
     expect(h2).toEqual([...DOORS.map((d) => d.name), "Registry", "Optional"]);
   });
@@ -473,5 +473,100 @@ test.describe("017: the Brand pages and downloads in build/", () => {
       "The icons themselves are not drawn yet.",
     );
     for (const p of BRAND) expect(main(p.path)).not.toMatch(/signature/i);
+  });
+});
+
+test.describe("018: the footer link and the twins", () => {
+  const html = (p: string) =>
+    readFileSync(path.join(BUILD, p, "index.html"), "utf8");
+
+  test("criterion 8: every built page holds exactly one Suggest a change on GitHub link, prefilled", () => {
+    const wrong: string[] = [];
+    const pages = [
+      ...SITEMAP.map((p) => [p.path, p.title] as const),
+      ["/404.html", ""] as const,
+    ];
+    for (const [p, title] of pages) {
+      const text =
+        p === "/404.html"
+          ? readFileSync(path.join(BUILD, "404.html"), "utf8")
+          : html(p);
+      const links = [
+        ...text.matchAll(
+          /<a[^>]*href="(https:\/\/github\.com\/plutosystemsco\/design-system\/issues\/new[^"]*)"[^>]*>([\s\S]*?)<\/a>/g,
+        ),
+      ].filter((m) =>
+        m[2].replace(/<[^>]*>/g, "").includes("Suggest a change on GitHub"),
+      );
+      if (links.length !== 1) {
+        wrong.push(`${p}: ${links.length} links`);
+        continue;
+      }
+      if (p === "/404.html") continue;
+      const url = new URL(links[0][1].replaceAll("&amp;", "&"));
+      const want =
+        p === "/" ? "Suggestion: Kuiper Design System" : `Suggestion: ${title}`;
+      if (url.searchParams.get("title") !== want)
+        wrong.push(`${p}: title ${url.searchParams.get("title")}`);
+      if (!url.searchParams.get("body")?.startsWith(`Page: ${SITE_ORIGIN}${p}`))
+        wrong.push(`${p}: body ${url.searchParams.get("body")}`);
+    }
+    expect(wrong).toEqual([]);
+  });
+
+  test("criterion 10: 0 twins hold the nav, the page tools, or previous and next", () => {
+    const wrong: string[] = [];
+    for (const p of SITEMAP) {
+      const md = readFileSync(path.join(BUILD, p.path, "index.md"), "utf8");
+      for (const s of [
+        "Copy page",
+        "View as Markdown",
+        "Previous:",
+        "Next:",
+        "Filter components",
+        "Suggest a change",
+      ])
+        if (md.includes(s)) wrong.push(`${p.path}: ${s}`);
+    }
+    expect(wrong).toEqual([]);
+  });
+});
+
+test.describe("018 criterion 18: the first stage is exampleOrder's first", () => {
+  test("on 75 of 75 pages, the first frame's data-example (or the viewer's first view) is the one exampleOrder names", async () => {
+    const { firstStage } = await import("../../src/lib/site/example-order.ts");
+    const registry = JSON.parse(readFileSync("registry.json", "utf8")) as {
+      items: { name: string }[];
+    };
+    const wrong: string[] = [];
+    for (const { name } of registry.items) {
+      const html = readFileSync(
+        path.join(BUILD, "components", name, "index.html"),
+        "utf8",
+      );
+      const stage = firstStage(name)!;
+      if (stage.kind === "example") {
+        const first = html.match(
+          /data-slot="frame"[^>]*data-example="([^"]+)"/,
+        )?.[1];
+        if (first !== stage.id) wrong.push(`${name}: ${first} vs ${stage.id}`);
+      } else if (!html.includes('data-testid="viewer"'))
+        wrong.push(`${name}: no viewer`);
+    }
+    expect(wrong).toEqual([]);
+  });
+});
+
+test.describe("018 review, finding 7: the index without scripts", () => {
+  test("each of the 72 lazy tiles holds its light picture in a <noscript>, with a src", () => {
+    const html = readFileSync(
+      path.join(BUILD, "components", "index.html"),
+      "utf8",
+    );
+    const pics = [...html.matchAll(/<noscript>\s*<img[^>]*src="([^"]+)"/g)].map(
+      (m) => m[1],
+    );
+    expect(pics).toHaveLength(72);
+    for (const src of pics) expect(src).toMatch(/-light\.[\w-]+\.webp$/);
   });
 });

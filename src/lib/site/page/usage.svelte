@@ -20,12 +20,12 @@
   When to use it, then Do and Don't, each headed by its word and an icon, in
   the foreground colour: red is never the signal here.
 -->
-<div class="grid max-w-prose gap-4">{@render when()}</div>
+<div class="grid max-w-(--site-measure) gap-4">{@render when()}</div>
 <div class="mt-8 grid gap-8 md:grid-cols-2">
   <div>
     <h3
       data-slot="usage-heading"
-      class="flex items-center gap-2 border-b-2 border-foreground pb-2 font-sans text-base font-semibold text-foreground"
+      class="site-h3 flex items-center gap-2 border-b-2 border-foreground pb-2 text-foreground"
     >
       <Check aria-hidden="true" class="size-4" />Do
     </h3>
@@ -34,7 +34,7 @@
   <div>
     <h3
       data-slot="usage-heading"
-      class="flex items-center gap-2 border-b-2 border-foreground pb-2 font-sans text-base font-semibold text-foreground"
+      class="site-h3 flex items-center gap-2 border-b-2 border-foreground pb-2 text-foreground"
     >
       <X aria-hidden="true" class="size-4" />Don't
     </h3>

@@ -12,7 +12,7 @@
 </script>
 
 {#if files.length}
-  <ul class="groove-b max-w-prose">
+  <ul class="groove-b max-w-(--site-measure)">
     {#each files as file (file)}
       <li class="groove py-3 font-mono text-sm wrap-anywhere">{file}</li>
     {/each}
@@ -21,7 +21,7 @@
     Paths follow your <code>components.json</code>.
   </p>
 {:else}
-  <p class="max-w-prose">
+  <p class="max-w-(--site-measure)">
     It writes no file of its own: <code>add</code> puts its variables and
     utilities into your stylesheet, the one <code>components.json</code> names.
   </p>

@@ -36,25 +36,23 @@
 </script>
 
 {#snippet preview()}
-  <p class="max-w-prose text-muted-foreground">
+  <BlockViewer block={name} {title} views={BLOCK_VIEWS[name] ?? []} />
+  <p class="mt-3 max-w-(--site-measure) text-sm text-muted-foreground">
     The block at a phone, tablet or desktop width, in the site's theme. A link
     that leaves the block opens inside the frame; Open alone shows the view at
     any width.
   </p>
-  <BlockViewer block={name} {title} views={BLOCK_VIEWS[name] ?? []} />
 {/snippet}
 
 {#snippet code()}
   {#if setup}
-    <h3 class="mt-10 font-sans text-base font-semibold">Set up</h3>
-    <ul class="mt-3 grid max-w-prose list-disc gap-2 ps-6">
+    <h3 class="site-h3 mt-10">Set up</h3>
+    <ul class="mt-3 grid max-w-(--site-measure) list-disc gap-2 ps-6">
       {@render setup()}
     </ul>
   {/if}
-  <h3 class="mt-10 font-sans text-base font-semibold">
-    Each file, as add writes it
-  </h3>
-  <p class="mt-2 max-w-prose text-sm text-muted-foreground">
+  <h3 class="site-h3 mt-10">Each file, as add writes it</h3>
+  <p class="mt-2 max-w-(--site-measure) text-sm text-muted-foreground">
     At its path in an app whose aliases are <code>#lib/components</code>,
     <code>#lib/components/ui</code> and <code>#lib/utils</code>.
   </p>

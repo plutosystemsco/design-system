@@ -18,7 +18,9 @@ import {
   type ThemeName,
 } from "./pages.ts";
 
-const NAME = "Pluto Systems design";
+const NAME = "Kuiper Design System";
+/** The lockup link's name: its visible word, then the site's name (WCAG 2.5.3). */
+const LOCKUP = `pluto, ${NAME}`;
 
 test.describe("015 criterion 5: the name", () => {
   test("every page's <title> ends with the site's name; the home page's is the name alone; the bar's lockup link is named for the site", async ({
@@ -31,8 +33,8 @@ test.describe("015 criterion 5: the name", () => {
       const want = p === "/" ? title === NAME : title.endsWith(` | ${NAME}`);
       if (!want) wrong.push(`${p}: title "${title}"`);
       const header = /<header[\s\S]*?<\/header>/.exec(html)?.[0] ?? "";
-      if (!header.includes(`aria-label="${NAME}"`))
-        wrong.push(`${p}: no lockup named "${NAME}"`);
+      if (!header.includes(`aria-label="${LOCKUP}"`))
+        wrong.push(`${p}: no lockup named "${LOCKUP}"`);
     }
     expect(wrong).toEqual([]);
   });
@@ -44,7 +46,7 @@ test.describe("015 criterion 5: the name", () => {
       await open(page, p);
       await expect(
         page.getByRole("banner").getByRole("link"),
-      ).toHaveAccessibleName(NAME);
+      ).toHaveAccessibleName(LOCKUP);
     }
   });
 
@@ -245,7 +247,7 @@ test.describe("015 criterion 23: the 404 page at any depth", () => {
       await expect(
         page
           .locator('[data-slot="site-bar"]')
-          .getByRole("link", { name: NAME }),
+          .getByRole("link", { name: LOCKUP }),
       ).toBeVisible();
       await expect(page.getByRole("contentinfo")).toBeVisible();
       const main = page.locator("main");
@@ -435,4 +437,517 @@ test.describe("017: the install guide's copy buttons", () => {
       expect(hits.out).toEqual([]);
     });
   }
+});
+
+test.describe("018 criterion 6: the part comes first", () => {
+  const ORDER = [
+    "examples",
+    "install",
+    "usage",
+    "api",
+    "accessibility",
+    "files",
+    "related",
+  ];
+  for (const [w, h, limit] of [
+    [1440, 900, 450],
+    [390, 844, 844],
+  ] as const)
+    test(`at ${w} × ${h}, on every component page, the first frame or viewer starts above y = ${limit}`, async ({
+      page,
+    }) => {
+      test.setTimeout(600_000);
+      await page.setViewportSize({ width: w, height: h });
+      const late: string[] = [];
+      for (const p of COMPONENT_PAGES) {
+        await open(page, p);
+        const top = await page.evaluate(() => {
+          const el = document.querySelector(
+            'main [data-slot="frame"], main [data-testid="viewer"]',
+          );
+          return el ? el.getBoundingClientRect().top + scrollY : null;
+        });
+        if (top === null || top >= limit) late.push(`${p}: ${top}`);
+      }
+      expect(late).toEqual([]);
+    });
+
+  test("main's sections are in decision 3's order, and the rail lists Install", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await open(page, "/components/button/");
+    const ids = await page
+      .locator("main section[aria-labelledby]:not([data-slot])")
+      .evaluateAll((ss) => ss.map((s) => s.getAttribute("aria-labelledby")));
+    expect(ids).toEqual(ORDER);
+    await expect(
+      page
+        .getByRole("complementary", { name: "On this page" })
+        .getByRole("link", { name: "Install" }),
+    ).toBeVisible();
+  });
+});
+
+test.describe("018 criterion 7: Updated", () => {
+  test("75 of 75 component pages show one Updated <version>, linked to its release; Since is unchanged; no Changed in", async ({
+    page,
+  }) => {
+    test.setTimeout(600_000);
+    const { parseChangelog, updatedIn } =
+      await import("../../src/lib/site/changelog.ts");
+    const registry = JSON.parse(readFileSync("registry.json", "utf8")) as {
+      items: { name: string; meta: { since: string } }[];
+    };
+    const log = parseChangelog(readFileSync("CHANGELOG.md", "utf8"));
+    const wrong: string[] = [];
+    for (const item of registry.items) {
+      await open(page, `/components/${item.name}/`);
+      const v = updatedIn(item.name, item.meta.since, log)!;
+      const facts = page.locator('[data-slot="facts"]');
+      const updated = facts.locator("dd a");
+      const got = {
+        count: await page.getByText(/^Updated$/).count(),
+        text: (await updated.textContent())?.trim(),
+        href: await updated.getAttribute("href"),
+        since: (
+          await facts
+            .locator("dt", { hasText: "Since" })
+            .locator("+ dd")
+            .textContent()
+        )?.trim(),
+        changed: await facts.getByText("Changed in").count(),
+      };
+      const want = {
+        count: 1,
+        text: v,
+        href: `/changelog/#v${v.replaceAll(".", "-")}`,
+        since: item.meta.since,
+        changed: 0,
+      };
+      if (JSON.stringify(got) !== JSON.stringify(want))
+        wrong.push(`${item.name}: ${JSON.stringify(got)}`);
+    }
+    expect(wrong).toEqual([]);
+  });
+
+  test("the four named items link their releases, and each target exists", async ({
+    page,
+  }) => {
+    for (const [name, anchor] of [
+      ["pluto-theme", "#v0-12-0"],
+      ["button", "#v0-11-0"],
+      ["tooltip", "#v0-2-0"],
+      ["name-strip", "#v0-11-0"],
+    ]) {
+      await open(page, `/components/${name}/`);
+      await expect(page.locator('[data-slot="facts"] dd a')).toHaveAttribute(
+        "href",
+        `/changelog/${anchor}`,
+      );
+    }
+    await open(page, "/changelog/");
+    for (const a of ["v0-12-0", "v0-11-0", "v0-2-0"])
+      await expect(page.locator(`#${a}`)).toHaveCount(1);
+  });
+});
+
+test.describe("018 criterion 8: the 404 names the address", () => {
+  let server: ReturnType<typeof Bun.serve>;
+  let origin = "";
+  test.beforeAll(() => {
+    const root = path.resolve("build");
+    server = Bun.serve({
+      port: 0,
+      fetch(req) {
+        let p = decodeURIComponent(new URL(req.url).pathname);
+        if (p.includes("..")) return new Response("", { status: 400 });
+        if (p.endsWith("/")) p += "index.html";
+        const file = path.join(root, p);
+        if (existsSync(file) && statSync(file).isFile())
+          return new Response(Bun.file(file));
+        return new Response(Bun.file(path.join(root, "404.html")), {
+          status: 404,
+          headers: { "content-type": "text/html; charset=utf-8" },
+        });
+      },
+    });
+    origin = `http://localhost:${server.port}`;
+  });
+  test.afterAll(() => server?.stop(true));
+
+  test("the 404's footer link body names the unknown address, once hydrated", async ({
+    page,
+  }) => {
+    await page.goto(origin + "/nope/deep/");
+    const link = page.getByRole("link", { name: "Suggest a change on GitHub" });
+    await expect
+      .poll(async () =>
+        new URL((await link.getAttribute("href"))!).searchParams.get("body"),
+      )
+      .toContain("/nope/deep/");
+  });
+});
+
+test.describe("018 criterion 9: the details", () => {
+  test("on Button, 0 frames hold the SvelteKit 2 line, and Install holds it once", async ({
+    page,
+  }) => {
+    await open(page, "/components/button/");
+    await expect(
+      page.locator('[data-slot="frame"]', { hasText: "In a SvelteKit 2 app" }),
+    ).toHaveCount(0);
+    await expect(
+      page
+        .locator('section[aria-labelledby="install"]')
+        .getByText("In a SvelteKit 2 app, read"),
+    ).toHaveCount(1);
+  });
+
+  for (const width of [390, 1440])
+    test(`at ${width}, on every page, no code text's box meets its copy button's box`, async ({
+      page,
+    }) => {
+      test.setTimeout(900_000);
+      await page.setViewportSize({ width, height: 900 });
+      const hits: string[] = [];
+      for (const p of PAGES) {
+        await open(page, p);
+        hits.push(
+          ...(await page.evaluate((path) => {
+            const out: string[] = [];
+            const meets = (a: DOMRect, b: DOMRect) =>
+              a.left < b.right &&
+              b.left < a.right &&
+              a.top < b.bottom &&
+              b.top < a.bottom;
+            for (const block of document.querySelectorAll(
+              'main [data-slot="code-block"]',
+            )) {
+              const button = block.querySelector(
+                '[data-slot="code-block-copy-button"]',
+              );
+              if (!button || !(button as HTMLElement).offsetParent) continue;
+              const box = button.getBoundingClientRect();
+              for (const line of block.querySelectorAll(
+                '[data-slot="code-block-line"]',
+              )) {
+                // Each visible character's box: a wrapped line's hanging
+                // space may sit in the padding, and is not text.
+                const walker = document.createTreeWalker(
+                  line,
+                  NodeFilter.SHOW_TEXT,
+                );
+                let hit = false;
+                for (
+                  let n = walker.nextNode();
+                  n && !hit;
+                  n = walker.nextNode()
+                ) {
+                  const t = n.textContent ?? "";
+                  for (let k = 0; k < t.length && !hit; k++) {
+                    if (/\s/.test(t[k])) continue;
+                    const range = document.createRange();
+                    range.setStart(n, k);
+                    range.setEnd(n, k + 1);
+                    for (const r of range.getClientRects())
+                      if (r.width > 0 && meets(box, r)) hit = true;
+                  }
+                }
+                if (hit) out.push(`${path}: ${line.textContent!.slice(0, 30)}`);
+              }
+            }
+            return out;
+          }, p)),
+        );
+      }
+      expect(hits).toEqual([]);
+    });
+
+  test("an API table with no description in any row has 3 columns; every other has 4, and every row with one shows it", async ({
+    page,
+  }) => {
+    test.setTimeout(600_000);
+    const { apiTables } = await import("../../src/lib/site/api.server.ts");
+    const registry = JSON.parse(readFileSync("registry.json", "utf8")) as {
+      items: { name: string }[];
+    };
+    const wrong: string[] = [];
+    for (const item of registry.items) {
+      await open(page, `/components/${item.name}/`);
+      const tables = apiTables(item as never);
+      const got = await page
+        .locator('section[aria-labelledby="api"] table')
+        .evaluateAll((ts) =>
+          ts.map((t) => t.querySelectorAll("thead th").length),
+        );
+      const want = tables.map((t) =>
+        t.rows.some((r) => r.doc.trim()) ? 4 : 3,
+      );
+      if (JSON.stringify(got) !== JSON.stringify(want))
+        wrong.push(`${item.name}: ${got} vs ${want}`);
+    }
+    expect(wrong).toEqual([]);
+  });
+});
+
+test.describe("018 criteria 12 to 14: the measure, one h3, smoothing", () => {
+  test("criterion 12: at 1440, median CPL on Button, Install and the changelog is between 58 and 70", async ({
+    page,
+  }, info) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    const out: string[] = [];
+    for (const p of ["/components/button/", "/start/install/", "/changelog/"]) {
+      await open(page, p);
+      const cpl = await page.evaluate(() => {
+        const els = [
+          ...document.querySelectorAll("main p, main li, main dd"),
+        ].filter(
+          (e) =>
+            (e.textContent ?? "").trim().length >= 160 &&
+            !e.closest(
+              'table, [data-slot="frame"], pre, code, [data-slot="code-block"]',
+            ),
+        );
+        const per = els.map((e) => {
+          const range = document.createRange();
+          range.selectNodeContents(e);
+          // Lines, not rects: an inline code chip sits a little higher
+          // than the text beside it, so rects within half a line are one.
+          const tops = [...range.getClientRects()]
+            .map((r) => r.top)
+            .sort((x, y) => x - y);
+          const lh = parseFloat(getComputedStyle(e).lineHeight) || 24;
+          let lines = tops.length ? 1 : 0;
+          for (let k = 1; k < tops.length; k++)
+            if (tops[k] - tops[k - 1] > lh / 2) lines++;
+          return (
+            (e.textContent ?? "").replace(/\s+/g, " ").trim().length /
+            Math.max(1, lines)
+          );
+        });
+        per.sort((a, b) => a - b);
+        return per.length ? per[Math.floor(per.length / 2)] : null;
+      });
+      out.push(`${p} ${cpl?.toFixed(1)}`);
+      console.log(`CPL ${info.project.name} ${p}: ${cpl?.toFixed(1)}`);
+      expect(cpl, p).not.toBeNull();
+      expect(cpl!, p).toBeGreaterThanOrEqual(58);
+      expect(cpl!, p).toBeLessThanOrEqual(70);
+    }
+  });
+
+  test("criterion 13: at 1440, every h3 in main outside frames is IBM Plex Sans 600 at 20 px", async ({
+    page,
+  }) => {
+    test.setTimeout(600_000);
+    await page.setViewportSize({ width: 1440, height: 900 });
+    const wrong: string[] = [];
+    for (const p of PAGES) {
+      await open(page, p);
+      wrong.push(
+        ...(await page.evaluate(
+          (path) =>
+            [...document.querySelectorAll("main h3")]
+              .filter(
+                (h) =>
+                  !h.closest(
+                    '[data-slot="frame"], [data-testid="viewer"], .sr-only',
+                  ) && !h.classList.contains("sr-only"),
+              )
+              .map((h) => {
+                const s = getComputedStyle(h);
+                return s.fontFamily.startsWith('"IBM Plex Sans') &&
+                  s.fontWeight === "600" &&
+                  s.fontSize === "20px"
+                  ? ""
+                  : `${path}: ${h.textContent?.trim()} ${s.fontFamily.split(",")[0]} ${s.fontWeight} ${s.fontSize}`;
+              })
+              .filter(Boolean),
+          p,
+        )),
+      );
+    }
+    expect(wrong).toEqual([]);
+  });
+
+  test("criterion 14: the body is antialiased on every page", async ({
+    page,
+  }) => {
+    test.setTimeout(600_000);
+    const wrong: string[] = [];
+    for (const p of PAGES) {
+      await open(page, p);
+      const v = await page.evaluate(() =>
+        getComputedStyle(document.body).getPropertyValue(
+          "-webkit-font-smoothing",
+        ),
+      );
+      if (v !== "antialiased") wrong.push(`${p}: ${v}`);
+    }
+    expect(wrong).toEqual([]);
+  });
+});
+
+test.describe("018 criterion 15: the bar", () => {
+  const panel = '[data-slot="site-bar"] .glass';
+  const alpha = (c: string) => {
+    const m = c
+      .match(/rgba?\(([^)]+)\)/)![1]
+      .split(",")
+      .map((x) => x.trim());
+    return m.length === 4 ? Number(m[3]) : 1;
+  };
+
+  test("productive: glass at the top of Button, opaque --glass-fallback after 400 px", async ({
+    page,
+  }) => {
+    await open(page, "/components/button/");
+    const bar = page.locator(panel).first();
+    expect(
+      alpha(await bar.evaluate((e) => getComputedStyle(e).backgroundColor)),
+    ).toBeLessThan(1);
+    await page.mouse.wheel(0, 400);
+    await expect(bar).toHaveAttribute("data-scrolled", "");
+    await expect
+      .poll(() => bar.evaluate((e) => getComputedStyle(e).backgroundColor))
+      .toBe(
+        await bar.evaluate((e) => {
+          const p = document.createElement("div");
+          p.style.backgroundColor = "var(--glass-fallback)";
+          e.append(p);
+          const c = getComputedStyle(p).backgroundColor;
+          p.remove();
+          return c;
+        }),
+      );
+    expect(
+      alpha(await bar.evaluate((e) => getComputedStyle(e).backgroundColor)),
+    ).toBe(1);
+  });
+
+  test("expressive: on /brand/colour/, scrolled with a band under the bar, the panel stays glass with no data-scrolled", async ({
+    page,
+  }) => {
+    await open(page, "/brand/colour/");
+    await page.mouse.wheel(0, 700);
+    await page.waitForTimeout(400);
+    const bar = page.locator(panel).first();
+    await expect(bar).not.toHaveAttribute("data-scrolled", /.*/);
+    expect(
+      alpha(await bar.evaluate((e) => getComputedStyle(e).backgroundColor)),
+    ).toBeLessThan(1);
+  });
+
+  // 018 checkpoint 2: on a landing the glass holds over the band, and the
+  // panel turns opaque once the band has scrolled out from under it.
+  for (const p of ["/components/", "/start/", "/brand/", "/foundations/"])
+    test(`landing ${p}: glass over the band, opaque once the band has gone`, async ({
+      page,
+    }) => {
+      await open(page, p);
+      const bar = page.locator(panel).first();
+      await page.mouse.wheel(0, 150);
+      await page.waitForTimeout(400);
+      await expect(bar).not.toHaveAttribute("data-scrolled", /.*/);
+      expect(
+        alpha(await bar.evaluate((e) => getComputedStyle(e).backgroundColor)),
+      ).toBeLessThan(1);
+      const bottom = await page
+        .locator('[data-slot="band"]')
+        .evaluate((b) => b.getBoundingClientRect().bottom + scrollY);
+      await page.evaluate((y) => scrollTo(0, y), bottom + 50);
+      await expect(bar).toHaveAttribute("data-scrolled", "");
+      await expect
+        .poll(async () =>
+          alpha(await bar.evaluate((e) => getComputedStyle(e).backgroundColor)),
+        )
+        .toBe(1);
+    });
+
+  test("under reduced motion, the change has no transition", async ({
+    page,
+  }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await open(page, "/components/button/");
+    const d = await page
+      .locator(panel)
+      .first()
+      .evaluate((e) =>
+        getComputedStyle(e)
+          .transitionDuration.split(",")
+          .map((x) => parseFloat(x)),
+      );
+    expect(Math.max(...d)).toBeLessThanOrEqual(0.00001);
+  });
+});
+
+test.describe("018 criterion 18: the Components index", () => {
+  test("75 tiles, each image sized, lazy and alt-less; no other-scheme images fetched; the filter narrows and counts", async ({
+    page,
+  }, info) => {
+    const other = info.project.name === "dark" ? "light" : "dark";
+    const fetched: string[] = [];
+    page.on("request", (r) => {
+      if (/\.webp/.test(r.url())) fetched.push(r.url());
+    });
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await open(page, "/components/");
+    const tiles = page.locator('[data-slot="component-tile"]');
+    await expect(tiles).toHaveCount(75);
+    const imgs = await page
+      .locator('[data-slot="component-tile"] img')
+      .evaluateAll((is) =>
+        is.map((i) => ({
+          w: i.getAttribute("width"),
+          h: i.getAttribute("height"),
+          alt: i.getAttribute("alt"),
+          lazy: i.getAttribute("loading"),
+          scheme: i.getAttribute("data-scheme"),
+        })),
+      );
+    // The first row's 3 pictures are CSS backgrounds, aria-hidden; the
+    // other 72 tiles hold an <img> per scheme.
+    await expect(
+      page.locator(
+        '[data-slot="component-tile"] [data-slot="tile-picture"][aria-hidden="true"]',
+      ),
+    ).toHaveCount(3);
+    expect(imgs).toHaveLength(144);
+    for (const i of imgs)
+      expect([i.w, i.h, i.alt, i.lazy]).toEqual(["480", "300", "", "lazy"]);
+    await page.mouse.wheel(0, 4000);
+    await page.waitForTimeout(800);
+    const shown = (
+      await page
+        .locator(`[data-slot="component-tile"] img[data-scheme="${other}"]`)
+        .all()
+    ).length;
+    expect(shown).toBe(72);
+    expect(fetched.filter((u) => u.includes(`-${other}.`))).toEqual([]);
+    await page.getByLabel("Filter components").first().fill("dia");
+    await expect(tiles.filter({ visible: true })).not.toHaveCount(75);
+    await expect(page.locator('main p[role="status"]')).toContainText(
+      "component",
+    );
+  });
+
+  test("CLS on /components/ is at most 0.02", async ({ page }) => {
+    await page.addInitScript(() => {
+      (window as unknown as { cls: number }).cls = 0;
+      new PerformanceObserver((l) => {
+        for (const e of l.getEntries() as unknown as {
+          value: number;
+          hadRecentInput: boolean;
+        }[])
+          if (!e.hadRecentInput)
+            (window as unknown as { cls: number }).cls += e.value;
+      }).observe({ type: "layout-shift", buffered: true });
+    });
+    await open(page, "/components/");
+    await page.waitForTimeout(1000);
+    expect(
+      await page.evaluate(() => (window as unknown as { cls: number }).cls),
+    ).toBeLessThanOrEqual(0.02);
+  });
 });

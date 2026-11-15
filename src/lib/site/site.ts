@@ -10,7 +10,7 @@
  */
 import pkg from "../../../package.json";
 
-export const SITE_NAME = "Pluto Systems design";
+export const SITE_NAME = "Kuiper Design System";
 export const SITE_ORIGIN =
   "https://pluto-systems-design.claygendron.workers.dev";
 export const VERSION: string = pkg.version;

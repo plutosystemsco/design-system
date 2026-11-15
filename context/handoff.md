@@ -35,3 +35,9 @@ The tree holds 75 items. The last full runs: unit 892 pass; `check` 0 errors; li
 - **The product icons (G5)**, their own specification: the flat colour tile, Phosphor glyphs (already pinned by `002`), the eight-app colour map and the radius that scales with the icon.
 - **A signature device** stays open. The owner set it aside for now (F, 2026-11-06).
 - Carried over from `v0.8.0`: the code-palette specification, and the highlighter fault where an apostrophe inside a TypeScript `//` comment breaks the following lines.
+- **After the `v0.12.0` tag, in 0.13.0** (owner decisions of 2026-11-15):
+  - the rename of code names to Kuiper (`pluto` registry, `pluto-theme`, `pluto:` context keys, the token file), with a migration guide for installed apps;
+  - lockup mock-ups for the Kuiper name, put to the owner for approval;
+  - the accessibility status generated from the test report (everything must pass), with the high-contrast scheme and a forced-colours pass;
+  - light and dark scoped to any subtree with `light-dark()` (`research/2026-11-15-scoped-schemes-and-contrast.md`), its four questions to the owner first;
+  - prop doc comments on every item, so the API tables fill in.

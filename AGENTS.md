@@ -2,7 +2,7 @@
 
 ## What this is
 
-The Pluto Systems design system: tokens, styles and Svelte components, delivered as a shadcn-svelte registry that apps copy source from.
+The Kuiper Design System, Pluto Systems' design system: tokens, styles and Svelte components, delivered as a shadcn-svelte registry that apps copy source from.
 
 Read `context/constitution.md` first. It governs this file. Then read `context/README.md` and `context/handoff.md`.
 

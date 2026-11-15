@@ -1,5 +1,7 @@
 <script lang="ts">
+  import LadderFigure from "#lib/site/brand/ladder-figure.svelte";
   import { door } from "#lib/site/doors";
+  import Specimen from "#lib/site/foundations/specimen.svelte";
   import Table from "#lib/site/foundations/table.svelte";
   import Leaf from "#lib/site/page/leaf.svelte";
   import { componentPath, sitePage } from "#lib/site/sitemap";
@@ -13,6 +15,23 @@
     heading: "Display: headings, the lockup, poster type.",
     mono: "Code, keys and samples.",
   };
+  // 018 decision 12: each sample is set by the utility it shows. A step the
+  // token file adds before it is named here is set from its numbers.
+  const SCALE: Record<string, string> = {
+    xs: "text-xs",
+    sm: "text-sm",
+    base: "text-base",
+    "2xl": "text-2xl",
+    "5xl": "text-5xl",
+  };
+  const DISPLAY: Record<string, string> = {
+    display: "type-display",
+    section: "type-section",
+    proof: "type-proof",
+    poster: "type-poster",
+  };
+  const SAMPLE = "Work runs on data.";
+  const rem = (px: number) => `${px / 16}rem`;
   const families = $derived(Object.entries(data.families));
   const scale = $derived(Object.entries(data.scale));
   const tracking = $derived(Object.entries(data.tracking));
@@ -45,10 +64,15 @@
     <h2 id="families" class="text-2xl font-semibold tracking-section">
       Families
     </h2>
-    <Table label="Families" head={["Face", "Its job", "Variable", "Part"]}>
+    <p class="mt-4">Each face's sample is set at <code>text-2xl</code>.</p>
+    <Table
+      label="Families"
+      head={["Face", "Sample", "Its job", "Variable", "Part"]}
+    >
       {#each families as [id, f] (id)}
         <tr data-family-row={id}>
           <td>{name(f.family)}</td>
+          <td><Specimen text={SAMPLE} class="text-2xl" family={f.family} /></td>
           <td>{JOBS[id] ?? ""}</td>
           <td><code>{f.variable}</code></td>
           <td
@@ -70,10 +94,23 @@
       Tailwind's text utilities, with this system's sizes and leading. Base is
       16 px.
     </p>
-    <Table label="The text scale" head={["Utility", "Size", "Leading"]}>
+    <Table
+      label="The text scale"
+      head={["Utility", "Sample", "Size", "Leading"]}
+    >
       {#each scale as [id, s] (id)}
         <tr data-scale-row={id}>
           <td><code>text-{id}</code></td>
+          <td
+            >{#if SCALE[id]}<Specimen
+                text={SAMPLE}
+                class={SCALE[id]}
+              />{:else}<Specimen
+                text={SAMPLE}
+                size={rem(s.px)}
+                leading={s.lineHeight}
+              />{/if}</td
+          >
           <td class="tabular-nums">{s.px} px</td>
           <td class="tabular-nums">{s.lineHeight}</td>
         </tr>
@@ -117,6 +154,7 @@
       label="Display steps"
       head={[
         "Utility",
+        "Sample",
         "Smallest",
         "Grows",
         "Largest",
@@ -128,6 +166,18 @@
       {#each steps as [id, s] (id)}
         <tr data-step-row={id}>
           <td><code>type-{id}</code></td>
+          <td
+            >{#if DISPLAY[id]}<Specimen
+                text="Pluto"
+                class={DISPLAY[id]}
+              />{:else}<Specimen
+                text="Pluto"
+                class="font-semibold"
+                family={data.families.heading.family}
+                size="clamp({rem(s.minPx)}, {s.vw}vw, {rem(s.maxPx)})"
+                leading={s.lineHeight}
+              />{/if}</td
+          >
           <td class="tabular-nums">{s.minPx} px</td>
           <td class="tabular-nums">{s.vw} vw</td>
           <td class="tabular-nums">{s.maxPx} px</td>
@@ -137,5 +187,12 @@
         </tr>
       {/each}
     </Table>
+    <figure class="mt-6 grid gap-4">
+      <LadderFigure {steps} />
+      <figcaption class="text-sm text-muted-foreground">
+        Each step's em box at its smallest and its largest, and its line height,
+        drawn from the token file.
+      </figcaption>
+    </figure>
   </section>
 </Leaf>

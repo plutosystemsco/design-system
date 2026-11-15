@@ -14,5 +14,5 @@
   class="mx-auto max-w-7xl px-(--gutter-stage) pt-16"
 >
   <h2 {id} class="text-2xl font-semibold tracking-section">{title}</h2>
-  <div class="mt-6 grid max-w-prose gap-4">{@render children()}</div>
+  <div class="mt-6 grid max-w-2xl gap-4">{@render children()}</div>
 </section>

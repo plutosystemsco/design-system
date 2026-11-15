@@ -1261,10 +1261,14 @@ test.describe("the editor agrees with the block", () => {
         await page
           .locator('[data-editor="full"]')
           .evaluate((el) => el.scrollIntoView({ block: "start" }));
-        const lines = await agree(page, "full", what);
-        expect(lines, `${what}: every line rendered`).toBe(
-          code.split("\n").length,
-        );
+        // Until the editor has rendered every line, not at one moment: on a
+        // loaded machine its last lines can arrive after the first agree.
+        await expect
+          .poll(() => agree(page, "full", what), {
+            message: `${what}: every line rendered`,
+            timeout: 30_000,
+          })
+          .toBe(code.split("\n").length);
       }
       // The scripted edits, on three texts.
       const view = "window.agreement.view('full')";
@@ -1964,9 +1968,10 @@ test.describe("inline code (014)", () => {
   }, info) => {
     const theme = info.project.name as "light" | "dark";
     await open(page, componentPath("button"));
-    // 015 decision 16: the install line is a code block in the facts card.
+    // 015 decision 16: the install line is a code block; 018 decision 3
+    // moves it from the facts card to the Install section.
     const line = page
-      .locator('[data-slot="facts"] [data-slot="code-block"]')
+      .locator('section[aria-labelledby="install"] [data-slot="code-block"]')
       .first();
     expect(await computed(line, "background-color")).toBe(CODE_GROUND[theme]);
     await expectHairline(line, "the install line");
