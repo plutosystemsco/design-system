@@ -1,0 +1,5 @@
+# Screenshots of other systems' sites are studied, never committed.
+# Only Pluto's own shots are kept in the repository.
+*
+!.gitignore
+!pluto-*

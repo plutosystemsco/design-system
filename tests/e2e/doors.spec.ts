@@ -494,3 +494,183 @@ test.describe("015 criterion 27: reduced motion and the door transition", () => 
     expect(await transitions(page)).toBe(1);
   });
 });
+
+test.describe("017: the Colour page's bands", () => {
+  test("criterion 8: the 4 bands hold 0 marks, 0 controls and 0 svg, and every text element in their glass computes --foreground", async ({
+    page,
+  }) => {
+    await open(page, "/brand/colour/");
+    const bands = page.locator('[data-slot="colour-band"]');
+    await expect(bands).toHaveCount(4);
+    const found = await bands.evaluateAll((els) =>
+      els.map((b) => ({
+        marks: b.querySelectorAll('[data-slot="four-dot"]').length,
+        controls: b.querySelectorAll(
+          'a, button, input, select, textarea, [role="button"], [tabindex]',
+        ).length,
+        svg: b.querySelectorAll("svg").length,
+        off: [...b.querySelectorAll(".glass *")]
+          .filter((e) =>
+            [...e.childNodes].some(
+              (n) => n.nodeType === Node.TEXT_NODE && n.textContent!.trim(),
+            ),
+          )
+          .filter((e) => {
+            const probe = document.createElement("span");
+            probe.style.color = "var(--foreground)";
+            e.appendChild(probe);
+            const want = getComputedStyle(probe).color;
+            probe.remove();
+            return getComputedStyle(e).color !== want;
+          })
+          .map((e) => e.tagName),
+      })),
+    );
+    expect(found).toEqual(
+      Array(4).fill({ marks: 0, controls: 0, svg: 0, off: [] }),
+    );
+  });
+
+  test("017: the foreground on the yellow band's glass, as painted, passes 4.5:1", async ({
+    page,
+  }, info) => {
+    await open(page, "/brand/colour/");
+    const glass = page
+      .locator('[data-slot="colour-band"]')
+      .nth(2)
+      .locator(".glass");
+    await glass.scrollIntoViewIfNeeded();
+    await page.waitForTimeout(300);
+    const shot = (await glass.screenshot()).toString("base64");
+    const text = await glass
+      .locator("p")
+      .evaluate((e) => getComputedStyle(e).color);
+    const ground = await page.evaluate(async (b64) => {
+      const img = new Image();
+      img.src = `data:image/png;base64,${b64}`;
+      await img.decode();
+      const c = document.createElement("canvas");
+      c.width = img.width;
+      c.height = img.height;
+      const ctx = c.getContext("2d")!;
+      ctx.drawImage(img, 0, 0);
+      const [r, g, b] = ctx.getImageData(
+        8,
+        Math.floor(img.height / 2),
+        1,
+        1,
+      ).data;
+      return [r, g, b];
+    }, shot);
+    const hex = (rgb: number[]) =>
+      "#" + rgb.map((n) => n.toString(16).padStart(2, "0")).join("");
+    const ratio = contrastRatio(rgbToHex(text), hex(ground));
+    info.annotations.push({
+      type: "ratio",
+      description: `${info.project.name}: ${ratio.toFixed(2)}:1, ${rgbToHex(text)} on ${hex(ground)}`,
+    });
+    console.log(
+      `yellow glass, ${info.project.name}: ${ratio.toFixed(2)}:1 (${rgbToHex(text)} on ${hex(ground)})`,
+    );
+    expect(ratio).toBeGreaterThanOrEqual(4.5);
+  });
+});
+
+test.describe("017: the motion page", () => {
+  /** The animations running inside the page's specimens. */
+  async function running(page: Page): Promise<number> {
+    return page.evaluate(
+      () =>
+        document.getAnimations().filter((a) => {
+          const t = (a.effect as KeyframeEffect | null)?.target;
+          return (
+            t instanceof Element &&
+            t.closest("[data-specimen]") &&
+            a.playState === "running"
+          );
+        }).length,
+    );
+  }
+
+  test("criterion 13: 0 specimen animations run before a Replay, and each Replay plays its specimen once", async ({
+    page,
+  }) => {
+    await open(page, "/brand/motion/");
+    for (let i = 0; i < 6; i++) {
+      expect(await running(page)).toBe(0);
+      await page.waitForTimeout(250);
+    }
+    for (const name of ["Replay the entrance", "Replay the reveal"]) {
+      await page.getByRole("button", { name }).click();
+      await expect.poll(() => running(page)).toBeGreaterThan(0);
+      await expect.poll(() => running(page), { timeout: 3000 }).toBe(0);
+      await page.waitForTimeout(500);
+      expect(await running(page)).toBe(0);
+    }
+  });
+
+  test("criterion 13: under reduced motion, Replay plays nothing and the dots are in place", async ({
+    page,
+  }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await open(page, "/brand/motion/");
+    for (const name of ["Replay the entrance", "Replay the reveal"]) {
+      await page.getByRole("button", { name }).click();
+      await page.waitForTimeout(100);
+      expect(await running(page)).toBe(0);
+    }
+    const dots = await page
+      .locator('[data-specimen] [data-slot="four-dot-dot"]')
+      .evaluateAll((els) =>
+        els.map((e) => {
+          const s = getComputedStyle(e);
+          return `${s.opacity} ${s.transform}`;
+        }),
+      );
+    expect(dots).toEqual(Array(8).fill("1 none"));
+  });
+});
+
+test.describe("017 criterion 8: no four-colour mark on a field, on 017's pages", () => {
+  const PAGES_017 = SITEMAP.filter((p) => p.spec === "017").map((p) => p.path);
+
+  test("on every 017 page, every four-colour mark sits on the canvas, a card or glass, never on a field", async ({
+    page,
+  }) => {
+    test.setTimeout(300_000);
+    expect(PAGES_017).toHaveLength(21);
+    const wrong: string[] = [];
+    for (const p of PAGES_017) {
+      await open(page, p);
+      const found = await page.evaluate((fields) => {
+        const bad: string[] = [];
+        for (const mark of document.querySelectorAll(
+          '[data-slot="four-dot"]',
+        )) {
+          const colours = new Set(
+            [...mark.querySelectorAll('[data-slot="four-dot-dot"]')].map(
+              (d) => getComputedStyle(d).backgroundColor,
+            ),
+          );
+          if (colours.size !== 4) continue;
+          // The nearest ancestor that paints a ground.
+          let el = mark.parentElement;
+          while (
+            el &&
+            ["rgba(0, 0, 0, 0)", "transparent"].includes(
+              getComputedStyle(el).backgroundColor,
+            )
+          )
+            el = el.parentElement;
+          if (el?.matches(fields))
+            bad.push(
+              mark.closest("[data-slot]")?.getAttribute("data-slot") ?? "mark",
+            );
+        }
+        return bad;
+      }, FIELDS);
+      if (found.length) wrong.push(`${p}: ${found.join(", ")}`);
+    }
+    expect(wrong).toEqual([]);
+  });
+});

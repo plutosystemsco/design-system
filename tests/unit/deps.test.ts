@@ -279,3 +279,21 @@ describe("the npm packages items name", () => {
       expect(pkg.devDependencies[name]).toBe(range);
   });
 });
+
+// 017 decision 4: the two packages that outline the downloads' word, exact.
+const PACKAGES_017: [name: string, version: string, specifier: string][] = [
+  ["fontkit", "2.0.4", "2.0.4"],
+  ["wawoff2", "2.0.1", "2.0.1"],
+];
+PACKAGES.push(...PACKAGES_017);
+
+describe("017: the downloads' two packages", () => {
+  test.each(PACKAGES_017)(
+    "%s: bun.lock resolves %s; package.json says %s, exact, in devDependencies",
+    (name, version, spec) => {
+      expect(pkg.devDependencies[name]).toBe(spec);
+      expect(lock.workspaces[""].devDependencies[name]).toBe(spec);
+      expect(lock.packages[name][0]).toBe(`${name}@${version}`);
+    },
+  );
+});

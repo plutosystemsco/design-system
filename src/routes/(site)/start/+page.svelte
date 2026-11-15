@@ -31,6 +31,11 @@
           label="Add the button"
         />
       </div>
+      <p class="text-sm">
+        <code>-y</code> answers yes to its questions, and <code>-o</code> lets
+        it update <code>src/app.css</code> and write over existing files without asking.
+        Leave them off to be asked at each step.
+      </p>
     </div>
   {/snippet}
 

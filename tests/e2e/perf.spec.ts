@@ -157,3 +157,31 @@ test.describe("015: the budgets", () => {
     });
   }
 });
+
+// 017 decision 11: the heaviest Brand page. Its budget started as the home
+// page's, borrowed and INFERRED; measured at 017's checkpoint (3 runs,
+// medians 289 kB, LCP 820 ms, CLS 0.002), it is the median plus 20%, within
+// the home page's. CLS is max(median × 1.2, 0.02), checkpoint 1's rule.
+const COLOUR_BUDGET = { transfer: 347, lcp: 984, cls: 0.02 };
+
+test.describe("017: the Colour page's budget", () => {
+  test(`/brand/colour/: transfer ≤ ${COLOUR_BUDGET.transfer} kB, LCP ≤ ${COLOUR_BUDGET.lcp} ms, CLS ≤ ${COLOUR_BUDGET.cls}, 0 .wasm`, async ({
+    browser,
+  }) => {
+    test.setTimeout(180_000);
+    const runs = [];
+    for (let i = 0; i < 3; i++)
+      runs.push(await measure(browser, origin + "/brand/colour/"));
+    console.log(`perf /brand/colour/: ${JSON.stringify(runs)}`);
+    expect(median(runs.map((r) => r.transfer))).toBeLessThanOrEqual(
+      COLOUR_BUDGET.transfer,
+    );
+    expect(median(runs.map((r) => r.lcp))).toBeLessThanOrEqual(
+      COLOUR_BUDGET.lcp,
+    );
+    expect(median(runs.map((r) => r.cls))).toBeLessThanOrEqual(
+      COLOUR_BUDGET.cls,
+    );
+    for (const r of runs) expect(r.wasm).toBe(0);
+  });
+});

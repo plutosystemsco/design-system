@@ -76,3 +76,51 @@ describe("015 criterion 4: no old address", () => {
     expect(hits).toEqual([]);
   });
 });
+
+describe("017: the page list", () => {
+  const added = SITEMAP.filter((p) => p.spec === "017");
+  const under = (door: string) =>
+    added.filter((p) => p.door === door).map((p) => p.path);
+
+  test("7 Foundations pages", () => {
+    expect(under("foundations")).toEqual([
+      "/foundations/tokens/",
+      "/foundations/colour/",
+      "/foundations/type/",
+      "/foundations/space-and-shape/",
+      "/foundations/motion/",
+      "/foundations/accessibility/",
+      "/foundations/code/",
+    ]);
+  });
+
+  test("9 Brand pages", () => {
+    expect(under("brand")).toEqual([
+      "/brand/mark/",
+      "/brand/colour/",
+      "/brand/type/",
+      "/brand/surfaces/",
+      "/brand/motion/",
+      "/brand/imagery/",
+      "/brand/voice/",
+      "/brand/products/",
+      "/brand/downloads/",
+    ]);
+  });
+
+  test("5 Start pages", () => {
+    expect(under("start")).toEqual([
+      "/start/install/",
+      "/start/theme/",
+      "/start/light-and-dark/",
+      "/start/modes/",
+      "/start/your-product/",
+    ]);
+  });
+
+  test("21 entries tagged 017, 102 in all, each under its door's landing", () => {
+    expect(added).toHaveLength(21);
+    expect(SITEMAP).toHaveLength(102);
+    for (const p of added) expect(p.parent).toBe(`/${p.door}/`);
+  });
+});

@@ -386,3 +386,92 @@ test.describe("015: public", () => {
     expect(wrong).toEqual([]);
   });
 });
+
+test.describe("017: the Foundations pages in build/", () => {
+  const built = (p: string) =>
+    readFileSync(path.join(BUILD, p, "index.html"), "utf8");
+
+  test("criterion 10: /foundations/tokens/, /colour/ and /code/ each hold every row of their table", async () => {
+    const { readTokens } = await import("../../scripts/tokens.ts");
+    const { tokenRows, codeRows } =
+      await import("../../src/lib/site/foundations/tables.ts");
+    const { colourRows } =
+      await import("../../src/lib/site/foundations/contrast-rows.server.ts");
+    const tokens = readTokens();
+    const attrs = (html: string, name: string) =>
+      [...html.matchAll(new RegExp(`${name}="([^"]+)"`, "g"))].map((m) => m[1]);
+
+    expect(attrs(built("foundations/tokens"), "data-token-row")).toEqual(
+      [
+        ...tokenRows(tokens).filter((r) => r.kind === "role"),
+        ...tokenRows(tokens).filter((r) => r.kind === "primitive"),
+      ].map((r) => r.id),
+    );
+    expect(attrs(built("foundations/colour"), "data-contrast-row")).toEqual(
+      colourRows(tokens).map((r) => `${r.theme}:${r.label}`),
+    );
+    expect(attrs(built("foundations/code"), "data-code-row")).toEqual(
+      codeRows(tokens).map((r) => r.role),
+    );
+  });
+
+  test("criterion 3: each token anchor resolves on the built /foundations/tokens/, and search.json is at most 30 kB gzipped", () => {
+    const index = JSON.parse(
+      readFileSync(path.join(BUILD, "search.json"), "utf8"),
+    ) as { path: string }[];
+    const anchors = index.filter((e) =>
+      e.path.startsWith("/foundations/tokens/#"),
+    );
+    expect(anchors.length).toBeGreaterThan(100);
+    const html = built("foundations/tokens");
+    for (const a of anchors)
+      expect(html).toContain(`id="${a.path.split("#")[1]}"`);
+    const gz = Bun.gzipSync(readFileSync(path.join(BUILD, "search.json")));
+    expect(gz.length).toBeLessThanOrEqual(30 * 1024);
+  });
+});
+
+test.describe("017: the Brand pages and downloads in build/", () => {
+  const BRAND = SITEMAP.filter((p) => p.spec === "017" && p.door === "brand");
+  const main = (p: string) => {
+    const html = readFileSync(path.join(BUILD, p, "index.html"), "utf8");
+    return html.slice(html.indexOf("<main"), html.indexOf("</main>"));
+  };
+
+  test("criterion 5: the 6 files are in build/brand/downloads/, each equal to downloadSvg's output", async () => {
+    const { readTokens } = await import("../../scripts/tokens.ts");
+    const { DOWNLOADS, downloadSvg } =
+      await import("../../src/lib/site/brand/downloads.ts");
+    const tokens = readTokens();
+    expect(
+      readdirSync(path.join(BUILD, "brand/downloads"))
+        .filter((f) => f.endsWith(".svg"))
+        .sort(),
+    ).toEqual(DOWNLOADS.map((d) => d.file).sort());
+    for (const d of DOWNLOADS)
+      expect(
+        readFileSync(path.join(BUILD, "brand/downloads", d.file), "utf8"),
+      ).toBe(await downloadSvg(tokens, d.file));
+  });
+
+  test("criterion 11: in the 9 Brand pages' main, 0 p, li, td or figcaption lack data-claim, outside the breadcrumb's nav", () => {
+    expect(BRAND).toHaveLength(9);
+    const missing = BRAND.flatMap((p) =>
+      [
+        ...main(p.path)
+          .replace(/<nav\b[\s\S]*?<\/nav>/g, "")
+          .matchAll(/<(p|li|td|figcaption)\b([^>]*)>/g),
+      ]
+        .filter((m) => !/\bdata-claim=/.test(m[2]))
+        .map((m) => `${p.path}: <${m[1]}${m[2]}>`),
+    );
+    expect(missing).toEqual([]);
+  });
+
+  test("criterion 11: the products page says the icons are not drawn; 0 pages mention a signature device", () => {
+    expect(main("/brand/products/")).toContain(
+      "The icons themselves are not drawn yet.",
+    );
+    for (const p of BRAND) expect(main(p.path)).not.toMatch(/signature/i);
+  });
+});

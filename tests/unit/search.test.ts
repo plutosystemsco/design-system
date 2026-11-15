@@ -48,3 +48,34 @@ describe("015: the search index", () => {
     expect(search(index, "zzzz")).toEqual([]);
   });
 });
+
+describe("017 decision 10: the token entries", () => {
+  const index = buildIndex(SOURCES);
+  const anchors = index.filter((e) =>
+    e.path.startsWith("/foundations/tokens/#"),
+  );
+
+  test("search/sources/ holds 2 modules, pages and tokens", () => {
+    expect(
+      readdirSync(DIR)
+        .filter((f) => f.endsWith(".ts"))
+        .sort(),
+    ).toEqual(["pages.ts", "tokens.ts"]);
+  });
+
+  test("1 anchor entry for every theme role and every primitive, each once", async () => {
+    const { readTokens } = await import("../../scripts/tokens.ts");
+    const tokens = readTokens();
+    const names = [
+      ...Object.keys(tokens.primitives).map((n) => `primitive-${n}`),
+      ...Object.keys(tokens.themes.light),
+    ];
+    expect(anchors.map((e) => e.path.split("#")[1]).sort()).toEqual(
+      names.sort(),
+    );
+    for (const e of anchors) {
+      expect(e.door).toBe("foundations");
+      expect(e.summary).toMatch(/^[A-Z].*\.$/);
+    }
+  });
+});

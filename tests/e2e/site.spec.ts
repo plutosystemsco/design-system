@@ -283,3 +283,156 @@ test.describe("015 criterion 23: the 404 page at any depth", () => {
 test("the page list names every page once", () => {
   expect(new Set(SITEMAP.map((p) => p.path)).size).toBe(SITEMAP.length);
 });
+
+test.describe("017: the downloads, the figures and the lockup's width", () => {
+  test("criterion 5: each download link answers 200, as image/svg+xml", async ({
+    page,
+    request,
+  }) => {
+    await open(page, "/brand/downloads/");
+    const links = page.locator('[data-slot="download-link"]');
+    await expect(links).toHaveCount(6);
+    for (const href of await links.evaluateAll((els) =>
+      els.map((e) => e.getAttribute("href")!),
+    )) {
+      const res = await request.get(href);
+      expect(res.status(), href).toBe(200);
+      expect(res.headers()["content-type"], href).toContain("image/svg+xml");
+    }
+  });
+
+  for (const [path, dims] of [
+    ["/brand/mark/", ["mark", "lockup"]],
+    ["/brand/type/", ["ladder"]],
+  ] as const) {
+    test(`criterion 9: ${path}'s figures are named images, and their lists equal the token file`, async ({
+      page,
+    }) => {
+      const { readTokens } = await import("../../scripts/tokens.ts");
+      const t = readTokens();
+      const m = t.mark;
+      const want: Record<string, Record<string, string>> = {
+        mark: {
+          dot: String(m.dot),
+          gap: String(m.gap),
+          side: String(2 * m.dot + m.gap),
+        },
+        lockup: {
+          lockupScale: String(m.lockupScale),
+          lockupGap: String(m.lockupGap),
+          rise: String(m.rise),
+          top: String((m.rise + 2 * m.dot + m.gap) * m.lockupScale),
+        },
+        ladder: Object.fromEntries(
+          Object.entries(t.expressive.display.steps).map(([id, s]) => [
+            id,
+            `${s.minPx} ${s.maxPx} ${s.lineHeight}`,
+          ]),
+        ),
+      };
+      await open(page, path);
+      const figures = page.locator('[data-slot="brand-figure"]');
+      await expect(figures).toHaveCount(dims.length);
+      for (const f of await figures.all()) {
+        await expect(f).toHaveAttribute("role", "img");
+        expect((await f.getAttribute("aria-label"))?.length).toBeGreaterThan(
+          10,
+        );
+      }
+      for (const d of dims) {
+        const got = await page
+          .locator(`[data-figure-dims="${d}"] [data-dim]`)
+          .evaluateAll((els) =>
+            Object.fromEntries(
+              els.map((e) => [
+                e.getAttribute("data-dim"),
+                e.getAttribute("data-value"),
+              ]),
+            ),
+          );
+        expect(got).toEqual(want[d]);
+      }
+    });
+
+    test(`criterion 9: at 390 px, ${path}'s figures render 0 text elements, and the lists carry every dimension`, async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width: 390, height: 844 });
+      await open(page, path);
+      const rendered = await page
+        .locator('[data-slot="brand-figure"] text')
+        .evaluateAll(
+          (els) => els.filter((e) => e.getClientRects().length > 0).length,
+        );
+      expect(rendered).toBe(0);
+      for (const d of dims)
+        await expect(
+          page.locator(`[data-figure-dims="${d}"] [data-dim]`).first(),
+        ).toBeVisible();
+    });
+  }
+
+  test("criterion 7: Chromium's width of the lockup's word at 100 px equals the committed fixture, to 0.1 px", async ({
+    page,
+  }) => {
+    const fixture = JSON.parse(
+      readFileSync("tests/fixtures/lockup-word-width.json", "utf8"),
+    ) as { px: number; width: number };
+    await open(page, "/brand/mark/");
+    const width = await page.evaluate((px) => {
+      const lockup = document.querySelector<HTMLElement>(
+        '[data-slot="lockup"]',
+      )!;
+      lockup.style.fontSize = `${px}px`;
+      const word = [...lockup.childNodes].find(
+        (n) => n.nodeType === Node.TEXT_NODE && n.textContent!.trim(),
+      )!;
+      const range = document.createRange();
+      range.selectNodeContents(word);
+      return range.getBoundingClientRect().width;
+    }, fixture.px);
+    expect(
+      Math.abs(width - fixture.width),
+      "run `bun scripts/site/lockup-width.ts`",
+    ).toBeLessThanOrEqual(0.1);
+  });
+});
+
+test.describe("017: the install guide's copy buttons", () => {
+  for (const width of [1440, 390, 360]) {
+    test(`at ${width} px, no copy button's box meets its code's text`, async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await open(page, "/start/install/");
+      const hits = await page.evaluate(() => {
+        const out: string[] = [];
+        const meets = (a: DOMRect, b: DOMRect) =>
+          a.left < b.right &&
+          b.left < a.right &&
+          a.top < b.bottom &&
+          b.top < a.bottom;
+        const blocks = [
+          ...document.querySelectorAll('main [data-slot="code-block"]'),
+        ];
+        for (const [i, block] of blocks.entries()) {
+          const button = block
+            .querySelector('[data-slot="code-block-copy-button"]')!
+            .getBoundingClientRect();
+          for (const line of block.querySelectorAll(
+            '[data-slot="code-block-line"]',
+          )) {
+            const range = document.createRange();
+            range.selectNodeContents(line);
+            for (const r of range.getClientRects())
+              if (r.width > 0 && meets(button, r))
+                out.push(`block ${i + 1}: ${line.textContent!.slice(0, 40)}`);
+          }
+        }
+        return { blocks: blocks.length, out };
+      });
+      expect(hits.blocks).toBe(6);
+      expect(hits.out).toEqual([]);
+    });
+  }
+});

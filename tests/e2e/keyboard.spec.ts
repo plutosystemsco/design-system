@@ -1438,3 +1438,54 @@ test("the 8 viewer toolbars hold 69 stops", () => {
   expect(counts).toEqual([5, 9, 9, 10, 9, 11, 11, 5]);
   expect(counts.reduce((a, b) => a + b, 0)).toBe(69);
 });
+
+test.describe("017: the token page by keyboard", () => {
+  test.use({ permissions: ["clipboard-read", "clipboard-write"] });
+
+  test("criterion 4: Tab reaches the first 3 copy buttons in order, and Enter on the first says Copied", async ({
+    page,
+  }) => {
+    await open(page, "/foundations/tokens/");
+    const buttons = page.locator('[data-slot="token-copy"]');
+    const names = await buttons.evaluateAll((els) =>
+      els.slice(0, 3).map((e) => e.getAttribute("aria-label")),
+    );
+    expect(names).toEqual([
+      "Copy --background",
+      "Copy --foreground",
+      "Copy --card",
+    ]);
+    await page
+      .getByRole("region", { name: "Theme roles, table", exact: true })
+      .focus();
+    for (const name of names) {
+      await page.keyboard.press("Tab");
+      expect((await focused(page))?.name).toBe(name);
+    }
+    await buttons.first().focus();
+    await page.keyboard.press("Enter");
+    await expect(buttons.first()).toHaveAttribute("aria-label", "Copied");
+    expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(
+      "--background",
+    );
+  });
+});
+
+test.describe("017: the downloads by keyboard", () => {
+  test("criterion 4: Tab reaches the 6 download links in order", async ({
+    page,
+  }) => {
+    await open(page, "/brand/downloads/");
+    const files = await page
+      .locator('[data-slot="download-link"]')
+      .evaluateAll((els) => els.map((e) => e.textContent!.trim()));
+    expect(files).toHaveLength(6);
+    await page.locator('[data-slot="download-link"]').first().focus();
+    const reached = [(await focused(page))?.name];
+    for (let i = 1; i < 6; i++) {
+      await page.keyboard.press("Tab");
+      reached.push((await focused(page))?.name);
+    }
+    expect(reached).toEqual(files);
+  });
+});

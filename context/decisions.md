@@ -2,6 +2,118 @@
 
 The owner's answers and decisions, newest first. A decision that changes the constitution is also recorded in its Status line. "The design book" and "v2" both mean the Pluto Systems design book, version 2, the source of the brand's rules; a section of it is cited as "§03".
 
+### Accessibility status, a high-contrast scheme, and scoped schemes (2026-11-15)
+
+Three calls left open after the prior-art memos of 2026-11-15.
+
+**Accessibility status, generated from the test report.** **The owner:** "Yes to accessibility status, but everything should be accessible."
+- Each component page shows what was checked, generated from the test run: automated checks in both schemes, keyboard, contrast, forced colours, and the screen-reader notes.
+- It is evidence, not a grade. There is no "partial" or "not yet" state. A component that fails a check fails the build; it is never published with a failing status.
+- This reverses `015` decision 10, which left a "Checked" row off.
+
+**A high-contrast scheme.** **The owner:** "yes to high contrast theme." It follows `prefers-contrast: more` and can be set by hand. It is a theme change every installed app receives, so it is its own specification, researched with scoped schemes below.
+
+**Light and dark scoped to any part of a page.** **The owner:** "what should we do? we have lots to study from." The design lead's recommendation, to be confirmed by a memo on the prior art (`research/2026-11-15-scoped-schemes-and-contrast.md`) before it goes to a specification:
+- Each colour token holds both its values in one variable, with CSS `light-dark()`.
+- An attribute on any element sets `color-scheme`, so any subtree can be light or dark.
+- Registry items stop using Tailwind's `dark:` variant; a test forbids it. Every difference between schemes lives in the tokens.
+- High contrast is a second axis on the same attribute pattern, since `light-dark()` takes only two values.
+
+### No status mark, and items gain prop doc comments (2026-11-15)
+
+Two questions came out of the prior-art memos of 2026-11-15. **The owner:** "I'll follows your recommendations."
+
+- **No status mark on components** (`2026-11-15-prior-art-govuk.md`, idea 9, option a). An item's "since" already shows how new it is. There is no "new", "trial" or "beta" mark.
+- **Items gain doc comments on their props,** so the API table's "What it does" column fills in (`2026-11-15-design-sites-developer.md`; on Button, 1 of 11 rows has text today).
+  - It is its own specification after `018`, because it changes item source and so `static/r/`.
+  - It does not hold the `v0.12.0` tag.
+  - Until then, `018` hides the column where an item's table has no text in it.
+
+### Every page but home has a left navigation (2026-11-15)
+
+**The owner,** looking at the site beside the reference design-system sites: "One clear thing we need is a left navigation bar when not on the home page."
+
+Today a page outside home shows its section's siblings and "On this page" only in a right rail, and nothing persistent on the left.
+
+**What follows:**
+- Every page but `/` gets a left navigation for its door:
+  - Start's five guides;
+  - Components' 75 pages under their 11 groups;
+  - Brand's nine pages;
+  - Foundations' seven pages;
+  - the changelog under the site's own links.
+- The current page is marked, and the nav is generated from `sitemap.ts`.
+- The right rail keeps "On this page" only.
+- Below the desktop breakpoint, the left nav folds into the menu.
+
+This is the first decision of the site-polish specification (`018`), which the design-site teardowns of 2026-11-15 feed.
+
+Asked whether `018` ships before or after the `v0.12.0` tag, **the owner:** before (the recommended option). The local tag waits until `018` is built and its change review is dispositioned. Nothing is published yet, so the site's first public version carries the left nav and the polish.
+
+The order is now:
+1. `017`'s change review and commit;
+2. the follow-up commit (`kbd`, dark `type`, the address);
+3. `018`'s research synthesis, then its spec, review, build and change review;
+4. the tag.
+
+### `kbd` sits on the code ground and can be selected (2026-11-15)
+
+**The owner,** looking at the Kbd page: "for kbd, is this inline code? If so, on light mode the background should be white, and I should be able to use my mouse to select the text."
+
+`kbd` is the Kbd component, not inline code. `014` left `kbd` and `samp` out of the chip on purpose. The owner's word amends that for `kbd`:
+- **Ground:** the Kbd component takes the code ground, `bg-code-background` (white in light, `#2C2821` in dark), not `bg-muted`, with its hairline edge kept.
+- **Selection:** it drops `select-none` and `pointer-events-none`, which came from shadcn-svelte's original, so its text can be selected and copied. A click on it still reaches a button it sits in.
+- **Text:** it keeps the muted foreground.
+
+This is an interface change to the `kbd` item, with a changelog line and a test for the ground and selection. It lands in the same follow-up commit as dark `type` and the site's address, after `017`.
+
+### Dark type is `#A8C0D8`, and the site's temporary address (2026-11-15)
+
+Asked, with a side-by-side of the TypeScript, Rust and Python samples in dark, whether dark `type` stays `#9FB1DD` or moves to `#A8C0D8`, **the owner:** "lets use the new blue." Dark `syntax-navy`, the `type` role, becomes **`#A8C0D8`**:
+- ΔE 8.8 from function (was 5.2), 10.9 from keyword, 10.8 from text, 8.5 from comment;
+- 7.81:1 on `#2C2821`, inside the 6.5 to 9.5 range.
+
+Light `type` (`#243B7A`) is unchanged. It lands as its own commit on `release/0.12.0` after `017`, with a changelog line, and `013`'s palette table is amended to match.
+
+Asked for the `<account>` part of the `workers.dev` address, **the owner:** "claygendron.workers.dev". Until `design.<domain>` is set, the site's origin is **`https://pluto-systems-design.claygendron.workers.dev`**. `SITE_ORIGIN` takes it, and `015`'s release check then passes. The noindex rule on that host stands.
+
+### The owner confirms the calls taken while away (2026-11-15)
+
+Asked on return about the three calls taken while the owner was away, **the owner:** "Sounds good."
+
+The three calls now stand as the owner's:
+- noindex on the `workers.dev` host;
+- no published item file cites an internal document;
+- three download colourways: colour, paper and ink.
+
+Asked whether the `product-home` sample may keep `github.com/ClayGendron/vfs`, **the owner:** "the github url is plutosystemsco/design-system, vfs is seperate." The design system's own address, `plutosystemsco/design-system`, is the one the site uses. The `vfs` address belongs to a separate project, so the sample keeps it.
+
+### After the `017` build's checkpoint (2026-11-15)
+
+The design lead looked at the nine Brand pages at 1440 and 390, in both themes. There were no page errors and no sideways scroll. The design lead also set the six downloads beside the live lockup at 2×. The colour, paper and ink lockups and marks match the live lockup's proportions and the dots' placement, so they are kept. The lockup-width fixture (225.000 px at 100 px) agrees with fontkit's outline.
+
+- **Dark glass over the yellow band,** first shown on screen on `/brand/colour/`: 10.89:1 as painted (10.90 computed); 15.52:1 in light. Glass text there is foreground only, so the 4.60 muted row is never set.
+- **The Brand prose was edited by the design lead's editor against "settled only", R23 and R24.** Seven pages changed; Products, Downloads and the summaries were kept. Seventeen claims were cut or corrected because no source said them, or a source contradicted them. Among them:
+  - the poster face "once on a page";
+  - "WCAG exempts a logo";
+  - "every other graphic meets 3:1", which the yellow chart series contradicts;
+  - J2's "nothing moves on its own", which is true only after the hello;
+  - the mono face "for anything a reader may type";
+  - an invented L3 gloss;
+  - imagery's M2 to M4 described against what the owner chose.
+
+  The red band's job now reads as the product's danger role. The page's "Brand red and error red" section still keeps the two apart by where they appear.
+- **Imagery, M4: the meters are removed.** M4 settled large abstract images made from data, for campaigns. Three meters are a chart, not that. Drawing an abstract image now would invent brand art the owner has not seen. So the section says, as "People at work" does, that Pluto has none drawn yet. This deviates from `017` decision 7's "a chart".
+- **Imagery, M1: the search card stays, captioned** as the system's own search card as it renders. It is real output of real parts, not a staged scene.
+- **Poster type on the Colour bands stays.** The Brand section is an owned moment by `015`'s ruling: fields appear only on the home page, the landings and Brand.
+- **Accepted deviations:**
+  - primitive anchors are `#primitive-<name>`;
+  - the claims check skips 015's breadcrumb;
+  - the new shared `foundations/` and `snippet.svelte`;
+  - the downloads shown on fixed light grounds;
+  - the reveal specimen played through the Web Animations API;
+  - tests seen failing by mutation where they were written after their code.
+
 ### The Button page's transfer budget is 365 kB (2026-11-15)
 
 After step 2's cuts, `/components/button/` came down from 371 kB to exactly 360 kB:
