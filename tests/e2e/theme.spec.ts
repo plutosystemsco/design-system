@@ -6,6 +6,7 @@ import {
   open,
   openView,
   PAGES,
+  TEST_VIEWS,
   VIEWS,
   type ThemeName,
 } from "./pages.ts";
@@ -33,6 +34,14 @@ for (const view of VIEWS) {
     page,
   }, info) => {
     await openView(page, view.path);
+    await expectTheme(page, info.project.name as ThemeName);
+  });
+}
+
+// 013 decision 21: the test views.
+for (const path of TEST_VIEWS) {
+  test(`${path} takes the theme from the system`, async ({ page }, info) => {
+    await openView(page, path);
     await expectTheme(page, info.project.name as ThemeName);
   });
 }

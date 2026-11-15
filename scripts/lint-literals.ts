@@ -21,7 +21,7 @@
  * `syntax-<hue>` name anywhere in an item file. The five syntax colours exist
  * for the code slots alone; Tailwind also emits `text-(--syntax-orange)` and
  * `text-(--color-syntax-orange)`, and a `.ts` theme string may write
- * `var(--syntax-teal)`, so a class rule would miss them. 004 decision 15 adds
+ * `var(--syntax-navy)`, so a class rule would miss them. 004 decision 15 adds
  * L20 and L21: an injected stylesheet (`<svelte:element this="style">`), and a
  * CSS length or named colour inside a quoted string of a `.ts` or `.svelte.ts`
  * item file, such as a CodeMirror theme object.

@@ -16,12 +16,13 @@
   const python = pythonSetup();
 
   // The examples: the class sample; a long file, whose tail is parsed in
-  // idle time; the roles plugin's edge cases. Chosen through reset(), as an
+  // idle time; Python's edge cases (a shebang, a def-line comment, keyword
+  // arguments named like built-ins). Chosen through reset(), as an
   // app loads a file.
   const examples: Record<string, { title: string; code: string }> = {
     class: { title: "A decorated class", code: PYTHON_CLASS },
     long: { title: "A long file, 40 lines of 180 characters", code: LONG },
-    edge: { title: "The roles' edge cases", code: EDGE },
+    edge: { title: "Python's edge cases", code: EDGE },
   };
   let example = $state("class");
 
@@ -42,7 +43,7 @@
 <PreviewSection
   id="variants"
   title="Variants"
-  intro="CodeMirror 6 on the code ground the code block shares, edged by the same hairline, every colour and size from the tokens, the same twenty-one slots the code block reads. It grows with its document, scrolls long lines sideways, and binds no Tab. The code is in the page before any script runs, as a plain pre that the editor replaces on mount. The example is a decorated class: a docstring, annotations, a property, self, an f-string and built-ins."
+  intro="CodeMirror 6 on the code ground the code block shares, edged by the same hairline, every colour and size from the tokens. Its colour comes from the highlighter, the same tree-sitter session a code block streams through, so the editor colours code exactly as the block does. It grows with its document, scrolls long lines sideways, and binds no Tab. The code is in the page before any script runs, as a plain pre that the editor replaces on mount. The example is a decorated class: a docstring, annotations, a property, self, an f-string and built-ins."
 >
   <div class="grid max-w-2xl gap-8">
     <Specimen caption="pythonSetup(), a bound value and onrun" class="w-full">

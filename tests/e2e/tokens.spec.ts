@@ -168,14 +168,17 @@ test.describe("tokens in the browser", () => {
     );
   });
 
-  // 004 decision 17: the code tokens and the scrollbar utility, in each theme.
-  test("text-code-keyword computes --primary's colour", async ({ page }) => {
+  // 004 decision 17: the code tokens and the scrollbar utility, in each theme;
+  // 013 decision 12: the keyword is Tombaugh's violet.
+  test("text-code-keyword computes --syntax-violet's colour", async ({
+    page,
+  }) => {
     const [colour, primary] = await page
       .locator(token("text-code-keyword"))
       .evaluate((el) => [
         getComputedStyle(el).color,
         getComputedStyle(document.documentElement)
-          .getPropertyValue("--primary")
+          .getPropertyValue("--syntax-violet")
           .trim(),
       ]);
     expect(holdsColour(colour, primary), `${colour} is ${primary}`).toBe(true);

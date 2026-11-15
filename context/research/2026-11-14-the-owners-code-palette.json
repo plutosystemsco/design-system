@@ -1,0 +1,93 @@
+{
+  "candidates": [
+    {
+      "id": "owners-picks",
+      "name": "The owner's picks",
+      "summary": "The owner's slot choices of 2026-11-14 on code-only swatches: blue keywords and tags, navy functions, built-ins and decorators, violet types, green strings, red numbers, plum escapes, a deeper and yellower amber for constants, self and properties plain. Slots the owner did not name follow Ink and Plum.",
+      "recommended": false,
+      "palette": {
+        "format": "pluto-code-palette",
+        "version": 1,
+        "swatches": {
+          "foreground": {
+            "light": "#0B0F17",
+            "dark": "#F3F0E8"
+          },
+          "syntax-blue": {
+            "light": "#2D48D4",
+            "dark": "#93B0FF"
+          },
+          "syntax-red": {
+            "light": "#C11E31",
+            "dark": "#FF9491"
+          },
+          "syntax-amber": {
+            "light": "#7C5500",
+            "dark": "#F6B128"
+          },
+          "syntax-green": {
+            "light": "#006638",
+            "dark": "#85EAAB"
+          },
+          "syntax-plum": {
+            "light": "#630042",
+            "dark": "#FAB9D1"
+          },
+          "syntax-navy": {
+            "light": "#1F3067",
+            "dark": "#BAD1FF"
+          },
+          "syntax-violet": {
+            "light": "#7136A3",
+            "dark": "#BA87D1"
+          },
+          "syntax-comment": {
+            "light": "#5C616D",
+            "dark": "#9C9689"
+          },
+          "syntax-ground": {
+            "light": "#FFFFFF",
+            "dark": "#2C2821"
+          },
+          "syntax-line": {
+            "light": "#F1F2F4",
+            "dark": "#22211E"
+          },
+          "syntax-selection": {
+            "light": "#DDE2F8",
+            "dark": "#1F2B51"
+          }
+        },
+        "slots": {
+          "keyword": "syntax-blue",
+          "constant": "syntax-amber",
+          "string": "syntax-green",
+          "number": "syntax-red",
+          "escape": "syntax-plum",
+          "function": "syntax-navy",
+          "builtin": "syntax-navy",
+          "type": "syntax-violet",
+          "tag": "syntax-blue",
+          "decorator": "syntax-navy",
+          "self": "foreground",
+          "foreground": "foreground",
+          "property": "foreground",
+          "comment": "syntax-comment",
+          "link": "syntax-blue",
+          "changed": "syntax-blue",
+          "inserted": "syntax-green",
+          "invalid": "syntax-red",
+          "deleted": "syntax-red",
+          "background": "syntax-ground",
+          "active-line": "syntax-line",
+          "selection": "syntax-selection"
+        },
+        "styles": {
+          "comment": {
+            "italic": true
+          }
+        }
+      }
+    }
+  ]
+}

@@ -79,33 +79,33 @@
           "elevation-line": "#857E70",
           "elevation-shadow": "#00000000",
           "scrim": "#0B0F1780",
-          "syntax-orange": "#A44F12",
-          "syntax-amber": "#915B00",
-          "syntax-purple": "#903ACE",
-          "syntax-teal": "#15717A",
-          "syntax-cyan": "#1A6C97",
+          "syntax-violet": "#7032B9",
+          "syntax-blue": "#3350CB",
+          "syntax-navy": "#243B7A",
+          "syntax-green": "#007150",
+          "syntax-yellow": "#6C5A00",
+          "syntax-orange": "#A34D15",
+          "syntax-plum": "#922F6E",
+          "syntax-red": "#B81C2E",
+          "syntax-grey": "#636972",
+          "syntax-ink": "#25292F",
           "syntax-ground": "#FFFFFF",
           "syntax-active-line": "#F3F0E8",
-          "code-foreground": "var(--foreground)",
+          "code-text": "var(--syntax-ink)",
+          "code-comment": "var(--syntax-grey)",
+          "code-keyword": "var(--syntax-violet)",
+          "code-function": "var(--syntax-blue)",
+          "code-type": "var(--syntax-navy)",
+          "code-string": "var(--syntax-green)",
+          "code-number": "var(--syntax-yellow)",
+          "code-constant": "var(--syntax-orange)",
+          "code-meta": "var(--syntax-plum)",
+          "code-special": "var(--syntax-red)",
+          "code-link": "var(--syntax-blue)",
+          "code-inserted": "var(--syntax-green)",
+          "code-deleted": "var(--syntax-red)",
+          "code-changed": "var(--syntax-blue)",
           "code-background": "var(--syntax-ground)",
-          "code-comment": "var(--muted-foreground)",
-          "code-keyword": "var(--primary)",
-          "code-constant": "var(--primary)",
-          "code-string": "var(--success)",
-          "code-number": "var(--syntax-orange)",
-          "code-escape": "var(--syntax-orange)",
-          "code-function": "var(--syntax-amber)",
-          "code-builtin": "var(--syntax-purple)",
-          "code-type": "var(--syntax-teal)",
-          "code-tag": "var(--syntax-teal)",
-          "code-property": "var(--syntax-cyan)",
-          "code-decorator": "var(--syntax-purple)",
-          "code-self": "var(--syntax-purple)",
-          "code-link": "var(--primary)",
-          "code-invalid": "var(--destructive)",
-          "code-inserted": "var(--success)",
-          "code-deleted": "var(--destructive)",
-          "code-changed": "var(--primary)",
           "code-active-line": "var(--syntax-active-line)"
         },
         "dark": {
@@ -157,33 +157,33 @@
           "elevation-line": "#7A7366",
           "elevation-shadow": "#00000000",
           "scrim": "#0B0F1799",
-          "syntax-orange": "#E7792A",
-          "syntax-amber": "#F19E20",
-          "syntax-purple": "#B780DF",
-          "syntax-teal": "#20A6B3",
-          "syntax-cyan": "#269DD8",
+          "syntax-violet": "#C4A4FE",
+          "syntax-blue": "#91AEFD",
+          "syntax-navy": "#9FB1DD",
+          "syntax-green": "#5CC89A",
+          "syntax-yellow": "#E5CD72",
+          "syntax-orange": "#FFA373",
+          "syntax-plum": "#EB9BC8",
+          "syntax-red": "#FC8D8A",
+          "syntax-grey": "#9EA4AE",
+          "syntax-ink": "#D9DFE8",
           "syntax-ground": "#2C2821",
           "syntax-active-line": "#221F19",
-          "code-foreground": "var(--foreground)",
+          "code-text": "var(--syntax-ink)",
+          "code-comment": "var(--syntax-grey)",
+          "code-keyword": "var(--syntax-violet)",
+          "code-function": "var(--syntax-blue)",
+          "code-type": "var(--syntax-navy)",
+          "code-string": "var(--syntax-green)",
+          "code-number": "var(--syntax-yellow)",
+          "code-constant": "var(--syntax-orange)",
+          "code-meta": "var(--syntax-plum)",
+          "code-special": "var(--syntax-red)",
+          "code-link": "var(--syntax-blue)",
+          "code-inserted": "var(--syntax-green)",
+          "code-deleted": "var(--syntax-red)",
+          "code-changed": "var(--syntax-blue)",
           "code-background": "var(--syntax-ground)",
-          "code-comment": "var(--muted-foreground)",
-          "code-keyword": "var(--primary)",
-          "code-constant": "var(--primary)",
-          "code-string": "var(--success)",
-          "code-number": "var(--syntax-orange)",
-          "code-escape": "var(--syntax-orange)",
-          "code-function": "var(--syntax-amber)",
-          "code-builtin": "var(--syntax-purple)",
-          "code-type": "var(--syntax-teal)",
-          "code-tag": "var(--syntax-teal)",
-          "code-property": "var(--syntax-cyan)",
-          "code-decorator": "var(--syntax-purple)",
-          "code-self": "var(--syntax-purple)",
-          "code-link": "var(--primary)",
-          "code-invalid": "var(--destructive)",
-          "code-inserted": "var(--success)",
-          "code-deleted": "var(--destructive)",
-          "code-changed": "var(--primary)",
           "code-active-line": "var(--syntax-active-line)"
         },
         "theme": {
@@ -220,26 +220,21 @@
           "shadow-elevation": "0 0 0 var(--line-width) var(--elevation-line), 0 0.75rem 2rem 0 var(--elevation-shadow)",
           "animate-enter": "pluto-enter var(--motion-micro) cubic-bezier(0.2, 0.7, 0.3, 1)",
           "animate-exit": "pluto-exit var(--motion-micro) cubic-bezier(0.2, 0.7, 0.3, 1) forwards",
-          "color-code-foreground": "var(--code-foreground)",
-          "color-code-background": "var(--code-background)",
+          "color-code-text": "var(--code-text)",
           "color-code-comment": "var(--code-comment)",
           "color-code-keyword": "var(--code-keyword)",
-          "color-code-constant": "var(--code-constant)",
+          "color-code-function": "var(--code-function)",
+          "color-code-type": "var(--code-type)",
           "color-code-string": "var(--code-string)",
           "color-code-number": "var(--code-number)",
-          "color-code-escape": "var(--code-escape)",
-          "color-code-function": "var(--code-function)",
-          "color-code-builtin": "var(--code-builtin)",
-          "color-code-type": "var(--code-type)",
-          "color-code-tag": "var(--code-tag)",
-          "color-code-property": "var(--code-property)",
-          "color-code-decorator": "var(--code-decorator)",
-          "color-code-self": "var(--code-self)",
+          "color-code-constant": "var(--code-constant)",
+          "color-code-meta": "var(--code-meta)",
+          "color-code-special": "var(--code-special)",
           "color-code-link": "var(--code-link)",
-          "color-code-invalid": "var(--code-invalid)",
           "color-code-inserted": "var(--code-inserted)",
           "color-code-deleted": "var(--code-deleted)",
           "color-code-changed": "var(--code-changed)",
+          "color-code-background": "var(--code-background)",
           "color-code-active-line": "var(--code-active-line)"
         }
       },
@@ -672,7 +667,7 @@
             "font-variant-ligatures": "none"
           },
           "code:not(pre code, :is(h1, h2, h3, h4, h5, h6) code)": {
-            "@apply rounded border border-border bg-code-background px-1 text-code-foreground box-decoration-clone": {}
+            "@apply rounded border border-border bg-code-background px-1 text-code-text box-decoration-clone": {}
           },
           "a code:not(pre code, :is(h1, h2, h3, h4, h5, h6) code)": {
             "@apply text-code-link": {}
@@ -2259,9 +2254,9 @@
       "name": "code-editor",
       "type": "registry:ui",
       "title": "Code editor",
-      "description": "A CodeMirror 6 editor themed from the tokens, with line numbers and Python, that prerenders as plain code and leaves Tab unbound.",
+      "description": "A CodeMirror 6 editor themed from the tokens and coloured by the highlighter, with line numbers and Python, that prerenders as plain code and leaves Tab unbound.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme"],
+      "registryDependencies": ["utils", "pluto-theme", "highlighter"],
       "files": [
         {
           "path": "src/lib/registry/ui/code-editor/code-editor.svelte",
@@ -2273,6 +2268,10 @@
         },
         {
           "path": "src/lib/registry/ui/code-editor/code-editor-python.ts",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/code-editor/code-editor-highlighting.ts",
           "type": "registry:ui"
         },
         {
@@ -2290,27 +2289,184 @@
       "name": "highlighter",
       "type": "registry:lib",
       "title": "Highlighter",
-      "description": "Shiki with the JavaScript engine and a theme whose every colour is a code token, for the server or the browser.",
+      "description": "Code highlighted in Meridian's roles: tree-sitter with this system's own queries for 21 languages, Shiki for the rest and as the fallback, every colour a code token, for the server or the browser.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
       "registryDependencies": ["utils", "pluto-theme"],
       "files": [
         {
           "path": "src/lib/registry/lib/highlighter.ts",
-          "type": "registry:lib"
+          "type": "registry:lib",
+          "target": "highlighter.ts"
+        },
+        {
+          "path": "src/lib/registry/lib/highlight/roles.ts",
+          "type": "registry:lib",
+          "target": "highlight/roles.ts"
+        },
+        {
+          "path": "src/lib/registry/lib/highlight/languages.ts",
+          "type": "registry:lib",
+          "target": "highlight/languages.ts"
+        },
+        {
+          "path": "src/lib/registry/lib/highlight/tree-sitter.ts",
+          "type": "registry:lib",
+          "target": "highlight/tree-sitter.ts"
+        },
+        {
+          "path": "src/lib/registry/lib/highlight/shiki.ts",
+          "type": "registry:lib",
+          "target": "highlight/shiki.ts"
+        },
+        {
+          "path": "src/lib/registry/lib/highlight/queries/bash.scm",
+          "type": "registry:lib",
+          "target": "highlight/queries/bash.scm"
+        },
+        {
+          "path": "src/lib/registry/lib/highlight/queries/c-sharp.scm",
+          "type": "registry:lib",
+          "target": "highlight/queries/c-sharp.scm"
+        },
+        {
+          "path": "src/lib/registry/lib/highlight/queries/c.scm",
+          "type": "registry:lib",
+          "target": "highlight/queries/c.scm"
+        },
+        {
+          "path": "src/lib/registry/lib/highlight/queries/cpp.scm",
+          "type": "registry:lib",
+          "target": "highlight/queries/cpp.scm"
+        },
+        {
+          "path": "src/lib/registry/lib/highlight/queries/css.scm",
+          "type": "registry:lib",
+          "target": "highlight/queries/css.scm"
+        },
+        {
+          "path": "src/lib/registry/lib/highlight/queries/go.scm",
+          "type": "registry:lib",
+          "target": "highlight/queries/go.scm"
+        },
+        {
+          "path": "src/lib/registry/lib/highlight/queries/html.scm",
+          "type": "registry:lib",
+          "target": "highlight/queries/html.scm"
+        },
+        {
+          "path": "src/lib/registry/lib/highlight/queries/java.scm",
+          "type": "registry:lib",
+          "target": "highlight/queries/java.scm"
+        },
+        {
+          "path": "src/lib/registry/lib/highlight/queries/javascript.locals.scm",
+          "type": "registry:lib",
+          "target": "highlight/queries/javascript.locals.scm"
+        },
+        {
+          "path": "src/lib/registry/lib/highlight/queries/javascript.scm",
+          "type": "registry:lib",
+          "target": "highlight/queries/javascript.scm"
+        },
+        {
+          "path": "src/lib/registry/lib/highlight/queries/json.scm",
+          "type": "registry:lib",
+          "target": "highlight/queries/json.scm"
+        },
+        {
+          "path": "src/lib/registry/lib/highlight/queries/jsx.scm",
+          "type": "registry:lib",
+          "target": "highlight/queries/jsx.scm"
+        },
+        {
+          "path": "src/lib/registry/lib/highlight/queries/kotlin.scm",
+          "type": "registry:lib",
+          "target": "highlight/queries/kotlin.scm"
+        },
+        {
+          "path": "src/lib/registry/lib/highlight/queries/php.scm",
+          "type": "registry:lib",
+          "target": "highlight/queries/php.scm"
+        },
+        {
+          "path": "src/lib/registry/lib/highlight/queries/python.scm",
+          "type": "registry:lib",
+          "target": "highlight/queries/python.scm"
+        },
+        {
+          "path": "src/lib/registry/lib/highlight/queries/ruby.locals.scm",
+          "type": "registry:lib",
+          "target": "highlight/queries/ruby.locals.scm"
+        },
+        {
+          "path": "src/lib/registry/lib/highlight/queries/ruby.scm",
+          "type": "registry:lib",
+          "target": "highlight/queries/ruby.scm"
+        },
+        {
+          "path": "src/lib/registry/lib/highlight/queries/rust.scm",
+          "type": "registry:lib",
+          "target": "highlight/queries/rust.scm"
+        },
+        {
+          "path": "src/lib/registry/lib/highlight/queries/svelte.scm",
+          "type": "registry:lib",
+          "target": "highlight/queries/svelte.scm"
+        },
+        {
+          "path": "src/lib/registry/lib/highlight/queries/toml.scm",
+          "type": "registry:lib",
+          "target": "highlight/queries/toml.scm"
+        },
+        {
+          "path": "src/lib/registry/lib/highlight/queries/typescript-assertion.scm",
+          "type": "registry:lib",
+          "target": "highlight/queries/typescript-assertion.scm"
+        },
+        {
+          "path": "src/lib/registry/lib/highlight/queries/typescript.locals.scm",
+          "type": "registry:lib",
+          "target": "highlight/queries/typescript.locals.scm"
+        },
+        {
+          "path": "src/lib/registry/lib/highlight/queries/typescript.scm",
+          "type": "registry:lib",
+          "target": "highlight/queries/typescript.scm"
+        },
+        {
+          "path": "src/lib/registry/lib/highlight/queries/yaml.scm",
+          "type": "registry:lib",
+          "target": "highlight/queries/yaml.scm"
         }
       ],
       "meta": {
         "since": "0.4.0",
         "group": "code",
-        "modes": ["productive", "expressive"],
-        "stock": {
-          "registry": "https://shadcn-svelte.com/registry/styles/maia",
-          "item": "highlighter",
-          "cli": "1.7.1",
-          "date": "2026-10-31",
-          "sha256": "9072ce3941fbf079fa5ea85ef36982772a2e1a55e603024726e1ac679079335c"
-        }
-      }
+        "modes": ["productive", "expressive"]
+      },
+      "dependencies": [
+        "web-tree-sitter@^0.27.2",
+        "tree-sitter-typescript@^0.23.2",
+        "tree-sitter-javascript@^0.25.0",
+        "tree-sitter-python@^0.25.0",
+        "tree-sitter-rust@^0.24.0",
+        "tree-sitter-go@^0.25.0",
+        "tree-sitter-java@^0.23.5",
+        "tree-sitter-c-sharp@^0.23.5",
+        "tree-sitter-ruby@^0.23.1",
+        "tree-sitter-html@^0.23.2",
+        "tree-sitter-css@^0.25.0",
+        "tree-sitter-bash@^0.25.1",
+        "tree-sitter-json@^0.24.8",
+        "@tree-sitter-grammars/tree-sitter-yaml@^0.7.1",
+        "@tree-sitter-grammars/tree-sitter-toml@^0.7.0",
+        "@tree-sitter-grammars/tree-sitter-svelte@~1.0.2",
+        "tree-sitter-c@^0.24.1",
+        "tree-sitter-cpp@^0.23.4",
+        "tree-sitter-php@^0.24.2",
+        "@tree-sitter-grammars/tree-sitter-kotlin@~1.1.0",
+        "shiki@^4.5.0"
+      ]
     },
     {
       "name": "use-highlighted-code",

@@ -618,7 +618,7 @@ export function themeCss(tokens: Tokens): CssTree {
       // or below, so the line height holds. Inside a link it takes the link
       // colour. In the base layer, a class an item sets on its code wins.
       "code:not(pre code, :is(h1, h2, h3, h4, h5, h6) code)": {
-        "@apply rounded border border-border bg-code-background px-1 text-code-foreground box-decoration-clone":
+        "@apply rounded border border-border bg-code-background px-1 text-code-text box-decoration-clone":
           {},
       },
       "a code:not(pre code, :is(h1, h2, h3, h4, h5, h6) code)": {

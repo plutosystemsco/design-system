@@ -17,6 +17,8 @@ const rules = loadRules();
 // a row of 002's rule table.
 
 /**
+ * 013 decisions 5 and 16: 352 files, as highlighter grows from 1 file to 29
+ * (its 24 query files among them) and code-editor gains its highlighting.
  * "Frost only, no lens" (decisions.md, 2026-11-07): 323 files, as liquid-glass
  * loses glass-lens.svelte.
  * 011 decision 8: 324 files, 010's 321 plus liquid-glass (3).
@@ -27,7 +29,7 @@ const rules = loadRules();
  * 006 decision 13: 300 files, 005's 286 plus the 14 of app-shell (9) and
  * chat (5).
  */
-const FILE_COUNT = 323;
+const FILE_COUNT = 352;
 
 describe("the item files", () => {
   const files = itemFiles();
@@ -244,12 +246,12 @@ const GOOD_008: Sample[] = [
   { cls: "mark-reveal", file: "app-shell-footer.svelte" },
 ];
 
-// 007 decision 3: L19, a syntax colour in any form; the code slot's class
-// stays allowed.
+// 007 decision 3: L19, a syntax colour in any form; the code role's class
+// stays allowed. 013 decision 12 moves the samples to its own names.
 const BAD_007: Sample[] = [
-  { cls: "text-syntax-orange" },
-  { cls: "text-(--syntax-orange)" },
-  { text: 'const theme = { color: "var(--syntax-teal)" };', file: "theme.ts" },
+  { cls: "text-syntax-violet" },
+  { cls: "text-(--syntax-blue)" },
+  { text: 'const theme = { color: "var(--syntax-navy)" };', file: "theme.ts" },
 ];
 const GOOD_007: Sample[] = [{ cls: "text-code-number" }];
 
@@ -321,6 +323,27 @@ describe("the lint itself", () => {
     expect(
       lintSample({ cls: "bg-syntax-orange/10" }).map((v) => v.rule),
     ).toEqual(["syntax colour", "translucent tint"]);
+  });
+
+  // 013 decision 6: a query file is item source too, read by the text rules.
+  test("a .scm query file is read: a syntax colour or a hex in one fails, a query of roles passes", () => {
+    expect(
+      lintText("; text-syntax-red\n(comment) @comment\n", "x.scm", rules).map(
+        (v) => v.rule,
+      ),
+    ).toContain("syntax colour");
+    expect(
+      lintText("; #C4581B\n(comment) @comment\n", "x.scm", rules).map(
+        (v) => v.rule,
+      ),
+    ).toContain("hex colour");
+    expect(
+      lintText(
+        '(comment) @comment\n((identifier) @constant (#match? @constant "^[A-Z][A-Z0-9_]+$"))\n["if" "else"] @keyword\n',
+        "x.scm",
+        rules,
+      ),
+    ).toEqual([]);
   });
 
   // 014 decision 9: one pattern for 0.12.0, written once for 014's names and 013's.

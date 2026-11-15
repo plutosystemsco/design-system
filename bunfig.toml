@@ -1,2 +1,4 @@
 [test]
 pathIgnorePatterns = ["tests/e2e/**", "tests/smoke/fixtures/**"]
+# 013 decision 5: `?raw` and `?url` imports, as Vite reads them.
+preload = ["./tests/helpers/vite-imports.ts"]

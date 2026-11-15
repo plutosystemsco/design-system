@@ -74,7 +74,7 @@ type Item = {
   name: string;
   type: string;
   registryDependencies?: string[];
-  files?: { path: string; type: string }[];
+  files?: { path: string; type: string; target?: string }[];
 };
 const registry = JSON.parse(
   readFileSync(path.join(REPO, "registry.json"), "utf8"),
@@ -98,13 +98,17 @@ function closure(names: string[]): Item[] {
 }
 
 /** Where a file lands in an app with 001's aliases (004: a hook under hooks/, a library under lib/). */
-function landed(item: Item, file: { path: string; type: string }): string {
+function landed(
+  item: Item,
+  file: { path: string; type: string; target?: string },
+): string {
   const base = path.basename(file.path);
   if (item.name === "utils") return "src/lib/utils.ts";
   if (file.type === "registry:page") return `src/routes/${item.name}/${base}`;
   if (file.type === "registry:component") return `src/lib/components/${base}`;
   if (file.type === "registry:hook") return `src/lib/hooks/${base}`;
-  if (file.type === "registry:lib") return `src/lib/${base}`;
+  // 013 decision 5: a library file with a target lands at it (highlight/…).
+  if (file.type === "registry:lib") return `src/lib/${file.target ?? base}`;
   return `src/lib/components/ui/${item.name}/${base}`;
 }
 
@@ -157,7 +161,8 @@ const EXPECTED_DEPS: Record<string, number> = {
   marker: 4,
   composer: 2,
   "code-block": 9,
-  highlighter: 1,
+  // 013 decision 5: the highlighter's 29 files, its 24 queries among them.
+  highlighter: 29,
   "use-highlighted-code": 1,
 };
 
@@ -257,7 +262,7 @@ describe.each([
     );
   });
 
-  test(`2. ${FULL ? 231 : FILES.length} files land: the block files at their app paths and every dependency's`, () => {
+  test(`2. ${FULL ? 259 : FILES.length} files land: the block files at their app paths and every dependency's`, () => {
     if (FULL) {
       expect(BLOCK_FILES).toHaveLength(30);
       expect(
@@ -270,8 +275,8 @@ describe.each([
           number
         >,
       );
-      expect(DEP_FILES).toHaveLength(201);
-      expect(FILES).toHaveLength(231);
+      expect(DEP_FILES).toHaveLength(229);
+      expect(FILES).toHaveLength(259);
     }
     const missing = FILES.filter((f) => !existsSync(path.join(r.app, f)));
     expect(missing).toEqual([]);
@@ -395,7 +400,7 @@ describe.each([
     expect(Number(completed![1])).toBe(0);
   });
 
-  test(`8. our lint finds 0 violations in the ${FULL ? 231 : FILES.length} installed files`, () => {
+  test(`8. our lint finds 0 violations in the ${FULL ? 259 : FILES.length} installed files`, () => {
     expect(lintFiles(FILES, loadRules(REPO), r.app)).toEqual([]);
   });
 

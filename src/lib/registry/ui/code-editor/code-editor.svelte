@@ -170,6 +170,6 @@
       data-slot="code-editor-fallback"
       role="group"
       aria-label={label}
-      class="overflow-x-auto py-3 ps-8 font-mono text-sm">{value}</pre>
+      class="overflow-x-auto py-3 ps-8 font-mono text-sm text-code-text">{value}</pre>
   {/if}
 </div>

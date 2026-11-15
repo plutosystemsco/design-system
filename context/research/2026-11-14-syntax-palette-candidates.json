@@ -1,0 +1,335 @@
+{
+  "candidates": [
+    {
+      "id": "ink-and-plum",
+      "name": "Ink and Plum",
+      "summary": "Five hues on ink: navy keywords, the brand blue on functions, green strings, violet literals, plum types, red errors; names, keys and members stay in ink.",
+      "recommended": true,
+      "palette": {
+        "format": "pluto-code-palette",
+        "version": 1,
+        "swatches": {
+          "syntax-ground": {
+            "light": "#FFFFFF",
+            "dark": "#2C2821"
+          },
+          "syntax-line": {
+            "light": "#F1F2F4",
+            "dark": "#22211E"
+          },
+          "syntax-selection": {
+            "light": "#DDE2F8",
+            "dark": "#1F2B51"
+          },
+          "syntax-navy": {
+            "light": "#1F3067",
+            "dark": "#BAD1FF"
+          },
+          "syntax-green": {
+            "light": "#006638",
+            "dark": "#85EAAB"
+          },
+          "syntax-violet": {
+            "light": "#7136A3",
+            "dark": "#BA87D1"
+          },
+          "syntax-plum": {
+            "light": "#630042",
+            "dark": "#FAB9D1"
+          },
+          "syntax-comment": {
+            "light": "#5C616D",
+            "dark": "#9C9689"
+          },
+          "foreground": {
+            "light": "#0B0F17",
+            "dark": "#F3F0E8"
+          },
+          "primary": {
+            "light": "#2D48D4",
+            "dark": "#93B0FF"
+          },
+          "destructive": {
+            "light": "#C11E31",
+            "dark": "#FF9491"
+          }
+        },
+        "slots": {
+          "foreground": "foreground",
+          "property": "foreground",
+          "comment": "syntax-comment",
+          "keyword": "syntax-navy",
+          "builtin": "syntax-navy",
+          "self": "syntax-navy",
+          "function": "primary",
+          "link": "primary",
+          "changed": "primary",
+          "string": "syntax-green",
+          "inserted": "syntax-green",
+          "number": "syntax-violet",
+          "constant": "syntax-violet",
+          "escape": "syntax-violet",
+          "type": "syntax-plum",
+          "tag": "syntax-plum",
+          "decorator": "syntax-plum",
+          "invalid": "destructive",
+          "deleted": "destructive",
+          "background": "syntax-ground",
+          "active-line": "syntax-line",
+          "selection": "syntax-selection"
+        },
+        "styles": {
+          "comment": {
+            "italic": true
+          }
+        }
+      }
+    },
+    {
+      "id": "three-dots",
+      "name": "Three Dots",
+      "summary": "Only the mark's blue, green and red, each at two steps: blue for the language's words, green for the values you write, red for errors; your names stay in ink.",
+      "recommended": false,
+      "palette": {
+        "format": "pluto-code-palette",
+        "version": 1,
+        "swatches": {
+          "syntax-ground": {
+            "light": "#FFFFFF",
+            "dark": "#2C2821"
+          },
+          "syntax-line": {
+            "light": "#F1F2F4",
+            "dark": "#22211E"
+          },
+          "syntax-selection": {
+            "light": "#DDE2F8",
+            "dark": "#1F2B51"
+          },
+          "syntax-navy": {
+            "light": "#2E407A",
+            "dark": "#BCCDF5"
+          },
+          "syntax-green": {
+            "light": "#006638",
+            "dark": "#85EAAB"
+          },
+          "syntax-pine": {
+            "light": "#00331F",
+            "dark": "#5BC08E"
+          },
+          "syntax-comment": {
+            "light": "#5C616D",
+            "dark": "#9C9689"
+          },
+          "foreground": {
+            "light": "#0B0F17",
+            "dark": "#F3F0E8"
+          },
+          "primary": {
+            "light": "#2D48D4",
+            "dark": "#93B0FF"
+          },
+          "destructive": {
+            "light": "#C11E31",
+            "dark": "#FF9491"
+          }
+        },
+        "slots": {
+          "foreground": "foreground",
+          "property": "foreground",
+          "function": "foreground",
+          "comment": "syntax-comment",
+          "keyword": "primary",
+          "builtin": "primary",
+          "self": "primary",
+          "constant": "primary",
+          "link": "primary",
+          "changed": "primary",
+          "type": "syntax-navy",
+          "tag": "syntax-navy",
+          "decorator": "syntax-navy",
+          "string": "syntax-green",
+          "inserted": "syntax-green",
+          "number": "syntax-pine",
+          "escape": "syntax-pine",
+          "invalid": "destructive",
+          "deleted": "destructive",
+          "background": "syntax-ground",
+          "active-line": "syntax-line",
+          "selection": "syntax-selection"
+        },
+        "styles": {
+          "function": {
+            "bold": true
+          }
+        }
+      }
+    },
+    {
+      "id": "four-classes",
+      "name": "Four Classes",
+      "summary": "The fewest colours: keywords in bold ink, the brand blue on functions, navy types, green strings, violet literals, red errors.",
+      "recommended": false,
+      "palette": {
+        "format": "pluto-code-palette",
+        "version": 1,
+        "swatches": {
+          "syntax-ground": {
+            "light": "#FFFFFF",
+            "dark": "#2C2821"
+          },
+          "syntax-line": {
+            "light": "#F1F2F4",
+            "dark": "#22211E"
+          },
+          "syntax-selection": {
+            "light": "#DDE2F8",
+            "dark": "#1F2B51"
+          },
+          "syntax-navy": {
+            "light": "#1F3067",
+            "dark": "#BAD1FF"
+          },
+          "syntax-green": {
+            "light": "#006638",
+            "dark": "#85EAAB"
+          },
+          "syntax-violet": {
+            "light": "#7136A3",
+            "dark": "#BA87D1"
+          },
+          "syntax-comment": {
+            "light": "#5C616D",
+            "dark": "#9C9689"
+          },
+          "foreground": {
+            "light": "#0B0F17",
+            "dark": "#F3F0E8"
+          },
+          "primary": {
+            "light": "#2D48D4",
+            "dark": "#93B0FF"
+          },
+          "destructive": {
+            "light": "#C11E31",
+            "dark": "#FF9491"
+          }
+        },
+        "slots": {
+          "foreground": "foreground",
+          "property": "foreground",
+          "keyword": "foreground",
+          "builtin": "foreground",
+          "self": "foreground",
+          "decorator": "foreground",
+          "comment": "syntax-comment",
+          "function": "primary",
+          "link": "primary",
+          "changed": "primary",
+          "type": "syntax-navy",
+          "tag": "syntax-navy",
+          "string": "syntax-green",
+          "inserted": "syntax-green",
+          "number": "syntax-violet",
+          "constant": "syntax-violet",
+          "escape": "syntax-violet",
+          "invalid": "destructive",
+          "deleted": "destructive",
+          "background": "syntax-ground",
+          "active-line": "syntax-line",
+          "selection": "syntax-selection"
+        },
+        "styles": {
+          "keyword": {
+            "bold": true
+          },
+          "comment": {
+            "italic": true
+          }
+        }
+      }
+    },
+    {
+      "id": "warm-keywords",
+      "name": "Warm Keywords",
+      "summary": "Ink and Plum's colours on GitHub's role plan: plum keywords, violet functions, the brand blue on constants and numbers, navy types.",
+      "recommended": false,
+      "palette": {
+        "format": "pluto-code-palette",
+        "version": 1,
+        "swatches": {
+          "syntax-ground": {
+            "light": "#FFFFFF",
+            "dark": "#2C2821"
+          },
+          "syntax-line": {
+            "light": "#F1F2F4",
+            "dark": "#22211E"
+          },
+          "syntax-selection": {
+            "light": "#DDE2F8",
+            "dark": "#1F2B51"
+          },
+          "syntax-plum": {
+            "light": "#630042",
+            "dark": "#FAB9D1"
+          },
+          "syntax-violet": {
+            "light": "#7136A3",
+            "dark": "#BA87D1"
+          },
+          "syntax-navy": {
+            "light": "#1F3067",
+            "dark": "#BAD1FF"
+          },
+          "syntax-green": {
+            "light": "#006638",
+            "dark": "#85EAAB"
+          },
+          "syntax-comment": {
+            "light": "#5C616D",
+            "dark": "#9C9689"
+          },
+          "foreground": {
+            "light": "#0B0F17",
+            "dark": "#F3F0E8"
+          },
+          "primary": {
+            "light": "#2D48D4",
+            "dark": "#93B0FF"
+          },
+          "destructive": {
+            "light": "#C11E31",
+            "dark": "#FF9491"
+          }
+        },
+        "slots": {
+          "foreground": "foreground",
+          "property": "foreground",
+          "comment": "syntax-comment",
+          "keyword": "syntax-plum",
+          "self": "syntax-plum",
+          "function": "syntax-violet",
+          "constant": "primary",
+          "number": "primary",
+          "builtin": "primary",
+          "link": "primary",
+          "changed": "primary",
+          "type": "syntax-navy",
+          "tag": "syntax-navy",
+          "decorator": "syntax-navy",
+          "string": "syntax-green",
+          "inserted": "syntax-green",
+          "escape": "primary",
+          "invalid": "destructive",
+          "deleted": "destructive",
+          "background": "syntax-ground",
+          "active-line": "syntax-line",
+          "selection": "syntax-selection"
+        },
+        "styles": {}
+      }
+    }
+  ]
+}

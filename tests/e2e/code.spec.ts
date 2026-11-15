@@ -36,6 +36,18 @@ function holdsColour(computed: string, hex: string): boolean {
   });
 }
 
+/** A custom property resolved as a colour, by a probe element on the page. */
+async function resolvedColour(page: Page, name: string): Promise<string> {
+  return page.evaluate((n) => {
+    const probe = document.createElement("span");
+    probe.style.color = `var(${n})`;
+    document.body.append(probe);
+    const colour = getComputedStyle(probe).color;
+    probe.remove();
+    return colour;
+  }, name);
+}
+
 async function computed(locator: Locator, property: string): Promise<string> {
   return locator.evaluate(
     (el, p) => getComputedStyle(el).getPropertyValue(p),
@@ -93,11 +105,12 @@ async function rawPage(
 }
 
 const PAGE = "/items/code-block/";
+
 const python = (page: Page) =>
   page.getByTestId("keyboard-fixture").locator('[data-slot="code-block"]');
 
 test.describe("the code block", () => {
-  test("C1. the server path: the raw HTML holds class-per-token spans, 0 style attributes in any block, and references 0 shiki chunks", async ({
+  test("C1. the server path: role-class spans, 0 style attributes and 0 font-medium in its blocks, every block settled, 0 tree-sitter, .wasm or Shiki assets and 0 modulepreload links to them", async ({
     browser,
     request,
   }) => {
@@ -110,12 +123,12 @@ test.describe("the code block", () => {
       .evaluateAll((all) => all.map((s) => s.getAttribute("class") ?? ""));
     expect(classes.length).toBeGreaterThan(0);
     for (const cls of classes) expect(cls).toMatch(/\btext-code-[a-z-]+\b/);
-    // A foreground token carries no class at all.
+    // A body token carries no class at all.
     const bare = await snippet
       .locator('[data-slot="code-block-line-content"] > span:not([class])')
       .count();
     expect(bare).toBeGreaterThan(0);
-    // 0 style attributes on or inside any code block.
+    // 0 style attributes and 0 font-medium on or inside any code block.
     expect(
       await raw
         .locator(
@@ -123,10 +136,24 @@ test.describe("the code block", () => {
         )
         .count(),
     ).toBe(0);
-    // No script the page references is Shiki: no chunk name says so, and no
-    // referenced module holds Shiki core's `codeToHtml` (a property name the
-    // minifier keeps, which our own wrapper never calls; the wrapper's
-    // `codeToTokens` call is in the page's bundle, Shiki's definition is not).
+    expect(
+      await raw
+        .locator('[data-slot="code-block-line-content"] .font-medium')
+        .count(),
+    ).toBe(0);
+    // 013 decision 14: every block on the page is settled as rendered.
+    const states = await raw
+      .locator('[data-slot="code-block-content"]')
+      .evaluateAll((all) => all.map((p) => p.getAttribute("data-highlight")));
+    expect(states.length).toBeGreaterThan(0);
+    expect(states.filter((s) => s !== "settled")).toEqual([]);
+    // No asset the page references, and no module it preloads, is an engine.
+    expect(html).not.toMatch(/\.wasm/);
+    const preloads = [
+      ...html.matchAll(/<link[^>]*rel="modulepreload"[^>]*href="([^"]+)"/g),
+    ].map((m) => m[1]!);
+    for (const href of preloads)
+      expect(href).not.toMatch(/tree-sitter|shiki|wasm/i);
     const urls = [
       ...new Set(
         [...html.matchAll(/\/_app\/immutable\/[^"'\s)]+\.js/g)].map(
@@ -136,73 +163,149 @@ test.describe("the code block", () => {
     ];
     expect(urls.length).toBeGreaterThan(0);
     for (const url of urls) {
-      expect(url).not.toMatch(/shiki|highlighter|shellscript|python/i);
+      expect(url).not.toMatch(/shiki|tree-sitter|shellscript|python/i);
       const js = await (await request.get(url)).text();
+      // Shiki core's `codeToHtml` and the runtime's `ts_parser_new` are names
+      // the minifier keeps; our own wrappers never define either.
       expect(js, `${url} holds no Shiki`).not.toContain("codeToHtml");
+      expect(js, `${url} holds no tree-sitter runtime`).not.toContain(
+        "ts_parser_new",
+      );
     }
     await close();
   });
 
-  // 007 decision 10: six slots on the sudoku example; a definition carries
-  // the weight, a call does not.
-  test("C2. the palette in the browser: 6 of 6 slot colours, font-medium on the 2 definitions and on 0 calls, the code ground, and no class on =", async ({
+  test("C1. the built client chunks hold 0 node: imports", async () => {
+    const { readdirSync, readFileSync } = await import("node:fs");
+    const dir = "build/_app/immutable";
+    const files = readdirSync(dir, { recursive: true })
+      .map(String)
+      .filter((f) => f.endsWith(".js"));
+    expect(files.length).toBeGreaterThan(0);
+    // Minified code writes an import with no space (`}from"node:x"`,
+    // `import("node:x")`); a code sample's text keeps its spaces. Vite's stub
+    // for a Node built-in in the browser is named for it.
+    const imports = /(?:\}from|\bimport\(|\brequire\()["'`]node:/;
+    const found = files.filter((f) => {
+      const js = readFileSync(`${dir}/${f}`, "utf8");
+      return imports.test(js) || js.includes("__vite-browser-external");
+    });
+    expect(found).toEqual([]);
+  });
+
+  // 013 decision 20 and criterion 18: the sizes, gzipped at level 9, over the
+  // site's built client (the browser suite's build).
+  test("C6. sizes: the runtime's WASM and chunk at 125 kB or less; 20 of 20 grammar files within decision 3's figure + 5% and 320 kB; every query chunk at 6 kB or less", async () => {
+    const { readdirSync, readFileSync } = await import("node:fs");
+    const dir = "build/_app/immutable";
+    const gz = (data: Buffer | string) =>
+      Bun.gzipSync(
+        new Uint8Array(typeof data === "string" ? Buffer.from(data) : data),
+        { level: 9 },
+      ).length / 1000;
+    const FIGURE: Record<string, number> = {
+      typescript: 133,
+      tsx: 136,
+      javascript: 49,
+      python: 64,
+      rust: 114,
+      go: 38,
+      java: 50,
+      c_sharp: 315,
+      ruby: 162,
+      html: 7,
+      css: 21,
+      bash: 177,
+      json: 2,
+      yaml: 34,
+      toml: 7,
+      svelte: 13,
+      c: 72,
+      cpp: 274,
+      php: 105,
+      kotlin: 294,
+    };
+    const wasm = readdirSync(`${dir}/assets`).filter((f) =>
+      f.endsWith(".wasm"),
+    );
+    expect(wasm).toHaveLength(21);
+    const grammars = wasm.filter((f) => f.startsWith("tree-sitter-"));
+    expect(grammars).toHaveLength(20);
+    for (const file of grammars) {
+      const name = /^tree-sitter-([a-z_]+)\./.exec(file)![1]!;
+      const size = gz(readFileSync(`${dir}/assets/${file}`));
+      // Decision 3's figures are whole kB, so the size is compared at that precision.
+      expect(Math.round(size), file).toBeLessThanOrEqual(FIGURE[name]! * 1.05);
+      expect(size, file).toBeLessThanOrEqual(320);
+    }
+    const chunks = readdirSync(`${dir}/chunks`).filter((f) =>
+      f.endsWith(".js"),
+    );
+    const runtimeJs = chunks.filter((f) =>
+      readFileSync(`${dir}/chunks/${f}`, "utf8").includes("ts_parser_new"),
+    );
+    expect(runtimeJs).toHaveLength(1);
+    const runtime =
+      gz(
+        readFileSync(
+          `${dir}/assets/${wasm.find((f) => f.startsWith("web-tree-sitter"))}`,
+        ),
+      ) + gz(readFileSync(`${dir}/chunks/${runtimeJs[0]}`, "utf8"));
+    expect(runtime).toBeLessThanOrEqual(125);
+    const queries = chunks.filter((f) =>
+      readFileSync(`${dir}/chunks/${f}`, "utf8").includes(
+        "written for the Pluto design system",
+      ),
+    );
+    expect(queries).toHaveLength(24);
+    for (const file of queries)
+      expect(
+        gz(readFileSync(`${dir}/chunks/${file}`, "utf8")),
+        file,
+      ).toBeLessThanOrEqual(6);
+  });
+
+  // 013 decision 21: seven roles on the sudoku example, the body in the
+  // code's own ink, and no weight or slant anywhere.
+  test("C2. the roles in the browser: 7 of 7 role colours, the body computes --code-text, every token weight 400 and upright, the code ground, and no class on =", async ({
     page,
   }) => {
     await open(page, PAGE);
     const block = python(page);
     const pairs: [cls: string, token: string][] = [
-      ["text-code-keyword", "--primary"],
-      ["text-code-string", "--success"],
-      ["text-code-number", "--syntax-orange"],
-      ["text-code-builtin", "--syntax-purple"],
-      ["text-code-constant", "--primary"],
-      ["text-code-comment", "--muted-foreground"],
+      ["text-code-keyword", "--code-keyword"],
+      ["text-code-string", "--code-string"],
+      ["text-code-number", "--code-number"],
+      ["text-code-constant", "--code-constant"],
+      ["text-code-function", "--code-function"],
+      ["text-code-type", "--code-type"],
+      ["text-code-comment", "--code-comment"],
     ];
     for (const [cls, token] of pairs) {
       const span = block.locator(`span.${cls}`).first();
       await expect(span, cls).toHaveCount(1);
       expect(await computed(span, "color"), cls).toBe(
-        hexToRgb(await cssVar(page, token)),
+        await resolvedColour(page, token),
       );
     }
-    const definitions = block.locator("span.text-code-function.font-medium");
-    await expect(definitions).toHaveText(["ok", "solve"]);
-    for (const span of await definitions.all())
-      expect(await computed(span, "font-weight")).toBe("500");
-    const calls = block.locator("span.text-code-function:not(.font-medium)");
-    expect(await calls.count()).toBeGreaterThan(0);
-    for (const span of await calls.all())
-      expect(await computed(span, "font-weight")).toBe("400");
-    expect(
-      await block.locator("span.font-medium:not(.text-code-function)").count(),
-    ).toBe(0);
-    expect(
-      await computed(
-        block.locator("span.text-code-builtin").first(),
-        "font-weight",
-      ),
-    ).toBe("400");
-    // A string's quotes take the string colour, so the
-    // quoted literal is one span, quotes included (Shiki merges tokens of one
-    // style). The puzzle string is the block's second line.
-    const quoted = block.locator("span.text-code-string", {
-      hasText: /^"530070000/,
-    });
-    await expect(quoted).toHaveCount(1);
-    expect(await quoted.textContent()).toMatch(/^"\d+"$/);
-    for (const text of await block
-      .locator("span.text-code-string")
-      .allTextContents())
-      expect(text, "a string span holds its own quotes").toMatch(
-        /^(["']).*\1$|^[^"']/,
-      );
-    const bareQuotes = block.locator(
-      '[data-slot="code-block-line-content"] > span:not([class])',
-      { hasText: /^["']$/ },
+    const body = block
+      .locator('[data-slot="code-block-line-content"] > span:not([class])')
+      .first();
+    expect(await computed(body, "color")).toBe(
+      await resolvedColour(page, "--code-text"),
     );
-    expect(await bareQuotes.count()).toBe(0);
-    // The pre's ground: the nearest painted background behind it, which is
-    // the block's root (the pre itself is transparent).
+    for (const [weight, style] of await block
+      .locator('[data-slot="code-block-line-content"] > span')
+      .evaluateAll((all) =>
+        all.map((s) => [
+          getComputedStyle(s).fontWeight,
+          getComputedStyle(s).fontStyle,
+        ]),
+      )) {
+      expect(weight).toBe("400");
+      expect(style).toBe("normal");
+    }
+    // The pre's ground: the nearest painted background behind it.
     const pre = block.locator('[data-slot="code-block-content"]');
     const ground = await pre.evaluate((el) => {
       for (let node: Element | null = el; node; node = node.parentElement) {
@@ -212,14 +315,11 @@ test.describe("the code block", () => {
       }
       return [null, "none"];
     });
-    // 014 decision 1: the code ground, white in light mode.
     expect(ground).toEqual([
       "code-block",
       hexToRgb(await cssVar(page, "--syntax-ground")),
     ]);
-    // An assignment's `=` is a foreground token. Shiki merges neighbouring
-    // tokens of one style, so it sits inside a classless span with the name
-    // beside it (`puzzle = `), never in a span of its own with a class.
+    // An assignment's `=` is a body token: it never carries a class.
     const operators = block.locator(
       '[data-slot="code-block-line-content"] > span',
       { hasText: /(^|[^!=<>])=([^=]|$)/ },
@@ -373,7 +473,7 @@ test.describe("the code block", () => {
 
 /** 007 decision 10: S2, the highlighter page's gallery of twenty-six languages. */
 test.describe("the gallery", () => {
-  test("S2. 26 of 26 blocks, each with at least 2 distinct text-code-* classes (diff: 2 of inserted, deleted, comment), 0 style attributes", async ({
+  test("S2. 26 of 26 blocks, each with at least 2 distinct text-code-* classes (diff: 2 of inserted, deleted, comment), 0 style attributes, the 16-row role table", async ({
     page,
   }) => {
     await open(page, "/items/highlighter/");
@@ -410,36 +510,109 @@ test.describe("the gallery", () => {
         ).toBeGreaterThanOrEqual(2);
     }
     expect(await gallery.locator("[style]").count()).toBe(0);
-    // The shell's special parameters are properties, never a self.
-    const shell = gallery.locator(
-      '[data-slot="code-block"][data-language="bash"]',
+    // 013 decision 12: the 16-row role table, 14 roles and the two grounds.
+    await expect(
+      page.getByTestId("role-table").locator("tbody tr"),
+    ).toHaveCount(16);
+  });
+});
+
+/** Each non-whitespace character of a block, with the role class its span carries. */
+async function roleString(block: Locator): Promise<string> {
+  return block.evaluate((root) => {
+    const out: string[] = [];
+    for (const line of root.querySelectorAll(
+      '[data-slot="code-block-line-content"]',
+    )) {
+      const walk = (node: Node, cls: string) => {
+        if (node.nodeType === Node.TEXT_NODE) {
+          for (const ch of node.textContent ?? "")
+            if (!/\s/.test(ch)) out.push(`${ch}${cls}`);
+          return;
+        }
+        const el = node as Element;
+        const own =
+          [...(el.classList ?? [])].find((c) => c.startsWith("text-code-")) ??
+          cls;
+        for (const child of el.childNodes) walk(child, own);
+      };
+      walk(line, "");
+      out.push("\n");
+    }
+    return out.join("|");
+  });
+}
+
+/** 013 decision 21: prerender against the browser, on the agreement view. */
+test.describe("prerender agrees with the browser", () => {
+  const VIEW = "/view/code-agreement/";
+
+  test("C5. every gallery sample's live copy settles with the prerendered copy's role on every non-whitespace character", async ({
+    page,
+  }) => {
+    await openView(page, VIEW);
+    const live = page.locator(
+      '[data-copy="live"] [data-slot="code-block-content"]',
     );
-    expect(await shell.locator("span.text-code-self").count()).toBe(0);
-    await expect(
-      shell.locator("span.text-code-property", { hasText: /^\*$/ }).first(),
-    ).toHaveCount(1);
-    // The gallery's 23-row slot table: foreground, the 20 classed slots, bold, underline.
-    await expect(
-      page.getByTestId("slot-table").locator("tbody tr"),
-    ).toHaveCount(23);
+    await expect(live).toHaveCount(26);
+    await expect(page.locator('[data-highlight="pending"]')).toHaveCount(0, {
+      timeout: 30_000,
+    });
+    const samples = page.locator("[data-sample]");
+    const shown = 26;
+    let compared = 0;
+    for (const sample of await samples.all()) {
+      const language = await sample.getAttribute("data-sample");
+      const before = await roleString(
+        sample.locator('[data-copy="prerendered"]'),
+      );
+      const after = await roleString(sample.locator('[data-copy="live"]'));
+      expect(after, language!).toBe(before);
+      expect(before, `${language} is highlighted`).toContain("text-code-");
+      compared++;
+    }
+    expect(compared).toBe(shown);
+  });
+
+  test("C5. the late grammar: with Python's grammar held back, the Markdown copy is pending with its fence plain, then settles to the prerendered classes", async ({
+    page,
+  }) => {
+    let release!: () => void;
+    const held = new Promise<void>((resolve) => (release = resolve));
+    await page.route(/tree-sitter-python[^/]*\.wasm/, async (route) => {
+      await held;
+      await route.continue();
+    });
+    await openView(page, VIEW);
+    const sample = page.locator('[data-sample="markdown"]');
+    const copy = sample.locator(
+      '[data-copy="live"] [data-slot="code-block-content"]',
+    );
+    await expect(copy).toHaveAttribute("data-highlight", "pending", {
+      timeout: 30_000,
+    });
+    const fence = sample
+      .locator('[data-copy="live"] [data-slot="code-block-line"]')
+      .filter({ hasText: "print(run.fuel)" });
+    expect(await fence.locator('span[class*="text-code-"]').count()).toBe(0);
+    release();
+    await expect(copy).toHaveAttribute("data-highlight", "settled", {
+      timeout: 30_000,
+    });
+    expect(await roleString(sample.locator('[data-copy="live"]'))).toBe(
+      await roleString(sample.locator('[data-copy="prerendered"]')),
+    );
+    expect(
+      await fence.locator('span[class*="text-code-"]').count(),
+    ).toBeGreaterThan(0);
   });
 });
 
 /** 007 decision 10: L1, the twenty-six languages in the editor. */
 test.describe("the languages", () => {
   const PAGE = "/items/code-languages/";
-  const LEGACY = [
-    "bash",
-    "toml",
-    "diff",
-    "docker",
-    "ruby",
-    "swift",
-    "kotlin",
-    "csharp",
-  ];
 
-  test("L1. 26 of 26 languages load in the editor with the required distinct token colours", async ({
+  test("L1. 26 of 26 languages load in the editor with at least 2 role colours besides the body's (diff: inserted and deleted); in HTML, typing <div> inserts </div>", async ({
     page,
   }) => {
     test.setTimeout(120_000);
@@ -447,9 +620,9 @@ test.describe("the languages", () => {
     const fixture = page.getByTestId("keyboard-fixture");
     const select = fixture.locator("select");
     const content = fixture.locator(".cm-content");
-    const body = hexToRgb(await cssVar(page, "--foreground"));
-    const inserted = hexToRgb(await cssVar(page, "--success"));
-    const deleted = hexToRgb(await cssVar(page, "--destructive"));
+    const body = await resolvedColour(page, "--code-text");
+    const inserted = await resolvedColour(page, "--code-inserted");
+    const deleted = await resolvedColour(page, "--code-deleted");
     const ids = await select
       .locator("option")
       .evaluateAll((all) => all.map((o) => (o as HTMLOptionElement).value));
@@ -477,7 +650,7 @@ test.describe("the languages", () => {
           }
           return [...set];
         }, body);
-      const required = id === "diff" ? 2 : LEGACY.includes(id) ? 1 : 2;
+      const required = 2;
       await expect
         .poll(async () => (await read()).length, {
           message: id,
@@ -490,6 +663,16 @@ test.describe("the languages", () => {
         expect(colours).toContain(deleted);
       }
     }
+    // One behaviour check: the language support is whole, so HTML closes a tag.
+    await select.selectOption("html");
+    await expect(fixture.getByTestId("language-loaded")).toHaveText(
+      "HTML loaded",
+    );
+    await content.click();
+    await page.keyboard.press("ControlOrMeta+End");
+    await page.keyboard.press("Enter");
+    await page.keyboard.type("<div>");
+    await expect(content).toContainText("<div></div>");
   });
 });
 
@@ -535,7 +718,8 @@ test.describe("the ink surface", () => {
     ).toBe(INK_WASH);
     expect(
       await computed(s.locator("span.text-code-keyword").first(), "color"),
-    ).toBe("rgb(147, 176, 255)");
+      // 013 decision 11: Tombaugh's dark keyword, #C4A4FE.
+    ).toBe("rgb(196, 164, 254)");
     expect(
       await computed(s.locator('[data-slot="tabs-list"]'), "background-color"),
     ).toBe(INK_WASH);
@@ -667,7 +851,7 @@ test.describe("the code editor", () => {
     await expect(disabled).toHaveAttribute("contenteditable", "false");
   });
 
-  test("E3. the theme from tokens: the ring on the editor, unclipped; 5 of 5 computed values; the keyword; 12 rules of ours in the emitted sheet, 0 literals", async ({
+  test("E3. the theme from tokens: the ring on the editor, unclipped; 5 of 5 computed values; the keyword; 5 role readings, the role span innermost; .cm-content and its caret in --code-text; 12 rules of ours in the emitted sheet, 0 literals", async ({
     page,
   }) => {
     await open(page, EDITOR_PAGE);
@@ -718,67 +902,51 @@ test.describe("the code editor", () => {
     expect(await computed(scroller, "scrollbar-color")).toBe(
       `${hexToRgb(await cssVar(page, "--input"))} ${codeGround}`,
     );
-    // A keyword, by its highlight class: the one whose colour is --code-keyword.
+    // 013 decision 16: the text and the caret are the code's own ink.
+    const ink = await resolvedColour(page, "--code-text");
+    expect(await computed(content(page), "color")).toBe(ink);
+    expect(await computed(content(page), "caret-color")).toBe(ink);
+    // A keyword, by its role class.
     const keyword = editor
-      .locator(".cm-line span", { hasText: /^import$/ })
+      .locator(".cm-line span.text-code-keyword", { hasText: /^import$/ })
       .first();
-    await expect(keyword).toHaveCount(1);
+    await expect(keyword).toHaveCount(1, { timeout: 10_000 });
     expect(await computed(keyword, "color")).toBe(
-      hexToRgb(await cssVar(page, "--primary")),
+      await resolvedColour(page, "--code-keyword"),
     );
-    // 007 decision 10: the 5 role readings on the class sample. `print` is a
-    // built-in at normal weight; `self` takes its slot; the docstring reads
-    // as a comment; `str` in an annotation is a type; `dataclass` after `@`
-    // is a decorator.
-    const purple = hexToRgb(await cssVar(page, "--syntax-purple"));
-    const print = editor.locator(".cm-line span.text-code-builtin", {
-      hasText: /^print$/,
-    });
-    await expect(print).toHaveCount(1);
-    expect(await computed(print, "color")).toBe(purple);
-    expect(await computed(print, "font-weight")).toBe("400");
-    // The mechanism: the plugin's mark is the innermost
-    // span, so its class decides the colour; it holds no child span.
-    expect(await print.locator("span").count()).toBe(0);
-    const self = editor.locator(".cm-line span.text-code-self").first();
-    await expect(self).toHaveText("self");
-    expect(await computed(self, "color")).toBe(purple);
-    const docstring = editor.locator(".cm-line span.text-code-comment").first();
-    await expect(docstring).toHaveText(/^"""A fuel ledger/);
-    expect(await computed(docstring, "color")).toBe(
-      hexToRgb(await cssVar(page, "--muted-foreground")),
-    );
-    const str = editor.locator(".cm-line span", { hasText: /^str$/ }).first();
-    await expect(str).toHaveCount(1);
-    expect(await computed(str, "color")).toBe(
-      hexToRgb(await cssVar(page, "--syntax-teal")),
-    );
-    // `dataclass` appears twice: imported on line 2 (the body colour) and
-    // after `@` on line 4 (the decorator colour).
-    const dataclasses = editor.locator(".cm-line span", {
-      hasText: /^dataclass$/,
-    });
-    await expect(dataclasses).toHaveCount(2);
-    const colours = await dataclasses.evaluateAll((all) =>
-      all.map((el) => [
-        el.previousSibling?.textContent?.endsWith("@") ?? false,
-        getComputedStyle(el).color,
-      ]),
-    );
-    const decorated = colours.find(([after]) => after);
-    expect(decorated, "a dataclass after @").toBeDefined();
-    expect(decorated![1]).toBe(purple);
-    const imported = colours.find(([after]) => !after);
-    expect(imported![1]).toBe(hexToRgb(await cssVar(page, "--foreground")));
-    // A definition keeps its weight; a call has none.
-    const definition = editor
-      .locator(".cm-line span", { hasText: /^per_step$/ })
-      .first();
-    expect(await computed(definition, "font-weight")).toBe("500");
-    const call = editor
-      .locator(".cm-line span", { hasText: /^sorted$/ })
-      .first();
-    expect(await computed(call, "font-weight")).toBe("400");
+    // The 5 role readings on the class sample, through the roles: `print` a
+    // function, `self` a keyword, the docstring a string, `str` a type and
+    // `dataclass` after `@` meta.
+    const readings: [cls: string, text: RegExp, token: string][] = [
+      ["text-code-function", /^print$/, "--code-function"],
+      ["text-code-keyword", /^self$/, "--code-keyword"],
+      ["text-code-string", /^.{3}A fuel ledger/, "--code-string"],
+      ["text-code-type", /^str$/, "--code-type"],
+      ["text-code-meta", /^@dataclass/, "--code-meta"],
+    ];
+    for (const [cls, text, token] of readings) {
+      const span = editor
+        .locator(`.cm-line span.${cls}`, { hasText: text })
+        .first();
+      await expect(span, `${cls} ${text}`).toHaveCount(1);
+      expect(await computed(span, "color"), cls).toBe(
+        await resolvedColour(page, token),
+      );
+      // The mechanism: the role mark is the innermost span.
+      expect(await span.locator("span").count()).toBe(0);
+    }
+    // No weight and no slant on any token.
+    for (const [weight, style] of await editor
+      .locator(".cm-line span")
+      .evaluateAll((all) =>
+        all.map((s) => [
+          getComputedStyle(s).fontWeight,
+          getComputedStyle(s).fontStyle,
+        ]),
+      )) {
+      expect(weight).toBe("400");
+      expect(style).toBe("normal");
+    }
 
     // Our theme's rules, by the theme's own class: CodeMirror gives each theme
     // a `ͼ` class on .cm-editor, and ours is the one whose rules read
@@ -862,57 +1030,57 @@ test.describe("the code editor", () => {
 
   // The roles plugin rebuilds when the tree grows; a docstring after a
   // comment; a keyword argument's name.
-  test("E5. the roles plugin on a long file and on the edge cases: line 30's print is a built-in after the idle parse; docstrings after a shebang and a def-line comment read as comments; keyword arguments named like built-ins stay in the body", async ({
+  test("E5. Python's roles on a long file and on the edge cases: line 30's print is a function; docstrings after a shebang and a def-line comment read as strings; keyword arguments named like built-ins stay in the body", async ({
     page,
   }) => {
     await open(page, EDITOR_PAGE);
     const editor = main(page);
     const select = page.getByTestId("example-select");
-    const purple = hexToRgb(await cssVar(page, "--syntax-purple"));
-    const body = hexToRgb(await cssVar(page, "--foreground"));
-    const comment = hexToRgb(await cssVar(page, "--muted-foreground"));
+    const fn = await resolvedColour(page, "--code-function");
+    const body = await resolvedColour(page, "--code-text");
+    const string = await resolvedColour(page, "--code-string");
 
     await select.selectOption("long");
     const lines = editor.locator(".cm-line");
     // CodeMirror renders the lines in and around the viewport, so the line
-    // is found by its text, not its index; line 30 sits past the first 3,000
-    // characters (the 17th line ends them) and inside the rendered range.
+    // is found by its text, not its index.
     const thirty = lines.filter({ hasText: 'print("line 30"' });
     await expect(thirty).toHaveCount(1);
-    const line30 = thirty.locator("span.text-code-builtin", {
+    const line30 = thirty.locator("span.text-code-function", {
       hasText: /^print$/,
     });
-    // No scroll, no edit: the idle parse alone brings the mark.
     await expect(line30).toHaveCount(1, { timeout: 10_000 });
-    expect(await computed(line30, "color")).toBe(purple);
-    expect(await thirty.locator("span.text-code-builtin").count()).toBe(3);
+    expect(await computed(line30, "color")).toBe(fn);
+    expect(await thirty.locator("span.text-code-function").count()).toBe(3);
 
     await select.selectOption("edge");
     await expect(lines.first()).toHaveText("#!/usr/bin/env python");
-    const shebangDoc = lines.nth(1).locator("span.text-code-comment");
+    const shebangDoc = lines.nth(1).locator("span.text-code-string");
     await expect(shebangDoc).toHaveText('"""A docstring after a shebang."""', {
       timeout: 10_000,
     });
-    expect(await computed(shebangDoc, "color")).toBe(comment);
-    const notedDoc = lines.nth(4).locator("span.text-code-comment");
+    expect(await computed(shebangDoc, "color")).toBe(string);
+    const notedDoc = lines.nth(4).locator("span.text-code-string");
     await expect(notedDoc).toHaveText('"""A docstring after a comment."""');
     const kwargs = lines.nth(5);
     await expect(kwargs).toContainText('f(type="x", id=3)');
-    expect(await kwargs.locator("span.text-code-builtin").count()).toBe(0);
-    for (const name of ["type", "id"]) {
-      const span = kwargs.locator("span", { hasText: new RegExp(`^${name}$`) });
-      await expect(span).toHaveCount(1);
-      expect(await computed(span, "color")).toBe(body);
-    }
+    // A body token carries no role class; it takes the editor's ink.
+    for (const name of ["type", "id"])
+      await expect(
+        kwargs.locator('span[class*="text-code-"]', {
+          hasText: new RegExp(`^${name}$`),
+        }),
+      ).toHaveCount(0);
+    expect(await computed(kwargs, "color")).toBe(body);
     const sortedLine = lines.nth(7);
     await expect(sortedLine).toContainText("sorted(items, key=len)");
-    await expect(sortedLine.locator("span.text-code-builtin")).toHaveText([
+    await expect(sortedLine.locator("span.text-code-function")).toHaveText([
       "sorted",
       "len",
     ]);
-    const key = sortedLine.locator("span", { hasText: /^key$/ });
-    await expect(key).toHaveCount(1);
-    expect(await computed(key, "color")).toBe(body);
+    await expect(
+      sortedLine.locator('span[class*="text-code-"]', { hasText: /^key$/ }),
+    ).toHaveCount(0);
   });
 
   // The caret is the browser's own (no drawSelection), so CodeMirror draws no
@@ -960,6 +1128,355 @@ test.describe("the code editor", () => {
 });
 
 /** 004 decision 11: the popover (P1, 002 decision 28's check). */
+/** 013 decision 21: the editor and the block on the agreement view. */
+test.describe("the editor agrees with the block", () => {
+  const VIEW = "/view/code-agreement/";
+  type Which = "full" | "windowed";
+
+  /** Each rendered line of an editor: its number and its role string. */
+  async function editorLines(page: Page, which: Which) {
+    return page.evaluate((w) => {
+      const api = (window as any).agreement;
+      const view = api.view(w);
+      const out: Record<number, string> = {};
+      for (const el of view.contentDOM.querySelectorAll(".cm-line")) {
+        const at = view.posAtDOM(el);
+        // Only the visible lines: CodeMirror also keeps the cursor's line
+        // rendered while it is scrolled away, outside the visible ranges.
+        if (
+          !view.visibleRanges.some(
+            (r: { from: number; to: number }) => at >= r.from && at <= r.to,
+          )
+        )
+          continue;
+        const number = view.state.doc.lineAt(at).number;
+        const parts: string[] = [];
+        const walk = (node: Node, cls: string) => {
+          if (node.nodeType === Node.TEXT_NODE) {
+            for (const ch of node.textContent ?? "")
+              if (!/\s/.test(ch)) parts.push(`${ch}${cls}`);
+            return;
+          }
+          const own =
+            [...((node as Element).classList ?? [])].find((c) =>
+              c.startsWith("text-code-"),
+            ) ?? cls;
+          for (const child of node.childNodes) walk(child, own);
+        };
+        walk(el, "");
+        out[number] = parts.join("|");
+      }
+      return out;
+    }, which);
+  }
+
+  /** The mirror block's lines, by number. */
+  async function blockLines(page: Page, which: Which) {
+    const block = page.locator(`[data-mirror="${which}"]`);
+    await expect(
+      block.locator('[data-slot="code-block-content"]'),
+    ).toHaveAttribute("data-highlight", "settled", { timeout: 30_000 });
+    return block.evaluate((root) => {
+      const out: Record<number, string> = {};
+      root
+        .querySelectorAll('[data-slot="code-block-line-content"]')
+        .forEach((line, i) => {
+          const parts: string[] = [];
+          const walk = (node: Node, cls: string) => {
+            if (node.nodeType === Node.TEXT_NODE) {
+              for (const ch of node.textContent ?? "")
+                if (!/\s/.test(ch)) parts.push(`${ch}${cls}`);
+              return;
+            }
+            const own =
+              [...((node as Element).classList ?? [])].find((c) =>
+                c.startsWith("text-code-"),
+              ) ?? cls;
+            for (const child of node.childNodes) walk(child, own);
+          };
+          walk(line, "");
+          out[i + 1] = parts.join("|");
+        });
+      return out;
+    });
+  }
+
+  /** The editor agrees with its mirror on every rendered line; returns how many lines were compared. */
+  async function agree(page: Page, which: Which, what: string) {
+    let compared = 0;
+    await expect
+      .poll(
+        async () => {
+          const editor = await editorLines(page, which);
+          const block = await blockLines(page, which);
+          const wrong = Object.entries(editor).filter(
+            ([n, roles]) => block[Number(n)] !== roles,
+          );
+          compared = Object.keys(editor).length;
+          return wrong.map(([n]) => n);
+        },
+        { message: what, timeout: 15_000 },
+      )
+      .toEqual([]);
+    return compared;
+  }
+
+  const load = (page: Page, which: Which, language: string, code: string) =>
+    page.evaluate(([w, l, c]) => (window as any).agreement.set(w, l, c), [
+      which,
+      language,
+      code,
+    ] as const);
+
+  test.describe("at full height", () => {
+    test.use({ viewport: { width: 1280, height: 7000 } });
+
+    test("E6. 44 of 44 texts agree on every non-whitespace character; 3 of 3 edited texts and a new Markdown fence agree after the edits", async ({
+      page,
+    }) => {
+      test.setTimeout(300_000);
+      await openView(page, VIEW);
+      await page.locator("[data-editors-ready]").waitFor();
+      await page.evaluate(() => (window as any).agreement.mirror(true));
+      const { SPECIMENS } = await import("../fixtures/highlight/specimens.ts");
+      const { CODE_SAMPLES } =
+        await import("../../src/lib/preview/code-samples.ts");
+      const texts = [
+        ...SPECIMENS.map((s) => [s.id, s.language, s.code] as const),
+        ...CODE_SAMPLES.map(
+          (s) => [`gallery ${s.language}`, s.language, s.code] as const,
+        ),
+      ];
+      expect(texts).toHaveLength(44);
+      await page.locator('[data-editor="full"]').scrollIntoViewIfNeeded();
+      for (const [what, language, code] of texts) {
+        await load(page, "full", language, code);
+        await page
+          .locator('[data-editor="full"]')
+          .evaluate((el) => el.scrollIntoView({ block: "start" }));
+        const lines = await agree(page, "full", what);
+        expect(lines, `${what}: every line rendered`).toBe(
+          code.split("\n").length,
+        );
+      }
+      // The scripted edits, on three texts.
+      const view = "window.agreement.view('full')";
+      for (const id of ["python", "svelte", "markdown"]) {
+        const specimen = SPECIMENS.find((s) => s.id === id)!;
+        await load(page, "full", specimen.language, specimen.code);
+        await agree(page, "full", `${id} before`);
+        await page.locator('[data-editor="full"] .cm-content').click();
+        await page.keyboard.press("ControlOrMeta+End");
+        await page.keyboard.type(
+          id === "markdown" ? "\n\n```python\nprint(1)\n```" : "\nvalue = 1",
+        );
+        await page.evaluate(
+          `(() => { const v = ${view}; v.dispatch({ changes: { from: 10, to: 40 } }); })()`,
+        );
+        await page.evaluate(
+          `(() => { const v = ${view}; v.dispatch({ changes: { from: v.state.doc.line(4).from, insert: "if x:\\n    y = [1, 2]\\n" }, userEvent: "input.paste" }); })()`,
+        );
+        await agree(page, "full", `${id} after the edits`);
+      }
+    });
+  });
+
+  test("E6. the windowed case: in the 20-line editor on a 2,000-line Ruby file, line 1,000 agrees before and after 50 off-screen edits", async ({
+    page,
+  }) => {
+    test.setTimeout(120_000);
+    await openView(page, VIEW);
+    await page.locator("[data-editors-ready]").waitFor();
+    await page.evaluate(() => (window as any).agreement.mirror(true));
+    await page
+      .locator('[data-editor="windowed"]')
+      .evaluate((el) => el.scrollIntoView({ block: "center" }));
+    const toLine = (n: number) =>
+      page.evaluate((line) => {
+        const v = (window as any).agreement.view("windowed");
+        v.scrollDOM.scrollTop = v.lineBlockAt(v.state.doc.line(line).from).top;
+        return new Promise((r) =>
+          requestAnimationFrame(() => requestAnimationFrame(r)),
+        );
+      }, n);
+    await toLine(1000);
+    const seen = await editorLines(page, "windowed");
+    expect(Object.keys(seen).map(Number)).toContain(1000);
+    expect(Object.keys(seen).length).toBeLessThan(200);
+    await agree(page, "windowed", "line 1,000");
+    await page.evaluate(() => {
+      const v = (window as any).agreement.view("windowed");
+      for (let i = 0; i < 50; i++) {
+        const line = v.state.doc.line(10 + (i % 31));
+        const insert = i % 5 === 0 ? `\n  count = ${i}` : ` # e${i}`;
+        v.dispatch({ changes: { from: line.to, insert } });
+      }
+    });
+    await toLine(1000);
+    await agree(page, "windowed", "line 1,000 after 50 edits");
+  });
+
+  /** p95 and max of a list. */
+  const stats = (times: number[]) => {
+    const sorted = [...times].sort((a, b) => a - b);
+    return {
+      p95: sorted[Math.ceil(0.95 * sorted.length) - 1]!,
+      max: sorted.at(-1)!,
+    };
+  };
+
+  /** Types 200 characters into the 20-line editor and times each transaction in the page. */
+  async function typeTimed(page: Page) {
+    await page.evaluate(() => {
+      const v = (window as any).agreement.view("windowed");
+      const times: number[] = [];
+      const events: number[] = [];
+      (window as any).timings = { times, events };
+      const dispatch = v.dispatch.bind(v);
+      v.dispatch = (...args: unknown[]) => {
+        const t0 = performance.now();
+        dispatch(...args);
+        times.push(performance.now() - t0);
+      };
+      new PerformanceObserver((list) => {
+        for (const e of list.getEntries() as PerformanceEventTiming[])
+          if (e.name === "keydown") events.push(e.processingEnd - e.startTime);
+      }).observe({
+        type: "event",
+        durationThreshold: 16,
+        buffered: false,
+      } as PerformanceObserverInit);
+      v.dispatch({
+        selection: {
+          anchor: v.state.doc.line(Math.floor(v.state.doc.lines / 2)).to,
+        },
+      });
+      v.focus();
+      times.length = 0;
+    });
+    await page.keyboard.type("x = 1 + 2 # typed ".repeat(12).slice(0, 200));
+    return page.evaluate(async () => {
+      const v = (window as any).agreement.view("windowed");
+      const frames: number[] = [];
+      for (let i = 0; i < 10; i++) {
+        const t0 = performance.now();
+        v.dispatch({
+          changes: { from: v.state.selection.main.head, insert: "y" },
+        });
+        await new Promise((r) => requestAnimationFrame(r));
+        frames.push(performance.now() - t0);
+      }
+      const { times, events } = (window as any).timings;
+      return { times: times.slice(0, 200), events, frames };
+    });
+  }
+
+  test("E7. the budgets, timed in the page: Python's first colour, 200 keystrokes in 5,000 lines; Ruby and Markdown in 2,000", async ({
+    page,
+  }) => {
+    test.setTimeout(180_000);
+    await openView(page, VIEW);
+    await page.locator("[data-editors-ready]").waitFor();
+    const { SPECIMENS } = await import("../fixtures/highlight/specimens.ts");
+    const repeat = (id: string, lines: number) => {
+      const code = SPECIMENS.find((s) => s.id === id)!.code.split("\n");
+      return Array.from(
+        { length: lines },
+        (_, i) => code[i % code.length],
+      ).join("\n");
+    };
+    // The grammar first, then the 5,000-line document's first colour.
+    await load(page, "windowed", "python", "x = 1");
+    await expect(
+      page.locator('[data-editor="windowed"] .text-code-number'),
+    ).toHaveCount(1, { timeout: 15_000 });
+    const firstColour = await page.evaluate(
+      async (code) => {
+        const root = document.querySelector('[data-editor="windowed"]')!;
+        const t0 = performance.now();
+        const done = new Promise<number>((resolve) => {
+          const seen = () => root.querySelector(".cm-line .text-code-keyword");
+          const observer = new MutationObserver(() => {
+            if (
+              seen() &&
+              (window as any).agreement.view("windowed").state.doc.lines > 4000
+            ) {
+              observer.disconnect();
+              resolve(performance.now() - t0);
+            }
+          });
+          observer.observe(root, {
+            subtree: true,
+            childList: true,
+            attributes: true,
+          });
+        });
+        await (window as any).agreement.set("windowed", "python", code);
+        return done;
+      },
+      repeat("python", 5000),
+    );
+    const python = await typeTimed(page);
+    const p = stats(python.times);
+    await load(page, "windowed", "ruby", repeat("ruby", 2000));
+    await expect(
+      page.locator('[data-editor="windowed"] .text-code-keyword').first(),
+    ).toBeVisible({ timeout: 15_000 });
+    const ruby = stats((await typeTimed(page)).times);
+    await load(page, "windowed", "markdown", repeat("markdown", 2000));
+    await expect(
+      page.locator('[data-editor="windowed"] [class*="text-code-"]').first(),
+    ).toBeVisible({ timeout: 15_000 });
+    const markdown = stats((await typeTimed(page)).times);
+    console.log(
+      `E7: python first colour ${firstColour.toFixed(0)} ms; python p95 ${p.p95.toFixed(2)} ms, max ${p.max.toFixed(2)} ms; ruby p95 ${ruby.p95.toFixed(2)} ms; markdown p95 ${markdown.p95.toFixed(2)} ms; keydown events over 16 ms: ${python.events.length}; next frame ${stats(python.frames).p95.toFixed(1)} ms p95`,
+    );
+    expect(python.times).toHaveLength(200);
+    expect(firstColour).toBeLessThanOrEqual(250);
+    // Reset at checkpoint 2 from 8 ms to 12 ms (decisions.md, "After the `013` build's checkpoint 2").
+    expect(p.p95).toBeLessThanOrEqual(12);
+    expect(p.max).toBeLessThanOrEqual(50);
+    expect(ruby.p95).toBeLessThanOrEqual(16);
+    expect(markdown.p95).toBeLessThanOrEqual(16);
+  });
+});
+
+/** 013 criterion 13: the editor before it mounts. */
+test("the editor before mount: with scripts off, the prerendered root computes the code ground and its fallback pre the --code-text colour", async ({
+  browser,
+}, info) => {
+  const context = await browser.newContext({
+    javaScriptEnabled: false,
+    colorScheme: info.project.use.colorScheme,
+    baseURL: info.project.use.baseURL,
+  });
+  const raw = await context.newPage();
+  await raw.goto(EDITOR_PAGE);
+  const root = raw.locator('[data-slot="code-editor"]').first();
+  const fallback = root.locator('[data-slot="code-editor-fallback"]');
+  await expect(fallback).toHaveCount(1);
+  const [ground, colour, wantGround, wantColour] = await root.evaluate((el) => {
+    const probe = (prop: string, value: string) => {
+      const p = document.createElement("span");
+      p.style.setProperty(prop, value);
+      el.append(p);
+      const c = getComputedStyle(p).getPropertyValue(prop);
+      p.remove();
+      return c;
+    };
+    return [
+      getComputedStyle(el).backgroundColor,
+      getComputedStyle(el.querySelector('[data-slot="code-editor-fallback"]')!)
+        .color,
+      probe("background-color", "var(--code-background)"),
+      probe("color", "var(--code-text)"),
+    ];
+  });
+  expect(ground).toBe(wantGround);
+  expect(colour).toBe(wantColour);
+  await context.close();
+});
+
 test.describe("the popover", () => {
   const PAGE = "/items/popover/";
 
@@ -1360,7 +1877,7 @@ test.describe("inline code (014)", () => {
     expect(await computed(chip, "background-color")).toBe(CODE_GROUND[theme]);
     await expectHairline(chip, "the chip");
     expect(await computed(chip, "color")).toBe(
-      hexToRgb(await own(chip, "--code-foreground")),
+      hexToRgb(await own(chip, "--code-text")),
     );
     expect(await computed(chip, "padding-inline-start")).toBe("4px");
     expect(await computed(chip, "padding-inline-end")).toBe("4px");
@@ -1444,7 +1961,7 @@ test.describe("inline code (014)", () => {
     expect(await computed(line, "background-color")).toBe(CODE_GROUND[theme]);
     await expectHairline(line, "the install line");
     expect(await computed(line, "color")).toBe(
-      hexToRgb(await own(line, "--code-foreground")),
+      hexToRgb(await own(line, "--code-text")),
     );
   });
 

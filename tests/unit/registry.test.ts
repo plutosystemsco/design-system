@@ -193,21 +193,20 @@ const GROUP_004: Record<string, string> = {
   meter: "data",
 };
 const TYPE_004 = new Map(ITEMS_004.map(([n, t]) => [n, t]));
-/** 004 decision 3: the stock-derived items of 004 (code-editor and meter carry no meta.stock). */
+/** 004 decision 3: the stock-derived items of 004 (code-editor and meter carry no meta.stock); 013 decision 5 makes highlighter ours, so 8 become 7. */
 const STOCK_004 = [
   "toggle",
   "toggle-group",
   "popover",
   "accordion",
   "code-block",
-  "highlighter",
   "use-highlighted-code",
   "chart",
 ];
 /** 004 decision 3: the stock sha256 of chart, read on the install date. */
 const CHART_STOCK_SHA =
   "dccff6d1f478d5469fdd93e3ddca5eb8c42732ae1ca494da79028c5cdc422d51";
-/** 004 decision 2: the 7 CodeMirror and Lezer packages code-editor names, at their ranges. */
+/** 004 decision 2: the CodeMirror packages code-editor names, at their ranges; 013 decision 16 drops @lezer/highlight. */
 const CODE_EDITOR_PACKAGES = [
   "@codemirror/autocomplete@^6.20.4",
   "@codemirror/commands@^6.11.1",
@@ -215,13 +214,58 @@ const CODE_EDITOR_PACKAGES = [
   "@codemirror/language@^6.13.1",
   "@codemirror/state@^6.7.6",
   "@codemirror/view@^6.43.15",
-  "@lezer/highlight@^1.2.5",
 ];
-/** 004 decision 4: the two stock-derived items whose files install outside <name>/. */
-const TARGETS_004: Record<string, string> = {
-  highlighter: "highlighter.ts",
-  "use-highlighted-code": "use-highlighted-code.svelte.ts",
-};
+/** 013 decision 5: the highlighter's 21 dependencies, at decision 3's specifiers. */
+const HIGHLIGHTER_DEPENDENCIES = [
+  "web-tree-sitter@^0.27.2",
+  "tree-sitter-typescript@^0.23.2",
+  "tree-sitter-javascript@^0.25.0",
+  "tree-sitter-python@^0.25.0",
+  "tree-sitter-rust@^0.24.0",
+  "tree-sitter-go@^0.25.0",
+  "tree-sitter-java@^0.23.5",
+  "tree-sitter-c-sharp@^0.23.5",
+  "tree-sitter-ruby@^0.23.1",
+  "tree-sitter-html@^0.23.2",
+  "tree-sitter-css@^0.25.0",
+  "tree-sitter-bash@^0.25.1",
+  "tree-sitter-json@^0.24.8",
+  "@tree-sitter-grammars/tree-sitter-yaml@^0.7.1",
+  "@tree-sitter-grammars/tree-sitter-toml@^0.7.0",
+  "@tree-sitter-grammars/tree-sitter-svelte@~1.0.2",
+  "tree-sitter-c@^0.24.1",
+  "tree-sitter-cpp@^0.23.4",
+  "tree-sitter-php@^0.24.2",
+  "@tree-sitter-grammars/tree-sitter-kotlin@~1.1.0",
+  "shiki@^4.5.0",
+];
+/** 013 decision 5: the 24 query files. */
+const QUERY_FILES = [
+  "javascript",
+  "jsx",
+  "javascript.locals",
+  "typescript",
+  "typescript-assertion",
+  "typescript.locals",
+  "python",
+  "rust",
+  "go",
+  "java",
+  "c-sharp",
+  "ruby",
+  "ruby.locals",
+  "html",
+  "css",
+  "bash",
+  "json",
+  "yaml",
+  "toml",
+  "svelte",
+  "c",
+  "cpp",
+  "php",
+  "kotlin",
+];
 /**
  * 010 decision 1: the nine compositions, each with its title and its
  * registry dependencies, and the block. Every one is expressive-only, since
@@ -578,14 +622,14 @@ describe("registry.json", () => {
       expect(byName.get(name)?.meta.since).toBe("0.1.0");
   });
 
-  test("10 of 10 004 items carry meta.since 0.4.0, 004 decision 4's titles and groups; 8 carry a 5-field meta.stock, code-editor and meter none", () => {
+  test("10 of 10 004 items carry meta.since 0.4.0, 004 decision 4's titles and groups; 7 carry a 5-field meta.stock, code-editor, highlighter and meter none", () => {
     const byName = new Map(
       (registry.items as { name: string; title: string; meta: any }[]).map(
         (i) => [i.name, i],
       ),
     );
     expect(ITEMS_004).toHaveLength(10);
-    expect(STOCK_004).toHaveLength(8);
+    expect(STOCK_004).toHaveLength(7);
     for (const [name, , title] of ITEMS_004) {
       const item = byName.get(name)!;
       expect(item.title).toBe(title);
@@ -659,12 +703,12 @@ describe("registry.json", () => {
       expect(stock.sha256).toMatch(/^[0-9a-f]{64}$/);
       if (name === "sidebar") expect(stock.sha256).toBe(SIDEBAR_STOCK_SHA);
     }
-    // 42 stock-derived items in all: 002's 26, 004's 8, 005's 8.
+    // 41 stock-derived items in all: 002's 26, 004's 7 (013: highlighter is ours), 005's 8.
     const stocked = (registry.items as { meta: any }[]).filter(
       (i) => i.meta?.stock,
     );
-    expect(stocked).toHaveLength(42);
-    expect(ITEMS_002.length + STOCK_004.length + STOCK_005.length).toBe(42);
+    expect(stocked).toHaveLength(41);
+    expect(ITEMS_002.length + STOCK_004.length + STOCK_005.length).toBe(41);
   });
 
   test("7 of 7 of 003's items carry meta.since 0.3.0, no meta.stock, and 003 decision 5's titles", () => {
@@ -983,74 +1027,56 @@ describe("the built registry", () => {
     }
   });
 
-  test("the hook's target is use-highlighted-code.svelte.ts and the library's highlighter.ts; highlighter names shiki@^4.5.0", () => {
-    for (const [name, target] of Object.entries(TARGETS_004)) {
-      const item = JSON.parse(
-        readFileSync(path.join(latest(), `${name}.json`), "utf8"),
-      );
-      expect(item.files.map((f: { target: string }) => f.target)).toEqual([
-        target,
-      ]);
-    }
-    const highlighter = JSON.parse(
-      readFileSync(path.join(latest(), "highlighter.json"), "utf8"),
-    );
-    expect([
-      ...(highlighter.dependencies ?? []),
-      ...(highlighter.devDependencies ?? []),
-    ]).toEqual(["shiki@^4.5.0"]);
-    // 007 decision 5: the strict engine, and the twenty-six lazy languages,
-    // read from the built file's content (a source check, not a browser one).
-    const source: string = highlighter.files[0].content;
-    expect(source.match(/forgiving: false/g)).toHaveLength(1);
-    expect(source.match(/forgiving: true/g)).toBeNull();
-    const languages = [
-      ...source.matchAll(/import\("shiki\/langs\/([a-z]+)\.mjs"\)/g),
-    ]
-      .map((m) => m[1])
-      .sort();
-    expect(languages).toEqual(
-      [
-        "python",
-        "javascript",
-        "typescript",
-        "tsx",
-        "jsx",
-        "html",
-        "css",
-        "json",
-        "yaml",
-        "toml",
-        "markdown",
-        "shellscript",
-        "sql",
-        "go",
-        "rust",
-        "java",
-        "c",
-        "cpp",
-        "csharp",
-        "ruby",
-        "php",
-        "kotlin",
-        "swift",
-        "svelte",
-        "diff",
-        "docker",
-      ].sort(),
-    );
-    expect(languages).toHaveLength(26);
+  test("the hook's target is use-highlighted-code.svelte.ts; highlighter carries 29 files at their targets, 21 dependencies, no devDependencies and no meta.stock", () => {
     const hook = JSON.parse(
       readFileSync(path.join(latest(), "use-highlighted-code.json"), "utf8"),
     );
+    expect(hook.files.map((f: { target: string }) => f.target)).toEqual([
+      "use-highlighted-code.svelte.ts",
+    ]);
     expect([
       ...(hook.dependencies ?? []),
       ...(hook.devDependencies ?? []),
     ]).toEqual([]);
+    const highlighter = JSON.parse(
+      readFileSync(path.join(latest(), "highlighter.json"), "utf8"),
+    );
+    const targets = highlighter.files.map((f: { target: string }) => f.target);
+    expect(targets).toHaveLength(29);
+    expect(targets.slice(0, 5)).toEqual([
+      "highlighter.ts",
+      "highlight/roles.ts",
+      "highlight/languages.ts",
+      "highlight/tree-sitter.ts",
+      "highlight/shiki.ts",
+    ]);
+    expect(targets.slice(5).sort()).toEqual(
+      QUERY_FILES.map((q) => `highlight/queries/${q}.scm`).sort(),
+    );
+    for (const file of highlighter.files)
+      expect(file.content, file.target).not.toContain("#lib");
+    expect(highlighter.dependencies).toEqual(HIGHLIGHTER_DEPENDENCIES);
+    expect(highlighter.devDependencies).toBeUndefined();
+    expect(highlighter.meta?.stock).toBeUndefined();
+    const content = (target: string) =>
+      highlighter.files.find((f: { target: string }) => f.target === target)
+        .content as string;
+    // 007 decision 5: the strict engine, once; Shiki's 26 lazy languages.
+    const all = highlighter.files
+      .map((f: { content: string }) => f.content)
+      .join("\n");
+    expect(all.match(/forgiving: false/g)).toHaveLength(1);
+    expect(all.match(/forgiving: true/g)).toBeNull();
+    const languages = [
+      ...content("highlight/languages.ts").matchAll(
+        /import\("shiki\/langs\/([a-z]+)\.mjs"\)/g,
+      ),
+    ].map((m) => m[1]);
+    expect(languages).toHaveLength(26);
   });
 
   // 007 decision 7: the library's target, its three packages and its import of the configured Python.
-  test("code-languages' target is code-languages.ts; it names @codemirror/language-data, @codemirror/language and @replit/codemirror-lang-svelte, and imports $UI$/code-editor/code-editor-python", () => {
+  test("code-languages' target is code-languages.ts; it names @codemirror/language-data, @codemirror/language and @replit/codemirror-lang-svelte, and imports $UI$/code-editor/code-editor-highlighting", () => {
     const item = JSON.parse(
       readFileSync(path.join(latest(), "code-languages.json"), "utf8"),
     );
@@ -1070,22 +1096,27 @@ describe("the built registry", () => {
       "code-editor",
     ]);
     expect(item.files[0].content).toContain(
-      'from "$UI$/code-editor/code-editor-python"',
+      'from "$UI$/code-editor/code-editor-highlighting"',
     );
   });
 
-  test("code-editor names the 7 CodeMirror and Lezer packages of 004 decision 2 at their ranges, and nothing else", () => {
+  test("code-editor names the 6 CodeMirror packages at their ranges, not @lezer/highlight, and depends on highlighter", () => {
     const item = JSON.parse(
       readFileSync(path.join(latest(), "code-editor.json"), "utf8"),
     );
     expect(
       [...(item.dependencies ?? []), ...(item.devDependencies ?? [])].sort(),
     ).toEqual(CODE_EDITOR_PACKAGES);
-    expect(item.registryDependencies).toEqual(["utils", "pluto-theme"]);
+    expect(item.registryDependencies).toEqual([
+      "utils",
+      "pluto-theme",
+      "highlighter",
+    ]);
     expect(item.files.map((f: { target: string }) => f.target)).toEqual([
       "code-editor/code-editor.svelte",
       "code-editor/code-editor-theme.ts",
       "code-editor/code-editor-python.ts",
+      "code-editor/code-editor-highlighting.ts",
       "code-editor/index.ts",
     ]);
   });
@@ -1402,6 +1433,60 @@ describe("CHANGELOG.md", () => {
     ])
       expect(body).toContain(name);
     expect(body).not.toContain("No variable is renamed or removed");
+  });
+
+  // 013 decision 17 and criterion 23: 013's lines in the shared entry, first
+  // in each shared bullet; one bullet per item; every removed name listed.
+  test("the one 0.12.0 entry holds 013's lines: one bullet per item, highlighter's marked interface change, 013's sentences before 014's, every removed name and the update line", () => {
+    const body = entry("0.12.0");
+    const bullet = (name: string) => {
+      const found = body
+        .split("\n")
+        .filter((line) => line.startsWith(`- \`${name}\`: `));
+      expect(found, name).toHaveLength(1);
+      return found[0]!;
+    };
+    for (const name of [
+      "pluto-theme",
+      "highlighter",
+      "code-block",
+      "code-editor",
+      "code-languages",
+      "use-highlighted-code",
+    ])
+      bullet(name);
+    expect(bullet("highlighter")).toContain("**interface change.**");
+    const theme = bullet("pluto-theme");
+    expect(theme.indexOf("Meridian's roles")).toBeLessThan(
+      theme.indexOf("`--syntax-ground`"),
+    );
+    for (const removed of [
+      "--code-foreground",
+      "--code-escape",
+      "--code-builtin",
+      "--code-tag",
+      "--code-property",
+      "--code-decorator",
+      "--code-self",
+      "--code-invalid",
+      "--syntax-amber",
+      "--syntax-purple",
+      "--syntax-teal",
+      "--syntax-cyan",
+    ])
+      expect(body, removed).toContain(`\`${removed}\``);
+    const editor = bullet("code-editor");
+    for (const name of [
+      "`codeHighlight`",
+      "`pythonLanguageConfigured`",
+      "`pythonRoles`",
+      "`codeHighlighting(language)`",
+    ])
+      expect(editor, name).toContain(name);
+    expect(body).toContain(
+      "`add pluto-theme highlighter use-highlighted-code code-block code-editor`",
+    );
+    expect(body).toContain("tree-sitter");
   });
 
   test("the 0.11.0 entry names decision 12's five visible changes", () => {

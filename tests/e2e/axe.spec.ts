@@ -11,6 +11,7 @@ import {
   PAGES_011,
   PAGES_002,
   VIEW_READY,
+  TEST_VIEWS,
   VIEWS,
   WIDTHS,
   open,
@@ -125,6 +126,21 @@ for (const [path, id, slot] of [
     await expectNoViolations(page);
   });
 }
+
+// 013 decision 21: the test views, at 1280 only, once every block has settled.
+test.describe("at 1280", () => {
+  test.use({ viewport: { width: 1280, height: 900 } });
+  for (const path of TEST_VIEWS) {
+    test(`axe finds 0 violations on ${path}`, async ({ page }) => {
+      await openView(page, path);
+      await page
+        .locator('[data-highlight="pending"]')
+        .first()
+        .waitFor({ state: "detached" });
+      await expectNoViolations(page);
+    });
+  }
+});
 
 // 007 decision 10: the ink surface on the pluto-theme page at 1280, with its
 // popover open (inside the surface) and with its dialog open (under body).

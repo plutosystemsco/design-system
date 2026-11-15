@@ -230,6 +230,12 @@ export const VIEWS = BLOCKS.flatMap((block) =>
   })),
 );
 
+/**
+ * 013 decision 21: test views that are not blocks. axe (at 1280) and the
+ * theme check scan them; the keyboard walk does not.
+ */
+export const TEST_VIEWS = ["/view/code-agreement/"] as const;
+
 /** 010 decision 10: each composition's views, under /view/compositions/. */
 export const COMPOSITION_VIEW_LIST = COMPOSITIONS.flatMap((item) =>
   (COMPOSITION_VIEWS[item] ?? []).map((view) => ({

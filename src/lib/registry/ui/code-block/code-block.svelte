@@ -10,7 +10,8 @@
     base: "group/code-block relative flex w-full min-w-0 flex-col overflow-hidden rounded border border-border bg-code-background text-sm has-[[data-slot=code-block-content]:focus-visible]:focus-ring data-[size=sm]:text-xs",
     variants: {
       variant: {
-        default: "text-foreground",
+        // The body is the code's own ink, not the page's foreground.
+        default: "text-code-text",
         // State told by colour: the app gives a destructive block a visible
         // label, such as "Error output", in its header or beside it.
         destructive: "text-destructive",

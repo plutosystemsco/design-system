@@ -1,6 +1,7 @@
+import { pythonLanguage } from "@codemirror/lang-python";
 import { LanguageDescription, LanguageSupport } from "@codemirror/language";
 import { languages } from "@codemirror/language-data";
-import { pythonLanguageConfigured } from "#lib/registry/ui/code-editor/code-editor-python";
+import { codeHighlighting } from "#lib/registry/ui/code-editor/code-editor-highlighting";
 
 /**
  * Any of the twenty-six languages the highlighter lists, for the editor, on
@@ -85,24 +86,29 @@ export function findLanguage(name: string): CodeLanguage | null {
 
 /**
  * Loads a language's support for the editor, or null for a name the table
- * does not hold. Three routes: Python is the configured grammar the preset
- * uses, so the editor's Python is one language everywhere; Svelte comes from
- * `@replit/codemirror-lang-svelte`, since `language-data` has no Svelte;
- * every other language goes to `language-data`'s description by its name
- * (a strict match, never a fuzzy one, which would map an unknown name by
- * substring), whose `load()` is one dynamic import, cached by the
- * description. Pass the result as an extension beside a base setup.
+ * does not hold. Its structure and behaviour (indentation, brackets, comment
+ * toggling, HTML's tag closing) are the language's own, from Lezer or a
+ * CodeMirror 5 mode; its colour is the highlighter's, through
+ * `codeHighlighting`, so the editor colours code as a code block does
+ * (013 decision 16). Three routes: Python is the preset's grammar; Svelte
+ * comes from `@replit/codemirror-lang-svelte`, since `language-data` has no
+ * Svelte; every other language goes to `language-data`'s description by its
+ * name (a strict match, never a fuzzy one), whose `load()` is one dynamic
+ * import, cached by the description. Pass the result as an extension beside
+ * a base setup.
  */
 export async function loadLanguage(
   name: string,
 ): Promise<LanguageSupport | null> {
   const language = findLanguage(name);
   if (!language) return null;
+  const colour = codeHighlighting(language.id);
   if (language.id === "python")
-    return new LanguageSupport(pythonLanguageConfigured);
+    return new LanguageSupport(pythonLanguage, [colour]);
   if (language.id === "svelte") {
     const { svelte } = await import("@replit/codemirror-lang-svelte");
-    return svelte();
+    const loaded = svelte();
+    return new LanguageSupport(loaded.language, [loaded.support, colour]);
   }
   const description = LanguageDescription.matchLanguageName(
     languages,
@@ -110,5 +116,7 @@ export async function loadLanguage(
     false,
   );
   if (!description) return null;
-  return description.load();
+  const loaded = await description.load();
+  // The support whole: it holds behaviour as well as structure.
+  return new LanguageSupport(loaded.language, [loaded.support, colour]);
 }

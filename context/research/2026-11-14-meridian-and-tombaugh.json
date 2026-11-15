@@ -1,0 +1,178 @@
+{
+  "candidates": [
+    {
+      "id": "meridian",
+      "name": "Meridian",
+      "summary": "The owner's Meridian guide as written: its seven roles, comment and text, on today's slots. No italic, no bold. Pluto's own grounds: white in light (the workbench's ground), #2C2821 in dark.",
+      "recommended": false,
+      "palette": {
+        "format": "pluto-code-palette",
+        "version": 1,
+        "swatches": {
+          "meridian-keyword": {
+            "light": "#793CC3",
+            "dark": "#BE9EF7"
+          },
+          "meridian-function": {
+            "light": "#0166C7",
+            "dark": "#76AEF5"
+          },
+          "meridian-type": {
+            "light": "#2B4383",
+            "dark": "#99ABD6"
+          },
+          "meridian-string": {
+            "light": "#087D39",
+            "dark": "#69C17E"
+          },
+          "meridian-constant": {
+            "light": "#956901",
+            "dark": "#E0AE56"
+          },
+          "meridian-meta": {
+            "light": "#9C3877",
+            "dark": "#E495C2"
+          },
+          "meridian-special": {
+            "light": "#C0312D",
+            "dark": "#F7867B"
+          },
+          "meridian-comment": {
+            "light": "#757B84",
+            "dark": "#818690"
+          },
+          "meridian-text": {
+            "light": "#25292F",
+            "dark": "#D9DFE8"
+          },
+          "code-ground": {
+            "light": "#FFFFFF",
+            "dark": "#2C2821"
+          },
+          "code-active-line": {
+            "light": "#F3F0E8",
+            "dark": "#221F19"
+          },
+          "selection": {
+            "light": "#CBD1F4",
+            "dark": "#464A59"
+          }
+        },
+        "slots": {
+          "foreground": "meridian-text",
+          "property": "meridian-text",
+          "comment": "meridian-comment",
+          "keyword": "meridian-keyword",
+          "self": "meridian-keyword",
+          "tag": "meridian-keyword",
+          "function": "meridian-function",
+          "builtin": "meridian-function",
+          "link": "meridian-function",
+          "changed": "meridian-function",
+          "type": "meridian-type",
+          "string": "meridian-string",
+          "inserted": "meridian-string",
+          "constant": "meridian-constant",
+          "number": "meridian-constant",
+          "decorator": "meridian-meta",
+          "escape": "meridian-special",
+          "invalid": "meridian-special",
+          "deleted": "meridian-special",
+          "background": "code-ground",
+          "active-line": "code-active-line",
+          "selection": "selection"
+        },
+        "styles": {}
+      }
+    },
+    {
+      "id": "tombaugh",
+      "name": "Tombaugh",
+      "summary": "Meridian with its blue, green, yellow and red moved toward the Pluto mark's (each takes the brand colour's hue and moves halfway to its chroma), then tuned for contrast: one lightness shift per mode (light 0.03 darker, dark 0.02 lighter) so every colour passes AA on the ground, the active line and the selection, and dark colours meet Meridian's 6.5:1; comments raised to AA; a gentler 13% blue selection. No italic, no bold. Pluto's grounds unchanged. A ninth role at the owner's request: numbers are yellow (a touch yellower than Pluto's amber, hue 85) and constants (booleans, null, ALL_CAPS names, enum members) are Pluto's orange. The owner then asked for a yellower number with more contrast on both grounds: #6C5A00 light (6.77:1 on white), #E5CD72 dark (9.28:1), softened to sit with the other dark colours.",
+      "recommended": false,
+      "palette": {
+        "format": "pluto-code-palette",
+        "version": 1,
+        "swatches": {
+          "tombaugh-keyword": {
+            "light": "#7032B9",
+            "dark": "#C4A4FE"
+          },
+          "tombaugh-function": {
+            "light": "#3350CB",
+            "dark": "#91AEFD"
+          },
+          "tombaugh-type": {
+            "light": "#243B7A",
+            "dark": "#9FB1DD"
+          },
+          "tombaugh-string": {
+            "light": "#007150",
+            "dark": "#5CC89A"
+          },
+          "tombaugh-meta": {
+            "light": "#922F6E",
+            "dark": "#EB9BC8"
+          },
+          "tombaugh-special": {
+            "light": "#B81C2E",
+            "dark": "#FC8D8A"
+          },
+          "tombaugh-comment": {
+            "light": "#636972",
+            "dark": "#9EA4AE"
+          },
+          "tombaugh-text": {
+            "light": "#25292F",
+            "dark": "#D9DFE8"
+          },
+          "code-ground": {
+            "light": "#FFFFFF",
+            "dark": "#2C2821"
+          },
+          "code-active-line": {
+            "light": "#F3F0E8",
+            "dark": "#221F19"
+          },
+          "tombaugh-selection": {
+            "light": "#E4E7F9",
+            "dark": "#393A3E"
+          },
+          "tombaugh-yellow": {
+            "light": "#6C5A00",
+            "dark": "#E5CD72"
+          },
+          "tombaugh-orange": {
+            "light": "#A34D15",
+            "dark": "#FFA373"
+          }
+        },
+        "slots": {
+          "foreground": "tombaugh-text",
+          "property": "tombaugh-text",
+          "comment": "tombaugh-comment",
+          "keyword": "tombaugh-keyword",
+          "self": "tombaugh-keyword",
+          "tag": "tombaugh-keyword",
+          "function": "tombaugh-function",
+          "builtin": "tombaugh-function",
+          "link": "tombaugh-function",
+          "changed": "tombaugh-function",
+          "type": "tombaugh-type",
+          "string": "tombaugh-string",
+          "inserted": "tombaugh-string",
+          "constant": "tombaugh-orange",
+          "number": "tombaugh-yellow",
+          "decorator": "tombaugh-meta",
+          "escape": "tombaugh-special",
+          "invalid": "tombaugh-special",
+          "deleted": "tombaugh-special",
+          "background": "code-ground",
+          "active-line": "code-active-line",
+          "selection": "tombaugh-selection"
+        },
+        "styles": {}
+      }
+    }
+  ]
+}

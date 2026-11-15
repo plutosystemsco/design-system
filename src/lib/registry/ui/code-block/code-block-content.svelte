@@ -29,7 +29,7 @@
     tabindex?: number;
   } = $props();
 
-  // The hook loads nothing for an empty language, so a plain block costs no Shiki.
+  // The hook loads nothing for an empty language, so a plain block costs no engine.
   const highlighted = useHighlightedCode(
     () => code ?? "",
     () => language ?? "",
@@ -42,6 +42,15 @@
     if (lineNumbers) return code.replace(/\n$/, "").split("\n");
     return null;
   });
+
+  // "pending" while the highlighter or a grammar the code embeds is loading;
+  // "settled" when nothing is, and always for prerendered lines, plain code
+  // and children.
+  const highlight = $derived(
+    !lines && code !== undefined && language && !highlighted.settled
+      ? "pending"
+      : "settled",
+  );
 </script>
 
 {#snippet content()}
@@ -74,6 +83,7 @@
   data-slot="code-block-content"
   data-wrap={wrap || undefined}
   data-numbered={lineNumbers || undefined}
+  data-highlight={highlight}
   dir="ltr"
   {tabindex}
   class={cn(

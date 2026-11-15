@@ -288,10 +288,10 @@
 <section class="mt-16" aria-labelledby="code">
   <h2 id="code" class="text-2xl font-bold tracking-section">Code and scroll</h2>
   <p class="mt-2 max-w-prose text-muted-foreground">
-    Twenty-one code tokens, each a semantic colour, drive the code block and the
-    editor as <code>text-code-*</code> and <code>bg-code-*</code> utilities.
-    They are written into both theme blocks, so a dark subtree inside a light
-    page takes the dark palette. The
+    Sixteen code roles, Meridian's in Tombaugh's colours, each a semantic
+    colour, drive the code block and the editor as <code>text-code-*</code> and
+    <code>bg-code-*</code> utilities. They are written into both theme blocks,
+    so a dark subtree inside a light page takes the dark palette. The
     <code>scrollbar</code> utility colours a native scroll box's thumb and track
     from <code>input</code> and <code>muted</code>; the pattern is
     <code>overflow-auto scrollbar</code> with <code>tabindex="0"</code> and a
@@ -315,16 +315,16 @@
   <div class="mt-6 flex flex-wrap items-start gap-12">
     <div class="flex flex-col items-start gap-2">
       <pre
-        class="rounded border border-border bg-code-background px-4 py-3 font-mono text-sm text-code-foreground"><code
+        class="rounded border border-border bg-code-background px-4 py-3 font-mono text-sm text-code-text"><code
           ><span data-token="text-code-keyword" class="text-code-keyword"
             >def</span
-          > <span class="text-code-function font-medium">area</span>(r):
+          > <span class="text-code-function">area</span>(r):
 <span
             data-token="bg-code-active-line"
             class="block bg-code-active-line">    <span
               class="text-code-keyword">return</span
-            > <span class="text-code-constant">3.14159</span> * r ** <span
-              class="text-code-constant">2</span
+            > <span class="text-code-number">3.14159</span> * r ** <span
+              class="text-code-number">2</span
             >  <span class="text-code-comment"># a circle</span></span
           ></code
         ></pre>
@@ -351,7 +351,7 @@
         role="region"
         aria-label="A scroll box on the code ground"
         tabindex="0"
-        class="w-64 overflow-auto rounded border border-border bg-code-background p-3 font-mono text-sm whitespace-nowrap text-code-foreground scrollbar-code"
+        class="w-64 overflow-auto rounded border border-border bg-code-background p-3 font-mono text-sm whitespace-nowrap text-code-text scrollbar-code"
       >
         A scroll box inside code, whose track is the code ground. This line is
         longer than the box so that it scrolls.

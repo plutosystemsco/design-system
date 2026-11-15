@@ -1,16 +1,20 @@
 import {
   loadHighlighter,
+  type HighlightChange,
   type Highlighter,
   type HighlightedLine,
+  type HighlightSession,
 } from "#lib/registry/lib/highlighter";
-
-/** The grammar state a highlight run ends in, as the highlighter returns it. */
-type GrammarState = ReturnType<Highlighter["highlight"]>["state"];
 
 /**
  * Highlights `code` in `language`. `current` holds one entry per line: a plain
  * string until the highlighter loads, then the line's tokens, each
  * `{ content, class }`. Pass each one to the `code` prop of a `CodeBlock.Line`.
+ * `settled` is true once nothing is loading: no highlighter, and no grammar
+ * the code embeds (an HTML block's script, a Markdown fence).
+ *
+ * The code streams through one session: when the new text extends the old,
+ * only the appended range is re-parsed and re-queried.
  *
  * ```svelte
  * <script lang="ts">
@@ -30,6 +34,8 @@ export function useHighlightedCode(
     language: string;
     highlighter: Highlighter | null;
   } | null>(null);
+  // Bumped when a session's embedded grammar arrives, so the lines repaint.
+  let version = $state(0);
 
   $effect(() => {
     const lang = language();
@@ -41,66 +47,84 @@ export function useHighlightedCode(
           loaded = { language: lang, highlighter: next };
         }
       })
-      .catch(() => {});
+      .catch(() => {
+        if (!cancelled) loaded = { language: lang, highlighter: null };
+      });
 
     return () => {
       cancelled = true;
     };
   });
 
-  // The complete lines, highlighted. While the code streams, only the new
-  // lines are tokenized, starting from the grammar state of the last one.
-  let done: {
-    highlighter: Highlighter | null;
+  /** The open session: its highlighter, the text it holds, and its listener. */
+  let open: {
+    highlighter: Highlighter;
+    session: HighlightSession;
     text: string;
-    lines: HighlightedLine[];
-    state?: GrammarState;
-  } = { highlighter: null, text: "", lines: [] };
+    stop: () => void;
+  } | null = null;
 
-  const lines = $derived.by((): HighlightedLine[] => {
-    const raw = value();
-    // A trailing newline would render as an extra empty line.
-    const code = raw.endsWith("\n") ? raw.slice(0, -1) : raw;
-    const lang = language();
-    const highlighter = loaded?.language === lang ? loaded.highlighter : null;
+  const close = () => {
+    open?.stop();
+    open?.session.dispose();
+    open = null;
+  };
 
-    if (!highlighter) {
-      return code.split("\n");
-    }
+  $effect(() => close);
 
-    let next = done;
+  const state = $derived.by(
+    (): {
+      lines: HighlightedLine[];
+      settled: boolean;
+    } => {
+      void version;
+      const raw = value();
+      // A trailing newline would render as an extra empty line.
+      const code = raw.endsWith("\n") ? raw.slice(0, -1) : raw;
+      const lang = language();
+      const ready = loaded?.language === lang;
+      const highlighter = ready ? loaded!.highlighter : null;
 
-    if (next.highlighter !== highlighter || !code.startsWith(next.text)) {
-      next = { highlighter, text: "", lines: [] };
-    }
+      if (!highlighter) {
+        if (open) close();
+        // Plain until the highlighter arrives; settled once it is known there is none.
+        return { lines: code.split("\n"), settled: ready || !lang };
+      }
 
-    const end = code.lastIndexOf("\n") + 1;
+      if (open?.highlighter !== highlighter) {
+        close();
+        const session = highlighter.session(code);
+        const stop = session.onChange(() => {
+          version++;
+        });
+        open = { highlighter, session, text: code, stop };
+      } else if (open.text !== code) {
+        const old = open.text;
+        const change: HighlightChange = code.startsWith(old)
+          ? {
+              fromA: old.length,
+              toA: old.length,
+              fromB: old.length,
+              toB: code.length,
+            }
+          : { fromA: 0, toA: old.length, fromB: 0, toB: code.length };
+        open.session.update(code, [change]);
+        open.text = code;
+      }
 
-    if (end > next.text.length) {
-      const result = highlighter.highlight(
-        code.slice(next.text.length, end - 1),
-        next.state,
-      );
-
-      next = {
-        highlighter,
-        text: code.slice(0, end),
-        lines: [...next.lines, ...result.lines],
-        state: result.state,
+      return {
+        lines: open.session.lines().slice(),
+        settled: open.session.settled,
       };
-    }
-
-    done = next;
-
-    // The last line is still being written, so it is tokenized every time.
-    const tail = code.slice(end);
-
-    return [...next.lines, highlighter.highlight(tail, next.state).lines[0]];
-  });
+    },
+  );
 
   return {
     get current() {
-      return lines;
+      return state.lines;
+    },
+    get settled() {
+      return state.settled;
     },
   };
 }

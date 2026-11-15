@@ -2,6 +2,54 @@
 
 The owner's answers and decisions, newest first. A decision that changes the constitution is also recorded in its Status line. "The design book" and "v2" both mean the Pluto Systems design book, version 2, the source of the brand's rules; a section of it is cited as "§03".
 
+### After the `013` build's checkpoint 2 (2026-11-15)
+
+The design lead typed in the editor in both themes, at 1280 px and 2×:
+- on the 5,000-line Python document in `/view/code-agreement/`'s 20-line editor (45 characters at line 2,500);
+- on Svelte and on Markdown in `/items/code-languages/`, adding a ```` ```python ```` fence.
+
+Colour followed every keystroke, the new fence took Python's roles, and Svelte closed its tags. There were no page errors and no long tasks over 50 ms. Calls:
+
+- **E7's Python bar is reset from 8 ms to 12 ms p95. No worker is added.**
+  - **Measured:** in the page, a keystroke costs 8.7 to 10.4 ms p95 (the builder, three runs). The design lead's own run on the dev server gave 9.9 to 10.4 ms per transaction, steady state. Max 31 ms, under the 50 ms bar, which stands.
+  - **Why:**
+    - About 5 ms of each keystroke is tree-sitter-python's own incremental re-parse. It re-reads about 77% of the text after a one-character edit; Rust re-reads 1 kB. Only a different engine moves that.
+    - At 10 ms a keystroke lands well inside one 16.7 ms frame, and far inside the 200 ms "good" responsiveness threshold (INP).
+    - The spec put a parsing worker out of scope (Scope, "Not here"), while its Risks named a worker as the remedy. The two conflict, and the cheaper reading wins. A worker would ship a second copy of each grammar and colour every keystroke one message late, which is a visible flicker, to save about 4 ms that no reader sees.
+    - Ruby (7.2 ms) and Markdown (2.0 ms) stay at their 16 ms bars.
+  - **Recorded as a deviation** in 013's Landing notes. E7 asserts 12 ms, and its message still prints the measured p95 and the next-frame figure.
+- **A known cost, not gated: a document that is mostly syntax errors re-parses in full.** By mistake, the design lead first loaded 5,000 lines of Python with the line breaks stripped. That text is an error almost everywhere, and every keystroke there cost about 230 ms, all in tree-sitter's re-parse. Real code under edit has local errors, and those stay at about 10 ms. A later spec may bound the parse: web-tree-sitter's progress callback can abandon a parse over a time limit and keep the last tree's colours until idle. It goes in 013's Risks for the record.
+- **Accepted:**
+  - the converter following decision 13's rows (295 → 309 hand entries; `roles.json` `a9eab0f6…`, `roles-hand.json` `96b77339…`; workbench 98.6%, held-out 97.7% unchanged; no query file moved, so the lock is untouched);
+  - the rewritten `highlighter` description;
+  - `pythonSetup()` pairing Lezer's `pythonLanguage` with `codeHighlighting`, dropping `pythonLanguageConfigured`, `pythonRoles` and `codeHighlight`. This is an interface change, so it needs a changelog line.
+- **For `015`'s builder:** the `code-languages` Svelte sample imports from `"$lib/ui/meter"`. `015` criterion 13 bans `$lib` in shown code, so that sample's import moves to `#lib` there.
+
+### After the `013` build's checkpoint 1 (2026-11-15)
+
+The design lead looked at `/items/highlighter/`, `/view/code-agreement/`, `/items/code-block/` and `/items/pluto-theme/`. It read them at 1280 px, native and 2×, in both themes, with no page errors, no overflow, and nothing left `pending`. Calls:
+
+- **The workbench-set bars stand.** Fresh queries score 98.4% overall, and every per-language bar is met. So decision 19's bars are confirmed, not reset.
+- **The held-out set, scored for the first time** with `PLUTO_HELDOUT=1`: **97.7% overall**. Per language: Python 100.0, JavaScript 100.0, TypeScript 98.0, Bash 97.1, SQL 88.5, Go 98.4, Rust 98.5, Java 97.9, C# 98.0, Ruby 98.5. Every bar of 92.0 / 93.5 / 85.0 is met. **One disclosure from the builder:** two query-writing agents briefly saw five held-out lines (two JS/TS comment lines, two TS field lines, one Ruby line). Nothing was written from them. The figure stands, with that noted in 013's Landing notes.
+- **The gate is deleted.** `src/lib/preview/held-out.server.ts` and every read of `PLUTO_HELDOUT` under `src/` and `tests/` are gone, and all 26 samples are coloured. `tests/fixtures/highlight/query-lock.json` holds the SHA-256 of the 24 query files, the figures and an empty change list. `queries.test.ts` now fails if the lock is missing.
+- **Read and passed:** comments recede by colour alone, red is rare on every screen, JSON keys are blue, HTML attributes are plum, and most of each screen is in the body ink. The dark yellow reads without glare on the ground and the active line. The dark constant (`#FFA373`) and special (`#FC8D8A`) separate (ΔE 6.8) where they meet: `True` beside `\n` and the f-string braces.
+- **Brought to the owner, nothing changed: dark function and dark type sit close.** `#91AEFD` and `#9FB1DD` measure ΔE 5.2. Beside them, function to keyword is 7.1, and light function to type is 14.3. On the gallery's TypeScript and Rust, `set`/`fmt` beside `Map`/`Formatter` read as two blues, but only just. The palette is the owner's (decision 8's guard), so it ships as specified. **The question for the owner:** keep `#9FB1DD`, or move dark `type` to `#A8C0D8`? The candidate measures ΔE 8.8 from function, 10.9 from keyword, 10.8 from text and 8.5 from comment, at 7.81:1 on `#2C2821`, inside Meridian's 6.5 to 9.5.
+- **The fixture against decision 13's rows** (TOML brackets, 15 characters; Ruby `Float()`, 5): the spec's rows govern. The converter is corrected so the fixture matches them, which is mechanical, not tuning. The old and new fixture hashes and both sets' figures before and after go in the Landing notes.
+- **To fix before the change review:** the `highlighter` item's description still reads "Shiki with the JavaScript engine…". It describes tree-sitter with the Shiki fallback, in `registry.json` and so on the page and in `static/r/`.
+
+### The design site's review calls, taken while the owner was away (2026-11-14)
+
+The spec reviews of `015` and `017` raised three points that touch the owner's rulings. The owner was away. The design lead took the recommended option for each, so the work is not blocked. Each was **taken by the design lead while the owner was away, and is open to reversal**.
+
+- **The temporary address is not indexed, now or later.** A `_headers` rule sends `X-Robots-Tag: noindex` for `https://pluto-systems-design.:account.workers.dev/*`. The site moves domains with no redirects, so pages indexed at the temporary host would stay behind as stale duplicates. The site is still public; the `workers.dev` copy is only kept out of search engines. **The rule stays after the owner sets `design.<domain>`** (revised after `015`'s second review, S5): a custom domain does not switch off the `workers.dev` host, which keeps serving the same files. A redirect would need the domain decided first. `"workers_dev": false` would remove the address the owner checks the site at (`015` decision 20).
+- **No published item file cites an internal document, from 0.12.0.** Some item comments cite specifications or review codes, for example "(010 decision 5)" or "(K3)". The site's generated API tables would publish them, and every installing app already receives them. As a rule (revised after `015`'s second review, S2, from a list of five lines), every comment under `static/r/` that matches `015` decision 14's citation patterns is reworded in plain words, with no interface change. `015`'s builder enumerates them against `016`'s commit, records each rewording in a fixture, and the changelog names the items. `static/r/` otherwise equals what `016` leaves (`015` decisions 14 and 26).
+- **"On colour and on paper" means three colourways.** The downloads are the mark and the lockup each in colour (for paper and light grounds), in paper (for the blue, red and green fields and for dark grounds), and in ink (for the yellow field and one-colour print). The four-colour mark is never set on a field, because its yellow dot measures 1.00:1 on the yellow field (`016`). There is no lifted-four dark download (`017` decision 4).
+
+Each of the three is put to the owner as a question, with the taken option first (`015`, "For the owner", questions 3 to 5). Two more steps stay with the owner, as hand-off items rather than blockers (the same section, items 1 and 2):
+
+- renaming or creating the worker `pluto-systems-design` in the Cloudflare dashboard, and reconnecting Workers Builds to it;
+- the `<account>` part of `pluto-systems-design.<account>.workers.dev`.
+
 ### Commits per specification, and the site's worker name (2026-11-14)
 
 Asked how the remaining specifications (`013`, `016`, `015`, `017`) proceed while they touch the same files in one uncommitted working tree, **the owner:** commit each specification as it lands. Each is committed to a `release/0.12.0` branch once its change review passes, starting with `014`; nothing is pushed until the owner asks. A review then reads one specification's diff, and a bad build can be rolled back. The tag still comes once, after the change reviews of `013`, `014`, `015`, `016` and `017`.

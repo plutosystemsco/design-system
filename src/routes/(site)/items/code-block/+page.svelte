@@ -152,13 +152,16 @@ ZeroDivisionError: division by zero`;
       is decoration: give it <code>aria-hidden="true"</code>.
     </li>
     <li>
-      Highlight colours are the twenty-one <code>--code-*</code> tokens, each a
-      semantic colour that passes 4.5:1 on every code ground in both themes. A
-      highlighted token is a class, <code>text-code-keyword</code>, never a
-      <code>style</code>; a token in the body's colour carries no class. The
-      sudoku example shows numbers, built-ins such as <code>print</code> and
-      <code>range</code>, constants and comments; a definition is medium weight,
-      a call is not.
+      Highlight colours are the fourteen text roles of <code>--code-*</code>,
+      each a semantic colour that passes 4.5:1 on every code ground and the
+      active line in both themes. A highlighted token is a class,
+      <code>text-code-keyword</code>, never a <code>style</code>; a body token
+      carries no class and takes the block's <code>text-code-text</code>. The
+      sudoku example shows numbers, functions such as <code>print</code> and
+      <code>range</code>, the types
+      <code>int</code> and <code>str</code>, constants and comments. No token is
+      bold or italic. A live block marks <code>data-highlight="pending"</code>
+      while a grammar loads and <code>"settled"</code> once nothing is loading.
     </li>
   </ul>
 </PreviewSection>

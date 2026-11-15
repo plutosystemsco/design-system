@@ -13,7 +13,8 @@
     codeLanguages,
     loadLanguage,
   } from "#lib/registry/lib/code-languages";
-  import { CodeEditor, codeHighlight } from "#lib/registry/ui/code-editor";
+  import { highlightLanguages } from "#lib/registry/lib/highlighter";
+  import { CodeEditor } from "#lib/registry/ui/code-editor";
   import * as Field from "#lib/registry/ui/field";
   import * as NativeSelect from "#lib/registry/ui/native-select";
   import { Status } from "#lib/registry/ui/status";
@@ -23,7 +24,8 @@
   import Specimen from "#lib/preview/specimen.svelte";
 
   // A base setup for any language: everything pythonSetup() has but the
-  // language and the roles plugin. An app writes its own beside the item.
+  // language and its colour, which loadLanguage brings. An app writes its
+  // own beside the item.
   function baseSetup(): Extension[] {
     return [
       lineNumbers(),
@@ -34,7 +36,6 @@
       indentOnInput(),
       highlightActiveLine(),
       highlightActiveLineGutter(),
-      codeHighlight,
     ];
   }
 
@@ -69,29 +70,8 @@
     svelte: "Lezer grammar, @replit/codemirror-lang-svelte",
     legacy: "legacy mode",
   };
-  // Known gaps per language, where there is one.
-  const gaps: Record<string, string> = {
-    python: "self, the built-ins and docstrings come from the roles plugin",
-    css: "selectors are className to Lezer, so they take the type colour, not tag; var() and calc() are keywords",
-    yaml: "plain scalars are untagged: values take the body colour",
-    jsx: "JSX braces take the body colour",
-    tsx: "JSX braces take the body colour",
-    html: "entities such as &amp; take the body colour",
-    go: "len and make are plain calls",
-    rust: "a lifetime takes the body colour; #[derive] is one meta token",
-    java: "@Override is untagged",
-    cpp: "[[nodiscard]] takes the body colour",
-    php: "#[Attribute] and $this take the body colour",
-    bash: "keywords, strings, numbers, comments and $variables; no tree",
-    toml: "a [table] reads as a constant; no tree",
-    diff: "the @@ line reads as a decorator; headers are untagged; no tree",
-    docker: "keywords, strings and comments; no tree",
-    ruby: "Sandbox::Run reads as a tag; no tree",
-    swift: "no decorator, no calls; no tree",
-    kotlin: "no calls, no ${} parts; no tree",
-    csharp:
-      "keywords, three types and strings; no numbers, attributes or this; no tree",
-  };
+  // 013 decision 16: the colour is the highlighter's, by engine.
+  const engines = new Map(highlightLanguages.map((l) => [l.id, l.engine]));
 </script>
 
 <ItemHeader name="code-languages" />
@@ -99,7 +79,7 @@
 <PreviewSection
   id="variants"
   title="Variants"
-  intro="Choose a language and the editor loads its grammar, one dynamic import the first time, then swaps in that language's sample. The twenty-one slots colour every grammar the same way; a language with a Lezer grammar gets the full palette, a legacy mode its keywords, strings, numbers and comments."
+  intro="Choose a language and the editor loads its grammar, one dynamic import the first time, then swaps in that language's sample. CodeMirror's grammar keeps indentation, brackets and the rest; the colour is the highlighter's, so the editor colours each language exactly as a code block does."
 >
   <div class="grid max-w-2xl gap-8">
     <Specimen
@@ -138,7 +118,7 @@
 <PreviewSection
   id="states"
   title="The twenty-six"
-  intro="Eighteen languages come with a Lezer grammar (Svelte's from a third-party package, released in 2022), eight as legacy modes: CodeMirror 5 tokenisers with no syntax tree, so no bracket matching or indentation by syntax, and a coarser palette."
+  intro="Eighteen languages come with a Lezer grammar (Svelte's from a third-party package, released in 2022), eight as legacy modes: CodeMirror 5 tokenisers with no syntax tree, so no bracket matching or indentation by syntax. Every one takes its colour from the highlighter: tree-sitter for twenty-one, Shiki for five."
 >
   <table class="w-full text-sm" data-testid="kinds-table">
     <thead>
@@ -146,7 +126,7 @@
         <th scope="col" class="py-2 text-start font-medium">id</th>
         <th scope="col" class="py-2 text-start font-medium">aliases</th>
         <th scope="col" class="py-2 text-start font-medium">kind</th>
-        <th scope="col" class="py-2 text-start font-medium">gaps</th>
+        <th scope="col" class="py-2 text-start font-medium">colour</th>
       </tr>
     </thead>
     <tbody>
@@ -158,7 +138,7 @@
           >
           <td class="py-2 pe-3">{kinds[language.kind]}</td>
           <td class="py-2 text-muted-foreground"
-            >{gaps[language.id] ?? "none found"}</td
+            >{engines.get(language.id) ?? "none"}</td
           >
         </tr>
       {/each}
@@ -183,17 +163,15 @@
       is enough.
     </li>
     <li>
-      <strong>One copy of <code>@lezer/highlight</code>.</strong> The highlight style
-      and the grammars it colours must share one instance of that package, or the
-      modified tags mismatch by id and a function name reads as an escape. The lock
-      file pins it once; an app that installs a language package of its own checks
-      that it still does.
+      <strong>Two parsers per keystroke.</strong> CodeMirror's grammar for structure
+      and tree-sitter for colour. Only the visible lines are queried, so a long document
+      stays quick to type in.
     </li>
     <li>
       Svelte comes from <code>@replit/codemirror-lang-svelte</code> 6.0.0,
-      released in 2022: runes such as <code>$props()</code> parse as calls.
-      Python is the configured grammar <code>pythonSetup()</code> uses, so the editor's
-      Python is one language everywhere; the roles plugin stays in the preset's hands.
+      released in 2022, for its structure; its colour, runes included, is the
+      highlighter's. Python is the grammar <code>pythonSetup()</code> uses, so the
+      editor's Python is one language everywhere.
     </li>
     <li>
       <code>loadLanguage</code> matches a name strictly, never by substring, and

@@ -1,0 +1,47 @@
+{
+  "lockedAt": "2026-11-15, checkpoint 1 of the 013 build, by the design lead",
+  "files": {
+    "bash.scm": "fa0861aefff106db71ce5fa893c4c1a64574e09962da3a0ad8c1bf301012367e",
+    "c-sharp.scm": "0a3cec6eca75359c20241d2c07c77f78c706a7b8f10732040bf25a2e4b456e5b",
+    "c.scm": "de655535e1845bfebdafe360e0f2ddaf1e3aec9a1a91153b82a5e441df579746",
+    "cpp.scm": "a70e7f0820ef53ff015e005c6c4fce5da86badc92cdd54b36d7e4bd0a1fd29de",
+    "css.scm": "209be9931d1fcd132af0f95e995edf7d193973caa81052adb905c57dd43de3e2",
+    "go.scm": "7808aa859b81218706b8c73fc0484b2536c1d320c47a4012b0cc0009b03ebf85",
+    "html.scm": "c1ec697ed822b09e288c90bcadd367dac1a1b36da516845ba360a354ef340b9c",
+    "java.scm": "1a6ced9d7984e6688710a494eb91ad44a242c84196dc3872d26163cf94974495",
+    "javascript.locals.scm": "0be014b529b266c520b5923d8f7c6dc17be33b80976b36911153ce012792baa6",
+    "javascript.scm": "aa7a1b6e1f78bf4f4f610743190bce41d06b4de18a53a1f6c38c134c3a0ad4d4",
+    "json.scm": "9b7c6f6707454770a3d62c4a80f6e4d9e9ef5f65a358da35ddc70bc7f1817dd6",
+    "jsx.scm": "f7be960fb4f8989318903b8f142763b85c1c4bd5ee56068108d64919f846a343",
+    "kotlin.scm": "9829929d8d6325d42f23f7551fc29e78aeaf7c4ac63ff6874919ee99ef92df8d",
+    "php.scm": "f7b0d2ee548a58843e62e1388f6f20a7c2f7c88cfaceb79633078163dd5715a4",
+    "python.scm": "75b2153902a852c4262adaad7987aed6e2fee506b0729eccb8377c41d42d85fd",
+    "ruby.locals.scm": "661844c61534e71b1a5b5eaab474ea0c1abd11ff808fadcc321f2f48674f2171",
+    "ruby.scm": "f9d7cea9e6699f6158dda4d3e4d06f3db673e25234c9341fff23b3b006c2041e",
+    "rust.scm": "fb4d9ef1c37329cf80abbf439e3f86bdc4bf4d8d46daa4839e34da5f49e144a6",
+    "svelte.scm": "ba28c4c037857db1826b418ee3b2576060911eed0c5e0466d6d3d10ad494d91f",
+    "toml.scm": "81eed769dd680a02857cfce7225a587664fcdfaeefba1046af909298382d255c",
+    "typescript-assertion.scm": "eb19b2bcf1fee7fb44864bbf93357f3017ad766cf7ab37ae8ce63812003e73cd",
+    "typescript.locals.scm": "d9e6ef2a3c0f762e6f2490d87c93f9d14afac3d31e7f460822b93c538e8d2937",
+    "typescript.scm": "43e267a0066bf34d217e894facd865e9e58abc38a54d54885205ab5185bcb702",
+    "yaml.scm": "72f5c3f15074c6c8d1414f56db3d4a45843f2108025246f64aae1cf94e0e0127"
+  },
+  "heldout": {
+    "overall": 97.7,
+    "python": 100.0,
+    "javascript": 100.0,
+    "typescript": 98.0,
+    "bash": 97.1,
+    "sql": 88.5,
+    "go": 98.4,
+    "rust": 98.5,
+    "java": 97.9,
+    "csharp": 98.0,
+    "ruby": 98.5
+  },
+  "workbench": {
+    "overall": 98.6,
+    "note": "98.4 when locked; the converter's correction at checkpoint 1 (TOML table brackets and Ruby Float() to decision 13's rows) moved it to 98.6 with no query change, so the hashes and the change list stand."
+  },
+  "changes": []
+}

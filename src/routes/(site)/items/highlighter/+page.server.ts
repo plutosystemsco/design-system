@@ -4,9 +4,8 @@ import type { PageServerLoad } from "./$types";
 
 /**
  * The gallery's twenty-six samples are highlighted here, at prerender, with
- * `highlightCode`, so the page ships the token data and no Shiki (007
- * decision 9). Every grammar compiles under the strict engine, or this load
- * fails and the build with it.
+ * `highlightCode`, so the page ships the token data and no engine (007
+ * decision 9).
  */
 export const load: PageServerLoad = async () => {
   const gallery = [];

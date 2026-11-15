@@ -14,6 +14,7 @@ import {
   deltaE,
   mix,
 } from "../../scripts/contrast.ts";
+import { deltaEUnder } from "../helpers/colour.ts";
 import {
   readTokens,
   resolveColor,
@@ -461,7 +462,7 @@ describe("edges over the scrim", () => {
   });
 });
 
-// 007 decision 3: every text slot on every code ground, in each theme. The
+// 013 decision 12: every text role on every code ground, in each theme. The
 // two grounds of the map (`background`, `active-line`) are not text. The rows
 // are built from the token file, never from the specification's table.
 // 014 decision 8: the grounds code is actually on. Light code is on its own
@@ -471,125 +472,223 @@ const GROUNDS = {
   light: ["syntax-ground", "syntax-active-line"],
   dark: ["syntax-ground", "syntax-active-line", "background"],
 } as const;
-const TEXT_SLOTS = Object.keys(tokens.code).filter(
-  (slot) => slot !== "background" && slot !== "active-line",
+const TEXT_ROLES = Object.keys(tokens.code).filter(
+  (role) => role !== "background" && role !== "active-line",
 );
-const SLOT_ROWS: [theme: "light" | "dark", slot: string, ground: string][] = (
+/** Meridian's seven coloured roles and `number`: the eight that carry a hue of their own. */
+const COLOURED = [
+  "keyword",
+  "function",
+  "type",
+  "string",
+  "number",
+  "constant",
+  "meta",
+  "special",
+];
+/** The coloured eight and the four that share their colours. */
+const RANGED = [...COLOURED, "link", "inserted", "deleted", "changed"];
+const ROLE_ROWS: [theme: "light" | "dark", role: string, ground: string][] = (
   ["light", "dark"] as const
 ).flatMap((theme) =>
-  TEXT_SLOTS.flatMap((slot) =>
+  TEXT_ROLES.flatMap((role) =>
     GROUNDS[theme].map(
-      (ground) => [theme, slot, ground] as [typeof theme, string, string],
+      (ground) => [theme, role, ground] as [typeof theme, string, string],
     ),
   ),
 );
 
-/** A slot's ratio on a ground in a theme, from the token file. */
-function slotRatio(theme: "light" | "dark", slot: string, ground: string) {
+/** A role's colour in a theme, from the token file. */
+const roleHex = (theme: "light" | "dark", role: string) =>
+  resolveColor(tokens, theme, tokens.code[role]!).toUpperCase();
+
+/** A role's ratio on a ground in a theme, from the token file. */
+function roleRatio(theme: "light" | "dark", role: string, ground: string) {
   return contrastRatio(
-    resolveColor(tokens, theme, tokens.code[slot]),
+    resolveColor(tokens, theme, tokens.code[role]!),
     resolveColor(tokens, theme, ground),
   );
 }
 
-describe("the code slots on the five code grounds", () => {
-  test("95 rows: 19 text slots on 2 light grounds and 3 dark", () => {
-    expect(TEXT_SLOTS).toHaveLength(19);
-    expect(SLOT_ROWS).toHaveLength(95);
+describe("the code roles on the five code grounds (013 decision 12)", () => {
+  test("70 rows: 14 text roles on 2 light grounds and 3 dark, 28 light and 42 dark", () => {
+    expect(TEXT_ROLES).toHaveLength(14);
+    expect(ROLE_ROWS).toHaveLength(70);
+    expect(ROLE_ROWS.filter(([theme]) => theme === "light")).toHaveLength(28);
+    expect(ROLE_ROWS.filter(([theme]) => theme === "dark")).toHaveLength(42);
   });
 
-  test.each(SLOT_ROWS)(
-    "%s: the %s slot's colour on %s measures at least 4.5",
-    (theme, slot, ground) => {
-      expect(slotRatio(theme, slot, ground)).toBeGreaterThanOrEqual(4.5);
+  test.each(ROLE_ROWS)(
+    "%s: the %s role's colour on %s measures at least 4.5",
+    (theme, role, ground) => {
+      expect(roleRatio(theme, role, ground)).toBeGreaterThanOrEqual(4.5);
     },
   );
 
-  // 014 criterion 3: the tightest row is dark property on the dark code
-  // ground; in light, number and escape (one colour, orange) on the canvas
-  // active line tie.
-  test("95 of 95 pass; the tightest is dark property on syntax-ground at 4.81, and light number and escape on syntax-active-line at 4.97", () => {
-    const rows = SLOT_ROWS.map(([theme, slot, ground]) => ({
+  test("70 of 70 at 4.5 or more, comments included; the lowest is light comment on syntax-active-line at 4.86", () => {
+    const rows = ROLE_ROWS.map(([theme, role, ground]) => ({
       theme,
-      slot,
+      role,
       ground,
-      ratio: slotRatio(theme, slot, ground),
+      ratio: roleRatio(theme, role, ground),
     }));
-    expect(rows.filter((r) => r.ratio >= 4.5)).toHaveLength(95);
+    expect(rows.filter((r) => r.ratio >= 4.5)).toHaveLength(70);
     const min = rows.reduce((a, b) => (b.ratio < a.ratio ? b : a));
     expect(min).toEqual({
-      theme: "dark",
-      slot: "property",
-      ground: "syntax-ground",
-      ratio: 4.81,
+      theme: "light",
+      role: "comment",
+      ground: "syntax-active-line",
+      ratio: 4.86,
     });
-    const light = rows.filter((r) => r.theme === "light");
-    const lightMin = Math.min(...light.map((r) => r.ratio));
-    expect(lightMin).toBe(4.97);
-    expect(
-      light
-        .filter((r) => r.ratio === lightMin)
-        .map((r) => `${r.slot} on ${r.ground}`),
-    ).toEqual(["number on syntax-active-line", "escape on syntax-active-line"]);
   });
 
-  // The ten families, as the primitives the text slots resolve to.
-  test("the 19 text slots resolve to 10 families in each theme", () => {
-    const families = (theme: "light" | "dark") =>
-      [
-        ...new Set(
-          TEXT_SLOTS.map((slot) => tokens.themes[theme][tokens.code[slot]]),
-        ),
-      ].sort();
-    expect(families("light")).toEqual(
-      [
-        "ink",
-        "ink-soft",
-        "blue",
-        "green-text",
-        "red-text",
-        "orange-text",
-        "amber-text",
-        "purple-text",
-        "teal-text",
-        "cyan-text",
-      ].sort(),
-    );
-    expect(families("dark")).toEqual(
-      [
-        "paper",
-        "paper-soft",
-        "blue-lifted",
-        "green-lifted",
-        "red-lifted",
-        "orange-lifted",
-        "amber",
-        "purple-lifted",
-        "teal-lifted",
-        "cyan-lifted",
-      ].sort(),
-    );
+  // Meridian's dark range, 6.5 to 9.5:1, on the ground a block normally sits on.
+  test("12 of 12 dark rows on syntax-ground between 6.5 and 9.5", () => {
+    const rows = RANGED.map((role) => [
+      role,
+      roleRatio("dark", role, "syntax-ground"),
+    ]);
+    expect(rows).toHaveLength(12);
+    for (const [role, ratio] of rows) {
+      expect(ratio as number, role as string).toBeGreaterThanOrEqual(6.5);
+      expect(ratio as number, role as string).toBeLessThanOrEqual(9.5);
+    }
   });
 
-  // 004 decision 5's five rows, to the hundredth, on the 0.11.0 palette (011
-  // decision 2), on the code ground (014 decision 8).
+  test("24 of 24 light rows on syntax-ground and syntax-active-line at 15 or less", () => {
+    const rows = RANGED.flatMap((role) =>
+      GROUNDS.light.map((ground) => roleRatio("light", role, ground)),
+    );
+    expect(rows).toHaveLength(24);
+    expect(rows.filter((ratio) => ratio <= 15)).toHaveLength(24);
+  });
+
+  // Decision 11's two rows over Meridian's 9.5, and decision 10's two against
+  // its 6:1 comment ceiling, which this system does not use.
+  test("the 4 named rows: dark number 10.41 on the active line and 11.66 on graphite; dark comment 6.55 and 7.33", () => {
+    const named = [
+      ["number", "syntax-active-line", 10.41],
+      ["number", "background", 11.66],
+      ["comment", "syntax-active-line", 6.55],
+      ["comment", "background", 7.33],
+    ] as const;
+    for (const [role, ground, ratio] of named) {
+      const measured = roleRatio("dark", role, ground);
+      console.log(
+        `dark ${role} on ${ground}: ${measured.toFixed(2)} (Meridian's ceiling ${role === "number" ? "9.5" : "6"})`,
+      );
+      expect(measured).toBe(ratio);
+    }
+  });
+
+  // Decision 11's table, to the hundredth: each role on the light ground and
+  // line, then the dark ground, line and graphite.
   test.each([
-    ["light", "foreground", 19.17],
-    ["light", "comment", 7.38],
-    ["light", "keyword", 7.02],
-    ["light", "string", 5.88],
-    ["light", "deleted", 6],
-    ["dark", "foreground", 12.87],
-    ["dark", "comment", 5.43],
-    ["dark", "keyword", 6.9],
-    ["dark", "string", 6.87],
-    ["dark", "deleted", 6.9],
+    ["keyword", 7.37, 6.47, 7.04, 7.89, 8.84],
+    ["function", 6.66, 5.85, 6.75, 7.57, 8.48],
+    ["type", 10.59, 9.3, 6.84, 7.67, 8.59],
+    ["string", 6.03, 5.3, 7.1, 7.96, 8.92],
+    ["number", 6.77, 5.94, 9.28, 10.41, 11.66],
+    ["constant", 5.78, 5.08, 7.49, 8.4, 9.41],
+    ["meta", 7.35, 6.46, 7.01, 7.86, 8.81],
+    ["special", 6.47, 5.68, 6.5, 7.28, 8.16],
+    ["comment", 5.53, 4.86, 5.84, 6.55, 7.33],
+    ["text", 14.61, 12.83, 10.93, 12.26, 13.73],
   ] as const)(
-    "%s: the %s slot on syntax-ground measures %d",
-    (theme, slot, ratio) => {
-      expect(slotRatio(theme, slot, "syntax-ground")).toBe(ratio);
+    "%s measures decision 11's figures",
+    (role, lightGround, lightLine, darkGround, darkLine, graphite) => {
+      expect([
+        roleRatio("light", role, "syntax-ground"),
+        roleRatio("light", role, "syntax-active-line"),
+        roleRatio("dark", role, "syntax-ground"),
+        roleRatio("dark", role, "syntax-active-line"),
+        roleRatio("dark", role, "background"),
+      ]).toEqual([lightGround, lightLine, darkGround, darkLine, graphite]);
     },
   );
+
+  test("distinctness: no two coloured roles under ΔE 5.0 in either theme, and dark function to keyword at 7.0 or more", () => {
+    for (const theme of ["light", "dark"] as const) {
+      const pairs = COLOURED.flatMap((a, i) =>
+        COLOURED.slice(i + 1).map((b) => ({
+          pair: `${a}–${b}`,
+          deltaE: deltaE(roleHex(theme, a), roleHex(theme, b)),
+        })),
+      );
+      expect(pairs).toHaveLength(28);
+      const closest = pairs.reduce((x, y) => (y.deltaE < x.deltaE ? y : x));
+      console.log(
+        `${theme}: closest coloured pair ${closest.pair}, ΔE ${closest.deltaE.toFixed(1)}`,
+      );
+      expect(pairs.filter((p) => p.deltaE < 5)).toEqual([]);
+    }
+    expect(
+      deltaE(roleHex("dark", "function"), roleHex("dark", "keyword")),
+    ).toBeGreaterThanOrEqual(7);
+  });
+
+  // Decision 8: printed, not gated. Numbers are digits and constants words.
+  test("number and constant under deuteranopia and protanopia, printed", () => {
+    for (const theme of ["light", "dark"] as const) {
+      const [n, c] = [roleHex(theme, "number"), roleHex(theme, "constant")];
+      const figures = {
+        typical: deltaE(n, c),
+        deuteranopia: deltaEUnder(n, c, "deuteranopia"),
+        protanopia: deltaEUnder(n, c, "protanopia"),
+      };
+      console.log(
+        `${theme} number–constant ΔE: ${Object.entries(figures)
+          .map(([k, v]) => `${k} ${v.toFixed(1)}`)
+          .join(", ")}`,
+      );
+      expect(figures.typical).toBeGreaterThan(5);
+    }
+  });
+
+  // The ten Tombaugh colours, as the primitives the text roles resolve to.
+  test("the 14 text roles resolve to the 10 Tombaugh colours in each theme", () => {
+    const research = JSON.parse(
+      readFileSync(
+        "context/research/2026-11-14-meridian-and-tombaugh.json",
+        "utf8",
+      ),
+    ) as {
+      candidates: {
+        id: string;
+        palette: { swatches: Record<string, { light: string; dark: string }> };
+      }[];
+    };
+    const swatches = research.candidates.find((c) => c.id === "tombaugh")!
+      .palette.swatches;
+    const SWATCH: Record<string, string> = {
+      text: "tombaugh-text",
+      comment: "tombaugh-comment",
+      keyword: "tombaugh-keyword",
+      function: "tombaugh-function",
+      type: "tombaugh-type",
+      string: "tombaugh-string",
+      number: "tombaugh-yellow",
+      constant: "tombaugh-orange",
+      meta: "tombaugh-meta",
+      special: "tombaugh-special",
+      link: "tombaugh-function",
+      inserted: "tombaugh-string",
+      deleted: "tombaugh-special",
+      changed: "tombaugh-function",
+    };
+    expect(Object.keys(SWATCH)).toEqual(TEXT_ROLES);
+    for (const theme of ["light", "dark"] as const) {
+      expect(
+        new Set(
+          TEXT_ROLES.map((role) => tokens.themes[theme][tokens.code[role]!]),
+        ).size,
+      ).toBe(10);
+      for (const role of TEXT_ROLES)
+        expect(roleHex(theme, role), `${theme} ${role}`).toBe(
+          swatches[SWATCH[role]!]![theme].toUpperCase(),
+        );
+    }
+  });
 });
 
 // 005 decision 17: four pairs the navigation items put on the page, each
@@ -1094,7 +1193,7 @@ describe("inline code (014 criterion 16)", () => {
   ];
   const text = CHIP_GROUNDS.flatMap(([theme, bg]) =>
     [
-      ["code-foreground", code(theme, "foreground")],
+      ["code-text", code(theme, "text")],
       ["code-link", code(theme, "link")],
       ["tombaugh-text", tombaugh["tombaugh-text"]![theme]],
       ["tombaugh-function", tombaugh["tombaugh-function"]![theme]],
@@ -1106,26 +1205,27 @@ describe("inline code (014 criterion 16)", () => {
     })),
   );
 
-  test("16 text rows, 16 of 16 at 4.5 or more; the lowest is Tombaugh's light link on white, 6.66", () => {
+  test("16 text rows, 16 of 16 at 4.5 or more; the lowest is the light link on white, 6.66", () => {
     expect(text).toHaveLength(16);
     expect(text.filter((r) => r.ratio >= 4.5)).toHaveLength(16);
     const min = text.reduce((a, b) => (b.ratio < a.ratio ? b : a));
+    // 013: code-link is Tombaugh's function colour, so it ties with it.
     expect(min).toEqual({
       theme: "light",
-      name: "tombaugh-function",
+      name: "code-link",
       bg: "#FFFFFF",
       ratio: 6.66,
     });
   });
 
-  test("the chip's own text: code-foreground 19.17 and 12.87, code-link 7.02 and 6.90", () => {
+  test("the chip's own text: code-text 14.61 and 10.93, code-link 6.66 and 6.75", () => {
     const at = (theme: string, name: string, bg: string) =>
       text.find((r) => r.theme === theme && r.name === name && r.bg === bg)!
         .ratio;
-    expect(at("light", "code-foreground", "#FFFFFF")).toBe(19.17);
-    expect(at("dark", "code-foreground", "#2C2821")).toBe(12.87);
-    expect(at("light", "code-link", "#FFFFFF")).toBe(7.02);
-    expect(at("dark", "code-link", "#2C2821")).toBe(6.9);
+    expect(at("light", "code-text", "#FFFFFF")).toBe(14.61);
+    expect(at("dark", "code-text", "#2C2821")).toBe(10.93);
+    expect(at("light", "code-link", "#FFFFFF")).toBe(6.66);
+    expect(at("dark", "code-link", "#2C2821")).toBe(6.75);
   });
 
   const field = (theme: "light" | "dark", name: string) => {

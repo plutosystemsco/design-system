@@ -157,9 +157,9 @@ describe.each([
   // theme variable from every cssVars key, so the app's @theme inline gains
   // one line `--code-<slot>: var(--code-<slot>)` per slot beside our
   // `--color-code-<slot>`. They are harmless (the unlayered :root wins, and
-  // `--code-` is no Tailwind namespace) and expected: exactly those 21 (007
-  // decision 4), and nothing else beyond our own block.
-  test("4. :root, .dark and @theme inline equal our src/app.css, but for the 21 derived code lines", () => {
+  // `--code-` is no Tailwind namespace) and expected: exactly those 16 (013
+  // decision 12), and nothing else beyond our own block.
+  test("4. :root, .dark and @theme inline equal our src/app.css, but for the 16 derived code lines", () => {
     const ours = readFileSync(path.join(REPO, "src", "app.css"), "utf8");
     let equal = 0;
     for (const prelude of [":root", ".dark", "@theme inline"]) {
@@ -168,7 +168,7 @@ describe.each([
         const derived = Object.entries(theirs).filter(([name]) =>
           name.startsWith("--code-"),
         );
-        expect(derived).toHaveLength(21);
+        expect(derived).toHaveLength(16);
         for (const [name, value] of derived) expect(value).toBe(`var(${name})`);
         for (const [name] of derived) delete theirs[name];
       }

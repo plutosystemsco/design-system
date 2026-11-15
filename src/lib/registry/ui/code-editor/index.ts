@@ -1,18 +1,13 @@
 import Root from "./code-editor.svelte";
-import {
-  pythonLanguageConfigured,
-  pythonRoles,
-  pythonSetup,
-} from "./code-editor-python";
-import { codeHighlight, codeTheme } from "./code-editor-theme";
+import { codeHighlighting } from "./code-editor-highlighting";
+import { pythonSetup } from "./code-editor-python";
+import { codeTheme } from "./code-editor-theme";
 
 export {
   Root,
   pythonSetup,
-  pythonLanguageConfigured,
-  pythonRoles,
   codeTheme,
-  codeHighlight,
+  codeHighlighting,
   //
   Root as CodeEditor,
 };

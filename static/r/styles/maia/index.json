@@ -1032,10 +1032,11 @@
 		"title": "Code editor",
 		"type": "registry:ui",
 		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-		"description": "A CodeMirror 6 editor themed from the tokens, with line numbers and Python, that prerenders as plain code and leaves Tab unbound.",
+		"description": "A CodeMirror 6 editor themed from the tokens and coloured by the highlighter, with line numbers and Python, that prerenders as plain code and leaves Tab unbound.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme"
+			"pluto-theme",
+			"highlighter"
 		],
 		"meta": {
 			"since": "0.4.0",
@@ -1051,7 +1052,30 @@
 		"title": "Highlighter",
 		"type": "registry:lib",
 		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-		"description": "Shiki with the JavaScript engine and a theme whose every colour is a code token, for the server or the browser.",
+		"description": "Code highlighted in Meridian's roles: tree-sitter with this system's own queries for 21 languages, Shiki for the rest and as the fallback, every colour a code token, for the server or the browser.",
+		"dependencies": [
+			"web-tree-sitter@^0.27.2",
+			"tree-sitter-typescript@^0.23.2",
+			"tree-sitter-javascript@^0.25.0",
+			"tree-sitter-python@^0.25.0",
+			"tree-sitter-rust@^0.24.0",
+			"tree-sitter-go@^0.25.0",
+			"tree-sitter-java@^0.23.5",
+			"tree-sitter-c-sharp@^0.23.5",
+			"tree-sitter-ruby@^0.23.1",
+			"tree-sitter-html@^0.23.2",
+			"tree-sitter-css@^0.25.0",
+			"tree-sitter-bash@^0.25.1",
+			"tree-sitter-json@^0.24.8",
+			"@tree-sitter-grammars/tree-sitter-yaml@^0.7.1",
+			"@tree-sitter-grammars/tree-sitter-toml@^0.7.0",
+			"@tree-sitter-grammars/tree-sitter-svelte@~1.0.2",
+			"tree-sitter-c@^0.24.1",
+			"tree-sitter-cpp@^0.23.4",
+			"tree-sitter-php@^0.24.2",
+			"@tree-sitter-grammars/tree-sitter-kotlin@~1.1.0",
+			"shiki@^4.5.0"
+		],
 		"registryDependencies": [
 			"utils",
 			"pluto-theme"
@@ -1062,14 +1086,7 @@
 			"modes": [
 				"productive",
 				"expressive"
-			],
-			"stock": {
-				"registry": "https://shadcn-svelte.com/registry/styles/maia",
-				"item": "highlighter",
-				"cli": "1.7.1",
-				"date": "2026-10-31",
-				"sha256": "9072ce3941fbf079fa5ea85ef36982772a2e1a55e603024726e1ac679079335c"
-			}
+			]
 		},
 		"relativeUrl": "highlighter.json"
 	},

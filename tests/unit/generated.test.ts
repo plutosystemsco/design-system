@@ -141,30 +141,36 @@ describe("002's additions to pluto-theme", () => {
   });
 });
 
-/** 004 decision 5 and 007 decisions 2 and 4: the 21 code tokens in both theme blocks, the scrollbar utility and the meter's rules. */
+/** 004 decision 5, 007 decision 4 and 013 decision 12: the 16 code roles in both theme blocks, the scrollbar utility and the meter's rules. */
 describe("004's additions to pluto-theme", () => {
   const SLOTS: [slot: string, semantic: string][] = [
-    ["foreground", "foreground"],
+    ["text", "syntax-ink"],
+    ["comment", "syntax-grey"],
+    ["keyword", "syntax-violet"],
+    ["function", "syntax-blue"],
+    ["type", "syntax-navy"],
+    ["string", "syntax-green"],
+    ["number", "syntax-yellow"],
+    ["constant", "syntax-orange"],
+    ["meta", "syntax-plum"],
+    ["special", "syntax-red"],
+    ["link", "syntax-blue"],
+    ["inserted", "syntax-green"],
+    ["deleted", "syntax-red"],
+    ["changed", "syntax-blue"],
     ["background", "syntax-ground"],
-    ["comment", "muted-foreground"],
-    ["keyword", "primary"],
-    ["constant", "primary"],
-    ["string", "success"],
-    ["number", "syntax-orange"],
-    ["escape", "syntax-orange"],
-    ["function", "syntax-amber"],
-    ["builtin", "syntax-purple"],
-    ["type", "syntax-teal"],
-    ["tag", "syntax-teal"],
-    ["property", "syntax-cyan"],
-    ["decorator", "syntax-purple"],
-    ["self", "syntax-purple"],
-    ["link", "primary"],
-    ["invalid", "destructive"],
-    ["inserted", "success"],
-    ["deleted", "destructive"],
-    ["changed", "primary"],
     ["active-line", "syntax-active-line"],
+  ];
+  /** 013 decision 12: the code names this release removes. */
+  const REMOVED = [
+    "foreground",
+    "escape",
+    "builtin",
+    "tag",
+    "property",
+    "decorator",
+    "self",
+    "invalid",
   ];
   const theme = () =>
     items(readFileSync("registry.json", "utf8")).get("pluto-theme") as Item & {
@@ -176,8 +182,8 @@ describe("004's additions to pluto-theme", () => {
       css: CssTree;
     };
 
-  test("cssVars.light holds the 21 code-* variables, each var(--<semantic>)", () => {
-    expect(SLOTS).toHaveLength(21);
+  test("cssVars.light holds the 16 code-* variables, each var(--<semantic>)", () => {
+    expect(SLOTS).toHaveLength(16);
     const light = theme().cssVars.light;
     const keys = Object.keys(light).filter((k) => k.startsWith("code-"));
     expect(keys).toEqual(SLOTS.map(([slot]) => `code-${slot}`));
@@ -186,7 +192,7 @@ describe("004's additions to pluto-theme", () => {
   });
 
   // 007 decision 4: a subtree re-substitutes the references with its own values.
-  test("cssVars.dark holds the same 21 code-* variables", () => {
+  test("cssVars.dark holds the same 16 code-* variables", () => {
     const dark = theme().cssVars.dark;
     const keys = Object.keys(dark).filter((k) => k.startsWith("code-"));
     expect(keys).toEqual(SLOTS.map(([slot]) => `code-${slot}`));
@@ -194,7 +200,7 @@ describe("004's additions to pluto-theme", () => {
       expect(dark[`code-${slot}`]).toBe(`var(--${semantic})`);
   });
 
-  test("cssVars.theme holds the 21 color-code-* utilities, each var(--code-<slot>)", () => {
+  test("cssVars.theme holds the 16 color-code-* utilities, each var(--code-<slot>)", () => {
     const vars = theme().cssVars.theme;
     const keys = Object.keys(vars).filter((k) => k.startsWith("color-code-"));
     expect(keys).toEqual(SLOTS.map(([slot]) => `color-code-${slot}`));
@@ -202,15 +208,20 @@ describe("004's additions to pluto-theme", () => {
       expect(vars[`color-code-${slot}`]).toBe(`var(--code-${slot})`);
   });
 
-  // 007 decision 3: the five syntax pairs sit in both theme blocks; 014
-  // decision 1 adds the two code grounds after them.
-  test("cssVars.light and cssVars.dark each hold the 5 syntax-* colours and the 2 syntax-* grounds", () => {
+  // 013 decision 12: the ten syntax colours sit in both theme blocks; 014
+  // decision 1's two code grounds follow them.
+  test("cssVars.light and cssVars.dark each hold the 10 syntax-* colours and the 2 syntax-* grounds, and none of the 4 removed", () => {
     const names = [
+      "syntax-violet",
+      "syntax-blue",
+      "syntax-navy",
+      "syntax-green",
+      "syntax-yellow",
       "syntax-orange",
-      "syntax-amber",
-      "syntax-purple",
-      "syntax-teal",
-      "syntax-cyan",
+      "syntax-plum",
+      "syntax-red",
+      "syntax-grey",
+      "syntax-ink",
       "syntax-ground",
       "syntax-active-line",
     ];
@@ -219,9 +230,15 @@ describe("004's additions to pluto-theme", () => {
       expect(Object.keys(vars).filter((k) => k.startsWith("syntax-"))).toEqual(
         names,
       );
+      for (const gone of ["amber", "purple", "teal", "cyan"])
+        expect(`syntax-${gone}` in vars, gone).toBe(false);
+      for (const gone of REMOVED)
+        expect(`code-${gone}` in vars, gone).toBe(false);
     }
-    expect(theme().cssVars.light["syntax-amber"]).toBe("#915B00");
-    expect(theme().cssVars.dark["syntax-amber"]).toBe("#F19E20");
+    for (const gone of REMOVED)
+      expect(`color-code-${gone}` in theme().cssVars.theme, gone).toBe(false);
+    expect(theme().cssVars.light["syntax-yellow"]).toBe("#6C5A00");
+    expect(theme().cssVars.dark["syntax-yellow"]).toBe("#E5CD72");
   });
 
   test("css holds @utility scrollbar: the input thumb on the muted track, thin", () => {
@@ -294,7 +311,7 @@ describe("004's additions to pluto-theme", () => {
     expect(bodies[0]).toContain("@apply font-mono;");
   });
 
-  test("src/app.css carries the 21 code variables in :root and in .dark, 21 color-code-* lines, 7 syntax-* per theme block, the utilities and the meter rules", () => {
+  test("src/app.css carries the 16 code variables in :root and in .dark, 16 color-code-* lines, 12 syntax-* per theme block, the utilities and the meter rules", () => {
     const css = readFileSync("src/app.css", "utf8");
     for (const block of [":root", ".dark"]) {
       const vars = topLevelMap(css, block);
@@ -305,12 +322,12 @@ describe("004's additions to pluto-theme", () => {
       expect(
         [...vars.keys()].filter((k) => k.startsWith("--syntax-")),
         block,
-      ).toHaveLength(7);
+      ).toHaveLength(12);
     }
     const inline = topLevelMap(css, "@theme inline");
     expect(
       [...inline.keys()].filter((k) => k.startsWith("--color-code-")),
-    ).toHaveLength(21);
+    ).toHaveLength(16);
     expect(css).toContain("--color-code-keyword: var(--code-keyword);");
     expect(css).toContain("@utility scrollbar {");
     expect(css).toContain("@utility scrollbar-code {");
@@ -338,7 +355,7 @@ describe("014's inline code", () => {
 
   test("@layer base holds the chip and the link rule, each one @apply of exactly its utilities, and no var(--code-…) of its own", () => {
     expect(base()[CHIP]).toEqual({
-      "@apply rounded border border-border bg-code-background px-1 text-code-foreground box-decoration-clone":
+      "@apply rounded border border-border bg-code-background px-1 text-code-text box-decoration-clone":
         {},
     });
     expect(base()[LINK]).toEqual({ "@apply text-code-link": {} });
@@ -366,7 +383,7 @@ describe("014's inline code", () => {
     const body = layer.slice(0, layer.indexOf("\n}\n"));
     const flat = body.replace(/\s+/g, " ");
     expect(flat).toContain(
-      `${CHIP} { @apply rounded border border-border bg-code-background px-1 text-code-foreground box-decoration-clone; }`,
+      `${CHIP} { @apply rounded border border-border bg-code-background px-1 text-code-text box-decoration-clone; }`,
     );
     expect(flat).toContain(`${LINK} { @apply text-code-link; }`);
   });
@@ -378,7 +395,7 @@ describe("014's inline code", () => {
       "border",
       "border-border",
       "bg-code-background",
-      "text-code-foreground",
+      "text-code-text",
     ])
       expect(classes, cls).toContain(cls);
     expect(classes).not.toContain("bg-muted");
@@ -923,6 +940,48 @@ const MOVED_014: Record<":root" | ".dark", Record<string, string>> = {
     "--code-active-line": "var(--syntax-active-line)",
   },
 };
+/**
+ * 013 decision 12 and criterion 3: the code map becomes Meridian's roles.
+ * `REMOVED_013` names every v0.8.0 property this release deletes, and
+ * `MOVED_013` every one it keeps under its name with a new value; each is
+ * named, so no other moves silently (constitution §6).
+ */
+const REMOVED_013_NAMES = [
+  "--code-foreground",
+  "--code-escape",
+  "--code-builtin",
+  "--code-tag",
+  "--code-property",
+  "--code-decorator",
+  "--code-self",
+  "--code-invalid",
+  "--syntax-amber",
+  "--syntax-purple",
+  "--syntax-teal",
+  "--syntax-cyan",
+];
+const REMOVED_013: Record<":root" | ".dark" | "@theme inline", string[]> = {
+  ":root": REMOVED_013_NAMES,
+  ".dark": REMOVED_013_NAMES,
+  "@theme inline": REMOVED_013_NAMES.map((n) => n.replace(/^--/, "--color-")),
+};
+const MOVED_013_CODE: Record<string, string> = {
+  "--code-comment": "var(--syntax-grey)",
+  "--code-keyword": "var(--syntax-violet)",
+  "--code-constant": "var(--syntax-orange)",
+  "--code-string": "var(--syntax-green)",
+  "--code-number": "var(--syntax-yellow)",
+  "--code-function": "var(--syntax-blue)",
+  "--code-type": "var(--syntax-navy)",
+  "--code-link": "var(--syntax-blue)",
+  "--code-inserted": "var(--syntax-green)",
+  "--code-deleted": "var(--syntax-red)",
+  "--code-changed": "var(--syntax-blue)",
+};
+const MOVED_013: Record<":root" | ".dark", Record<string, string>> = {
+  ":root": { ...MOVED_013_CODE, "--syntax-orange": "#a34d15" },
+  ".dark": { ...MOVED_013_CODE, "--syntax-orange": "#ffa373" },
+};
 describe("v0.8.0's custom properties (criterion 2)", () => {
   const fixture = JSON.parse(
     readFileSync("tests/unit/fixtures/v0.8.0-custom-properties.json", "utf8"),
@@ -961,21 +1020,47 @@ describe("v0.8.0's custom properties (criterion 2)", () => {
     }
   });
 
+  test("013 removes 12 properties of :root and of .dark and their 12 --color- forms, and moves 12 of :root and 12 of .dark, none listed by 014", () => {
+    for (const block of [":root", ".dark", "@theme inline"] as const) {
+      expect(REMOVED_013[block]).toHaveLength(12);
+      for (const name of REMOVED_013[block])
+        expect(name in (fixture[block] as Record<string, string>), name).toBe(
+          true,
+        );
+    }
+    for (const block of [":root", ".dark"] as const) {
+      expect(Object.keys(MOVED_013[block])).toHaveLength(12);
+      for (const [name, value] of Object.entries(MOVED_013[block])) {
+        expect(name in MOVED_014[block], `${block} ${name}`).toBe(false);
+        expect(REMOVED_013[block], name).not.toContain(name);
+        expect(
+          (fixture[block] as Record<string, string>)[name],
+          `${block} ${name}`,
+        ).not.toBe(value);
+      }
+    }
+  });
+
   test.each([":root", ".dark", "@theme inline"])(
-    "%s keeps every v0.8.0 property at its value, but for those 011 and 014 move, which read their 0.12.0 value",
+    "%s keeps every v0.8.0 property at its value, but for those 011, 014 and 013 move, which read their 0.12.0 value, and those 013 removes, which are absent",
     (block) => {
       const now = topLevelMap(css, block);
+      const removed = REMOVED_013[block as keyof typeof REMOVED_013];
       const moved =
         block === "@theme inline"
           ? {}
           : {
               ...MOVED_011[block as ":root" | ".dark"],
               ...MOVED_014[block as ":root" | ".dark"],
+              ...MOVED_013[block as ":root" | ".dark"],
             };
       const changed = Object.entries(fixture[block] as Record<string, string>)
+        .filter(([name]) => !removed.includes(name))
         .map(([name, value]) => [name, moved[name] ?? value] as const)
         .filter(([name, value]) => now.get(name) !== value);
       expect(changed).toEqual([]);
+      for (const name of removed)
+        expect(now.has(name), `${block} ${name}`).toBe(false);
     },
   );
 });

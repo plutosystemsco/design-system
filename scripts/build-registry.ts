@@ -13,9 +13,11 @@ import {
   cpSync,
   mkdirSync,
   mkdtempSync,
+  readdirSync,
   readFileSync,
   renameSync,
   rmSync,
+  writeFileSync,
 } from "node:fs";
 import path from "node:path";
 
@@ -47,6 +49,7 @@ export async function buildRegistry(
   let output: string;
   try {
     output = await runCli(root, fresh);
+    dropShadowedDevDependencies(fresh);
     rmSync(latest, { recursive: true, force: true });
     mkdirSync(path.dirname(latest), { recursive: true });
     renameSync(fresh, latest);
@@ -59,6 +62,44 @@ export async function buildRegistry(
   mkdirSync(path.dirname(versioned), { recursive: true });
   cpSync(latest, versioned, { recursive: true });
   return { out };
+}
+
+/**
+ * A dependency spec's package name: `shiki`, `shiki@^4.5.0`,
+ * `@scope/name` and `@scope/name@~1.0.2` give `shiki` and `@scope/name`. An
+ * `@` at index 0 opens a scope, never a version.
+ */
+export function packageName(spec: string): string {
+  const at = spec.lastIndexOf("@");
+  return at > 0 ? spec.slice(0, at) : spec;
+}
+
+/**
+ * 013 decision 5: the CLI lists every package an item's files import under
+ * `devDependencies`, the highlighter's dynamic imports included. A package
+ * the item names in `dependencies` is dropped from `devDependencies`, so an
+ * app's `add` installs it once, as a dependency, and a production install
+ * keeps it.
+ */
+export function dropShadowedDevDependencies(dir: string): void {
+  const name = packageName;
+  for (const file of readdirSync(dir)) {
+    if (!file.endsWith(".json") || file === "index.json") continue;
+    const at = path.join(dir, file);
+    const text = readFileSync(at, "utf8");
+    const item = JSON.parse(text);
+    if (!item.dependencies || !item.devDependencies) continue;
+    const named = new Set((item.dependencies as string[]).map(name));
+    const kept = (item.devDependencies as string[]).filter(
+      (spec) => !named.has(name(spec)),
+    );
+    if (kept.length === item.devDependencies.length) continue;
+    if (kept.length) item.devDependencies = kept;
+    else delete item.devDependencies;
+    const indent = /^\{\n(\s+)/.exec(text)?.[1] ?? "  ";
+    const end = text.endsWith("\n") ? "\n" : "";
+    writeFileSync(at, JSON.stringify(item, null, indent) + end);
+  }
 }
 
 /** Runs the locked local CLI under Bun, writing the registry into `output`. Returns its output. */

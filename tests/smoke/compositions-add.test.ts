@@ -57,7 +57,7 @@ type Item = {
   name: string;
   type: string;
   registryDependencies?: string[];
-  files?: { path: string; type: string }[];
+  files?: { path: string; type: string; target?: string }[];
   meta?: { modes?: Mode[] };
 };
 const registry = JSON.parse(
@@ -82,13 +82,17 @@ function closure(names: string[]): Item[] {
 }
 
 /** Where a file lands in an app with 001's aliases. */
-function landed(item: Item, file: { path: string; type: string }): string {
+function landed(
+  item: Item,
+  file: { path: string; type: string; target?: string },
+): string {
   const base = path.basename(file.path);
   if (item.name === "utils") return "src/lib/utils.ts";
   if (file.type === "registry:page") return `src/routes/${item.name}/${base}`;
   if (file.type === "registry:component") return `src/lib/components/${base}`;
   if (file.type === "registry:hook") return `src/lib/hooks/${base}`;
-  if (file.type === "registry:lib") return `src/lib/${base}`;
+  // 013 decision 5: a library file with a target lands at it (highlight/…).
+  if (file.type === "registry:lib") return `src/lib/${file.target ?? base}`;
   return `src/lib/components/ui/${item.name}/${base}`;
 }
 

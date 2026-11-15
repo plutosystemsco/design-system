@@ -249,10 +249,12 @@ describe("8. the views", () => {
     ]);
   });
 
-  test("0 other +page.svelte files under src/routes/(view)/view/ or src/routes/(shell)/view/", () => {
+  test("0 other +page.svelte files under src/routes/(view)/view/ or src/routes/(shell)/view/, but 013's test view", () => {
     const expected = new Set([
       ...views.map((v) => routeFile(v.block, v.path)),
       ...compositionViews.map((v) => compositionFile(v.path)),
+      // 013 decision 21: a test surface, not a block's view.
+      path.join("src/routes/(view)/view/code-agreement/+page.svelte"),
     ]);
     const found: string[] = [];
     const walk = (dir: string) => {
