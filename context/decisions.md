@@ -13,6 +13,19 @@ Pluto Systems remains the company and its brand: the four-dot mark, the colours 
 
 **The home hero.** **The owner:** "And I want the hero to be Design with Kuiper". The home page's headline becomes "Design / with / Kuiper" on its three poster lines, replacing "Build / with / Pluto.". **The owner:** "no period after Kuiper". It lands in `018`.
 
+### The font's own letter spacing everywhere, and the index cards redrawn (2026-11-15)
+
+**Letter spacing.** Shown "Start" on the blue band with its letters pressed together, **the owner:** "are you chaning the text spacing for headers? It looks like the horizontal spacing is altered, please fix and take the font default spacing everywhere". Every tracking value goes to the font's default: the `display`, `section`, `eyebrow` and `mark` tokens and the four expressive steps (display, section, proof, poster), plus any literal `letter-spacing` or `tracking-*` in items and the site. The `tracking-*` utilities stay, at `0`, so no app's class breaks; the `pluto-theme` change is an interface change in the changelog. It lands in 0.12.0, before the tag.
+
+**The top bar is glass everywhere.** **The owner:** "the header bar is transparent in some places and not in others, please unify this". Asked solid everywhere, glass at the top and solid on scroll, or glass everywhere, **the owner:** glass everywhere. The bar is frosted glass on every page at all times; content scrolling behind it shows through, blurred. This reverses `018` decision 10 and the checkpoint-2 ruling that landings turn opaque once their band has gone. The glass must keep the lockup, links and controls at their contrast over anything behind it (a stronger blur or a denser glass token if needed), which a test checks over the busiest page content. It lands in 0.12.0, before the tag.
+
+**Transparency always signifies depth.** **The owner:** "I think I want to make a rule transparnecy always signifies depth, so divs in the headers shouldn't have transparency to the color behind it, they are on the same level. The header bar is above everything else and stays in a fixed position, so it is transparent to what is below it." The rule:
+- Only a layer that sits above other content may be translucent: the fixed glass bar, and overlays above the page (and the scrim under a modal).
+- Everything inside a layer is on that layer's level. It never lets the colour behind it show through: a control in the bar (search, its key chip, the theme switch, the nav's marks) takes a solid fill or no fill of its own, never a translucent one.
+- In 0.12.0 the bar's contents are fixed to this. In 0.13.0 every item and site surface is audited against it, and a lint forbids alpha fills except on the declared layers.
+
+**The Components index cards.** Shown the Surfaces cards, **the owner:** "these cards do not work with the background on background color of them, please plan to redesign in the roadmap". The thumbnail sits on the page's own paper inside a white card on that paper, and white examples (Card, Collapsible) sit white on white. The index card is redesigned in 0.13.0; `roadmap.md` carries it.
+
 ### `019`'s VoiceOver listen passed (2026-11-15)
 
 The owner listened by hand, after the scripted run was blocked: guidepup's setup needs the terminal to have Full Disk Access to write VoiceOver's settings, which the design lead advised against on an everyday machine. With VoiceOver on macOS, on the Error summary page, the form submitted empty. **The owner:** "Yes, it works." The pass rule held: "There is a problem" was spoken, all three errors were read in full, and the title was not read twice in a row.
