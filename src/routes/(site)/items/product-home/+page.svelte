@@ -35,7 +35,7 @@
     </li>
     <li>
       Three colour fields, one owned moment each: the hero's object on blue, the
-      proof on amber, the console on green. Every control sits on a card or on
+      proof on yellow, the console on green. Every control sits on a card or on
       glass, never on a field. The glass is frosted, the same in every browser.
     </li>
   {/snippet}

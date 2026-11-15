@@ -777,7 +777,8 @@ describe("009's variables (criterion 1)", () => {
     expect(css[EXPRESSIVE]).toEqual({
       "--mark-1": "#93B0FF",
       "--mark-2": "#FF9491",
-      "--mark-3": "#F19E20",
+      // 016 decision 1: the lifted yellow.
+      "--mark-3": "#F8D874",
       "--mark-4": "#60C498",
     });
     expect(css[PRODUCTIVE]).toEqual({
@@ -982,6 +983,55 @@ const MOVED_013: Record<":root" | ".dark", Record<string, string>> = {
   ":root": { ...MOVED_013_CODE, "--syntax-orange": "#a34d15" },
   ".dark": { ...MOVED_013_CODE, "--syntax-orange": "#ffa373" },
 };
+/** 016 criterion 7: the brand yellow, emitted. */
+describe("016's yellow in pluto-theme", () => {
+  const theme = () =>
+    items(readFileSync("registry.json", "utf8")).get("pluto-theme") as Item & {
+      cssVars: {
+        light: Record<string, string>;
+        dark: Record<string, string>;
+      };
+    };
+
+  test("cssVars.light: chart-3, caution and mark-3 #E2B000, caution-text #806200; cssVars.dark: chart-3, caution and caution-text #F8D874, mark-3 paper", () => {
+    const { light, dark } = theme().cssVars;
+    expect([light["chart-3"], light.caution, light["mark-3"]]).toEqual([
+      "#E2B000",
+      "#E2B000",
+      "#E2B000",
+    ]);
+    expect(light["caution-text"]).toBe("#806200");
+    expect([dark["chart-3"], dark.caution, dark["caution-text"]]).toEqual([
+      "#F8D874",
+      "#F8D874",
+      "#F8D874",
+    ]);
+    expect(dark["mark-3"]).toBe("#F3F0E8");
+  });
+
+  test("src/app.css's @theme inline holds --color-caution-text, and no amber is emitted", () => {
+    const css = readFileSync("src/app.css", "utf8");
+    expect(css).toContain("--color-caution-text: var(--caution-text);");
+    expect(css).not.toMatch(/amber|#f19e20|#915b00/i);
+  });
+});
+
+/**
+ * 016 decisions 1 and 2: the brand yellow. The four app-facing names keep
+ * their names and take the new hexes; each is already listed by MOVED_011,
+ * so MOVED_016 is spread after it.
+ */
+const MOVED_016: Record<":root" | ".dark", Record<string, string>> = {
+  ":root": {
+    "--chart-3": "#e2b000",
+    "--caution": "#e2b000",
+    "--mark-3": "#e2b000",
+  },
+  ".dark": {
+    "--chart-3": "#f8d874",
+    "--caution": "#f8d874",
+  },
+};
 describe("v0.8.0's custom properties (criterion 2)", () => {
   const fixture = JSON.parse(
     readFileSync("tests/unit/fixtures/v0.8.0-custom-properties.json", "utf8"),
@@ -1020,6 +1070,14 @@ describe("v0.8.0's custom properties (criterion 2)", () => {
     }
   });
 
+  test("016 moves 3 properties of :root and 2 of .dark, each already listed by 011", () => {
+    expect(Object.keys(MOVED_016[":root"])).toHaveLength(3);
+    expect(Object.keys(MOVED_016[".dark"])).toHaveLength(2);
+    for (const block of [":root", ".dark"] as const)
+      for (const name of Object.keys(MOVED_016[block]))
+        expect(name in MOVED_011[block], `${block} ${name}`).toBe(true);
+  });
+
   test("013 removes 12 properties of :root and of .dark and their 12 --color- forms, and moves 12 of :root and 12 of .dark, none listed by 014", () => {
     for (const block of [":root", ".dark", "@theme inline"] as const) {
       expect(REMOVED_013[block]).toHaveLength(12);
@@ -1042,7 +1100,7 @@ describe("v0.8.0's custom properties (criterion 2)", () => {
   });
 
   test.each([":root", ".dark", "@theme inline"])(
-    "%s keeps every v0.8.0 property at its value, but for those 011, 014 and 013 move, which read their 0.12.0 value, and those 013 removes, which are absent",
+    "%s keeps every v0.8.0 property at its value, but for those 011, 014, 013 and 016 move, which read their 0.12.0 value, and those 013 removes, which are absent",
     (block) => {
       const now = topLevelMap(css, block);
       const removed = REMOVED_013[block as keyof typeof REMOVED_013];
@@ -1053,6 +1111,7 @@ describe("v0.8.0's custom properties (criterion 2)", () => {
               ...MOVED_011[block as ":root" | ".dark"],
               ...MOVED_014[block as ":root" | ".dark"],
               ...MOVED_013[block as ":root" | ".dark"],
+              ...MOVED_016[block as ":root" | ".dark"],
             };
       const changed = Object.entries(fixture[block] as Record<string, string>)
         .filter(([name]) => !removed.includes(name))
@@ -1229,7 +1288,7 @@ describe("011's variables (criterion 1)", () => {
     ["--field-1-foreground", "#FFFFFF", "#16140F"],
     ["--field-2", "#C92035", "#FF9491"],
     ["--field-2-foreground", "#FFFFFF", "#16140F"],
-    ["--field-3", "#F19E20", "#F19E20"],
+    ["--field-3", "#E2B000", "#F8D874"],
     ["--field-3-foreground", "#0B0F17", "#16140F"],
     ["--field-4", "#008058", "#60C498"],
     ["--field-4-foreground", "#FFFFFF", "#16140F"],

@@ -14,7 +14,7 @@ import {
   deltaE,
   mix,
 } from "../../scripts/contrast.ts";
-import { deltaEUnder } from "../helpers/colour.ts";
+import { deltaEUnder, oklch } from "../helpers/colour.ts";
 import {
   readTokens,
   resolveColor,
@@ -71,7 +71,8 @@ const LIGHT: Row[] = [
   ["success on card", "#007351", "#FFFFFF", 5.88, 4.5, "pass"],
   ["success on muted", "#007351", "#E9E5DB", 4.67, 4.5, "pass"],
   ["success-foreground on success", "#FFFFFF", "#007351", 5.88, 4.5, "pass"],
-  ["caution-foreground on caution", "#0B0F17", "#F19E20", 8.81, 4.5, "pass"],
+  // 016 decision 1: the brand yellow, #E2B000 in light.
+  ["caution-foreground on caution", "#0B0F17", "#E2B000", 9.53, 4.5, "pass"],
   ["sidebar-foreground on sidebar", "#0B0F17", "#F3F0E8", 16.84, 4.5, "pass"],
   [
     "sidebar-primary-foreground on sidebar-primary",
@@ -116,6 +117,10 @@ const LIGHT: Row[] = [
     4.5,
     "pass",
   ],
+  // 016 decision 3: the yellow for text, no weaker than amber-text was.
+  ["caution-text on background", "#806200", "#F3F0E8", 5.03, 4.5, "pass"],
+  ["caution-text on card", "#806200", "#FFFFFF", 5.73, 4.5, "pass"],
+  ["caution-text on muted", "#806200", "#E9E5DB", 4.55, 4.5, "pass"],
   [
     "destructive on destructive/10 over background",
     "#C11E31",
@@ -155,8 +160,8 @@ const LIGHT: Row[] = [
   ["chart-1 on card", "#2D48D4", "#FFFFFF", 7.02, 3, "pass"],
   ["chart-2 on background", "#C92035", "#F3F0E8", 4.92, 3, "pass"],
   ["chart-2 on card", "#C92035", "#FFFFFF", 5.61, 3, "pass"],
-  ["chart-3 on background", "#F19E20", "#F3F0E8", 1.91, 3, "exception"],
-  ["chart-3 on card", "#F19E20", "#FFFFFF", 2.17, 3, "exception"],
+  ["chart-3 on background", "#E2B000", "#F3F0E8", 1.76, 3, "exception"],
+  ["chart-3 on card", "#E2B000", "#FFFFFF", 2.01, 3, "exception"],
   ["chart-4 on background", "#008058", "#F3F0E8", 4.36, 3, "pass"],
   ["chart-4 on card", "#008058", "#FFFFFF", 4.96, 3, "pass"],
   ["chart-5 on background", "#505661", "#F3F0E8", 6.48, 3, "pass"],
@@ -200,7 +205,8 @@ const DARK: Row[] = [
   ["success on card", "#60C498", "#221F19", 7.7, 4.5, "pass"],
   ["success on muted", "#60C498", "#2C2821", 6.87, 4.5, "pass"],
   ["success-foreground on success", "#0B0F17", "#60C498", 8.99, 4.5, "pass"],
-  ["caution-foreground on caution", "#0B0F17", "#F19E20", 8.81, 4.5, "pass"],
+  // 016 decision 1: the lifted yellow, #F8D874 in dark.
+  ["caution-foreground on caution", "#0B0F17", "#F8D874", 13.75, 4.5, "pass"],
   ["sidebar-foreground on sidebar", "#F3F0E8", "#16140F", 16.16, 4.5, "pass"],
   [
     "sidebar-primary-foreground on sidebar-primary",
@@ -245,6 +251,10 @@ const DARK: Row[] = [
     4.5,
     "pass",
   ],
+  // 016 decision 3: in dark the lifted yellow is text-safe.
+  ["caution-text on background", "#F8D874", "#16140F", 13.2, 4.5, "pass"],
+  ["caution-text on card", "#F8D874", "#221F19", 11.78, 4.5, "pass"],
+  ["caution-text on muted", "#F8D874", "#2C2821", 10.51, 4.5, "pass"],
   [
     "destructive on destructive/20 over background",
     "#FF9491",
@@ -284,8 +294,8 @@ const DARK: Row[] = [
   ["chart-1 on card", "#93B0FF", "#221F19", 7.74, 3, "pass"],
   ["chart-2 on background", "#FF9491", "#16140F", 8.67, 3, "pass"],
   ["chart-2 on card", "#FF9491", "#221F19", 7.74, 3, "pass"],
-  ["chart-3 on background", "#F19E20", "#16140F", 8.45, 3, "pass"],
-  ["chart-3 on card", "#F19E20", "#221F19", 7.55, 3, "pass"],
+  ["chart-3 on background", "#F8D874", "#16140F", 13.2, 3, "pass"],
+  ["chart-3 on card", "#F8D874", "#221F19", 11.78, 3, "pass"],
   ["chart-4 on background", "#60C498", "#16140F", 8.62, 3, "pass"],
   ["chart-4 on card", "#60C498", "#221F19", 7.7, 3, "pass"],
   ["chart-5 on background", "#A39D90", "#16140F", 6.82, 3, "pass"],
@@ -315,8 +325,8 @@ describe.each([
 ] as const)("the %s theme", (theme, expected) => {
   const rows = contrastTable(tokens, theme);
 
-  test("computes 55 pairs", () => {
-    expect(rows).toHaveLength(55);
+  test("computes 58 pairs", () => {
+    expect(rows).toHaveLength(58);
   });
 
   test.each(expected.map((row, i) => [i + 1, ...row] as const))(
@@ -347,9 +357,9 @@ describe("across both themes", () => {
     ...contrastTable(tokens, "dark"),
   ];
 
-  test("110 pairs: 108 pass, exactly 2 are the chart-3 exceptions, 0 fail", () => {
-    expect(all).toHaveLength(110);
-    expect(all.filter((r) => r.result === "pass")).toHaveLength(108);
+  test("116 pairs: 114 pass, exactly 2 are the chart-3 exceptions, 0 fail", () => {
+    expect(all).toHaveLength(116);
+    expect(all.filter((r) => r.result === "pass")).toHaveLength(114);
     expect(all.filter((r) => r.result === "fail")).toHaveLength(0);
     const exceptions = all.filter((r) => r.result === "exception");
     expect(exceptions.map((r) => `${r.theme} ${r.label}`)).toEqual([
@@ -790,8 +800,9 @@ describe("glass over glass (012 decision 4)", () => {
     // over the canvas the light tint is the canvas, 011's primary on
     // background.
     ["light", "primary", 5.98, 6.16],
-    ["dark", "foreground", 15.53, 16.16],
-    ["dark", "primary", 8.33, 8.67],
+    // 016 decision 5: the lifted yellow's field is now the lowest in dark.
+    ["dark", "foreground", 15.4, 16.16],
+    ["dark", "primary", 8.26, 8.67],
   ] as const)(
     "%s %s: lowest over a field %d, over the canvas %d",
     (theme, role, field, canvas) => {
@@ -843,11 +854,11 @@ describe("the field set (011 criterion 3)", () => {
     expect(text.map((r) => [r.theme, r.label, r.ratio])).toEqual([
       ["light", "field-1-foreground on field-1", 7.02],
       ["light", "field-2-foreground on field-2", 5.61],
-      ["light", "field-3-foreground on field-3", 8.81],
+      ["light", "field-3-foreground on field-3", 9.53],
       ["light", "field-4-foreground on field-4", 4.96],
       ["dark", "field-1-foreground on field-1", 8.67],
       ["dark", "field-2-foreground on field-2", 8.67],
-      ["dark", "field-3-foreground on field-3", 8.45],
+      ["dark", "field-3-foreground on field-3", 13.2],
       ["dark", "field-4-foreground on field-4", 8.62],
     ]);
   });
@@ -880,9 +891,10 @@ describe("the glass set (011 criterion 3)", () => {
     ["light", "foreground", 12.43],
     ["light", "muted-foreground", 4.78],
     ["light", "primary", 4.55],
-    ["dark", "foreground", 12.06],
-    ["dark", "muted-foreground", 5.09],
-    ["dark", "primary", 6.47],
+    // 016 decision 5: dark glass over the lifted yellow is lighter.
+    ["dark", "foreground", 10.9],
+    ["dark", "muted-foreground", 4.6],
+    ["dark", "primary", 5.85],
   ] as const)("the lowest %s %s row is %d", (theme, role, ratio) => {
     const own = rows.filter(
       (r) => r.theme === theme && r.label.startsWith(`${role} on glass`),
@@ -1337,5 +1349,171 @@ describe("inline code (014 criterion 16)", () => {
     expect(at("light glass fallback")).toEqual([1.62, 5.78]);
     expect(at("the ink surface on a light page")).toEqual([0, 9.47]);
     expect(at("the ink surface on a dark page")).toEqual([0, 8.56]);
+  });
+});
+
+/**
+ * 016: the brand yellow. #E2B000 in light and #F8D874 in dark in place of
+ * amber #F19E20, with a text shade, #806200, as `caution-text`.
+ */
+describe("the brand yellow (016)", () => {
+  const P = tokens.primitives;
+  const hex = (theme: "light" | "dark", role: string) =>
+    resolveColor(tokens, theme, role).toUpperCase();
+  const r1 = (n: number) => Math.round(n * 10) / 10;
+
+  // Criterion 2.
+  test("the hues: yellow at 88.0, yellow-text at 87.6, yellow-lifted's chroma 0.125", () => {
+    expect(Math.abs(oklch(P.yellow!).h - 88.0)).toBeLessThanOrEqual(0.5);
+    expect(Math.abs(oklch(P["yellow-text"]!).h - 87.6)).toBeLessThanOrEqual(
+      0.5,
+    );
+    expect(Math.abs(oklch(P["yellow-lifted"]!).c - 0.125)).toBeLessThanOrEqual(
+      0.005,
+    );
+  });
+
+  // Criterion 3: amber-text read 4.98, 5.67 and 4.51.
+  test("the text shade loses nothing to amber-text: 5.03 on paper, 5.73 on white, 4.55 on muted", () => {
+    const text = P["yellow-text"]!;
+    expect(contrastRatio(text, P.paper!)).toBe(5.03);
+    expect(contrastRatio(text, P.raised!)).toBe(5.73);
+    expect(contrastRatio(text, hex("light", "muted"))).toBe(4.55);
+    expect(contrastRatio(text, P.paper!)).toBeGreaterThanOrEqual(4.98);
+    expect(contrastRatio(text, P.raised!)).toBeGreaterThanOrEqual(5.67);
+    expect(contrastRatio(text, hex("light", "muted"))).toBeGreaterThanOrEqual(
+      4.51,
+    );
+  });
+
+  test("the text shade is ΔE 4.4 from code-yellow and 27.4 from yellow", () => {
+    const d = deltaE(P["yellow-text"]!, P["code-yellow"]!);
+    expect(d).toBeGreaterThanOrEqual(3);
+    expect(r1(d)).toBe(4.4);
+    expect(r1(deltaE(P["yellow-text"]!, P.yellow!))).toBe(27.4);
+  });
+
+  // Criterion 4's reason.
+  test("the two light chart-3 exceptions give the yellow series' reason", () => {
+    for (const e of tokens.contrast.exceptions)
+      expect(e.why).toBe(
+        "yellow series are labelled directly (the design book §03; WCAG 1.4.11)",
+      );
+  });
+
+  // Criterion 5: decision 5's field-3 figures.
+  test.each([
+    ["light", "foreground on glass over field-3", 15.52],
+    ["light", "muted-foreground on glass over field-3", 5.97],
+    ["light", "primary on glass over field-3", 5.68],
+    ["dark", "foreground on glass over field-3", 10.9],
+    ["dark", "muted-foreground on glass over field-3", 4.6],
+    ["dark", "primary on glass over field-3", 5.85],
+  ] as const)("%s %s reads %d", (theme, label, ratio) => {
+    const row = glassRows(tokens).find(
+      (r) => r.theme === theme && r.label === label,
+    )!;
+    expect(row.ratio).toBe(ratio);
+  });
+
+  test.each([
+    ["light", "foreground on glass over glass over field-3", 16.68],
+    ["light", "primary on glass over glass over field-3", 6.11],
+    ["dark", "foreground on glass over glass over field-3", 15.4],
+    ["dark", "primary on glass over glass over field-3", 8.26],
+  ] as const)("%s %s reads %d", (theme, label, ratio) => {
+    const row = glassOverGlassRows(tokens).find(
+      (r) => r.theme === theme && r.label === label,
+    )!;
+    expect(row.ratio).toBe(ratio);
+  });
+
+  test("the ring on glass over field-3 reads 5.68 in light and 5.85 in dark; 11 of 11 ring rows pass", () => {
+    const rows = glassRingRows(tokens);
+    const at = (theme: string) =>
+      rows.find(
+        (r) => r.theme === theme && r.label === "ring on glass over field-3",
+      )!.ratio;
+    expect([at("light"), at("dark")]).toEqual([5.68, 5.85]);
+    expect(rows.filter((r) => r.result === "pass")).toHaveLength(11);
+    expect(glassFallbackRows(tokens)).toHaveLength(6);
+    expect(forbiddenRows(tokens)).toHaveLength(3);
+    expect(scrimRows(tokens)).toHaveLength(6);
+  });
+
+  // Criterion 6: chart-3 against its neighbours.
+  test("chart-3 is ΔE 18.0 or more from its neighbours in both themes; the lowest is dark chart-2, 18.3", () => {
+    const rows = (["light", "dark"] as const).flatMap((theme) =>
+      ["chart-1", "chart-2", "chart-4", "chart-5"].map((n) => ({
+        theme,
+        n,
+        d: r1(deltaE(hex(theme, "chart-3"), hex(theme, n))),
+      })),
+    );
+    expect(rows.map((r) => r.d)).toEqual([
+      48.1, 31.2, 30.3, 37.5, 27.2, 18.3, 19.8, 21.9,
+    ]);
+    expect(Math.min(...rows.map((r) => r.d))).toBe(18.3);
+  });
+
+  test("under protanopia and deuteranopia, 12.0 or more; the lowest is dark chart-4 under protanopia, 12.1", () => {
+    const rows = (["light", "dark"] as const).flatMap((theme) =>
+      ["chart-1", "chart-2", "chart-4", "chart-5"].flatMap((n) =>
+        (["protanopia", "deuteranopia"] as const).map((vision) => ({
+          label: `${theme} ${n} ${vision}`,
+          d: r1(deltaEUnder(hex(theme, "chart-3"), hex(theme, n), vision)),
+        })),
+      ),
+    );
+    expect(rows.every((r) => r.d >= 12)).toBe(true);
+    const min = rows.reduce((a, b) => (b.d < a.d ? b : a));
+    expect(min).toEqual({ label: "dark chart-4 protanopia", d: 12.1 });
+  });
+
+  // Criterion 13: recorded, not gated. Each figure is asserted to match.
+  test("the record: the third dot on paper 1.76, on white 2.01, on graphite in expressive dark 13.20", () => {
+    const yellow = hex("light", "mark-3");
+    expect(yellow).toBe("#E2B000");
+    expect(contrastRatio(yellow, P.paper!)).toBe(1.76);
+    expect(contrastRatio(yellow, P.raised!)).toBe(2.01);
+    expect(contrastRatio(P["yellow-lifted"]!, P.graphite!)).toBe(13.2);
+  });
+
+  test("the record: the yellow dot on each field, as decision 5's table has it", () => {
+    const fill = (theme: "light" | "dark", f: string) =>
+      P[
+        tokens.expressive.field[theme][
+          f as keyof (typeof tokens.expressive.field)["light"]
+        ][0]
+      ]!;
+    const dot = { light: P.yellow!, dark: P["yellow-lifted"]! };
+    const read = (theme: "light" | "dark") =>
+      ["field-1", "field-2", "field-3", "field-4"].map((f) => [
+        contrastRatio(dot[theme], fill(theme, f)),
+        r1(deltaE(dot[theme], fill(theme, f))),
+      ]);
+    expect(read("light")).toEqual([
+      [3.49, 48.1],
+      [2.79, 31.2],
+      [1, 0],
+      [2.46, 30.3],
+    ]);
+    expect(read("dark")).toEqual([
+      [1.52, 27.2],
+      [1.52, 18.3],
+      [1, 0],
+      [1.53, 19.8],
+    ]);
+  });
+
+  test("the record: light caution's bar on a card 2.01 (was 2.17), its badge fill on the page 1.76 (was 1.91)", () => {
+    expect(contrastRatio(hex("light", "caution"), hex("light", "card"))).toBe(
+      2.01,
+    );
+    expect(
+      contrastRatio(hex("light", "caution"), hex("light", "background")),
+    ).toBe(1.76);
+    expect(contrastRatio("#F19E20", hex("light", "card"))).toBe(2.17);
+    expect(contrastRatio("#F19E20", hex("light", "background"))).toBe(1.91);
   });
 });

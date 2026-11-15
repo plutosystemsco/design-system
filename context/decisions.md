@@ -2,6 +2,31 @@
 
 The owner's answers and decisions, newest first. A decision that changes the constitution is also recorded in its Status line. "The design book" and "v2" both mean the Pluto Systems design book, version 2, the source of the brand's rules; a section of it is cited as "§03".
 
+### After the `016` build's checkpoint (2026-11-15)
+
+The design lead looked at these pages in both themes, at 1440 and 390 px:
+- `/items/pluto-theme/`
+- `/view/compositions/stage/grounds/`
+- `/view/product-home/`
+- `/items/four-dot/`
+- `/items/badge/`
+- `/items/alert/`
+- `/items/chart/`
+
+There were no page errors on a warm server.
+
+- **The yellow reads as yellow** beside blue, red and green.
+  - **Light:** on the fields, `#E2B000` with ink text. It reads warm, not orange, and not green-cast.
+  - **Dark:** `#F8D874` with graphite text. It sits with the lifted blue, red and green as one set.
+  - **The mark:** the four-dot mark keeps four distinct dots at `text-xs`, both alone and in the lockup.
+  - **State colours:** the alert's caution bar and the badge's fill read as yellow and are named in words. That is the one place light caution relies on a fill under 3:1 (2.01 on its card, 1.76 on the page), as decision 5 records.
+- **The builder's on-screen figures match decision 5:**
+  - **Light:** ink on caution 9.53; chart-3's ΔE to its neighbours 30.3 to 48.1.
+  - **Dark:** ink on caution 13.75; chart-3's ΔE 18.3 to 27.2.
+  - **Not on screen:** dark glass over `field-3` (4.60) appears on no page at 1440, so the unit test is its guard. `015`'s design site puts glass over the yellow field (its Colour page, `017`); that checkpoint reads it on screen.
+- **Accepted:** the `chart` page gains a row of five series swatches, so criterion 8 has a series 3 to read.
+- **For step 5:** the `alert` page's copy still says "an amber bar". Criterion 9's search catches it.
+
 ### After the `013` build's checkpoint 2 (2026-11-15)
 
 The design lead typed in the editor in both themes, at 1280 px and 2×:

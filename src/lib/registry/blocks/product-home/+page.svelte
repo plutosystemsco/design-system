@@ -157,7 +157,7 @@ for path in result.paths: print(path)`;
     </StageHero>
   </Stage>
 
-  <!-- Three owned moments, one colour each (C2): blue in the hero, amber
+  <!-- Three owned moments, one colour each (C2): blue in the hero, yellow
   for the proof, green for the console. -->
   <Stage element="div" ground="field-3">
     <div class="py-24">

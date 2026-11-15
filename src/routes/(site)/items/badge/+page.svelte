@@ -13,7 +13,7 @@
 <PreviewSection
   id="variants"
   title="Variants"
-  intro="A label, not an action. A state is a border and text in its colour, with no tint, so it reads on a hover row; caution is solid amber with ink text."
+  intro="A label, not an action. A state is a border and text in its colour, with no tint, so it reads on a hover row; caution is solid yellow with ink text."
 >
   <div class="flex flex-wrap items-end gap-8">
     <Specimen caption="default"><Badge>Queued</Badge></Specimen>

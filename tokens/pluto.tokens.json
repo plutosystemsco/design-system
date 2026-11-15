@@ -6,10 +6,11 @@
     "raised": "#FFFFFF",
     "blue": "#2D48D4",
     "red": "#C92035",
-    "amber": "#F19E20",
+    "yellow": "#E2B000",
     "green": "#008058",
     "red-text": "#C11E31",
     "green-text": "#007351",
+    "yellow-text": "#806200",
     "wash": "#E9E5DB",
     "line": "#0B0F171A",
     "line-input": "#857E70",
@@ -21,6 +22,7 @@
     "blue-lifted": "#93B0FF",
     "red-lifted": "#FF9491",
     "green-lifted": "#60C498",
+    "yellow-lifted": "#F8D874",
     "clear": "#00000000",
     "ink-shadow": "#0B0F1729",
     "ink-scrim": "#0B0F1780",
@@ -69,7 +71,7 @@
       "ring": "blue",
       "chart-1": "blue",
       "chart-2": "red",
-      "chart-3": "amber",
+      "chart-3": "yellow",
       "chart-4": "green",
       "chart-5": "ink-soft",
       "sidebar": "paper",
@@ -85,12 +87,13 @@
       "success": "green-text",
       "success-foreground": "raised",
       "success-fill": "green",
-      "caution": "amber",
+      "caution": "yellow",
       "caution-foreground": "ink",
+      "caution-text": "yellow-text",
       "raised": "raised",
       "mark-1": "blue",
       "mark-2": "red",
-      "mark-3": "amber",
+      "mark-3": "yellow",
       "mark-4": "green",
       "groove-line": "line",
       "groove-light": "clear",
@@ -131,7 +134,7 @@
       "ring": "blue-lifted",
       "chart-1": "blue-lifted",
       "chart-2": "red-lifted",
-      "chart-3": "amber",
+      "chart-3": "yellow-lifted",
       "chart-4": "green-lifted",
       "chart-5": "paper-soft",
       "sidebar": "graphite",
@@ -147,8 +150,9 @@
       "success": "green-lifted",
       "success-foreground": "ink",
       "success-fill": "green-lifted",
-      "caution": "amber",
+      "caution": "yellow-lifted",
       "caution-foreground": "ink",
+      "caution-text": "yellow-lifted",
       "raised": "ink-raised",
       "mark-1": "paper",
       "mark-2": "paper",
@@ -310,13 +314,13 @@
       "light": {
         "field-1": ["blue", "raised"],
         "field-2": ["red", "raised"],
-        "field-3": ["amber", "ink"],
+        "field-3": ["yellow", "ink"],
         "field-4": ["green", "raised"]
       },
       "dark": {
         "field-1": ["blue-lifted", "graphite"],
         "field-2": ["red-lifted", "graphite"],
-        "field-3": ["amber", "graphite"],
+        "field-3": ["yellow-lifted", "graphite"],
         "field-4": ["green-lifted", "graphite"]
       }
     },
@@ -371,7 +375,10 @@
       ["muted-foreground", "syntax-ground"],
       ["muted-foreground", "syntax-active-line"],
       ["success", "syntax-active-line"],
-      ["destructive", "syntax-active-line"]
+      ["destructive", "syntax-active-line"],
+      ["caution-text", "background"],
+      ["caution-text", "card"],
+      ["caution-text", "muted"]
     ],
     "tints": [
       {
@@ -426,12 +433,12 @@
       {
         "theme": "light",
         "pair": ["chart-3", "background"],
-        "why": "amber series are labelled directly (the design book §03; WCAG 1.4.11)"
+        "why": "yellow series are labelled directly (the design book §03; WCAG 1.4.11)"
       },
       {
         "theme": "light",
         "pair": ["chart-3", "card"],
-        "why": "amber series are labelled directly (the design book §03; WCAG 1.4.11)"
+        "why": "yellow series are labelled directly (the design book §03; WCAG 1.4.11)"
       }
     ],
     "forbidden": {

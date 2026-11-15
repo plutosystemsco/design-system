@@ -37,7 +37,7 @@
     <li>
       Its text is the foreground and the primary only: the bar floats over the
       whole page. On its glass over another glass over any field they measure at
-      least 15.53:1 and 5.98:1. Dark glass over a light image of your own is
+      least 15.40:1 and 5.98:1. Dark glass over a light image of your own is
       yours to measure.
     </li>
     <li>

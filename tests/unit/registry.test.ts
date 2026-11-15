@@ -1784,6 +1784,77 @@ describe("014: the white code ground", () => {
   });
 });
 
+/** 016 criteria 9 and 12: no amber left, and the yellow in the documents. */
+describe("016: the brand yellow", () => {
+  const read = (file: string) => readFileSync(file, "utf8");
+  const PAGES = "src/routes/(site)/items";
+
+  test("no amber, #F19E20 or #915B00, in any case, in the tokens, build-tokens, src/ (but the identity record), registry.json or static/r/", () => {
+    const files = execSync(
+      "git ls-files --cached --others --exclude-standard -- tokens scripts/build-tokens.ts src registry.json static/r",
+      { encoding: "utf8" },
+    )
+      .split("\n")
+      .filter(
+        (f) =>
+          f &&
+          existsSync(f) &&
+          !f.startsWith("src/lib/identity/") &&
+          !/\.(png|jpe?g|webp|woff2?|ico)$/.test(f),
+      );
+    expect(files.length).toBeGreaterThan(300);
+    const hits = files.filter((f) => /amber|#?f19e20|#?915b00/i.test(read(f)));
+    expect(hits).toEqual([]);
+  });
+
+  test("the one 0.12.0 entry holds 016's summary line, and its one pluto-theme bullet names the yellows and --caution-text", () => {
+    const text = read("CHANGELOG.md");
+    const at = text.indexOf("## 0.12.0");
+    const body = text.slice(at, text.indexOf("\n## ", at + 1));
+    expect(body).toContain(
+      "The brand's yellow is yellower and lifted in dark: `#E2B000` in light, `#F8D874` in dark, in place of `#F19E20`.",
+    );
+    const bullets = body
+      .split("\n")
+      .filter((line) => line.startsWith("- `pluto-theme`: "));
+    expect(bullets).toHaveLength(1);
+    for (const name of [
+      "`#E2B000`",
+      "`#F8D874`",
+      "`#806200`",
+      "`--caution-text`",
+    ])
+      expect(bullets[0], name).toContain(name);
+  });
+
+  test("the page texts and comments say yellow; marketing-bar reads 15.40:1", () => {
+    for (const file of [
+      `${PAGES}/alert/+page.svelte`,
+      `${PAGES}/badge/+page.svelte`,
+      `${PAGES}/chart/+page.svelte`,
+      `${PAGES}/product-home/+page.svelte`,
+      `${PAGES}/pluto-theme/+page.svelte`,
+      "src/lib/registry/ui/badge/badge.svelte",
+      "src/lib/registry/blocks/product-home/+page.svelte",
+    ]) {
+      expect(read(file), file).not.toMatch(/amber/i);
+      expect(read(file), file).toMatch(/yellow/i);
+    }
+    const flat = (file: string) => read(file).replace(/\s+(\/\/\s+)?/g, " ");
+    expect(flat(`${PAGES}/pluto-theme/+page.svelte`)).toContain(
+      "Yellow is the one known exception: a yellow series is labelled directly",
+    );
+    expect(flat("src/lib/registry/ui/badge/badge.svelte")).toContain(
+      "because the brand yellow is never text in light",
+    );
+    const bar = read(`${PAGES}/marketing-bar/+page.svelte`).replace(
+      /\s+/g,
+      " ",
+    );
+    expect(bar).toContain("at least 15.40:1 and 5.98:1");
+  });
+});
+
 /**
  * 008 change review, finding 1: a released snapshot is frozen. Each tag's
  * `static/<tag>/` matches the tag, so a build under a stale version can never

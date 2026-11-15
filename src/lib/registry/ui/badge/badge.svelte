@@ -3,7 +3,8 @@
 
   // No tint: a badge sits in rows whose hover and selected ground is the
   // accent inset, so a state is a border and text in its colour. Caution is
-  // a solid amber fill with ink text, because amber is never text.
+  // a solid yellow fill with ink text, because the brand yellow is never
+  // text in light.
   export const badgeVariants = tv({
     base: "group/badge inline-flex w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded border px-2 py-0 font-mono text-xs font-medium whitespace-nowrap [&>svg]:pointer-events-none [&>svg]:size-3",
     variants: {

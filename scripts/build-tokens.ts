@@ -47,7 +47,7 @@ const RADIUS_STEPS = ["xs", "sm", "md", "lg", "xl", "2xl", "3xl", "4xl"];
 const EXPRESSIVE_DARK_MARKS = [
   "blue-lifted",
   "red-lifted",
-  "amber",
+  "yellow-lifted",
   "green-lifted",
 ] as const;
 
@@ -128,7 +128,7 @@ function marks(hexes: readonly string[]): Record<string, string> {
 /**
  * 006 decision 4: where each dot starts, as multiples of `--mark-orbit`, in
  * the design book's directions and reading order: blue from the lower left,
- * red from the upper right, amber from the upper left, green from the lower
+ * red from the upper right, yellow from the upper left, green from the lower
  * right.
  */
 const ENTRANCE_OFFSETS: [x: number, y: number][] = [

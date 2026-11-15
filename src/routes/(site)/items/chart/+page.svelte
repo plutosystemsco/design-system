@@ -189,6 +189,25 @@
         </Card.Content>
       </Card.Root>
     </Specimen>
+    <Specimen
+      caption="the five series colours, chart-1 to chart-5"
+      class="w-full"
+    >
+      <!-- 016: the third is the brand yellow. The classes are written out so
+           Tailwind finds them. -->
+      <ul class="flex flex-wrap gap-4 text-sm">
+        {#each [["series-1", "bg-chart-1"], ["series-2", "bg-chart-2"], ["series-3", "bg-chart-3"], ["series-4", "bg-chart-4"], ["series-5", "bg-chart-5"]] as [id, swatch], i (id)}
+          <li class="flex items-center gap-2">
+            <span
+              aria-hidden="true"
+              class="size-6 rounded {swatch}"
+              data-testid={id}
+            ></span>
+            <code>chart-{i + 1}</code>
+          </li>
+        {/each}
+      </ul>
+    </Specimen>
   </div>
 </PreviewSection>
 
@@ -234,7 +253,7 @@
       the data allows; otherwise bars against a line, or labels on the marks. A legend
       alone is not enough. A light figure that uses
       <code>chart-3</code>
-      (amber) labels that series directly.
+      (yellow) labels that series directly.
     </li>
     <li>
       <strong>Colour by token class or <code>var()</code> prop.</strong>

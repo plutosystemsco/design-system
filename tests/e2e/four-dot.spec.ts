@@ -41,11 +41,11 @@ async function geometry(page: Page) {
   });
 }
 
-/** 011 decision 2: Deep Field's four, and the warm canvas's paper. */
+/** 011 decision 2: Deep Field's four, and the warm canvas's paper; 016 decision 1's yellow third. */
 const BRAND = [
   "rgb(45, 72, 212)",
   "rgb(201, 32, 53)",
-  "rgb(241, 158, 32)",
+  "rgb(226, 176, 0)",
   "rgb(0, 128, 88)",
 ];
 const PAPER = "rgb(243, 240, 232)";
@@ -53,7 +53,7 @@ const PAPER = "rgb(243, 240, 232)";
 const LIFTED = [
   "rgb(147, 176, 255)",
   "rgb(255, 148, 145)",
-  "rgb(241, 158, 32)",
+  "rgb(248, 216, 116)",
   "rgb(96, 196, 152)",
 ];
 

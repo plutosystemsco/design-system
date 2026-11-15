@@ -18,9 +18,10 @@ describe("the token file", () => {
   // 007 decision 3: 004's 25 plus the nine text-safe hue primitives; 011
   // decision 2 adds graphite, the dark canvas; 013 decision 12 removes 007's
   // nine and adds Tombaugh's twenty: 35 becomes 46.
-  test("holds 46 primitives, each #RRGGBB or #RRGGBBAA", () => {
+  // 016 decision 1: amber goes; yellow, yellow-lifted and yellow-text come: 48.
+  test("holds 48 primitives, each #RRGGBB or #RRGGBBAA", () => {
     const primitives = Object.entries(tokens.primitives);
-    expect(primitives).toHaveLength(46);
+    expect(primitives).toHaveLength(48);
     for (const [, hex] of primitives) expect(hex).toMatch(HEX);
   });
 
@@ -102,6 +103,45 @@ describe("the token file", () => {
       expect(`syntax-${gone}` in tokens.themes.light, gone).toBe(false);
   });
 
+  // 016 decisions 1 to 3: the brand yellow, its lifted tone and its text
+  // shade; amber is gone, and no app-facing name changes.
+  test("016: no primitive or role is named amber; the three yellows and the roles that name them", () => {
+    for (const names of [
+      Object.keys(tokens.primitives),
+      Object.keys(tokens.themes.light),
+      Object.keys(tokens.themes.dark),
+    ])
+      expect(names.filter((n) => /amber/i.test(n))).toEqual([]);
+    expect([
+      tokens.primitives.yellow,
+      tokens.primitives["yellow-lifted"],
+      tokens.primitives["yellow-text"],
+    ]).toEqual(["#E2B000", "#F8D874", "#806200"]);
+    const { light, dark } = tokens.themes;
+    expect([light["chart-3"], light.caution, light["mark-3"]]).toEqual([
+      "yellow",
+      "yellow",
+      "yellow",
+    ]);
+    expect([dark["chart-3"], dark.caution]).toEqual([
+      "yellow-lifted",
+      "yellow-lifted",
+    ]);
+    expect([light["caution-text"], dark["caution-text"]]).toEqual([
+      "yellow-text",
+      "yellow-lifted",
+    ]);
+    expect(dark["mark-3"]).toBe("paper");
+    expect([light["caution-foreground"], dark["caution-foreground"]]).toEqual([
+      "ink",
+      "ink",
+    ]);
+    const roles = Object.keys(light);
+    expect(roles.indexOf("caution-text")).toBe(
+      roles.indexOf("caution-foreground") + 1,
+    );
+  });
+
   test("writes each hex once", () => {
     const values = Object.values(tokens.primitives).map((h) => h.toUpperCase());
     expect(new Set(values).size).toBe(values.length);
@@ -110,16 +150,16 @@ describe("the token file", () => {
   // 007 decision 3: 48 becomes 53; 014 decision 1: 53 becomes 55; 013
   // decision 12: 55 becomes 60.
   test.each(["light", "dark"] as const)(
-    "%s holds 60 names, each naming a primitive",
+    "%s holds 61 names, each naming a primitive",
     (theme) => {
       const entries = Object.entries(tokens.themes[theme]);
-      expect(entries).toHaveLength(60);
+      expect(entries).toHaveLength(61);
       for (const [, primitive] of entries)
         expect(Object.keys(tokens.primitives)).toContain(primitive);
     },
   );
 
-  test("both themes name the same 60 tokens", () => {
+  test("both themes name the same 61 tokens", () => {
     expect(Object.keys(tokens.themes.dark).sort()).toEqual(
       Object.keys(tokens.themes.light).sort(),
     );
@@ -218,7 +258,7 @@ describe("the token file", () => {
           "line-input",
           "blue",
           "red",
-          "amber",
+          "yellow",
           "green",
           "red-text",
           "green-text",
@@ -246,7 +286,8 @@ describe("the token file", () => {
       "line-input": "#857E70",
       blue: "#2D48D4",
       red: "#C92035",
-      amber: "#F19E20",
+      // 016 decision 1: the brand yellow in place of amber.
+      yellow: "#E2B000",
       green: "#008058",
       "red-text": "#C11E31",
       "green-text": "#007351",
@@ -337,7 +378,7 @@ describe("the code map", () => {
     expect(Object.entries(tokens.code)).toEqual(ROLES);
   });
 
-  test("16 of 16 values are among the 60 semantic names, and none is a primitive or a hex", () => {
+  test("16 of 16 values are among the 61 semantic names, and none is a primitive or a hex", () => {
     const semantic = new Set(Object.keys(tokens.themes.light));
     const values = Object.values(tokens.code);
     expect(values).toHaveLength(16);
@@ -435,9 +476,9 @@ describe("the expressive group", () => {
   test("adds no primitive and no theme role", () => {
     // 011 decision 2 adds one, graphite; the theme roles are 53, and 55
     // since 014 decision 1's two code grounds; 013 decision 12 makes them 46
-    // primitives and 60 roles.
-    expect(Object.keys(tokens.primitives)).toHaveLength(46);
-    expect(Object.keys(tokens.themes.light)).toHaveLength(60);
+    // primitives and 60 roles; 016 decisions 1 and 3, 48 and 61.
+    expect(Object.keys(tokens.primitives)).toHaveLength(48);
+    expect(Object.keys(tokens.themes.light)).toHaveLength(61);
   });
 
   test("display names the heading family; each step is 600", () => {
@@ -473,13 +514,13 @@ describe("011's expressive shapes", () => {
       light: {
         "field-1": ["blue", "raised"],
         "field-2": ["red", "raised"],
-        "field-3": ["amber", "ink"],
+        "field-3": ["yellow", "ink"],
         "field-4": ["green", "raised"],
       },
       dark: {
         "field-1": ["blue-lifted", "graphite"],
         "field-2": ["red-lifted", "graphite"],
-        "field-3": ["amber", "graphite"],
+        "field-3": ["yellow-lifted", "graphite"],
         "field-4": ["green-lifted", "graphite"],
       },
     });

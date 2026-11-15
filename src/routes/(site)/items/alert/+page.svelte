@@ -17,7 +17,7 @@
 <PreviewSection
   id="variants"
   title="Variants"
-  intro="Each title names the state in words. Destructive and success sit on their tints; caution is a card with an amber bar. An alert is never placed inside an inset."
+  intro="Each title names the state in words. Destructive and success sit on their tints; caution is a card with a yellow bar. An alert is never placed inside an inset."
 >
   <div class="grid max-w-xl gap-6">
     <Specimen caption="default · no role" class="w-full">

@@ -196,8 +196,9 @@ test.describe("3. the hero's glass and field", () => {
 
 /** The lifted four in dark, the four in light: the mark's colours on an expressive page. */
 const MARKS = {
-  light: ["#2D48D4", "#C92035", "#F19E20", "#008058"],
-  dark: ["#93B0FF", "#FF9491", "#F19E20", "#60C498"],
+  // 016 decision 1: the brand yellow, lifted in dark.
+  light: ["#2D48D4", "#C92035", "#E2B000", "#008058"],
+  dark: ["#93B0FF", "#FF9491", "#F8D874", "#60C498"],
 };
 
 // Criterion 4: the floating glass bar, and the expressive marks.
@@ -495,7 +496,7 @@ test.describe("7. the product home", () => {
     await expect(panel).toHaveCSS("border-top-left-radius", "8px");
   });
 
-  test("its fields are field-1, field-3 and field-4: blue, amber and green", async ({
+  test("its fields are field-1, field-3 and field-4: blue, yellow and green", async ({
     page,
   }) => {
     await openView(page, HOME);
@@ -526,5 +527,63 @@ test.describe("7. the product home", () => {
       );
     // The bar's panel and the hero's panel.
     expect(filters).toEqual(["blur(16px)", "blur(16px)"]);
+  });
+});
+
+/**
+ * 016 criterion 8: the brand yellow, #E2B000 in light and #F8D874 in dark,
+ * where the brand puts it: field-3, the caution badge and alert, chart 3.
+ */
+test.describe("016: the brand yellow", () => {
+  const YELLOW = { light: "rgb(226, 176, 0)", dark: "rgb(248, 216, 116)" };
+  const LEGEND = { light: "rgb(11, 15, 23)", dark: "rgb(22, 20, 15)" };
+  const style = (locator: Locator, property: string) =>
+    locator.evaluate(
+      (el, p) => getComputedStyle(el).getPropertyValue(p),
+      property,
+    );
+
+  test("the field-3 stage is the yellow, and its heading the legend", async ({
+    page,
+  }, info) => {
+    const theme = info.project.name as "light" | "dark";
+    await openView(page, GROUNDS);
+    const stage = page.locator('[data-ground="field-3"]');
+    await expect(stage).toHaveCount(1);
+    expect(await style(stage, "background-color")).toBe(YELLOW[theme]);
+    expect(await style(stage.locator("h2"), "color")).toBe(LEGEND[theme]);
+  });
+
+  test("the caution badge is the --caution fill with ink text; the caution alert's bar is --caution", async ({
+    page,
+  }, info) => {
+    const theme = info.project.name as "light" | "dark";
+    await page.goto("/items/badge/");
+    const badge = page
+      .locator('[data-slot="badge"]', { hasText: "Flaky" })
+      .first();
+    expect(await style(badge, "background-color")).toBe(YELLOW[theme]);
+    expect(await style(badge, "background-color")).toBe(
+      hexToRgb(await rootColour(page, "--caution")),
+    );
+    expect(await style(badge, "color")).toBe("rgb(11, 15, 23)");
+    await page.goto("/items/alert/");
+    const alert = page
+      .locator('[data-slot="alert"][data-variant="caution"]')
+      .first();
+    expect(await style(alert, "border-left-color")).toBe(YELLOW[theme]);
+    expect(await style(alert, "border-left-color")).toBe(
+      hexToRgb(await rootColour(page, "--caution")),
+    );
+  });
+
+  test("the chart page's series 3 is --chart-3", async ({ page }, info) => {
+    const theme = info.project.name as "light" | "dark";
+    await page.goto("/items/chart/");
+    const swatch = page.getByTestId("series-3");
+    expect(await style(swatch, "background-color")).toBe(YELLOW[theme]);
+    expect(await style(swatch, "background-color")).toBe(
+      hexToRgb(await rootColour(page, "--chart-3")),
+    );
   });
 });
