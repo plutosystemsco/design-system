@@ -7,7 +7,7 @@
 
 `v0.11.0` (2026-11-07) is the last tag. `0.12.0` is built on the `release/0.12.0` branch and not yet tagged. `package.json` reads 0.12.0, `static/v0.12.0/` is built, and the changelog has one 0.12.0 entry. Nothing is pushed.
 
-The system is now the **Kuiper Design System**, a public product any team may adopt (`decisions.md`, 2026-11-15). Code names stay `pluto` until 0.13.0.
+The system is now the **Kuiper Design System**, a public product any team may adopt (the owner, 2026-11-15). Code names stay `pluto` until 0.13.0.
 
 Committed on `release/0.12.0`, one commit per specification:
 
@@ -39,7 +39,7 @@ The order to the tag: `019`'s fixes, its commit, the owner's listen, then the lo
 
 ## Next
 
-The plan is `roadmap.md` (being written now from the inventory, the page standard, the toast memo and the scorecard). Already ruled for 0.13.0 and after (`decisions.md`, 2026-11-15):
+The plan is `roadmap.md` (being written now from the inventory, the page standard, the toast memo and the scorecard). Already ruled for 0.13.0 and after (the owner, 2026-11-15):
 
 - the rename of code names to Kuiper, with a migration guide for installed apps;
 - lockup mock-ups for the Kuiper name, for the owner's approval;

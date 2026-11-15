@@ -123,8 +123,9 @@
       Tracking and weight
     </h2>
     <p class="mt-4">
-      Large type is set tighter, and small capitals looser. Each value is in
-      ems, so it scales with the size.
+      Type is set at the font's own spacing, at every size: each tracking
+      utility reads 0. The utilities stay, so a product that wants its own
+      spacing sets <code>letter-spacing</code> where it needs it.
     </p>
     <Table label="Tracking" head={["Utility", "Tracking"]}>
       {#each tracking as [id, v] (id)}

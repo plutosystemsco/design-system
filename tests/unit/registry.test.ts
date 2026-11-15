@@ -1887,24 +1887,25 @@ describe("016: the brand yellow", () => {
 
 /**
  * 019 change review, finding 1: the error-summary page claims a screen-reader
- * listen only once `decisions.md` records one. A record is an entry whose
- * heading names `019` and VoiceOver and whose body says the pass rule held
- * (decision 12). "`019`'s VoiceOver listen waits for the owner" is not one.
+ * listen only once 019's status line records one: "Criterion 19 passed",
+ * heard with VoiceOver (decision 12).
  */
 describe("019: no screen-reader claim without its record", () => {
   const page = readFileSync(
     "src/routes/(site)/components/error-summary/+page.svelte",
     "utf8",
   ).replace(/\s+/g, " ");
-  const decisions = readFileSync("context/decisions.md", "utf8");
-  const recorded = decisions
-    .split(/^(?=### )/m)
-    .some(
-      (entry) =>
-        /^### .*`019`.*VoiceOver/.test(entry) && /pass rule held/i.test(entry),
-    );
+  const spec = readdirSync("context/specifications").find((f) =>
+    f.startsWith("019-"),
+  );
+  const status =
+    readFileSync(`context/specifications/${spec}`, "utf8")
+      .split("\n")
+      .find((l) => l.startsWith("- **Status:**")) ?? "";
+  const recorded =
+    /Criterion 19 passed/.test(status) && /VoiceOver/.test(status);
 
-  test("the page claims a VoiceOver listen only when decisions.md records one that passed", () => {
+  test("the page claims a VoiceOver listen only when 019's status records one that passed", () => {
     const claims = /Heard with VoiceOver/i.test(page);
     if (claims) expect(recorded, "a recorded listen").toBe(true);
     else expect(page).toContain("Not yet heard with a screen reader.");
@@ -1912,6 +1913,32 @@ describe("019: no screen-reader claim without its record", () => {
 
   test("the page says NVDA and JAWS are not tested", () => {
     expect(page).toContain("NVDA and JAWS are not tested.");
+  });
+});
+
+/**
+ * 019a decision 1 (the owner, 2026-11-15): the
+ * one pluto-theme bullet says the spacing is now the font's default, and
+ * what an app that wants the old tightening does.
+ */
+describe("0.12.0: the font's own letter spacing", () => {
+  test("the pluto-theme bullet says every tracking value is now the font's default, and how to keep the old tightening", () => {
+    const text = readFileSync("CHANGELOG.md", "utf8");
+    const at = text.indexOf("## 0.12.0");
+    const body = text.slice(at, text.indexOf("\n## ", at + 1));
+    const bullets = body
+      .split("\n")
+      .filter((l) => l.startsWith("- `pluto-theme`: "));
+    expect(bullets).toHaveLength(1);
+    const bullet = bullets[0]!;
+    for (const name of [
+      "letter spacing",
+      "font's default",
+      "`--tracking-display`",
+      "`--type-display-tracking`",
+      "`letter-spacing`",
+    ])
+      expect(bullet, name).toContain(name);
   });
 });
 

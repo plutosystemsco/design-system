@@ -718,18 +718,27 @@ describe("009's variables (criterion 1)", () => {
     }
   });
 
+  // The font's own spacing everywhere (019a decision 1): the four
+  // tracking utilities stay, at 0, so no app's class breaks.
+  test("@theme inline's four --tracking-* variables are 0em", () => {
+    const css = readFileSync("src/app.css", "utf8");
+    for (const name of ["display", "section", "eyebrow", "mark"])
+      expect(css, name).toContain(`--tracking-${name}: 0em;`);
+  });
+
   // Decisions 3 to 7: each value from the token file, as the specification's tables give it.
   test.each([
     ["--font-face-display", "'IBM Plex Sans Variable', system-ui, sans-serif"],
     ["--type-display-size", "clamp(3rem, 6vw, 5.75rem)"],
     ["--type-display-leading", "0.95"],
-    ["--type-display-tracking", "-0.045em"],
+    // The font's own spacing everywhere (019a decision 1).
+    ["--type-display-tracking", "0em"],
     ["--type-section-size", "clamp(2.25rem, 4vw, 3.5rem)"],
     ["--type-section-leading", "1.05"],
-    ["--type-section-tracking", "-0.035em"],
+    ["--type-section-tracking", "0em"],
     ["--type-proof-size", "clamp(3.5rem, 6vw, 6rem)"],
     ["--type-proof-leading", "1"],
-    ["--type-proof-tracking", "-0.04em"],
+    ["--type-proof-tracking", "0em"],
     ["--motion-press", "160ms"],
     ["--motion-slide", "220ms"],
     ["--motion-busy", "400ms"],
@@ -1036,6 +1045,16 @@ const MOVED_016: Record<":root" | ".dark", Record<string, string>> = {
     "--caution": "#f8d874",
   },
 };
+/**
+ * 019a decision 1 (the owner, 2026-11-15): the four tracking utilities'
+ * variables in @theme inline move to 0em; they keep their names.
+ */
+const MOVED_019A_INLINE: Record<string, string> = {
+  "--tracking-display": "0em",
+  "--tracking-section": "0em",
+  "--tracking-eyebrow": "0em",
+  "--tracking-mark": "0em",
+};
 describe("v0.8.0's custom properties (criterion 2)", () => {
   const fixture = JSON.parse(
     readFileSync("tests/unit/fixtures/v0.8.0-custom-properties.json", "utf8"),
@@ -1110,7 +1129,7 @@ describe("v0.8.0's custom properties (criterion 2)", () => {
       const removed = REMOVED_013[block as keyof typeof REMOVED_013];
       const moved =
         block === "@theme inline"
-          ? {}
+          ? MOVED_019A_INLINE
           : {
               ...MOVED_011[block as ":root" | ".dark"],
               ...MOVED_014[block as ":root" | ".dark"],
@@ -1346,7 +1365,7 @@ describe("011's variables (criterion 1)", () => {
     ["--motion-light", "600ms"],
     ["--type-poster-size", "clamp(3.5rem, 12vw, 10rem)"],
     ["--type-poster-leading", "0.9"],
-    ["--type-poster-tracking", "-0.05em"],
+    ["--type-poster-tracking", "0em"],
     ["--mark-lockup-scale", "0.87"],
     ["--mark-lockup-size", "calc(var(--mark-lockup-scale) * 1em)"],
     ["--mark-rise", "0.36em"],

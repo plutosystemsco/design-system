@@ -17,10 +17,7 @@
     entrance = true,
     path = null,
     navLabel = "",
-    productive = false,
   }: {
-    /** The page is productive: once it scrolls, the panel turns opaque (018 decision 10). */
-    productive?: boolean;
     /** The page's path, for the menus; none on the 404. */
     path?: string | null;
     /** The left nav's name, which the menu takes from md to lg; none on the home page and the 404. */
@@ -36,31 +33,6 @@
   let menuOpen = $state(false);
   let doorOpen = $state(false);
 
-  // 018 decision 10: on a productive page, once it has scrolled, the panel
-  // takes the glass's own opaque ground, so no example shows through it.
-  // An observer on a sentinel at the page's top, not a scroll listener.
-  let sentinel: HTMLElement | undefined = $state();
-  let bar: HTMLElement | undefined = $state();
-  let scrolled = $state(false);
-  $effect(() => {
-    // A landing's band holds the glass's showcase: the panel turns opaque
-    // only once the band has left the room under the bar (018 checkpoint 2).
-    const band = landing
-      ? document.querySelector<HTMLElement>('[data-slot="band"]')
-      : null;
-    const target = productive ? sentinel : band;
-    if (!target) {
-      scrolled = false;
-      return;
-    }
-    const room = band ? (bar?.offsetHeight ?? 0) : 0;
-    const io = new IntersectionObserver(
-      ([e]) => (scrolled = !e.isIntersecting),
-      { rootMargin: `-${room}px 0px 0px 0px` },
-    );
-    io.observe(target);
-    return () => io.disconnect();
-  });
   // The phone menu's pages load when it first opens, not with every page.
   let AllPages: typeof import("./all-pages.svelte").default | null =
     $state(null);
@@ -73,24 +45,19 @@
 </script>
 
 <!--
-  The bar: a floating glass panel at the wide measure, sticky, its text the
+  The bar: a floating glass panel at the wide measure, sticky, glass on every
+  page at all times (019a). It is the one layer above the page, so it alone
+  is translucent; everything inside it is solid or clear. Its text is the
   foreground and the primary only, so it reads over anything that scrolls
   under it. The banner holds the lockup; the doors, search and the theme
   sit in the site's navigation beside it. Below md the doors fold into a
   sheet behind "Menu".
 -->
 <div
-  bind:this={sentinel}
-  aria-hidden="true"
-  class="pointer-events-none absolute top-0 h-px w-px"
-></div>
-<div
-  bind:this={bar}
   data-slot="site-bar"
   data-sticky-bar
   data-mode="expressive"
   class="pointer-events-none sticky top-0 z-40 h-(--site-bar-room) pt-2"
-  style:view-transition-name="site-bar"
 >
   <a
     href="#main"
@@ -98,9 +65,14 @@
     >Skip to content</a
   >
   <div class="mx-auto max-w-7xl px-(--gutter-stage)">
+    <!--
+      The view-transition name is on the glass itself: on an ancestor it
+      would make that ancestor a backdrop root, and the glass would blur
+      nothing behind the bar (019a).
+    -->
     <div
-      data-scrolled={scrolled ? "" : undefined}
-      class="glass pointer-events-auto flex h-(--size-bar) items-center gap-2 ps-3 pe-2 transition-[background-color] duration-(--motion-micro) data-scrolled:bg-(--glass-fallback) md:gap-4 lg:gap-6"
+      style:view-transition-name="site-bar"
+      class="glass pointer-events-auto flex h-(--size-bar) items-center gap-2 ps-3 pe-2 md:gap-4 lg:gap-6"
       {@attach pointerLight}
     >
       <header class="flex shrink-0">

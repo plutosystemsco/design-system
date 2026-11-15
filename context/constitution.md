@@ -1,8 +1,8 @@
 # Constitution
 
-- **Status:** in force since 2026-10-27. Amended 2026-10-27 (§4.6 allows named dependencies) 2026-11-01 (§2 and §4.2: the goal names no single app, and "done" is proven in this repository) and 2026-11-14 (§3: the repository hosts one public design site) and 2026-11-15 (§1: the system is named the Kuiper Design System). Amended 2026-11-15 (`decisions.md`, "Kuiper is a public product, and the old limits go"): §1 and §2, Kuiper is a public product anyone can adopt, measured against the reference systems; §2, two more release conditions; §3, no design-tool kit; §4.2, breadth follows the roadmap; §4.4, accessibility is proven across three engines and screen readers; §4.5, apps may install with Bun, npm or pnpm; §5, a small-change track, checkpoint rulings in landing notes, and the scorecard; §6, migration notes and deprecation.
+- **Status:** in force since 2026-10-27. Amended 2026-10-27 (§4.6 allows named dependencies) 2026-11-01 (§2 and §4.2: the goal names no single app, and "done" is proven in this repository) and 2026-11-14 (§3: the repository hosts one public design site) and 2026-11-15 (§1: the system is named the Kuiper Design System). Amended 2026-11-15 (`decisions.md`, "Kuiper is a public product, and the old limits go"): §1 and §2, Kuiper is a public product anyone can adopt, measured against the reference systems; §2, two more release conditions; §3, no design-tool kit; §4.2, breadth follows the roadmap; §4.4, accessibility is proven across three engines and screen readers; §4.5, apps may install with Bun, npm or pnpm; §5, a small-change track, checkpoint rulings in landing notes, and the scorecard; §6, migration notes and deprecation. Amended 2026-11-15 again: the owner retired `decisions.md` ("it isn't needed"); owner decisions now live in the specification, roadmap entry or rule they shape.
 - **Owner:** Pluto Systems, PBC
-- **Scope:** every document, script and line of code in this repository, and everyone working on it. The other documents under `context/` obey this one. It changes only by a decision recorded in `decisions.md` and noted in its Status line.
+- **Scope:** every document, script and line of code in this repository, and everyone working on it. The other documents under `context/` obey this one. It changes only by the owner's decision, noted in its Status line.
 
 ## 1. Mission
 
@@ -14,7 +14,7 @@ It is delivered the way shadcn delivers components. An app copies the source in 
 
 This repository is developed over time toward a system that stands beside the reference systems (Carbon, Material, Spectrum, Atlassian, Primer, Radix Themes, GOV.UK) in breadth, guidance, accessibility evidence and polish. Its docs, install path and governance are written for outside teams as well as Pluto Systems'. It has no final state. Each release is complete in itself, and a release is ready when all of these are true:
 
-1. The brand's tokens (colour, type, spacing, radius, motion), as settled in `decisions.md`, live here as one source, for every scheme the system serves. The Pluto Systems design book is their origin.
+1. The brand's tokens (colour, type, spacing, radius, motion), as the owner has settled them, live here as one source, for every scheme the system serves. The Pluto Systems design book is their origin.
 2. A shadcn-svelte-compatible registry is published. An app installs a component with shadcn-svelte's `add` command pointed at it and gets source files, with their dependencies resolved.
 3. Every item in the registry has a page that meets the component page standard: live examples in every scheme, usage, API, keyboard, and an accessibility status generated from the tests.
 4. Every specification the release carries is done: its acceptance criteria are met here, its built change is reviewed, and the release is tagged.
@@ -43,7 +43,7 @@ This repository is developed over time toward a system that stands beside the re
 
 **A small change** is a fix that changes no interface, adds no token and no dependency, and touches one item or one page. It needs no research memo and no separate spec review. It is a specification of kind _small change_: the defect, the fix and the check, on one page. Its check is seen failing first. A reviewer who did not write it reviews the built change.
 
-A feature's build has a checkpoint. A ruling made there is recorded in the specification's landing notes; `decisions.md` holds the owner's decisions, and those rulings that change a rule or a budget. After each specification lands, the benchmark scorecard is re-run, and the change review cites its movement.
+A feature's build has a checkpoint. A ruling made there, and any owner's answer that shapes the work, is recorded in the specification's landing notes. A ruling that changes a rule goes into this constitution, `AGENTS.md` or `roadmap.md`. After each specification lands, the benchmark scorecard is re-run, and the change review cites its movement.
 
 Four roles. One person may hold more than one, except that a reviewer never reviews what they wrote. The **owner** decides what the system is for and settles any question the other roles cannot. The **design lead** writes specifications and runs the pipeline. A **builder** implements one specification. A **reviewer** reads a specification or a built change fresh, having written neither.
 

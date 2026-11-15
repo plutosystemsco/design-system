@@ -49,10 +49,11 @@
   </Section>
 
   <Section id="ladder" title="The display ladder">
-    <!-- source: 011 decision 9; tokens/pluto.tokens.json, expressive.display.steps -->
+    <!-- source: 011 decision 9; 019a decision 1; tokens/pluto.tokens.json, expressive.display.steps -->
     <p data-claim="settled">
       Display type comes in four steps. Each grows with the window, between its
-      smallest and its largest size, and is set tight, with little leading.
+      smallest and its largest size, at the font's own spacing, with little
+      leading.
     </p>
     <figure class="mt-4 grid gap-4">
       <LadderFigure steps={data.steps} />

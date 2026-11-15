@@ -231,10 +231,10 @@
       "5xl": { "px": 44, "lineHeight": 1.15 }
     },
     "tracking": {
-      "display": -0.03,
-      "section": -0.02,
-      "eyebrow": 0.08,
-      "mark": -0.04
+      "display": 0,
+      "section": 0,
+      "eyebrow": 0,
+      "mark": 0
     },
     "weight": { "normal": 400, "medium": 500, "bold": 700 },
     "leading": { "none": 1 }
@@ -267,7 +267,7 @@
           "vw": 6,
           "maxPx": 92,
           "lineHeight": 0.95,
-          "tracking": -0.045,
+          "tracking": 0,
           "weight": 600
         },
         "section": {
@@ -275,7 +275,7 @@
           "vw": 4,
           "maxPx": 56,
           "lineHeight": 1.05,
-          "tracking": -0.035,
+          "tracking": 0,
           "weight": 600
         },
         "proof": {
@@ -283,7 +283,7 @@
           "vw": 6,
           "maxPx": 96,
           "lineHeight": 1,
-          "tracking": -0.04,
+          "tracking": 0,
           "weight": 600,
           "tabular": true
         },
@@ -292,7 +292,7 @@
           "vw": 12,
           "maxPx": 160,
           "lineHeight": 0.9,
-          "tracking": -0.05,
+          "tracking": 0,
           "weight": 600
         }
       }

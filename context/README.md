@@ -12,7 +12,6 @@ We work **research → spec → review → tests → code → review**. Each dir
 context/
   README.md            # this map
   constitution.md      # the mission, the goal, the hard constraints
-  decisions.md         # the owner's decisions, and rulings that change a rule or a budget, newest first
   roadmap.md           # the planned work toward the reference systems, ranked
   handoff.md           # the state of the work, replaced at each release
   prior_art/           # clones of projects we learn from (git-ignored, read-only)
@@ -23,7 +22,7 @@ context/
 
 **There is no list of open questions.** `roadmap.md` lists the planned work and its order; it holds no undecided choices. A specification makes every choice it needs and gives the reason. Something we do not know enough to decide gets a research memo marked _placeholder_. That memo names the question, what would answer it and what it blocks. The specification that needs it waits.
 
-A decision only the owner can make is asked with options and a recommendation, and recorded in `decisions.md` once answered.
+A decision only the owner can make is asked with options and a recommendation, and recorded, once answered, in the specification or roadmap entry it shapes, or in the constitution if it changes a rule. `decisions.md` was retired on 2026-11-15; older documents that cite it mean its last version, at commit `beeb67e`.
 
 ## The stages
 
@@ -49,6 +48,6 @@ A decision only the owner can make is asked with options and a recommendation, a
 - Plain Markdown.
 - Each document opens with a title and a header list: status, date, author.
 - The roles (owner, design lead, builder, reviewer) are the constitution's §5. A document names a role, never a person.
-- A feature's build has a **checkpoint**: the design lead looks at the half-built change, in the browser, before the builder goes on. The builder's working notes are not kept. A ruling made at a checkpoint is recorded in the specification's landing notes; only a ruling that changes a rule or a budget also goes in `decisions.md`.
+- A feature's build has a **checkpoint**: the design lead looks at the half-built change, in the browser, before the builder goes on. The builder's working notes are not kept. A ruling made at a checkpoint is recorded in the specification's landing notes.
 - Cross-reference with relative links.
 - Short sentences, one idea each; a term of art is defined the first time it is used.

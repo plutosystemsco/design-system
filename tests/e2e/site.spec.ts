@@ -789,98 +789,11 @@ test.describe("018 criteria 12 to 14: the measure, one h3, smoothing", () => {
   });
 });
 
-test.describe("018 criterion 15: the bar", () => {
-  const panel = '[data-slot="site-bar"] .glass';
-  const alpha = (c: string) => {
-    const m = c
-      .match(/rgba?\(([^)]+)\)/)![1]
-      .split(",")
-      .map((x) => x.trim());
-    return m.length === 4 ? Number(m[3]) : 1;
-  };
-
-  test("productive: glass at the top of Button, opaque --glass-fallback after 400 px", async ({
-    page,
-  }) => {
-    await open(page, "/components/button/");
-    const bar = page.locator(panel).first();
-    expect(
-      alpha(await bar.evaluate((e) => getComputedStyle(e).backgroundColor)),
-    ).toBeLessThan(1);
-    await page.mouse.wheel(0, 400);
-    await expect(bar).toHaveAttribute("data-scrolled", "");
-    await expect
-      .poll(() => bar.evaluate((e) => getComputedStyle(e).backgroundColor))
-      .toBe(
-        await bar.evaluate((e) => {
-          const p = document.createElement("div");
-          p.style.backgroundColor = "var(--glass-fallback)";
-          e.append(p);
-          const c = getComputedStyle(p).backgroundColor;
-          p.remove();
-          return c;
-        }),
-      );
-    expect(
-      alpha(await bar.evaluate((e) => getComputedStyle(e).backgroundColor)),
-    ).toBe(1);
-  });
-
-  test("expressive: on /brand/colour/, scrolled with a band under the bar, the panel stays glass with no data-scrolled", async ({
-    page,
-  }) => {
-    await open(page, "/brand/colour/");
-    await page.mouse.wheel(0, 700);
-    await page.waitForTimeout(400);
-    const bar = page.locator(panel).first();
-    await expect(bar).not.toHaveAttribute("data-scrolled", /.*/);
-    expect(
-      alpha(await bar.evaluate((e) => getComputedStyle(e).backgroundColor)),
-    ).toBeLessThan(1);
-  });
-
-  // 018 checkpoint 2: on a landing the glass holds over the band, and the
-  // panel turns opaque once the band has scrolled out from under it.
-  for (const p of ["/components/", "/start/", "/brand/", "/foundations/"])
-    test(`landing ${p}: glass over the band, opaque once the band has gone`, async ({
-      page,
-    }) => {
-      await open(page, p);
-      const bar = page.locator(panel).first();
-      await page.mouse.wheel(0, 150);
-      await page.waitForTimeout(400);
-      await expect(bar).not.toHaveAttribute("data-scrolled", /.*/);
-      expect(
-        alpha(await bar.evaluate((e) => getComputedStyle(e).backgroundColor)),
-      ).toBeLessThan(1);
-      const bottom = await page
-        .locator('[data-slot="band"]')
-        .evaluate((b) => b.getBoundingClientRect().bottom + scrollY);
-      await page.evaluate((y) => scrollTo(0, y), bottom + 50);
-      await expect(bar).toHaveAttribute("data-scrolled", "");
-      await expect
-        .poll(async () =>
-          alpha(await bar.evaluate((e) => getComputedStyle(e).backgroundColor)),
-        )
-        .toBe(1);
-    });
-
-  test("under reduced motion, the change has no transition", async ({
-    page,
-  }) => {
-    await page.emulateMedia({ reducedMotion: "reduce" });
-    await open(page, "/components/button/");
-    const d = await page
-      .locator(panel)
-      .first()
-      .evaluate((e) =>
-        getComputedStyle(e)
-          .transitionDuration.split(",")
-          .map((x) => parseFloat(x)),
-      );
-    expect(Math.max(...d)).toBeLessThanOrEqual(0.00001);
-  });
-});
+// 018 criterion 15 is reversed by 019a decision 2 (the owner, 2026-11-15).
+// The bar no longer turns opaque on a productive page once it scrolls, or on
+// a landing once its band has gone: it is glass at all times.
+// bar-glass.spec.ts checks the glass, its blur, and its text's contrast over
+// the busiest content.
 
 test.describe("018 criterion 18: the Components index", () => {
   test("75 tiles, each image sized, lazy and alt-less; no other-scheme images fetched; the filter narrows and counts", async ({

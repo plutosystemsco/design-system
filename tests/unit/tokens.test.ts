@@ -556,9 +556,24 @@ describe("011's expressive shapes", () => {
       vw: 12,
       maxPx: 160,
       lineHeight: 0.9,
-      tracking: -0.05,
+      tracking: 0,
       weight: 600,
     });
+  });
+
+  // 019a decision 1 (the owner, 2026-11-15): every tracking value is the
+  // font's default.
+  test("every tracking value is 0: the four type tokens and the four expressive steps", () => {
+    expect(raw.type.tracking).toEqual({
+      display: 0,
+      section: 0,
+      eyebrow: 0,
+      mark: 0,
+    });
+    for (const [step, value] of Object.entries(
+      raw.expressive.display.steps as Record<string, { tracking: number }>,
+    ))
+      expect(value.tracking, step).toBe(0);
   });
 
   test("decision 10: the spring", () => {

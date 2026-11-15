@@ -80,14 +80,14 @@
       aria-keyshortcuts={shortcut ? "Control+K Meta+K" : undefined}
       aria-haspopup="dialog"
       onclick={show}
-      class="inline-flex h-10 w-full items-center justify-center gap-3 rounded border border-border bg-transparent px-2 text-sm text-foreground hover:border-foreground md:justify-start md:px-3"
+      class="inline-flex h-10 w-full items-center justify-center gap-3 rounded border border-input bg-transparent px-2 text-sm text-foreground hover:border-foreground md:justify-start md:px-3"
     >
       <MagnifyingGlass aria-hidden="true" class="size-4 shrink-0" />
       <span class="sr-only md:not-sr-only">Search</span>
       <kbd
         aria-hidden="true"
         data-keys={keys}
-        class="site-keys ms-auto hidden rounded border border-border px-1.5 font-sans text-xs md:inline"
+        class="site-keys ms-auto hidden rounded bg-code-background px-1.5 font-sans text-xs md:inline"
       ></kbd>
     </button>
   {/if}

@@ -71,7 +71,6 @@
   entrance={entry?.path !== "/"}
   path={entry?.path ?? null}
   {navLabel}
-  productive={nav && !landing && current !== "brand"}
 />
 
 {#if nav && entry}

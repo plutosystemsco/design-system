@@ -238,7 +238,6 @@ const report = {
     ).length,
     reviews: list("context/reviews").filter((f) => /\d{3}-.*\.md$/.test(f))
       .length,
-    decisions: count(read("context/decisions.md"), /^### /gm),
     license: pkg.license ?? null,
   },
 };
