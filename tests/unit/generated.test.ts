@@ -1183,10 +1183,21 @@ describe("009's rules and utilities", () => {
     expect(Object.keys(block)).toHaveLength(3);
   });
 
-  test("a sticky bar that marks itself never hides focus", () => {
-    expect(css()["html:has([data-sticky-bar])"]).toEqual({
+  // 019 decision 5: the rule is a default an app's own padding beats: in
+  // @layer base, at no specificity.
+  test("a sticky bar that marks itself never hides focus, by a default in @layer base", () => {
+    expect(css()["html:has([data-sticky-bar])"]).toBeUndefined();
+    const base = css()["@layer base"] as Record<string, unknown>;
+    expect(base[":where(html:has([data-sticky-bar]))"]).toEqual({
       "scroll-padding-top": "var(--size-bar)",
     });
+    const app = readFileSync("src/app.css", "utf8");
+    expect(app).not.toMatch(/^html:has\(\[data-sticky-bar\]\)/m);
+    const layer = app.slice(app.indexOf("@layer base {"));
+    const body = layer.slice(0, layer.indexOf("\n}\n"));
+    expect(body.replace(/\s+/g, " ")).toContain(
+      ":where(html:has([data-sticky-bar])) { scroll-padding-top: var(--size-bar); }",
+    );
   });
 
   test("the theme adds no utility that L22 does not name, beyond rounded-action", () => {

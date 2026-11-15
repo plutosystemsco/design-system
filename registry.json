@@ -483,9 +483,6 @@
         "@utility rounded-action": {
           "border-radius": "var(--radius-action, var(--radius))"
         },
-        "html:has([data-sticky-bar])": {
-          "scroll-padding-top": "var(--size-bar)"
-        },
         "@utility action-press": {
           "transition": "transform var(--motion-press) var(--ease-standard)",
           "&:active": {
@@ -673,6 +670,9 @@
           },
           "a code:not(pre code, :is(h1, h2, h3, h4, h5, h6) code)": {
             "@apply text-code-link": {}
+          },
+          ":where(html:has([data-sticky-bar]))": {
+            "scroll-padding-top": "var(--size-bar)"
           }
         },
         "@layer components": {

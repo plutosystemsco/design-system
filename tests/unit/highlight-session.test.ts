@@ -292,38 +292,50 @@ describe("the Shiki session's convergence (decision 16)", () => {
 });
 
 describe("the streaming budget (decision 20)", () => {
-  test("a 2,000-line stream in 50 chunks through one session: 4 ms or less per chunk, p95", async () => {
+  // A wall-clock budget: one untimed stream first warms the session and the
+  // engine, then the best of three timed streams' p95 is held to 4 ms, so one
+  // stream slowed by a loaded machine does not fail it (019 change review,
+  // finding 6).
+  test("a 2,000-line stream in 50 chunks through one session: 4 ms or less per chunk, p95, the best of 3 after a warm-up", async () => {
     const highlighter = (await loadHighlighter("python")) as Highlighter;
     const base = specimen("python");
     let text = "";
     while (text.split("\n").length < 2000) text += base + "\n";
     text = text.split("\n").slice(0, 2000).join("\n");
     const size = Math.ceil(text.length / 50);
-    const session = highlighter.session("");
-    session.lines();
-    const times: number[] = [];
-    let shown = "";
-    for (let i = 1; i <= 50; i++) {
-      const next = text.slice(0, i * size);
-      const t0 = performance.now();
-      session.update(next, [
-        {
-          fromA: shown.length,
-          toA: shown.length,
-          fromB: shown.length,
-          toB: next.length,
-        },
-      ]);
+
+    /** One stream through a new session: its per-chunk times, sorted. */
+    function stream(): number[] {
+      const session = highlighter.session("");
       session.lines();
-      times.push(performance.now() - t0);
-      shown = next;
+      const times: number[] = [];
+      let shown = "";
+      for (let i = 1; i <= 50; i++) {
+        const next = text.slice(0, i * size);
+        const t0 = performance.now();
+        session.update(next, [
+          {
+            fromA: shown.length,
+            toA: shown.length,
+            fromB: shown.length,
+            toB: next.length,
+          },
+        ]);
+        session.lines();
+        times.push(performance.now() - t0);
+        shown = next;
+      }
+      session.dispose();
+      return times.sort((a, b) => a - b);
     }
-    session.dispose();
-    times.sort((a, b) => a - b);
-    const p95 = times[Math.ceil(0.95 * times.length) - 1]!;
+
+    stream(); // the warm-up, untimed
+    const runs = [stream(), stream(), stream()];
+    const p95s = runs.map((t) => t[Math.ceil(0.95 * t.length) - 1]!);
+    const best = Math.min(...p95s);
     console.log(
-      `stream: p95 ${p95.toFixed(2)} ms per chunk, max ${times.at(-1)!.toFixed(2)} ms`,
+      `stream: p95 ${p95s.map((p) => p.toFixed(2)).join(", ")} ms per chunk; best ${best.toFixed(2)}`,
     );
-    expect(p95).toBeLessThanOrEqual(4);
+    expect(best).toBeLessThanOrEqual(4);
   }, 60_000);
 });

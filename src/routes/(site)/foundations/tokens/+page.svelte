@@ -47,7 +47,7 @@
     </p>
     <Table label="Theme roles" head={["Role", "Light", "Dark", "Its job"]}>
       {#each roles as r (r.id)}
-        <tr id={r.id} data-token-row={r.id} class="scroll-mt-(--site-bar-room)">
+        <tr id={r.id} data-token-row={r.id}>
           <td><CopyName name={r.copy} copy={r.copy} /></td>
           <td><Swatch value={r.light} theme="light" /></td>
           <td><Swatch value={r.dark} theme="dark" /></td>
@@ -66,7 +66,7 @@
     </p>
     <Table label="Primitives" head={["Primitive", "Value", "Read by"]}>
       {#each primitives as r (r.id)}
-        <tr id={r.id} data-token-row={r.id} class="scroll-mt-(--site-bar-room)">
+        <tr id={r.id} data-token-row={r.id}>
           <td><CopyName name={r.name} copy={r.copy} /></td>
           <td><Swatch value={r.light} /></td>
           <td>{r.words}</td>

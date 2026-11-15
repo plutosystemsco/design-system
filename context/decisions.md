@@ -13,6 +13,18 @@ Pluto Systems remains the company and its brand: the four-dot mark, the colours 
 
 **The home hero.** **The owner:** "And I want the hero to be Design with Kuiper". The home page's headline becomes "Design / with / Kuiper" on its three poster lines, replacing "Build / with / Pluto.". **The owner:** "no period after Kuiper". It lands in `018`.
 
+### The roadmap's questions (2026-11-15)
+
+Asked from `context/roadmap.md` §6. **The owner** took the recommended option on three and moved the fourth:
+- **The full test matrix runs on GitHub Actions:** Linux for the three engines, macOS for VoiceOver, Windows for NVDA. Until the owner allows a push, everything but NVDA runs locally.
+- **The old `pluto` names keep working for one release** after `020`'s rename: `pluto-theme` and the old storage key work in 0.13.0 with a warning in the migration guide, and go in 0.14.0.
+- **The scoped-schemes questions take the memo's answers:**
+  - `light-dark()` with a generated fallback for older Safari;
+  - `.dark` kept as an alias for two minor releases;
+  - high-contrast colours as new shades of the brand's hues, measured to 7:1 and approved by the owner;
+  - non-text elements reach 4.5:1 in high contrast.
+- **The 0.13.0 start:** asked whether 0.13.0 waits for the `019` listen, the owner offered to listen at once ("I can do the voice over right now").
+
 ### Kuiper is a public product, and the old limits go (2026-11-15)
 
 Asked from the older-rules audit (`research/2026-11-15-older-rules-audit.md`), the toast memo (`research/2026-11-15-toasts.md`) and the benchmark scorecard (`research/benchmark-scorecard.md`):

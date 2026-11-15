@@ -480,11 +480,6 @@ export function themeCss(tokens: Tokens): CssTree {
     "@utility rounded-action": {
       "border-radius": "var(--radius-action, var(--radius))",
     },
-    // 009 decision 6: a sticky bar that marks itself never hides focus
-    // (WCAG 2.4.11).
-    "html:has([data-sticky-bar])": {
-      "scroll-padding-top": "var(--size-bar)",
-    },
     // 009 decision 6: an action that gives under the finger. Under reduced
     // motion `--press-scale` is 1.
     "@utility action-press": {
@@ -623,6 +618,13 @@ export function themeCss(tokens: Tokens): CssTree {
       },
       "a code:not(pre code, :is(h1, h2, h3, h4, h5, h6) code)": {
         "@apply text-code-link": {},
+      },
+      // 009 decision 6: a sticky bar that marks itself never hides focus
+      // (WCAG 2.4.11). 019 decision 5: a default, in the base layer at no
+      // specificity, so an app's own scroll-padding-top wins in any layer or
+      // as a utility.
+      ":where(html:has([data-sticky-bar]))": {
+        "scroll-padding-top": "var(--size-bar)",
       },
     },
     // 004 decision 5: the native meter on the muted track with a primary fill.

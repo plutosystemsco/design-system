@@ -5,7 +5,7 @@
 import { expect, test, type Page } from "@playwright/test";
 import { contrastRatio } from "../../scripts/contrast.ts";
 import { DOORS } from "../../src/lib/site/doors.ts";
-import { COMPONENT_PAGES, hexToRgb, open, SITEMAP } from "./pages.ts";
+import { COMPONENT_PAGES, hexToRgb, open, settled, SITEMAP } from "./pages.ts";
 
 /**
  * 015's own pages. A later specification's pages (017's Brand pages hold
@@ -118,6 +118,10 @@ test.describe("015 criterion 10: the doors, against the Google echo", () => {
     }) => {
       await page.setViewportSize({ width, height: 900 });
       await open(page, "/");
+      // The discs enter on a spring that overshoots; under load `open` can
+      // return mid-entrance, so the box would include the overshoot. The
+      // sizes are read at rest (019 change review, finding 5).
+      await settled(page);
       const discs = await page.evaluate(() => {
         const h1 = document.querySelector("h1")!.getBoundingClientRect();
         return [...document.querySelectorAll('[data-slot="door"]')].map((d) => {

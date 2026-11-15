@@ -36,7 +36,7 @@
     /** With a sidebar the header holds its trigger and nothing else of the navigation: the links and the account live in the sidebar. */
     sidebar?: boolean;
     user?: AppShellUser | null;
-    /** Without a sidebar: sticks to the top, under every overlay; the app then sets `scroll-padding-top` in its CSS. With a sidebar the header is always sticky. */
+    /** Without a sidebar: sticks to the top, under every overlay. With a sidebar the header is always sticky. While sticky it carries `data-sticky-bar`, so the theme gives the page a `scroll-padding-top` that clears it. */
     sticky?: boolean;
     settingsHref?: string;
     signOutHref?: string;
@@ -61,10 +61,13 @@
   With a sidebar the trigger follows the home link at every width, the
   sidebar holds the navigation and the account, and the header is sticky
   (z-20, under every overlay), since the sidebar beside it is sticky too.
-  Without one, not sticky by default.
+  Without one, not sticky by default. While sticky it declares itself with
+  data-sticky-bar, so anchors, focus and an error summary's links stop below
+  it.
 -->
 <header
   data-slot="app-shell-header"
+  data-sticky-bar={sidebar || sticky ? "" : undefined}
   class={cn(
     "groove-b bg-background",
     sidebar && "sticky top-0 z-20",

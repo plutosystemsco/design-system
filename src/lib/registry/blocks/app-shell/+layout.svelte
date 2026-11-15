@@ -31,7 +31,7 @@
   ];
   /** false, "offcanvas" or "icon". With a sidebar, the navigation and the account live in it. */
   const SIDEBAR: false | "offcanvas" | "icon" = false;
-  /** Without a sidebar only; then add `html { scroll-padding-top: 4rem }` to your app.css. */
+  /** Without a sidebar only. A sticky header declares itself, so the page's scroll padding clears it. */
   const STICKY = false;
   const USER: { name: string; email: string } | null = null;
   const FOOTER = {

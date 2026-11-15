@@ -780,7 +780,8 @@ test.describe("status", () => {
 
 /** 003 decision 9: the error-summary item. */
 test.describe("error summary", () => {
-  test("E1. the raw prerendered HTML holds 3 specimens with no role", async ({
+  // 019 decision 1: no role on the root or anywhere inside it.
+  test("E1. the raw prerendered HTML holds 3 specimens with no role anywhere in them", async ({
     browser,
     request,
   }) => {
@@ -791,12 +792,23 @@ test.describe("error summary", () => {
     );
     const roles = await raw
       .locator('[data-testid="summary-specimens"] [data-slot="error-summary"]')
-      .evaluateAll((all) => all.map((s) => s.getAttribute("role")));
-    expect(roles).toEqual([null, null, null]);
+      .evaluateAll((all) =>
+        all.map(
+          (s) =>
+            // The icon's role="img" sits under aria-hidden, outside the
+            // accessibility tree, so it is not counted.
+            [s, ...s.querySelectorAll("*")].filter(
+              (e) =>
+                e.hasAttribute("role") && !e.closest('[aria-hidden="true"]'),
+            ).length,
+        ),
+      );
+    expect(roles).toEqual([0, 0, 0]);
     await close();
   });
 
-  test("E2. the inserted summary has role alert, tabindex -1, its heading, and 2 links at least 24 px tall", async ({
+  // 019 decision 1: the alert is the summary's content; the root has none.
+  test("E2. the inserted summary's content has role alert; the root has tabindex -1 and no role; its heading, and 3 links at least 24 px tall", async ({
     page,
   }) => {
     await open(page, componentPath("error-summary"));
@@ -804,7 +816,10 @@ test.describe("error summary", () => {
     await fixture.getByRole("button", { name: "Create project" }).click();
     const summary = fixture.locator('[data-slot="error-summary"]');
     await expect(summary).toBeFocused();
-    await expect(summary).toHaveAttribute("role", "alert");
+    expect(await summary.getAttribute("role")).toBeNull();
+    await expect(
+      summary.locator('[data-slot="error-summary-content"]'),
+    ).toHaveAttribute("role", "alert");
     await expect(summary).toHaveAttribute("tabindex", "-1");
     await expect(
       summary.getByRole("heading", { name: "There is a problem" }),
@@ -813,6 +828,7 @@ test.describe("error summary", () => {
     await expect(links).toHaveText([
       "Enter a project name",
       "Enter the owner's email address",
+      "Choose who can see the project",
     ]);
     for (const link of await links.all())
       expect((await box(link)).height).toBeGreaterThanOrEqual(24);

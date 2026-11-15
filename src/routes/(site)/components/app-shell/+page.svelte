@@ -161,10 +161,11 @@ export default defineConfig({
       of one commit is byte-identical.
     </li>
     <li>
-      With <code>STICKY</code> set, add one line to your <code>app.css</code>
-      so an anchor lands below the header:
-      <code>{"html { scroll-padding-top: 4rem }"}</code>. The same line applies
-      with a sidebar, whose header is always sticky.
+      With <code>STICKY</code> set, or with a sidebar, whose header is always
+      sticky, the header carries <code>data-sticky-bar</code>, so the theme
+      gives the page a <code>scroll-padding-top</code> of
+      <code>--size-bar</code> and an anchor lands below the header. Your own
+      <code>scroll-padding-top</code> on <code>html</code> wins over it.
     </li>
   {/snippet}
 </BlockPage>

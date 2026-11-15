@@ -71,7 +71,11 @@ test.describe("sign in", () => {
     await page.getByRole("button", { name: "Sign in" }).click();
     const s = summary(page);
     await expect(s).toBeFocused();
-    await expect(s).toHaveAttribute("role", "alert");
+    // 019 decision 1: the alert is the content; the root has none.
+    expect(await s.getAttribute("role")).toBeNull();
+    await expect(
+      s.locator('[data-slot="error-summary-content"]'),
+    ).toHaveAttribute("role", "alert");
     const links = await s.getByRole("link").allTextContents();
     const inline = await page
       .locator('[data-slot="field-error"]')
@@ -135,6 +139,12 @@ test.describe("sign in", () => {
     await openView(page, "/view/sign-in/errors/");
     await expect(summary(page)).toHaveCount(1);
     expect(await summary(page).getAttribute("role")).toBeNull();
+    // 019 decision 1: nor on its content, rendered from props.
+    expect(
+      await summary(page)
+        .locator('[data-slot="error-summary-content"]')
+        .getAttribute("role"),
+    ).toBeNull();
     expect(await activeId(page)).toBeNull();
     await openView(page, "/view/sign-in/credentials/");
     await expect(
@@ -737,7 +747,11 @@ test.describe("a callback that rejects", () => {
     await page.getByRole("button", { name: "Sign in" }).click();
     const s = summary(page);
     await expect(s).toBeFocused();
-    await expect(s).toHaveAttribute("role", "alert");
+    // 019 decision 1: the alert is the content; the root has none.
+    expect(await s.getAttribute("role")).toBeNull();
+    await expect(
+      s.locator('[data-slot="error-summary-content"]'),
+    ).toHaveAttribute("role", "alert");
     await expect(s).toContainText(FAILED.signIn);
     await expect(
       page.locator('[data-slot="sign-in-form"] [data-slot="status"]'),
@@ -769,7 +783,11 @@ test.describe("a callback that rejects", () => {
       '[data-slot="settings-form"] [data-slot="error-summary"]',
     );
     await expect(s).toBeFocused();
-    await expect(s).toHaveAttribute("role", "alert");
+    // 019 decision 1: the alert is the content; the root has none.
+    expect(await s.getAttribute("role")).toBeNull();
+    await expect(
+      s.locator('[data-slot="error-summary-content"]'),
+    ).toHaveAttribute("role", "alert");
     await expect(s).toContainText(FAILED.save);
     await expect(settingsStatus(page)).toHaveText(FAILED.save);
     await expect(page.locator("#settings-name")).toHaveValue("Ada King");
@@ -787,7 +805,11 @@ test.describe("a callback that rejects", () => {
     const section = page.locator('[data-slot="settings-delete"]');
     const s = section.locator('[data-slot="error-summary"]');
     await expect(s).toBeFocused();
-    await expect(s).toHaveAttribute("role", "alert");
+    // 019 decision 1: the alert is the content; the root has none.
+    expect(await s.getAttribute("role")).toBeNull();
+    await expect(
+      s.locator('[data-slot="error-summary-content"]'),
+    ).toHaveAttribute("role", "alert");
     await expect(s).toContainText(FAILED.remove);
     await expect(section.locator('[data-slot="status"]')).toHaveText(
       FAILED.remove,

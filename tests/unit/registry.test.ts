@@ -1880,6 +1880,91 @@ describe("016: the brand yellow", () => {
 });
 
 /**
+ * 019 change review, finding 1: the error-summary page claims a screen-reader
+ * listen only once `decisions.md` records one. A record is an entry whose
+ * heading names `019` and VoiceOver and whose body says the pass rule held
+ * (decision 12). "`019`'s VoiceOver listen waits for the owner" is not one.
+ */
+describe("019: no screen-reader claim without its record", () => {
+  const page = readFileSync(
+    "src/routes/(site)/components/error-summary/+page.svelte",
+    "utf8",
+  ).replace(/\s+/g, " ");
+  const decisions = readFileSync("context/decisions.md", "utf8");
+  const recorded = decisions
+    .split(/^(?=### )/m)
+    .some(
+      (entry) =>
+        /^### .*`019`.*VoiceOver/.test(entry) && /pass rule held/i.test(entry),
+    );
+
+  test("the page claims a VoiceOver listen only when decisions.md records one that passed", () => {
+    const claims = /Heard with VoiceOver/i.test(page);
+    if (claims) expect(recorded, "a recorded listen").toBe(true);
+    else expect(page).toContain("Not yet heard with a screen reader.");
+  });
+
+  test("the page says NVDA and JAWS are not tested", () => {
+    expect(page).toContain("NVDA and JAWS are not tested.");
+  });
+});
+
+/** 019 criterion 14: the error summary's and the app shell's interface lines. */
+describe("019: the changelog", () => {
+  const body = () => {
+    const text = readFileSync("CHANGELOG.md", "utf8");
+    const at = text.indexOf("## 0.12.0");
+    return text.slice(at, text.indexOf("\n## ", at + 1));
+  };
+  const bullets = (name: string) =>
+    body()
+      .split("\n")
+      .filter((line) => line.startsWith(`- \`${name}\`: `));
+
+  test("the 0.12.0 entry holds 1 error-summary and 1 app-shell bullet, each an interface change, after kbd's, and still 1 pluto-theme bullet", () => {
+    for (const name of ["error-summary", "app-shell", "pluto-theme"])
+      expect(bullets(name), name).toHaveLength(1);
+    for (const name of ["error-summary", "app-shell"])
+      expect(bullets(name)[0], name).toContain("**interface change.**");
+    const lines = body().split("\n");
+    const at = (name: string) =>
+      lines.findIndex((l) => l.startsWith(`- \`${name}\`: `));
+    expect(at("error-summary")).toBe(at("kbd") + 1);
+    expect(at("app-shell")).toBe(at("kbd") + 2);
+  });
+
+  test("they name the 11 names", () => {
+    const summary = bullets("error-summary")[0]!;
+    for (const name of [
+      // Named as `data-slot="error-summary-content"`, as 019 decision 11 words it.
+      'data-slot="error-summary-content"',
+      "`announce`",
+      "`scroll-padding-top`",
+      "`data-sticky-bar`",
+      "`add error-summary`",
+    ])
+      expect(summary, name).toContain(name);
+    const shell = bullets("app-shell")[0]!;
+    for (const name of [
+      "`data-sticky-bar`",
+      "`scroll-padding-top`",
+      "`add app-shell`",
+    ])
+      expect(shell, name).toContain(name);
+    const theme = bullets("pluto-theme")[0]!;
+    for (const name of [
+      "`@layer base`",
+      "`:where(html:has([data-sticky-bar]))`",
+      "`scroll-pt-*`",
+    ])
+      expect(theme, name).toContain(name);
+    expect(theme.trimEnd()).toMatch(
+      /After updating, delete the old unlayered `html:has\(\[data-sticky-bar\]\) \{ scroll-padding-top: var\(--size-bar\); \}` from your stylesheet: the CLI does not remove it, and while it stays it overrides your own value\.$/,
+    );
+  });
+});
+
+/**
  * 008 change review, finding 1: a released snapshot is frozen. Each tag's
  * `static/<tag>/` matches the tag, so a build under a stale version can never
  * rewrite one unseen.

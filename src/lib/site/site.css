@@ -16,6 +16,11 @@
     margin-bottom: calc(-1 * var(--site-bar-room));
   }
 
+  /* The bar's room, not the theme's default, is what the page scrolls below. */
+  html:has([data-slot="site-bar"]) {
+    scroll-padding-top: var(--site-bar-room);
+  }
+
   /* A door's dot: its colour field's fill, at text size. */
   .site-dot {
     display: inline-block;

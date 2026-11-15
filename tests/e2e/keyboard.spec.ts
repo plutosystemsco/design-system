@@ -340,7 +340,13 @@ const FIXTURES: [item: string, stops: string[]][] = [
   ["status", ["button:Announce", "button:Clear"]],
   [
     "error-summary",
-    ["input:Project name", "input:Owner email", "button:Create project"],
+    // 019 decision 10: a radio question joins the form.
+    [
+      "input:Project name",
+      "input:Owner email",
+      "radio:Only me",
+      "button:Create project",
+    ],
   ],
   // 004 decision 8: the copy button in the header, then the pre, whose ring
   // the root draws. A stop written `tag:*` matches any name: the pre's text
@@ -474,9 +480,10 @@ async function expectRingUnclipped(
 
 // 005 decision 17: 32 fixtures and 64 stops when 005 landed. 007 adds two:
 // the ink surface's fixture of 7 stops on the pluto-theme page (007 decision 9)
-// and the code-languages page's fixture of 2 stops (007 decision 7).
+// and the code-languages page's fixture of 2 stops (007 decision 7). 019
+// decision 10 adds the error summary's radio question: one stop.
 const FIXTURE_COUNT = 34;
-const STOP_COUNT = 73;
+const STOP_COUNT = 74;
 test(`the ${FIXTURE_COUNT} fixtures hold ${STOP_COUNT} stops`, () => {
   expect(FIXTURES).toHaveLength(FIXTURE_COUNT);
   expect(FIXTURES.reduce((n, [, stops]) => n + stops.length, 0)).toBe(
@@ -1188,7 +1195,11 @@ test.describe("behaviours", () => {
     await page.keyboard.press("Enter");
     const summary = fixture(page).locator('[data-slot="error-summary"]');
     await expect(summary).toBeFocused();
-    await expect(summary).toHaveAttribute("role", "alert");
+    // 019 decision 1: the alert is the content; the root takes focus.
+    expect(await summary.getAttribute("role")).toBeNull();
+    await expect(
+      summary.locator('[data-slot="error-summary-content"]'),
+    ).toHaveAttribute("role", "alert");
     await page.keyboard.press("Tab");
     await expect(summary.getByRole("link").first()).toBeFocused();
     await page.keyboard.press("Enter");

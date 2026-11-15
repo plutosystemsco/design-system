@@ -297,3 +297,21 @@ describe("017: the downloads' two packages", () => {
     },
   );
 });
+
+// 019 decision 12: the screen-reader check's one package, dev-only, exact.
+// It ships in no item, and no suite runs the script that uses it.
+const PACKAGES_019: [name: string, version: string, specifier: string][] = [
+  ["@guidepup/guidepup", "0.40.0", "0.40.0"],
+];
+PACKAGES.push(...PACKAGES_019);
+
+describe("019: the screen-reader check's package", () => {
+  test.each(PACKAGES_019)(
+    "%s: bun.lock resolves %s; package.json says %s, exact, in devDependencies",
+    (name, version, spec) => {
+      expect(pkg.devDependencies[name]).toBe(spec);
+      expect(lock.workspaces[""].devDependencies[name]).toBe(spec);
+      expect(lock.packages[name][0]).toBe(`${name}@${version}`);
+    },
+  );
+});

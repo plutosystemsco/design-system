@@ -11,10 +11,11 @@
       every problem, and each link goes to the field that needs fixing.
     </p>
     <p>
-      It has two states. Announced: inserted by a failed submit with
-      <code>role="alert"</code>, and focused, as the Keyboard example shows.
-      From props: rendered with the page, <code>announce={"{false}"}</code>, no
-      role, as the variants show; the consuming app moves focus to it.
+      It has two states. Announced: inserted by a failed submit, its content
+      carrying <code>role="alert"</code>, and focused, as the Keyboard example
+      shows. From props: rendered with the page,
+      <code>announce={"{false}"}</code>, no role, as the variants show; the
+      consuming app moves focus to it.
     </p>
     <p>
       <code>titleFor("Projects", true)</code> gives
@@ -33,12 +34,14 @@
   {/snippet}
   {#snippet accessibility()}
     <li>
-      <code>role="alert"</code> only when a submit in this page inserted it, never
-      on content present at load.
+      <code>role="alert"</code> is on the summary's content, not on the root
+      that takes focus, and only when a submit in this page inserted it, never
+      on content present at load. Do not pass <code>role</code> to the summary.
     </li>
     <li>
-      <code>tabindex="-1"</code>: the form moves focus to it after every failed
-      submit, and it stays out of the Tab order.
+      The root has <code>tabindex="-1"</code>, no role and no name: the form
+      moves focus to it after every failed submit, and it stays out of the Tab
+      order. The heading is read first.
     </li>
     <li>
       A heading, "There is a problem", so a reader moving by heading finds it
@@ -46,8 +49,18 @@
     </li>
     <li>
       Each link holds its field's inline error and goes to the field's id;
-      activating it focuses the field. Each link is at least 24 px tall.
+      activating it focuses the field. If the field or its label is out of view
+      or covered, it first brings the label to the top of the page, or a radio
+      or checkbox's legend. No hash joins the address. A page with a sticky
+      header declares it, with <code>data-sticky-bar</code> or its own
+      <code>scroll-padding-top</code>, so the label stops below it. Each link is
+      at least 24 px tall.
     </li>
+    <li>
+      A link to a radio group's id focuses its checked radio, or its first. Link
+      a checkbox question to its first checkbox.
+    </li>
+    <li>Not yet heard with a screen reader. NVDA and JAWS are not tested.</li>
     <li>
       <code>titleFor(title, failed)</code> prefixes "Error: " to the page's one title
       while a summary shows.
