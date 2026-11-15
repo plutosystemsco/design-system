@@ -596,7 +596,7 @@ describe("the code roles on the five code grounds (013 decision 12)", () => {
   test.each([
     ["keyword", 7.37, 6.47, 7.04, 7.89, 8.84],
     ["function", 6.66, 5.85, 6.75, 7.57, 8.48],
-    ["type", 10.59, 9.3, 6.84, 7.67, 8.59],
+    ["type", 10.59, 9.3, 7.81, 8.76, 9.81],
     ["string", 6.03, 5.3, 7.1, 7.96, 8.92],
     ["number", 6.77, 5.94, 9.28, 10.41, 11.66],
     ["constant", 5.78, 5.08, 7.49, 8.4, 9.41],
@@ -616,6 +616,20 @@ describe("the code roles on the five code grounds (013 decision 12)", () => {
       ]).toEqual([lightGround, lightLine, darkGround, darkLine, graphite]);
     },
   );
+
+  // decisions.md, "Dark type is #A8C0D8" (2026-11-15): dark type's distance
+  // from its neighbours, to the tenth.
+  test.each([
+    ["function", 8.8],
+    ["keyword", 10.9],
+    ["text", 10.8],
+    ["comment", 8.5],
+  ] as const)("dark type to %s: ΔE %d", (role, want) => {
+    expect(
+      Math.round(deltaE(roleHex("dark", "type"), roleHex("dark", role)) * 10) /
+        10,
+    ).toBe(want);
+  });
 
   test("distinctness: no two coloured roles under ΔE 5.0 in either theme, and dark function to keyword at 7.0 or more", () => {
     for (const theme of ["light", "dark"] as const) {

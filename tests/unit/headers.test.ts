@@ -73,3 +73,39 @@ describe("015 criterion 24: worker, headers and paths", () => {
     );
   });
 });
+
+// decisions.md, "Dark type is #A8C0D8, and the site's temporary address"
+// (2026-11-15): the owner's account, and the release check that waited on it.
+describe("the site's address", () => {
+  test("SITE_ORIGIN is https://pluto-systems-design.claygendron.workers.dev", async () => {
+    const { SITE_ORIGIN } = await import("../../src/lib/site/site.ts");
+    expect(SITE_ORIGIN).toBe(
+      "https://pluto-systems-design.claygendron.workers.dev",
+    );
+  });
+
+  test("the noindex rule's host pattern matches that address", async () => {
+    const { SITE_ORIGIN } = await import("../../src/lib/site/site.ts");
+    const rules = parseHeaders(readFileSync("static/_headers", "utf8"));
+    const rule = rules.find((r) => r.pattern.startsWith("https://"))!;
+    expect(rule.headers).toEqual([["X-Robots-Tag", "noindex"]]);
+    const host = rule.pattern;
+    const re = new RegExp(
+      "^" +
+        host
+          .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+          .replace(/:[a-z]+/g, "[^.]+")
+          .replace("/\\*", "/.*") +
+        "$",
+    );
+    expect(re.test(`${SITE_ORIGIN}/components/button/`)).toBe(true);
+  });
+
+  test("scripts/site/release-check.ts exits 0", () => {
+    const r = Bun.spawnSync([
+      process.execPath,
+      "scripts/site/release-check.ts",
+    ]);
+    expect(r.exitCode).toBe(0);
+  });
+});

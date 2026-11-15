@@ -30,7 +30,7 @@
 			"target": "kbd/kbd-group.svelte"
 		},
 		{
-			"content": "<script lang=\"ts\">\n  import { cn, type WithElementRef } from \"$UTILS$\";\n  import type { HTMLAttributes } from \"svelte/elements\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    children,\n    ...restProps\n  }: WithElementRef<HTMLAttributes<HTMLElement>> = $props();\n</script>\n\n<kbd\n  bind:this={ref}\n  data-slot=\"kbd\"\n  class={cn(\n    \"pointer-events-none inline-flex w-fit min-w-6 items-center justify-center gap-1 rounded border border-border bg-muted px-1 font-mono text-xs font-medium text-muted-foreground select-none [&_svg:not([class*='size-'])]:size-3\",\n    className,\n  )}\n  {...restProps}\n>\n  {@render children?.()}\n</kbd>\n",
+			"content": "<script lang=\"ts\">\n  import { cn, type WithElementRef } from \"$UTILS$\";\n  import type { HTMLAttributes } from \"svelte/elements\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    children,\n    ...restProps\n  }: WithElementRef<HTMLAttributes<HTMLElement>> = $props();\n</script>\n\n<kbd\n  bind:this={ref}\n  data-slot=\"kbd\"\n  class={cn(\n    \"inline-flex w-fit min-w-6 items-center justify-center gap-1 rounded border border-border bg-code-background px-1 font-mono text-xs font-medium text-muted-foreground [&_svg:not([class*='size-'])]:size-3\",\n    className,\n  )}\n  {...restProps}\n>\n  {@render children?.()}\n</kbd>\n",
 			"type": "registry:ui",
 			"target": "kbd/kbd.svelte"
 		},

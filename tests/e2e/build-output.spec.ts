@@ -185,8 +185,8 @@ test.describe("015: the Markdown twins", () => {
   test("criterion 19: each twin holds 0 HTML tags outside code spans and fences", () => {
     const wrong: string[] = [];
     for (const p of SITEMAP) {
-      // The site's address holds the `<account>` placeholder until the
-      // owner sets it: a known string, not a tag.
+      // The site's address is a known string: once it held the
+      // `<account>` placeholder, which read as a tag.
       const twin = readFileSync(twinOf(p.path), "utf8")
         .split(SITE_ORIGIN)
         .join("")

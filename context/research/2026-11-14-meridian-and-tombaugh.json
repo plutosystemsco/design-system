@@ -88,7 +88,7 @@
     {
       "id": "tombaugh",
       "name": "Tombaugh",
-      "summary": "Meridian with its blue, green, yellow and red moved toward the Pluto mark's (each takes the brand colour's hue and moves halfway to its chroma), then tuned for contrast: one lightness shift per mode (light 0.03 darker, dark 0.02 lighter) so every colour passes AA on the ground, the active line and the selection, and dark colours meet Meridian's 6.5:1; comments raised to AA; a gentler 13% blue selection. No italic, no bold. Pluto's grounds unchanged. A ninth role at the owner's request: numbers are yellow (a touch yellower than Pluto's amber, hue 85) and constants (booleans, null, ALL_CAPS names, enum members) are Pluto's orange. The owner then asked for a yellower number with more contrast on both grounds: #6C5A00 light (6.77:1 on white), #E5CD72 dark (9.28:1), softened to sit with the other dark colours.",
+      "summary": "Meridian with its blue, green, yellow and red moved toward the Pluto mark's (each takes the brand colour's hue and moves halfway to its chroma), then tuned for contrast: one lightness shift per mode (light 0.03 darker, dark 0.02 lighter) so every colour passes AA on the ground, the active line and the selection, and dark colours meet Meridian's 6.5:1; comments raised to AA; a gentler 13% blue selection. No italic, no bold. Pluto's grounds unchanged. A ninth role at the owner's request: numbers are yellow (a touch yellower than Pluto's amber, hue 85) and constants (booleans, null, ALL_CAPS names, enum members) are Pluto's orange. The owner then asked for a yellower number with more contrast on both grounds: #6C5A00 light (6.77:1 on white), #E5CD72 dark (9.28:1), softened to sit with the other dark colours. Later (2026-11-15) the owner moved dark type from #9FB1DD to #A8C0D8, to stand further from function (ΔE 8.8, was 5.2); 7.81:1 on the dark ground.",
       "recommended": false,
       "palette": {
         "format": "pluto-code-palette",
@@ -104,7 +104,7 @@
           },
           "tombaugh-type": {
             "light": "#243B7A",
-            "dark": "#9FB1DD"
+            "dark": "#A8C0D8"
           },
           "tombaugh-string": {
             "light": "#007150",

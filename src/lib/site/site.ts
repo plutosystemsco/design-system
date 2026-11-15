@@ -4,14 +4,15 @@
  * `SITE_ORIGIN` is the address the site is served from. Every install
  * command, `llms.txt`, `sitemap.xml` and every link in a Markdown twin read
  * it, because a prerendered page has no request to read an origin from, and
- * a command copied from a page must hold a full address. Until the owner
- * gives the account, it holds the literal placeholder `<account>`;
- * `scripts/site/release-check.ts` keeps that from reaching a tag.
+ * a command copied from a page must hold a full address. It is the worker's
+ * workers.dev address until the owner sets `design.<domain>`;
+ * `scripts/site/release-check.ts` keeps a placeholder from reaching a tag.
  */
 import pkg from "../../../package.json";
 
 export const SITE_NAME = "Pluto Systems design";
-export const SITE_ORIGIN = "https://pluto-systems-design.<account>.workers.dev";
+export const SITE_ORIGIN =
+  "https://pluto-systems-design.claygendron.workers.dev";
 export const VERSION: string = pkg.version;
 export const SOURCE = "https://github.com/plutosystemsco/design-system";
 export const CLI = "bunx --bun shadcn-svelte@1.7.1";

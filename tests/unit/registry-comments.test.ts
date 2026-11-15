@@ -22,6 +22,16 @@ const FIXTURE = JSON.parse(
   reworded: { item: string; path: string; before: string; after: string }[];
   kept: { item: string; path: string; line: string; reason: string }[];
 };
+/** Changes the owner decided after 015, applied to the base before comparing. */
+const AMENDMENTS = JSON.parse(
+  readFileSync(
+    path.join(ROOT, "tests/fixtures/static-r-amendments.json"),
+    "utf8",
+  ),
+) as {
+  amended: { item: string; before: string; after: string; why: string }[];
+};
+
 const VERSION = JSON.parse(
   readFileSync(path.join(ROOT, "package.json"), "utf8"),
 ).version;
@@ -150,6 +160,7 @@ describe("nothing else in static/r moved since the base (0.12.0 only)", () => {
     "each file, with the fixture's rewordings applied to the base, deep-equals the file now",
     () => {
       const used = new Set<number>();
+      const amendedUsed = new Set<number>();
       const moved: string[] = [];
       for (const file of FILES) {
         const rel = path.relative(ROOT, file);
@@ -184,9 +195,28 @@ describe("nothing else in static/r moved since the base (0.12.0 only)", () => {
             });
           }
         }
+        // The later amendments, as text over the base's JSON.
+        if (item) {
+          let text = JSON.stringify(before);
+          AMENDMENTS.amended.forEach((a, i) => {
+            if (a.item !== item.name) return;
+            const from = JSON.stringify(a.before).slice(1, -1);
+            const to = JSON.stringify(a.after).slice(1, -1);
+            const raw = text.includes(from) ? [from, to] : [a.before, a.after];
+            if (!text.includes(raw[0])) return;
+            text = text.split(raw[0]).join(raw[1]);
+            amendedUsed.add(i);
+          });
+          before = JSON.parse(text);
+        }
         if (!Bun.deepEquals(before, now)) moved.push(rel);
       }
       expect(moved).toEqual([]);
+      expect(
+        AMENDMENTS.amended
+          .filter((_, i) => !amendedUsed.has(i))
+          .map((a) => `${a.item}: ${a.why}`),
+      ).toEqual([]);
       expect(
         FIXTURE.reworded
           .filter((_, i) => !used.has(i))

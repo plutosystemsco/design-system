@@ -1,0 +1,17 @@
+{
+  "why": "Changes to static/r made after 015 by the owner's later decisions, each applied to the base as a text replacement before the comparison. Each entry must be used.",
+  "amended": [
+    {
+      "item": "pluto-theme",
+      "before": "\"syntax-navy\":\"#9FB1DD\"",
+      "after": "\"syntax-navy\":\"#A8C0D8\"",
+      "why": "decisions.md, \"Dark type is #A8C0D8, and the site's temporary address\" (2026-11-15)"
+    },
+    {
+      "item": "kbd",
+      "before": "pointer-events-none inline-flex w-fit min-w-6 items-center justify-center gap-1 rounded border border-border bg-muted px-1 font-mono text-xs font-medium text-muted-foreground select-none [&_svg:not([class*='size-'])]:size-3",
+      "after": "inline-flex w-fit min-w-6 items-center justify-center gap-1 rounded border border-border bg-code-background px-1 font-mono text-xs font-medium text-muted-foreground [&_svg:not([class*='size-'])]:size-3",
+      "why": "decisions.md, \"kbd sits on the code ground and can be selected\" (2026-11-15)"
+    }
+  ]
+}

@@ -40,7 +40,7 @@ describe("the token file", () => {
       "code-blue": "#3350CB",
       "code-blue-lifted": "#91AEFD",
       "code-navy": "#243B7A",
-      "code-navy-lifted": "#9FB1DD",
+      "code-navy-lifted": "#A8C0D8",
       "code-green": "#007150",
       "code-green-lifted": "#5CC89A",
       "code-yellow": "#6C5A00",

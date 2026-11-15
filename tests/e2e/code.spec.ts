@@ -1975,17 +1975,44 @@ test.describe("inline code (014)", () => {
     );
   });
 
-  test("I5. a block's pre code takes no chip; kbd keeps the muted inset", async ({
+  // decisions.md, "kbd sits on the code ground and can be selected"
+  // (2026-11-15): the owner's word amends 014's muted inset for kbd.
+  test("I5. a block's pre code takes no chip; kbd sits on the code ground, with its hairline and muted text", async ({
     page,
-  }) => {
+  }, info) => {
+    const theme = info.project.name as "light" | "dark";
     await open(page, PAGE);
     const inner = python(page).locator("pre code").first();
     expect(await computed(inner, "background-color")).toBe("rgba(0, 0, 0, 0)");
     expect(await computed(inner, "border-top-width")).toBe("0px");
     await open(page, componentPath("kbd"));
-    const kbd = page.locator("main kbd").first();
-    expect(await computed(kbd, "background-color")).toBe(
-      hexToRgb(await cssVar(page, "--muted")),
+    const kbd = page.locator('main [data-slot="kbd"]').first();
+    expect(await computed(kbd, "background-color")).toBe(CODE_GROUND[theme]);
+    expect(await computed(kbd, "border-top-width")).toBe("1px");
+    expect(await computed(kbd, "color")).toBe(
+      hexToRgb(await cssVar(page, "--muted-foreground")),
     );
+  });
+
+  test("I5b. kbd's text can be selected by mouse, and it takes pointer events", async ({
+    page,
+  }) => {
+    await open(page, componentPath("kbd"));
+    const kbd = page.locator('main [data-slot="kbd"]').first();
+    expect(await computed(kbd, "user-select")).not.toBe("none");
+    expect(await computed(kbd, "pointer-events")).toBe("auto");
+    await kbd.scrollIntoViewIfNeeded();
+    const box = (await kbd.boundingBox())!;
+    const text = (await kbd.textContent())!.trim();
+    // Drag across it from just outside its start to just outside its end.
+    await page.mouse.move(box.x - 2, box.y + box.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(box.x + box.width + 2, box.y + box.height / 2, {
+      steps: 5,
+    });
+    await page.mouse.up();
+    expect(
+      await page.evaluate(() => getSelection()?.toString() ?? ""),
+    ).toContain(text);
   });
 });

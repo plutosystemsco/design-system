@@ -148,9 +148,7 @@ describe("015: install from the site, then offline", () => {
   });
 
   test("criterion 18: the installed files name neither the local origin, nor the site's host, nor GitHub's raw files", () => {
-    const host = new URL(
-      SITE_ORIGIN.replace("<account>", "account"),
-    ).host.replace("account", "");
+    const host = new URL(SITE_ORIGIN).host;
     const hits: string[] = [];
     for (const f of files(path.join(app, "src"))) {
       const text = readFileSync(path.join(app, "src", f), "utf8");

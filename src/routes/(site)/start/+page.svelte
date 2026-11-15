@@ -14,7 +14,7 @@
     <p>From an empty SvelteKit app to a first Pluto screen.</p>
   {/snippet}
   {#snippet glass()}
-    <div class="grid gap-4">
+    <div class="grid grid-cols-[minmax(0,1fr)] gap-4">
       <div>
         <p class="mb-2 text-sm font-medium">First, the theme:</p>
         <Command

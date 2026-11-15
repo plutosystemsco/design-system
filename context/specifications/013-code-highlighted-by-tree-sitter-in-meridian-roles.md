@@ -269,7 +269,7 @@ They still recede: they are grey (chroma 0.016) among eight hues; in dark every 
 |---|---|---|---|---|---|
 | `keyword` | `tombaugh-keyword` | `#7032B9` | 7.37 / 6.47 | `#C4A4FE` | 7.04 / 7.89 / 8.84 |
 | `function`, `link`, `changed` | `tombaugh-function` | `#3350CB` | 6.66 / 5.85 | `#91AEFD` | 6.75 / 7.57 / 8.48 |
-| `type` | `tombaugh-type` | `#243B7A` | 10.59 / 9.30 | `#9FB1DD` | 6.84 / 7.67 / 8.59 |
+| `type` | `tombaugh-type` | `#243B7A` | 10.59 / 9.30 | `#A8C0D8` (was `#9FB1DD`) | 7.81 / 8.76 / 9.81 (was 6.84 / 7.67 / 8.59) |
 | `string`, `inserted` | `tombaugh-string` | `#007150` | 6.03 / 5.30 | `#5CC89A` | 7.10 / 7.96 / 8.92 |
 | `number` | `tombaugh-yellow` | `#6C5A00` | 6.77 / 5.94 | `#E5CD72` | 9.28 / **10.41** / **11.66** |
 | `constant` | `tombaugh-orange` | `#A34D15` | 5.78 / 5.08 | `#FFA373` | 7.49 / 8.40 / 9.41 |
@@ -279,6 +279,8 @@ They still recede: they are grey (chroma 0.016) among eight hues; in dark every 
 | `text` | `tombaugh-text` | `#25292F` | 14.61 / 12.83 | `#D9DFE8` | 10.93 / 12.26 / 13.73 |
 
 These are measured values to start from; the contrast test (criterion 3) is the proof, computed from the token file.
+
+**Amended 2026-11-15, after `017`:** dark `type` moves from `#9FB1DD` to `#A8C0D8`, at the owner's word (`decisions.md`, "Dark type is `#A8C0D8`, and the site's temporary address"). It now stands ΔE 8.8 from dark `function` (was 5.2), 10.9 from `keyword`, 10.8 from `text` and 8.5 from `comment`, and measures 7.81:1 on the dark ground, inside 6.5 to 9.5. Light `type` is unchanged.
 
 ### 12. The tokens
 
