@@ -60,7 +60,7 @@
       A link to a radio group's id focuses its checked radio, or its first. Link
       a checkbox question to its first checkbox.
     </li>
-    <li>Not yet heard with a screen reader. NVDA and JAWS are not tested.</li>
+    <li>Heard with VoiceOver on macOS. NVDA and JAWS are not tested.</li>
     <li>
       <code>titleFor(title, failed)</code> prefixes "Error: " to the page's one title
       while a summary shows.

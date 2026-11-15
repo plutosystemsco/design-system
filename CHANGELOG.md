@@ -2,7 +2,7 @@
 
 Each release of the registry, newest first. A change to an item's interface is marked **interface change**.
 
-## 0.12.0 — unreleased
+## 0.12.0 — 2026-11-15
 
 Code is highlighted by tree-sitter with this system's own queries, in code blocks and in the editor alike, and coloured in the Tombaugh palette, after the guide Meridian: keywords violet, functions blue, types navy, strings green, numbers yellow, constants orange, meta plum, specials red, comments grey and upright. Every colour reads 4.5:1 or more on the code ground and the active line in both themes, and dark colours sit between 6.5 and 9.5 on the dark code ground. Numbers and constants are close in light mode for a reader with protanopia; numbers are digits and constants words. In light mode code sits on white, lighter than the page, and every code block and editor is edged by the hairline. The brand's yellow is yellower and lifted in dark: `#E2B000` in light, `#F8D874` in dark, in place of `#F19E20`.
 

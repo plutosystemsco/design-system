@@ -13,6 +13,15 @@ Pluto Systems remains the company and its brand: the four-dot mark, the colours 
 
 **The home hero.** **The owner:** "And I want the hero to be Design with Kuiper". The home page's headline becomes "Design / with / Kuiper" on its three poster lines, replacing "Build / with / Pluto.". **The owner:** "no period after Kuiper". It lands in `018`.
 
+### `019`'s VoiceOver listen passed (2026-11-15)
+
+The owner listened by hand, after the scripted run was blocked: guidepup's setup needs the terminal to have Full Disk Access to write VoiceOver's settings, which the design lead advised against on an everyday machine. With VoiceOver on macOS, on the Error summary page, the form submitted empty. **The owner:** "Yes, it works." The pass rule held: "There is a problem" was spoken, all three errors were read in full, and the title was not read twice in a row.
+
+What follows:
+- The page's line reads "Heard with VoiceOver on macOS. NVDA and JAWS are not tested."
+- The `v0.12.0` tag is made locally.
+- Scripted screen-reader runs move to GitHub Actions' macOS and Windows machines in `022`, with the setup steps pinned and written into the script's header.
+
 ### The roadmap's questions (2026-11-15)
 
 Asked from `context/roadmap.md` §6. **The owner** took the recommended option on three and moved the fourth:
