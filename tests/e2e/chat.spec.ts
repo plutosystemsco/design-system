@@ -11,7 +11,7 @@ import {
   type Locator,
   type Page,
 } from "@playwright/test";
-import { cssVar, hexToRgb, open } from "./pages.ts";
+import { cssVar, hexToRgb, open, componentPath } from "./pages.ts";
 
 async function computed(locator: Locator, property: string): Promise<string> {
   return locator.evaluate(
@@ -50,7 +50,7 @@ const scrollState = (region: Locator) =>
 
 /** 005 decision 11: the message log (L1). */
 test.describe("L1. the message log", () => {
-  const PAGE = "/items/message-log/";
+  const PAGE = componentPath("message-log");
 
   test("a region named Messages with a stop, holding a log named Conversation with aria-relevant additions; it opens at its end with the button hidden; scroll-padding-bottom is 96", async ({
     page,
@@ -165,7 +165,13 @@ test.describe("L1. the message log", () => {
     request,
   }) => {
     const { raw, close } = await rawPage(browser, request, PAGE);
-    expect(await raw.locator('[role="region"][aria-label]').count()).toBe(3);
+    // 015: the page's API tables and its examples' code are named scroll
+    // regions too; the count is the live examples'.
+    expect(
+      await raw
+        .locator('[data-slot="frame-stage"] [role="region"][aria-label]')
+        .count(),
+    ).toBe(3);
     expect(
       await raw.locator('[role="log"][aria-label="Conversation"]').count(),
     ).toBeGreaterThanOrEqual(2);
@@ -180,7 +186,7 @@ test.describe("L1. the message log", () => {
 
 /** 005 decision 12: the message (L2) and the marker (L3). */
 test.describe("L2. the message", () => {
-  const PAGE = "/items/message/";
+  const PAGE = componentPath("message");
 
   test("the header is a heading with tabindex -1; the bubble is on muted, 8 px rounded, 80% wide at most; 0 style attributes", async ({
     page,
@@ -230,7 +236,7 @@ test.describe("L2. the message", () => {
 });
 
 test.describe("L3. the marker", () => {
-  const PAGE = "/items/marker/";
+  const PAGE = componentPath("marker");
 
   test("the separator's lines are borders in --border, the border variant's edge too; no role by default; the icon is hidden", async ({
     page,
@@ -275,7 +281,7 @@ test.describe("L3. the marker", () => {
 
 /** 005 decision 13: the composer (L4). */
 test.describe("L4. the composer", () => {
-  const PAGE = "/items/composer/";
+  const PAGE = componentPath("composer");
   const main = (page: Page) => page.getByTestId("composer-main");
   const textarea = (page: Page) => main(page).locator("textarea");
   const button = (page: Page) =>

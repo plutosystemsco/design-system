@@ -1,0 +1,10 @@
+<script lang="ts">
+  import { Badge } from "#lib/components/ui/badge";
+</script>
+
+<div class="flex flex-wrap items-end gap-8">
+  <Badge>Queued</Badge>
+  <Badge variant="destructive">Failed</Badge>
+  <Badge variant="success">Passed</Badge>
+  <Badge variant="caution">Flaky</Badge>
+</div>

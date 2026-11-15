@@ -451,7 +451,7 @@ print(runs.map { $0.description }.joined(), runs.count, nil as Int?)`,
     language: "svelte",
     title: "Svelte",
     code: `<script lang="ts">
-  import { Meter } from "$lib/ui/meter";
+  import { Meter } from "#lib/components/ui/meter";
 
   // A fuel line: a typed prop, a rune, a derived label.
   let { value = 0, max = 30 }: { value?: number; max?: number } = $props();

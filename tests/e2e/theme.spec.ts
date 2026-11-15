@@ -2,6 +2,7 @@ import { expect, test, type Page } from "@playwright/test";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import {
+  COMPOSITION_VIEW_LIST,
   GROUND,
   open,
   openView,
@@ -60,7 +61,7 @@ test.describe("the head script", () => {
         .matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g),
     ].map((m) => m[1]);
 
-  test("the catalogue's raw <head> holds the theme script exactly once, reading pluto-theme and toggling the dark class", async ({
+  test("the home page's raw <head> holds the theme script exactly once, reading pluto-theme and toggling the dark class", async ({
     request,
   }) => {
     const html = await (await request.get("/")).text();
@@ -73,20 +74,61 @@ test.describe("the head script", () => {
     expect(scripts[0]).toContain('classList.toggle("dark"');
   });
 
-  // The (site) and (view) layouts each render it; a page holds exactly one.
-  test(`every one of the ${PAGES.length + VIEWS.length} prerendered pages holds the script exactly once`, async ({
+  // The (site), (view) and (shell) layouts each render it; a page holds
+  // exactly one (015 criterion 6: every page and every view in pages.ts).
+  const ALL = [
+    ...PAGES,
+    ...VIEWS.map((v) => v.path),
+    ...COMPOSITION_VIEW_LIST.map((v) => v.path),
+    ...TEST_VIEWS,
+  ];
+  test(`every one of the ${ALL.length} prerendered pages and views holds the script exactly once`, async ({
     request,
   }) => {
     const counts: Record<string, number> = {};
-    for (const path of [...PAGES, ...VIEWS.map((v) => v.path)]) {
+    for (const path of ALL) {
       const html = await (await request.get(path)).text();
       counts[path] = inlineScripts(html).filter((s) =>
         s.includes('localStorage.getItem("pluto-theme")'),
       ).length;
     }
     expect(Object.values(counts).filter((n) => n !== 1)).toEqual([]);
-    expect(Object.keys(counts)).toHaveLength(PAGES.length + VIEWS.length);
+    expect(Object.keys(counts)).toHaveLength(ALL.length);
   });
+
+  // 015 criterion 6: an example view holds the frame's head script once,
+  // and no ThemeScript.
+  for (const item of [
+    "button",
+    "alert",
+    "dropdown-menu",
+    "chart",
+    "code-block",
+  ]) {
+    test(`${item}'s first example view: 1 example head script, 0 ThemeScript`, async ({
+      request,
+    }) => {
+      const pageHtml = await (await request.get(`/components/${item}/`)).text();
+      const id =
+        /data-slot="frame"[^>]*\bid="([^"]+)"|\bid="([^"]+)"[^>]*data-slot="frame"/.exec(
+          pageHtml,
+        );
+      const example = id?.[1] ?? id?.[2];
+      expect(example).toBeTruthy();
+      const html = await (
+        await request.get(`/example/${item}/${example}/`)
+      ).text();
+      const scripts = inlineScripts(html);
+      expect(
+        scripts.filter((s) => s.includes("URLSearchParams(location.search)")),
+      ).toHaveLength(1);
+      expect(
+        scripts.filter((s) =>
+          s.includes('localStorage.getItem("pluto-theme")'),
+        ),
+      ).toHaveLength(0);
+    });
+  }
 
   test("app.html holds no script of its own", () => {
     const appHtml = readFileSync("src/app.html", "utf8");

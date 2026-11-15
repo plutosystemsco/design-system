@@ -1,0 +1,16 @@
+<script lang="ts">
+  import { Checkbox } from "#lib/components/ui/checkbox";
+  import { Input } from "#lib/components/ui/input";
+  import { Label } from "#lib/components/ui/label";
+</script>
+
+<div class="flex flex-wrap items-start gap-12">
+  <div class="grid w-64 gap-3">
+    <Label for="label-email">Email address</Label>
+    <Input id="label-email" type="email" placeholder="you@example.com" />
+  </div>
+  <div class="flex items-center gap-3">
+    <Checkbox id="label-terms" />
+    <Label for="label-terms">Accept the terms</Label>
+  </div>
+</div>

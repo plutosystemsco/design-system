@@ -1,0 +1,8 @@
+<script lang="ts">
+  import * as Kbd from "#lib/components/ui/kbd";
+</script>
+
+<div class="flex flex-wrap items-center gap-8">
+  <Kbd.Root>Esc</Kbd.Root>
+  <Kbd.Group><Kbd.Root>Ctrl</Kbd.Root><Kbd.Root>Enter</Kbd.Root></Kbd.Group>
+</div>

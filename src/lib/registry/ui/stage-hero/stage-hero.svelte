@@ -12,7 +12,7 @@
   export type StageHeroField = "field-1" | "field-2" | "field-3" | "field-4";
 
   // Each class written out in full, so Tailwind finds it in this file and an
-  // installed app emits it (012 decision 3).
+  // installed app emits it.
   const FIELDS: Record<StageHeroField, string> = {
     "field-1": "field-1",
     "field-2": "field-2",
@@ -62,13 +62,13 @@
     strip?: Snippet;
     /** The field the object sits on. */
     field?: StageHeroField;
-    /** The poster title, 56 to 160 px: for launches only (K3). */
+    /** The poster title, 56 to 160 px: for launches only. */
     poster?: boolean;
     /** Fills the screen less the bar, so the next section is below the fold. */
     fill?: boolean;
-    /** Beneath a bar that overlays it: the whole screen's height, its words clear of the bar (010 decision 5). */
+    /** Beneath a bar that overlays it: the whole screen's height, its words clear of the bar. */
     underBar?: boolean;
-    /** 1 when the hero holds the page's one h1; 2 beside another h1 (010 decision 5). */
+    /** 1 when the hero holds the page's one h1; 2 beside another h1. */
     headingLevel?: 1 | 2;
   } = $props();
 </script>
@@ -107,7 +107,7 @@
 {/snippet}
 
 <!--
-  A page's first screen (012 decision 3). With an object: from lg, a twelve-
+  A page's first screen. With an object: from lg, a twelve-
   column grid whose gap is the stage's gutter. The words sit in a glass panel
   over columns 1 to 7, lit where the pointer moves; the field spans columns 5
   to 12 behind it, a subgrid of those eight, and the object takes its last

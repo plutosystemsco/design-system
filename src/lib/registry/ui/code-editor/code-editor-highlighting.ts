@@ -24,7 +24,7 @@ const MARKS = Object.fromEntries(
 ) as Record<Exclude<CodeRole, "text">, Decoration>;
 
 /**
- * The editor's colour, from the highlighter (013 decision 16): the same
+ * The editor's colour, from the highlighter: the same
  * session a code block streams through, so the editor colours code exactly as
  * the block does. One view plugin, at the highest precedence, so its span is
  * innermost and its class decides the colour.

@@ -1,5 +1,5 @@
 /**
- * The fallback (013 decisions 4 and 14): Shiki, with the JavaScript engine,
+ * The fallback: Shiki, with the JavaScript engine,
  * strict, and one theme written by role, every colour `var(--code-<role>)`.
  * It highlights Markdown, diff, SQL, Swift and Dockerfile, and any language
  * whose tree-sitter path is removed or fails. Shiki is imported lazily, so a

@@ -1,5 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
-import { open, openView, type ThemeName } from "./pages.ts";
+import { open, openView, type ThemeName, componentPath } from "./pages.ts";
 
 type Rect = {
   left: number;
@@ -68,7 +68,7 @@ test.describe("the lockup at 100 px", () => {
   let g: Awaited<ReturnType<typeof geometry>>;
 
   test.beforeEach(async ({ page }) => {
-    await open(page, "/items/four-dot/");
+    await open(page, componentPath("four-dot"));
     await page.evaluate(() => document.fonts.ready);
     g = await geometry(page);
   });
@@ -144,7 +144,7 @@ test.describe("the standalone mark and the footer endorsement", () => {
   test("the standalone mark's dots measure 0.30 em of its own size", async ({
     page,
   }) => {
-    await open(page, "/items/four-dot/");
+    await open(page, componentPath("four-dot"));
     const { size, dots } = await page.evaluate(() => {
       const mark = document.querySelector('[data-testid="decorative"]')!;
       return {
@@ -203,7 +203,7 @@ test.describe("criterion 12: the mark's colours by theme and mode", () => {
   test("paper in .dark; the lifted four under data-mode=expressive within .dark or on it; paper again in a productive island; the four in light", async ({
     page,
   }) => {
-    await open(page, "/items/four-dot/");
+    await open(page, componentPath("four-dot"));
     const colours = await page.evaluate(() => {
       const mark = document.querySelector(
         '[data-testid="geometry-lockup"] [data-slot="four-dot"]',
@@ -244,7 +244,7 @@ test.describe("criterion 12: the mark's colours by theme and mode", () => {
   test("the page's own marks are paper in the dark project and the four in light", async ({
     page,
   }, info) => {
-    await open(page, "/items/four-dot/");
+    await open(page, componentPath("four-dot"));
     await page.evaluate(() => {
       const mark = document.querySelector(
         '[data-testid="geometry-lockup"] [data-slot="four-dot"]',
@@ -270,7 +270,7 @@ test.describe("criterion 12: the mark's colours by theme and mode", () => {
 
 test.describe("accessible names", () => {
   test.beforeEach(async ({ page }) => {
-    await open(page, "/items/four-dot/");
+    await open(page, componentPath("four-dot"));
   });
 
   test("the decorative mark is hidden from assistive technology", async ({
@@ -298,12 +298,12 @@ test.describe("accessible names", () => {
     await expect(link).toHaveAccessibleName("Pluto Systems");
   });
 
-  test('the header lockup is a link named "Pluto Systems design system"', async ({
+  test('the header lockup is a link named "Pluto Systems design"', async ({
     page,
   }) => {
     const link = page.getByRole("banner").getByRole("link");
     await expect(link).toHaveCount(1);
-    await expect(link).toHaveAccessibleName("Pluto Systems design system");
+    await expect(link).toHaveAccessibleName("Pluto Systems design");
   });
 });
 
@@ -445,7 +445,7 @@ test.describe("the entrance", () => {
     });
   });
 
-  test("on the site, a client-side navigation from / to /items/four-dot/ starts 0 new entrances and keeps the lockup node", async ({
+  test("on the site, a client-side navigation from /components/ to /components/four-dot/ starts 0 new entrances and keeps the lockup node", async ({
     page,
   }) => {
     await page.addInitScript(() => {
@@ -464,7 +464,7 @@ test.describe("the entrance", () => {
         true,
       );
     });
-    await open(page, "/");
+    await open(page, "/components/");
     await page.evaluate(() =>
       Promise.all(
         document.getAnimations().map((a) => a.finished.catch(() => null)),
@@ -485,7 +485,7 @@ test.describe("the entrance", () => {
       .getByRole("link", { name: "four-dot", exact: false })
       .first()
       .click();
-    await expect(page).toHaveURL(/\/items\/four-dot\/$/);
+    await expect(page).toHaveURL(/\/components\/four-dot\/$/);
     await expect(page.locator("h1")).toHaveCount(1);
     expect(await starts()).toBe(8);
     expect(

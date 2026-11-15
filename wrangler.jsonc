@@ -1,5 +1,9 @@
 {
-  "name": "pluto-design-system",
+  "name": "pluto-systems-design",
   "compatibility_date": "2026-10-27",
-  "assets": { "directory": "./build" }
+  "assets": {
+    "directory": "./build",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page"
+  }
 }

@@ -1,15 +1,7 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
 import {
-  PAGES_003,
-  PAGES_004,
-  PAGES_005,
-  PAGES_006,
-  PAGES_007,
-  PAGES_009,
-  PAGES_010,
-  PAGES_011,
-  PAGES_002,
+  PAGES,
   VIEW_READY,
   TEST_VIEWS,
   VIEWS,
@@ -17,6 +9,7 @@ import {
   open,
   openView,
   settled,
+  componentPath,
 } from "./pages.ts";
 
 const TAGS = [
@@ -40,45 +33,26 @@ async function expectNoViolations(page: Page, exclude?: string): Promise<void> {
   expect(results.passes.length).toBeGreaterThan(0);
 }
 
-// 003 decision 20: the catalogue and 002's 32 item pages at 1280: 33 per theme.
-test.describe("at 1280", () => {
-  test.use({ viewport: { width: 1280, height: 900 } });
-  for (const path of PAGES_002) {
-    test(`axe finds 0 violations on ${path}`, async ({ page }) => {
-      await open(page, path);
-      await expectNoViolations(page);
-    });
-  }
-});
-
-// 003's 7 item pages, 004's, 005's, 006's, 007's, 009's, 010's and 011's item pages
-// and the 31 views at 360, 768 and 1280 (006 decision 14, 007 decision 10,
-// 009 criterion 14 and 010 criterion 8; the compositions' own views are
-// scanned in compositions.spec.ts).
+// 015 criterion 7: every page of the site at 360, 768 and 1280, and the
+// 31 views (006 decision 14, 007 decision 10, 009 criterion 14 and 010
+// criterion 8; the compositions' own views are scanned in
+// compositions.spec.ts).
 for (const width of WIDTHS) {
   test.describe(`at ${width}`, () => {
     test.use({ viewport: { width, height: 900 } });
-    for (const path of [
-      ...PAGES_003,
-      ...PAGES_004,
-      ...PAGES_005,
-      ...PAGES_006,
-      ...PAGES_007,
-      ...PAGES_009,
-      ...PAGES_010,
-      ...PAGES_011,
-    ]) {
+    for (const path of PAGES) {
       test(`axe finds 0 violations on ${path}`, async ({ page }) => {
         await open(page, path);
         // A block's page holds the viewer; let its frame hydrate first.
-        if ((await page.locator("iframe").count()) > 0)
+        if ((await page.locator('[data-testid="viewer"] iframe').count()) > 0)
           await page
-            .frameLocator("iframe")
+            .frameLocator('[data-testid="viewer"] iframe')
             .first()
             .locator(VIEW_READY)
             .waitFor();
+        await settled(page);
         // The frame is scanned at its own URL, as a view, at each width; here
-        // its <main> would be a second main landmark of the item page.
+        // its <main> would be a second main landmark of the page.
         await expectNoViolations(page, '[data-testid="viewer"] iframe');
       });
     }
@@ -91,13 +65,39 @@ for (const width of WIDTHS) {
   });
 }
 
+// 015 criterion 7: the first example view of five items, at 1280.
+test.describe("at 1280", () => {
+  test.use({ viewport: { width: 1280, height: 900 } });
+  for (const item of [
+    "button",
+    "alert",
+    "dropdown-menu",
+    "chart",
+    "code-block",
+  ]) {
+    test(`axe finds 0 violations on ${item}'s first example view`, async ({
+      page,
+      request,
+    }) => {
+      const html = await (await request.get(componentPath(item))).text();
+      const id =
+        /data-slot="frame"[^>]*\bid="([^"]+)"|\bid="([^"]+)"[^>]*data-slot="frame"/.exec(
+          html,
+        );
+      await page.goto(`/example/${item}/${id?.[1] ?? id?.[2]}/`);
+      await page.locator("body[data-view-ready]").waitFor();
+      await expectNoViolations(page);
+    });
+  }
+});
+
 // 004 decision 11: the popover page with each of its three popovers open
 // (aria-dialog-name: every popover has a name).
 for (const id of ["popover-fuel", "popover-form", "popover-start"]) {
   test(`axe finds 0 violations with the ${id} popover open`, async ({
     page,
   }) => {
-    await open(page, "/items/popover/");
+    await open(page, componentPath("popover"));
     await page.getByTestId(id).click();
     const dialog = page.locator('[data-slot="popover-content"]');
     await dialog.waitFor();
@@ -110,11 +110,11 @@ for (const id of ["popover-fuel", "popover-form", "popover-start"]) {
 // 005 decision 17: the open states of the overlays (aria-dialog-name on
 // every sheet and dialog; the menu's roles).
 for (const [path, id, slot] of [
-  ["/items/dropdown-menu/", "menu-account", "dropdown-menu-content"],
-  ["/items/sheet/", "sheet-end", "sheet-content"],
-  ["/items/sheet/", "sheet-start", "sheet-content"],
-  ["/items/dialog/", "dialog-rename", "dialog-content"],
-  ["/items/dialog/", "dialog-terms", "dialog-content"],
+  [componentPath("dropdown-menu"), "menu-account", "dropdown-menu-content"],
+  [componentPath("sheet"), "sheet-end", "sheet-content"],
+  [componentPath("sheet"), "sheet-start", "sheet-content"],
+  [componentPath("dialog"), "dialog-rename", "dialog-content"],
+  [componentPath("dialog"), "dialog-terms", "dialog-content"],
 ] as const) {
   test(`axe finds 0 violations on ${path} with ${id} open`, async ({
     page,
@@ -150,10 +150,10 @@ test.describe("at 1280", () => {
     ["surface-popover", "popover-content"],
     ["surface-dialog", "dialog-content"],
   ] as const) {
-    test(`axe finds 0 violations on /items/pluto-theme/ with ${id} open`, async ({
+    test(`axe finds 0 violations on /components/pluto-theme/ with ${id} open`, async ({
       page,
     }) => {
-      await open(page, "/items/pluto-theme/");
+      await open(page, componentPath("pluto-theme"));
       await page.getByTestId(id).click();
       await page.locator(`[data-slot="${slot}"]`).waitFor();
       await settled(page);
@@ -165,10 +165,10 @@ test.describe("at 1280", () => {
 // 005 decision 10: the sidebar page at 360 with its sheet open.
 test.describe("at 360", () => {
   test.use({ viewport: { width: 360, height: 700 } });
-  test("axe finds 0 violations on /items/sidebar/ with the sheet open", async ({
+  test("axe finds 0 violations on /components/sidebar/ with the sheet open", async ({
     page,
   }) => {
-    await open(page, "/items/sidebar/");
+    await open(page, componentPath("sidebar"));
     await page
       .getByTestId("shell-main")
       .locator('[data-slot="sidebar-trigger"]')
@@ -206,7 +206,7 @@ test("axe finds 0 violations on /view/app-shell/signed-in/ with the account menu
 
 // 002 decision 23: the alert-dialog page again, with its dialog open.
 test("axe finds 0 violations with the alert dialog open", async ({ page }) => {
-  await open(page, "/items/alert-dialog/");
+  await open(page, componentPath("alert-dialog"));
   await page.getByTestId("dialog-trigger").first().click();
   await page.locator('[data-slot="alert-dialog-content"]').waitFor();
   await settled(page);

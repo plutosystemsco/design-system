@@ -3,7 +3,7 @@
  * every test, so each holds in the light and the dark theme.
  */
 import { expect, test, type Page } from "@playwright/test";
-import { hexToRgb, ITEMS, open } from "./pages.ts";
+import { hexToRgb, ITEMS, open, componentPath } from "./pages.ts";
 
 /**
  * Criterion 3: `v0.8.0`'s computed faces and button radius, read from its
@@ -49,10 +49,10 @@ async function productiveFaces(page: Page) {
 
 test.describe("criterion 3: a productive page looks as it did in v0.8.0", () => {
   for (const name of ITEMS) {
-    test(`/items/${name}/ keeps v0.8.0's faces and button radius`, async ({
+    test(`/components/${name}/ keeps v0.8.0's faces and button radius`, async ({
       page,
     }) => {
-      await open(page, `/items/${name}/`);
+      await open(page, componentPath(name));
       const faces = await productiveFaces(page);
       expect(faces.heading).toBe(V080.heading);
       expect(faces.paragraph).toBe(V080.paragraph);
@@ -94,7 +94,7 @@ test.describe("criterion 7: the action radius follows the nearest mode", () => {
   test("rounded-action is 8 px productive, 8 px expressive, 8 px in a nested productive island", async ({
     page,
   }) => {
-    await open(page, "/items/button/");
+    await open(page, componentPath("button"));
     await plantModes(page, "rounded-action");
     expect(await radius(page, "root")).toBe("8px");
     expect(await radius(page, "expressive")).toBe("8px");
@@ -104,7 +104,7 @@ test.describe("criterion 7: the action radius follows the nearest mode", () => {
   test("a default button is 8 px under data-mode=expressive and outside it", async ({
     page,
   }) => {
-    await open(page, "/items/button/");
+    await open(page, componentPath("button"));
     const button = page.locator('main [data-slot="button"]').first();
     expect(
       await button.evaluate((el) => getComputedStyle(el).borderTopLeftRadius),
@@ -118,8 +118,8 @@ test.describe("criterion 7: the action radius follows the nearest mode", () => {
   });
 });
 
-const THEME = "/items/pluto-theme/";
-const READ_TOKEN = "/items/read-token/";
+const THEME = componentPath("pluto-theme");
+const READ_TOKEN = componentPath("read-token");
 
 const computed = (page: Page, testid: string, property: string) =>
   page

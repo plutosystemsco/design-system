@@ -10,7 +10,7 @@ import { readDuration } from "#lib/registry/lib/read-token";
 
 type Part = "x" | "y" | "lit";
 
-/** Sets one of the glass's custom properties: the one style write the lint allows (L24). */
+/** Sets one of the glass's custom properties: the one style write the system's lint allows. */
 function set(element: HTMLElement, part: Part, value: string): void {
   element.style.setProperty(`--glass-${part}`, value);
 }

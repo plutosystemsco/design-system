@@ -60,11 +60,11 @@
   The contentinfo: the logo (not a link; the bar's is) with the product's
   line, then each group of links, a navigation landmark named by its title,
   which is a heading at the mono eyebrow step. Under them, the build's facts
-  by the app shell footer's rules (006 decision 16, 008 decision 3): the rows
+  by the app shell footer's rules: the rows
   commit, built, doc and source, in mono, each only when its value is given,
   no word standing in for a missing one; then the statement when given. It
   is expressive, so in the dark theme its mark shows the lifted four, as the
-  bar's does (012 decision 6).
+  bar's does.
 -->
 <footer
   data-slot="marketing-footer"

@@ -1,0 +1,45 @@
+<script lang="ts" module>
+  export const meta = {
+    title: "Variants",
+    intro:
+      "Each title names the state in words. Destructive and success sit on their tints; caution is a card with a yellow bar. An alert is never placed inside an inset.",
+  };
+</script>
+
+<script lang="ts">
+  import CheckCircle from "phosphor-svelte/lib/CheckCircle";
+  import Info from "phosphor-svelte/lib/Info";
+  import Warning from "phosphor-svelte/lib/Warning";
+  import WarningCircle from "phosphor-svelte/lib/WarningCircle";
+  import * as Alert from "#lib/registry/ui/alert";
+  import { Button } from "#lib/registry/ui/button";
+</script>
+
+<div class="grid max-w-xl gap-6">
+  <Alert.Root class="w-full">
+    <Info aria-hidden="true" />
+    <Alert.Title>Maintenance on Sunday</Alert.Title>
+    <Alert.Description>Runs pause from 02:00 to 03:00 UTC.</Alert.Description>
+  </Alert.Root>
+  <!-- Here at load, so it passes role={null}; inserted later, it keeps role alert. -->
+  <Alert.Root variant="destructive" class="w-full" role={null}>
+    <WarningCircle aria-hidden="true" />
+    <Alert.Title>Error: the run failed</Alert.Title>
+    <Alert.Description
+      >3 tests failed in tests/test_sandbox.py.</Alert.Description
+    >
+    <Alert.Action
+      ><Button size="sm" variant="secondary">View logs</Button></Alert.Action
+    >
+  </Alert.Root>
+  <Alert.Root variant="success" class="w-full">
+    <CheckCircle aria-hidden="true" />
+    <Alert.Title>Saved</Alert.Title>
+    <Alert.Description>Your settings apply to the next run.</Alert.Description>
+  </Alert.Root>
+  <Alert.Root variant="caution" class="w-full">
+    <Warning aria-hidden="true" />
+    <Alert.Title>Caution: this run is flaky</Alert.Title>
+    <Alert.Description>It passed on retry 2 of 3.</Alert.Description>
+  </Alert.Root>
+</div>

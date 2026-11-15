@@ -1,0 +1,11 @@
+<script lang="ts">
+  import { Spinner } from "#lib/components/ui/spinner";
+</script>
+
+<div class="flex flex-wrap items-end gap-8">
+  <span class="text-base"><Spinner /></span>
+  <span class="text-2xl"><Spinner class="size-6" /></span>
+  <span class="flex items-center gap-2 text-sm text-muted-foreground">
+    <Spinner label="Loading runs" />
+  </span>
+</div>

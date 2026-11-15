@@ -43,5 +43,13 @@
     "overall": 98.6,
     "note": "98.4 when locked; the converter's correction at checkpoint 1 (TOML table brackets and Ruby Float() to decision 13's rows) moved it to 98.6 with no query change, so the hashes and the change list stand."
   },
-  "changes": []
+  "changes": [
+    {
+      "file": "php.scm",
+      "sha256": "70152a4561a2f92de579c06719fd6cb9937a610e6b68f53ec42dbee46dbc78f8",
+      "reason": "015 decision 14: a comment line reworded to drop an internal reference; no pattern changed, so the figures stand.",
+      "workbench": 98.6,
+      "heldout": 97.7
+    }
+  ]
 }

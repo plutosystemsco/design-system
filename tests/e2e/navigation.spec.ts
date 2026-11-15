@@ -18,6 +18,7 @@ import {
   settled,
   TABBABLE,
   type ThemeName,
+  componentPath,
 } from "./pages.ts";
 
 /**
@@ -122,7 +123,7 @@ const storedTheme = (page: Page) =>
 
 /** 005 decision 7: the menu (N1). */
 test.describe("N1. the menu", () => {
-  const PAGE = "/items/dropdown-menu/";
+  const PAGE = componentPath("dropdown-menu");
 
   test("the trigger promises a menu; open, the items carry their roles, 32 px each, with the highlighted item on accent and the focused item ringed; the separator is the hairline; the shortcut is hidden; 256 px wide; 0 style attributes of ours", async ({
     page,
@@ -310,7 +311,7 @@ async function expectCloseLast(content: Locator): Promise<void> {
 }
 
 test.describe("N2. the sheet", () => {
-  const PAGE = "/items/sheet/";
+  const PAGE = componentPath("sheet");
 
   test("open: a modal dialog named by its title, 288 px wide at most the viewport, on the scrim with no blur and the elevation, the close button 32 px and last; the fade holds the node, then it is gone", async ({
     page,
@@ -417,7 +418,7 @@ test.describe("N2. the sheet", () => {
 });
 
 test.describe("N3. the dialog", () => {
-  const PAGE = "/items/dialog/";
+  const PAGE = componentPath("dialog");
 
   for (const width of [360, 1280] as const) {
     test.describe(`at ${width}`, () => {
@@ -483,7 +484,7 @@ test.describe("N3. the dialog", () => {
 
 /** 005 decision 9: the breadcrumb (N4). */
 test.describe("N4. the breadcrumb", () => {
-  const PAGE = "/items/breadcrumb/";
+  const PAGE = componentPath("breadcrumb");
 
   test("a nav named Breadcrumb holding a list; the current page is a span with aria-current and no role; separators are hidden; the ellipsis opens a menu of the hidden pages from a 32 px button", async ({
     page,
@@ -543,15 +544,25 @@ test.describe("N4. the breadcrumb", () => {
 
 /** 005 decision 10: the sidebar (N5). */
 test.describe("N5. the sidebar", () => {
-  const PAGE = "/items/sidebar/";
+  const PAGE = componentPath("sidebar");
 
   test("landmarks: every nav and region on the page is labelled once, the insets are regions, and the site's main is the only main", async ({
     page,
   }) => {
     await open(page, PAGE);
+    // A nav's name: its aria-label, or the text its aria-labelledby names.
     const navs = await page
       .locator("nav")
-      .evaluateAll((all) => all.map((n) => n.getAttribute("aria-label")));
+      .evaluateAll((all) =>
+        all.map(
+          (n) =>
+            n.getAttribute("aria-label") ??
+            document
+              .getElementById(n.getAttribute("aria-labelledby") ?? "")
+              ?.textContent?.trim() ??
+            null,
+        ),
+      );
     expect(navs).toContain("Main");
     expect(navs).toContain("Icon example");
     expect(new Set(navs).size).toBe(navs.length);
@@ -574,7 +585,10 @@ test.describe("N5. the sidebar", () => {
     }
     expect(new Set(regions.map((r) => r[2])).size).toBe(regions.length);
     await expect(page.locator("main")).toHaveCount(1);
-    await expect(page.locator("#main")).toHaveCount(0);
+    // 015 decision 22: the site's main is the skip link's target, #main; no
+    // inset takes that id.
+    await expect(page.locator("#main")).toHaveCount(1);
+    await expect(page.locator("main#main")).toHaveCount(1);
   });
 
   test("the first shell: a sticky nav 256 px wide on the sidebar ground, the trigger a disclosure that controls it, collapsed to 0 and inert on a press and restored on the next, the cookie written; the icon shell is 48 px", async ({
@@ -805,7 +819,7 @@ test.describe("N5. the sidebar", () => {
 
 /** 005 decision 6: the theme (N6). */
 test.describe("N6. the theme", () => {
-  const PAGE = "/items/theme/";
+  const PAGE = componentPath("theme");
 
   test("the raw HTML holds the head script with the key, and the toggle carries no aria-pressed and no data-ready before hydration", async ({
     browser,
@@ -922,7 +936,8 @@ test.describe("N6. the theme", () => {
     const s = await small.boundingBox();
     expect([b?.width, b?.height]).toEqual([48, 48]);
     expect([s?.width, s?.height]).toEqual([32, 32]);
-    const header = page.locator("header").getByRole("button", {
+    // 015 decision 5: the site's bar holds the toggle.
+    const header = page.locator("[data-sticky-bar]").getByRole("button", {
       name: "Dark theme",
     });
     await expect(header).toHaveAttribute("data-slot", "theme-toggle");

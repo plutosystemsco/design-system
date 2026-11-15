@@ -119,21 +119,24 @@ test.describe("a logo", () => {
     await expect(logo.locator(".mark-entrance")).toHaveCount(0);
   });
 
-  test("12. the preview site's footer holds a lockup logo, the brand line once, and the source link as its only link", async ({
+  // 015 decision 5: the site's footer is marketing-footer, with a link
+  // group per door and the registry's; its logo is still not a link.
+  test("12. the site's footer holds a lockup logo, not a link, the brand line once, and the source link", async ({
     page,
   }) => {
     await open(page, "/");
     const footer = page.getByRole("contentinfo");
-    const logo = footer.locator('[data-shell="logo"]');
+    const logo = footer.getByRole("img", { name: "Pluto Systems" });
     await expect(logo).toHaveCount(1);
     await expect(logo.locator('[data-slot="lockup"]')).toHaveCount(1);
+    await expect(footer.locator('a [data-slot="lockup"]')).toHaveCount(0);
     const text = (await footer.textContent()) ?? "";
     expect(text.match(/Work runs on data\./g)).toHaveLength(1);
-    await expect(footer.getByRole("link")).toHaveCount(1);
-    await expect(footer.getByRole("link")).toHaveAttribute(
-      "href",
-      "https://github.com/plutosystemsco/design-system",
-    );
+    await expect(
+      footer.locator(
+        'a[href="https://github.com/plutosystemsco/design-system"]',
+      ),
+    ).toHaveCount(1);
   });
 });
 

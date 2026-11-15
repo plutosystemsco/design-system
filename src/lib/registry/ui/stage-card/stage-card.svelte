@@ -45,7 +45,7 @@
   let gone = false;
 
   // A polite region announces a change, and the same text twice is none, so
-  // it is cleared and set again on the next frame (010 decision 3).
+  // it is cleared and set again on the next frame.
   function announce(text: string) {
     said = "";
     cancelAnimationFrame(frame);
@@ -69,7 +69,7 @@
       );
     } catch (reason) {
       if (gone) return;
-      // The rejection's own message, so the error directs (010 decision 3).
+      // The rejection's own message, so the error says what went wrong.
       lines = [];
       error = reason instanceof Error ? reason.message : String(reason);
       busy = false;
@@ -88,7 +88,7 @@
 <!--
   A flat card: the theme's own roles on its raised ground (surface-plain), so
   it reads the same on the canvas or a field, and while a run works an edge
-  in the primary inside it (busy-edge; 012 decision 5). The code block sits
+  in the primary inside it (busy-edge). The code block sits
   inset, so its focus
   indicator is never clipped by the card. Its header holds the title, the copy
   button and, with `run`, Run, which shows the button's busy state and keeps

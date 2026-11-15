@@ -4,7 +4,7 @@
 ; written for the Pluto design system; not derived from the grammar's own queries.
 ;
 ; This file paints PHP alone. The text outside `<?php … ?>` is the engine's
-; to inject as HTML (013 decision 14); here it stays in the body.
+; to inject as HTML; here it stays in the body.
 
 [(comment)] @comment
 

@@ -1,5 +1,5 @@
 /**
- * The code roles (013 decision 7): Meridian's seven coloured roles, comment
+ * The code roles: Meridian's seven coloured roles, comment
  * and text, `number` of its own, and four the guide does not cover (a link
  * and a diff's three line roles). Each is one `--code-<role>` custom
  * property. A capture in our queries is named for its role, so no

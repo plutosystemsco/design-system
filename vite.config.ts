@@ -38,6 +38,30 @@ export default defineConfig({
   plugins: [
     registryWatch(),
     tailwindcss(),
-    sveltekit({ adapter: adapter(), ...(name ? { version: { name } } : {}) }),
+    sveltekit({
+      adapter: adapter(),
+      // 015 decision 21: absolute asset paths, so the 404 page, served at any
+      // depth by the worker's 404-page handling, loads /_app/ from the root.
+      paths: { relative: false },
+      // The 404 page is linked from nowhere; the worker serves it for any
+      // unknown address.
+      prerender: {
+        entries: ["*", "/404"],
+        // An example view is one example, cut from its component page: a
+        // link inside it to an id on that page (#variants) has no target in
+        // the view. Every other page must hold the ids it links to.
+        // A page's Markdown twin is written after vite build, by
+        // scripts/site/markdown.ts; build-output.spec.ts checks every one.
+        handleHttpError: ({ path, message }) => {
+          if (path.endsWith("/index.md")) return;
+          throw new Error(message);
+        },
+        handleMissingId: ({ path, message }) => {
+          if (path.startsWith("/example/")) return;
+          throw new Error(message);
+        },
+      },
+      ...(name ? { version: { name } } : {}),
+    }),
   ],
 });

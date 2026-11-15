@@ -21,7 +21,7 @@
     overlay = false,
     class: className,
   }: {
-    /** The product's logo; it renders here for "header" (008 decision 2's shape). */
+    /** The product's logo; it renders here for "header", as the app shell's logo snippet does. */
     logo: Snippet<[place: "header" | "footer"]>;
     /** The home link's accessible name. It contains any words the logo shows. */
     homeLabel: string;
@@ -32,29 +32,28 @@
     primary?: MarketingLink;
     /** The navigation landmark's name. */
     label?: string;
-    /** Floats the bar over the section below it, a stage whose hero sets `underBar` (010 decision 4). */
+    /** Floats the bar over the section below it, a stage whose hero sets `underBar`. */
     overlay?: boolean;
     class?: string;
   } = $props();
 
   let menuOpen = $state(false);
   // Its text is the foreground and the primary only: the bar floats over the
-  // whole page, images included, where muted text would not hold (012
-  // decision 4).
+  // whole page, images included, where muted text would not hold.
   const link =
     "inline-flex min-h-12 items-center text-sm font-medium text-foreground hover:text-primary";
 </script>
 
 <!--
-  The banner, at the page's top level so it stays stuck for the whole page
-  (010 decision 4): a floating glass panel, capped at the wide measure, lit
-  where the pointer moves (012 decision 4). It follows the page's theme and
+  The banner, at the page's top level so it stays stuck for the whole page:
+  a floating glass panel, capped at the wide measure, lit
+  where the pointer moves. It follows the page's theme and
   never carries `.dark`. Its actions keep the case radius. It marks itself
   with data-sticky-bar, so the page keeps a focused element clear of it. The
   skip link comes first and shows on focus. Below md the links and the
   secondary action fold into a sheet opened by "Menu". With `overlay`, its
   own height is taken back below it, so the first stage runs under it from
-  the top of the page (the 010 build's checkpoint 1).
+  the top of the page.
 -->
 <header
   data-slot="marketing-bar"

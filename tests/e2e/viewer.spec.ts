@@ -10,7 +10,8 @@ const { version } = JSON.parse(readFileSync("package.json", "utf8")) as {
   version: string;
 };
 import { toAppFiles } from "../../src/lib/server/built-item.ts";
-import { BLOCKS, open, VIEW_READY } from "./pages.ts";
+import { SITE_ORIGIN } from "../../src/lib/site/site.ts";
+import { BLOCKS, open, VIEW_READY, componentPath } from "./pages.ts";
 
 /** 003 decision 5's titles. */
 const TITLES: Record<string, string> = {
@@ -77,7 +78,7 @@ const APP_PATHS: Record<string, string[]> = {
 const frame = (page: Page) => page.locator('[data-testid="viewer"] iframe');
 
 async function openBlock(page: Page, block: string): Promise<void> {
-  await open(page, `/items/${block}/`);
+  await open(page, componentPath(block));
   await page
     .frameLocator('[data-testid="viewer"] iframe')
     .locator(VIEW_READY)
@@ -239,10 +240,10 @@ for (const block of BLOCKS) {
       expect(states[2]).toBe(states[0]);
     });
 
-    test(`5. the code view has ${APP_PATHS[block]!.length} files at their app paths, and the install command has no -o, with its note`, async ({
+    test(`5. the code view has ${APP_PATHS[block]!.length} files at their app paths, and the two install commands have no -o, with the note`, async ({
       page,
     }) => {
-      await open(page, `/items/${block}/`);
+      await open(page, componentPath(block));
       const summaries = await page
         .getByTestId("code-view")
         .locator("summary")
@@ -257,23 +258,20 @@ for (const block of BLOCKS) {
         .locator("pre")
         .allTextContents();
       expect(bodies).toEqual(toAppFiles(built.files).map((f) => f.text));
+      // 015 decision 16: two install commands in the facts card, the
+      // site's first, then GitHub's; a block's note on -o beside them.
       const commands = page.locator("code", {
         hasText: "bunx --bun shadcn-svelte@1.7.1 add",
       });
       await expect(commands).toHaveCount(2);
-      for (const command of await commands.all()) {
-        await expect(command).toHaveText(
-          `REGISTRY_URL=https://raw.githubusercontent.com/plutosystemsco/design-system/v${version}/static/r bunx --bun shadcn-svelte@1.7.1 add ${block} -y`,
-        );
-        const note = await command.evaluate(
-          (el) =>
-            el.parentElement?.nextElementSibling?.getAttribute("data-testid") ??
-            el.nextElementSibling?.getAttribute("data-testid") ??
-            null,
-        );
-        expect(note).toBe("install-note");
-      }
-      await expect(page.getByTestId("install-note").first()).toContainText(
+      await expect(commands.nth(0)).toHaveText(
+        `REGISTRY_URL=${SITE_ORIGIN}/v${version}/r bunx --bun shadcn-svelte@1.7.1 add ${block} -y`,
+      );
+      await expect(commands.nth(1)).toHaveText(
+        `REGISTRY_URL=https://raw.githubusercontent.com/plutosystemsco/design-system/v${version}/static/r bunx --bun shadcn-svelte@1.7.1 add ${block} -y`,
+      );
+      await expect(page.getByTestId("install-note")).toHaveCount(1);
+      await expect(page.getByTestId("install-note")).toContainText(
         "Leave out -o.",
       );
     });

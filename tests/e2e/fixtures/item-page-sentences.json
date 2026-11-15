@@ -1,0 +1,89 @@
+{
+  "note": "Sentences that 013 and 016 require on item pages, copied from the committed tree (c8185c9) before the pages moved to /components/. Each must stay on its page; site.spec.ts checks the page's main text, whitespace collapsed.",
+  "sentences": [
+    {
+      "item": "highlighter",
+      "page": "/components/highlighter/",
+      "sentence": "Twenty-one languages parse with a tree-sitter grammar and our queries; Markdown, diff, SQL, Swift and Dockerfile highlight with Shiki, which also stands behind every other language.",
+      "requiredBy": "013 decision 3: the languages and which engine each uses"
+    },
+    {
+      "item": "highlighter",
+      "page": "/components/highlighter/",
+      "sentence": "The eight hues sit between 6.5:1 and 9.5:1 on the dark code ground, and every role passes 4.5:1; off the ground the dark number reads higher, 10.41:1 on the active line and 11.66:1 inside an ink surface.",
+      "requiredBy": "013 decision 11: the dark figures; corrected at 015's checkpoint 2 (the dark comment is 5.84:1, so only the eight hues sit in 6.5 to 9.5)"
+    },
+    {
+      "item": "highlighter",
+      "page": "/components/highlighter/",
+      "sentence": "For a reader with protanopia, light-mode numbers and constants are one colour.",
+      "requiredBy": "013 decision 8: the protanopia limit"
+    },
+    {
+      "item": "highlighter",
+      "page": "/components/highlighter/",
+      "sentence": "so their shape tells them apart.",
+      "requiredBy": "013 decision 8: shape tells numbers from constants"
+    },
+    {
+      "item": "highlighter",
+      "page": "/components/highlighter/",
+      "sentence": "A block highlighted in the browser fetches the tree-sitter runtime (about 115 kB gzipped) and each grammar it shows, once; an HTML block also loads JavaScript and CSS, a Svelte block TypeScript and CSS.",
+      "requiredBy": "013 decisions 5 and 14: what a page fetches, and the injected languages"
+    },
+    {
+      "item": "highlighter",
+      "page": "/components/highlighter/",
+      "sentence": "Every client build carries all twenty grammar files and the runtime, about 23.5 MB raw (2.15 MB gzipped).",
+      "requiredBy": "013 decision 5: the deploy weight"
+    },
+    {
+      "item": "highlighter",
+      "page": "/components/highlighter/",
+      "sentence": "A strict Content Security Policy needs 'wasm-unsafe-eval': the runtime compiles WebAssembly.",
+      "requiredBy": "013 decision 23: the CSP note"
+    },
+    {
+      "item": "code-languages",
+      "page": "/components/code-languages/",
+      "sentence": "Every one takes its colour from the highlighter: tree-sitter for twenty-one, Shiki for five.",
+      "requiredBy": "013 decision 16: the editor's colour"
+    },
+    {
+      "item": "code-block",
+      "page": "/components/code-block/",
+      "sentence": "No token is bold or italic.",
+      "requiredBy": "013 decision 17: tokens are never bold"
+    },
+    {
+      "item": "alert",
+      "page": "/components/alert/",
+      "sentence": "Destructive and success sit on their tints; caution is a card with a yellow bar.",
+      "requiredBy": "016 decision 6: the alert's copy"
+    },
+    {
+      "item": "badge",
+      "page": "/components/badge/",
+      "sentence": "A state is a border and text in its colour, with no tint, so it reads on a hover row; caution is solid yellow with ink text.",
+      "requiredBy": "016 decision 6: the badge's copy"
+    },
+    {
+      "item": "chart",
+      "page": "/components/chart/",
+      "sentence": "A light figure that uses chart-3 (yellow) labels that series directly.",
+      "requiredBy": "016 decision 6: the chart's copy"
+    },
+    {
+      "item": "product-home",
+      "page": "/components/product-home/",
+      "sentence": "Three colour fields, one owned moment each: the hero's object on blue, the proof on yellow, the console on green.",
+      "requiredBy": "016 decision 6: product-home's copy"
+    },
+    {
+      "item": "pluto-theme",
+      "page": "/components/pluto-theme/",
+      "sentence": "Yellow is the one known exception: a yellow series is labelled directly.",
+      "requiredBy": "016 decision 6: pluto-theme's copy"
+    }
+  ]
+}

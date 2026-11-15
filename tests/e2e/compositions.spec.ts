@@ -20,6 +20,7 @@ import {
   WIDTHS,
   waitForHighlight,
   type ThemeName,
+  componentPath,
 } from "./pages.ts";
 
 const HOME = "/view/product-home/";
@@ -725,7 +726,7 @@ test.describe("the item pages' frames", () => {
     test(`${item}: the frame shows /view/compositions/${item}/ and the state buttons switch among ${views.length}`, async ({
       page,
     }) => {
-      await open(page, `/items/${item}/`);
+      await open(page, componentPath(item));
       const frame = page.locator('[data-testid="viewer"] iframe');
       await expect(frame).toHaveAttribute("src", views[0]!.path);
       await expect(frame).toHaveAttribute("title", /preview$/);

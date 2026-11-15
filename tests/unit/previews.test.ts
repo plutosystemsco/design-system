@@ -3,7 +3,8 @@ import { existsSync, readFileSync } from "node:fs";
 
 const registry = JSON.parse(readFileSync("registry.json", "utf8"));
 const names: string[] = registry.items.map((i: { name: string }) => i.name);
-const page = (name: string) => `src/routes/(site)/items/${name}/+page.svelte`;
+const page = (name: string) =>
+  `src/routes/(site)/components/${name}/+page.svelte`;
 
 // 006 decision 3, 007 decision 7, 009 decision 10, 010 decision 1 and 011 decision 8: 75 items.
 const COUNT = 75;
@@ -12,10 +13,10 @@ test(`the registry has ${COUNT} items`, () => {
   expect(names).toHaveLength(COUNT);
 });
 
-test(`${COUNT} of ${COUNT} items have a preview page under (site)/items/`, () => {
+test(`${COUNT} of ${COUNT} items have a page under (site)/components/`, () => {
   expect(names.filter((name) => existsSync(page(name)))).toHaveLength(COUNT);
 });
 
-test.each(names)("%s has a preview page", (name) => {
+test.each(names)("%s has a page under (site)/components/", (name) => {
   expect(existsSync(page(name))).toBe(true);
 });

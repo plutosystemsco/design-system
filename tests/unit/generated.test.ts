@@ -388,17 +388,21 @@ describe("014's inline code", () => {
     expect(flat).toContain(`${LINK} { @apply text-code-link; }`);
   });
 
-  test("the preview's install line takes the code ground and the hairline, not bg-muted", () => {
-    const text = readFileSync("src/lib/preview/install-command.svelte", "utf8");
-    const classes = /<code\s+class="([^"]*)"/.exec(text)![1]!.split(/\s+/);
-    for (const cls of [
-      "border",
-      "border-border",
-      "bg-code-background",
-      "text-code-text",
-    ])
-      expect(classes, cls).toContain(cls);
-    expect(classes).not.toContain("bg-muted");
+  // 015 decision 16: the site's install line is a code block, so it takes
+  // the code ground and the hairline from the item.
+  test("the site's install line takes the code ground and the hairline, not bg-muted", () => {
+    const text = readFileSync("src/lib/site/page/command.svelte", "utf8");
+    expect(text).toContain("<CodeBlock.Root");
+    expect(text).not.toContain("bg-muted");
+    const block = readFileSync(
+      "src/lib/registry/ui/code-block/code-block.svelte",
+      "utf8",
+    );
+    const base = /base: "([^"]*)"/.exec(block)![1]!.split(/\s+/);
+    for (const cls of ["border", "border-border", "bg-code-background"])
+      expect(base, cls).toContain(cls);
+    expect(block).toContain('default: "text-code-text"');
+    expect(base).not.toContain("bg-muted");
   });
 });
 

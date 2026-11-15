@@ -89,8 +89,8 @@ export function findLanguage(name: string): CodeLanguage | null {
  * does not hold. Its structure and behaviour (indentation, brackets, comment
  * toggling, HTML's tag closing) are the language's own, from Lezer or a
  * CodeMirror 5 mode; its colour is the highlighter's, through
- * `codeHighlighting`, so the editor colours code as a code block does
- * (013 decision 16). Three routes: Python is the preset's grammar; Svelte
+ * `codeHighlighting`, so the editor colours code as a code block does.
+ * Three routes: Python is the preset's grammar; Svelte
  * comes from `@replit/codemirror-lang-svelte`, since `language-data` has no
  * Svelte; every other language goes to `language-data`'s description by its
  * name (a strict match, never a fuzzy one), whose `load()` is one dynamic

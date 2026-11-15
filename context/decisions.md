@@ -2,6 +2,108 @@
 
 The owner's answers and decisions, newest first. A decision that changes the constitution is also recorded in its Status line. "The design book" and "v2" both mean the Pluto Systems design book, version 2, the source of the brand's rules; a section of it is cited as "§03".
 
+### The Button page's transfer budget is 365 kB (2026-11-15)
+
+After step 2's cuts, `/components/button/` came down from 371 kB to exactly 360 kB:
+- the frame switch became two plain pressed buttons;
+- the API table is styled from the table element, not per cell;
+- the page loads only its own registry entry;
+- each example's code travels once.
+
+Step 3 then added the lazy search button and the links to the Markdown twins, which every page carries. That made it 361 kB. **Ruled by the design lead: the Button budget is 365 kB.** The 1 kB is a cost every page now pays, not the Button page's own weight. Moving an example to save it would cost the page more than it saves. The other three budgets are unchanged.
+
+**Raised again to 370 kB, after the change review.** The review found each example view loading every example, about 688 kB over 186 requests. The fix loads one example per view: 228 kB over 45 requests for Button's variants. Across the site's 157 views, each saves about 460 kB. The cost is finer chunks, which add 5 kB to `/components/button/` (367 kB, all three runs), measured A/B in the same tree. Merging chunks through rolldown's experimental option would reshape every page for 5 kB, so the design lead raised the Button budget to 370 kB instead.
+
+### After the `015` build's checkpoint 2 (2026-11-15)
+
+The design lead read these pages at 1440 in both themes, alongside the builder's shots at 390:
+- `/components/button/`
+- `/components/dialog/`
+- `/components/code-block/`
+- `/components/chart/`
+- `/components/pluto-theme/`
+- `/components/product-home/`
+
+There were no page errors. On each page the design lead switched the first example's frame to the other theme, then toggled the page's theme with the frame open.
+
+- **The frames hold their pick.** Dialog's Light frame, on a dark page, stayed on the light canvas through two page toggles. Button's Dark frame stayed dark after the page went dark and back. The switch shows the pick in both states.
+- **The component template: kept as built.** The facts card with its two install tabs, the wrapping command, Examples, then Usage, API, Accessibility, Files you own and Related, and the fixed rail.
+- **Block pages: kept.** The width viewer sits under Examples (360, 768, 1280, "Open alone"), with the file view under Files you own.
+- **The prose of 25 items** is edited by the design lead's editor against R23, R24 and the voice rules:
+  - button, dialog, alert, badge, input, field, checkbox, native-select, tabs, tooltip;
+  - sheet, sidebar, table, chart, meter, code-block, code-editor, highlighter, pluto-theme, four-dot;
+  - liquid-glass, marketing-bar, product-home, chat, settings.
+
+  The change reviewer reads all 75.
+- **`/components/button/` is over its transfer budget, 371 kB against 360: option (a).** The budget stays. In step 3 the builder cuts the page under it. Ways to do that: the frame's switch as two plain pressed buttons instead of bits-ui's toggle group, and a more compact API table. If the page cannot get under 360 kB without losing an example or a section, the builder reports the measured floor, and the design lead rules again. Moving the Heights example off the page (option c) is the fallback, not the first move.
+- **Deviations accepted:**
+  - example views skip the host page's ids;
+  - example views carry the page's headings, visually hidden;
+  - code that can scroll sideways is a named region;
+  - tests changed only where markup moved;
+  - the smaller changes, including the `code-samples` Svelte sample now importing from `#lib`.
+- **The helpers' calls, accepted:**
+  - tooltip's frame height;
+  - chart's three example groups;
+  - status's keyboard fixture inside variants;
+  - the code-only sidebar cookie example;
+  - code-block's `install` data key renamed `terminal`.
+
+### After the `015` build's checkpoint 1 (2026-11-15)
+
+The design lead looked at the built frame (`vite preview` of `build/`) at 1440 in both themes, and at the builder's own shots at 1024 and 390. It viewed:
+- the home page's entrance, frame by frame at 100 to 1,600 ms;
+- the door transition, from a click on the Components disc;
+- the four landings;
+- `/components/alert/` and `/components/pluto-theme/`;
+- `/changelog/`;
+- a 404 three folders deep.
+
+No page errors.
+
+- **The entrance, and the stillness after it: kept.** The discs scale in one after another. By 1.6 s, 0 animations run, in both themes.
+- **The door transition: kept.** The disc grows into the band and the page is red within about 160 ms. One flaw to fix: mid-transition, the bar's lockup briefly shows one dot instead of four. The mark is either kept out of the transition's snapshot or given its own `view-transition-name`, so it never drops dots.
+- **The doors' words: kept,** as ruled at checkpoint 0.
+- **The red band: kept.** "75 parts you can add, each a page" now sits on one line, and the install command wraps.
+- **The yellow band, with no glass: kept.** The one-colour lockup and two short lines, on `field-3`, with ink text.
+- **The bar's current door: kept.** It is underlined in the foreground colour, with a soft wash behind it.
+- **A component page with no field: kept.** `pluto-theme`'s fields are still unframed until step 2, as expected.
+- **To fix: the Start band's title sits at the bottom of its band,** leaving the top-left empty beside the install panel. The band's title block aligns to the top, as on the Components band, on every band.
+- **To fix: the 404.** At `/nope/deep/` under a dark system theme, the page rendered light, with no bar and no footer. Decision 23 and H5 want the bar and the search button after hydration, and the theme script, at any depth. The builder checks this the way criterion 23 does (serving the build with its 404 fallback). If `vite preview` alone serves a different page, the check says so and uses the fallback.
+- **Budgets:** tightened after step 2 re-measures the component pages, not now.
+- **CLS budgets:** a budget of median plus 20% at the 0.001 scale is noise, not a measure. Each CLS budget is the larger of median × 1.2 and **0.02**, a fifth of the 0.1 "good" threshold. This deviates from decision 23's rule and is recorded in the Landing notes.
+- **Deviations accepted:**
+  - the banner holds the lockup alone, with the doors, search and toggle in a `nav` named "Site";
+  - the tests outside decision 24's table, changed only where files moved;
+  - `php.scm`'s citation, with its lock change entry;
+  - criterion 27 counting motion of 1 ms or more;
+  - the disc names carrying their lines;
+  - the smaller calls: the footer, the rail, search not yet working, and the icon "Menu" below md.
+
+### After the `015` build's checkpoint 0 (2026-11-15)
+
+The design lead looked at the throwaway home page, Components landing and Button page, at 1440 and 390 in both themes, on the committed tokens (013 and 016 landed, so no scratch overrides). The builder's figures were taken at 1440, 1024, 768 and 390.
+
+**Decisions 6 and 7, ruled:**
+
+- **The discs are kept as built.**
+  - **At 1024 and wider:** they rise from the headline's cap height and stand exactly its height, so the type stays the largest thing on the screen.
+  - **Below 1024:** they sit under the headline at 40% of the width, capped at 160 px.
+  - **The words fit:** the least room to a disc's edge is 10.7 px at 360 and 24.1 px at 1440.
+  - **The Google echo:** each disc carries its door's name and a line under it, so the four read as navigation first and as a logo second. That is the answer the spec relies on, and it holds on screen.
+- **The red band is kept:** the name, "75", "parts you can add, each a page", and one glass panel with the theme's install command. It has no icons and no examples. One fix: the line under "75" leaves "page" alone on its own line at 1440. It is balanced (`text-wrap: balance`), or the measure widened, so no line holds a single word.
+
+**The builder's questions, ruled:**
+
+1. **The cap-height constant** (IBM Plex Sans 600 at 0.9 leading, cap 0.127 em below the line's top) lives in `doors.ts` beside the two ratios, as a measured constant. Its comment names the font, weight and leading, and how it was measured.
+2. **Install commands soft-wrap** (option b). This applies wherever a command is shown: the home block, the band's panel and the component pages' install box. On the Button page, "add button" was hidden too. The copied text stays exact, and `viewer.spec.ts`'s string is unchanged. The break may fall anywhere in the address.
+3. **The home page's section indexes:** Components lists its 11 groups as links into `/components/`. Start, Brand and Foundations show their heading and summary until `017` adds their pages. This reading of "its landing and its pages" is accepted.
+4. **"Files you own" shows the files only; "Related" holds "It brings" and "Brought by".** A long list flows into columns. This deviates from decision 15's wording and is recorded in the Landing notes.
+5. **The frame's pick is held until the visitor changes it,** even after the page's theme comes to match it (criterion 14).
+6. **The door dots read `--field-N`,** so a dot keeps its colour inside a productive dark `<main>`, where `--mark-N` turns paper.
+7. **Criterion 10's height check allows 0.5 px** for sub-pixel rounding. The disc size is not floored.
+8. **Not built at checkpoint 0, as expected:** search, the view transition and the menu sheet. The transition is judged at checkpoint 1.
+
 ### After the `016` build's checkpoint (2026-11-15)
 
 The design lead looked at these pages in both themes, at 1440 and 390 px:

@@ -10,6 +10,7 @@ import {
   hexToRgb,
   openView,
   TABBABLE,
+  componentPath,
 } from "./pages.ts";
 
 const HOME = "/view/product-home/";
@@ -558,7 +559,7 @@ test.describe("016: the brand yellow", () => {
     page,
   }, info) => {
     const theme = info.project.name as "light" | "dark";
-    await page.goto("/items/badge/");
+    await page.goto(componentPath("badge"));
     const badge = page
       .locator('[data-slot="badge"]', { hasText: "Flaky" })
       .first();
@@ -567,7 +568,7 @@ test.describe("016: the brand yellow", () => {
       hexToRgb(await rootColour(page, "--caution")),
     );
     expect(await style(badge, "color")).toBe("rgb(11, 15, 23)");
-    await page.goto("/items/alert/");
+    await page.goto(componentPath("alert"));
     const alert = page
       .locator('[data-slot="alert"][data-variant="caution"]')
       .first();
@@ -579,7 +580,7 @@ test.describe("016: the brand yellow", () => {
 
   test("the chart page's series 3 is --chart-3", async ({ page }, info) => {
     const theme = info.project.name as "light" | "dark";
-    await page.goto("/items/chart/");
+    await page.goto(componentPath("chart"));
     const swatch = page.getByTestId("series-3");
     expect(await style(swatch, "background-color")).toBe(YELLOW[theme]);
     expect(await style(swatch, "background-color")).toBe(

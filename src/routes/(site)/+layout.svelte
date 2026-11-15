@@ -1,51 +1,64 @@
 <script lang="ts">
+  import "#lib/site/site.css";
   import type { Snippet } from "svelte";
-  import { version } from "$app/env";
-  import AppShellFooter from "#lib/registry/components/app-shell-footer.svelte";
-  import { Lockup } from "#lib/registry/ui/four-dot";
-  import { ThemeScript, ThemeToggle } from "#lib/registry/ui/theme";
+  import { onNavigate } from "$app/navigation";
+  import { page } from "$app/state";
+  import { ThemeScript } from "#lib/registry/ui/theme";
+  import Bar from "#lib/site/chrome/bar.svelte";
+  import Footer from "#lib/site/chrome/footer.svelte";
+  import { takeDoor } from "#lib/site/door-transition";
+  import { DOORS } from "#lib/site/doors";
+  import { sitePage } from "#lib/site/sitemap";
 
   let { children }: { children: Snippet } = $props();
 
-  // 006 decision 16: this repository's commit (vite.config.ts sets the
-  // version name from git; its default would be a timestamp) and the
-  // commit's date, for the shell's footer.
-  const commit = /^\d+$/.test(version) ? undefined : version;
-  const builtAt = import.meta.env.VITE_BUILT_AT as string | undefined;
+  // The page's entry in the one list, read from its route, so the 404 page,
+  // served at any address, marks no door.
+  const entry = $derived(
+    sitePage(
+      (page.route.id ?? "").replace(/^\/\(site\)/, "").replace(/\/?$/, "/"),
+    ),
+  );
+  const current = $derived(entry?.door ?? null);
+  const landing = $derived(!!entry && DOORS.some((d) => d.path === entry.path));
+
+  // The door opens onto its field: following a disc on the home page grows
+  // it into the landing's band. Only then, only where the browser has view
+  // transitions, and never under reduced motion; every other navigation is
+  // instant.
+  onNavigate((navigation) => {
+    const door = takeDoor();
+    if (
+      !door ||
+      !document.startViewTransition ||
+      matchMedia("(prefers-reduced-motion: reduce)").matches
+    )
+      return;
+    return new Promise((resolve) => {
+      document.startViewTransition(async () => {
+        resolve();
+        await navigation.complete;
+      });
+    });
+  });
 </script>
 
-<!-- The theme's head script, once per page (005 decision 16). -->
+<!-- The theme's head script, once per page. -->
 <ThemeScript />
 
-<!-- The lockup plays the page's one entrance, once per full load (006 decision 5). -->
-<header class="groove-b bg-background">
-  <div
-    class="mx-auto flex max-w-5xl items-center justify-between gap-4 px-6 py-4"
-  >
-    <Lockup
-      href="/"
-      label="Pluto Systems design system"
-      entrance
-      class="text-2xl"
-    />
-    <ThemeToggle />
-  </div>
-</header>
+<!-- Every page links its Markdown twin and the index of twins. -->
+<svelte:head>
+  {#if entry}
+    <link rel="alternate" type="text/markdown" href="{entry.path}index.md" />
+    <link rel="describedby" href="/llms.txt" />
+  {/if}
+</svelte:head>
 
-<main class="mx-auto max-w-5xl px-6 py-12">
+<!-- The lockup plays the page's one entrance, once per full load; on the home page the doors do. -->
+<Bar {current} {landing} entrance={entry?.path !== "/"} />
+
+<main id="main" tabindex="-1" class="flex-1 outline-none">
   {@render children()}
 </main>
 
-<!-- 008 decision 8: the site is Pluto Systems' own, so its footer carries the lockup (no entrance) and the brand line. -->
-{#snippet logo()}
-  <Lockup class="text-2xl" />
-{/snippet}
-
-<AppShellFooter
-  appName="Pluto Systems"
-  {logo}
-  tagline="Work runs on data."
-  {commit}
-  {builtAt}
-  sourceHref="https://github.com/plutosystemsco/design-system"
-/>
+<Footer />

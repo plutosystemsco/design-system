@@ -18,6 +18,7 @@ import {
   cssVar,
   open,
   settled,
+  componentPath,
 } from "./pages.ts";
 
 type Box = { x: number; y: number; width: number; height: number };
@@ -73,7 +74,7 @@ test.describe("heights and targets", () => {
   test("6 default controls are 48 px tall; the icon button and the cell are square", async ({
     page,
   }) => {
-    await open(page, "/items/button/");
+    await open(page, componentPath("button"));
     const row = page.getByTestId("heights");
     const heights: Record<string, number> = {};
     for (const id of [
@@ -106,7 +107,7 @@ test.describe("heights and targets", () => {
   test("2 small buttons are 32 px tall, and icon-sm is square", async ({
     page,
   }) => {
-    await open(page, "/items/button/");
+    await open(page, componentPath("button"));
     const row = page.getByTestId("heights");
     const sm = await box(row.getByTestId("height-sm"));
     const iconSm = await box(row.getByTestId("height-icon-sm"));
@@ -121,14 +122,14 @@ test.describe("heights and targets", () => {
   test("a default toggle, a small toggle and a toggle-group item are 48, 32 and 48 px tall", async ({
     page,
   }) => {
-    await open(page, "/items/toggle/");
+    await open(page, componentPath("toggle"));
     const toggle = await box(page.getByTestId("height-toggle"));
     const sm = await box(page.getByTestId("height-toggle-sm"));
     expect(near(toggle.height, 48), `toggle is ${toggle.height}`).toBe(true);
     expect(toggle.width).toBeGreaterThanOrEqual(48);
     expect(near(sm.height, 32), `sm toggle is ${sm.height}`).toBe(true);
     expect(sm.width).toBeGreaterThanOrEqual(32);
-    await open(page, "/items/toggle-group/");
+    await open(page, componentPath("toggle-group"));
     const item = await box(
       page.getByTestId("toggle-group-single").locator("button").first(),
     );
@@ -139,20 +140,20 @@ test.describe("heights and targets", () => {
   test("a menu item, the sheet's close button and the dialog's close button are 32 px; the send button is 48", async ({
     page,
   }) => {
-    await open(page, "/items/composer/");
+    await open(page, componentPath("composer"));
     const send = await box(
       page.getByTestId("composer-main").locator('[data-slot="composer-send"]'),
     );
     expect([near(send.width, 48), near(send.height, 48)]).toEqual([true, true]);
-    await open(page, "/items/dropdown-menu/");
+    await open(page, componentPath("dropdown-menu"));
     await page.getByTestId("menu-account").click();
     const item = page.getByRole("menuitem").first();
     await expect(item).toBeVisible();
     expect(near((await box(item)).height, 32)).toBe(true);
     await page.keyboard.press("Escape");
     for (const [path, id, slot] of [
-      ["/items/sheet/", "sheet-end", "sheet-content"],
-      ["/items/dialog/", "dialog-rename", "dialog-content"],
+      [componentPath("sheet"), "sheet-end", "sheet-content"],
+      [componentPath("dialog"), "dialog-rename", "dialog-content"],
     ] as const) {
       await open(page, path);
       await page.getByTestId(id).click();
@@ -170,7 +171,7 @@ test.describe("heights and targets", () => {
   test("a sidebar row is 48 px, a sub-row 32 px, and the trigger 32 px", async ({
     page,
   }) => {
-    await open(page, "/items/sidebar/");
+    await open(page, componentPath("sidebar"));
     const shell = page.getByTestId("shell-main");
     const row = await box(
       shell.locator('[data-sidebar="menu-button"]:not([aria-current])').first(),
@@ -228,7 +229,7 @@ test.describe("heights and targets", () => {
       "pluto-theme",
       "code-languages",
     ]) {
-      await open(page, `/items/${item}/`);
+      await open(page, componentPath(item));
       const sizes = await page
         .getByTestId("keyboard-fixture")
         .evaluate((fixture) => {
@@ -266,7 +267,7 @@ test.describe("the switch", () => {
     test(`${state}: track 64 × 32, thumb 24 × 24, 4 px inside, no overflow`, async ({
       page,
     }) => {
-      await open(page, "/items/switch/");
+      await open(page, componentPath("switch"));
       const track = page.getByTestId(`switch-${state}`);
       const thumb = track.locator('[data-slot="switch-thumb"]');
       await settled(page);
@@ -293,7 +294,7 @@ test.describe("invalid borders", () => {
     test(`${item}: the invalid border is --destructive, 3:1 on its ground`, async ({
       page,
     }) => {
-      await open(page, `/items/${item}/`);
+      await open(page, componentPath(item));
       const destructive = await cssVar(page, "--destructive");
       // The code input's border is on its cells, driven by the hidden input.
       const control =
@@ -327,7 +328,7 @@ test.describe("elevation and scrim", () => {
   test("the open dialog's overlay is the scrim, unblurred, and its edge is elevation-line", async ({
     page,
   }, info) => {
-    await open(page, "/items/alert-dialog/");
+    await open(page, componentPath("alert-dialog"));
     await page.getByTestId("dialog-trigger").first().click();
     const overlay = page.locator('[data-slot="alert-dialog-overlay"]');
     const content = page.locator('[data-slot="alert-dialog-content"]');
@@ -379,7 +380,7 @@ test.describe("elevation on the menu and the scrim on the sheet", () => {
   test("the open menu's shadow holds elevation-line; the open sheet's overlay is the scrim, unblurred", async ({
     page,
   }) => {
-    await open(page, "/items/dropdown-menu/");
+    await open(page, componentPath("dropdown-menu"));
     await page.getByTestId("menu-account").click();
     const menu = page.locator('[data-slot="dropdown-menu-content"]');
     await expect(menu).toBeVisible();
@@ -402,7 +403,7 @@ test.describe("elevation on the menu and the scrim on the sheet", () => {
     ).toBe(true);
     await page.keyboard.press("Escape");
 
-    await open(page, "/items/sheet/");
+    await open(page, componentPath("sheet"));
     await page.getByTestId("sheet-end").click();
     const overlay = page.locator('[data-slot="sheet-overlay"]');
     await expect(page.locator('[data-slot="sheet-content"]')).toBeVisible();
@@ -429,7 +430,7 @@ test.describe("motion", () => {
       ...ITEMS_006,
       ...ITEMS_007,
     ]) {
-      await open(page, `/items/${item}/`);
+      await open(page, componentPath(item));
       const found = await page.evaluate(() =>
         [...document.querySelectorAll("*")]
           .filter(
@@ -461,7 +462,7 @@ test.describe("the code input", () => {
   test("the real input carries autocomplete, inputmode and a pattern", async ({
     page,
   }) => {
-    await open(page, "/items/input-otp/");
+    await open(page, componentPath("input-otp"));
     const input = page.getByTestId("otp-paste").locator("input");
     await expect(input).toHaveAttribute("autocomplete", "one-time-code");
     await expect(input).toHaveAttribute("inputmode", "numeric");
@@ -470,7 +471,7 @@ test.describe("the code input", () => {
 
   for (const text of ["123456", "123-456", "123456\n"]) {
     test(`pasting ${JSON.stringify(text)} fills 6 cells`, async ({ page }) => {
-      await open(page, "/items/input-otp/");
+      await open(page, componentPath("input-otp"));
       const input = page.getByTestId("otp-paste").locator("input");
       await input.focus();
       await input.evaluate((el, value) => {
@@ -491,7 +492,7 @@ test.describe("the code input", () => {
   test("typing a letter leaves the value and every cell empty", async ({
     page,
   }) => {
-    await open(page, "/items/input-otp/");
+    await open(page, componentPath("input-otp"));
     const input = page.getByTestId("otp-paste").locator("input");
     await input.focus();
     await page.keyboard.type("a");
@@ -649,7 +650,7 @@ test.describe("field wiring", () => {
     browser,
     request,
   }) => {
-    const response = await request.get("/items/field/");
+    const response = await request.get(componentPath("field"));
     expect(response.status()).toBe(200);
     const html = await response.text();
     const context = await browser.newContext({ javaScriptEnabled: false });
@@ -661,7 +662,7 @@ test.describe("field wiring", () => {
   });
 
   test("7 of 7 controls are wired after hydration", async ({ page }) => {
-    await open(page, "/items/field/");
+    await open(page, componentPath("field"));
     expectWired(await readWiring(page));
     expectSetWired(await readSetWiring(page));
   });
@@ -669,7 +670,7 @@ test.describe("field wiring", () => {
   test("the keyboard fixture's inputs are described by their description, and the invalid one by its error", async ({
     page,
   }) => {
-    await open(page, "/items/field/");
+    await open(page, componentPath("field"));
     const fixture = page.getByTestId("keyboard-fixture");
     await expect(fixture.locator("#kb-valid")).toHaveAccessibleDescription(
       "Lowercase letters and numbers.",
@@ -685,7 +686,7 @@ test.describe("alert roles", () => {
   test("inserted alerts take none, alert, status and status, and role={null} none", async ({
     page,
   }) => {
-    await open(page, "/items/alert/");
+    await open(page, componentPath("alert"));
     await page.getByTestId("insert-alerts").click();
     const roles = await page
       .getByTestId("inserted-alerts")
@@ -727,7 +728,11 @@ test.describe("status", () => {
     browser,
     request,
   }) => {
-    const { raw, close } = await rawPage(browser, request, "/items/status/");
+    const { raw, close } = await rawPage(
+      browser,
+      request,
+      componentPath("status"),
+    );
     const regions = await raw
       .locator('[data-testid="status-specimens"] [data-slot="status"]')
       .evaluateAll((all) =>
@@ -748,7 +753,7 @@ test.describe("status", () => {
   test("S2. Announce sets the text in both regions, and Clear empties both", async ({
     page,
   }) => {
-    await open(page, "/items/status/");
+    await open(page, componentPath("status"));
     const regions = page
       .getByTestId("status-specimens")
       .locator('[data-slot="status"]');
@@ -762,7 +767,7 @@ test.describe("status", () => {
   test("S3. the hidden region is a 1 × 1 px clip, and the visible one is wider", async ({
     page,
   }) => {
-    await open(page, "/items/status/");
+    await open(page, componentPath("status"));
     await page.getByRole("button", { name: "Announce" }).click();
     const hidden = page.getByTestId("status-hidden");
     const visible = page.getByTestId("status-visible");
@@ -782,7 +787,7 @@ test.describe("error summary", () => {
     const { raw, close } = await rawPage(
       browser,
       request,
-      "/items/error-summary/",
+      componentPath("error-summary"),
     );
     const roles = await raw
       .locator('[data-testid="summary-specimens"] [data-slot="error-summary"]')
@@ -794,7 +799,7 @@ test.describe("error summary", () => {
   test("E2. the inserted summary has role alert, tabindex -1, its heading, and 2 links at least 24 px tall", async ({
     page,
   }) => {
-    await open(page, "/items/error-summary/");
+    await open(page, componentPath("error-summary"));
     const fixture = page.getByTestId("keyboard-fixture");
     await fixture.getByRole("button", { name: "Create project" }).click();
     const summary = fixture.locator('[data-slot="error-summary"]');

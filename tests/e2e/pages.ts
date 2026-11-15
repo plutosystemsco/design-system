@@ -6,6 +6,15 @@ import {
   COMPOSITIONS_ROOT,
   viewPath,
 } from "../../src/lib/preview/blocks.ts";
+import { DOORS } from "../../src/lib/site/doors.ts";
+import {
+  componentPath,
+  GROUPS,
+  SITEMAP,
+  type SitePage,
+} from "../../src/lib/site/sitemap.ts";
+
+export { componentPath, SITEMAP, type SitePage };
 
 /** The items in 005 decision 4's order: one site page each, plus the catalogue. */
 export const ITEMS = [
@@ -190,25 +199,27 @@ export const BLOCKS = [
   "product-home",
 ];
 /** The 7 item pages of 003. */
-export const PAGES_003 = ITEMS_003.map((name) => `/items/${name}/`);
+export const PAGES_003 = ITEMS_003.map(componentPath);
 /** The 10 item pages of 004. */
-export const PAGES_004 = ITEMS_004.map((name) => `/items/${name}/`);
+export const PAGES_004 = ITEMS_004.map(componentPath);
 /** The 11 item pages of 005. */
-export const PAGES_005 = ITEMS_005.map((name) => `/items/${name}/`);
+export const PAGES_005 = ITEMS_005.map(componentPath);
 /** The 2 item pages of 006. */
-export const PAGES_006 = ITEMS_006.map((name) => `/items/${name}/`);
+export const PAGES_006 = ITEMS_006.map(componentPath);
 /** The item page of 007. */
-export const PAGES_007 = ITEMS_007.map((name) => `/items/${name}/`);
+export const PAGES_007 = ITEMS_007.map(componentPath);
 /** The item page of 009. */
-export const PAGES_009 = ITEMS_009.map((name) => `/items/${name}/`);
+export const PAGES_009 = ITEMS_009.map(componentPath);
 /** The 10 item pages of 010. */
-export const PAGES_010 = ITEMS_010.map((name) => `/items/${name}/`);
+export const PAGES_010 = ITEMS_010.map(componentPath);
 /** The item page of 011. */
-export const PAGES_011 = ITEMS_011.map((name) => `/items/${name}/`);
-/** The site pages: the catalogue and one page per item. */
-export const PAGES = ["/", ...ITEMS.map((name) => `/items/${name}/`)];
-/** The catalogue and 002's 32 item pages. */
-export const PAGES_002 = PAGES.filter(
+export const PAGES_011 = ITEMS_011.map(componentPath);
+/** Every page of the site, from the one list (015 decision 1). */
+export const PAGES = SITEMAP.map((p) => p.path);
+/** The 75 component pages. */
+export const COMPONENT_PAGES = ITEMS.map(componentPath);
+/** 002's 32 component pages. */
+export const PAGES_002 = COMPONENT_PAGES.filter(
   (p) =>
     !PAGES_003.includes(p) &&
     !PAGES_004.includes(p) &&
@@ -556,3 +567,79 @@ export async function settled(page: Page): Promise<void> {
  */
 export const TABBABLE =
   'a[href]:not([tabindex="-1"]), button:not([disabled]):not([tabindex="-1"]), input:not([disabled]):not([type="hidden"]):not([tabindex="-1"]), select:not([disabled]):not([tabindex="-1"]), textarea:not([disabled]):not([tabindex="-1"]), summary:not([tabindex="-1"]), [tabindex]:not([tabindex="-1"])';
+
+/**
+ * 015 decision 5: the bar's stops at md and wider, on every page. The skip
+ * link, the lockup, the four doors, search (rendered once scripts run) and
+ * the theme toggle.
+ */
+export const BAR_STOPS = [
+  "a:Skip to content",
+  "a:Pluto Systems design",
+  ...DOORS.map((d) => `a:${d.name}`),
+  "button:Search",
+  "button:Dark theme",
+];
+
+/**
+ * The footer's stops: one link per door's landing and the door's pages (the
+ * Components door lists its landing; its 75 pages are on it), the registry
+ * group, then the source link.
+ */
+export const FOOTER_STOPS = [
+  ...DOORS.flatMap((d) => [
+    `a:${d.name}`,
+    ...SITEMAP.filter(
+      (p) => p.door === d.id && p.path !== d.path && d.id !== "components",
+    ).map((p) => `a:${p.title}`),
+  ]),
+  "a:Latest registry",
+  "a:This release's registry",
+  "a:Changelog",
+  "a:llms.txt",
+  "a:github.com/plutosystemsco/design-system",
+];
+
+/** A code block's two stops: its copy button, then its scrolling code. */
+const CODE_BLOCK = ["button:Copy code", "region:*"];
+
+/**
+ * 015 decision 5: the home page's stops. The bar, the install block, the
+ * four doors, what one command gives you (its block and the items it
+ * brings), the four section indexes (each door's heading link, then its
+ * rows: the Components door's are its eleven groups), and the footer.
+ */
+export const HOME_STOPS = [
+  ...BAR_STOPS,
+  ...CODE_BLOCK,
+  // Each disc's name and its line, as its text reads.
+  ...DOORS.map((d) => `a:${d.name} ${d.line}`),
+  ...CODE_BLOCK,
+  "a:utils",
+  "a:pluto-theme",
+  "a:spinner",
+  ...DOORS.flatMap((d) => [
+    `a:${d.name}`,
+    ...(d.id === "components"
+      ? GROUPS.map((g) => `a:${g.title}`)
+      : SITEMAP.filter((p) => p.door === d.id && p.path !== d.path).map(
+          (p) => `a:${p.title}`,
+        )),
+  ]),
+  ...FOOTER_STOPS,
+];
+
+/**
+ * 015 decision 5: the Components landing's stops. The bar, the band's glass
+ * (one block), the filter, every item's row link in registry order, and the
+ * footer.
+ */
+export const COMPONENTS_STOPS = [
+  ...BAR_STOPS,
+  ...CODE_BLOCK,
+  "input:Filter components",
+  ...SITEMAP.filter((p) => p.parent === "/components/").map(
+    (p) => `a:${p.title}`,
+  ),
+  ...FOOTER_STOPS,
+];

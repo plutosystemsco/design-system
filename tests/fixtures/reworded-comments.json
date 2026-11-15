@@ -1,0 +1,237 @@
+{
+  "base": "c8185c9db96c17f9064fc0085357da14af7fc12c",
+  "note": "Each comment in a published item file that cited a specification, a decision or a review code, reworded in plain words with its meaning kept. `before` and `after` are whole lines of the item file, joined by a newline where the citation spanned lines. `kept` lists code, not comments, that a citation pattern matches, each exempting one decoded line. An entry with `why` corrects an untrue comment rather than a citation.",
+  "reworded": [
+    {
+      "item": "liquid-glass",
+      "path": "src/lib/registry/ui/liquid-glass/pointer-light.ts",
+      "before": "/** Sets one of the glass's custom properties: the one style write the lint allows (L24). */",
+      "after": "/** Sets one of the glass's custom properties: the one style write the system's lint allows. */"
+    },
+    {
+      "item": "code-editor",
+      "path": "src/lib/registry/ui/code-editor/code-editor-theme.ts",
+      "before": " * highlighter, through `codeHighlighting` (013 decision 16).",
+      "after": " * highlighter, through `codeHighlighting`."
+    },
+    {
+      "item": "code-editor",
+      "path": "src/lib/registry/ui/code-editor/code-editor-highlighting.ts",
+      "before": " * The editor's colour, from the highlighter (013 decision 16): the same",
+      "after": " * The editor's colour, from the highlighter: the same"
+    },
+    {
+      "item": "highlighter",
+      "path": "src/lib/registry/lib/highlighter.ts",
+      "before": " * Code highlighted in Meridian's roles (013). tree-sitter parses the 21",
+      "after": " * Code highlighted in Meridian's roles. tree-sitter parses the 21"
+    },
+    {
+      "item": "highlighter",
+      "path": "src/lib/registry/lib/highlight/roles.ts",
+      "before": " * The code roles (013 decision 7): Meridian's seven coloured roles, comment",
+      "after": " * The code roles: Meridian's seven coloured roles, comment"
+    },
+    {
+      "item": "highlighter",
+      "path": "src/lib/registry/lib/highlight/languages.ts",
+      "before": " * The twenty-six languages (013 decisions 3 to 6). Twenty-one parse with a",
+      "after": " * The twenty-six languages. Twenty-one parse with a"
+    },
+    {
+      "item": "highlighter",
+      "path": "src/lib/registry/lib/highlight/tree-sitter.ts",
+      "before": " * The tree-sitter engine (013 decisions 2, 4, 5, 14 and 15). `web-tree-sitter`",
+      "after": " * The tree-sitter engine. `web-tree-sitter`"
+    },
+    {
+      "item": "highlighter",
+      "path": "src/lib/registry/lib/highlight/shiki.ts",
+      "before": " * The fallback (013 decisions 4 and 14): Shiki, with the JavaScript engine,",
+      "after": " * The fallback: Shiki, with the JavaScript engine,"
+    },
+    {
+      "item": "highlighter",
+      "path": "src/lib/registry/lib/highlight/queries/php.scm",
+      "before": "; to inject as HTML (013 decision 14); here it stays in the body.",
+      "after": "; to inject as HTML; here it stays in the body."
+    },
+    {
+      "item": "code-languages",
+      "path": "src/lib/registry/lib/code-languages.ts",
+      "before": " * `codeHighlighting`, so the editor colours code as a code block does\n * (013 decision 16). Three routes: Python is the preset's grammar; Svelte",
+      "after": " * `codeHighlighting`, so the editor colours code as a code block does.\n * Three routes: Python is the preset's grammar; Svelte"
+    },
+    {
+      "item": "stage",
+      "path": "src/lib/registry/ui/stage/stage.svelte",
+      "before": "  // installed app emits it (012 decision 2).",
+      "after": "  // installed app emits it."
+    },
+    {
+      "item": "stage",
+      "path": "src/lib/registry/ui/stage/stage.svelte",
+      "before": "  An expressive section on a ground (012 decision 2). It follows the page's",
+      "after": "  An expressive section on a ground. It follows the page's"
+    },
+    {
+      "item": "stage-card",
+      "path": "src/lib/registry/ui/stage-card/stage-card.svelte",
+      "before": "  // it is cleared and set again on the next frame (010 decision 3).",
+      "after": "  // it is cleared and set again on the next frame."
+    },
+    {
+      "item": "stage-card",
+      "path": "src/lib/registry/ui/stage-card/stage-card.svelte",
+      "before": "      // The rejection's own message, so the error directs (010 decision 3).",
+      "after": "      // The rejection's own message, so the error says what went wrong."
+    },
+    {
+      "item": "stage-card",
+      "path": "src/lib/registry/ui/stage-card/stage-card.svelte",
+      "before": "  in the primary inside it (busy-edge; 012 decision 5). The code block sits",
+      "after": "  in the primary inside it (busy-edge). The code block sits"
+    },
+    {
+      "item": "marketing-bar",
+      "path": "src/lib/registry/ui/marketing-bar/marketing-bar.svelte",
+      "before": "    /** The product's logo; it renders here for \"header\" (008 decision 2's shape). */",
+      "after": "    /** The product's logo; it renders here for \"header\", as the app shell's logo snippet does. */"
+    },
+    {
+      "item": "marketing-bar",
+      "path": "src/lib/registry/ui/marketing-bar/marketing-bar.svelte",
+      "before": "    /** Floats the bar over the section below it, a stage whose hero sets `underBar` (010 decision 4). */",
+      "after": "    /** Floats the bar over the section below it, a stage whose hero sets `underBar`. */"
+    },
+    {
+      "item": "marketing-bar",
+      "path": "src/lib/registry/ui/marketing-bar/marketing-bar.svelte",
+      "before": "  // whole page, images included, where muted text would not hold (012\n  // decision 4).",
+      "after": "  // whole page, images included, where muted text would not hold."
+    },
+    {
+      "item": "marketing-bar",
+      "path": "src/lib/registry/ui/marketing-bar/marketing-bar.svelte",
+      "before": "  The banner, at the page's top level so it stays stuck for the whole page\n  (010 decision 4): a floating glass panel, capped at the wide measure, lit\n  where the pointer moves (012 decision 4). It follows the page's theme and",
+      "after": "  The banner, at the page's top level so it stays stuck for the whole page:\n  a floating glass panel, capped at the wide measure, lit\n  where the pointer moves. It follows the page's theme and"
+    },
+    {
+      "item": "marketing-bar",
+      "path": "src/lib/registry/ui/marketing-bar/marketing-bar.svelte",
+      "before": "  the top of the page (the 010 build's checkpoint 1).",
+      "after": "  the top of the page."
+    },
+    {
+      "item": "stage-hero",
+      "path": "src/lib/registry/ui/stage-hero/stage-hero.svelte",
+      "before": "  // installed app emits it (012 decision 3).",
+      "after": "  // installed app emits it."
+    },
+    {
+      "item": "stage-hero",
+      "path": "src/lib/registry/ui/stage-hero/stage-hero.svelte",
+      "before": "    /** The poster title, 56 to 160 px: for launches only (K3). */",
+      "after": "    /** The poster title, 56 to 160 px: for launches only. */"
+    },
+    {
+      "item": "stage-hero",
+      "path": "src/lib/registry/ui/stage-hero/stage-hero.svelte",
+      "before": "    /** Beneath a bar that overlays it: the whole screen's height, its words clear of the bar (010 decision 5). */",
+      "after": "    /** Beneath a bar that overlays it: the whole screen's height, its words clear of the bar. */"
+    },
+    {
+      "item": "stage-hero",
+      "path": "src/lib/registry/ui/stage-hero/stage-hero.svelte",
+      "before": "    /** 1 when the hero holds the page's one h1; 2 beside another h1 (010 decision 5). */",
+      "after": "    /** 1 when the hero holds the page's one h1; 2 beside another h1. */"
+    },
+    {
+      "item": "stage-hero",
+      "path": "src/lib/registry/ui/stage-hero/stage-hero.svelte",
+      "before": "  A page's first screen (012 decision 3). With an object: from lg, a twelve-",
+      "after": "  A page's first screen. With an object: from lg, a twelve-"
+    },
+    {
+      "item": "proof-band",
+      "path": "src/lib/registry/ui/proof-band/proof-band.svelte",
+      "before": "          /** The band's name when it has no title (010 decision 6). */",
+      "after": "          /** The band's name when it has no title. */"
+    },
+    {
+      "item": "proof-band",
+      "path": "src/lib/registry/ui/proof-band/proof-band.svelte",
+      "before": "  // each item's value, so the prerendered page and any new items read final\n  // (010 decision 6; change review findings 2 and 3).",
+      "after": "  // each item's value, so the prerendered page and any new items read their\n  // final values."
+    },
+    {
+      "item": "live-console",
+      "path": "src/lib/registry/ui/live-console/live-console.svelte",
+      "before": "  // result twice is announced twice (010 decisions 3 and 7).",
+      "after": "  // result twice is announced twice."
+    },
+    {
+      "item": "live-console",
+      "path": "src/lib/registry/ui/live-console/live-console.svelte",
+      "before": "      // over the fill duration (010 decision 7, review finding 7).",
+      "after": "      // over the fill duration."
+    },
+    {
+      "item": "live-console",
+      "path": "src/lib/registry/ui/live-console/live-console.svelte",
+      "before": "  keep the productive corner and size (010 decision 7). A flat card with the",
+      "after": "  keep the productive corner and size. A flat card with the"
+    },
+    {
+      "item": "live-console",
+      "path": "src/lib/registry/ui/live-console/live-console.svelte",
+      "before": "  edge in the primary inside it while a run works (busy-edge; 012 decision 5).",
+      "after": "  edge in the primary inside it while a run works (busy-edge)."
+    },
+    {
+      "item": "marketing-footer",
+      "path": "src/lib/registry/ui/marketing-footer/marketing-footer.svelte",
+      "before": "  by the app shell footer's rules (006 decision 16, 008 decision 3): the rows",
+      "after": "  by the app shell footer's rules: the rows"
+    },
+    {
+      "item": "marketing-footer",
+      "path": "src/lib/registry/ui/marketing-footer/marketing-footer.svelte",
+      "before": "  bar's does (012 decision 6).",
+      "after": "  bar's does."
+    },
+    {
+      "item": "product-home",
+      "path": "src/lib/registry/blocks/product-home/+page.svelte",
+      "before": "  // the suite is built on, as its README states it (010 decision 9); replace",
+      "after": "  // the suite is built on, as its README states it; replace"
+    },
+    {
+      "item": "product-home",
+      "path": "src/lib/registry/blocks/product-home/+page.svelte",
+      "before": "<!-- The page's one entrance: the bar's lockup, never the footer's (006 decision 5). -->",
+      "after": "<!-- The page's one entrance: the bar's lockup, never the footer's. -->"
+    },
+    {
+      "item": "product-home",
+      "path": "src/lib/registry/blocks/product-home/+page.svelte",
+      "before": "  <!-- Three owned moments, one colour each (C2): blue in the hero, yellow",
+      "after": "  <!-- Three owned moments, one colour each: blue in the hero, yellow"
+    },
+    {
+      "item": "code-editor",
+      "path": "src/lib/registry/ui/code-editor/code-editor-theme.ts",
+      "before": " * Five names live only in `@theme inline`: `--spacing`, `--text-sm`,\n * `--text-sm--line-height`, `--font-mono` and `--font-weight-medium`. They",
+      "after": " * Four names live only in `@theme inline`: `--spacing`, `--text-sm`,\n * `--text-sm--line-height` and `--font-mono`. They",
+      "why": "A correction, not a citation: the file reads four of these names, not five (015 checkpoint 2)."
+    }
+  ],
+  "kept": [
+    {
+      "item": "chat",
+      "path": "src/lib/registry/blocks/chat/+page.svelte",
+      "line": "    await sleep(700);",
+      "reason": "Code, not a comment: a 700 ms pause in the demo's fake reply. The bracketed-number pattern matches it."
+    }
+  ]
+}

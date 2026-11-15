@@ -65,7 +65,7 @@
   }
 
   // As the stage card: cleared, then set on the next frame, so the same
-  // result twice is announced twice (010 decisions 3 and 7).
+  // result twice is announced twice.
   function announce(text: string) {
     said = "";
     cancelAnimationFrame(frame);
@@ -84,7 +84,7 @@
       busy = false;
       lines = result.lines;
       // The meters mount at 0, then fill to the result on the next frame
-      // over the fill duration (010 decision 7, review finding 7).
+      // over the fill duration.
       meters = result.meters;
       fills = result.meters.map(() => 0);
       requestAnimationFrame(() => {
@@ -128,9 +128,9 @@
 
 <!--
   A working tool shown on a stage, so it is productive: its tabs and buttons
-  keep the productive corner and size (010 decision 7). A flat card with the
+  keep the productive corner and size. A flat card with the
   theme's own roles (surface-plain), so it reads the same on a field, and an
-  edge in the primary inside it while a run works (busy-edge; 012 decision 5).
+  edge in the primary inside it while a run works (busy-edge).
   One tab per example, each panel its
   command in a code block; the panels are not stops of their own, the code is.
   After a run, a row per meter: its label, the meter at the track height,

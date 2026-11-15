@@ -1,0 +1,169 @@
+/*
+  The design site's one stylesheet. Every rule sits in `@layer components`,
+  so a field's legend, a utility in the layer after it, is never beaten by a
+  site rule; no site component has a <style> block. Colours and sizes are
+  tokens; the doors' two ratios and the poster's cap offset come from
+  `doors.ts`, set on the map by the home page.
+*/
+@layer components {
+  :root {
+    /* The bar's height and the room it floats in, above every page's top. */
+    --site-bar-room: calc(var(--size-bar) + var(--spacing) * 4);
+  }
+
+  /* The bar floats over the page, so its room is taken back below it. */
+  [data-slot="site-bar"] {
+    margin-bottom: calc(-1 * var(--site-bar-room));
+  }
+
+  /* A door's dot: its colour field's fill, at text size. */
+  .site-dot {
+    display: inline-block;
+    flex: none;
+    width: 0.5em;
+    height: 0.5em;
+    border-radius: 50%;
+  }
+  .site-dot[data-door="1"] {
+    background-color: var(--field-1);
+  }
+  .site-dot[data-door="2"] {
+    background-color: var(--field-2);
+  }
+  .site-dot[data-door="3"] {
+    background-color: var(--field-3);
+  }
+  .site-dot[data-door="4"] {
+    background-color: var(--field-4);
+  }
+
+  /* The bar's current door: an underline in the foreground, never the door's colour. */
+  .site-door-link[aria-current] {
+    color: var(--foreground);
+    text-decoration-line: underline;
+    text-decoration-color: var(--foreground);
+    text-decoration-thickness: var(--focus-width);
+    text-underline-offset: calc(var(--spacing) * 2);
+  }
+
+  /* The search button's shortcut: shown, but not part of its name. */
+  .site-keys::after {
+    content: attr(data-keys);
+  }
+
+  /*
+    The home page's doors. Below lg the disc is 40% of the width, at most
+    160 px; from lg it is the headline's three lines over (2 + gap) discs,
+    so the 2 × 2 is the headline's height. The map's own custom properties
+    (--disc, --door-gap-ratio, --poster-cap-offset) are set in its markup.
+  */
+  [data-slot="door-map"] {
+    display: grid;
+    grid-template-columns: repeat(2, var(--disc));
+    gap: calc(var(--disc) * var(--door-gap-ratio));
+  }
+  [data-slot="door"] {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: var(--disc);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    container-type: inline-size;
+    text-align: center;
+    text-decoration: none;
+    /* The mark's entrance is measured in the dot's em; here the dot is the disc. */
+    font-size: var(--disc);
+    transition: scale var(--motion-micro) var(--ease-spring);
+    animation:
+      pluto-mark-dock calc(var(--motion-entrance) * var(--motion-entrance-dot))
+        backwards,
+      pluto-mark-fade calc(var(--motion-entrance) * var(--motion-entrance-dot))
+        backwards;
+    animation-timing-function: var(--ease-spring), var(--ease-entrance);
+  }
+  [data-slot="door"]:hover,
+  [data-slot="door"]:focus-visible {
+    scale: 1.03;
+  }
+  [data-slot="door"]:active {
+    transform: scale(var(--press-scale));
+    transition:
+      scale var(--motion-micro) var(--ease-spring),
+      transform var(--motion-press) var(--ease-standard);
+  }
+  /* The theme's ring, not the field's: a field sets --ring to its legend. */
+  [data-slot="door"]:focus-visible {
+    outline: var(--focus-width) solid var(--surface-ring);
+    outline-offset: var(--focus-offset);
+  }
+  [data-slot="door-map"] > :nth-child(1) > [data-slot="door"] {
+    --_ox: -1;
+    --_oy: 0.6;
+    animation-delay: calc(
+      var(--motion-entrance) *
+        (var(--motion-entrance-start) + 0 * var(--motion-entrance-stagger))
+    );
+  }
+  [data-slot="door-map"] > :nth-child(2) > [data-slot="door"] {
+    --_ox: 0.8;
+    --_oy: -0.8;
+    animation-delay: calc(
+      var(--motion-entrance) *
+        (var(--motion-entrance-start) + 1 * var(--motion-entrance-stagger))
+    );
+  }
+  [data-slot="door-map"] > :nth-child(3) > [data-slot="door"] {
+    --_ox: -0.6;
+    --_oy: -1;
+    animation-delay: calc(
+      var(--motion-entrance) *
+        (var(--motion-entrance-start) + 2 * var(--motion-entrance-stagger))
+    );
+  }
+  [data-slot="door-map"] > :nth-child(4) > [data-slot="door"] {
+    --_ox: 1;
+    --_oy: 0.8;
+    animation-delay: calc(
+      var(--motion-entrance) *
+        (var(--motion-entrance-start) + 3 * var(--motion-entrance-stagger))
+    );
+  }
+  [data-slot="door-name"] {
+    font-family: var(--font-face-display);
+    font-weight: 600;
+    font-size: calc(var(--door-name-ratio) * 100cqi);
+    line-height: 1.1;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    [data-slot="door"] {
+      animation: none;
+    }
+  }
+
+  /* The door opens onto its field: the disc and the band share a name. */
+  ::view-transition-group(*) {
+    animation-duration: var(--motion-slide);
+    animation-timing-function: var(--ease-standard);
+  }
+  /*
+    The bar is its own snapshot, painted above the growing door, so its
+    lockup keeps its four dots through the transition.
+  */
+  ::view-transition-group(site-bar) {
+    z-index: 1;
+  }
+
+  /* A focusable scroll region, named, that draws the page's ring. */
+  [data-slot="site-scroll"]:focus-visible {
+    outline: var(--focus-width) solid var(--ring);
+    outline-offset: var(--focus-offset);
+  }
+
+  /* The rail's current item. */
+  [data-slot="site-rail"] a[aria-current] {
+    color: var(--foreground);
+    box-shadow: calc(-1 * var(--focus-width)) 0 0 var(--foreground);
+  }
+}

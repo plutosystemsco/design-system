@@ -4,7 +4,7 @@
     "canvas" | "field-1" | "field-2" | "field-3" | "field-4";
 
   // Each class written out in full, so Tailwind finds it in this file and an
-  // installed app emits it (012 decision 2).
+  // installed app emits it.
   const GROUNDS: Record<StageGround, string> = {
     canvas: "bg-background text-foreground",
     "field-1": "field-1",
@@ -46,7 +46,7 @@
 </script>
 
 <!--
-  An expressive section on a ground (012 decision 2). It follows the page's
+  An expressive section on a ground. It follows the page's
   theme: it never carries `.dark`, and is never placed under a `.dark`
   ancestor other than html. `clip`, not `hidden`, keeps sideways overflow
   from widening the page while sticky still works inside. The inner column

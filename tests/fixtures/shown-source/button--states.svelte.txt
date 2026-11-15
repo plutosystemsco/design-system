@@ -1,0 +1,10 @@
+<script lang="ts">
+  import { Button } from "#lib/components/ui/button";
+</script>
+
+<div class="flex flex-wrap items-center gap-4">
+  <Button disabled>Save changes</Button>
+  <Button variant="secondary" disabled>Cancel</Button>
+  <Button busy>Signing in…</Button>
+  <Button variant="secondary" size="sm" busy>Saving</Button>
+</div>

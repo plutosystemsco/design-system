@@ -26,7 +26,7 @@
         }
       | {
           title?: undefined;
-          /** The band's name when it has no title (010 decision 6). */
+          /** The band's name when it has no title. */
           label: string;
         }
     );
@@ -43,8 +43,8 @@
 
   const uid = $props.id();
   // While `live`, the digits show the count's frames; otherwise they show
-  // each item's value, so the prerendered page and any new items read final
-  // (010 decision 6; change review findings 2 and 3).
+  // each item's value, so the prerendered page and any new items read their
+  // final values.
   let live = $state(false);
   let shown = $state<number[]>([]);
   // The page's language, once in the browser; the server formats in its own.

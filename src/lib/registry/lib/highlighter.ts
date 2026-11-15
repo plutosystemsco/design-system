@@ -1,5 +1,5 @@
 /**
- * Code highlighted in Meridian's roles (013). tree-sitter parses the 21
+ * Code highlighted in Meridian's roles. tree-sitter parses the 21
  * languages with a grammar, with queries this system writes; Shiki highlights
  * the other five and is the fallback of every one. A token renders as a
  * class, never a `style`: `tokenClass` gives a role's `text-code-<role>`.

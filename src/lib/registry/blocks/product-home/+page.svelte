@@ -15,7 +15,7 @@
   import { StageHero } from "#lib/registry/ui/stage-hero";
 
   // Your product's values. Every claim here is true of the open platform
-  // the suite is built on, as its README states it (010 decision 9); replace
+  // the suite is built on, as its README states it; replace
   // them with your own. A link goes to "/" or to an id on this page.
   const NAME = "Pluto Systems";
   const LINKS = [
@@ -113,7 +113,7 @@ for path in result.paths: print(path)`;
 
 <svelte:head><title>Work runs on data.</title></svelte:head>
 
-<!-- The page's one entrance: the bar's lockup, never the footer's (006 decision 5). -->
+<!-- The page's one entrance: the bar's lockup, never the footer's. -->
 {#snippet logo(place: "header" | "footer")}
   <Lockup entrance={place === "header"} class="text-2xl" />
 {/snippet}
@@ -157,7 +157,7 @@ for path in result.paths: print(path)`;
     </StageHero>
   </Stage>
 
-  <!-- Three owned moments, one colour each (C2): blue in the hero, yellow
+  <!-- Three owned moments, one colour each: blue in the hero, yellow
   for the proof, green for the console. -->
   <Stage element="div" ground="field-3">
     <div class="py-24">

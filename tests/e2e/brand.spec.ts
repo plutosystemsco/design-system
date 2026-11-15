@@ -4,10 +4,10 @@
  * Both projects run every test, so each holds in the light and dark theme.
  */
 import { expect, test, type Locator, type Page } from "@playwright/test";
-import { hexToRgb, open } from "./pages.ts";
+import { hexToRgb, open, componentPath } from "./pages.ts";
 
-const THEME = "/items/pluto-theme/";
-const GLASS = "/items/liquid-glass/";
+const THEME = componentPath("pluto-theme");
+const GLASS = componentPath("liquid-glass");
 
 const style = (locator: Locator, property: string, pseudo?: string) =>
   locator.evaluate(

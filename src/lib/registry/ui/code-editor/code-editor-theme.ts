@@ -2,10 +2,10 @@ import { EditorView } from "@codemirror/view";
 
 /**
  * The editor's chrome, from the tokens. Its colour comes from the
- * highlighter, through `codeHighlighting` (013 decision 16).
+ * highlighter, through `codeHighlighting`.
  * Every value is a `var()`, read from `:root` wherever a name exists there.
- * Five names live only in `@theme inline`: `--spacing`, `--text-sm`,
- * `--text-sm--line-height`, `--font-mono` and `--font-weight-medium`. They
+ * Four names live only in `@theme inline`: `--spacing`, `--text-sm`,
+ * `--text-sm--line-height` and `--font-mono`. They
  * resolve because Tailwind emits an inline theme variable whose name appears
  * in a scanned source file, and this file is one; an app that narrows its
  * `@source` must keep this folder among its sources.

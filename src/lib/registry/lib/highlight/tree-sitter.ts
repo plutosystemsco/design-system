@@ -1,5 +1,5 @@
 /**
- * The tree-sitter engine (013 decisions 2, 4, 5, 14 and 15). `web-tree-sitter`
+ * The tree-sitter engine. `web-tree-sitter`
  * parses; our queries name each node's role; this file paints them.
  *
  * - **The last pattern that matches a node wins**, and the innermost painted

@@ -34,7 +34,7 @@ const TREE_SITTER: [name: string, version: string, specifier: string][] = [
   ["@tree-sitter-grammars/tree-sitter-kotlin", "1.1.0", "~1.1.0"],
 ];
 
-// 001 decision 4's 19 packages, 002 decision 2's 4, 004 decision 2's 9, 007 decision 7's 2 and the identity exhibit's 6 (decisions.md, "The identity is commissioned"; 009 criterion 15): the version bun.lock pins and the specifier package.json holds.
+// 001 decision 4's 19 packages, 002 decision 2's 4, 004 decision 2's 9, and 007 decision 7's 2 (the identity exhibit's 6 left with it, 015 decision 11): the version bun.lock pins and the specifier package.json holds.
 const PACKAGES: [name: string, version: string, specifier: string][] = [
   ["shadcn-svelte", "1.7.1", "^1.7.1"],
   ["@sveltejs/kit", "3.1.0", "3.1.0"],
@@ -72,17 +72,12 @@ const PACKAGES: [name: string, version: string, specifier: string][] = [
   // 007 decision 7: the two packages of code-languages.
   ["@codemirror/language-data", "6.5.2", "^6.5.2"],
   ["@replit/codemirror-lang-svelte", "6.0.0", "^6.0.0"],
-  // The identity exhibit's six typeface packages, for its option boards at
-  // `/identity`. No registry item names them, so they are pinned exactly.
-  ["@fontsource-variable/figtree", "5.3.0", "5.3.0"],
-  ["@fontsource-variable/funnel-display", "5.3.0", "5.3.0"],
-  ["@fontsource-variable/funnel-sans", "5.3.0", "5.3.0"],
-  ["@fontsource-variable/geist-mono", "5.3.0", "5.3.0"],
-  ["@fontsource-variable/instrument-sans", "5.3.0", "5.3.0"],
-  ["@fontsource/ibm-plex-mono", "5.3.0", "5.3.0"],
   // 013 decision 3: the runtime and 19 grammar packages, in its table's order.
   ...TREE_SITTER,
 ];
+
+/** How many of PACKAGES this file names before any appended block adds to it. */
+const PACKAGES_015 = PACKAGES.length;
 
 function split(dep: string): { name: string; range?: string } {
   const at = dep.lastIndexOf("@");
@@ -90,9 +85,34 @@ function split(dep: string): { name: string; range?: string } {
   return { name: dep.slice(0, at), range: dep.slice(at + 1) };
 }
 
+/** 015 decision 11: the six typeface packages only the exhibit imported. */
+const EXHIBIT = [
+  "@fontsource-variable/figtree",
+  "@fontsource-variable/funnel-display",
+  "@fontsource-variable/funnel-sans",
+  "@fontsource-variable/geist-mono",
+  "@fontsource-variable/instrument-sans",
+  "@fontsource/ibm-plex-mono",
+];
+
+describe("015: the identity exhibit's packages are gone", () => {
+  test("0 of the six in package.json or bun.lock", () => {
+    const named = EXHIBIT.filter(
+      (n) =>
+        n in pkg.devDependencies ||
+        n in (lock.workspaces[""].devDependencies ?? {}) ||
+        n in lock.packages,
+    );
+    expect(named).toEqual([]);
+  });
+});
+
 describe("package.json and bun.lock", () => {
-  test("name exactly the 60 packages, all devDependencies", () => {
-    expect(PACKAGES).toHaveLength(60);
+  // The set is PACKAGES as a later specification extends it: its own block,
+  // appended to this file, pushes its packages onto PACKAGES before any test
+  // runs. 015's own count stays 54.
+  test("name exactly the packages of PACKAGES, all devDependencies; 015's are 54", () => {
+    expect(PACKAGES.slice(0, PACKAGES_015)).toHaveLength(54);
     expect(pkg.dependencies ?? {}).toEqual({});
     expect(Object.keys(pkg.devDependencies).sort()).toEqual(
       PACKAGES.map(([n]) => n).sort(),

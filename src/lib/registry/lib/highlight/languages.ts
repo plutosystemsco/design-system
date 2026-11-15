@@ -1,5 +1,5 @@
 /**
- * The twenty-six languages (013 decisions 3 to 6). Twenty-one parse with a
+ * The twenty-six languages. Twenty-one parse with a
  * tree-sitter grammar and our own queries; five (Markdown, diff, SQL, Swift,
  * Dockerfile) highlight through Shiki, which also holds every language as the
  * fallback. Nothing here loads until a block names a language.

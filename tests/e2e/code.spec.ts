@@ -12,7 +12,14 @@ import {
   type Locator,
   type Page,
 } from "@playwright/test";
-import { cssVar, hexToRgb, open, openView, settled } from "./pages.ts";
+import {
+  cssVar,
+  hexToRgb,
+  open,
+  openView,
+  settled,
+  componentPath,
+} from "./pages.ts";
 
 /**
  * True when a computed colour holds a token's colour: the same channels and
@@ -104,7 +111,7 @@ async function rawPage(
   return { raw, html, close: () => context.close() };
 }
 
-const PAGE = "/items/code-block/";
+const PAGE = componentPath("code-block");
 
 const python = (page: Page) =>
   page.getByTestId("keyboard-fixture").locator('[data-slot="code-block"]');
@@ -476,7 +483,7 @@ test.describe("the gallery", () => {
   test("S2. 26 of 26 blocks, each with at least 2 distinct text-code-* classes (diff: 2 of inserted, deleted, comment), 0 style attributes, the 16-row role table", async ({
     page,
   }) => {
-    await open(page, "/items/highlighter/");
+    await open(page, componentPath("highlighter"));
     const gallery = page.getByTestId("gallery");
     const blocks = gallery.locator('[data-slot="code-block"]');
     await expect(blocks).toHaveCount(26);
@@ -610,7 +617,7 @@ test.describe("prerender agrees with the browser", () => {
 
 /** 007 decision 10: L1, the twenty-six languages in the editor. */
 test.describe("the languages", () => {
-  const PAGE = "/items/code-languages/";
+  const PAGE = componentPath("code-languages");
 
   test("L1. 26 of 26 languages load in the editor with at least 2 role colours besides the body's (diff: inserted and deleted); in HTML, typing <div> inserts </div>", async ({
     page,
@@ -678,7 +685,7 @@ test.describe("the languages", () => {
 
 /** 007 decision 10: S1, the ink surface on the pluto-theme page. */
 test.describe("the ink surface", () => {
-  const PAGE = "/items/pluto-theme/";
+  const PAGE = componentPath("pluto-theme");
   const surface = (page: Page) => page.getByTestId("keyboard-fixture");
   // 011 decisions 2 and 3: the dark ground is graphite, the raised step and
   // the wash are warm.
@@ -760,7 +767,7 @@ test.describe("the ink surface", () => {
 });
 
 /** 004 decision 9: the editor. */
-const EDITOR_PAGE = "/items/code-editor/";
+const EDITOR_PAGE = componentPath("code-editor");
 
 /**
  * The grown-by-4-px clip check of 003 check 27, on an element. 014 decision 7
@@ -1478,7 +1485,7 @@ test("the editor before mount: with scripts off, the prerendered root computes t
 });
 
 test.describe("the popover", () => {
-  const PAGE = "/items/popover/";
+  const PAGE = componentPath("popover");
 
   test("P1. elevation on a menu: 2 shadow layers, role dialog named by its title, 256 px wide, 0 border; 2 of 2 other popovers named", async ({
     page,
@@ -1542,7 +1549,7 @@ test.describe("the accordion", () => {
   test("A1. wiring: 3 of 3 triggers control a region labelled by them, level 3; the open caret turns; grooves on items 2 and 3", async ({
     page,
   }) => {
-    await open(page, "/items/accordion/");
+    await open(page, componentPath("accordion"));
     const fixture = page.getByTestId("keyboard-fixture");
     const items = fixture.locator('[data-slot="accordion-item"]');
     await expect(items).toHaveCount(3);
@@ -1596,7 +1603,7 @@ test.describe("the toggles", () => {
     const foreground = () => cssVar(page, "--foreground").then(hexToRgb);
     const background = () => cssVar(page, "--background").then(hexToRgb);
 
-    await open(page, "/items/toggle/");
+    await open(page, componentPath("toggle"));
     const pressed = page.getByTestId("toggle-pressed");
     await expect(pressed).toHaveAttribute("data-state", "on");
     await expect(pressed).toHaveAttribute("aria-pressed", "true");
@@ -1611,7 +1618,7 @@ test.describe("the toggles", () => {
       "rgba(0, 0, 0, 0)",
     );
 
-    await open(page, "/items/toggle-group/");
+    await open(page, componentPath("toggle-group"));
     const group = page.getByTestId("toggle-group-single");
     await expect(group).toHaveAttribute("role", "group");
     const checked = group.locator('[data-state="on"]');
@@ -1632,7 +1639,7 @@ test.describe("the toggles", () => {
 
 /** 004 decision 10: the chart (H1). */
 test.describe("the chart", () => {
-  const PAGE = "/items/chart/";
+  const PAGE = componentPath("chart");
 
   test("H1. raw: 2 figures labelled by their captions, 0 svg figures, 2 tables in details; hydrated: a figure svg each, fill and stroke from the chart tokens, stroke-width 0, 0 style attributes on chart slots, the tooltip's shadow, the muted hover band", async ({
     browser,
@@ -1711,7 +1718,7 @@ test.describe("the chart", () => {
 
 /** 004 decision 14: the meter (M1). */
 test.describe("the meter", () => {
-  const PAGE = "/items/meter/";
+  const PAGE = componentPath("meter");
 
   /** The colour of one pixel of an element, at a fraction of its width and half its height. */
   async function pixel(page: Page, locator: Locator, fraction: number) {
@@ -1861,7 +1868,7 @@ test.describe("the code ground and its edge (014)", () => {
  * block's own code are unchanged by the chip.
  */
 test.describe("inline code (014)", () => {
-  const THEME_PAGE = "/items/pluto-theme/";
+  const THEME_PAGE = componentPath("pluto-theme");
   const own = (locator: Locator, name: string) =>
     locator.evaluate(
       (el, n) => getComputedStyle(el).getPropertyValue(n).trim(),
@@ -1956,8 +1963,11 @@ test.describe("inline code (014)", () => {
     page,
   }, info) => {
     const theme = info.project.name as "light" | "dark";
-    await open(page, "/items/button/");
-    const line = page.locator("code", { hasText: "REGISTRY_URL=" }).first();
+    await open(page, componentPath("button"));
+    // 015 decision 16: the install line is a code block in the facts card.
+    const line = page
+      .locator('[data-slot="facts"] [data-slot="code-block"]')
+      .first();
     expect(await computed(line, "background-color")).toBe(CODE_GROUND[theme]);
     await expectHairline(line, "the install line");
     expect(await computed(line, "color")).toBe(
@@ -1972,7 +1982,7 @@ test.describe("inline code (014)", () => {
     const inner = python(page).locator("pre code").first();
     expect(await computed(inner, "background-color")).toBe("rgba(0, 0, 0, 0)");
     expect(await computed(inner, "border-top-width")).toBe("0px");
-    await open(page, "/items/kbd/");
+    await open(page, componentPath("kbd"));
     const kbd = page.locator("main kbd").first();
     expect(await computed(kbd, "background-color")).toBe(
       hexToRgb(await cssVar(page, "--muted")),

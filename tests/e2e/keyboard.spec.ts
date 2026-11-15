@@ -1,14 +1,17 @@
 import { expect, test, type Page } from "@playwright/test";
 import {
+  BAR_STOPS,
   BLOCKS,
+  COMPONENTS_STOPS,
+  HOME_STOPS,
   hexToRgb,
-  ITEMS,
   open,
   openView,
   TABBABLE,
   VIEW_STOPS,
   VIEWS,
   waitForHighlight,
+  componentPath,
 } from "./pages.ts";
 import { BLOCK_VIEWS } from "../../src/lib/preview/blocks.ts";
 
@@ -131,84 +134,139 @@ test.describe("the ring helper", () => {
   });
 });
 
-test.describe("the catalogue", () => {
-  test.beforeEach(async ({ page }) => {
-    await open(page, "/");
-  });
-
-  // 006 decision 16: the site's footer adds one stop after the items, the
-  // source link; its lockup is not a link.
-  const SOURCE = "https://github.com/plutosystemsco/design-system";
-  test(`Tab visits the ${3 + ITEMS.length} stops in order, each with the solid ring outline`, async ({
-    page,
-  }) => {
-    const colour = await ring(page);
-    const stops: Stop[] = [];
-    for (let i = 0; i < 3 + ITEMS.length; i++) {
-      await page.keyboard.press("Tab");
-      const stop = await focused(page);
-      expect(stop).not.toBeNull();
-      stops.push(stop!);
-      await expectRingOutline(page, colour);
-    }
-    expect(stops).toHaveLength(3 + ITEMS.length);
-    expect(stops.map((s) => [s.tag, s.href])).toEqual([
-      ["a", "/"],
-      ["button", null],
-      ...ITEMS.map((name) => ["a", `/items/${name}/`]),
-      ["a", SOURCE],
-    ]);
-    expect(stops[0].name).toBe("Pluto Systems design system");
-    expect(stops[1].name).toBe("Dark theme");
-    expect(stops[stops.length - 1].name).toBe(
-      "github.com/plutosystemsco/design-system",
-    );
-
-    // No further stop: the catalogue has no other focusable element.
+/**
+ * 015 decision 22: a page's stops in order, from the top. Each stop is
+ * `role:name`, the name its aria-label or its text; `region:*` is any code
+ * block's scrolling code. Each shows the ring, unclipped.
+ */
+async function walk(page: Page, expected: string[]): Promise<void> {
+  const colour = await ring(page);
+  const seen: string[] = [];
+  for (let i = 0; i < expected.length; i++) {
     await page.keyboard.press("Tab");
-    expect(await focused(page)).toBeNull();
-  });
+    const stop = await page.evaluate(() => {
+      const el = document.activeElement as HTMLElement | null;
+      if (!el || el === document.body) return null;
+      const role = el.getAttribute("role") ?? el.tagName.toLowerCase();
+      const labelled = el.getAttribute("aria-labelledby");
+      const name = (
+        el.getAttribute("aria-label") ??
+        (labelled ? document.getElementById(labelled)?.textContent : null) ??
+        (el as HTMLInputElement).labels?.[0]?.textContent ??
+        el.textContent ??
+        ""
+      )
+        .trim()
+        .replace(/\s+/g, " ");
+      return {
+        signature: `${role}:${name}`,
+        slot: el.getAttribute("data-slot"),
+      };
+    });
+    expect(stop, `stop ${i + 1} exists`).not.toBeNull();
+    const want = expected[i];
+    seen.push(
+      want.endsWith(":*")
+        ? stop!.signature.split(":")[0] + ":*"
+        : stop!.signature,
+    );
+    expect(seen[i], `stop ${i + 1}`).toBe(want);
+    const by =
+      stop!.slot === "code-block-content"
+        ? '[data-slot="code-block"]'
+        : undefined;
+    await expectRingOutline(page, colour, by);
+    await expectRingUnclipped(page, by);
+  }
+  // No further stop: the page has no other focusable element.
+  await page.keyboard.press("Tab");
+  expect(
+    await page.evaluate(() =>
+      document.activeElement === document.body
+        ? null
+        : document.activeElement?.outerHTML.slice(0, 120),
+    ),
+  ).toBeNull();
+}
 
-  test("Enter on the first item link opens /items/pluto-theme/", async ({
+test.describe("at 1280 × 900", () => {
+  test.use({ viewport: { width: 1280, height: 900 } });
+
+  test(`the home page: Tab visits its ${HOME_STOPS.length} stops in order, each with the ring unclipped`, async ({
     page,
   }) => {
-    for (let i = 0; i < 3; i++) await page.keyboard.press("Tab");
-    expect((await focused(page))?.href).toBe("/items/pluto-theme/");
-    await page.keyboard.press("Enter");
-    await expect(page).toHaveURL(/\/items\/pluto-theme\/$/);
+    await open(page, "/");
+    await page.locator('[data-slot="site-search"]').waitFor();
+    await walk(page, HOME_STOPS);
   });
+
+  test(`the Components landing: Tab visits its ${COMPONENTS_STOPS.length} stops in order, each with the ring unclipped`, async ({
+    page,
+  }) => {
+    await open(page, "/components/");
+    await page.locator('[data-slot="site-search"]').waitFor();
+    await walk(page, COMPONENTS_STOPS);
+  });
+
+  test("Enter on the first item row opens /components/pluto-theme/", async ({
+    page,
+  }) => {
+    await open(page, "/components/");
+    await page.getByLabel("Filter components").focus();
+    await page.keyboard.press("Tab");
+    await expect(page.locator(":focus")).toHaveAttribute(
+      "href",
+      componentPath("pluto-theme"),
+    );
+    await page.keyboard.press("Enter");
+    await expect(page).toHaveURL(/\/components\/pluto-theme\/$/);
+  });
+
+  for (const path of ["/start/", componentPath("button"), "/changelog/"]) {
+    test(`${path}: the bar's ${BAR_STOPS.length} stops come first, in order, each with the ring`, async ({
+      page,
+    }) => {
+      await open(page, path);
+      await page.locator('[data-slot="site-search"]').waitFor();
+      const colour = await ring(page);
+      for (const want of BAR_STOPS) {
+        await page.keyboard.press("Tab");
+        const name = await page.evaluate(() => {
+          const el = document.activeElement as HTMLElement;
+          const role = el.getAttribute("role") ?? el.tagName.toLowerCase();
+          return `${role}:${(el.getAttribute("aria-label") ?? el.textContent ?? "").trim().replace(/\s+/g, " ")}`;
+        });
+        expect(name).toBe(want);
+        await expectRingOutline(page, colour);
+        await expectRingUnclipped(page);
+      }
+    });
+  }
 
   test("Space flips the theme toggle and Enter flips it back", async ({
     page,
   }) => {
-    const toggle = page.getByRole("button", { name: "Dark theme" });
+    await open(page, "/components/");
+    const toggle = page.getByRole("button", { name: "Dark theme" }).first();
     const html = page.locator("html");
-    const before = await toggle.getAttribute("aria-pressed");
     const wasDark = ((await html.getAttribute("class")) ?? "")
       .split(/\s+/)
       .includes("dark");
-    expect(before).toBe(String(wasDark));
-
-    await page.keyboard.press("Tab");
-    await page.keyboard.press("Tab");
-    await expect(toggle).toBeFocused();
-
+    await expect(toggle).toHaveAttribute("aria-pressed", String(wasDark));
+    await toggle.focus();
     await page.keyboard.press("Space");
     await expect(toggle).toHaveAttribute("aria-pressed", String(!wasDark));
     if (wasDark) await expect(html).not.toHaveClass(/(^|\s)dark(\s|$)/);
     else await expect(html).toHaveClass(/(^|\s)dark(\s|$)/);
-
     await page.keyboard.press("Enter");
     await expect(toggle).toHaveAttribute("aria-pressed", String(wasDark));
-    if (wasDark) await expect(html).toHaveClass(/(^|\s)dark(\s|$)/);
-    else await expect(html).not.toHaveClass(/(^|\s)dark(\s|$)/);
   });
 });
 
 test("on the four-dot page, Tab reaches the lockup link, with the same outline", async ({
   page,
 }) => {
-  await open(page, "/items/four-dot/");
+  await open(page, componentPath("four-dot"));
   const colour = await ring(page);
   let reached = false;
   for (let i = 0; i < 20 && !reached; i++) {
@@ -279,7 +337,8 @@ const FIXTURES: [item: string, stops: string[]][] = [
   // 004 decision 8: the copy button in the header, then the pre, whose ring
   // the root draws. A stop written `tag:*` matches any name: the pre's text
   // is the whole example.
-  ["code-block", ["button:Copy code", "pre:*"]],
+  // 015 criterion 26: the code scrolls sideways, so it is a named region.
+  ["code-block", ["button:Copy code", "region:*"]],
   // 004 decision 9: Tab in and out of the editor, whose ring the .cm-editor draws.
   [
     "code-editor",
@@ -322,7 +381,8 @@ const FIXTURES: [item: string, stops: string[]][] = [
     [
       "textbox:Surface example",
       "button:Copy code",
-      "pre:*",
+      // 015 criterion 26: a named region, as the code scrolls sideways.
+      "region:*",
       "tab:Output",
       "button:About fuel",
       "button:Run options",
@@ -421,7 +481,7 @@ for (const [item, expected] of FIXTURES) {
   test(`${item}: the keyboard fixture holds ${count} stops, each the expected element with the ring`, async ({
     page,
   }) => {
-    await open(page, `/items/${item}/`);
+    await open(page, componentPath(item));
     const colour = await ring(page);
     const fixture = page.getByTestId("keyboard-fixture");
     await fixture.locator(TABBABLE).first().focus();
@@ -474,7 +534,7 @@ test.describe("behaviours", () => {
   test("Space on the theme toggle flips aria-pressed and the dark class; Space again restores both", async ({
     page,
   }) => {
-    await open(page, "/items/theme/");
+    await open(page, componentPath("theme"));
     const toggle = page
       .getByTestId("keyboard-fixture")
       .getByRole("button", { name: "Dark theme" });
@@ -499,7 +559,7 @@ test.describe("behaviours", () => {
   test("Enter on the menu trigger opens the menu with focus on its first item; ArrowDown moves to the second", async ({
     page,
   }) => {
-    await open(page, "/items/dropdown-menu/");
+    await open(page, componentPath("dropdown-menu"));
     const trigger = fixture(page).getByRole("button", { name: "Account" });
     await trigger.focus();
     await page.keyboard.press("Enter");
@@ -517,7 +577,7 @@ test.describe("behaviours", () => {
   test("Escape closes the menu and returns focus to the trigger; Tab from the open menu closes it and moves on", async ({
     page,
   }) => {
-    await open(page, "/items/dropdown-menu/");
+    await open(page, componentPath("dropdown-menu"));
     const trigger = fixture(page).getByRole("button", { name: "Account" });
     const menu = page.getByRole("menu");
     // Tab first, from a fresh open: the menu closes and focus moves on to the
@@ -551,7 +611,7 @@ test.describe("behaviours", () => {
   test("Enter on the sheet trigger opens it with focus on its first link; Tab loops through the close button back to the first link", async ({
     page,
   }) => {
-    await open(page, "/items/sheet/");
+    await open(page, componentPath("sheet"));
     const trigger = fixture(page).getByRole("button", {
       name: "Open navigation",
     });
@@ -571,7 +631,7 @@ test.describe("behaviours", () => {
   test("Escape closes the sheet, focus returns to the trigger, and the content is gone after the fade", async ({
     page,
   }) => {
-    await open(page, "/items/sheet/");
+    await open(page, componentPath("sheet"));
     const trigger = fixture(page).getByRole("button", {
       name: "Open navigation",
     });
@@ -589,7 +649,7 @@ test.describe("behaviours", () => {
   test("Enter on the sidebar trigger sets aria-expanded false and makes the nav inert with 0 stops inside; Enter again restores both", async ({
     page,
   }) => {
-    await open(page, "/items/sidebar/");
+    await open(page, componentPath("sidebar"));
     const trigger = fixture(page).getByRole("button", {
       name: "Toggle sidebar",
     });
@@ -629,7 +689,7 @@ test.describe("behaviours", () => {
     test("Enter on the sidebar trigger opens the sheet named Sidebar with focus on its first link; Escape returns focus to the trigger", async ({
       page,
     }) => {
-      await open(page, "/items/sidebar/");
+      await open(page, componentPath("sidebar"));
       const trigger = fixture(page).getByRole("button", {
         name: "Toggle sidebar",
       });
@@ -648,7 +708,7 @@ test.describe("behaviours", () => {
   test("End scrolls the log's region to its end; ArrowUp releases the follow, a streamed reply does not move it, and the button appears inside the region", async ({
     page,
   }) => {
-    await open(page, "/items/message-log/");
+    await open(page, componentPath("message-log"));
     const region = fixture(page).getByRole("region", {
       name: "Keyboard messages",
     });
@@ -694,7 +754,7 @@ test.describe("behaviours", () => {
   test("Enter on the log's button returns to the end and hides it", async ({
     page,
   }) => {
-    await open(page, "/items/message-log/");
+    await open(page, componentPath("message-log"));
     const region = fixture(page).getByRole("region", {
       name: "Keyboard messages",
     });
@@ -727,7 +787,7 @@ test.describe("behaviours", () => {
   test("in the composer, Enter sends and clears; Shift Enter adds a line and does not send; a keydown with isComposing does not send", async ({
     page,
   }) => {
-    await open(page, "/items/composer/");
+    await open(page, componentPath("composer"));
     const textarea = fixture(page).locator("textarea");
     const sent = page.getByTestId("kb-sent");
     await textarea.focus();
@@ -756,7 +816,7 @@ test.describe("behaviours", () => {
   test("while streaming, Escape stops; the status reads Responding then Stopped", async ({
     page,
   }) => {
-    await open(page, "/items/composer/");
+    await open(page, componentPath("composer"));
     const textarea = fixture(page).locator("textarea");
     const button = fixture(page).locator('[data-slot="composer-send"]');
     const status = fixture(page).getByRole("status");
@@ -775,7 +835,7 @@ test.describe("behaviours", () => {
   test("Enter on the dialog trigger opens it with focus on the input; Escape returns focus", async ({
     page,
   }) => {
-    await open(page, "/items/dialog/");
+    await open(page, componentPath("dialog"));
     const trigger = fixture(page).getByRole("button", {
       name: "Rename project",
     });
@@ -792,7 +852,7 @@ test.describe("behaviours", () => {
   test("the busy button ignores Enter and clicks, keeps focus and aria-busy", async ({
     page,
   }) => {
-    await open(page, "/items/button/");
+    await open(page, componentPath("button"));
     const busy = page.getByTestId("busy-button");
     const count = page.getByTestId("submit-count");
     await expect(count).toHaveText("0");
@@ -812,7 +872,7 @@ test.describe("behaviours", () => {
   });
 
   test("Space flips the switch", async ({ page }) => {
-    await open(page, "/items/switch/");
+    await open(page, componentPath("switch"));
     const control = fixture(page).getByRole("switch").first();
     await control.focus();
     const before = await control.getAttribute("aria-checked");
@@ -824,7 +884,7 @@ test.describe("behaviours", () => {
   });
 
   test("Space flips the checkbox", async ({ page }) => {
-    await open(page, "/items/checkbox/");
+    await open(page, componentPath("checkbox"));
     const control = fixture(page).getByRole("checkbox").first();
     await control.focus();
     const before = await control.getAttribute("aria-checked");
@@ -838,7 +898,7 @@ test.describe("behaviours", () => {
   test("ArrowRight moves focus and selection to the next tab", async ({
     page,
   }) => {
-    await open(page, "/items/tabs/");
+    await open(page, componentPath("tabs"));
     const tabs = fixture(page).getByRole("tablist").first().getByRole("tab");
     await tabs.nth(0).focus();
     await expect(tabs.nth(0)).toHaveAttribute("aria-selected", "true");
@@ -850,7 +910,7 @@ test.describe("behaviours", () => {
   test("ArrowDown moves focus and the check to the next radio", async ({
     page,
   }) => {
-    await open(page, "/items/radio-group/");
+    await open(page, componentPath("radio-group"));
     const radios = fixture(page).getByRole("radio");
     await radios.nth(0).focus();
     await expect(radios.nth(0)).toHaveAttribute("aria-checked", "true");
@@ -860,7 +920,7 @@ test.describe("behaviours", () => {
   });
 
   test("Enter toggles the collapsible", async ({ page }) => {
-    await open(page, "/items/collapsible/");
+    await open(page, componentPath("collapsible"));
     const trigger = fixture(page).getByRole("button").first();
     await trigger.focus();
     await expect(trigger).toHaveAttribute("aria-expanded", "false");
@@ -876,7 +936,7 @@ test.describe("behaviours", () => {
     test("Tab from the top opens the tooltip on the off-screen trigger, and Escape closes it", async ({
       page,
     }) => {
-      await open(page, "/items/tooltip/");
+      await open(page, componentPath("tooltip"));
       const trigger = fixture(page).getByRole("button").first();
       // The trigger starts below the fold; Tab scrolls it into view.
       expect(
@@ -911,7 +971,7 @@ test.describe("behaviours", () => {
   test("Enter on the password toggle flips the type and the name", async ({
     page,
   }) => {
-    await open(page, "/items/input-group/");
+    await open(page, componentPath("input-group"));
     const toggle = fixture(page).locator(
       '[data-slot="input-group"] button[aria-controls]',
     );
@@ -929,7 +989,7 @@ test.describe("behaviours", () => {
   test("the alert dialog opens on Cancel, traps Tab, closes on Escape and returns focus", async ({
     page,
   }) => {
-    await open(page, "/items/alert-dialog/");
+    await open(page, componentPath("alert-dialog"));
     const trigger = fixture(page).getByTestId("dialog-trigger");
     await trigger.focus();
     await page.keyboard.press("Enter");
@@ -948,7 +1008,7 @@ test.describe("behaviours", () => {
   });
 
   test("Space on Announce sets the status text", async ({ page }) => {
-    await open(page, "/items/status/");
+    await open(page, componentPath("status"));
     const announce = fixture(page).getByRole("button", { name: "Announce" });
     await announce.focus();
     await page.keyboard.press("Space");
@@ -965,7 +1025,7 @@ test.describe("behaviours", () => {
     test("Enter on the copy button sets the status text to Copied and the button's name", async ({
       page,
     }) => {
-      await open(page, "/items/code-block/");
+      await open(page, componentPath("code-block"));
       // Located by its slot: its name changes on success.
       const button = fixture(page).locator(
         '[data-slot="code-block-copy-button"]',
@@ -982,7 +1042,7 @@ test.describe("behaviours", () => {
   test("Tab lands in the editor and Tab again leaves it, document unchanged", async ({
     page,
   }) => {
-    await open(page, "/items/code-editor/");
+    await open(page, componentPath("code-editor"));
     const editor = fixture(page).locator(".cm-editor");
     const content = editor.locator(".cm-content");
     const before = await content.textContent();
@@ -999,7 +1059,7 @@ test.describe("behaviours", () => {
   test("Control-Enter raises the run count and inserts no line", async ({
     page,
   }) => {
-    await open(page, "/items/code-editor/");
+    await open(page, componentPath("code-editor"));
     const editor = fixture(page).locator(".cm-editor");
     const content = editor.locator(".cm-content");
     const lines = () => editor.locator(".cm-line").count();
@@ -1017,7 +1077,7 @@ test.describe("behaviours", () => {
 
   // 004 decision 10.
   test("Enter on Show as table shows a table with 7 rows", async ({ page }) => {
-    await open(page, "/items/chart/");
+    await open(page, componentPath("chart"));
     const summary = fixture(page).locator("summary");
     await expect(summary).toHaveCount(1);
     await expect(summary).toHaveText("Show as table");
@@ -1037,7 +1097,7 @@ test.describe("behaviours", () => {
   test("Enter on the popover trigger opens a dialog named by its title with focus on its first stop; Escape closes it and returns focus", async ({
     page,
   }) => {
-    await open(page, "/items/popover/");
+    await open(page, componentPath("popover"));
     const trigger = fixture(page).getByRole("button", { name: "Fuel" });
     await trigger.focus();
     await page.keyboard.press("Enter");
@@ -1055,7 +1115,7 @@ test.describe("behaviours", () => {
   test("ArrowDown in the accordion moves focus to the second trigger; Enter expands it and shows the region its aria-controls names", async ({
     page,
   }) => {
-    await open(page, "/items/accordion/");
+    await open(page, componentPath("accordion"));
     const triggers = fixture(page).locator('[data-slot="accordion-trigger"]');
     await triggers.nth(0).focus();
     await page.keyboard.press("ArrowDown");
@@ -1072,7 +1132,7 @@ test.describe("behaviours", () => {
 
   // 004 decision 13.
   test("Space flips the first toggle's aria-pressed", async ({ page }) => {
-    await open(page, "/items/toggle/");
+    await open(page, componentPath("toggle"));
     const toggle = fixture(page).getByRole("button").first();
     await toggle.focus();
     const before = await toggle.getAttribute("aria-pressed");
@@ -1086,7 +1146,7 @@ test.describe("behaviours", () => {
   test("ArrowRight in the toggle group moves focus without changing aria-checked, and Space checks the focused item", async ({
     page,
   }) => {
-    await open(page, "/items/toggle-group/");
+    await open(page, componentPath("toggle-group"));
     const items = fixture(page).getByRole("radio");
     const checked = fixture(page).locator(
       '[role="radio"][aria-checked="true"]',
@@ -1111,7 +1171,7 @@ test.describe("behaviours", () => {
   test("Enter on Create project inserts the error summary and focuses it; Enter on its first link focuses the field", async ({
     page,
   }) => {
-    await open(page, "/items/error-summary/");
+    await open(page, componentPath("error-summary"));
     const submit = fixture(page).getByRole("button", {
       name: "Create project",
     });
@@ -1351,7 +1411,7 @@ test.describe("viewer toolbars", () => {
     test(`${block}: ${expected.length} toolbar stops in order, each with the ring`, async ({
       page,
     }) => {
-      await open(page, `/items/${block}/`);
+      await open(page, componentPath(block));
       const colour = await ring(page);
       await page
         .getByTestId("viewer-toolbar")

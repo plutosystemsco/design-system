@@ -1,7 +1,14 @@
 import { expect, test, type Page } from "@playwright/test";
-import { GROUND, open, openView, settled, type ThemeName } from "./pages.ts";
+import {
+  GROUND,
+  open,
+  openView,
+  settled,
+  type ThemeName,
+  componentPath,
+} from "./pages.ts";
 
-const PAGE = "/items/pluto-theme/";
+const PAGE = componentPath("pluto-theme");
 const token = (name: string) => `[data-token="${name}"]`;
 
 /**
@@ -233,7 +240,7 @@ test.describe("the vertical groove", () => {
   test("groove-s: the inset's start border is 1 px of --groove-line, and its inset shadow holds --groove-light", async ({
     page,
   }) => {
-    await open(page, "/items/sidebar/");
+    await open(page, componentPath("sidebar"));
     const inset = page
       .getByTestId("shell-main")
       .locator('[data-slot="sidebar-inset"]');
@@ -302,9 +309,9 @@ test.describe("flat product screens in the light theme (011 criterion 4)", () =>
   };
 
   for (const [path, trigger, slot] of [
-    ["/items/popover/", "popover-fuel", "popover-content"],
-    ["/items/dropdown-menu/", "menu-account", "dropdown-menu-content"],
-    ["/items/dialog/", "dialog-rename", "dialog-content"],
+    [componentPath("popover"), "popover-fuel", "popover-content"],
+    [componentPath("dropdown-menu"), "menu-account", "dropdown-menu-content"],
+    [componentPath("dialog"), "dialog-rename", "dialog-content"],
   ] as const) {
     test(`an open ${slot}: the first layer is #857E70, the second clear`, async ({
       page,

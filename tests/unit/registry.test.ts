@@ -1678,9 +1678,23 @@ describe("CHANGELOG.md", () => {
 
 /** 014 criteria 7, 9 and 13: the white code ground, in the items' source, the version and the documents. */
 describe("014: the white code ground", () => {
-  const read = (file: string) => readFileSync(file, "utf8");
   const UI = "src/lib/registry/ui";
-  const PAGES = "src/routes/(site)/items";
+  const PAGES = "src/routes/(site)/components";
+  // 015 decision 13: an item page's examples are files of their own, so a
+  // page's text is its page file and its example files.
+  const read = (file: string) => {
+    const page = new RegExp(
+      `^${PAGES.replace(/[()]/g, "\\$&")}/([^/]+)/\\+page\\.svelte$`,
+    ).exec(file);
+    const dir = page ? `src/lib/site/examples/${page[1]}` : "";
+    const examples =
+      dir && existsSync(dir)
+        ? readdirSync(dir)
+            .filter((f) => f.endsWith(".svelte"))
+            .map((f) => readFileSync(`${dir}/${f}`, "utf8"))
+        : [];
+    return [readFileSync(file, "utf8"), ...examples].join("\n");
+  };
   /** The class tokens of the first string literal after `key`. */
   const classesAfter = (text: string, key: RegExp) => {
     const match = key.exec(text);
@@ -1729,7 +1743,7 @@ describe("014: the white code ground", () => {
 
   test('no file under src/lib/registry/ or the item pages contains class="bg-muted"', () => {
     const files = execSync(
-      `git ls-files --cached --others --exclude-standard -- src/lib/registry "${PAGES}"`,
+      `git ls-files --cached --others --exclude-standard -- src/lib/registry "${PAGES}" src/lib/site/examples`,
       { encoding: "utf8" },
     )
       .split("\n")
@@ -1786,21 +1800,31 @@ describe("014: the white code ground", () => {
 
 /** 016 criteria 9 and 12: no amber left, and the yellow in the documents. */
 describe("016: the brand yellow", () => {
-  const read = (file: string) => readFileSync(file, "utf8");
-  const PAGES = "src/routes/(site)/items";
+  const PAGES = "src/routes/(site)/components";
+  // 015 decision 13: an item page's examples are files of their own, so a
+  // page's text is its page file and its example files.
+  const read = (file: string) => {
+    const page = new RegExp(
+      `^${PAGES.replace(/[()]/g, "\\$&")}/([^/]+)/\\+page\\.svelte$`,
+    ).exec(file);
+    const dir = page ? `src/lib/site/examples/${page[1]}` : "";
+    const examples =
+      dir && existsSync(dir)
+        ? readdirSync(dir)
+            .filter((f) => f.endsWith(".svelte"))
+            .map((f) => readFileSync(`${dir}/${f}`, "utf8"))
+        : [];
+    return [readFileSync(file, "utf8"), ...examples].join("\n");
+  };
 
-  test("no amber, #F19E20 or #915B00, in any case, in the tokens, build-tokens, src/ (but the identity record), registry.json or static/r/", () => {
+  test("no amber, #F19E20 or #915B00, in any case, in the tokens, build-tokens, src/, registry.json or static/r/", () => {
     const files = execSync(
       "git ls-files --cached --others --exclude-standard -- tokens scripts/build-tokens.ts src registry.json static/r",
       { encoding: "utf8" },
     )
       .split("\n")
       .filter(
-        (f) =>
-          f &&
-          existsSync(f) &&
-          !f.startsWith("src/lib/identity/") &&
-          !/\.(png|jpe?g|webp|woff2?|ico)$/.test(f),
+        (f) => f && existsSync(f) && !/\.(png|jpe?g|webp|woff2?|ico)$/.test(f),
       );
     expect(files.length).toBeGreaterThan(300);
     const hits = files.filter((f) => /amber|#?f19e20|#?915b00/i.test(read(f)));
