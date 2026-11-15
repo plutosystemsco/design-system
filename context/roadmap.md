@@ -68,13 +68,14 @@ The new name in code. Evidence across three engines and two screen readers. Toke
 | `020` the Kuiper rename | `pluto` → `kuiper` in the registry name, the theme item, context keys, the token file, the storage key and the package; one "Upgrade to 0.13.0" guide page; a redirect for each moved URL | all | the `v0.12.0` tag | 11: 2 → 3 (migration page) |
 | `021` tokens for everyone | The token file becomes DTCG with a `$description` per role (from `words.ts`), a record of renamed and removed names, and a plain CSS-variables file published beside the theme. Built CSS is byte-identical | T | `020` | 5: 1 → 4; 12: 0 → 1 |
 | `022` the test matrix | Firefox and WebKit projects for every browser suite; scripted VoiceOver and NVDA runs, built on `019`'s script, for items with a live region, a focus move or an overlay; a tag waits on a green run | E | `020` | 3: row (h) recorded |
-| `023` prop doc comments | A doc comment on every prop of every item; a unit test that the described list has no empty row; the undefined-`var()` test | I | `020` | 2: 2 → 3 |
-| `024` budgets per template | One transfer budget per page template, from its heaviest page plus a stated margin. Small change | S (perf only) | `020` | 8: held |
+| `023` prop doc comments | A doc comment on every prop of every item; a unit test that the described list has no empty row; the undefined-`var()` test | I | `020`, `024` (Button's headroom) | 2: 2 → 3 |
+| `024` budgets per template | One transfer, LCP and CLS budget per page template (eight templates), from its heaviest page plus a stated margin. A full spec: it needs owner answers and sets a rule for later specs | S (perf only) | `020` | 8: held |
 | `025` component cost | Each item installed into a minimal SvelteKit app; its added JS and CSS (gzipped, with dependencies), hydration time and main-interaction latency under CPU throttle; per-item budgets that fail the build | E (new `scripts/cost/`) | `020` | 15: (b) budgets |
 | `026` toast | Kuiper's own `toast` on `status`: two announcers, no tab stop per toast, F8, a ≥ 6 s floor for success and info, timed toasts only, pause rules, `timers="off"` | N; app-shell mount at landing | `020`; its app-shell edit after `023` | 1: one of 40 |
-| `027` batch A | Pagination, search field, button group, tag, link, progress bar. New items only, each fully described from birth | N | `020` | 1: 3 → 4 (35 of 40) |
-| `028` forced colours | System-colour rules on every interactive item; a `forcedColors: "active"` check per item | I | `023`, `026`, `027` | 3: (e) |
-| `029` scoped schemes | Option B: `light-dark()` tokens with a hex fallback, `data-scheme` on any element, `dark:` banned in items, `readToken` returns a resolved colour, alert's tints as tokens | T, then I (alert) | `021`, `023`; the owner's four questions | 4: 2 → 3 |
+| `027a` batch A, quiet items | Link, button group, progress. Nothing spoken, no focus move. New items only, each fully described from birth | N | `020` | 1: 32 of 40 |
+| `027b` batch A, interactive items | Pagination, search field, tag. Each has a live region or a focus move, so it joins `022`'s screen-reader set | N | `020`, `022`, `025`, `026` (its `unspoken` rule) | 1: 3 → 4 (35 of 40) |
+| `028` forced colours | System-colour rules on every interactive item; a `forcedColors: "active"` check per item | I | `023`, `026`, `027a`, `027b` | 3: (e) |
+| `029` scoped schemes | Option B: `light-dark()` tokens with a hex fallback, `data-scheme` on any element, `dark:` banned in items, `readToken` returns a resolved colour, alert's tints as tokens | T, then I (alert) | `021`, `023` (the owner's scoped-schemes answers are recorded in §6 Q4) | 4: 2 → 3 |
 | `030` the accessibility status | Tests tagged by item and check; a committed report of the last full run; the status line and "What Kuiper provides" on each page; `025`'s cost on the facts line | S | `022`, `024`, `025`, `028` | 3: (d); 15: (a), (c) → 3 |
 | `031` high contrast | `prefers-contrast: more` and a hand setting on `<html>`; text at 7:1; its own primitives, approved by the owner | T | `029`, `028` | 3: (f) → 3; 4: → 4 |
 | `031a` the index card redesign | The Components index card is redrawn: the owner found its thumbnail on the page's own paper, inside a white card on that paper, reads as background on background, and white examples sit white on white (the owner, 2026-11-15). Research how Carbon, Atlassian, Spectrum and Radix frame previews; a stage ground that differs from both the page and the card in every scheme; the thumbnails regenerated | S (index, thumbnails) | `029` (scheme grounds) | 6: held; 7: held |
@@ -91,7 +92,7 @@ Not a spec: **the Kuiper lockup mock-ups.** They are drawn in `research/` as an 
 | `034` the part first | The frame's title and scheme switch on one row; the stage above y = 500 at 1440 | S (frames) | `032` | 7: 2 → 3 |
 | `035` states in axe | Hover, pressed, disabled, invalid and open states driven and scanned, in both schemes | E | `022` | 3: (b) |
 | `036` info, banner and count | An `info` tone; a page-level banner from `alert`; count and dot badges; `toast.info` | T, then I | `031` | 1: held |
-| `037` batch B | Custom select, combobox, multi-select, slider, choice cards, toggletip, context menu. Combobox gets a 1,000-option cost case | N | `027` (tag) | 1: 37 of 40; 15: (d) → 4 |
+| `037` batch B | Custom select, combobox, multi-select, slider, choice cards, toggletip, context menu. Combobox gets a 1,000-option cost case | N | `027b` (tag) | 1: 37 of 40; 15: (d) → 4 |
 | `038` the data palette | Eight categorical colours, sequential and diverging scales, each measured for contrast and colour-blind distance | T, then I (chart) | `036` | 4, 5: held |
 | `039` motion | Motion tokens by size of change; sheets, drawers and toasts slide; accordions open by height; nothing moves under reduced motion | T, then I | `038` | — |
 | `040` installs by npm and pnpm | The smoke test installs into one scratch app per manager (§4.5) | E (smoke) | `025` | 10: held |
@@ -101,7 +102,7 @@ Not a spec: **the Kuiper lockup mock-ups.** They are drawn in `research/` as an 
 | Spec | Scope | Lanes | Depends on | Moves |
 |---|---|---|---|---|
 | `041` density, type and section grounds | A compact control density; a 20 px title step; named section grounds for headers and toolbars | T | `039` | 4: (d) |
-| `042` batch C | Data table (TanStack Table, named), toolbar, page header, description list, tab nav, copy button, relative time. Data table gets a 10,000-row cost case | N | `041`, `027` | 1: held |
+| `042` batch C | Data table (TanStack Table, named), toolbar, page header, description list, tab nav, copy button, relative time. Data table gets a 10,000-row cost case | N | `041`, `027a`, `027b` | 1: held |
 | `043`–`047` the rollout | The page standard, one spec per group: forms; overlays and navigation; surfaces and feedback; actions, data and code; the reduced set for blocks, fonts and libraries. Each also completes its items' keyboard data | site guidance, one group each | `033` | 3: (c) → 4; coverage → about 90% |
 | `048` governance | A written interface-change rule; `meta.deprecated` naming the replacement; a built-token diff in every change review | registry meta, scripts | `021` | 14: 2 → 3 |
 | `049` notes and upcoming | Release notes grouped by kind; a feed; an "Upcoming" page generated from this file | S, `CHANGELOG.md` | `048` | 11: 3 → 4 |
@@ -138,7 +139,7 @@ The deprecation rule takes effect with the 1.0 tag.
 
 `020` lands before any other 0.13.0 build. The reasons:
 
-- **Every other spec touches what it renames.** `021` reshapes the token file. `026` and `027` add context keys. `029` rewrites the theme item. Renamed last, each would be written once with `pluto` and again with `kuiper`, in the same release.
+- **Every other spec touches what it renames.** `021` reshapes the token file. `026` and `027b` add context keys. `029` rewrites the theme item. Renamed last, each would be written once with `pluto` and again with `kuiper`, in the same release.
 - **New items would be born with old names.** Toast and batch A would need their own migration lines for names no app ever installed.
 - **One guide, built up.** `020` creates the "Upgrade to 0.13.0" page. Each later spec with an interface change adds its section. The guide grows as a ledger file.
 - **It is mechanical.** A script renames; the tests and the scorecard show nothing else moved. The queue costs days, not a release.
@@ -150,7 +151,7 @@ While `020` builds, the wave-1 specifications are written and reviewed. Those ar
 | Wave | Runs at once | Why this order |
 |---|---|---|
 | 0 | `020`, alone. The lockup mock-ups, the spec writing and the owner's scoped-schemes questions run beside it | It touches every file |
-| 1 | `021` (T), `022` (E), `023` (I), `024` (S, perf), `025` (E, new files), `026` (N), `027` (N) | One spec per lane. `022` and `025` share lane E but not files: config and screen readers against a new `scripts/cost/` |
+| 1 | `021` (T), `022` (E), `023` (I), `024` (S, perf), `025` (E, new files), `026` (N), `027a` (N), `027b` (N, after `022`, `025`, `026`) | One spec per lane. `022` and `025` share lane E but not files: config and screen readers against a new `scripts/cost/` |
 | 2 | `028` (I), `029` (T), `030` (S) | `028` waits for `023` and the new items. `029` waits for `021`, and its alert edit waits for `023`. `030` waits for the matrix, the budgets, the cost figures and the forced-colours check |
 | 3 | `031` (T) | It needs `029`'s attribute pattern and the owner's swatches. It is the first spec to slip to 0.14.0 if the lane runs long |
 
@@ -181,10 +182,12 @@ The loop runs after every specification lands. It also runs before every tag.
 
 `scripts/bench/` is committed (since `45a5f5c`), so every run scores the same instrument. `020` renames it to `kuiper.ts`, with a fallback to the old token path so older commits still score.
 
+**Page budgets (`024`).** Every site page is held to its template's transfer, LCP and CLS budgets, each from the template's heaviest or slowest page plus a stated margin (`tests/e2e/budgets.ts`). A specification that adds weight to every page of a template states the cost in kB per page; it must fit the template's headroom or ask for a ruling. A budget rises only by a ruling recorded with its measurement, and falls at a re-base without one. Before each tag, the sweep runs: `PERF_SWEEP=1 bun --bun playwright test --project=perf --no-deps`. This rule takes effect when `024` lands.
+
 ## 5. Risks
 
 - **The matrix's first run is unknown.** No item has run in Firefox, WebKit or under a screen reader. Each fault becomes a small change. Many faults would lengthen 0.13.0.
-- **The suite triples.** About 2,000 browser tests become about 6,000. `022` must shard them, or the loop slows.
+- **The suite triples.** 2,981 browser tests (measured by `022`) become about 8,900 across three engines. `022` must shard them, or the loop slows.
 - **Ledger contention.** Seven wave-1 specs land through the same five files. Landing one at a time is slow but safe.
 - **The rollout is mostly writing.** About 280 hours across `043`–`047`. It decides 0.15.0's date.
 - **Row 7's 4 may conflict with the standard.** The header and facts sit above the first example. Reaching y = 350 may mean moving the facts below it.
@@ -193,28 +196,15 @@ The loop runs after every specification lands. It also runs before every tag.
 
 ## 6. Questions for the owner
 
-Recommended option first.
+Recommended option first. Answered questions keep their answer and its source.
 
-**Q1. Where does the full matrix run?** The repository has no CI. NVDA runs only on Windows.
-1. **GitHub Actions on the public repository.** Linux runs the three engines. A macOS runner drives VoiceOver; a Windows runner drives NVDA. A tag waits on a green run. Public repositories run free. It needs the owner to push.
-2. **Locally, on the release machine,** with NVDA in a Windows virtual machine. No push needed. One machine gates every tag.
-3. **Engines in CI, screen readers locally.**
+**Q1. Where does the full matrix run?** Answered: GitHub Actions on the public repository (`decisions.md` at `beeb67e`; `022`'s landing notes hold its nine detailed answers).
 
-**Q2. When does 0.13.0's build start?** The `v0.12.0` tag waits on your `019` listen. `020` renames `error-summary`'s files too.
-1. **Run the listen first.** `020` starts at the tag. Specs are written meanwhile.
-2. **Branch `release/0.13.0` now.** If the listen fails, the fix lands on both branches.
+**Q2. When does 0.13.0's build start?** Answered by events: the owner's `019` listen passed, `v0.12.0` was tagged on `dad6f76`, and `release/0.13.0` starts from it.
 
-**Q3. Do old names keep working for one release?**
-1. **Yes, for the item and the storage key only.** A `pluto-theme` stub installs `kuiper-theme`. The theme script reads the old key once. Context keys break, with the guide.
-2. **A clean break.** The guide covers every name. Deprecation is not owed before 1.0.
+**Q3. Do old names keep working for one release?** Answered: yes, for every old name, the context keys included (`decisions.md` at `beeb67e`; `020` decision 4). The exceptions the owner chose in `020`: the token file path and the four old keyframes are not kept (`020` Q3, Q5).
 
-**Q4. The scoped-schemes questions,** asked when `029` starts. Its [memo](research/2026-11-15-scoped-schemes-and-contrast.md) §8 holds the alternatives; the recommended answers are:
-1. **Browser floor:** `light-dark()` with a generated hex fallback until Safari 17.5.
-2. **`.dark`:** an alias of `data-scheme="dark"` for two minor releases, then removed.
-3. **High-contrast colours:** new primitives in the brand's hues, measured to 7:1, swatches approved by you.
-4. **Non-text target in high contrast:** 4.5:1, as Primer uses.
-
-Its third question, whether high contrast is needed, is settled: yes.
+**Q4. The scoped-schemes questions.** Answered with the memo's recommendations (`decisions.md` at `beeb67e`): `light-dark()` with a generated hex fallback, `.dark` as an alias for two minor releases, high-contrast primitives measured to 7:1 with swatches the owner approves, and 4.5:1 for non-text in high contrast. `029` and `031` carry them.
 
 **Q5. What is 1.0?**
 1. **The bar in `061`:** every target in §1, every page at the standard, every status green. The date follows the bar.

@@ -1,6 +1,6 @@
 # 025 — Component cost
 
-- **Status:** Revised after review. The specification review, [`../reviews/025-component-cost-spec-2026-11-15.md`](../reviews/025-component-cost-spec-2026-11-15.md), found 2 High, 13 Medium and 5 Low. Every finding is answered under "Review". Not built.
+- **Status:** Ready for owner answers: review approved with changes, all applied. The specification review, [`../reviews/025-component-cost-spec-2026-11-15.md`](../reviews/025-component-cost-spec-2026-11-15.md), found 2 High, 13 Medium and 5 Low; its re-review found R1 (High) to R8. Every finding is answered under "Review"; R7 is `026`'s to restate, and `026` has restated it. The owner answered Q1 to Q8 on 2026-11-15, each with the recommended option (see Landing notes). Ready to build after `020`.
 - **Date:** 2026-11-15
 - **Author:** the spec author for `025`, for the design lead
 - **Kind:** test harness and published data. New files under `scripts/cost/`, new tests, one `package.json` script, one line in `scripts/site/release-check.ts`, and one `exclude` entry in `tsconfig.json`. **No interface change:** no item's source, props or files change. No new dependency: the harness uses Bun, the repository's locked `shadcn-svelte` CLI, Playwright and Prettier. The cost app's own lockfile pins only versions the repository's `bun.lock` already resolves (decision 2).
@@ -31,7 +31,7 @@ This specification measures each item where the cost is paid: in a real SvelteKi
 - **Response time**: from the trusted timestamp of the event that starts the item's work to two animation frames after the expected state is seen. React Aria's suite calls this "opportunity" (*cost* §2.3). It is comparable in kind to one INP interaction, not equal to it: INP ends at the next paint after the handlers, and is a field measure over many people's interactions.
 - **The no-op click**: a click on the floor's heading, which does nothing. Its response time is the harness's own floor, about 41 ms under 4× (*cost* §9.4).
 - **Under 4×**: with Chromium's main thread slowed four times (`Emulation.setCPUThrottlingRate`). Lighthouse uses the same multiplier (*cost*, terms). Public text says "a 4× slower CPU" and makes no claim about devices.
-- **A launch** is one browser process. **A block** is the run of trials for one item inside a launch: floor, item, floor, item, floor (decision 12).
+- **A launch** is one browser process. **A block** is the run of trials for one item inside a launch: floor, item, floor, item, floor, item, floor (decision 11).
 - **The size hash** and **the runtime hash**: SHA-256s over everything that decides an item's size figures, and its runtime figures (decision 13).
 - **The release machine**: the machine named in `budgets.json`'s `machine` field, on which the tag's full run is made.
 
@@ -72,7 +72,11 @@ Figures from the prototype are approximate: it installed with the CLI's default 
 ### 3. How an item is installed, offline
 
 1. The harness serves the built registry, `static/r/`, read-only, from a Bun file server on a free port. It never starts `vite dev`, and never uses port 5199.
-2. **Every CLI run is offline.** `BUN_CONFIG_REGISTRY` and `npm_config_registry` point at a closed local port, so the CLI's package lookups fail fast and the run needs no network (open question 8). The `add` still exits 0 (*cost* §9.2).
+2. **Every CLI run is offline, and fails its lookups fast.** One constant in `build.ts`, `OFFLINE_ENV`, holds every variable, and every CLI run gets all of them:
+   - `BUN_CONFIG_REGISTRY` and `npm_config_registry`: `http://127.0.0.1:9/`, a closed local port, so no package lookup leaves the machine (open question 8);
+   - `npm_config_fetch_retries`: `0`, so a failed lookup is not retried. Without it the lookups back off against the closed port: an offline `add` took 72.1 and 72.3 s, against 2.08 s with retries off and 0.66 s online (EXECUTED (re-review)).
+   - The `add` still exits 0 and writes `"latest"` for the fonts, which step 5 then undoes (*cost* §9.2). An `add` that takes over 10 s fails the item, naming `OFFLINE_ENV` (criterion 22).
+   - *Why not the CLI's hidden `--no-deps`*, which skips the lookups (0.2 s, the same files, EXECUTED (re-review)): it is undocumented, and it leaves no `package.json` change to check against the template, which is how step 5 proves criterion 3 at run time.
 3. It prepares one **template** in a fresh temporary folder: copy the cost app, `bun install --frozen-lockfile` (which reads only Bun's cache; a cold cache is the one step that may need the network, and the harness says so when it fails), `svelte-kit sync`, then `shadcn-svelte add <theme item> utils -y -o --no-deps-install` with the repository's locked CLI under Bun (`tests/smoke/process.ts`'s `bin`). Built with `_floor.svelte`, the template is the floor; with `_theme-floor.svelte`, the theme floor. The cost app built with no `add` is the empty app.
 4. For each item it copies the template, without `build/` or `.svelte-kit/output`, into a fresh folder, with `node_modules` linked to the template's (the review rebuilt a linked copy byte for byte, *cost* §9.2). It runs `add <item> -y -o --no-deps-install`.
 5. **It checks and restores `package.json`.** It compares the item app's `package.json` with the template's. A package the template lacks fails the item, naming the package: criterion 3, proved at run time. Then it restores the template's file, so the built tree is the hashed one.
@@ -134,9 +138,11 @@ Figures from the prototype are approximate: it installed with the CLI's default 
 - `target`: a selector that matches exactly one element of the page;
 - `state`: a script expression, true once the interaction's work is done;
 - `says`: the verb `costFacts` uses ("opens", "shows", "updates", "sends", "copies", "toggles", "selects", "expands", "focuses");
-- `viewport`: 1280 × 800 unless stated;
-- `prepare`, optionally: what runs before the measure is armed;
+- `viewport`: `"1280x800"` unless stated;
+- `prepare`, optionally: a script expression run before the measure is armed;
 - `note`, optionally: what the figure includes that is not the item's own work.
+
+Every field is a string: no function, number or object. So an entry's canonical serialisation, its keys sorted, is exact, and the runtime hash (decision 13) sees any change to it.
 
 | Item | Kind, start | Target | The state that ends it | Says |
 |---|---|---|---|---|
@@ -193,28 +199,37 @@ Figures from the prototype are approximate: it installed with the CLI's default 
 ### 11. How many runs, which statistic
 
 - **Sizes:** one build per app. Builds are deterministic for equal inputs (*cost* §4), so a size is measured once and never re-measured.
-- **Runtime: 6 launches, one block per item per launch.** A launch opens with 1 discarded warm-up load of the floor. Then each item, in an order shuffled per launch by a fixed seed, runs its block: **floor, item, floor, item, floor**, all at the item's viewport. Floor trials make the no-op click; item trials make the item's interaction.
-- An item's launch-level hydration figure is the median of its block's 2 item trials minus the median of its block's 3 floor trials. Its response time's launch-level figure is the median of its 2 item trials. Each figure is the median of the 6 launch-level figures. The spread beside it is the lowest and highest launch-level figure.
+- **Runtime: 6 launches, one block per item per launch.** A launch opens with 1 discarded warm-up load of the floor. Then each item, in an order shuffled per launch by a fixed seed, runs its block: **floor, item, floor, item, floor, item, floor**, all at the item's viewport. Floor trials make the no-op click; item trials make the item's interaction.
+- An item's launch-level hydration figure is the median of its block's 3 item trials minus the median of its block's 4 floor trials. Its response time's launch-level figure is the median of its 3 item trials. Each figure is the median of the 6 launch-level figures. The spread beside it is the lowest and highest launch-level figure.
 - *Why blocks:* in a full launch of about 72 items, a floor measured once per launch would sit minutes from most items, and drift between them would not cancel. In a block it sits seconds away. In the prototype, pairing each item with floor trials seconds away cut `separator`'s worst launch-level difference from 14.6 to 6.2 ms, and its range from 17.7 to 7.1; `button`'s range from 19.4 to 14.5; `dialog`'s from 26.5 to 23.1. It did not cancel the A/A pair's worst launch, 15.8 ms either way: that launch's own trials were noisy (the floor read 84.6 to 118.5 within it), which no pairing removes. The median over 6 launches absorbed it: every method gave medians within 1.5 ms of each other (*cost* §9.3).
+- *Why 3 item trials, not 8 launches:* the first revision's block of 2 item trials raised the noise. Re-cut from the prototype's samples and bootstrapped (*cost* §10.1), the A/A figure's standard error over 6 launches was 3.7 ms with 2 item trials, 2.8 ms with 2 item trials and 8 launches, and 2.5 ms with 3 item trials and 6 launches; the items' fell to 1.5 to 3.2 ms. The A/A figure passed ±8 ms in 99.5% of resamples with 3 item trials, against 92.9% with 2. Three item trials cost 42 loads per item, against 40 for 8 launches of the old block, and give the lower noise.
 - *Why 6 launches:* in the prototype the median of the first 3, 4, 6 and 8 launches stayed within 0.5 ms for `button` and 6 ms for `dialog` (*cost* §5). 6 launches also give a usable Hodges–Lehmann interval if a later specification wants a verdict; this one uses no interval.
-- **A runtime figure over budget is re-measured** at once: that item alone, 6 more launches of its block. It fails only if the second figure is also over. A size over budget fails at once.
+- **The run settings live in one hashed file,** `scripts/cost/settings.ts`: the CPU rate (4), the launches (6), the block shape (`FIFIFIF`), the warm-ups (1), the default viewport, the gzip level (9), the Brotli quality (11), the timeouts, the load wait and the instrument band. `run.ts` parses flags and holds no setting. `settings.ts` is in both hashes (decision 13).
+- **A runtime figure over budget is re-measured** at once: that item alone, 6 more launches of its block.
+- **The bar for the gate.** Criterion 12's second full run may hold at most one figure over budget after the re-measure. If it holds more, the item trials per block or the margins change, by a ruling in the landing notes, before budgets are written. The bootstrap puts a single item's chance of failing a first budget and then its re-measure at well under 1% (*cost* §10.1). It fails only if the second figure is also over. A size over budget fails at once.
 
 ### 12. Noise: wait, sample, check the instrument
 
 - **Wait.** Before the runtime phase, the harness waits for the one-minute load average to fall below the core count, for at most 3 minutes, sampling every 10 s. It then starts regardless. The builds have finished by then.
 - **Sample.** It reads the load at the start of every launch and records the maximum and the median for the run.
-- **Check the instrument.** Two figures, measured in every run, do not depend on any item: the floor's own median hydration (`floorHydrateMs`) and the no-op click (`noopMs`). Each must fall within ±15% of its committed value in `budgets.json`'s `instrument` field, and `_calibrate.svelte`'s response time must be at least 50 ms and at most 50 ms plus `noopMs` plus 16 ms. If any fails, the run is **noisy**.
-- A noisy run's figures are written, marked with the run's `noisy: true`. The unit gate checks them against budgets as usual. The release check refuses them (decision 16).
-- *Why this works on a shared machine:* the prototype ran at load averages of 13 to 36 on 10 cores. The floor's launch medians stayed within 96 to 117 ms and the no-op within 37.8 to 45, both inside ±15% (*cost* §5, §9.4). A load-average threshold alone would have refused every run that day.
+- **Check the instrument.** Two figures, measured in every run, do not depend on any item: the floor's own median hydration (`floorHydrateMs`) and the no-op click (`noopMs`). Each run's median of each must fall within ±15% of its committed value in `budgets.json`'s `instrument` field (single launches may stray further), and `_calibrate.svelte`'s response time must be at least 50 ms and at most 50 ms plus `noopMs` plus 16 ms. If any fails, the run is **noisy**.
+- A noisy run's figures are written, marked with the run's `noisy: true`. The unit gate holds its sizes and hydration to their budgets as usual, and **its response times only to the 200 ms ceiling, on any machine**: holding a noisy wait to its budget would turn noise into failures for the re-measure to rescue. The release check refuses a noisy run (decision 16).
+- **Who writes the instrument values, and when.** Only `bun run cost --budget instrument` writes them. It reads the newest run's `floorHydrateMs` and `noopMs`, and refuses unless that run is `--full`, on the release machine, with `_calibrate.svelte` inside its bound. (It cannot ask that the run be quiet by the instrument check, since that check is defined against the values being written.) It is run at criterion 12's first full run, and again by the builder of any specification that moves the instrument (a Playwright, Chromium or harness change), at that build, before its other budgets. The landing notes of that specification give the old and new values and the reason. Criterion 7's walk skips `instrument`; it is not a budget.
+- *Why this works on a shared machine:* the prototype ran at load averages of 13 to 36 on 10 cores. The floor's run medians were 109.2, 113.0 and 122.5 ms, within +12.2% of the quietest; its single launch medians ranged 89.0 to 127.4, which is why the band applies to a run's median. The clean no-op run's launch medians stayed within 37.8 to 45 ms (*cost* §5, §9.4, §10.2). A load-average threshold alone would have refused every run that day. Measured against a quiet baseline, a run as busy as those would be flagged, which is the intent.
 - **The release procedure:** the tag's full run is made on the release machine, plugged in, with nothing else running.
 
 ### 13. Two hashes, and the cache
 
-- **The size hash** covers: the served JSON of the item and of every item in its `registryDependencies` closure, as built in `static/r/`; its fixture file, or for a block its route as served; its case files; `_floor.svelte` and `_theme-floor.svelte`; every file under `scripts/cost/app/`; `scripts/cost/build.ts` and `scripts/cost/hash.ts`; the CLI's version as the repository's `bun.lock` resolves it; and the compressor, `process.versions.zlib`.
-- **The runtime hash** is the size hash plus: the item's `interactions.ts` entry, canonically serialised (keys sorted); `_calibrate.svelte`; `scripts/cost/runtime.ts` and `scripts/cost/stats.ts`; and Playwright's version.
+- **The size hash** covers: the served JSON of the item and of every item in its `registryDependencies` closure, as built in `static/r/`; its fixture file, or for a block its route as served; its case files; `_floor.svelte` and `_theme-floor.svelte`; every file under `scripts/cost/app/`; `scripts/cost/build.ts`, `scripts/cost/hash.ts` and `scripts/cost/settings.ts`; the CLI's version as the repository's `bun.lock` resolves it; and the compressor's version **as the report's newest full run names it** (below).
+- **The runtime hash** is the size hash plus: the item's `interactions.ts` entry, canonically serialised (keys sorted; every field a string, decision 9); `_calibrate.svelte`; `scripts/cost/runtime.ts` and `scripts/cost/stats.ts`; and Playwright's version. (`settings.ts` is already in the size hash.)
 - **Bun's version is recorded, not hashed.** `package.json` does not pin Bun exactly (`packageManager` 1.3.14, `engines` `>=1.3.14`), and the machine that ran the prototype had 1.4.4. The unit gate warns, and does not fail, when the local Bun differs from the report's. The release check refuses the mismatch.
+- **The compressor follows the report, not the machine.** `process.versions.zlib` comes with the local Bun's build, so hashing the local value would call every item stale on another Bun, and bring back the portability fault. So:
+  - the unit gate computes every size hash with the zlib version recorded in the report's newest `full` run, and warns when the local `process.versions.zlib` differs;
+  - `bun run cost` refuses a cached run when the local zlib differs from that run's, and says to use the same Bun or run `--full`; a `--full` run records its own;
+  - the release check refuses a mismatch, as for Bun.
+  - *Why not pin Bun exactly:* `package.json`'s `packageManager` and `engines` are a repository-wide choice outside lane E. If the owner pins Bun later, this rule still holds.
 - `bun run cost` rebuilds only items whose size hash differs from the report's, and re-measures runtime for items whose runtime hash differs, each with its blocks' floor trials. `--full` ignores the cache.
-- **Inputs that force a full run:** the theme item, `utils`, `_floor.svelte`, `_theme-floor.svelte`, anything under `scripts/cost/app/` (a package added or bumped changes the lock), `build.ts`, `hash.ts`, and the CLI's or zlib's version, for sizes; with `runtime.ts`, `stats.ts`, `_calibrate.svelte` and Playwright's version, for runtime. A specification that adds or bumps a package is a full run.
+- **Inputs that force a full run:** the theme item, `utils`, `_floor.svelte`, `_theme-floor.svelte`, anything under `scripts/cost/app/` (a package added or bumped changes the lock), `build.ts`, `hash.ts`, `settings.ts`, and the CLI's or zlib's version, for sizes; with `runtime.ts`, `stats.ts`, `_calibrate.svelte` and Playwright's version, for runtime. A specification that adds or bumps a package is a full run.
 
 ### 14. The report: `scripts/cost/report.json`
 
@@ -230,7 +245,7 @@ Figures from the prototype are approximate: it installed with the CLI's default 
       "machine": { "model": "…", "cores": 10, "os": "…" },
       "tools": { "bun": "1.4.4", "chromium": "…", "playwright": "1.64.1",
                  "cli": "1.7.1", "zlib": "…" },
-      "settings": { "cpu": 4, "launches": 6, "block": "FIFIF", "warmups": 1,
+      "settings": { "cpu": 4, "launches": 6, "block": "FIFIFIF", "warmups": 1,
                     "gzipLevel": 9 },
       "load": { "median": 0, "max": 0 },
       "instrument": { "floorHydrateMs": 0, "noopMs": 0, "calibrateMs": 0 },
@@ -252,7 +267,8 @@ Figures from the prototype are approximate: it installed with the CLI's default 
       "breakdown": [ { "source": "package:bits-ui", "js": 0 }, { "source": "own", "js": 0 } ],
       "hydrate": { "ms": 0, "spread": [0, 0], "settledMs": null },
       "interaction": { "kind": "click", "start": "click", "says": "opens",
-                       "ms": 0, "spread": [0, 0], "pressGapMs": 0, "eventTimingMs": 80 },
+                       "ms": 0, "spread": [0, 0], "ownMs": 0, "pressGapMs": 0,
+                       "eventTimingMs": 80 },
       "cases": {}
     }
   }
@@ -261,6 +277,7 @@ Figures from the prototype are approximate: it installed with the CLI's default 
 
 - `run` names the run each item's runtime figures came from, so figures from different machines are never mixed silently. A cached run adds its own entry under `runs`, and only the items it re-measured point at it.
 - The theme item's page reads `themeFloor` minus `empty`; `utils`' reads `floor` minus `themeFloor`; each font's page reads its bytes in `themeFloor.fonts`.
+- `ownMs` is `ms` minus the same run's `noopMs`: an estimate of the item's own work, recorded and never budgeted. Budgets hold the raw `ms`, the wait a person has, against which the 200 ms ceiling means something.
 - `interaction` is `null` for an item with none. `eventTimingMs` is `null` for a hover, or when no entry reached 16 ms. `pressGapMs` is `null` for a key or a hover.
 - `scripts/cost/report.ts` also exports `readCost(name)` and `costFacts(entry)`. `costFacts` returns the strings `030` shows: a size, `"39.4 kB"` (initial JS plus CSS, one decimal); `"+ 133 kB on demand"` when lazy JS plus assets is over 0; and a time: `"opens in 96 ms"` for an interactive item, from `says`; `"hydrates in 36 ms"` or `"hydrates in under 5 ms"` for the others. The conditions go in a note `030` places: "alone, gzipped; times under a 4× slower CPU, from the click to the second frame after the change; an empty click measures N ms".
 - *Why under `scripts/cost/`:* lane E owns the folder, and site code already imports from `scripts/` on the server (`src/lib/site/foundations/contrast-rows.server.ts`). `030` reads it from `component-data.server.ts`.
@@ -276,7 +293,7 @@ Figures from the prototype are approximate: it installed with the CLI's default 
 - **Which figures a budget holds, where.** Sizes and hydration are held against their budgets on every run. A response time is held against its budget when its run's `machine.model` equals `budgets.json`'s `machine`; from any other machine, only against the 200 ms ceiling. *Why:* hydration is a paired difference and travels; a response time is the wait itself and moves with the machine (*cost* §5).
 - **A budget rises only by a recorded ruling.** A raised number carries a `raised` record: the metric, the old and new numbers, the date, and `ruling`, a link to the landing notes of the specification that raised it. The landing notes say why, and name the item and the figure. One ruling may cover many items when one change moves them all (a `bits-ui` upgrade). `raised` records are append-only.
 - **The rule applies to a dependency.** When an item gains a dependency (`app-shell` gains `toast` in `026`), its figures rise, and each budget they exceed is raised with a `raised` record linking that specification's landing notes. If this specification lands after `026`, `app-shell`'s first budget already includes `toast`, and no record is needed.
-- **A budget may fall freely.** `bun run cost --tighten` lowers any size budget whose headroom exceeds twice its margin to the measured figure plus the margin. It lowers a runtime budget only from a `--full`, not noisy, run on the release machine. It never raises one.
+- **A budget may fall freely.** `bun run cost --tighten` lowers any size budget whose headroom exceeds twice its margin to the measured figure plus the margin. It lowers a runtime budget only from a `--full`, not noisy, run on the release machine. It never raises one. It never touches `instrument`.
 - `bun run cost --budget <item>` writes a first budget for an item that has none, and refuses for an item that has one. A new item's first budget is set in its own specification's build, and its landing notes cite it.
 
 ### 16. Where the gate runs
@@ -290,7 +307,7 @@ Figures from the prototype are approximate: it installed with the CLI's default 
 
 ### 17. The run, and the measurement loop
 
-- **A full run** (`--full`): about 3 to 6 minutes of builds, four at a time; then up to 3 minutes' wait for the load (decision 12); then the runtime phase, one page at a time: 6 launches × about 72 blocks × 5 loads, about 2,160 loads at about 0.5 s, about 18 minutes. **About 25 to 30 minutes** on the M1 Pro the prototype used (*cost* §6, §9.3).
+- **A full run** (`--full`): about 3 to 6 minutes of builds, four at a time, with each offline `add` about 2 s; then up to 3 minutes' wait for the load (decision 12); then the runtime phase, one page at a time: 6 launches × about 72 blocks × 7 loads, about 3,030 loads at about 0.5 s, about 25 minutes. **About 30 to 35 minutes** on the M1 Pro the prototype used (*cost* §6, §10.1). A re-measure adds about 21 s per item.
 - **A cached run** after a specification that touches a few items and no package: only those items, each with its blocks. 1 to 5 minutes. A specification that touches the theme, `utils`, a package or the harness: a full run (decision 13).
 - **The loop** (roadmap §4, step 1) gains one step after `bun run build`: `bun run cost`. A full run before every tag. The change review cites the report's diff for the items the specification touched.
 - **The scorecard** gains row 15 when this specification lands, with *cost* §7's rubric and §9.5's scores. **Row 15 does not join the headline total**, which stays "of 56" over rows 1 to 14, so every run stays comparable with the first; the run log adds a second total, of 60, beside it. Its §8 gains the cost run.
@@ -309,13 +326,14 @@ scripts/cost/
   build.ts                  registry guard, template, item apps, sizes, breakdown (decisions 3, 4, 7)
   runtime.ts                launches, blocks, hydration, response time, noise (decisions 5, 6, 11, 12)
   stats.ts                  median, block differences, spread, Hodges–Lehmann
+  settings.ts               every run setting (decision 11), hashed
   hash.ts                   the two hashes (decision 13)
   report.ts                 types, read, write (Prettier), readCost, costFacts (decision 14)
   release.ts                the release check's cost step (decision 16)
   budgets.json              decision 15
   report.json               decision 14
 tests/unit/cost.test.ts     criteria 1–11, 13, 14
-tests/smoke/cost.test.ts    criteria 15–19
+tests/smoke/cost.test.ts    criteria 15–19, 22
 tsconfig.json               "exclude" gains scripts/cost/app and scripts/cost/fixtures
 package.json                "cost": "bun scripts/cost/run.ts" (a ledger line)
 scripts/site/release-check.ts   one line: the cost step (decision 16)
@@ -349,7 +367,7 @@ scripts/site/release-check.ts   one line: the cost step (decision 16)
 Each is written before the code it checks and seen failing: the unit tests fail while `scripts/cost/` is empty; the smoke test fails while the harness does not exist. The landing notes record each test's first failure.
 
 - `tests/unit/cost.test.ts`: criteria 1 to 11, 13 and 14.
-- `tests/smoke/cost.test.ts`: criteria 15 to 19.
+- `tests/smoke/cost.test.ts`: criteria 15 to 19 and 22.
 - `stats.ts` is tested on fixed inputs with known answers (criterion 9) before it is used.
 
 ## Acceptance criteria
@@ -362,28 +380,29 @@ Counts are written as rules; the numbers in brackets hold at this specification'
 4. **The report's shape.** `report.json` parses against `report.ts`'s types: `runs`, `empty`, `themeFloor`, `floor`, `catalogue`, and one entry per measured item [71], with its cases [1]. Every item and case with an `interactions.ts` entry has a non-null `interaction` with the entry's `start` and `says`; every other has `null`. Every `run` names a key of `runs`. (unit)
 5. **Fresh.** Every item's and case's size hash and runtime hash, computed now, equal the report's. The test fails naming each stale item and the command to run. A local Bun version different from the report's newest run gives a warning, not a failure. (unit)
 6. **Within budget.** Every size and hydration figure is at or under its budget. Every response time is at or under 200 ms, and at or under its budget when its run's machine is the release machine. Every item and case has a budget for each figure decision 15 gives it, and none for a figure it lacks. (unit)
-7. **Rulings.** The test walks `budgets.json`'s committed history (`git log --format=%H -- scripts/cost/budgets.json`, oldest first) and then the working tree against `HEAD`. For every number that rises between two consecutive versions, a `raised` record holds that metric and those two numbers, and its `ruling` links to an existing specification file whose Landing notes section names the item. No `raised` record is removed or changed between versions. A `raised` record that takes an `interactionMs` budget over 200 links a Landing notes paragraph containing "the owner". (unit)
+7. **Rulings.** The test fails with a message when the repository is a shallow clone (`git rev-parse --is-shallow-repository` prints `true`); `022`'s CI checks out with full history. It walks `budgets.json`'s committed history (`git log --format=%H -- scripts/cost/budgets.json`, oldest first) and then the working tree against `HEAD`, skipping `machine` and `instrument`. It compares each budget number with its value in the **last earlier version in which that key existed**, so deleting a budget and adding a higher one later is still a rise. For every rise, a `raised` record holds that metric and those two numbers, and its `ruling` links to an existing specification file whose Landing notes section names the item. No `raised` record is removed or changed between versions. A `raised` record that takes an `interactionMs` budget over 200 links a Landing notes paragraph containing "the owner". (unit)
 8. **The breakdown.** For every item, the breakdown's groups sum to its initial JS within one byte per group; every group's source is `own`, `runtime`, `item:<a registry item>` or `package:<a package the cost app lists>`; no group is `package:cn` (decision 1; dropped if open question 7 is answered no). (unit)
 9. **Statistics.** `stats.ts` on fixed inputs: the median of `[3, 1, 2]` is 2 and of `[4, 1, 3, 2]` is 2.5; a fixed 6-launch table of blocks gives hand-computed launch-level differences and median; Hodges–Lehmann of `[1, 2, 3, 10]` is 2.5. (unit)
 10. **The facts strings.** `costFacts` on four fixed entries returns: `"39.4 kB"` and `"opens in 96 ms"` for a dialog-like entry; `"hydrates in 36 ms"` for a static one; `"hydrates in under 5 ms"` for one at 1.0 ms; and, for a lazy-heavy entry, a size of initial bytes only plus `"+ 133 kB on demand"`. (unit)
 11. **The catalogue.** `catalogue.js` is less than `catalogue.sumOfAlone.js`, both positive, both over the same non-block items. (unit)
-12. **The first full run, and its false-fail rate.** On the landing commit, on the release machine, `bun run cost --full` exits 0, writing a run with `full: true`, `noisy: false`, every figure within budget, and `budgets.json`'s `instrument` from it. Then a second `--full` run is made without changing anything. The landing notes record both runs' wall times and machine lines, the empty app's, the floors' and every item's figures as a table, and the second run's count of figures over the budgets set from the first, before and after the re-measure: the measured false-fail rate per full run. (run)
+12. **The first full run, and its false-fail rate.** On the landing commit, on the release machine, `bun run cost --full` exits 0, writing a run with `full: true`, `noisy: false`, every figure within budget, and `budgets.json`'s `instrument` from it. Then a second `--full` run is made without changing anything. **It passes with at most one figure over budget after the re-measure**; more means a ruling changes the trials or the margins, and both runs are repeated (decision 11). The landing notes record both runs' wall times and machine lines, the empty app's, the floors' and every item's figures as a table, and the second run's count of figures over the budgets set from the first, before and after the re-measure: the measured false-fail rate per full run. (run)
 13. **The gate fails.** With a copy of the report in which `button`'s `js` is 1 byte over its budget, the unit test fails and names `button` and `js`; with `dialog`'s `interaction.ms` over and its run on the release machine, it names `dialog` and `interactionMs`; with the same run on another machine and the figure under 200 ms, it passes. Shown by the test's own fixtures, not by editing the committed files. (unit)
 14. **A rise without a ruling fails.** With a fixture history of `budgets.json` whose `dialog.js` rises twice, a→b then b→c, and holds a record only for a→b, criterion 7's check fails naming `dialog`, `js`, b and c. (unit)
-15. **Determinism, offline.** With the npm registry pointed at a closed port, the smoke test builds `separator`, `button`, `dialog` and `sign-in` twice each, from fresh folders: every `add` exits 0; each item app's `package.json` after restoring equals the template's; the two builds' JS and CSS files have equal SHA-256s. The four items' entries' targets each match one element (criterion 2). (smoke)
+15. **Determinism, offline.** With `OFFLINE_ENV` (decision 3.2), the smoke test builds `separator`, `button`, `dialog` and `sign-in` twice each, from fresh folders: every `add` exits 0; each item app's `package.json` after restoring equals the template's; the two builds' JS and CSS files have equal SHA-256s. The four items' entries' targets each match one element (criterion 2). The test finishes inside `test:smoke`'s 300 s timeout: 9 `add`s at about 2 s and 8 builds at 5 to 20 s; it is split into one test per item if a run comes within 60 s of it. (smoke)
 16. **The initial set.** For `button`, `dialog` and `sign-in`, the JS and CSS files Chromium requested before `cost:hydrated` are exactly the harness's initial set. (smoke)
-17. **A/A, the no-op and calibration.** The floor measured as an item over 6 launches gives a hydration figure within ±5 ms. The no-op click's figure is under 60 ms. `_calibrate.svelte`'s figure is at least 50 ms and at most 50 ms plus the no-op's figure plus 16 ms. (smoke)
+17. **A/A, the no-op and calibration.** The floor measured as an item, with the harness's own block and launches (`settings.ts`), gives a hydration figure within ±8 ms (passed by 99.5% of bootstrap resamples, *cost* §10.1). The no-op click's figure is under 60 ms. `_calibrate.svelte`'s figure is at least 50 ms and at most 50 ms plus the no-op's figure plus 16 ms. (smoke)
 18. **A stale build cannot leak.** The smoke test writes, into the template's `build/` folder before an item is copied, a file containing a class name it builds at run time (`"bg-" + "fuchsia-950"`), so the site's own Tailwind never sees it; the item's CSS does not contain `fuchsia`. (smoke)
 19. **The registry guard, and the fixtures type-check.** With a temporary copy of `static/r/` in which one item's JSON differs from a fresh `build:registry --out` by one byte, the guard exits 2 and says to run `bun run build:registry`. `svelte-check` in the `dialog` and `sign-in` item apps reports 0 errors. (smoke)
 20. **The suites.** `bun run test:unit`, `bun run test:e2e` and `bun run test:smoke` pass; `bun run check` 0 errors, with `tsconfig.json`'s new excludes; `bun run lint` clean, including `report.json` and `budgets.json`. No expectation outside the new tests changes. (all)
 21. **The scorecard.** At landing, the scorecard has row 15 with *cost* §7's rubric and §9.5's scores, Kuiper's (b) ✓, and (d) ✓ if open question 4 is answered "now"; the headline total stays of rows 1 to 14, with the total of 15 rows beside it in the run log; its §8 names `bun run cost`. (review)
+22. **An offline `add` is fast.** The smoke test times one `add separator -y -o --no-deps-install` with `OFFLINE_ENV`, in a fresh copy of the template: it exits 0 in under 10 s (measured at 2.08 s, *cost* §10.3). (smoke)
 
 ## Build order
 
 1. The unit tests against an empty `scripts/cost/`, seen failing.
 2. `stats.ts`, `hash.ts`, `report.ts` to criteria 9 and 10. Confirm each entry's `start` against the item's source; record any correction.
 3. The cost app; criterion 3.
-4. `build.ts` and the fixtures, then `runtime.ts`; the smoke test, seen failing first, to criteria 15 to 19.
+4. `build.ts` and the fixtures, then `runtime.ts`; the smoke test, seen failing first, to criteria 15 to 19 and 22.
 5. **Checkpoint.** The design lead reads the first `--sizes-only` report and the runtime of `button`, `dialog` and `sign-in` before budgets are written. Rulings go in the landing notes.
 6. The two full runs on the release machine, the first budgets and the instrument values, the report; criteria 4 to 8, 11 to 14.
 7. `package.json`'s script, `tsconfig.json`'s excludes, `release.ts` and its line in `release-check.ts`; criterion 20; the scorecard, criterion 21.
@@ -414,7 +433,7 @@ Recommended option first.
 3. A slowdown calibrated to a benchmark of the measuring machine, as Lighthouse allows. It does not rescue figures mixed across machines, which decision 14 already prevents.
 
 **Q2. Do runtime figures fail the build?** The design lead's call, given the review's condition: blocks (decision 11), the instrument check (decision 12) and per-entry runs (decisions 14, 15) are in. So the recommendation stays option 1.
-1. **Yes:** sizes and hydration everywhere; response time against its budget on the release machine, and against 200 ms everywhere; a re-measure before a runtime failure.
+1. **Yes:** sizes and hydration everywhere; response time against its budget on the release machine in a quiet run, and against 200 ms everywhere else; a re-measure before a runtime failure; at most one false fail per full run, or the trials rise before budgets are written (criterion 12).
 2. Sizes and hydration fail; response time fails only against the 200 ms ceiling, anywhere.
 3. Sizes fail; runtime is published and reported, never failing.
 
@@ -440,7 +459,7 @@ Recommended option first.
 2. No: every item's figure holds `cn`, and `utils`' row says so instead of a number.
 
 **Q8. May `bun run cost` use the network?**
-1. **No:** every CLI run points the npm registry at a closed port. Runs are offline and identical. The template's `bun install` reads Bun's cache, which must be warm once.
+1. **No:** every CLI run points the npm registry at a closed port, with retries off, so each lookup fails in about 2 s. Runs are offline and identical. The template's `bun install` reads Bun's cache, which must be warm once.
 2. Yes: the CLI looks the fonts up on npm on every `add`, and the harness restores `package.json` after each. Runs then need the network and depend on npm answering.
 
 ## Review
@@ -470,8 +489,34 @@ The specification review, [`../reviews/025-component-cost-spec-2026-11-15.md`](.
 | 19 | Low | Decision 9: `input-group`'s password toggle added; `marketing-bar`'s block runs at its viewport; the clipboard note on `code-block` and `stage-card` |
 | 20 | Low | (a) header fixed; (b) blocks in a seeded shuffle; (c) the six-launch reason rests on *cost* §5; (d) `--tighten` restricted; (e) the catalogue leaves blocks out of both; (f) the guard compares content; (g) the class built at run time; (h) `--budget` and `--tighten` write `budgets.json`; (i) *cost* §9.7; (j) no device claim; (k) cold contexts said; (l) `noisy` is the run's field |
 
+**Re-review, 2026-11-15.** Answers, one per remaining finding:
+
+| # | Severity | Answer |
+|---|---|---|
+| R1 | High | Decision 3.2: `OFFLINE_ENV` in `build.ts` adds `npm_config_fetch_retries=0` (72 s → 2.08 s per `add`, measured by the re-review); an `add` over 10 s fails the item; criterion 22 times one; criterion 15 states its time inside the 300 s timeout |
+| R2 | Medium | Decision 11: 3 item trials per block (FIFIFIF), 6 launches, about 25 minutes of runtime and 30 to 35 in all (decision 17); criterion 17's A/A at ±8 ms with the harness's own block; criterion 12 passes with at most one false fail after the re-measure (*cost* §10.1) |
+| R3 | Medium | Decision 13: the size hash takes the zlib version named by the report's newest full run; the unit gate warns on a local mismatch, `bun run cost` refuses a cached run on one, the release check refuses it. Bun is not pinned: that is outside lane E |
+| R4 | Low | Criterion 7: each number is compared with the last earlier version in which its key existed; a shallow clone fails with a message; `machine` and `instrument` are skipped |
+| R5 | Low | Decision 12: only `--budget instrument` writes the instrument values, from a full release-machine run, at criterion 12 and at any build that moves them, with landing notes; a noisy run's response times are held only to the 200 ms ceiling |
+| R6 | Low | Decision 11: every run setting in `settings.ts`, in both hashes; `run.ts` holds none. Decision 9: every entry field is a string |
+| R7 | Low | `026`'s to restate (below) |
+| R8 | Low | *cost* §10.2: `rt2`'s 476.9 ms no-op was the probe's own fault, fixed in `rt3`; the floor's launch medians at load 25 to 36 ranged 89.0 to 127.4, and the ±15% band is for a run's median (decision 12) |
+
+Budgets stay on the raw response time, as the re-review advises; `ownMs` (`ms` minus `noopMs`) is recorded beside it and never budgeted (decision 14).
+
 **For `026`.** Its decision 25 fits as written, with three counts to restate: `interactions.ts` holds 35 entries with `toast` and its two cases (this specification adds `input-group`), and blocks have no fixture file, so 76 items give 64 fixture files and 72 measured items, plus three cases. Its `toast` entry needs a `start` (`click`).
 
 ## Landing notes
+
+**The owner's answers (the owner, 2026-11-15).** The owner accepted the recommended option for every question:
+
+- **Q1:** runtime is measured at a 4× CPU slowdown, on the release machine only.
+- **Q2:** runtime figures fail the build. Sizes and hydration are gated everywhere. Response time is gated against its budget only on a quiet full run on the release machine; otherwise it is held to the 200 ms ceiling. This holds under criterion 12's bar of at most one false fail per full run.
+- **Q3:** until CI exists, the full cost run gates the tag on the release machine, through the release check.
+- **Q4:** a large-data case now: `table` at 1,000 rows, so row 15 (d) is met in 0.13.0.
+- **Q5:** no second "saving if removed" size figure. The breakdown and the catalogue stay.
+- **Q6:** the margins as stated: sizes +5% or at least 1 kB; hydration +25% or at least 8 ms; response +25% or at least 16 ms; a 200 ms ceiling.
+- **Q7:** `cn` counts in the floor, not in every item.
+- **Q8:** runs are offline. The registry points at a closed port, and fetch retries are off.
 
 Not yet landed.

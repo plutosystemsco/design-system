@@ -3,7 +3,7 @@
 Reviews [`specifications/025-component-cost.md`](../specifications/025-component-cost.md).
 
 - **Date:** 2026-11-15
-- **Status:** in review; does not land yet
+- **Status:** dispositioned; re-reviewed 2026-11-15 (see "Re-review"). Does not land yet: re-review finding R1
 - **Reviewer:** a reviewer; not the author
 - **Reviewed:** the specification as drafted, 2026-11-15 (387 lines), and its memo, [`research/2026-11-15-component-cost.md`](../research/2026-11-15-component-cost.md) (212 lines). They were checked against these:
   - the constitution (§4.4, §4.5, §4.6, §5), `AGENTS.md`, `reviews/README.md`, `roadmap.md` (row `025`, §3 "`025`, component cost", §4 the loop, §6 Q1) and the scorecard (§1 method, §2 rubric, §8 re-run);
@@ -188,4 +188,85 @@ Does not land yet: findings 1 and 2 stand (criterion 3 excludes the fonts the fl
 
 ## Disposition
 
-Not yet answered.
+The author answered every finding in the specification's "Review" table, and the memo gained a dated §9. Each answer is checked below, under "Re-review".
+
+## Re-review, 2026-11-15
+
+- **Reviewed:** `context/specifications/025-component-cost.md` as committed at `f9e1c1a` on `release/0.13.0` (477 lines), and the memo's new §9 (`research/2026-11-15-component-cost.md`, lines 214–290). Also the prototype's new `scripts/runtime2.ts` and its outputs `out/rt2.json` and `out/rt3.json`; `026-toast.md` lines 495–502, 737, 781 and 882 as they stand; `scripts/build-registry.ts` (it takes `--out`, line 148).
+- **Re-ran:** nothing in the repository was written but this file. Probes ran in `…/scratchpad/025-review/`, on ports 5342 and 5343, never 5199.
+  - **The offline `add`** (decision 3.2), on the probe app with exact pins, `add dialog -y -o --no-deps-install`, `BUN_CONFIG_REGISTRY` and `npm_config_registry` at `http://127.0.0.1:9/` (EXECUTED): it exits 0 and writes `"latest"`, as the spec says. But it took **72.1 s and 72.3 s**, against 0.66 s online. Adding `npm_config_fetch_retries=0`: **2.08 s**, same result. The hidden `--no-deps`, with the registry still closed: 0.2 s, `package.json` unchanged, `app.css` byte-identical to the `--no-deps-install` run.
+  - **The block design's noise** (decision 11). I re-cut the prototype's raw samples (`out/runtime-1794775089141.json`, 8 launches × 5 rounds) into floor–item–floor–item–floor blocks: three consecutive rounds' floor trials and two of the item's. Then I bootstrapped one block per launch over 6 launches (EXECUTED, 40,000 resamples).
+    - The launch-level standard deviation is 6.2–11.3 ms, against 3.2–8.3 ms for the old launch medians.
+    - The six-launch median's standard error is 3.4 ms for A/A, and 2.6–4.0 ms for the items.
+    - A/A `|median|` exceeds 5 ms in 11.1% of resamples, and 8 ms in 6.2%.
+    - The chance of failing a first budget and then its re-measure: `separator` 0.19%, `button` 0.73%, `dialog` 0.36%, `dropdown-menu` 0.02%.
+  - **The instrument** (decision 12), from `out/rt2.json` and `out/rt3.json`, taken at load 25 to 36 (EXECUTED, read):
+    - the floor's median hydration was 113.0 and 122.5 ms, against §5's 109.2 at load 13 to 25: +3.5% and +12.2%;
+    - its launch medians ranged 89.0 to 127.4;
+    - the no-op was 41.1 ms in `rt3`, launch medians 37.8 to 45.0. In `rt2` the no-op read **476.9 ms**, which the memo does not mention (R8).
+
+### Each finding, against its answer
+
+| # | Answer checked | Stands? |
+|---|---|---|
+| 1 | Decision 2.1 and criterion 3 read `font.dependency`, and decision 3.5 proves it at run time | Fixed |
+| 2 | Blocks, floor–item–floor–item–floor, seeded shuffle, at the item's viewport. The claim "narrows drift, does not cancel it" is honest and matches §9.3. The cost is fewer item trials per launch, which raises the per-launch noise (R2) | Fixed; R2 follows from it |
+| 3 | Decision 8 gives 63 files and 8 blocks at their routes, with targets by role. Criterion 2 checks `data-cost` in files and targets in built pages | Fixed |
+| 4 | `cn` is in the floor; `utils` = floor − theme floor; Q7; criterion 8 forbids `package:cn`; the "changes only when…" wording | Fixed |
+| 5 | A `start` per entry, the press gap recorded (median 0, at most 4.8 ms, EXECUTED in `rt2`), "comparable in kind", `noopMs` | Fixed |
+| 6 | Two hashes, named inputs, the full-run triggers listed, Bun recorded not hashed. But the local zlib *is* hashed, and it comes from the local Bun (R3) | Partly; R3 |
+| 7 | The git-history walk, two raises, append-only records, "the owner". Two gaps remain (R4) | Mostly; R4 |
+| 8 | ±5 ms, and criterion 12 measures the false-fail rate. Under the new blocks ±5 ms flakes about 11% (R2) | Partly; R2 |
+| 9 | Offline by a closed port, `package.json` checked and restored. A closed port is not fast (R1) | Partly; R1 |
+| 10 | Wait, sample, instrument check. Workable: the busy runs sit within ±15% of a busy baseline, and a quiet baseline would flag them, which is the intent. The update rule is missing (R5) | Fixed; R5 |
+| 11 | Compressible assets gzipped, `assets` budgeted, "on demand" | Fixed |
+| 12 | `runs`, a `run` per entry, response time held to its budget only on the release machine, one full run at the tag | Fixed |
+| 13 | `tsconfig.json` excludes, criterion 19's `svelte-check` in item apps, Prettier for both files | Fixed |
+| 14 | §9.5 scores Material 3 0 on m3.material.io, with material-web.dev in the evidence. Row 15 stays out of the headline (of 56; of 60 beside it). The rubric is unchanged | Fixed |
+| 15 | `<item>.<case>` keys, `start` and `says`, the case report shape, counts written as rules. `026` has not yet restated its counts (R7) | Fixed in `025`; R7 |
+| 16 | `scripts/cost/release.ts`, one line after `022`'s step, each spec's part named | Fixed |
+| 17 | §9.1; "approximate" | Fixed |
+| 18 | Decision 5's paragraph; `cost:settled` for eight items | Fixed |
+| 19 | `input-group` added (32 entries); `marketing-bar`'s block at its viewport; the clipboard note | Fixed |
+| 20 | (a) to (l) each answered; I checked the header, `noisy` in the run, `--tighten`, the content guard (`build:registry --out` exists), the class built at run time, and §9.7 | Fixed |
+
+**The counts.** 32 item entries + 39 without an interaction = 71 measured = 75 − 4 floor items. 71 − 8 blocks = 63 fixture files. With `026`: `toast`, `toast.burst` and `toast.progress` make 35 entries; 76 items, 64 files, 72 measured. These are consistent.
+
+**The no-op as a budget offset.** Keep the budgets on the raw response time, as drafted. It is the wait a person has, and the 200 ms ceiling only means something raw. Subtracting the no-op would make response time a paired figure that travels across machines, like hydration. But the no-op is two animation frames whose phase is random per trial, so the difference adds variance where small items have little signal (2 ms of `button`'s 43). An optional `ownMs` (`ms − noopMs`), recorded and not budgeted, would let a reader see an item's own work. It is not required.
+
+### Remaining findings
+
+1. **R1 — High. A closed registry port is not fast: each offline `add` takes about 72 s** (decision 3.2, "fail fast"). `npm view`'s default retries back off against the closed port (EXECUTED: 72.1 s and 72.3 s, against 2.08 s with `npm_config_fetch_retries=0`).
+   Failure: about 73 adds in a full run (template, theme floor, 71 item apps, catalogue, case) at 72 s, four at a time, add about 22 minutes. A cached run adds 72 s per item. Criterion 15's 8 adds plus a template take over 10 minutes, past `test:smoke`'s 300 s per-test timeout (`package.json`).
+   Fix: decision 3.2 also sets `npm_config_fetch_retries=0`. Name every variable in one place in `build.ts`. Criterion 15 asserts each `add` finishes under 10 s. The hidden `--no-deps` also avoids every lookup (0.2 s, same files, EXECUTED). But it is undocumented, and it leaves no `package.json` to check, so keep `--no-deps-install` with retries off.
+2. **R2 — Medium. Two item trials per block raise the noise, and the flake bars rest on the old design** (decisions 11 and 12; criteria 12 and 17). A launch-level figure is now the mean of 2 item trials minus the median of 3 floor trials. On the prototype's samples that gives an A/A standard error of 3.4 ms over 6 launches. Criterion 17's ±5 ms then fails about 11% of smoke runs on a loaded machine. After the re-measure, an item's false-fail chance is 0.2–0.7%. Across about 72 hydration figures, a loaded full run would have at least one false fail roughly one time in six (INFERRED from the per-item rates). Criterion 12 measures this on the release machine, but sets no bar to pass.
+   Fix: either 3 item trials per block (floor, item, floor, item, floor, item, floor: about 7 minutes more per full run), or 8 launches. Criterion 17 runs its A/A with the same block and launches as the harness. Its bound is ±2.5 standard errors of that run's own launch-level A/A values, or ±8 ms. Criterion 12's bar: at most one figure over budget after the re-measure in the second full run. Otherwise the margins or the trial count change by a ruling in the landing notes.
+3. **R3 — Medium. The size hash takes the local zlib, which comes with the local Bun** (decision 13; criterion 5). Bun is "recorded, not hashed" so another Bun only warns. But `process.versions.zlib` is Bun's own build (it printed a commit id under 1.4.4, EXECUTED). So whenever two Bun releases carry different zlib builds, criterion 5 calls every item stale, and finding 6 returns. `package.json` still declares 1.3.14 while the machine runs 1.4.4.
+   Fix: the unit gate computes the size hash with the zlib named by the report's newest full run, and warns when the local one differs. The release check refuses the mismatch, as for Bun. Or pin Bun exactly and enforce it.
+4. **R4 — Low. Two gaps in the ruling walk** (criterion 7).
+   - (a) Deleting an item's budget in one commit and adding a higher one in the next is not a "rise between two consecutive versions". Compare each number with the last version in which that key existed.
+   - (b) A shallow clone, as `actions/checkout` makes by default once `022`'s CI exists, has one version, and the walk passes with nothing to walk. Fail with a message when `git rev-parse --is-shallow-repository` is true, or `022` checks out with `fetch-depth: 0`. Say whether `instrument` values are numbers the walk holds (see R5).
+5. **R5 — Low. The instrument values have no update rule** (decisions 12, 15). A Playwright or Chromium bump can move the floor's hydration by more than 15%, and then every run is noisy until `instrument` changes. Nothing says who writes it, or whether a busy run may.
+   Fix: `instrument` is written only from a `--full`, release-machine run, with `--budget instrument`. The landing notes of the spec that moves it say why, and the walk in criterion 7 skips it. Also, a noisy run's response times are held only to the 200 ms ceiling, even on the release machine. Holding them to budget there turns noise into failures that the re-measure must then rescue.
+6. **R6 — Low. Two hash write-ins** (decision 13).
+   - The run settings (CPU rate, launches, block shape, warm-ups) must live in `runtime.ts` or be hashed. Decision 13 names `runtime.ts` but not `run.ts`, which parses `--full` and could hold them.
+   - An entry's `prepare` and `state` are strings, so "canonically serialised" is exact. Say so, rather than allowing functions.
+7. **R7 — Low. `026` still counts the old way** (`026-toast.md` lines 502, 737, 882). It says 34 entries, "each of those 34 fixtures holds exactly one `data-cost`", and "72 fixtures". `025` now gives 35 entries, an optional `data-cost`, 64 fixture files and 72 measured items, and `toast`'s entry needs `start: click` (`025` line 473). This is `026`'s to restate. It is listed here so the two land agreeing.
+8. **R8 — Low. Two memo write-ins** (§9.4; decision 12, line 208).
+   - `rt2.json`'s no-op read 476.9 ms (launch medians 463–520), against `rt3`'s 41.1. Say what was wrong in `rt2`'s floor measure and that `rt3` fixed it, so the 41 ms stands on one clean run.
+   - "The floor's launch medians stayed within 96 to 117 ms" is §5's run only. At load 25 to 36 they ranged 89.0 to 127.4. The ±15% claim holds for each run's median, not for single launches. Say which.
+
+### The open questions
+
+- **Q1. Agree, option 1.**
+- **Q2. Agree, option 1, given R2.** Hydration is paired and gated everywhere; response time is gated on the release machine; there is a re-measure. With criterion 12's bar, this is the right gate. If the second full run shows more than one false fail after the re-measure, raise the item trials before writing budgets, rather than falling back to option 2.
+- **Q3. Agree, option 1.**
+- **Q4. Agree, option 1.** One fixture, hydration only, and (d) met honestly by a budget. It proves the case shape before `026` adds two.
+- **Q5. Agree, option 1.** With `cn` in the floor, the alone figure no longer inflates small items.
+- **Q6. Agree, option 1.** Sizes are deterministic. The hydration margin's 8 ms floor is about 2 to 3 standard errors under the new blocks, enough with the re-measure if R2's bar holds. Tightening runtime only from a quiet full release run is right.
+- **Q7. Agree, option 1**, the same rule as the theme.
+- **Q8. Agree, option 1**, with R1's `npm_config_fetch_retries=0`. Without it, "offline" costs about 72 s per add.
+
+### Verdict after re-review
+
+Does not land yet: R1 stands. A closed registry port makes each `add` take about 72 s, which breaks the smoke test's timeout and adds about 22 minutes to a full run. The fix is one environment variable, measured here at 2.1 s. R2 and R3 (Medium) are to be answered in the specification before the build. With R1 fixed and R2 and R3 answered, it is fit to build; R4 to R8 may be answered in the build's landing notes.

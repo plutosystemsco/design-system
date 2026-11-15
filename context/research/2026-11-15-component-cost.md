@@ -1,6 +1,6 @@
 # Component cost: how the references measure it, how Kuiper can, and row 15
 
-- **Status:** research, for `025`, corrected 2026-11-15 after the specification review (§9) ([`../specifications/025-component-cost.md`](../specifications/025-component-cost.md)). It commits us to nothing.
+- **Status:** research, for `025`, corrected 2026-11-15 after the specification review (§9) and its re-review (§10) ([`../specifications/025-component-cost.md`](../specifications/025-component-cost.md)). It commits us to nothing.
 - **Date:** 2026-11-15
 - **Author:** the spec author for `025`
 - **Question:** Which reference systems publish or enforce a per-component size or runtime cost, and how? Which way of measuring fits a registry whose items are copied into an app as source? How noisy is a runtime figure, and how many runs does it take? What is row 15's rubric, and how does each system score on it?
@@ -288,3 +288,31 @@ The rubric is unchanged. Row 15 is new, so it is kept out of the scorecard's hea
 - The terms quote Lighthouse's claim about "the mid-tier mobile bracket". It is Lighthouse's, not ours: React Aria's suite notes that CPU throttling "does not emulate mobile hardware" (READ, `perf/README.md`, "Choose a workload"). Kuiper's public text says "a 4× slower CPU".
 - React Aria measures warm module caches on fresh component instances (READ, same, "Trial lifecycle and statistics"). The prototype, and `025`, load each trial in a cold browser context: the cost of a first visit.
 - §6's run time, with `025`'s revised blocks (floor, item, floor, item, floor; 6 launches; about 72 items): about 2,160 loads at 0.5 s, about 18 minutes of runtime, and 25 to 30 minutes in all (INFERRED).
+
+## 10. Correction, 2026-11-15, after the re-review
+
+The re-review of `025` (same file, "Re-review, 2026-11-15") found two more errors in §9 and measured the offline `add`. §1 to §9 stand; where they disagree with this section, this section holds.
+
+### 10.1 Blocks with 2 or 3 item trials
+
+The prototype's raw samples (`out/runtime-1794775089141.json`, 8 launches × 5 rounds) were re-cut into blocks and the six- or eight-launch median bootstrapped, 20,000 resamples each (EXECUTED (correction), `scripts/blocks-bootstrap.ts` in the scratchpad). A block's floor trials were consecutive rounds of the floor; its item trials, the same rounds of the item; the A/A "item" was the floor's copy. Hydration, ms:
+
+| Block, launches | A/A standard error | A/A outside ±5 | A/A outside ±8 | Items' standard error |
+|---|---|---|---|---|
+| FIFIF, 6 | 3.71 | 12.4% | 7.08% | 2.55 – 3.79 |
+| FIFIF, 8 | 2.83 | 7.6% | 3.65% | 2.10 – 3.37 |
+| FIFIFIF, 6 | 2.46 | 2.8% | 0.54% | 1.48 – 3.19 |
+| FIFIFIF, 8 | 2.12 | 1.2% | 0.14% | 1.13 – 2.37 |
+
+- The medians stayed put: A/A −0.1 to 0.5; `separator` 1.2 to 1.6; `button` 29.4 to 32.1; `dialog` 35.2 to 35.8; `dropdown-menu` 41.1 to 41.4.
+- The re-review's own bootstrap of FIFIF over 6 launches found an A/A standard error of 3.4 ms and 11.1% outside ±5 ms, and put an item's chance of failing a first budget and then its re-measure at 0.02 to 0.73% (EXECUTED (review)).
+- **Reading** (INFERRED). Three item trials per block over 6 launches (42 loads per item) are quieter than two over 8 (40 loads). With them, an A/A bound of ±8 ms fails about one run in 200. The resampling reuses only 8 real launches, from a busy machine, so these are estimates, and criterion 12 of `025` measures the real rate.
+
+### 10.2 The no-op in `rt2`, and the floor's range when the machine is busy
+
+- §9.4 reports the no-op click as 41.1 ms, from `out/rt3.json`. The earlier run, `out/rt2.json`, read **476.9 ms** (launch medians 463 to 520). That run was wrong: the floor's expected state was the expression `true`, already true before the click, so the frame loop resolved before the click with the start time still 0, and the figure was measured from the page's time origin. `rt3` ended the state at `window.__cost.start > 0`, once the click had been seen. The 41 ms figure stands on that one clean run.
+- §9's "the floor's launch medians stayed within 96 to 117 ms" holds for §5's run only. In `rt2` and `rt3`, at load 25 to 36, the floor's median hydration was 113.0 and 122.5 ms, against §5's 109.2, and its single launch medians ranged 89.0 to 127.4 (READ, the re-review's reading of the two files). So a ±15% band holds for each run's median, not for single launches.
+
+### 10.3 The offline `add`
+
+With the npm registry pointed at a closed port, `add dialog -y -o --no-deps-install` exited 0 but took 72.1 s and 72.3 s, against 0.66 s online: the lookups were retried with back-off. With `npm_config_fetch_retries=0` as well, it took 2.08 s and wrote the same files. The hidden `--no-deps` skipped the lookups in 0.2 s, left `package.json` unchanged, and wrote an `app.css` byte-identical to the `--no-deps-install` run's (EXECUTED (re-review)).

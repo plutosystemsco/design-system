@@ -65,7 +65,7 @@ It is born at the page standard's shape: every prop described, its parts marked,
 - **`api.server.ts` tables a component's props and a TypeScript file's exports**, with their doc comments (READ (026), its header).
 - **Unit tests run under Bun without Svelte's compiler** (READ (026), `bunfig.toml`; confirmed by the review). So the queue is plain TypeScript with an injected clock, and the components only render it (decision 21).
 - **The average adult reads 238 words a minute silently** (READ (review), Brysbaert 2019, *Journal of Memory and Language* 109, doi:10.1016/j.jml.2019.104047). A time set at that rate leaves half of readers short. Whitespace splits Chinese, Japanese and Thai badly; `Intl.Segmenter` with `granularity: "word"` splits them, in all three engines (READ (review)).
-- **`025`'s harness** installs each item into a copy of the floor, renders one fixture page that imports only from the item's installed path and `svelte`, and reports size, hydration and response time. Its alone figure counts `cn` (10.9 kB gzipped) and every dependency: `button` is 20.9 kB of JS over the floor and hydrates 31 ms over it. It shows anything under 5 ms as "under 5 ms". Its cost app's lockfile holds only packages some item names (READ (026), `025` decisions 1, 2, 5, 7, 8, 9, 10 and "What the research found").
+- **`025`'s harness** installs each item into a copy of the floor and reports size, hydration and response time. A non-block item renders one fixture file that imports only from the item's installed path and `svelte`; a block has no fixture file and is measured at the route it installs. Each interaction is an `interactions.ts` entry whose fields are all strings (`kind`, `start`, `target`, `state`, `says`, `viewport`, and optionally `prepare` and `note`). Its alone figure counts `cn` (10.9 kB gzipped) and every dependency: `button` is 20.9 kB of JS over the floor and hydrates 31 ms over it. It shows anything under 5 ms as "under 5 ms". Its cost app's lockfile holds only packages some item names (READ (026), `025` decisions 1, 2, 5, 7, 8, 9, 10 and "What the research found").
 
 ## Decisions
 
@@ -491,17 +491,29 @@ The item, its examples and its page build at once with everything else in wave 1
 
 `025` measures each item alone, over the floor, in its cost app (`025` decision 1). Toast's case follows its mechanism and adds nothing to it.
 
-- **The fixture,** `scripts/cost/fixtures/toast.svelte`, over the item app's `src/routes/+page.svelte` (`025` decision 8). It imports only from `toast`'s installed path and from `svelte`. It renders `<Toaster />` and one native `<button data-cost="target">Save</button>` whose click calls `toast.success("Saved")`. The toaster is in the page, not a root layout: the root layout is the cost app's, with its `cost:hydrated` mark.
-- **The interaction,** one entry in `scripts/cost/interactions.ts` (`025` decision 9): kind `click`; target `[data-cost=target]`; the state that ends it, a `[data-slot=toast]` present and `[data-slot=toaster-status]` reading "Success: Saved."; `says` "shows", so `costFacts` gives "shows in N ms". Viewport 1280 × 800. Its figure is `025`'s response time (decision 6), under 4×; Event Timing is recorded beside it, not budgeted. With the two case entries below, the list grows from 31 entries to 34.
-- **Two cases** (`025` decision 10), each a fixture of its own, each with hydration and response time budgeted and its JS reported, not budgeted:
+- **The fixture.** `toast` is not a block, so it has a fixture file, `scripts/cost/fixtures/toast.svelte` (`025` decision 8). It imports only from `toast`'s installed path and from `svelte`. It renders `<Toaster />` and one native `<button data-cost="target">Save</button>` whose click calls `toast.success("Saved")`. The toaster is in the page, not a root layout: the root layout is the cost app's, with its `cost:hydrated` mark. Only fixture and case files carry `data-cost`; a block has no fixture file, and its entry names its target by a `target` selector on its route (`025` decision 8). So `app-shell`'s entry is unchanged by this spec.
+- **The interaction,** one entry in `scripts/cost/interactions.ts`, keyed `toast`, in `025` decision 9's shape. Every field is a string:
+
+  ```ts
+  toast: {
+    kind: "click",
+    start: "click",
+    target: "[data-cost=target]",
+    state: "document.querySelector('[data-slot=toast]') !== null && document.querySelector('[data-slot=toaster-status]')?.textContent?.trim() === 'Success: Saved.'",
+    says: "shows",
+    viewport: "1280x800",
+  }
+  ```
+
+  No `prepare` and no `note`: the click is the whole interaction, and the figure is the item's own work. `costFacts` gives "shows in N ms". Its figure is `025`'s response time (decision 6), under 4×; Event Timing is recorded beside it, not budgeted. The builder confirms `start` against the toaster's source in `025`'s build step, as `025` decision 9 asks of every entry.
+- **Two cases** (`025` decision 10), each a fixture of its own, `scripts/cost/fixtures/toast.burst.svelte` and `toast.progress.svelte`, each with the same import rule, its own `<button data-cost="target">`, and an entry of the same shape (`kind: "click"`, `start: "click"`, `target: "[data-cost=target]"`, `says: "shows"` for `toast.burst` and `"updates"` for `toast.progress`, `viewport: "1280x800"`). Each has hydration and response time budgeted and its JS and CSS reported, not budgeted:
   - `toast.burst`: the click raises 100 distinct successes in one task. The state that ends it: three `[data-slot=toast]` drawn and the "more" line reading "97 more";
   - `toast.progress`: the click applies 200 `toast.loading` updates to one `id` in one task, "Uploading 1 of 200" to "Uploading 200 of 200". The state that ends it: the toast's title reads "Uploading 200 of 200". It shows that the stack draws once, not 200 times.
   - That a loading toast's own updates are silent is a speech rule, not a cost; unit test 15 holds it.
-- **What `025` must allow, for the two cases** (the design lead passes this to `025`'s author; if `025` has landed, it is a small change in lane E, landing before this spec's cost case):
-  - **Keying.** A case with an interaction has its own entry in `interactions.ts`, keyed `<item>.<case>` (`toast.burst`, `toast.progress`), with the same fields as an item's (kind, target, state, viewport, `says`). An entry so keyed is valid when `<item>` is an item and `scripts/cost/fixtures/<item>.<case>.svelte` exists; `025` decision 9's "an entry needs an item" reads "an entry needs an item, or an item's case fixture". A case with no entry, such as `table.1000-rows`, is hydration only, as now.
-  - **Criterion 2.** `interactions.ts` holds exactly the 31 items of decision 9's table, plus `toast` (32 item entries), plus the 2 case entries `toast.burst` and `toast.progress`: 34 entries. Each of those 34 fixtures holds exactly one `data-cost="target"`; no other fixture holds one.
-  - **Criterion 1.** 76 items, 72 fixtures plus `_floor.svelte`, and three case fixtures beside them.
-  - **Criterion 4.** One report entry per measured item, 72, plus three cases: `table.1000-rows`, `toast.burst` and `toast.progress`. Each case with an entry has a non-null `interaction`.
+- **The counts, as `025`'s rules** (`025` decisions 8 to 10 and criteria 1, 2 and 4, as revised). `025` now keys a case's entry `<item>.<case>` and validates it against the case's fixture, so this spec asks nothing more of it. The numbers in brackets hold once this spec lands, and change with the registry:
+  - **Items** (`025` criterion 1): every registry item is a floor item (the theme item, the fonts), a block (measured at its route, with no fixture file), or has `scripts/cost/fixtures/<item>.svelte` [76 items: 4 floor items, 8 blocks, 64 fixture files]. Every `<item>.<case>.svelte` names an item [3 cases: `table.1000-rows`, `toast.burst`, `toast.progress`].
+  - **Measured items** (`025` criterion 4): one report entry per item that is not a floor item [72], each with its cases [3]. Every item and case with an entry has a non-null `interaction`.
+  - **Entries** (`025` criterion 2): one per interactive item, and one per case that has an interaction [35: `025`'s 32, which include `input-group`'s password toggle, plus `toast`, `toast.burst` and `toast.progress`]. `data-cost="target"` appears only in fixture and case files, at most once each [`toast`'s three files each hold one].
 - **`app-shell`'s budget rises.** `app-shell` gains `toast` as a dependency (decision 23), so its alone size and hydration rise, by about `toast`'s own 3 to 5 kB of JS and its listeners (INFERRED). If `025` has landed with a budget for `app-shell`, the rise is over its margin, and `025` criterion 6 would fail `bun run test:unit`. So, in build step 8:
   - `bun run cost` measures `app-shell` again;
   - each of its budgets the new figure exceeds (`js` at least; `css` and `hydrateMs` if they exceed) is raised to the new figure plus `025`'s margin, rounded as `025` decision 14 says, with a `raised` record: the metric, the old and new numbers, the date, and `ruling` linking to this specification's Landing notes;
@@ -734,7 +746,7 @@ Each is written and seen failing before the code it checks. The landing notes sa
 
 **Unit, `022`'s suite:** 76. **`sr-rules.test.ts`: `unspoken` and `before`** pass and fail on fixture logs in both readers' wording. 77. **`sr-items.test.ts`** passes with `toast` in `SR_ITEMS`, one file more than `022`'s count, and `app-shell.sr.ts` holding a `live` test. `022`'s annotation check passes with every toast test carrying `item`, `rules` and `hears`, each `hears` target of `022`'s allowed forms, and `mutations.test.ts` derives exactly S2 and S10 for `toast-alert`.
 
-**Unit, `025`'s suite:** 78. **`cost.test.ts`'s interaction check** passes with `toast`, `toast.burst` and `toast.progress` in `interactions.ts` (34 entries), and its fixture and two case files present; and its budget check passes with `app-shell`'s `raised` records, if any.
+**Unit, `025`'s suite:** 78. **`cost.test.ts`'s checks** pass with `toast`, `toast.burst` and `toast.progress` in `interactions.ts`, every field a string [35 entries], `toast`'s fixture and two case files present [64 fixture files, 3 cases, 72 measured items], `data-cost="target"` only in fixture and case files; and its budget check passes with `app-shell`'s `raised` records, if any.
 
 ## Acceptance criteria
 
@@ -778,7 +790,7 @@ Each is written and seen failing before the code it checks. The landing notes sa
 5. **The example view's toaster** (lane S).
 6. **The app shell** (lane I), once `023` has landed. Then its preview copy and the `toast` shell view (lane S). Thumbnails.
 7. **The screen-reader files, rules and mutation** (lane E), once `022` has landed. Tests 76 and 77.
-8. **The cost case** (lane E), once `025` has landed, and once `025` allows case entries (decision 25), by its own revision or a small change. Test 78; `bun run cost --budget toast`; `bun run cost` again for `app-shell`, raising its budgets with `raised` records if it is over (decision 25).
+8. **The cost case** (lane E), once `025` has landed; its revision already keys case entries `<item>.<case>` (decision 25). Test 78; `bun run cost --budget toast`; `bun run cost` again for `app-shell`, raising its budgets with `raised` records if it is over (decision 25).
 9. **Ledgers**, in landing order: `registry.json`, the changelog, the guide, the sitemap, the order, the aliases, `static/r/`.
 10. **Owner push** for the `matrix` run and the mutation run (`022`'s plan). Then the change review, the landing, and the scorecard.
 
@@ -879,7 +891,7 @@ The re-review approved with changes R1 to R10. Each is applied:
 | R4 | The mutation's expected set conflicts with `022`'s derivation | Decision 20: finer `hears` targets, `toast:assertive`, `toast:polite` and `toast:focus`, on every toast test; the patch's row in `022`'s form (file `toaster.svelte`, target `toast:assertive`, fault L1); `022` must allow `<item>:<part>` targets; the derived set is exactly S2 and S10. Test 77 |
 | R5 | The new view trips `blocks.test.ts`'s guard | Decision 20: the view joins line 252's exception set with its reason, as `code-agreement` does, and stays out of `views`. Scope lists the file |
 | R6 | Test 61 expects 88 px on a view with no sticky bar | Test 61: 16 px on `/view/app-shell/toast/`, as shipped; 88 px on `/view/app-shell/sidebar/`, raised through the preview copy's `window.kuiperToast` hook (decision 23) |
-| R7 | Two of `025`'s criteria and `app-shell`'s budget | Decision 25: cases keyed `<item>.<case>` in `interactions.ts`; `025`'s criteria 1, 2 and 4 at 76 items, 72 fixtures, 34 entries, 72 entries plus three cases; `app-shell`'s budget raised with `raised` records and a landing-note line (`025` criteria 6, 7). Build step 8, criterion 26, test 78 |
+| R7 | Two of `025`'s criteria and `app-shell`'s budget | Decision 25: cases keyed `<item>.<case>` in `interactions.ts`; `025`'s criteria 1, 2 and 4 as rules, with today's numbers in brackets (restated after `025`'s own revision: 76 items, 64 fixture files, 72 measured items, 3 cases, 35 entries); `app-shell`'s budget raised with `raised` records and a landing-note line (`025` criteria 6, 7). Build step 8, criterion 26, test 78 |
 | R8 | The same `onclose` passed again runs twice | Decision 9: the same reference is kept, with no `"replaced"`. Test 14 |
 | R9 | `findTrap` misses `translate`, `rotate`, `scale`, `container-type`, `content-visibility` | Decision 7 lists them. Test 28 |
 | R10 | Write-ins | The toaster passes the page's `lang` to the queue on mount and on change (`setLang`; test 36); when a modal closes on a navigation, the later hold's end wins (decisions 16, 17; test 24); the set is "one more than `022`'s", 29; Q6 split into Q6a and Q6b |

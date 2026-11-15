@@ -1,9 +1,9 @@
 # 021 — Tokens for everyone
 
-- **Status:** Ready for owner answers: review approved with changes, all applied. The specification review ([`../reviews/021-tokens-for-everyone-spec-2026-11-15.md`](../reviews/021-tokens-for-everyone-spec-2026-11-15.md)) approved it with changes; all 13 findings are answered in the text, and each is listed under "Review". It waits on the owner's answers to the five open questions at the end. Not built.
+- **Status:** Ready to build after `020`: owner answers recorded, review approved with changes, all applied. The specification review ([`../reviews/021-tokens-for-everyone-spec-2026-11-15.md`](../reviews/021-tokens-for-everyone-spec-2026-11-15.md)) approved it with changes; all 13 findings are answered in the text, and each is listed under "Review". The owner answered its five questions on 2026-11-15; the answers are in the decisions and under "Landing notes". Committed as a specification on `release/0.13.0` (`f9e1c1a`). Not built.
 - **Date:** 2026-11-15
 - **Author:** the design lead
-- **Kind:** a feature in lane T (tokens). It changes the token source's shape and adds published files. **No interface change:** every custom property, value, utility and rule an app receives is unchanged, byte for byte (decision 3). It adds no CSS token and no dependency. In the DTCG files, the script constant `EXPRESSIVE_DARK_MARKS` becomes four tokens per scheme, eight in all (decision 6), and the 48 primitives become public DTCG paths (Q5). From 0.13.0 the DTCG paths are an interface, covered by the record (decision 10). It removes one site module, `words.ts`, whose words move into the token files (decision 9).
+- **Kind:** a feature in lane T (tokens). It changes the token source's shape and adds published files. **No interface change:** every custom property, value, utility and rule an app receives is unchanged, byte for byte (decision 3). It adds no CSS token and no dependency. In the DTCG files, the script constant `EXPRESSIVE_DARK_MARKS` becomes four tokens per scheme, eight in all (decision 6), and the 48 primitives become public DTCG paths (decision 10; the owner, 2026-11-15). From 0.13.0 the DTCG paths are an interface, covered by the record (decision 10). It removes one site module, `words.ts`, whose words move into the token files (decision 9).
 - **Written against the names `020` leaves.** `020`, the Kuiper rename, lands first ([`roadmap.md`](../roadmap.md) §3). So this specification says `tokens/kuiper.tokens.json`, `kuiper-theme`, the `kuiper` registry and `static/r/styles/maia/kuiper-theme.json`, where the tree today says `pluto`. Wherever `020` chooses a name this specification does not foresee, `020`'s name wins, and the builder notes it in the landing notes.
 - **Depends on:** `020`. The baseline for "byte-identical" is the tree at `020`'s landing commit, with every change landed by then, including the letter-spacing change being built now (`019a` decision 1: the four tracking values and the four display steps' tracking at `0`).
 - **Ranked:** [`roadmap.md`](../roadmap.md) §2, 0.13.0, wave 1, lane T. Scorecard row 5, Tokens, is Kuiper's second-largest gap: 1 against Primer's 4 ([`benchmark-scorecard.md`](../research/benchmark-scorecard.md) §5). Row 12, design tooling, is the largest; the owner capped it at 2 with "we design in code" (constitution §3).
@@ -77,7 +77,7 @@ This specification makes the tokens readable by anyone:
   - **Root `$`-properties do collide.** Both files carry `$schema` and `$description`, and a scheme file carries `$extensions`. In a flattened file the root's `$schema`, `$description` and `$extensions` are the scheme file's: it comes later.
   - `031`'s override files will share the `role` group with the scheme files, on purpose. They rely on the stated rule, token by token, and restate each token whole, so the unstated part does not matter there either (decision 7).
 - **The two scheme files hold the same paths in the same order.** Each token in them is whole: `$type`, `$value`, `$description`, `$extensions`. A role's `$description` is written in both; a test holds the two copies equal (criterion 4).
-- *Why a resolver set, not one file:* it is the conforming way to carry dark, and it lets `031` add high contrast as a file and two contexts (decision 7). The alternatives are open question 1.
+- *Why a resolver set, not one file:* it is the conforming way to carry dark, and it lets `031` add high contrast as a file and two contexts (decision 7). **The owner chose it** on 2026-11-15, over one file with dark in `$extensions` and one standalone file per scheme (Landing notes).
 
 ### 3. The same tokens, and the built CSS byte-identical
 
@@ -130,8 +130,8 @@ Every token states its own `$type`. No group sets `$type` for its children. *Why
 | `EXPRESSIVE_DARK_MARKS` (a script constant) | scheme | `expressive-mark.mark-1` to `mark-4` | `color`, aliases | none: in the mode rules |
 | `contrast.*` | contrast file | as today | not DTCG | none |
 
-- **The vendor key.** Kuiper's extension data sits under one key, called **the vendor key** here. This specification writes it `io.github.plutosystemsco.kuiper`, the key open question 2 recommends unless Pluto Systems confirms it controls `plutosystems.co`. If the owner answers otherwise, the builder uses that key everywhere this one appears. **Once shipped, the key is permanent.** It is in every published token, and the record has no kind for a changed vendor key.
-- **The CSS name is recorded.** Each token, or each group whose tokens make one variable, carries `$extensions["io.github.plutosystemsco.kuiper"].cssVariable`. So a stranger can map a path to the property an app reads without reading Kuiper's build.
+- **The vendor key is `co.plutosystems.kuiper`.** Kuiper's extension data sits under this one key, called **the vendor key** here. It is the company's own domain, reversed, with the system's name: the owner confirmed on 2026-11-15, "We control plutosystems.co." The format recommends a reverse domain the vendor controls (Format §5.2.3). **Once shipped, the key is permanent.** It is in every published token, and the record has no kind for a changed vendor key.
+- **The CSS name is recorded.** Each token, or each group whose tokens make one variable, carries `$extensions["co.plutosystems.kuiper"].cssVariable`. So a stranger can map a path to the property an app reads without reading Kuiper's build.
 - **Every other custom property is derived.** It is a formula of other variables, written by the build: `--mark-lockup-size`, `--mark-lift`, `--radius-action`, `--size-hero-fill`, the seven `--surface-*` copies, `--shadow-elevation` (in `kuiper.css`'s `:root` and `.dark`, decision 11), the eight `--radius-<step>` aliases, and Tailwind's `--color-*`, `--animate-*` and `--default-transition-duration`. A test holds this list (criterion 11).
 
 ### 5. The values
@@ -141,7 +141,7 @@ Every token states its own `$type`. No group sets `$type` for its children. *Why
   - The components and `hex` must agree: each component × 255, rounded, equals its hex byte. A test says which colour disagrees, and prints the components to write (criterion 2).
   - *Why both:* the spec requires components; people read hex. A primitive is still unique by its hex and alpha together, as today's rule says.
 - **Sizes** are px, as the design book gives them. The build turns them into rem as today, `px ÷ 16`. So the DTCG file says `8 px` where the CSS says `0.5rem`. The two are the same at the default root size, which is the build's rule (`001` decision 9).
-- **`em`, `vw` and the spring have no DTCG type.** Each is a `number`, with its unit in `$extensions["io.github.plutosystemsco.kuiper"].unit` (`"em"`, `"vw"`) and the unit also said in its `$description`. A fluid size is a group of `min`, `preferred` and `max`. The spring is its three numbers; the build turns them into `linear()`, as today. *Why:* the format forbids these units (*DTCG* §1.6), and a `dimension` in `rem` would be a different value, since an `em` follows the text it sits in.
+- **`em`, `vw` and the spring have no DTCG type.** Each is a `number`, with its unit in `$extensions["co.plutosystems.kuiper"].unit` (`"em"`, `"vw"`) and the unit also said in its `$description`. A fluid size is a group of `min`, `preferred` and `max`. The spring is its three numbers; the build turns them into `linear()`, as today. *Why:* the format forbids these units (*DTCG* §1.6), and a `dimension` in `rem` would be a different value, since an `em` follows the text it sits in.
   - **This breaks a SHOULD of the format, knowingly.** The format says tools and teams "SHOULD restrict their usage of extension data to optional meta-data that is not crucial to understanding that token's value" (Format §5.2.3). A unit is crucial to the value. No 2025.10 type carries `em` or `vw`, so there is no conforming alternative. A reader that ignores extensions sees a bare number, so the words say the unit.
   - **The 18 tokens are counted.** 13 carry `unit: "em"` (the mark's five, the four tracking values, the four display steps' tracking) and 5 carry `unit: "vw"` (the four display steps' and the gutter's `preferred`). A test holds the count (T2). When a later DTCG release adds these units, each becomes a `dimension`, and the record lists each as a `retyped` token (decision 10).
 - **Font stacks** are arrays, most preferred first: `["Geist Variable", "system-ui", "sans-serif"]`. The lowering rebuilds today's string: each name in single quotes if it holds a space, bare if not, joined by `, `. That rule rebuilds all three stacks exactly (criterion 7).
@@ -194,7 +194,7 @@ The resolver:
   - **A second modifier, `contrast`.** A modifier cannot read another, but aliases resolve after flattening. So a `more` context's file can alias per-scheme tokens and still resolve in each scheme. The scoped-schemes memo keeps contrast on the root, not on `data-scheme`, which this way fits.
   - Context names, and the choice, are `031`'s. Nothing in this specification rules either out, and no test here needs changing for either.
 - **Expressive mode is not a modifier.** Its values are on `:root` in both modes. Only the mark's dots differ, and that is a scheme value (decision 6).
-- **Each scheme file's top level carries** `$extensions["io.github.plutosystemsco.kuiper"]: { "scheme": "light", "colorScheme": "light" }`. Carbon carries its `color-scheme` the same way (*DTCG* §4).
+- **Each scheme file's top level carries** `$extensions["co.plutosystems.kuiper"]: { "scheme": "light", "colorScheme": "light" }`. Carbon carries its `color-scheme` the same way (*DTCG* §4).
 
 ### 8. A real excerpt
 
@@ -209,12 +209,12 @@ The resolver:
     "ink": {
       "$type": "color",
       "$value": { "colorSpace": "srgb", "components": [0.0431, 0.0588, 0.0902], "hex": "#0B0F17" },
-      "$extensions": { "io.github.plutosystemsco.kuiper": { "since": "0.13.0" } }
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
     },
     "line": {
       "$type": "color",
       "$value": { "colorSpace": "srgb", "components": [0.0431, 0.0588, 0.0902], "alpha": 0.102, "hex": "#0B0F17" },
-      "$extensions": { "io.github.plutosystemsco.kuiper": { "since": "0.13.0" } }
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
     }
   },
   "spacing": {
@@ -223,7 +223,7 @@ The resolver:
       "$type": "dimension",
       "$value": { "value": 4, "unit": "px" },
       "$description": "One spacing step. Every ladder step is a whole number of atoms.",
-      "$extensions": { "io.github.plutosystemsco.kuiper": { "cssVariable": "--spacing", "since": "0.1.0" } }
+      "$extensions": { "co.plutosystems.kuiper": { "cssVariable": "--spacing", "since": "0.1.0" } }
     },
     "ladder": {
       "$description": "The steps a layout uses, named by their count of atoms, as Tailwind's spacing classes are.",
@@ -237,7 +237,7 @@ The resolver:
       "$type": "number",
       "$value": 0.3,
       "$description": "A dot's diameter, in em.",
-      "$extensions": { "io.github.plutosystemsco.kuiper": { "unit": "em", "cssVariable": "--mark-dot", "since": "0.1.0" } }
+      "$extensions": { "co.plutosystems.kuiper": { "unit": "em", "cssVariable": "--mark-dot", "since": "0.1.0" } }
     }
   },
   "code": {
@@ -246,7 +246,7 @@ The resolver:
       "$type": "color",
       "$value": "{role.syntax-ink}",
       "$description": "Everything no other role names: identifiers, punctuation.",
-      "$extensions": { "io.github.plutosystemsco.kuiper": { "cssVariable": "--code-text", "since": "0.12.0" } }
+      "$extensions": { "co.plutosystems.kuiper": { "cssVariable": "--code-text", "since": "0.12.0" } }
     }
   }
 }
@@ -258,20 +258,20 @@ The resolver:
 {
   "$schema": "https://www.designtokens.org/schemas/2025.10/format.json",
   "$description": "The Kuiper Design System's dark scheme.",
-  "$extensions": { "io.github.plutosystemsco.kuiper": { "scheme": "dark", "colorScheme": "dark" } },
+  "$extensions": { "co.plutosystems.kuiper": { "scheme": "dark", "colorScheme": "dark" } },
   "role": {
     "$description": "The jobs colours do. Parts read roles, never primitives. Each names one primitive in this scheme.",
     "background": {
       "$type": "color",
       "$value": "{primitive.graphite}",
       "$description": "The page's ground.",
-      "$extensions": { "io.github.plutosystemsco.kuiper": { "cssVariable": "--background", "since": "0.1.0" } }
+      "$extensions": { "co.plutosystems.kuiper": { "cssVariable": "--background", "since": "0.1.0" } }
     },
     "primary": {
       "$type": "color",
       "$value": "{primitive.blue-lifted}",
       "$description": "The one main action: a primary button, a selected control.",
-      "$extensions": { "io.github.plutosystemsco.kuiper": { "cssVariable": "--primary", "since": "0.1.0" } }
+      "$extensions": { "co.plutosystems.kuiper": { "cssVariable": "--primary", "since": "0.1.0" } }
     }
   }
 }
@@ -334,6 +334,7 @@ Four states, each recorded in one place:
   - each `cssVars.theme` key, and each `--` key anywhere in `css`, ships as itself, once.
 
   Every name that shipped and is not in today's theme must be in the record. Every name in the record must be absent from today's theme, `src/app.css` and `kuiper.css`. Today the set is exactly 24 (*DTCG* §3; the review's probe, EXECUTED). Read as "each `cssVars` key", the rule would count 32, with eight phantom `--color-color-code-*` names, so the test states the rule as above. So a name can no longer be removed silently. Primer's CI check does this against the base branch (*DTCG* §4); this test does it against every release in the tree, with no git.
+- **Primitives are public, as DTCG paths only.** The DTCG files carry the 48 primitives, because roles alias them, and the CSS still carries none (the owner, 2026-11-15). The alias from role to primitive is the palette's structure a designer reads. So renaming or removing a primitive after 0.13.0 needs a `token` entry.
 - **From 0.13.0, a token path is an interface too.** A DTCG path renamed or removed after 0.13.0 gets a `token` entry. The same test checks them against `static/v*/r/tokens/kuiper.tokens.json` and the scheme files, once a versioned copy exists.
 
 ### 11. The plain CSS-variables file
@@ -356,10 +357,10 @@ Four states, each recorded in one place:
 ### 12. Validation
 
 - **By hand, as today.** `validateTokens` becomes a checker of the five files. It throws a `TokenError` naming the file and the path, such as `tokens: kuiper.dark.tokens.json: role.ring: "{primitive.blu-lifted}" names no token`.
-- **The format's rules, for the types used:** names match `^[^${}.][^{}.]*$`; every token has `$value` and its own `$type`; no group has `$value`; colour, dimension, duration, cubic Bézier, font family, font weight and number values have the shapes in decision 5 and *DTCG* §1.6; every alias resolves in each context, to a token of the same type, with no cycle; extension keys are only `io.github.plutosystemsco.kuiper`.
+- **The format's rules, for the types used:** names match `^[^${}.][^{}.]*$`; every token has `$value` and its own `$type`; no group has `$value`; colour, dimension, duration, cubic Bézier, font family, font weight and number values have the shapes in decision 5 and *DTCG* §1.6; every alias resolves in each context, to a token of the same type, with no cycle; extension keys are only `co.plutosystems.kuiper`.
 - **Hex is upper case, 6 digits.** The validator requires `hex` to match `^#[0-9A-F]{6}$`, stricter than the schema's `^#[0-9a-fA-F]{6}$`. A lower-case hex would change `registry.json`'s `cssVars`, which carry upper case; an 8-digit hex, the old file's habit, is not DTCG.
 - **Kuiper's rules, carried over** (today's `validateTokens`): a role aliases a primitive; a code slot aliases a role; each light `expressive-mark.mark-n` aliases the same primitive as light `role.mark-n` (decision 6); the two schemes hold the same paths in the same order; each primitive's hex and alpha are unique; ladder steps are whole atoms, and a step's name is its count of atoms; the entrance's shares fit its budget; tint alphas are whole tenths; the press scale is at most 1; the spring's ratio and settle are below 1; a fluid size's min is below its max; the fields are exactly `field-1` to `field-4`; the contrast rows name roles; and the rest of today's checks, each kept with its reason comment.
-- **No schema validator joins the suite.** Carbon validates with Ajv against vendored schemas (*DTCG* §4). Kuiper's checks cover the same rules for the types it uses, without a dependency. Validation against the published schemas, and an independent reader, run once at the checkpoint, outside the tree: open question 4.
+- **No schema validator joins the suite.** Carbon validates with Ajv against vendored schemas (*DTCG* §4). Kuiper's checks cover the same rules for the types it uses, without a dependency. Validation against the published schemas, and an independent reader, run once at the checkpoint, outside the tree (decision 16).
 
 ### 13. Where the files are published, and their URLs
 
@@ -409,6 +410,15 @@ The 0.13.0 entry gains two bullets:
 - **New:** the tokens are published as plain CSS variables (`kuiper.css`) and as DTCG files, with a record of every removed name, at `/v0.13.0/r/tokens/`. Each is listed with its URL. From 0.13.0 the DTCG token paths, the 48 primitives included, are an interface: a path renamed or removed is listed in `kuiper.removed.json` (constitution §6).
 
 `static/r/` is a ledger file. These folders land at this specification's landing, in landing order ([`roadmap.md`](../roadmap.md) §2, "Lanes").
+
+### 16. The checks outside the tree, at the checkpoint
+
+The owner's answers to the specification's third and fourth questions (2026-11-15). Each runs once, in a scratch folder outside the repository, at exact versions named in the landing notes. Nothing joins `bun.lock` or `package.json`, and no output is kept in the tree.
+
+- **(a) Schema validation.** Ajv (8.17.1, or the version current then) validates each of the three token files and both flattened files against `https://www.designtokens.org/schemas/2025.10/format.json`, and the resolver against `.../resolver.json`, both fetched that day. Every file must be valid. *Why:* the published schemas are the stricter reader; they reject a `dimension` in `em`, which Terrazzo accepted (the review's probe, EXECUTED).
+- **(b) An independent reader.** `@terrazzo/cli` (2.10.0, or the version current then) runs `tz check` once on each flattened file, not on the resolver. *Why:* given a resolver, it checks only the default context, so a broken dark alias passed; given a flattened file, it reads the dark scheme (the review's probe, EXECUTED). Both must report no errors.
+- **(c) A design tool.** The design lead imports `kuiper.flat-light.tokens.json` into Penpot, once, outside the repository. What Penpot imported and what it refused go in the landing notes and the scorecard's row 12 evidence. If Penpot rejects the 2025.10 colour objects, row 12 (b) is not met and stays 0, and no second, older-format file is published to please it. No design-tool file is kept (constitution §3). *Why Penpot:* its guide documents DTCG import from its Tokens panel (*DTCG* §8); Figma has no help page to cite, and Kuiper does not design in Figma.
+- Kuiper's own validator (decision 12) holds the same rules on every run after.
 
 ## Design
 
@@ -515,7 +525,7 @@ Every browser check runs in both theme projects. "Byte-identical" means equal SH
 18. **The changelog.** The 0.13.0 entry holds decision 15's two bullets. The `kuiper-theme` bullet says "not an interface change" and "byte for byte". The new-files bullet names `kuiper.css`, `kuiper.resolver.json`, `kuiper.removed.json` and `/r/tokens/`, and says the DTCG token paths are an interface. `registry.test.ts` checks these names. (unit)
 19. **The suites.** `bun run test:unit`, `bun run test:e2e` and `bun run test:smoke` pass; `bun run check` 0 errors; `bun run lint` clean; the literal lint unchanged. Expectations change only in the tests decision 14 names and the new ones. (all)
 20. **Tests first, and the checkpoint.** T1 to T6 and T9 to T17 are seen failing before the change. T8, and T7's comparison, pass and are proven by mutation; T7's `expressiveDarkMarks` assertion fails until the lowering exists. At the checkpoint the design lead reads the converted files beside today's, the new group descriptions, `kuiper.css` beside `src/app.css`, and the tokens page in both themes. (checkpoint)
-21. **The scorecard.** The loop is run (`roadmap.md` §4). Row 5 is expected to move 1 → 4: (c) descriptions in the source, (d) DTCG, (f) lifecycle, (g) two targets, joining (a), (b) and (e) for 7 of 7. Row 12 is expected to move 0 → 1 on (b), only with the evidence open question 3 asks for: a recorded import, or a cited design tool's documentation. The change review cites the movement. (bench)
+21. **The scorecard.** The loop is run (`roadmap.md` §4). Row 5 is expected to move 1 → 4: (c) descriptions in the source, (d) DTCG, (f) lifecycle, (g) two targets, joining (a), (b) and (e) for 7 of 7. Row 12 is expected to move 0 → 1 on (b), only with the evidence decision 16's Penpot import gives. If Penpot rejects the file, row 12 stays 0, and the change review says so. The change review cites the movement. (bench)
 
 ## Build order
 
@@ -529,9 +539,9 @@ Every browser check runs in both theme projects. "Byte-identical" means equal SH
 8. `since` values and the record. T12 to T14.
 9. The readers: `tables.ts`, the search source, the index load, `lint-literals.ts`, the smoke test, `brand-sources.test.ts`, the bench (`kuiper.ts`). `words.ts` deleted.
 10. The tokens page, the README line, the brand pages' comments. T16, T17.
-11. **Checkpoint** (criterion 20).
+11. **Checkpoint** (criterion 20), with decision 16's Ajv, `tz check` and Penpot runs.
 12. The changelog; `static/r/` at landing.
-13. Every suite, the lints and `check`. `020`'s test 19. The open question 3 and 4 checks, as the owner answered.
+13. Every suite, the lints and `check`. `020`'s test 19. Decision 16's three checks, if not already run at the checkpoint.
 14. The change review. Then the scorecard loop.
 
 ## Risks
@@ -541,55 +551,13 @@ Every browser check runs in both theme projects. "Byte-identical" means equal SH
 - **`em` and `vw` as numbers.** This breaks the format's SHOULD on extension data (decision 5). A tool that ignores extensions misreads 18 values as unitless. The words say the unit. A later DTCG release may add units; each of the 18 then gets a `retyped` record entry.
 - **Descriptions twice.** Each role's words are in two files. T4 fails on any drift.
 - **The URL moves once.** When the owner sets `design.<domain>`, the site's URLs change. The GitHub raw URL at the tag does not.
-- **The vendor key is permanent.** Once 0.13.0 ships, every published token carries it. Q2 asks the fact first.
+- **The vendor key is permanent.** Once 0.13.0 ships, every published token carries it. The owner confirmed the domain it reverses (decision 4).
 - **Lane E.** The bench script (`kuiper.ts` after `020`) and lane E's `022` and `025` may touch `scripts/bench/` at once. This specification edits only its token block, and lands it in landing order.
 - **The fixtures are a snapshot.** Any later value change fails T7 and T8. That is their point. The specification that changes a value deletes them, and says so.
 
 ## Open questions for the owner
 
-Recommended option first. The answers go in the landing notes.
-
-**Q1. One source file, or a resolver set?**
-
-1. **A resolver set:** a base file, a light file, a dark file and a resolver (decision 2). Conforms to DTCG's Resolver module, which Carbon uses; any resolver-aware tool reads dark; `031` adds high contrast as one file per scheme. Costs: four files, and each role's words written twice, held equal by a test.
-2. **One DTCG file, dark in `$extensions`.** One file to read. But only the light values are standard; a tool that does not know Kuiper's key never sees dark. `031` adds a second key to every token.
-3. **One standalone file per scheme, no resolver.** Plain DTCG everywhere; but the scheme-free tokens, over 100 of them, are written twice.
-
-**Q2. The vendor key for `$extensions`.** The format recommends a reverse domain name the vendor controls (Format §5.2.3). The key goes on every published token. **Once 0.13.0 ships, it is permanent:** changing it would change every published file, and the record has no kind for it.
-
-First, a fact only you can give: **does Pluto Systems control the domain `plutosystems.co`?** The registry's items named `https://plutosystems.co` as their author until 0.7.0. Commit `bfbd6b6` (0.7.1, "registry author point at this repository") replaced it with the GitHub URL. Nothing current names the domain: only the frozen registry copies up to `static/v0.7.0/`, and one sample, `package co.plutosystems.sandbox;` in `src/lib/preview/code-samples.ts`, which `020` classes as sample content (*DTCG* §8).
-
-1. **If it does not, or you are not sure: `io.github.plutosystemsco.kuiper`.** A namespace the organisation verifiably holds: the `io.github.<org>` form package registries accept for an owner GitHub has verified. The specification is written with this key (decision 4). Recommended.
-2. **If it does: `co.plutosystems.kuiper`.** The company's own domain, reversed, with the system's name.
-3. **Another domain** you name, reversed, with `.kuiper`.
-
-**Q3. Does a published DTCG file count as "tokens published as design-tool variables" on scorecard row 12 (b)?** The roadmap expects 0 → 1. The scorecard scores evidence, so the answer needs a named tool. None could be cited as importing 2025.10 files (*DTCG* §8):
-
-- **Penpot**'s own guide says its tokens "adhere to the Design Tokens Format Module", "a draft by the W3C DTCG", and imports JSON files and folders from its Tokens panel. But it lists colour values as strings only (hex, RGB, HSL), not the 2025.10 colour object (READ, [help.penpot.app](https://help.penpot.app/user-guide/design-tokens/)). A forum thread says its export is Tokens Studio's format, not 2025.10 (READ, secondary).
-- **Figma**'s native variables import and export was announced at Schema 2025. Forum reports from December 2025 say it was still rolling out, with gaps (READ, secondary, [the Figma forum](https://forum.figma.com/ask-the-community-7/native-variable-export-feature-47831)). No Figma help page could be found to cite. By your ruling, Kuiper does not design in Figma.
-
-So:
-
-1. **One import as evidence.** At the checkpoint, the design lead imports `kuiper.flat-light.tokens.json` into Penpot, once, outside the repository, in the same scratch folder as Q4's checks. What it imported, and what it refused, go in the landing notes and the scorecard's evidence. If Penpot rejects the 2025.10 colour objects, (b) is not met, row 12 stays 0, and no second, older-format file is published for it. No design-tool file is kept (constitution §3). Recommended.
-2. **Yes, with no tool tried.** The rubric scores the publication. Without a cited tool this is a claim, not evidence; the scorecard would mark it so.
-3. **No.** Row 12 stays 0 until `054`, the designer's start.
-
-**Q4. A second reader, to prove conformance?**
-
-The review's probe (EXECUTED, Terrazzo CLI 2.10.0) found that `tz check`, given the resolver, checks only the default context: a broken alias in the dark file passed. It also accepted a `dimension` in `em`, which the format forbids. Given plain files, it caught the dark alias. Ajv 8.17.1 against the published schemas rejected the `em` dimension and accepted the spec's excerpts. `@terrazzo/parser` has no binary; the CLI is `@terrazzo/cli`.
-
-1. **Both, once, at the checkpoint, outside `bun.lock`.** In a scratch folder outside the tree, at exact versions (Ajv 8.17.1 and `@terrazzo/cli` 2.10.0, or the versions current then, named in the landing notes):
-   - (a) **Ajv** validates each of the three token files and both flattened files against `https://www.designtokens.org/schemas/2025.10/format.json`, and the resolver against `.../resolver.json`, fetched that day;
-   - (b) **`tz check`** runs once on each flattened file, not on the resolver, so the dark scheme is read.
-
-   Both outputs go in the landing notes. Nothing joins `bun.lock`. Recommended: the schemas are the stricter reader, Terrazzo is the independent one, and Kuiper's own validator (decision 12) holds the same rules on every run after.
-2. **Ajv in the suite.** Ajv as a pinned dev dependency, the two schemas vendored under `tests/fixtures/`, and a unit test over every file, as Carbon does. Proves schema conformance on every run. Costs a dependency and its updates, and a licence check of the vendored schemas. Not recommended: it repeats, for the types Kuiper uses, what decision 12's validator checks without a dependency, and a token-file change is rare and reviewed.
-3. **None.** Kuiper's own validator only.
-
-**Q5. Primitives become public.** The DTCG files carry the 48 primitives, because roles alias them. From 0.13.0 a primitive's path is an interface: renaming one needs a record entry. The CSS still carries none.
-
-1. **Yes, public in DTCG, absent from the CSS.** The alias from role to primitive is what a designer needs to see the palette.
-2. **Publish resolved values only.** The published files carry hex values and no primitives; the source keeps them. A primitive stays private, but the published files lose the palette's structure.
+None. The owner answered all five on 2026-11-15. Each answer is in the decision it shapes (decisions 2, 4, 10 and 16) and under "Landing notes".
 
 ## Review
 
@@ -603,7 +571,7 @@ The specification review, [`../reviews/021-tokens-for-everyone-spec-2026-11-15.m
 | 4 | The bench: `020`'s `kuiper.ts`, the other counts, the `--rev` fallback | Decision 14: each field on the new files, the old shape kept for older commits, a non-zero exit on a missing shape or a zero count; Scope; criterion 17 adds `020`'s test 19 and exact counts |
 | 5 | T16 fetched absolute `SITE_ORIGIN` URLs | Decision 13 and T16: the prefix is checked, the path fetched from the test server |
 | 6 | Q4's reader proved less than claimed | Q4 rewritten: Ajv against the 2025.10 schemas for every file, plus `tz check` per flattened file, once, outside `bun.lock`; option 2 (Ajv pinned in the suite) argued and not recommended; decision 12 |
-| 7 | Q2 rested on a domain dropped at 0.7.1 | Q2 asks the fact first; recommends `io.github.plutosystemsco.kuiper` unless the domain is confirmed; the key's permanence stated in Q2, decision 4 and Risks; the spec is written with the recommended key |
+| 7 | Q2 rested on a domain dropped at 0.7.1 | Q2 asked the fact first and recommended `io.github.plutosystemsco.kuiper` unless the domain was confirmed. The owner then confirmed it ("We control plutosystems.co"), so the key is `co.plutosystems.kuiper` (decision 4); the key's permanence stated in decision 4 and Risks |
 | 8 | `readTokens`'s argument; `lint-literals.ts` | Decision 3 gives `readTokens(root = process.cwd())`; decision 14 and Scope add `lint-literals.ts`; criterion 6 names every reader |
 | 9 | The merge wording; the context-name equalities after `031` | Decision 2: token-level last-wins stated, the unstated property merge named, root `$`-properties' collision said; decision 7: "each scheme context", a second `contrast` modifier left open for `031`; T1 and criterion 1 no longer require the contexts to be only `THEMES`; Risks |
 | 10 | T13's rule counted 32 | Decision 10 and T13: `cssVars.light` and `.dark` only take `--color-`; versions sorted as versions; exactly 24 |
@@ -616,3 +584,13 @@ The memo's wrong figures are corrected in its §8, dated 2026-11-15: 18 colours 
 ## Landing notes
 
 Not landed.
+
+### The owner's answers (2026-11-15)
+
+The five questions the specification put to the owner, answered on 2026-11-15, after the specification review. Each is applied in the decision named.
+
+- **Q1, one file or a resolver set:** the resolver set: a base file, a light file, a dark file and a resolver, as recommended. Applied in decisions 2 and 7.
+- **Q2, the vendor key:** the owner: "We control plutosystems.co." So the key is `co.plutosystems.kuiper`, the company's domain reversed, not the `io.github.plutosystemsco.kuiper` fallback the specification recommended while the domain was unconfirmed. The key is permanent once 0.13.0 ships. Applied in decision 4, every excerpt, decision 12 and the tests that read the key (T2), and Risks.
+- **Q3, scorecard row 12 (b):** one Penpot import of `kuiper.flat-light.tokens.json` at the checkpoint, outside the repository, as recommended. If Penpot rejects it, row 12 stays 0. Applied in decision 16 (c) and criterion 21.
+- **Q4, conformance:** Ajv against the 2025.10 schemas for every file, plus `tz check` on each flattened file, once at the checkpoint, outside `bun.lock`, as recommended. Applied in decision 16 (a) and (b), and decision 12.
+- **Q5, primitives:** public as DTCG paths, still absent from the CSS, as recommended. Applied in decision 10.
