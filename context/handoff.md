@@ -1,43 +1,54 @@
 # Handoff
 
 - **Status:** the state of the work, replaced at each release.
-- **Date:** 2026-11-07
+- **Date:** 2026-11-15
 
 ## State
 
-`v0.11.0` (2026-11-07) is the last release. It holds `009` to `012` in one release (`decisions.md`, "One release, 0.11.0", 2026-11-07). 0.9.0 and 0.10.0 are never tagged; their snapshots are deleted. `package.json` reads 0.11.0, `static/v0.11.0/` is built, and the changelog has one 0.11.0 entry.
+`v0.11.0` (2026-11-07) is the last tag. `0.12.0` is built on the `release/0.12.0` branch and not yet tagged. `package.json` reads 0.12.0, `static/v0.12.0/` is built, and the changelog has one 0.12.0 entry. Nothing is pushed.
 
-1. **`009`, expressive mode and the brand slots.** Built and change-reviewed. `data-mode="expressive"` is a second voice on the same tokens. Lint rule L22 keeps expressive-only classes out of productive items.
-2. **`010`, the stage compositions.** Built and change-reviewed. Nine compositions and the `product-home` block.
-3. **The identity, settled.** The owner answered all fourteen questions over two rounds (`decisions.md`, 2026-11-06). The exhibit at `/identity` is the research record.
-4. **`011`, the brand.** Built, change-reviewed, every finding fixed or answered.
-   - Deep Field's hues on the warm canvas `#F3F0E8` and graphite `#16140F`.
-   - Four colour fields, `field-1` to `field-4`, with `surface-plain` to restore the theme's roles.
-   - Frosted glass on expressive pages only, with opaque fallbacks. The lens was removed by the owner's ruling ("Frost only", 2026-11-07).
-   - `type-poster`, a spring ease for the dots only (L23), and the E6 risen-colon lockup.
-5. **`012`, the compositions on brand.** Built, change-reviewed, every finding fixed. The compositions and `product-home` now use the fields, `surface-plain` and glass. `009`'s stage and light tokens are removed.
+The system is now the **Kuiper Design System**, a public product any team may adopt (`decisions.md`, 2026-11-15). Code names stay `pluto` until 0.13.0.
 
-The tree holds 75 items. The last full runs: unit 892 pass; `check` 0 errors; lint clean; literal lint 0 violations and 1 allowance (L24); e2e 1966 passed, 4 skipped; smoke 111 pass.
+Committed on `release/0.12.0`, one commit per specification:
+
+1. **`014`, the white light-mode code ground**, with inline code on the code ground.
+2. **`013`, code highlighted by tree-sitter** in Meridian's roles, with the Tombaugh palette.
+3. **`016`, the brand yellow**: `#E2B000` light, `#F8D874` dark.
+4. **`015`, the design site**: the four doors, 75 component pages, search, Markdown twins and `llms.txt`.
+5. **`017`, Start, Brand and Foundations**: 21 pages and the six downloads.
+6. **The follow-up**: dark `type` `#A8C0D8`, `kbd` on the code ground, the site's address.
+7. **`018`, site polish**: the left navigation, the component-first page, thumbnails, search aliases, and the Kuiper name (`ea1f9bd`).
+
+**`019`, the error summary**, is built and change-reviewed, uncommitted. The review reads "Lands, once finding 1 is settled" (`reviews/019-the-error-summary-pr-2026-11-15.md`). Its findings are being fixed. The alert moves inside the summary, and a link brings the field's label into view.
+
+The tree holds 75 items. The last runs, on `019`'s build: unit 1206 pass; e2e 2738 passed, 11 skipped; smoke 132 pass; `check` 0 errors; lint clean; literal lint 0 violations and 1 allowance (L24); the release check exits 0. One timing test (`highlight-session.test.ts`, 4 ms p95) is flaky under load.
+
+**The rules changed today.** The constitution, `AGENTS.md` and `README.md` were amended from the older-rules audit (`research/2026-11-15-older-rules-audit.md`, "Applied 2026-11-15"). In short: breadth follows the roadmap, accessibility is proven across three engines and screen readers from 0.13.0, the motion budget is gone, and small fixes have a lighter track.
 
 ## Waiting on the owner
 
-- Nothing.
+- **`019`'s VoiceOver listen, before the tag.** The owner runs `scripts/a11y/voiceover-error-summary.ts` (after enabling VoiceOver's AppleScript control), or listens for one minute. The pass rule is in `019` decision 12. If it fails, the owner chooses between keeping the inner alert and dropping the live role (`019`, Risks).
+
+The order to the tag: `019`'s fixes, its commit, the owner's listen, then the local `v0.12.0` tag.
 
 ## What this work checks, and what it does not
 
-- Every page is checked in Chromium, in both themes, by the browser suites, axe and the keyboard walk. Firefox, Safari and iOS Safari are not checked. No screen reader has been run.
+- Every page is checked in Chromium, in both themes, by the browser suites, axe and the keyboard walk.
+- Firefox and WebKit are not yet run, and no screen reader has been run but `019`'s pending listen. From 0.13.0 these are no longer limits: constitution §4.4 requires all three engines and scripted screen-reader checks.
 - The glass's Firefox mask order is written to the standard, but it is not run in Firefox.
-- The exhibit's boards were checked by screenshot only; they have no tests of their own, by design.
-- The last fixes to `011` and `012` were not re-reviewed by a reviewer; the counts are the builder's.
 
 ## Next
 
-- **The product icons (G5)**, their own specification: the flat colour tile, Phosphor glyphs (already pinned by `002`), the eight-app colour map and the radius that scales with the icon.
-- **A signature device** stays open. The owner set it aside for now (F, 2026-11-06).
-- Carried over from `v0.8.0`: the code-palette specification, and the highlighter fault where an apostrophe inside a TypeScript `//` comment breaks the following lines.
-- **After the `v0.12.0` tag, in 0.13.0** (owner decisions of 2026-11-15):
-  - the rename of code names to Kuiper (`pluto` registry, `pluto-theme`, `pluto:` context keys, the token file), with a migration guide for installed apps;
-  - lockup mock-ups for the Kuiper name, put to the owner for approval;
-  - the accessibility status generated from the test report (everything must pass), with the high-contrast scheme and a forced-colours pass;
-  - light and dark scoped to any subtree with `light-dark()` (`research/2026-11-15-scoped-schemes-and-contrast.md`), its four questions to the owner first;
-  - prop doc comments on every item, so the API tables fill in.
+The plan is `roadmap.md` (being written now from the inventory, the page standard, the toast memo and the scorecard). Already ruled for 0.13.0 and after (`decisions.md`, 2026-11-15):
+
+- the rename of code names to Kuiper, with a migration guide for installed apps;
+- lockup mock-ups for the Kuiper name, for the owner's approval;
+- the accessibility status from the test report, with the high-contrast scheme, a forced-colours pass, and the full engine and screen-reader matrix;
+- light and dark scoped to any subtree with `light-dark()` (`research/2026-11-15-scoped-schemes-and-contrast.md`), its questions to the owner first;
+- prop doc comments on every item, so the API tables fill in;
+- the component page standard, piloted on `button`, `dialog`, `field`, `dropdown-menu` and `error-summary`;
+- a `toast` of Kuiper's own, on `status` (`research/2026-11-15-toasts.md`);
+- the token file as conformant DTCG, exported as design variables;
+- a functional data palette: eight categorical colours with sequential and diverging scales.
+
+Still open from before: the product icons (G5), whose tile is ruled but not drawn, and a signature device, set aside by the owner.

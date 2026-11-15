@@ -13,6 +13,45 @@ Pluto Systems remains the company and its brand: the four-dot mark, the colours 
 
 **The home hero.** **The owner:** "And I want the hero to be Design with Kuiper". The home page's headline becomes "Design / with / Kuiper" on its three poster lines, replacing "Build / with / Pluto.". **The owner:** "no period after Kuiper". It lands in `018`.
 
+### Kuiper is a public product, and the old limits go (2026-11-15)
+
+Asked from the older-rules audit (`research/2026-11-15-older-rules-audit.md`), the toast memo (`research/2026-11-15-toasts.md`) and the benchmark scorecard (`research/benchmark-scorecard.md`):
+- **Who Kuiper is for.** **The owner:** "Public product. It's building the design system for current and future needs, and is a system that anyone can adopt." Constitution §1, §2 and §4.2 are reworded: a component is added when `roadmap.md` ranks it, from current or future need and the reference systems' evidence. No named app is required. Docs, install path and governance are written for outside teams too.
+- **Accessibility evidence: the full matrix from 0.13.0.** Chromium, Firefox and WebKit in every test run, plus scripted VoiceOver and NVDA checks. A tag waits on automated checks only. "Recorded as limits, not as pending work" is removed from §4.4 and from the specifications that repeat it. `v0.12.0` still waits on the owner's `019` listen.
+- **Charts may use a functional data palette:** eight categorical colours plus sequential and diverging scales, each measured for contrast and colour-blind distinction. Data colour is functional, like code colour.
+- **Changes to installed apps:** a migration note with every interface change; from 1.0, nothing is removed without a deprecation in an earlier minor release.
+- **Reach: tokens for everyone.** Components stay Svelte. The tokens and theme are also published as plain CSS variables and a W3C Design Tokens (DTCG) file.
+- **The motion budget is removed.** **The owner:** "Nix the motion budget, allow for sliding and motion that is functional or that is intentionally whimsical and welcoming." Motion is allowed where it is functional, or deliberately whimsical and welcoming. Reduced motion is always honoured: nothing moves when it is set. This sits beside the 2026-11-07 ruling that every other animation answers the visitor (J2): the next motion specification states how a welcoming flourish meets it, for example only on first arrival and once per visit.
+- **Toasts time out only when harmless.** Success and info toasts last at least 6 s, longer for longer text, and pause on hover, focus, a hidden tab or an open modal. Apps get a switch to turn timers off. Errors, cautions, actions and loading never time out. The design lead takes the memo's option (b): Kuiper builds its own `toast` on `status`, with no dependency, since `svelte-sonner`'s tab stops and nested live regions are in its markup.
+- **Design tooling: tokens as design variables, no Figma.** **The owner:** "We should assume we are not going to adopt figma, we design in code. So tokens and design variables." The token file becomes conformant DTCG, with role descriptions in the file, and is exported as design variables. No component library is drawn in a design tool.
+
+The audit's other AMEND and REMOVE verdicts are applied on the owner's instruction to question the old rules. The rules it marked KEEP stay: the source model, tokens as the one source, state never by colour alone, 24 px targets, the muted-ground tint ban, and the owner's brand calls.
+
+### Toasts, the page standard, and questioning the old rules (2026-11-15)
+
+Asked after the component-inventory and component-page-standard memos of 2026-11-15:
+- **Toasts: yes.** **The owner:** "We should have toasts, so drop our rule against them and work out the best solution." `005` decision 14's refusal is withdrawn. A research memo studies the references' toasts and the accessibility rules on timing and status messages, then a specification builds the best one.
+- **Structured guidance lives in the site:** one typed module per item, `src/lib/site/guidance/<item>.ts`. Installed apps receive nothing new.
+- **A don't may show a real accessibility fault,** rendered live but `inert`, labelled as a don't. Its test asserts that axe reports exactly the rule it names, and the page's axe run excludes only that example.
+- **The pilot set:** `button`, `dialog`, `field`, `dropdown-menu`, `error-summary`.
+
+**Questioning the older documents.** **The owner:** "You should question the assumptions made in the constitution and other older documents that were written before our ambitions. If they do not serve us in building a compelling design system, we should nix them." What follows:
+- An audit reads the constitution, `AGENTS.md`, `decisions.md` and the specifications for rules written before the ambition to match the reference systems.
+- Each rule is kept, amended or removed, with its reason. Rules that plainly hold the system back are removed on this instruction and recorded here. Rules that protect accessibility, the source-not-a-package model or the owner's own calls are put to the owner first.
+
+### `019`'s VoiceOver listen waits for the owner (2026-11-15)
+
+Asked how to run `019`'s screen-reader check (decision 12), **the owner:** "Away from my laptop right now, let s do it later". `019` is committed after its change review. The local `v0.12.0` tag waits until the owner has run `scripts/a11y/voiceover-error-summary.ts`, or listened, and the pass rule holds. If it fails, the owner chooses between keeping the inner alert and dropping the live role (`019`, Risks).
+
+### A roadmap toward the reference systems, measured as it goes (2026-11-15)
+
+Asked whether 0.12.0 is a polished system that competes with IBM's and Google's, the design lead answered no: the site holds its own, but breadth (75 items against hundreds), per-component guidance, published accessibility status, scoped theming, design tooling and reach fall well short. **The owner:** "Yes, build a roadmap and have concurrent agents work towards it. Constantly access outgoes towards prior art references."
+
+What follows:
+- **Three research tracks run at once:** a component inventory against the reference catalogues, a benchmark scorecard, and a standard for a component page's guidance. They feed `context/roadmap.md`, releases from 0.13.0 toward 1.0.
+- **Outcomes are measured against prior art continuously.** The scorecard is re-run after every specification lands. Each change review cites its movement, and the roadmap is re-ranked from it.
+- Agents work concurrently where their files don't overlap. Builds that share files run in sequence.
+
 ### `018` checkpoint 2, the design lead's rulings (2026-11-15)
 
 Seen: the Components index at 1440, 768 and 390 in both themes, ten thumbnails beside their pages, search for "dia" and "modal", Foundations Type and Colour, and the forced-colours shots.
