@@ -346,6 +346,12 @@ export function themeCss(tokens: Tokens): CssTree {
       "scrollbar-color": "var(--input) var(--muted)",
       "scrollbar-width": "thin",
     },
+    // 014 decision 5: the same bar for a scroll box inside code, its track the
+    // code ground, so a white block carries no wash stripe.
+    "@utility scrollbar-code": {
+      "scrollbar-color": "var(--input) var(--code-background)",
+      "scrollbar-width": "thin",
+    },
     // 005 decision 5: the horizontal groove turned on its side. The inset
     // beside a sidebar owns it on its start edge: the hairline first, then
     // the light inside it, light from the top-left. An outer shadow on the
@@ -606,6 +612,18 @@ export function themeCss(tokens: Tokens): CssTree {
       // contextual ligatures drew `!=` as one glyph, which copy does not
       // return. The same rule sits on the editor's scroller.
       [monoSelector(tokens)]: { "font-variant-ligatures": "none" },
+      // 014 decision 15: inline code, a code element outside a pre and a
+      // heading, is a chip on the code ground edged by the hairline, as a
+      // block is: the case radius, one atom of side padding and none above
+      // or below, so the line height holds. Inside a link it takes the link
+      // colour. In the base layer, a class an item sets on its code wins.
+      "code:not(pre code, :is(h1, h2, h3, h4, h5, h6) code)": {
+        "@apply rounded border border-border bg-code-background px-1 text-code-foreground box-decoration-clone":
+          {},
+      },
+      "a code:not(pre code, :is(h1, h2, h3, h4, h5, h6) code)": {
+        "@apply text-code-link": {},
+      },
     },
     // 004 decision 5: the native meter on the muted track with a primary fill.
     // Pseudo-elements cannot be classes, and an item may hold no <style>. No

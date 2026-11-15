@@ -181,13 +181,16 @@ test.describe("tokens in the browser", () => {
     expect(holdsColour(colour, primary), `${colour} is ${primary}`).toBe(true);
   });
 
-  test("bg-code-active-line computes --card's colour", async ({ page }) => {
+  // 014 decision 1: the active line is its own code-only role.
+  test("bg-code-active-line computes --syntax-active-line's colour", async ({
+    page,
+  }) => {
     const [colour, card] = await page
       .locator(token("bg-code-active-line"))
       .evaluate((el) => [
         getComputedStyle(el).backgroundColor,
         getComputedStyle(document.documentElement)
-          .getPropertyValue("--card")
+          .getPropertyValue("--syntax-active-line")
           .trim(),
       ]);
     expect(holdsColour(colour, card), `${colour} is ${card}`).toBe(true);

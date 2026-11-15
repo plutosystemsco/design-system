@@ -19,10 +19,12 @@ export const codeTheme = EditorView.theme({
     backgroundColor: "var(--code-background)",
     borderRadius: "var(--radius)",
   },
-  // The global focus recipe, around the whole editor, gutter included.
+  // The global focus recipe, around the whole editor, gutter included. The
+  // editor sits inside its root's hairline, so the offset adds the line
+  // width: the indicator sits as far outside the hairline as a code block's.
   "&.cm-focused": {
     outline: "var(--focus-width) solid var(--ring)",
-    outlineOffset: "var(--focus-offset)",
+    outlineOffset: "calc(var(--focus-offset) + var(--line-width))",
   },
   ".cm-content": {
     caretColor: "var(--code-foreground)",
@@ -35,7 +37,8 @@ export const codeTheme = EditorView.theme({
     // Code shows the characters that were typed: no ligatures.
     fontVariantLigatures: "none",
     borderRadius: "var(--radius)",
-    scrollbarColor: "var(--input) var(--muted)",
+    // The track is the code ground.
+    scrollbarColor: "var(--input) var(--code-background)",
     scrollbarWidth: "thin",
   },
   ".cm-gutters": {
@@ -46,7 +49,7 @@ export const codeTheme = EditorView.theme({
   ".cm-lineNumbers .cm-gutterElement": {
     padding: "0 calc(var(--spacing) * 2) 0 calc(var(--spacing) * 3)",
   },
-  // The active line is the opaque card step, not a tint.
+  // The active line, one opaque step from the ground, not a tint.
   ".cm-activeLine": { backgroundColor: "var(--code-active-line)" },
   ".cm-activeLineGutter": { backgroundColor: "var(--code-active-line)" },
   // The base theme tints matched brackets; the tint is cleared and a hairline

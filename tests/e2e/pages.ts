@@ -450,6 +450,9 @@ export const VIEW_STOPS: Record<string, string[]> = {
   "/view/chat/thread/": [
     "button:New chat",
     "region:Messages",
+    // 014 decision 11: m3, the second user turn, holds a block.
+    "button:Copy code",
+    "pre:add(2, 3)",
     "button:Copy code",
     'pre:def add(a, b): """Add two numbers.""" return a + b',
     "button:Latest reply",

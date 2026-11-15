@@ -67,11 +67,13 @@
   <div class="mt-6 grid gap-3" data-testid="code-view">
     {#each files as file (file.appPath)}
       <details class="rounded border border-border">
+        <!-- A path has no break of its own; at 320 px it breaks anywhere, so
+             the chip's padding and edge never widen the page (014). -->
         <summary class="cursor-pointer px-4 py-3"
-          ><code class="text-sm">{file.appPath}</code></summary
+          ><code class="text-sm wrap-anywhere">{file.appPath}</code></summary
         >
         <pre
-          class="bg-muted px-4 py-3 font-mono text-xs wrap-anywhere whitespace-pre-wrap text-foreground"><code
+          class="bg-code-background px-4 py-3 font-mono text-xs wrap-anywhere whitespace-pre-wrap text-foreground"><code
             >{file.text}</code
           ></pre>
       </details>

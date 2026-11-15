@@ -62,8 +62,10 @@
   --syntax-purple: #903ace;
   --syntax-teal: #15717a;
   --syntax-cyan: #1a6c97;
+  --syntax-ground: #ffffff;
+  --syntax-active-line: #f3f0e8;
   --code-foreground: var(--foreground);
-  --code-background: var(--muted);
+  --code-background: var(--syntax-ground);
   --code-comment: var(--muted-foreground);
   --code-keyword: var(--primary);
   --code-constant: var(--primary);
@@ -82,7 +84,7 @@
   --code-inserted: var(--success);
   --code-deleted: var(--destructive);
   --code-changed: var(--primary);
-  --code-active-line: var(--card);
+  --code-active-line: var(--syntax-active-line);
   --mark-dot: 0.3em;
   --mark-gap: 0.08em;
   --mark-rise: 0.36em;
@@ -241,8 +243,10 @@
   --syntax-purple: #b780df;
   --syntax-teal: #20a6b3;
   --syntax-cyan: #269dd8;
+  --syntax-ground: #2c2821;
+  --syntax-active-line: #221f19;
   --code-foreground: var(--foreground);
-  --code-background: var(--muted);
+  --code-background: var(--syntax-ground);
   --code-comment: var(--muted-foreground);
   --code-keyword: var(--primary);
   --code-constant: var(--primary);
@@ -261,7 +265,7 @@
   --code-inserted: var(--success);
   --code-deleted: var(--destructive);
   --code-changed: var(--primary);
-  --code-active-line: var(--card);
+  --code-active-line: var(--syntax-active-line);
   --field-1: #93b0ff;
   --field-1-foreground: #16140f;
   --field-2: #ff9491;
@@ -401,6 +405,8 @@
   --color-syntax-purple: var(--syntax-purple);
   --color-syntax-teal: var(--syntax-teal);
   --color-syntax-cyan: var(--syntax-cyan);
+  --color-syntax-ground: var(--syntax-ground);
+  --color-syntax-active-line: var(--syntax-active-line);
   @keyframes pluto-enter {
     from {
       opacity: 0;
@@ -468,6 +474,11 @@
 
 @utility scrollbar {
   scrollbar-color: var(--input) var(--muted);
+  scrollbar-width: thin;
+}
+
+@utility scrollbar-code {
+  scrollbar-color: var(--input) var(--code-background);
   scrollbar-width: thin;
 }
 
@@ -825,6 +836,12 @@ html:has([data-sticky-bar]) {
   pre {
     font-variant-ligatures: none;
     @apply font-mono;
+  }
+  code:not(pre code, :is(h1, h2, h3, h4, h5, h6) code) {
+    @apply rounded border border-border bg-code-background px-1 text-code-foreground box-decoration-clone;
+  }
+  a code:not(pre code, :is(h1, h2, h3, h4, h5, h6) code) {
+    @apply text-code-link;
   }
   html {
     @apply font-sans;

@@ -1,5 +1,6 @@
 <script lang="ts">
   import { Button } from "#lib/registry/ui/button";
+  import * as Card from "#lib/registry/ui/card";
   import { CodeEditor, pythonSetup } from "#lib/registry/ui/code-editor";
   import * as Kbd from "#lib/registry/ui/kbd";
   import { Status } from "#lib/registry/ui/status";
@@ -41,7 +42,7 @@
 <PreviewSection
   id="variants"
   title="Variants"
-  intro="CodeMirror 6 on the muted ground the code block shares, every colour and size from the tokens, the same twenty-one slots the code block reads. It grows with its document, scrolls long lines sideways, and binds no Tab. The code is in the page before any script runs, as a plain pre that the editor replaces on mount. The example is a decorated class: a docstring, annotations, a property, self, an f-string and built-ins."
+  intro="CodeMirror 6 on the code ground the code block shares, edged by the same hairline, every colour and size from the tokens, the same twenty-one slots the code block reads. It grows with its document, scrolls long lines sideways, and binds no Tab. The code is in the page before any script runs, as a plain pre that the editor replaces on mount. The example is a decorated class: a docstring, annotations, a property, self, an f-string and built-ins."
 >
   <div class="grid max-w-2xl gap-8">
     <Specimen caption="pythonSetup(), a bound value and onrun" class="w-full">
@@ -105,15 +106,22 @@
   intro="Read-only keeps the stop and the selection and says aria-readonly: the state while a run is in flight, so focus does not jump when the result arrives. Disabled is not editable and leaves the tab order."
 >
   <div class="grid max-w-2xl gap-8">
-    <Specimen caption="readonly" class="w-full">
-      <div class="w-full" data-testid="editor-readonly">
-        <CodeEditor
-          value={SHORT}
-          label="Read-only example"
-          extensions={python}
-          readonly
-        />
-      </div>
+    <Specimen
+      caption="readonly, in a card: told by the hairline"
+      class="w-full"
+    >
+      <Card.Root class="w-full">
+        <Card.Content>
+          <div class="w-full" data-testid="editor-readonly">
+            <CodeEditor
+              value={SHORT}
+              label="Read-only example"
+              extensions={python}
+              readonly
+            />
+          </div>
+        </Card.Content>
+      </Card.Root>
     </Specimen>
     <Specimen caption="disabled" class="w-full">
       <div class="w-full" data-testid="editor-disabled">

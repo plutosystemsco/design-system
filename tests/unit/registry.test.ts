@@ -1368,14 +1368,40 @@ describe("CHANGELOG.md", () => {
   // 011 decision 14, criterion 14: 0.9.0 and 0.10.0 were never released;
   // their entries fold into one 0.11.0 entry, which names decision 12's five
   // visible changes, and what 009, 010 and 011 add.
-  test("has no 0.9.0 or 0.10.0 entry, and 0.11.0 is the newest", () => {
+  // 014 decisions 12 and 13: 0.12.0, "unreleased" until the tag, is the
+  // newest; 0.11.0 follows it.
+  test("has no 0.9.0 or 0.10.0 entry; 0.12.0 is the newest, unreleased, and 0.11.0 is next", () => {
     const text = readFileSync("CHANGELOG.md", "utf8");
     expect(text).not.toMatch(/^## 0\.9\.0\b/m);
     expect(text).not.toMatch(/^## 0\.10\.0\b/m);
     const versions = [...text.matchAll(/^## (\d+\.\d+\.\d+)\b/gm)].map(
       (m) => m[1],
     );
-    expect(versions[0]).toBe("0.11.0");
+    expect(versions.slice(0, 2)).toEqual(["0.12.0", "0.11.0"]);
+    expect(text).toMatch(/^## 0\.12\.0 — unreleased$/m);
+  });
+
+  // 014 criterion 13: one 0.12.0 entry, shared with 013; one bullet per item,
+  // each of the three marked as an interface change.
+  test("the one 0.12.0 entry marks pluto-theme, code-block and code-editor as interface changes and names the two roles, scrollbar-code and inline code", () => {
+    const text = readFileSync("CHANGELOG.md", "utf8");
+    expect(text.match(/^## 0\.12\.0\b/gm)).toHaveLength(1);
+    const body = entry("0.12.0");
+    for (const name of ["pluto-theme", "code-block", "code-editor"]) {
+      const bullets = body
+        .split("\n")
+        .filter((line) => line.startsWith(`- \`${name}\`: `));
+      expect(bullets, name).toHaveLength(1);
+      expect(bullets[0], name).toContain("**interface change.**");
+    }
+    for (const name of [
+      "`--syntax-ground`",
+      "`--syntax-active-line`",
+      "`scrollbar-code`",
+      "Inline code",
+    ])
+      expect(body).toContain(name);
+    expect(body).not.toContain("No variable is renamed or removed");
   });
 
   test("the 0.11.0 entry names decision 12's five visible changes", () => {
@@ -1562,6 +1588,114 @@ describe("CHANGELOG.md", () => {
   test("still has a 0.1.0 entry naming each of the 6 items", () => {
     const body = entry("0.1.0");
     for (const [name] of ITEMS_001) expect(body).toContain(`\`${name}\``);
+  });
+});
+
+/** 014 criteria 7, 9 and 13: the white code ground, in the items' source, the version and the documents. */
+describe("014: the white code ground", () => {
+  const read = (file: string) => readFileSync(file, "utf8");
+  const UI = "src/lib/registry/ui";
+  const PAGES = "src/routes/(site)/items";
+  /** The class tokens of the first string literal after `key`. */
+  const classesAfter = (text: string, key: RegExp) => {
+    const match = key.exec(text);
+    expect(match, String(key)).not.toBeNull();
+    return match![1]!.split(/\s+/);
+  };
+
+  test("code-block's base classes hold border, border-border and bg-code-background", () => {
+    const base = classesAfter(
+      read(`${UI}/code-block/code-block.svelte`),
+      /base:\s*"([^"]*)"/,
+    );
+    for (const cls of ["border", "border-border", "bg-code-background"])
+      expect(base, cls).toContain(cls);
+  });
+
+  test("code-block-content holds scrollbar-code and not scrollbar as a class token", () => {
+    const tokens = classesAfter(
+      read(`${UI}/code-block/code-block-content.svelte`),
+      /cn\(\s*"([^"]*)"/,
+    );
+    expect(tokens).toContain("scrollbar-code");
+    expect(tokens).not.toContain("scrollbar");
+  });
+
+  test("code-editor's root holds border, border-border and bg-code-background, not bg-muted", () => {
+    const root = classesAfter(
+      read(`${UI}/code-editor/code-editor.svelte`),
+      /data-slot="code-editor"\s*class=\{cn\("([^"]*)"/,
+    );
+    for (const cls of ["border", "border-border", "bg-code-background"])
+      expect(root, cls).toContain(cls);
+    expect(root).not.toContain("bg-muted");
+  });
+
+  test("code-editor-theme's scroller reads the code ground, and its focus offset adds the line width", () => {
+    const theme = read(`${UI}/code-editor/code-editor-theme.ts`);
+    expect(theme).toContain(
+      'scrollbarColor: "var(--input) var(--code-background)"',
+    );
+    expect(theme).toContain(
+      'outlineOffset: "calc(var(--focus-offset) + var(--line-width))"',
+    );
+    expect(theme).not.toContain("var(--muted)");
+  });
+
+  test('no file under src/lib/registry/ or the item pages contains class="bg-muted"', () => {
+    const files = execSync(
+      `git ls-files --cached --others --exclude-standard -- src/lib/registry "${PAGES}"`,
+      { encoding: "utf8" },
+    )
+      .split("\n")
+      .filter((f) => f && existsSync(f));
+    expect(files.length).toBeGreaterThan(100);
+    const offenders = files.filter((f) => read(f).includes('class="bg-muted"'));
+    expect(offenders).toEqual([]);
+  });
+
+  test("package.json reads 0.12.0; the registry build has written static/v0.12.0/; no v0.12.0 tag exists", () => {
+    expect(JSON.parse(read("package.json")).version).toBe("0.12.0");
+    expect(existsSync("static/v0.12.0/r/styles/maia/index.json")).toBe(true);
+    const tags = execSync("git tag --list 'v0.12.0'", { encoding: "utf8" });
+    expect(tags.trim()).toBe("");
+  });
+
+  test("registry.json's code-block description names the code ground and the hairline, not the muted inset", () => {
+    const item = JSON.parse(read("registry.json")).items.find(
+      (i: { name: string }) => i.name === "code-block",
+    );
+    expect(item.description).toBe(
+      "Code, output or a diff on the code ground, edged by the hairline, highlighted from the code tokens, with line numbers, a copy button and a header divided by the groove.",
+    );
+    expect(item.description).not.toContain("muted inset");
+  });
+
+  test("no item page or comment names muted or card as the code ground", () => {
+    const highlighter = read(`${PAGES}/highlighter/+page.svelte`);
+    expect(highlighter).toContain(
+      '["background", "syntax-ground", "bg-code-background"]',
+    );
+    expect(highlighter).toContain(
+      '["active-line", "syntax-active-line", "bg-code-active-line"]',
+    );
+    expect(highlighter).not.toContain('["background", "muted"');
+    expect(highlighter).not.toContain('["active-line", "card"');
+    for (const file of [
+      `${PAGES}/code-editor/+page.svelte`,
+      `${UI}/code-block/code-block-line.svelte`,
+      `${UI}/code-editor/code-editor.svelte`,
+    ])
+      expect(read(file), file).not.toContain("muted ground");
+    expect(read(`${PAGES}/code-block/+page.svelte`)).not.toContain(
+      "muted inset",
+    );
+    expect(read(`${UI}/code-block/code-block.svelte`)).not.toContain(
+      "muted inset",
+    );
+    const theme = read(`${PAGES}/pluto-theme/+page.svelte`);
+    expect(theme).toContain("scrollbar-code");
+    expect(theme).not.toContain('passes <code>class="bg-muted"</code>');
   });
 });
 

@@ -2,6 +2,16 @@
 
 Each release of the registry, newest first. A change to an item's interface is marked **interface change**.
 
+## 0.12.0 — unreleased
+
+In light mode code sits on white, lighter than the page, and every code block and editor is edged by the hairline.
+
+- `pluto-theme`: **interface change.** The code ground and the active line have theme roles of their own, `--syntax-ground` and `--syntax-active-line`. `--code-background` and `--code-active-line` keep their names and now name them. In light mode the code ground is white (`#FFFFFF`), not `wash` (`#E9E5DB`), and the active line is the page canvas (`#F3F0E8`), not white; dark mode's grounds are unchanged. A new utility, `scrollbar-code`, draws a scroll box's track in the code ground; inside an ink surface that track is the surface, in both page themes. Inline code, a `code` element not inside a `pre` or a heading, is now a chip on the code ground with the hairline edge, the case radius, 4 px of side padding and the code body colour (the link colour inside a link), in both themes; the line height does not change, and a chip that wraps keeps its edge on each line. `kbd` and `samp` are unchanged. A class an app sets on its own `code` wins for the properties it sets, since the rule is in the base layer; the hairline, the radius, the side padding and the code colour still apply unless a class sets them too. The chip adds 10 px to inline code's width (4 px of padding and a 1 px edge on each side), so an unbreakable inline token in a tight column can widen that column by as much; give the `code` `wrap-anywhere`, or its container `break-all`. The code-ground change itself renames and removes nothing; every rename and removal in this bullet is the code map's. An app's own class named `scrollbar-code` would take the theme's rule; rename it before updating. An app that painted its own surfaces with `--code-background` now gets white in light mode.
+- `code-block`: **interface change.** No prop, slot or export changes. The root draws a 1 px `border-border` on each side. At the same content it is 2 px taller. Where it fills its container, its width is unchanged and its code area is 2 px narrower, so a line that just fit may now scroll. Where it sizes to its content, as in a chat bubble, it is also 2 px wider. A fixed height keeps its size and shows 2 px less code. Its scroll track is the code ground. The advice to pass `class="bg-muted"` to keep an inset is withdrawn: code on `muted` does not meet AA with this release's colours.
+- `code-editor`: **interface change.** No prop, slot or export changes. The root reads the code ground (`bg-code-background`) in place of `bg-muted` and draws the same hairline, with the same change of size as `code-block`. Its focus ring stays 2 px outside its edge. Its scroll track is the code ground. Prerendered, it is the colour it has once mounted.
+
+Update `pluto-theme`, `code-block` and `code-editor` together. An app that updates the theme alone gets white blocks with no edge on its white cards.
+
 ## 0.11.0 — 2026-11-07
 
 The brand: Pluto's colours on a warm canvas, flat product screens, the closer lockup, and the expressive mode a home page or a launch is built in. 0.9.0 and 0.10.0 were never released; their changes are folded in here.

@@ -1170,12 +1170,13 @@ async function drawnByContainer(page: Page): Promise<string | undefined> {
 
 // 003's 83 stops over 18 views, and 006 decision 14's 70 over the shell's 4 and the chat's 6;
 // 008 takes the shipped shell's source link (69) and adds two views of 8 (85).
-// 010 criterion 9 adds the product home's 20 at 1280: 188.
-test("the 31 views hold 188 stops", () => {
+// 010 criterion 9 adds the product home's 20 at 1280: 188. 014 decision 11
+// adds the thread's second block, its copy button and its pre: 190.
+test("the 31 views hold 190 stops", () => {
   expect(VIEWS.map((v) => v.path)).toEqual(Object.keys(VIEW_STOPS));
   expect(
     Object.values(VIEW_STOPS).reduce((n, stops) => n + stops.length, 0),
-  ).toBe(188);
+  ).toBe(190);
 });
 
 /** 006 decision 14: the chat's four keyboard behaviours (5 to 8). */

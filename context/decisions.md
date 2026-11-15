@@ -2,6 +2,108 @@
 
 The owner's answers and decisions, newest first. A decision that changes the constitution is also recorded in its Status line. "The design book" and "v2" both mean the Pluto Systems design book, version 2, the source of the brand's rules; a section of it is cited as "§03".
 
+### Commits per specification, and the site's worker name (2026-11-14)
+
+Asked how the remaining specifications (`013`, `016`, `015`, `017`) proceed while they touch the same files in one uncommitted working tree, **the owner:** commit each specification as it lands. Each is committed to a `release/0.12.0` branch once its change review passes, starting with `014`; nothing is pushed until the owner asks. A review then reads one specification's diff, and a bad build can be rolled back. The tag still comes once, after the change reviews of `013`, `014`, `015`, `016` and `017`.
+
+Asked whether the Cloudflare worker keeps the name `pluto-design-system`, **the owner:** rename it `pluto-systems-design`, to match the site's name. Until the owner sets `design.<domain>`, the site is at `pluto-systems-design.<account>.workers.dev`. `015` carries the rename in `wrangler.jsonc`.
+
+### After the `014` build's checkpoint (2026-11-14)
+
+The design lead looked at `/items/code-block/`, `/items/code-editor/` (the editor focused), `/items/pluto-theme/` (the ink surface), `/view/chat/thread/` (the user turn's block) and `/view/product-home/` (the nested lines), at 1440 and 390 px in both themes. The code ground reads white in light and `#2C2821` in dark, with the hairline in both; no page errors. Calls on the builder's deviations and findings:
+
+- **The phone overflow is pre-existing, not 014's.** `/items/code-block/`, `/items/code-editor/` and `/items/pluto-theme/` scrolled sideways at 390 px before 014 (303, 230 and 425 px; 014 adds 2 px). The cause: a Specimen `figure` with `min-width: auto` in a `grid max-w-2xl`, and the contrast table with no scroll wrapper. It is left for `015`, which rebuilds the item pages, and is recorded in 014's landing notes.
+- **Accepted, with a changelog line:** the inline-code chip adds 10 px of padding and edge to an unbreakable token, which widened `/items/settings/` to 327 px at 320 px; the builder added `wrap-anywhere` to that path in `block-page.svelte`. An installed app with an unbreakable inline token in a tight column gets the same 10 px, so the shared 0.12.0 changelog entry says so.
+- **Accepted:** the three test groups the spec's list missed (two stop counts in `blocks.spec`, the `tokens.spec` active-line reading), two more good L19 samples, page copy beyond decision 11's list, and the `code-editor` page's read-only editor in a card.
+
+### A yellower yellow, in code and in the brand (2026-11-14)
+
+**The owner:** "the yellow needs to change, it needs to be more yellow and improve contrast on both white and dark", then: "I meant the brand yellow too."
+
+- **The syntax yellow (numbers) is settled:** `#6C5A00` light, `#F1CA00` dark (OKLCH hue 95). On the white code ground 6.77:1 (was 5.55), on the dark ground 9.20:1 (was 7.71). Every Tombaugh colour still passes AA on the ground, the active line and the selection; numbers and constants are no longer a near pair. In light mode a dark yellow reads golden; that is the cost of contrast on white.
+- **The brand yellow: `#E2B000` light, `#F8D874` dark.** Shown five steps from Sun to Gold and four dark yellows beside the lifted blue, red and green, **the owner** chose the midpoint `#E2B000` (OKLCH hue 88; 2.01:1 on white, against today's amber at 2.17 and Google's and Microsoft's logo yellows at about 1.7; ink on it 9.53:1) and the soft `#F8D874` in dark ("slightly more white like the other colors": the lifted colours' chroma, about 0.125; 13.20:1 on graphite, was 8.45). It replaces amber (`#F19E20`) wherever the brand's yellow appears: the mark's third dot, the third field, the third chart colour and the caution fill. Its text shade must not lose contrast against today's `amber-text`. A specification of its own, `016`, carries it in 0.12.0. Measured for the owner on the way: Google's logo yellow `#FBBC05`, Microsoft's `#FFB900` (hex values from memory, measured here).
+- **The dark syntax yellow is softened too:** `#E5CD72` (9.28:1 on the dark code ground, under Meridian's 9.5), in place of `#F1CA00`, so it sits with Tombaugh's other dark colours. Light stays `#6C5A00`.
+
+### The design site: its name, downloads and the exhibit (2026-11-14)
+
+From `research/2026-11-14-the-design-site.md`'s questions. **The owner:**
+
+- **Name and home:** "Pluto Systems design", on a subdomain such as `design.<domain>`; until the owner sets the DNS, it runs on its Cloudflare `workers.dev` address.
+- **Downloads:** the brand section offers the four-dot mark and the lockup as SVG, on colour and on paper, generated from the tokens, in 0.12.0.
+- **The `/identity` exhibit is removed.** Its full record stays in `context/` and in git history. (First ruled "remove it, redirect"; superseded below, since nothing is published.)
+- **The direction: B, "the mark is the map".** Shown the three prototypes, **the owner:** "I like B!" The four dots become the site's four doors (Start, Components, Brand, Foundations), each section opening on its colour field, with poster type and glass: the system's expressive mode is the site's voice. The research named two risks the specification must answer: four large circles in the mark's colours echo Google at billboard size, and red as the Components colour can read as an error.
+- **Install from both.** Asked where apps install from, **the owner:** both. The site serves the registry at its own versioned `/r/` path, and the raw GitHub address keeps working for apps that already use it.
+- **`/components/`, with no redirects.** Asked whether the URLs keep `/items/` or move to `/components/`, **the owner:** "Move to components, nothing is published, no need to redirect." The same reasoning holds for `/identity/` and `/workbench/`: they are removed, not redirected. No `_redirects` file is needed for them.
+- **Releases: a changelog page only.** No per-item release history and no launch page in 0.12.0.
+- **For agents: yes.** Every page is also served as Markdown, with an `llms.txt` index, generated at build time.
+
+### Inline code takes the code ground too (2026-11-14)
+
+**The owner,** while `014` was being built: "make sure in line code in light mode gets the same treatment." Inline code (a `code` element in running text, not inside a `pre`) has had only the mono face, from the base rule for `code, kbd, samp, pre`, and no ground of its own. It now sits on the code ground like a block: white in light mode, with the same hairline edge, and the code text colour. Dark mode gets the same treatment on its unchanged ground, so inline code reads alike in both themes. `014` is amended to carry it, with its own criteria, before its build goes past the checkpoint.
+
+### A public design site, the workbench dropped, and properties under Meridian (2026-11-14)
+
+**The owner:** "also apart of 0.12.0, I want to build a brand site or a design site that explains how to build with the design system, and explains the pluto system brand. we can also drop the workbench/code/ app."
+
+- **The constitution is amended (§3).** Asked whether the site lives in this repository, which §3 said is "Not a website", or in a repository of its own, **the owner:** amend §3; the site lives here. §3 now reads that this is not a marketing site and hosts one public design site. The Status line records it.
+- **It is public.** Asked whether it is for anyone or for Pluto teams only, **the owner:** public. Nothing internal goes on it; it deploys on Cloudflare, as the preview does.
+- **The preview pages and `/identity` fold into it, and it aims high.** Asked whether today's item pages and the identity exhibit fold into the site or stay beside it, **the owner:** "fold into site, but we need to think bigger and develope something great, use the front end design skill to help." The item pages become its component documentation; the identity exhibit's settled answers become its brand section, and the exhibit's record stays in `context/`. The site is designed with the `frontend-design` skill, to a standard that competes with the best public design systems (the owner's earlier bar: "compete with Google").
+- **It ships in 0.12.0,** with `013` and `014`, by its own research, specification, review and build.
+- **The workbench is dropped.** `/workbench/code/` and its `(workbench)` layout are removed in 0.12.0; it was never released. Its eighteen specimens and the hand-labelled reference stay, as test fixtures for `013`'s accuracy test. The research memos that cite it stand as the record.
+- **Properties under Meridian.** The `013` spec review asked what "properties stay in the body" means once Meridian's map is adopted. **The owner:** Meridian's split. Fields and member access are text; JSON keys are function; HTML attributes are meta; CSS property names are keyword. This supersedes "properties in the body colour" in the entries below wherever they differ.
+
+### One release, 0.12.0, for the white ground and tree-sitter (2026-11-14)
+
+Asked whether `014` (the white light-mode code ground) ships alone as 0.12.0 with `013` (tree-sitter and Tombaugh) following as 0.13.0, or both ship as one release, **the owner:** one release, 0.12.0. `014` is built and change-reviewed first; `013` is built on it; both are tagged together, with one changelog entry that marks each interface change.
+
+### Tombaugh, a number role, the white ground first, and docstrings as strings (2026-11-14)
+
+Specification `013` was drafted with three questions for the owner; the owner also asked for a number role.
+
+- **A number role.** **The owner:** "can we create a number role? I want it to be orange." Meridian folds numbers into its constant role; this system keeps them apart, so ten roles take colour (Meridian's seven, number, and the diff and link roles `013` keeps). To make room beside orange, the constant moved a touch toward yellow (hue 85).
+- **The palette: Tombaugh, with the two swapped.** Asked whether `013` ships Tombaugh or Meridian, **the owner:** "tombaugh, but swap the colors for constants and numbers, numbers should be yellow." Numbers are yellow (`#856300` light, `#E6B543` dark) and constants (booleans, null, ALL_CAPS names, enum members, symbols) are Pluto's orange (`#A34D15` light, `#FFA373` dark). The values are in `research/2026-11-14-meridian-and-tombaugh.json`. Yellow and orange sit close for a reader with deuteranopia; numbers are digits and constants are words, so their shape tells them apart.
+- **The light ground: white, first.** On Pluto's shipped light code ground (`wash`), tuned Tombaugh's constant and comment fall just under AA. Asked whether to darken every light colour one more step or land the white light-mode code ground first, **the owner:** land the white ground first. A specification of its own changes the light code ground to white and lands with or before `013`; it must settle the open question of code on a white card (`research/2026-11-14-code-on-a-white-card-once-the-code-ground-is-white.md`). Dark mode keeps its ground. This narrows "Only the syntax colours change, never Pluto's backgrounds" below: the page canvas and dark grounds still never change.
+- **Docstrings are strings.** Asked whether a Python docstring takes the string or the comment colour, **the owner:** string, as GitHub and VS Code colour it.
+
+### Code takes Meridian's roles (2026-11-14)
+
+The owner gave a syntax theme guide of their own, Meridian, kept as `research/2026-11-14-meridian-the-owners-syntax-theme-guide.md`. **The owner:** "I want to use this for our syntax highlighting colors. You may adjust the colors slightly to better match the pluto 4 colors, but use the same color role organization."
+
+- **Meridian's role organisation is adopted whole:** its seven coloured roles (keyword, function, type, string, constant, meta, special), comment and text; its role map (what gets each role, across tree-sitter captures and TextMate scopes); and its rules (colour carries meaning, one lightness per mode, red is rare, comments recede, regular weight, comments the only styled role).
+- **Its colours may move slightly toward the four Pluto colours** (the mark's blue, red, amber and green). Meridian's lightness plan and its contrast limits hold, measured again after any move.
+- **It supersedes, where they differ:** the owner's first picks ("The owner's code palette, first picks": `self` in the body, tags blue, numbers red, escapes plum, built-ins navy) and the earlier ban on yellow, since Meridian's constant is yellow. Properties stay in the body, as before.
+- **No italic comments, and no bold.** **The owner:** "no italized comment either." Every token is set at regular weight and upright; comments recede by colour alone. This departs from Meridian's guide, whose one styled role is italic comments.
+- **Meridian and Tombaugh, to compare.** The owner asked to see Meridian beside a Pluto-adjusted version, named for Pluto. Tombaugh (Pluto's discoverer, and its heart-shaped region; not Charon, which the design book already uses for its blue) keeps every Meridian role and lightness and moves only the blue, green, yellow and red: each takes the Pluto mark colour's hue and moves halfway to its chroma. Both are in `research/2026-11-14-meridian-and-tombaugh.json` for the workbench; which one `013` ships is the owner's choice. At the owner's word ("improved contrast, I see some warnings in the viewer"), Tombaugh was then tuned: one lightness shift per mode (light 0.03 darker, dark 0.02 lighter, about 2 to 3 ΔE), comments raised to AA, and a gentler 13% blue selection, so every colour passes 4.5:1 on the ground, the active line and the selection in both modes, and dark colours meet Meridian's 6.5:1. The selection there is the workbench's proposal, not a Pluto token.
+- **Only the syntax colours change, never Pluto's backgrounds.** Asked how Meridian's surfaces sit beside Pluto's canvas, **the owner:** "do not change the pluto background colors, only the syntax highlighting." Meridian's surfaces (its background, panel, line and selection) are not adopted. The code ground, active line and page keep Pluto's own colours, and Meridian's token colours are tuned to meet its contrast limits on Pluto's grounds instead of its own. The white light-mode code ground stays a separate matter (the 2026-11-14 entry on the code ground and its placeholder memo).
+- **It joins specification `013`,** which already rewrites how code is labelled for tree-sitter: the code slots become Meridian's roles, with the few the guide does not cover (diff lines, links) kept and said how.
+
+### Code is highlighted by tree-sitter, in blocks and the editor (2026-11-14)
+
+The owner asked how code can be highlighted "to 100% accuracy" and whether Shiki is the right pick. `research/2026-11-14-how-to-highlight-code-accurately.md` measured seven approaches against a hand-labelled reference (`research/2026-11-14-highlighting-reference.json`). tree-sitter with this system's own queries scored 96.6% on the workbench specimens and 95.5% on held-out samples; Shiki stalls near 88% however many theme rules it is given; the editor (Lezer and legacy modes) scores 73.5% and agrees with the code block on 74.2% of characters.
+
+- **Where tree-sitter runs.** Asked whether at prerender and in the browser, at prerender only with Shiki live, or not at all, **the owner:** at prerender and in the browser. One engine, so a block looks the same static or live. Languages without a usable tree-sitter grammar fall back to Shiki.
+- **The editor.** Asked whether the editor follows in its own specification later, in this one, or not at all, **the owner:** include it now. One specification moves the code block and the editor together.
+
+### The owner's code palette, first picks (2026-11-14)
+
+At the workbench, after `research/2026-11-14-syntax-colours-without-amber-or-cyan.md`, the owner chose slot by slot. Recorded as data in `research/2026-11-14-the-owners-code-palette.json`, which the workbench offers as "The owner's picks".
+
+- **The owner's slots:** keyword and tag `syntax-blue` (a code-only copy of `primary`); constant `syntax-amber`; string `syntax-green`; number `syntax-red` (a code-only copy of `destructive`); escape `syntax-plum`; function, built-in and decorator `syntax-navy`; type `syntax-violet`; self in the body.
+- **Amber, retuned at the owner's word** ("increase contrast and … more yellow a touch"): OKLCH lightness 0.04 further from the ground and hue 8° toward yellow. Light `#915B00` to `#7C5500` (6.65:1 on white), dark `#F19E20` to `#F6B128` (7.84:1 on `#2C2821`). Amber returns to code for constants, by the owner's choice, after the research left it out.
+- **Slots the owner did not name** follow Ink and Plum: property in the body (the owner's earlier ruling), comments in `syntax-comment` and italic, links and changed lines blue, inserted green, invalid and deleted red, and Ink and Plum's ground, active line and selection.
+- **Measured** with the workbench's functions: every text slot passes AA on the ground, the active line and the selection in both themes (lowest: dark comment, 4.98:1); no pair of slots on different swatches is under ΔE 10.
+
+### A code-palette workbench (2026-11-14)
+
+The owner asked for "an app that lets me adjust the code syntax highlighting colors and selections", with code "that shows all types and in different languages", in light and dark mode. The owner's request is the commission:
+
+- **Where it lives.** A route in the preview app, `/workbench/code/`, under its own `(workbench)` layout. It is a research instrument, like `/identity`: not a registry item, so the literal lint does not cover it, and its values are candidates the token file does not hold.
+- **What it does.** It opens on the shipped palette, read from the token file at prerender, with light-mode code on white: the owner, the same day, "the light mode code background color should be white", not `wash`. The ground and the active line become code-only swatches (white and today's dark ground; the page canvas and today's dark active line), so no shared role is retuned. The shipped palette, on `wash`, stays one choice away. Every code slot names a swatch; every swatch has a light and a dark colour, set by picker, hex or OKLCH sliders. Bold, italic and underline can be laid over a slot. Light and dark previews redraw together, under simulated colour-vision deficiencies or in greyscale. Each slot's WCAG contrast is read on the ground, the active line and the selection, and close pairs are flagged by OKLab ΔE. The result exports as a palette file and as a change to the token file.
+- **A proposal it adds.** A `selection` slot, which the token file does not have (the editor uses the browser's own selection). It starts as the brand blue a quarter of the way over the code ground, so its contrast can be judged; at that share most accents fall short of AA on it.
+- **Proposed highlighter rules, on by default.** Previewed with a second highlighting at prerender; the shipped highlighter is unchanged until a specification adopts them. (1) Shell: the owner, in `pip install x`, "install x shouldn't have syntax highlighting". A command keeps its colour; its bare arguments, flags, case patterns and loop words take the body; quoted strings and heredocs stay strings. (2) A number is one colour: the theme's `storage` rule painted Python's `0x` of `0x2A` and `j` of `3j` as keywords, and Go's `_` and Rust's decimal `.` fell to the body. (3) A docstring is a string, as GitHub and VS Code colour it; `007` sent it to the comment slot, and the owner read that as a parsing fault.
+- **Its specimens.** Eighteen programs in eighteen languages, written for it in `src/lib/workbench/specimens.ts`, which together put every text slot on screen; the highlighter gallery's twenty-six samples are offered beside them.
+- **Its checks.** `tests/unit/workbench.test.ts`: the colour arithmetic agrees with `scripts/contrast.ts`, the baseline equals the token file in both themes, export and import round-trip, and the specimens cover every text slot.
+
 ### The code ground in light mode is the owner's to change, and code on a white card is for this system to work out (2026-11-14)
 
 Raised from the vfs docs site, which installs this system at `v0.11.0`. The owner, on seeing its code blocks: "we need to update design system to have code blocks in light mode be white or lighter than the background, not darker." The research is `research/2026-11-14-a-white-code-ground-in-light-mode.md`. Its questions were put to the owner with options and a recommendation.

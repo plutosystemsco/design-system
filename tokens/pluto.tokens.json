@@ -90,7 +90,9 @@
       "syntax-amber": "amber-text",
       "syntax-purple": "purple-text",
       "syntax-teal": "teal-text",
-      "syntax-cyan": "cyan-text"
+      "syntax-cyan": "cyan-text",
+      "syntax-ground": "raised",
+      "syntax-active-line": "paper"
     },
     "dark": {
       "background": "graphite",
@@ -145,12 +147,14 @@
       "syntax-amber": "amber",
       "syntax-purple": "purple-lifted",
       "syntax-teal": "teal-lifted",
-      "syntax-cyan": "cyan-lifted"
+      "syntax-cyan": "cyan-lifted",
+      "syntax-ground": "ink-wash",
+      "syntax-active-line": "ink-raised"
     }
   },
   "code": {
     "foreground": "foreground",
-    "background": "muted",
+    "background": "syntax-ground",
     "comment": "muted-foreground",
     "keyword": "primary",
     "constant": "primary",
@@ -169,7 +173,7 @@
     "inserted": "success",
     "deleted": "destructive",
     "changed": "primary",
-    "active-line": "card"
+    "active-line": "syntax-active-line"
   },
   "radius": { "case": 8 },
   "spacing": { "atom": 4, "ladder": [4, 8, 12, 16, 24, 32, 48, 64, 96] },
@@ -346,7 +350,11 @@
       ["sidebar-foreground", "sidebar"],
       ["sidebar-primary-foreground", "sidebar-primary"],
       ["sidebar-accent-foreground", "sidebar-accent"],
-      ["sidebar-primary", "sidebar"]
+      ["sidebar-primary", "sidebar"],
+      ["muted-foreground", "syntax-ground"],
+      ["muted-foreground", "syntax-active-line"],
+      ["success", "syntax-active-line"],
+      ["destructive", "syntax-active-line"]
     ],
     "tints": [
       {
@@ -394,7 +402,8 @@
       ["chart-4", "background"],
       ["chart-4", "card"],
       ["chart-5", "background"],
-      ["chart-5", "card"]
+      ["chart-5", "card"],
+      ["primary", "syntax-active-line"]
     ],
     "exceptions": [
       {

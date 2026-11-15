@@ -11,6 +11,8 @@ import {
   scrimRows,
   glassOverGlassRows,
   compositeAlphaByte,
+  deltaE,
+  mix,
 } from "../../scripts/contrast.ts";
 import {
   readTokens,
@@ -87,6 +89,32 @@ const LIGHT: Row[] = [
     "pass",
   ],
   ["sidebar-primary on sidebar", "#2D48D4", "#F3F0E8", 6.16, 4.5, "pass"],
+  // 014 decision 8: the chrome on the code grounds.
+  [
+    "muted-foreground on syntax-ground",
+    "#505661",
+    "#FFFFFF",
+    7.38,
+    4.5,
+    "pass",
+  ],
+  [
+    "muted-foreground on syntax-active-line",
+    "#505661",
+    "#F3F0E8",
+    6.48,
+    4.5,
+    "pass",
+  ],
+  ["success on syntax-active-line", "#007351", "#F3F0E8", 5.16, 4.5, "pass"],
+  [
+    "destructive on syntax-active-line",
+    "#C11E31",
+    "#F3F0E8",
+    5.27,
+    4.5,
+    "pass",
+  ],
   [
     "destructive on destructive/10 over background",
     "#C11E31",
@@ -132,6 +160,7 @@ const LIGHT: Row[] = [
   ["chart-4 on card", "#008058", "#FFFFFF", 4.96, 3, "pass"],
   ["chart-5 on background", "#505661", "#F3F0E8", 6.48, 3, "pass"],
   ["chart-5 on card", "#505661", "#FFFFFF", 7.38, 3, "pass"],
+  ["primary on syntax-active-line", "#2D48D4", "#F3F0E8", 6.16, 3, "pass"],
 ];
 
 const DARK: Row[] = [
@@ -189,6 +218,32 @@ const DARK: Row[] = [
     "pass",
   ],
   ["sidebar-primary on sidebar", "#93B0FF", "#16140F", 8.67, 4.5, "pass"],
+  // 014 decision 8: the chrome on the code grounds.
+  [
+    "muted-foreground on syntax-ground",
+    "#A39D90",
+    "#2C2821",
+    5.43,
+    4.5,
+    "pass",
+  ],
+  [
+    "muted-foreground on syntax-active-line",
+    "#A39D90",
+    "#221F19",
+    6.08,
+    4.5,
+    "pass",
+  ],
+  ["success on syntax-active-line", "#60C498", "#221F19", 7.7, 4.5, "pass"],
+  [
+    "destructive on syntax-active-line",
+    "#FF9491",
+    "#221F19",
+    7.74,
+    4.5,
+    "pass",
+  ],
   [
     "destructive on destructive/20 over background",
     "#FF9491",
@@ -234,6 +289,7 @@ const DARK: Row[] = [
   ["chart-4 on card", "#60C498", "#221F19", 7.7, 3, "pass"],
   ["chart-5 on background", "#A39D90", "#16140F", 6.82, 3, "pass"],
   ["chart-5 on card", "#A39D90", "#221F19", 6.08, 3, "pass"],
+  ["primary on syntax-active-line", "#93B0FF", "#221F19", 7.74, 3, "pass"],
 ];
 
 describe("the arithmetic", () => {
@@ -258,8 +314,8 @@ describe.each([
 ] as const)("the %s theme", (theme, expected) => {
   const rows = contrastTable(tokens, theme);
 
-  test("computes 50 pairs", () => {
-    expect(rows).toHaveLength(50);
+  test("computes 55 pairs", () => {
+    expect(rows).toHaveLength(55);
   });
 
   test.each(expected.map((row, i) => [i + 1, ...row] as const))(
@@ -290,9 +346,10 @@ describe("across both themes", () => {
     ...contrastTable(tokens, "dark"),
   ];
 
-  test("100 pairs: 98 pass and exactly 2 are the chart-3 exceptions", () => {
-    expect(all).toHaveLength(100);
-    expect(all.filter((r) => r.result === "pass")).toHaveLength(98);
+  test("110 pairs: 108 pass, exactly 2 are the chart-3 exceptions, 0 fail", () => {
+    expect(all).toHaveLength(110);
+    expect(all.filter((r) => r.result === "pass")).toHaveLength(108);
+    expect(all.filter((r) => r.result === "fail")).toHaveLength(0);
     const exceptions = all.filter((r) => r.result === "exception");
     expect(exceptions.map((r) => `${r.theme} ${r.label}`)).toEqual([
       "light chart-3 on background",
@@ -407,7 +464,13 @@ describe("edges over the scrim", () => {
 // 007 decision 3: every text slot on every code ground, in each theme. The
 // two grounds of the map (`background`, `active-line`) are not text. The rows
 // are built from the token file, never from the specification's table.
-const GROUNDS = ["muted", "card", "background"] as const;
+// 014 decision 8: the grounds code is actually on. Light code is on its own
+// white ground and the canvas active line; dark code is on those and on
+// graphite, the ground inside an ink surface on a light page.
+const GROUNDS = {
+  light: ["syntax-ground", "syntax-active-line"],
+  dark: ["syntax-ground", "syntax-active-line", "background"],
+} as const;
 const TEXT_SLOTS = Object.keys(tokens.code).filter(
   (slot) => slot !== "background" && slot !== "active-line",
 );
@@ -415,7 +478,7 @@ const SLOT_ROWS: [theme: "light" | "dark", slot: string, ground: string][] = (
   ["light", "dark"] as const
 ).flatMap((theme) =>
   TEXT_SLOTS.flatMap((slot) =>
-    GROUNDS.map(
+    GROUNDS[theme].map(
       (ground) => [theme, slot, ground] as [typeof theme, string, string],
     ),
   ),
@@ -429,10 +492,10 @@ function slotRatio(theme: "light" | "dark", slot: string, ground: string) {
   );
 }
 
-describe("the code slots on the six code grounds", () => {
-  test("114 rows: 19 text slots, 2 themes, 3 grounds", () => {
+describe("the code slots on the five code grounds", () => {
+  test("95 rows: 19 text slots on 2 light grounds and 3 dark", () => {
     expect(TEXT_SLOTS).toHaveLength(19);
-    expect(SLOT_ROWS).toHaveLength(114);
+    expect(SLOT_ROWS).toHaveLength(95);
   });
 
   test.each(SLOT_ROWS)(
@@ -442,23 +505,32 @@ describe("the code slots on the six code grounds", () => {
     },
   );
 
-  // 011 criterion 2: on the 0.11.0 palette the tightest row is the number
-  // slot (orange) on light muted; the escape slot shares its colour and ties.
-  test("114 of 114 pass; the tightest is the number slot (orange) on light muted at 4.50", () => {
+  // 014 criterion 3: the tightest row is dark property on the dark code
+  // ground; in light, number and escape (one colour, orange) on the canvas
+  // active line tie.
+  test("95 of 95 pass; the tightest is dark property on syntax-ground at 4.81, and light number and escape on syntax-active-line at 4.97", () => {
     const rows = SLOT_ROWS.map(([theme, slot, ground]) => ({
       theme,
       slot,
       ground,
       ratio: slotRatio(theme, slot, ground),
     }));
-    expect(rows.filter((r) => r.ratio >= 4.5)).toHaveLength(114);
+    expect(rows.filter((r) => r.ratio >= 4.5)).toHaveLength(95);
     const min = rows.reduce((a, b) => (b.ratio < a.ratio ? b : a));
     expect(min).toEqual({
-      theme: "light",
-      slot: "number",
-      ground: "muted",
-      ratio: 4.5,
+      theme: "dark",
+      slot: "property",
+      ground: "syntax-ground",
+      ratio: 4.81,
     });
+    const light = rows.filter((r) => r.theme === "light");
+    const lightMin = Math.min(...light.map((r) => r.ratio));
+    expect(lightMin).toBe(4.97);
+    expect(
+      light
+        .filter((r) => r.ratio === lightMin)
+        .map((r) => `${r.slot} on ${r.ground}`),
+    ).toEqual(["number on syntax-active-line", "escape on syntax-active-line"]);
   });
 
   // The ten families, as the primitives the text slots resolve to.
@@ -499,22 +571,23 @@ describe("the code slots on the six code grounds", () => {
     );
   });
 
-  // 004 decision 5's five rows, to the hundredth, on the 0.11.0 palette (011 decision 2).
+  // 004 decision 5's five rows, to the hundredth, on the 0.11.0 palette (011
+  // decision 2), on the code ground (014 decision 8).
   test.each([
-    ["light", "foreground", 15.24],
-    ["light", "comment", 5.86],
-    ["light", "keyword", 5.58],
-    ["light", "string", 4.67],
-    ["light", "deleted", 4.77],
+    ["light", "foreground", 19.17],
+    ["light", "comment", 7.38],
+    ["light", "keyword", 7.02],
+    ["light", "string", 5.88],
+    ["light", "deleted", 6],
     ["dark", "foreground", 12.87],
     ["dark", "comment", 5.43],
     ["dark", "keyword", 6.9],
     ["dark", "string", 6.87],
     ["dark", "deleted", 6.9],
   ] as const)(
-    "%s: the %s slot on muted still measures %d",
+    "%s: the %s slot on syntax-ground measures %d",
     (theme, slot, ratio) => {
-      expect(slotRatio(theme, slot, "muted")).toBe(ratio);
+      expect(slotRatio(theme, slot, "syntax-ground")).toBe(ratio);
     },
   );
 });
@@ -755,5 +828,414 @@ describe("the glass fallback and the ring on glass (011 criterion 3)", () => {
       expect(row.minimum).toBe(3);
       expect(row.result).toBe("pass");
     }
+  });
+});
+
+/** 014 decision 8: the two colour functions, written to the published formulas. */
+describe("deltaE and mix (014 decision 8)", () => {
+  test("deltaE, the OKLab distance × 100: white to the canvas is 4.61", () => {
+    expect(Math.round(deltaE("#FFFFFF", "#F3F0E8") * 100) / 100).toBe(4.61);
+    expect(deltaE("#2D48D4", "#2D48D4")).toBe(0);
+    expect(deltaE("#FFFFFF", "#F3F0E8")).toBe(deltaE("#F3F0E8", "#FFFFFF"));
+  });
+
+  test("mix, t of the way in sRGB, each channel rounded: 13% of primary over white is #E4E7F9", () => {
+    expect(mix("#FFFFFF", "#2D48D4", 0.13)).toBe("#E4E7F9");
+    expect(mix("#FFFFFF", "#2D48D4", 0)).toBe("#FFFFFF");
+    expect(mix("#FFFFFF", "#2D48D4", 1)).toBe("#2D48D4");
+  });
+});
+
+/**
+ * 014 decision 8 and criterion 5: Tombaugh, the palette 013 ships, on this
+ * specification's grounds and the 13% selection. It reads the research file,
+ * which is never edited after the fact, so the group stays valid once 013
+ * lands; 013 may remove it once its own rows measure the same colours.
+ */
+describe("Tombaugh on the code grounds (014 criterion 5)", () => {
+  type Swatches = Record<string, { light: string; dark: string }>;
+  const research = JSON.parse(
+    readFileSync(
+      "context/research/2026-11-14-meridian-and-tombaugh.json",
+      "utf8",
+    ),
+  ) as { candidates: { id: string; palette: { swatches: Swatches } }[] };
+  const swatches = research.candidates.find((c) => c.id === "tombaugh")!.palette
+    .swatches;
+  const NOT_TEXT = ["code-ground", "code-active-line", "tombaugh-selection"];
+  const text = Object.keys(swatches).filter((n) => !NOT_TEXT.includes(n));
+
+  const ground = (theme: "light" | "dark", role: string) =>
+    resolveColor(tokens, theme, role).toUpperCase();
+  const selection = (theme: "light" | "dark") =>
+    mix(ground(theme, "syntax-ground"), ground(theme, "primary"), 0.13);
+  const GROUND_SETS = {
+    light: [
+      ground("light", "syntax-ground"),
+      ground("light", "syntax-active-line"),
+      selection("light"),
+    ],
+    dark: [
+      ground("dark", "syntax-ground"),
+      ground("dark", "syntax-active-line"),
+      ground("dark", "background"),
+      selection("dark"),
+    ],
+  };
+  const rows = (["light", "dark"] as const).flatMap((theme) =>
+    text.flatMap((name) =>
+      GROUND_SETS[theme].map((bg) => ({
+        theme,
+        name,
+        bg,
+        ratio: contrastRatio(swatches[name]![theme], bg),
+      })),
+    ),
+  );
+
+  test("10 text colours; the selection is #E4E7F9 in light and #393A3E in dark", () => {
+    expect(text).toHaveLength(10);
+    expect(selection("light")).toBe("#E4E7F9");
+    expect(selection("dark")).toBe("#393A3E");
+  });
+
+  test("its code-ground and code-active-line swatches equal syntax-ground and syntax-active-line in both themes", () => {
+    for (const theme of ["light", "dark"] as const) {
+      expect(swatches["code-ground"]![theme].toUpperCase()).toBe(
+        ground(theme, "syntax-ground"),
+      );
+      expect(swatches["code-active-line"]![theme].toUpperCase()).toBe(
+        ground(theme, "syntax-active-line"),
+      );
+    }
+  });
+
+  test("70 of 70 rows at 4.5 or more; the lowest is light comment on #E4E7F9, 4.50", () => {
+    expect(rows).toHaveLength(70);
+    expect(rows.filter((r) => r.theme === "light")).toHaveLength(30);
+    expect(rows.filter((r) => r.ratio >= 4.5)).toHaveLength(70);
+    const min = rows.reduce((a, b) => (b.ratio < a.ratio ? b : a));
+    expect(min).toEqual({
+      theme: "light",
+      name: "tombaugh-comment",
+      bg: "#E4E7F9",
+      ratio: 4.5,
+    });
+  });
+});
+
+/**
+ * 014 decision 4 and criterion 6: the block's edge reads on every surround.
+ * The hairline is composited over the code ground, since it is drawn inside
+ * the block's border box; the edge reads when the ground or the hairline is at
+ * least ΔE 3 from the surround.
+ */
+describe("the edge reads (014 criterion 6)", () => {
+  const hex = (theme: "light" | "dark", role: string) =>
+    resolveColor(tokens, theme, role).toUpperCase();
+  const hairline = (theme: "light" | "dark", under: string) =>
+    compositeAlphaByte(resolveColor(tokens, theme, "border"), under);
+  const glassFallback = tokens.expressive.glass.light.fallback;
+
+  // [label, theme, the ground term, the hairline's ground, the surround]
+  const SURROUNDS: [string, "light" | "dark", string, string, string][] = [
+    [
+      "light background",
+      "light",
+      hex("light", "syntax-ground"),
+      hex("light", "syntax-ground"),
+      hex("light", "background"),
+    ],
+    [
+      "light background beside the active line",
+      "light",
+      hex("light", "syntax-active-line"),
+      hex("light", "syntax-ground"),
+      hex("light", "background"),
+    ],
+    [
+      "light card",
+      "light",
+      hex("light", "syntax-ground"),
+      hex("light", "syntax-ground"),
+      hex("light", "card"),
+    ],
+    [
+      "light muted",
+      "light",
+      hex("light", "syntax-ground"),
+      hex("light", "syntax-ground"),
+      hex("light", "muted"),
+    ],
+    [
+      "light glass fallback",
+      "light",
+      hex("light", "syntax-ground"),
+      hex("light", "syntax-ground"),
+      String(glassFallback).toUpperCase(),
+    ],
+    [
+      "dark background",
+      "dark",
+      hex("dark", "syntax-ground"),
+      hex("dark", "syntax-ground"),
+      hex("dark", "background"),
+    ],
+    [
+      "dark card",
+      "dark",
+      hex("dark", "syntax-ground"),
+      hex("dark", "syntax-ground"),
+      hex("dark", "card"),
+    ],
+    [
+      "dark muted",
+      "dark",
+      hex("dark", "syntax-ground"),
+      hex("dark", "syntax-ground"),
+      hex("dark", "muted"),
+    ],
+    // Inside an ink surface the code ground is the surface (007 decision 8):
+    // graphite on a light page, card on a dark one.
+    [
+      "the ink surface on a light page",
+      "dark",
+      hex("dark", "background"),
+      hex("dark", "background"),
+      hex("dark", "background"),
+    ],
+    [
+      "the ink surface on a dark page",
+      "dark",
+      hex("dark", "card"),
+      hex("dark", "card"),
+      hex("dark", "card"),
+    ],
+  ];
+  const round2 = (n: number) => Math.round(n * 100) / 100;
+  const edges = SURROUNDS.map(
+    ([label, theme, groundTerm, under, surround]) => ({
+      label,
+      ground: round2(deltaE(groundTerm, surround)),
+      hairline: round2(deltaE(hairline(theme, under), surround)),
+    }),
+  ).map((e) => ({ ...e, edge: Math.max(e.ground, e.hairline) }));
+
+  test("10 surrounds", () => {
+    expect(edges).toHaveLength(10);
+  });
+
+  test.each(SURROUNDS.map(([label], i) => [label, i] as const))(
+    "%s: the ground or the hairline is at least ΔE 3 from it",
+    (_, i) => {
+      expect(edges[i]!.edge).toBeGreaterThanOrEqual(3);
+    },
+  );
+
+  test("the lowest is light background beside the active line, the hairline alone at 3.03", () => {
+    const min = edges.reduce((a, b) => (b.edge < a.edge ? b : a));
+    expect(min).toEqual({
+      label: "light background beside the active line",
+      ground: 0,
+      hairline: 3.03,
+      edge: 3.03,
+    });
+  });
+
+  test("the table's figures, to one decimal", () => {
+    expect(
+      edges.map((e) => [
+        e.label,
+        Math.round(e.ground * 10) / 10,
+        Math.round(e.hairline * 10) / 10,
+      ]),
+    ).toEqual([
+      ["light background", 4.6, 3],
+      ["light background beside the active line", 0, 3],
+      ["light card", 0, 7.3],
+      ["light muted", 7.9, 1.5],
+      ["light glass fallback", 1.6, 5.8],
+      ["dark background", 8.7, 16.6],
+      ["dark card", 3.8, 11.7],
+      ["dark muted", 0, 7.9],
+      ["the ink surface on a light page", 0, 9.5],
+      ["the ink surface on a dark page", 0, 8.6],
+    ]);
+  });
+});
+
+/**
+ * 014 decision 15 and criterion 16: inline code, a chip on the code ground
+ * edged by the hairline. Its text on its ground, and its edge on every
+ * surround it may sit on, the hairline composited over the chip's ground.
+ */
+describe("inline code (014 criterion 16)", () => {
+  type Swatches = Record<string, { light: string; dark: string }>;
+  const research = JSON.parse(
+    readFileSync(
+      "context/research/2026-11-14-meridian-and-tombaugh.json",
+      "utf8",
+    ),
+  ) as { candidates: { id: string; palette: { swatches: Swatches } }[] };
+  const tombaugh = research.candidates.find((c) => c.id === "tombaugh")!.palette
+    .swatches;
+  const hex = (theme: "light" | "dark", role: string) =>
+    resolveColor(tokens, theme, role).toUpperCase();
+  const code = (theme: "light" | "dark", slot: string) =>
+    hex(theme, tokens.code[slot]!);
+
+  // The chip's grounds: the code ground in each theme, and inside an ink
+  // surface the surface itself, graphite on a light page and card on a dark one.
+  const CHIP_GROUNDS: ["light" | "dark", string][] = [
+    ["light", code("light", "background")],
+    ["dark", code("dark", "background")],
+    ["dark", hex("dark", "background")],
+    ["dark", hex("dark", "card")],
+  ];
+  const text = CHIP_GROUNDS.flatMap(([theme, bg]) =>
+    [
+      ["code-foreground", code(theme, "foreground")],
+      ["code-link", code(theme, "link")],
+      ["tombaugh-text", tombaugh["tombaugh-text"]![theme]],
+      ["tombaugh-function", tombaugh["tombaugh-function"]![theme]],
+    ].map(([name, fg]) => ({
+      theme,
+      name,
+      bg,
+      ratio: contrastRatio(fg!, bg),
+    })),
+  );
+
+  test("16 text rows, 16 of 16 at 4.5 or more; the lowest is Tombaugh's light link on white, 6.66", () => {
+    expect(text).toHaveLength(16);
+    expect(text.filter((r) => r.ratio >= 4.5)).toHaveLength(16);
+    const min = text.reduce((a, b) => (b.ratio < a.ratio ? b : a));
+    expect(min).toEqual({
+      theme: "light",
+      name: "tombaugh-function",
+      bg: "#FFFFFF",
+      ratio: 6.66,
+    });
+  });
+
+  test("the chip's own text: code-foreground 19.17 and 12.87, code-link 7.02 and 6.90", () => {
+    const at = (theme: string, name: string, bg: string) =>
+      text.find((r) => r.theme === theme && r.name === name && r.bg === bg)!
+        .ratio;
+    expect(at("light", "code-foreground", "#FFFFFF")).toBe(19.17);
+    expect(at("dark", "code-foreground", "#2C2821")).toBe(12.87);
+    expect(at("light", "code-link", "#FFFFFF")).toBe(7.02);
+    expect(at("dark", "code-link", "#2C2821")).toBe(6.9);
+  });
+
+  const field = (theme: "light" | "dark", name: string) => {
+    const [fill] =
+      tokens.expressive.field[theme][
+        name as keyof (typeof tokens.expressive.field)["light"]
+      ];
+    return tokens.primitives[fill]!.toUpperCase();
+  };
+  const glassOver = (theme: "light" | "dark", under: string) =>
+    compositeAlphaByte(
+      String(tokens.expressive.glass[theme].tint),
+      under,
+    ).toUpperCase();
+  const fallback = (theme: "light" | "dark") => {
+    const value = String(tokens.expressive.glass[theme].fallback);
+    return (
+      value.startsWith("#") ? value : tokens.primitives[value]!
+    ).toUpperCase();
+  };
+  const FIELD_NAMES = ["field-1", "field-2", "field-3", "field-4"];
+
+  // [label, theme, the chip's ground, the surround]
+  const SURROUNDS: [string, "light" | "dark", string, string][] = (
+    ["light", "dark"] as const
+  ).flatMap((theme) => {
+    const ground = code(theme, "background");
+    const rows: [string, "light" | "dark", string, string][] = [
+      [`${theme} page`, theme, ground, hex(theme, "background")],
+      [`${theme} card`, theme, ground, hex(theme, "card")],
+      [`${theme} muted`, theme, ground, hex(theme, "muted")],
+      ...FIELD_NAMES.map(
+        (f) =>
+          [`${theme} ${f}`, theme, ground, field(theme, f)] as [
+            string,
+            "light" | "dark",
+            string,
+            string,
+          ],
+      ),
+      [
+        `${theme} glass over the canvas`,
+        theme,
+        ground,
+        glassOver(theme, hex(theme, "background")),
+      ],
+      ...FIELD_NAMES.map(
+        (f) =>
+          [
+            `${theme} glass over ${f}`,
+            theme,
+            ground,
+            glassOver(theme, field(theme, f)),
+          ] as [string, "light" | "dark", string, string],
+      ),
+      [`${theme} glass fallback`, theme, ground, fallback(theme)],
+    ];
+    if (theme === "dark")
+      rows.push(
+        [
+          "the ink surface on a light page",
+          "dark",
+          hex("dark", "background"),
+          hex("dark", "background"),
+        ],
+        [
+          "the ink surface on a dark page",
+          "dark",
+          hex("dark", "card"),
+          hex("dark", "card"),
+        ],
+      );
+    return rows;
+  });
+  const round2 = (n: number) => Math.round(n * 100) / 100;
+  const edges = SURROUNDS.map(([label, theme, ground, surround]) => {
+    const hairline = compositeAlphaByte(
+      resolveColor(tokens, theme, "border"),
+      ground,
+    );
+    const g = round2(deltaE(ground, surround));
+    const h = round2(deltaE(hairline, surround));
+    return { label, ground: g, hairline: h, edge: Math.max(g, h) };
+  });
+
+  test("28 surrounds: 13 light, 15 dark", () => {
+    expect(edges).toHaveLength(28);
+    expect(SURROUNDS.filter(([, t]) => t === "light")).toHaveLength(13);
+  });
+
+  test("28 of 28 read, by ground or hairline at 3.0 or more; the lowest is the light page, 4.61", () => {
+    expect(edges.filter((e) => e.edge >= 3)).toHaveLength(28);
+    const min = edges.reduce((a, b) => (b.edge < a.edge ? b : a));
+    expect(min.label).toBe("light page");
+    expect(min.edge).toBe(4.61);
+  });
+
+  test("decision 15's figures: the page, a card, a user's turn and the ink surface", () => {
+    const at = (label: string) => {
+      const e = edges.find((x) => x.label === label)!;
+      return [e.ground, e.hairline];
+    };
+    expect(at("light page")).toEqual([4.61, 3.03]);
+    expect(at("light card")).toEqual([0, 7.28]);
+    expect(at("light muted")).toEqual([7.9, 1.53]);
+    expect(at("dark page")).toEqual([8.71, 16.62]);
+    expect(at("dark card")).toEqual([3.83, 11.74]);
+    expect(at("dark muted")).toEqual([0, 7.91]);
+    expect(at("light glass fallback")).toEqual([1.62, 5.78]);
+    expect(at("the ink surface on a light page")).toEqual([0, 9.47]);
+    expect(at("the ink surface on a dark page")).toEqual([0, 8.56]);
   });
 });

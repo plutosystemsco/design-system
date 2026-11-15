@@ -12,7 +12,7 @@ import {
   type Locator,
   type Page,
 } from "@playwright/test";
-import { cssVar, hexToRgb, open, settled } from "./pages.ts";
+import { cssVar, hexToRgb, open, openView, settled } from "./pages.ts";
 
 /**
  * True when a computed colour holds a token's colour: the same channels and
@@ -42,6 +42,40 @@ async function computed(locator: Locator, property: string): Promise<string> {
     property,
   );
 }
+
+/**
+ * 014 decision 4: a 1 px hairline on 4 of 4 sides, in the `--border` the
+ * element itself computes (an ink surface sets the dark theme's).
+ */
+async function expectHairline(locator: Locator, what: string): Promise<void> {
+  const sides = await locator.evaluate((el) => {
+    const s = getComputedStyle(el);
+    return {
+      border: s.getPropertyValue("--border").trim(),
+      sides: (["top", "right", "bottom", "left"] as const).map((side) => [
+        s.getPropertyValue(`border-${side}-style`),
+        s.getPropertyValue(`border-${side}-width`),
+        s.getPropertyValue(`border-${side}-color`),
+      ]),
+    };
+  });
+  expect(sides.sides, what).toHaveLength(4);
+  for (const [style, width, colour] of sides.sides) {
+    expect(style, what).toBe("solid");
+    expect(width, what).toBe("1px");
+    expect(holdsColour(colour!, sides.border), `${what}: ${colour}`).toBe(true);
+  }
+}
+
+/** 014 decision 1: the code ground and the active line, as Chromium computes them. */
+const CODE_GROUND = {
+  light: "rgb(255, 255, 255)",
+  dark: "rgb(44, 40, 33)",
+} as const;
+const ACTIVE_LINE = {
+  light: "rgb(243, 240, 232)",
+  dark: "rgb(34, 31, 25)",
+} as const;
 
 /** Fetches a page's prerendered HTML and loads it with scripts off. */
 async function rawPage(
@@ -111,7 +145,7 @@ test.describe("the code block", () => {
 
   // 007 decision 10: six slots on the sudoku example; a definition carries
   // the weight, a call does not.
-  test("C2. the palette in the browser: 6 of 6 slot colours, font-medium on the 2 definitions and on 0 calls, the muted ground, and no class on =", async ({
+  test("C2. the palette in the browser: 6 of 6 slot colours, font-medium on the 2 definitions and on 0 calls, the code ground, and no class on =", async ({
     page,
   }) => {
     await open(page, PAGE);
@@ -178,9 +212,10 @@ test.describe("the code block", () => {
       }
       return [null, "none"];
     });
+    // 014 decision 1: the code ground, white in light mode.
     expect(ground).toEqual([
       "code-block",
-      hexToRgb(await cssVar(page, "--muted")),
+      hexToRgb(await cssVar(page, "--syntax-ground")),
     ]);
     // An assignment's `=` is a foreground token. Shiki merges neighbouring
     // tokens of one style, so it sits inside a classless span with the name
@@ -207,6 +242,10 @@ test.describe("the code block", () => {
       const pre = block.locator('[data-slot="code-block-content"]');
       await expect(pre).toHaveAttribute("tabindex", "0");
       expect(await computed(pre, "scrollbar-width")).toBe("thin");
+      // 014 decision 5: the track is the code ground.
+      expect(await computed(pre, "scrollbar-color")).toBe(
+        `${hexToRgb(await cssVar(page, "--input"))} ${hexToRgb(await cssVar(page, "--syntax-ground"))}`,
+      );
       const scroll = await pre.evaluate((el) => [
         el.scrollWidth,
         el.clientWidth,
@@ -266,8 +305,9 @@ test.describe("the code block", () => {
         ),
       ).toBe(true);
 
-      // The three emphasised lines: the opaque card step and a 2 px marker.
-      const card = hexToRgb(await cssVar(page, "--card"));
+      // The three emphasised lines: the active line, one opaque step from
+      // the code ground, and a 2 px marker (014 decision 2).
+      const card = hexToRgb(await cssVar(page, "--syntax-active-line"));
       for (const [variant, token] of [
         ["highlighted", "--primary"],
         ["added", "--success"],
@@ -484,6 +524,9 @@ test.describe("the ink surface", () => {
     expect(
       await computed(s.locator('[data-slot="code-block"]'), "background-color"),
     ).toBe(ground);
+    // 014 decision 6: the block and the editor gain the hairline there too.
+    await expectHairline(s.locator('[data-slot="code-block"]'), "the block");
+    await expectHairline(s.locator('[data-slot="code-editor"]'), "the editor");
     expect(
       await computed(
         editor.locator(".cm-activeLine").first(),
@@ -535,15 +578,19 @@ test.describe("the ink surface", () => {
 /** 004 decision 9: the editor. */
 const EDITOR_PAGE = "/items/code-editor/";
 
-/** The grown-by-4-px clip check of 003 check 27, on an element. */
-async function unclipped(locator: Locator): Promise<string | null> {
-  return locator.evaluate((el) => {
+/**
+ * The grown-by-4-px clip check of 003 check 27, on an element. 014 decision 7
+ * passes the editor's 5 px: the focus offset, the focus width and the line
+ * width, so the whole ring is checked.
+ */
+async function unclipped(locator: Locator, by = 4): Promise<string | null> {
+  return locator.evaluate((el, by) => {
     const r = el.getBoundingClientRect();
     const grown = {
-      left: r.left - 4,
-      right: r.right + 4,
-      top: r.top - 4,
-      bottom: r.bottom + 4,
+      left: r.left - by,
+      right: r.right + by,
+      top: r.top - by,
+      bottom: r.bottom + by,
     };
     const main = document.querySelector("main");
     for (let a = el.parentElement; a && a !== main; a = a.parentElement) {
@@ -561,7 +608,7 @@ async function unclipped(locator: Locator): Promise<string | null> {
       if (!fits) return `${a.getAttribute("data-slot") ?? a.tagName} clips it`;
     }
     return null;
-  });
+  }, by);
 }
 
 test.describe("the code editor", () => {
@@ -632,18 +679,28 @@ test.describe("the code editor", () => {
       const s = getComputedStyle(el);
       return [s.outlineStyle, s.outlineWidth, s.outlineColor, s.outlineOffset];
     });
-    expect(outline).toEqual(["solid", "2px", ring, "2px"]);
+    // 014 decision 7: the ring sits 2 px outside the root's hairline, so its
+    // offset is the focus offset plus the line width.
+    expect(outline).toEqual(["solid", "2px", ring, "3px"]);
     expect(await computed(content(page), "outline-style")).toBe("none");
-    expect(await unclipped(editor)).toBeNull();
+    const grow = await editor.evaluate((el) => {
+      const s = getComputedStyle(el);
+      return ["--focus-offset", "--focus-width", "--line-width"]
+        .map((n) => parseFloat(s.getPropertyValue(n)))
+        .reduce((a, b) => a + b, 0);
+    });
+    expect(grow).toBe(5);
+    expect(await unclipped(editor, grow)).toBeNull();
     // The root has no overflow-hidden.
     const root = page
       .getByTestId("editor-main")
       .locator('[data-slot="code-editor"]');
     expect(await computed(root, "overflow-x")).toBe("visible");
 
-    expect(await computed(editor, "background-color")).toBe(
-      hexToRgb(await cssVar(page, "--muted")),
-    );
+    // 014 decision 1: the root and the editor on the code ground.
+    const codeGround = hexToRgb(await cssVar(page, "--syntax-ground"));
+    expect(await computed(root, "background-color")).toBe(codeGround);
+    expect(await computed(editor, "background-color")).toBe(codeGround);
     expect(await computed(editor.locator(".cm-gutters"), "color")).toBe(
       hexToRgb(await cssVar(page, "--muted-foreground")),
     );
@@ -652,12 +709,15 @@ test.describe("the code editor", () => {
         editor.locator(".cm-activeLine").first(),
         "background-color",
       ),
-    ).toBe(hexToRgb(await cssVar(page, "--card")));
+    ).toBe(hexToRgb(await cssVar(page, "--syntax-active-line")));
     const scroller = editor.locator(".cm-scroller");
     expect(await computed(scroller, "font-family")).toContain("JetBrains Mono");
     expect(await computed(scroller, "font-size")).toBe("13.5px");
     expect(await computed(scroller, "font-variant-ligatures")).toBe("none");
     expect(await computed(scroller, "scrollbar-width")).toBe("thin");
+    expect(await computed(scroller, "scrollbar-color")).toBe(
+      `${hexToRgb(await cssVar(page, "--input"))} ${codeGround}`,
+    );
     // A keyword, by its highlight class: the one whose colour is --code-keyword.
     const keyword = editor
       .locator(".cm-line span", { hasText: /^import$/ })
@@ -1181,5 +1241,224 @@ test.describe("the meter", () => {
     expect(await pixel(page, meter, 0.08)).toBe(primary);
     expect(await pixel(page, meter, 0.5)).toBe(muted);
     await expect(page.getByTestId("fuel-meter")).toContainText("of 30 billion");
+  });
+});
+
+/**
+ * 014 criterion 8: the white code ground and the hairline, on every surface
+ * the release puts code on, read as literal colours in each theme.
+ */
+test.describe("the code ground and its edge (014)", () => {
+  test("G1. code-block: the root on the code ground with the hairline on 4 sides; 3 emphasised lines on the active line; the track on the code ground", async ({
+    page,
+  }, info) => {
+    const theme = info.project.name as "light" | "dark";
+    await open(page, PAGE);
+    const block = python(page);
+    expect(await computed(block, "background-color")).toBe(CODE_GROUND[theme]);
+    await expectHairline(block, "the block");
+    const lines = page.locator(
+      '[data-slot="code-block-line"]:is([data-variant="highlighted"], [data-variant="added"], [data-variant="removed"])',
+    );
+    expect(await lines.count()).toBe(3);
+    for (const line of await lines.all())
+      expect(await computed(line, "background-color")).toBe(ACTIVE_LINE[theme]);
+    const pre = block.locator('[data-slot="code-block-content"]');
+    expect(
+      (await computed(pre, "scrollbar-color")).endsWith(CODE_GROUND[theme]),
+    ).toBe(true);
+  });
+
+  test("G2. code-editor: the root and .cm-editor on the code ground, the root with the hairline; the active line; the track; the ring 3 px out", async ({
+    page,
+  }, info) => {
+    const theme = info.project.name as "light" | "dark";
+    await open(page, EDITOR_PAGE);
+    const host = page.getByTestId("editor-main");
+    const root = host.locator('[data-slot="code-editor"]');
+    const editor = host.locator(".cm-editor");
+    expect(await computed(root, "background-color")).toBe(CODE_GROUND[theme]);
+    expect(await computed(editor, "background-color")).toBe(CODE_GROUND[theme]);
+    await expectHairline(root, "the editor's root");
+    expect(
+      await computed(
+        editor.locator(".cm-activeLine").first(),
+        "background-color",
+      ),
+    ).toBe(ACTIVE_LINE[theme]);
+    expect(
+      (
+        await computed(editor.locator(".cm-scroller"), "scrollbar-color")
+      ).endsWith(CODE_GROUND[theme]),
+    ).toBe(true);
+    await editor.locator(".cm-content").focus();
+    await expect(editor).toHaveClass(/cm-focused/);
+    expect(await computed(editor, "outline-offset")).toBe("3px");
+    expect(await unclipped(editor, 5)).toBeNull();
+  });
+
+  test("G3. product-home: each stage-card's block and live-console's block on the code ground with the hairline", async ({
+    page,
+  }, info) => {
+    const theme = info.project.name as "light" | "dark";
+    await openView(page, "/view/product-home/");
+    const blocks = page.locator(
+      '[data-slot="stage-card"] [data-slot="code-block"], [data-slot="live-console"] [data-slot="code-block"]',
+    );
+    const cards = await page
+      .locator('[data-slot="stage-card"] [data-slot="code-block"]')
+      .count();
+    const consoles = await page
+      .locator('[data-slot="live-console"] [data-slot="code-block"]')
+      .count();
+    expect(cards, "stage-card blocks").toBeGreaterThanOrEqual(2);
+    expect(consoles, "live-console blocks").toBeGreaterThanOrEqual(1);
+    for (const block of await blocks.all()) {
+      expect(await computed(block, "background-color")).toBe(
+        CODE_GROUND[theme],
+      );
+      await expectHairline(block, "a composition's block");
+    }
+  });
+
+  test("G4. the chat thread: the block in m3's user bubble on the code ground with the hairline", async ({
+    page,
+  }, info) => {
+    const theme = info.project.name as "light" | "dark";
+    await openView(page, "/view/chat/thread/");
+    const turn = page
+      .locator('[data-slot="message"][data-align="end"]')
+      .filter({ hasText: "adds two numbers" });
+    await expect(turn).toHaveCount(1);
+    const block = turn.locator('[data-slot="code-block"]');
+    await expect(block).toHaveCount(1);
+    await expect(block.locator("pre")).toHaveText("add(2, 3)");
+    expect(await computed(block, "background-color")).toBe(CODE_GROUND[theme]);
+    await expectHairline(block, "the user turn's block");
+  });
+});
+
+/**
+ * 014 decision 15, criterion 17: inline code is a chip on the code ground,
+ * edged by the hairline; in a heading it is not; the install line and the
+ * block's own code are unchanged by the chip.
+ */
+test.describe("inline code (014)", () => {
+  const THEME_PAGE = "/items/pluto-theme/";
+  const own = (locator: Locator, name: string) =>
+    locator.evaluate(
+      (el, n) => getComputedStyle(el).getPropertyValue(n).trim(),
+      name,
+    );
+
+  test("I1. the chip: ground, hairline, code colour, 4 px side padding and none above, the case radius, cloned on a wrap", async ({
+    page,
+  }, info) => {
+    const theme = info.project.name as "light" | "dark";
+    await open(page, THEME_PAGE);
+    const chip = page.getByTestId("inline-p").locator("code").first();
+    expect(await computed(chip, "background-color")).toBe(CODE_GROUND[theme]);
+    await expectHairline(chip, "the chip");
+    expect(await computed(chip, "color")).toBe(
+      hexToRgb(await own(chip, "--code-foreground")),
+    );
+    expect(await computed(chip, "padding-inline-start")).toBe("4px");
+    expect(await computed(chip, "padding-inline-end")).toBe("4px");
+    expect(await computed(chip, "padding-block-start")).toBe("0px");
+    expect(await computed(chip, "padding-block-end")).toBe("0px");
+    // --radius is written in rem; a probe resolves it to the px the chip computes.
+    const radius = await chip.evaluate((el) => {
+      const probe = document.createElement("span");
+      probe.style.borderTopLeftRadius = "var(--radius)";
+      el.parentElement!.append(probe);
+      const px = getComputedStyle(probe).borderTopLeftRadius;
+      probe.remove();
+      return px;
+    });
+    expect(radius).toBe("8px");
+    expect(await computed(chip, "border-top-left-radius")).toBe(radius);
+    expect(await computed(chip, "box-decoration-break")).toBe("clone");
+  });
+
+  test("I2. rendered line heights: a one-line paragraph with a chip is as tall as its twin with a mono span, in text-xs, text-sm and text-base", async ({
+    page,
+  }) => {
+    await open(page, THEME_PAGE);
+    for (const size of ["xs", "sm", "base"]) {
+      const withChip = page.getByTestId(`inline-line-${size}`);
+      const twin = page.getByTestId(`inline-twin-${size}`);
+      await expect(withChip.locator("code")).toHaveCount(1);
+      await expect(twin.locator("span.font-mono")).toHaveCount(1);
+      expect(await withChip.getAttribute("class")).toBe(
+        await twin.getAttribute("class"),
+      );
+      const [a, b] = [
+        (await withChip.boundingBox())!.height,
+        (await twin.boundingBox())!.height,
+      ];
+      expect(Math.abs(a - b), `${size}: ${a} vs ${b}`).toBeLessThanOrEqual(0.5);
+    }
+  });
+
+  test("I3. in a link the code colour is the link's; in a card the same chip; in an h3 no chip; in the ink surface flush with the surface", async ({
+    page,
+  }, info) => {
+    const theme = info.project.name as "light" | "dark";
+    await open(page, THEME_PAGE);
+    const link = page.getByTestId("inline-link").locator("code");
+    await expect(page.getByTestId("inline-link")).toHaveAttribute(
+      "href",
+      "#inline-code",
+    );
+    expect(await computed(link, "color")).toBe(
+      hexToRgb(await own(link, "--code-link")),
+    );
+    const card = page.getByTestId("inline-card").locator("code");
+    expect(await computed(card, "background-color")).toBe(CODE_GROUND[theme]);
+    await expectHairline(card, "the card's chip");
+    const heading = page.getByTestId("inline-h3");
+    const inHeading = heading.locator("code");
+    expect(await computed(inHeading, "background-color")).toBe(
+      "rgba(0, 0, 0, 0)",
+    );
+    expect(await computed(inHeading, "border-top-width")).toBe("0px");
+    expect(await computed(inHeading, "font-family")).toContain(
+      "JetBrains Mono",
+    );
+    expect(await computed(inHeading, "color")).toBe(
+      await computed(heading, "color"),
+    );
+    const surface = page.getByTestId("keyboard-fixture");
+    const inSurface = page.getByTestId("inline-surface").locator("code");
+    expect(await computed(inSurface, "background-color")).toBe(
+      await computed(surface, "background-color"),
+    );
+  });
+
+  test("I4. the install line on an item page takes the code ground, the hairline and the code colour", async ({
+    page,
+  }, info) => {
+    const theme = info.project.name as "light" | "dark";
+    await open(page, "/items/button/");
+    const line = page.locator("code", { hasText: "REGISTRY_URL=" }).first();
+    expect(await computed(line, "background-color")).toBe(CODE_GROUND[theme]);
+    await expectHairline(line, "the install line");
+    expect(await computed(line, "color")).toBe(
+      hexToRgb(await own(line, "--code-foreground")),
+    );
+  });
+
+  test("I5. a block's pre code takes no chip; kbd keeps the muted inset", async ({
+    page,
+  }) => {
+    await open(page, PAGE);
+    const inner = python(page).locator("pre code").first();
+    expect(await computed(inner, "background-color")).toBe("rgba(0, 0, 0, 0)");
+    expect(await computed(inner, "border-top-width")).toBe("0px");
+    await open(page, "/items/kbd/");
+    const kbd = page.locator("main kbd").first();
+    expect(await computed(kbd, "background-color")).toBe(
+      hexToRgb(await cssVar(page, "--muted")),
+    );
   });
 });

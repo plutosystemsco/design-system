@@ -1,6 +1,6 @@
 # Constitution
 
-- **Status:** in force since 2026-10-27. Amended 2026-10-27 (§4.6 allows named dependencies) and 2026-11-01 (§2 and §4.2: the goal names no single app, and "done" is proven in this repository).
+- **Status:** in force since 2026-10-27. Amended 2026-10-27 (§4.6 allows named dependencies) 2026-11-01 (§2 and §4.2: the goal names no single app, and "done" is proven in this repository) and 2026-11-14 (§3: the repository hosts one public design site).
 - **Owner:** Pluto Systems, PBC
 - **Scope:** every document, script and line of code in this repository, and everyone working on it. The other documents under `context/` obey this one. It changes only by a decision recorded in `decisions.md` and noted in its Status line.
 
@@ -20,7 +20,7 @@ This repository is developed over time to meet the needs of Pluto Systems, PBC. 
 ## 3. What this project is not
 
 - Not a package an app imports at run time. An app owns its copy.
-- Not a website. Its preview pages exist to show and test the components.
+- Not a marketing site. It hosts one public design site: how to build with the system, and the Pluto Systems brand. The site's component pages show and test every item (§2.3); nothing on it sells a product.
 - Not a CLI. A branded CLI may wrap the registry later, by a recorded decision.
 
 ## 4. Hard constraints

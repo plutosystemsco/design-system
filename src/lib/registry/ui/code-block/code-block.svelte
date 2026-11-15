@@ -3,12 +3,11 @@
 
   export const codeBlockVariants = tv({
     // The root draws the focus indicator for its pre, so overflow-hidden
-    // cannot clip it. The ground is the code
-    // ground, with no border: an inset is told by its ground. The code ground
-    // is the muted inset everywhere but inside an ink surface, where it goes
-    // flush with the surface as the editor does; a block that
-    // should stay an inset there passes `class="bg-muted"`.
-    base: "group/code-block relative flex w-full min-w-0 flex-col overflow-hidden rounded bg-code-background text-sm has-[[data-slot=code-block-content]:focus-visible]:focus-ring data-[size=sm]:text-xs",
+    // cannot clip it. The ground is the code ground, white in light mode,
+    // edged by the hairline on every surface, so a white block keeps its edge
+    // on a white card. Inside an ink surface the code ground is the surface
+    // itself, and the hairline tells the block from it.
+    base: "group/code-block relative flex w-full min-w-0 flex-col overflow-hidden rounded border border-border bg-code-background text-sm has-[[data-slot=code-block-content]:focus-visible]:focus-ring data-[size=sm]:text-xs",
     variants: {
       variant: {
         default: "text-foreground",

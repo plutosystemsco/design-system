@@ -8,6 +8,7 @@ import {
   lintFiles,
   lintText,
   loadRules,
+  SYNTAX_COLOUR,
 } from "../../scripts/lint-literals.ts";
 
 const rules = loadRules();
@@ -252,6 +253,21 @@ const BAD_007: Sample[] = [
 ];
 const GOOD_007: Sample[] = [{ cls: "text-code-number" }];
 
+// 014 decision 9: L19 also names the two code grounds; an item reaches them
+// through the code map's classes or variables alone.
+const BAD_014: Sample[] = [
+  { cls: "bg-syntax-ground" },
+  { cls: "bg-(--syntax-active-line)" },
+  {
+    text: 'const theme = { background: "var(--syntax-ground)" };',
+    file: "theme.ts",
+  },
+];
+const GOOD_014: Sample[] = [
+  { cls: "bg-code-background" },
+  { cls: "bg-code-active-line" },
+];
+
 const BAD = [
   ...BAD_001,
   ...BAD_002,
@@ -259,6 +275,7 @@ const BAD = [
   ...BAD_004,
   ...BAD_006,
   ...BAD_007,
+  ...BAD_014,
 ];
 const GOOD = [
   ...GOOD_001,
@@ -269,6 +286,7 @@ const GOOD = [
   ...GOOD_006,
   ...GOOD_008,
   ...GOOD_007,
+  ...GOOD_014,
 ];
 
 describe("the lint itself", () => {
@@ -289,10 +307,10 @@ describe("the lint itself", () => {
     },
   );
 
-  test("74 bad samples flagged and 0 of 50 good ones", () => {
-    expect(BAD).toHaveLength(74);
-    expect(GOOD).toHaveLength(50);
-    expect(BAD.filter((s) => lintSample(s).length > 0)).toHaveLength(74);
+  test("77 bad samples flagged and 0 of 52 good ones", () => {
+    expect(BAD).toHaveLength(77);
+    expect(GOOD).toHaveLength(52);
+    expect(BAD.filter((s) => lintSample(s).length > 0)).toHaveLength(77);
     expect(GOOD.filter((s) => lintSample(s).length > 0)).toHaveLength(0);
   });
 
@@ -303,6 +321,16 @@ describe("the lint itself", () => {
     expect(
       lintSample({ cls: "bg-syntax-orange/10" }).map((v) => v.rule),
     ).toEqual(["syntax colour", "translucent tint"]);
+  });
+
+  // 014 decision 9: one pattern for 0.12.0, written once for 014's names and 013's.
+  test("L19's pattern is 014 decision 9's, exactly, and names its rule on the 3 new samples", () => {
+    expect(SYNTAX_COLOUR.source).toBe(
+      "syntax-(?:orange|amber|purple|teal|cyan|violet|blue|navy|green|yellow|plum|red|grey|ink|ground|active-line)\\b",
+    );
+    expect(SYNTAX_COLOUR.flags).toBe("g");
+    for (const sample of BAD_014)
+      expect(lintSample(sample).map((v) => v.rule)).toContain("syntax colour");
   });
 });
 

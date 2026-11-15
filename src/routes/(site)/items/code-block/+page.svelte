@@ -1,6 +1,7 @@
 <script lang="ts">
   import FileCode from "phosphor-svelte/lib/FileCode";
   import Terminal from "phosphor-svelte/lib/Terminal";
+  import * as Card from "#lib/registry/ui/card";
   import * as CodeBlock from "#lib/registry/ui/code-block";
   import ItemHeader from "#lib/preview/item-header.svelte";
   import PreviewSection from "#lib/preview/preview-section.svelte";
@@ -23,7 +24,7 @@ ZeroDivisionError: division by zero`;
 <PreviewSection
   id="variants"
   title="Variants"
-  intro="Code on the muted inset, with no border. The header is divided from the code by the groove. Every colour is a code token, rendered as a class: the install snippet below was highlighted when this page was built, and shipped no highlighter."
+  intro="Code on the code ground, white in light mode, edged by the hairline. The header is divided from the code by the groove. Every colour is a code token, rendered as a class: the install snippet below was highlighted when this page was built, and shipped no highlighter."
 >
   <div class="grid max-w-2xl gap-8">
     <Specimen caption="default, prerendered with highlightCode" class="w-full">
@@ -57,6 +58,18 @@ ZeroDivisionError: division by zero`;
           {/each}
         </CodeBlock.Content>
       </CodeBlock.Root>
+    </Specimen>
+    <Specimen
+      caption="in a card: white on white, told by the hairline"
+      class="w-full"
+    >
+      <Card.Root class="w-full">
+        <Card.Content>
+          <CodeBlock.Root data-testid="card-block">
+            <CodeBlock.Content code={output} />
+          </CodeBlock.Root>
+        </Card.Content>
+      </Card.Root>
     </Specimen>
     <Specimen caption="destructive, labelled “Error output”" class="w-full">
       <CodeBlock.Root variant="destructive">
@@ -123,9 +136,9 @@ ZeroDivisionError: division by zero`;
       <code>−</code> markers are the same.
     </li>
     <li>
-      An emphasised line is the opaque card step with a 2 px marker on its left
-      in the state colour: shape and position, not a tint, which the muted
-      ground would swallow.
+      An emphasised line is the active line, one opaque step from the code
+      ground, with a 2 px marker on its left in the state colour: shape and
+      position, not a tint.
     </li>
     <li>
       The <code>destructive</code> variant is state told by colour, so give it a visible

@@ -3,8 +3,8 @@
 
   // Every line carries a transparent marker of the focus width, so an
   // emphasised line's coloured marker shifts no column. The three emphasised
-  // variants are the opaque card step with a marker in the state colour:
-  // shape and position, not a tint, which would vanish on the muted ground.
+  // variants are the active line, one opaque step from the code ground, with
+  // a marker in the state colour: shape and position, not a tint.
   export const codeBlockLineVariants = tv({
     base: "relative block min-h-lh -mx-4 border-l-(length:--focus-width) border-transparent px-4 group-data-[size=sm]/code-block:-mx-3 group-data-[size=sm]/code-block:px-3 in-data-numbered:col-span-2 in-data-numbered:grid in-data-numbered:grid-cols-subgrid in-data-numbered:gap-x-3 in-data-numbered:[counter-increment:line] in-data-numbered:before:min-w-6 in-data-numbered:before:text-end in-data-numbered:before:text-muted-foreground in-data-numbered:before:select-none in-data-numbered:before:content-[counter(line)] in-data-numbered:supports-[content:counter(line)_/_'']:before:content-[counter(line)_/_''] after:absolute after:top-0 after:start-1 after:select-none",
     variants: {

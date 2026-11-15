@@ -150,7 +150,9 @@
 </script>
 
 <!--
-  The root shares the code block's muted ground and carries no overflow-hidden:
+  The root shares the code block's code ground and hairline, so the
+  prerendered pre is on the same ground before the editor mounts. It carries
+  no overflow-hidden:
   the focus indicator sits outside .cm-editor, which fills the root, and a
   clip would hide it. The theme rounds the editor and its scroller instead. The
   fallback pre is the editor's type and padding in Tailwind's terms; its 32 px
@@ -160,7 +162,7 @@
 <div
   bind:this={ref}
   data-slot="code-editor"
-  class={cn("rounded bg-muted", className)}
+  class={cn("rounded border border-border bg-code-background", className)}
   {...restProps}
 >
   {#if !mounted}

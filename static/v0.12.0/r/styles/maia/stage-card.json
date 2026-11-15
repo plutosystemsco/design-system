@@ -1,0 +1,34 @@
+{
+	"$schema": "https://shadcn-svelte.com/schema/registry-item.json",
+	"name": "stage-card",
+	"title": "Stage card",
+	"type": "registry:ui",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+	"description": "Code on a flat card for a stage, with a copy button and, given a run function, a Run button whose output and outcome the card shows and says.",
+	"registryDependencies": [
+		"utils",
+		"pluto-theme",
+		"code-block",
+		"button",
+		"status"
+	],
+	"meta": {
+		"since": "0.11.0",
+		"group": "compositions",
+		"modes": [
+			"expressive"
+		]
+	},
+	"files": [
+		{
+			"content": "<script lang=\"ts\" module>\n  /** Where a run stands: before one, while it works, after it resolves, after it rejects. */\n  export type StageCardState = \"idle\" | \"busy\" | \"done\" | \"error\";\n</script>\n\n<script lang=\"ts\">\n  import { Button } from \"$UI$/button\";\n  import * as CodeBlock from \"$UI$/code-block\";\n  import { Status } from \"$UI$/status\";\n  import { cn, type WithElementRef } from \"$UTILS$\";\n  import type { HTMLAttributes } from \"svelte/elements\";\n\n  let {\n    ref = $bindable(null),\n    title,\n    code,\n    language,\n    run,\n    runLabel = \"Run\",\n    onstate,\n    class: className,\n    ...restProps\n  }: WithElementRef<\n    Omit<HTMLAttributes<HTMLDivElement>, \"title\" | \"children\">\n  > & {\n    /** The code block's title, such as a file name. Not a heading. */\n    title: string;\n    /** The code, copied as written. */\n    code: string;\n    /** The language the code is highlighted in, as `code-block` takes it. */\n    language?: string;\n    /** Runs the code and resolves to its output lines; a rejection's message is shown. Without it, no Run button. */\n    run?: () => Promise<string[]>;\n    runLabel?: string;\n    /** Told each time the run's state changes, so a parent can answer it. */\n    onstate?: (state: StageCardState) => void;\n  } = $props();\n\n  let busy = $state(false);\n  let lines = $state<string[]>([]);\n  let error = $state(\"\");\n  let said = $state(\"\");\n  let frame = 0;\n  // Set when the card is gone: a run that settles later changes nothing.\n  let gone = false;\n\n  // A polite region announces a change, and the same text twice is none, so\n  // it is cleared and set again on the next frame (010 decision 3).\n  function announce(text: string) {\n    said = \"\";\n    cancelAnimationFrame(frame);\n    frame = requestAnimationFrame(() => (said = text));\n  }\n\n  async function start() {\n    if (!run || busy) return;\n    busy = true;\n    said = \"\";\n    onstate?.(\"busy\");\n    try {\n      const output = await run();\n      if (gone) return;\n      lines = output;\n      error = \"\";\n      busy = false;\n      onstate?.(\"done\");\n      announce(\n        `Ran. ${output.length} ${output.length === 1 ? \"line\" : \"lines\"}.`,\n      );\n    } catch (reason) {\n      if (gone) return;\n      // The rejection's own message, so the error directs (010 decision 3).\n      lines = [];\n      error = reason instanceof Error ? reason.message : String(reason);\n      busy = false;\n      onstate?.(\"error\");\n      announce(\"Run failed.\");\n    }\n  }\n\n  // An effect's cleanup runs in the browser only; the server has no frames.\n  $effect(() => () => {\n    gone = true;\n    cancelAnimationFrame(frame);\n  });\n</script>\n\n<!--\n  A flat card: the theme's own roles on its raised ground (surface-plain), so\n  it reads the same on the canvas or a field, and while a run works an edge\n  in the primary inside it (busy-edge; 012 decision 5). The code block sits\n  inset, so its focus\n  indicator is never clipped by the card. Its header holds the title, the copy\n  button and, with `run`, Run, which shows the button's busy state and keeps\n  focus. The output list is there from the first render, so its busy state can\n  be read; it shows once it holds a line. The status says the outcome.\n-->\n<div\n  bind:this={ref}\n  data-slot=\"stage-card\"\n  data-busy={busy ? \"\" : undefined}\n  class={cn(\n    \"surface-plain busy-edge grid gap-2 overflow-hidden rounded-lg border border-border bg-card p-2 text-card-foreground\",\n    className,\n  )}\n  {...restProps}\n>\n  <CodeBlock.Root>\n    <CodeBlock.Header>\n      <CodeBlock.Title>{title}</CodeBlock.Title>\n      <CodeBlock.Actions>\n        <CodeBlock.CopyButton {code} />\n        {#if run}\n          <Button\n            size=\"sm\"\n            class=\"h-(--size-action-small)\"\n            {busy}\n            onclick={start}>{runLabel}</Button\n          >\n        {/if}\n      </CodeBlock.Actions>\n    </CodeBlock.Header>\n    <CodeBlock.Content {code} {language} />\n  </CodeBlock.Root>\n  {#if run}\n    <ul\n      data-slot=\"stage-card-output\"\n      aria-label=\"Output\"\n      aria-busy={busy ? \"true\" : undefined}\n      class={cn(\n        \"grid gap-1 px-2 pb-2 font-mono text-sm wrap-anywhere\",\n        !lines.length && !error && \"hidden\",\n      )}\n    >\n      {#each lines as line, index (index)}\n        <li>{line}</li>\n      {/each}\n      {#if error}\n        <li class=\"text-destructive\">{error}</li>\n      {/if}\n    </ul>\n    <Status data-stage-card=\"status\" text={said} />\n  {/if}\n</div>\n",
+			"type": "registry:ui",
+			"target": "stage-card/stage-card.svelte"
+		},
+		{
+			"content": "import Root, { type StageCardState } from \"./stage-card.svelte\";\n\nexport {\n  Root,\n  type StageCardState,\n  //\n  Root as StageCard,\n};\n",
+			"type": "registry:ui",
+			"target": "stage-card/index.ts"
+		}
+	]
+}

@@ -43,18 +43,22 @@ describe("the token file", () => {
     });
   });
 
-  // 007 decision 3: the five syntax pairs, reached only through the code slots.
-  test("holds the 5 syntax-* pairs: the text primitive in light, the lifted one (amber itself) in dark", () => {
-    const pairs = Object.keys(tokens.themes.light).filter((n) =>
+  // 007 decision 3: the five syntax pairs, reached only through the code
+  // slots; 014 decision 1 adds the two code grounds beside them.
+  test("holds the 5 syntax-* colour pairs, then 014's 2 grounds: the text primitive in light, the lifted one (amber itself) in dark", () => {
+    const names = Object.keys(tokens.themes.light).filter((n) =>
       n.startsWith("syntax-"),
     );
-    expect(pairs).toEqual([
+    expect(names).toEqual([
       "syntax-orange",
       "syntax-amber",
       "syntax-purple",
       "syntax-teal",
       "syntax-cyan",
+      "syntax-ground",
+      "syntax-active-line",
     ]);
+    const pairs = names.slice(0, 5);
     expect(
       pairs.map((n) => [tokens.themes.light[n], tokens.themes.dark[n]]),
     ).toEqual([
@@ -71,21 +75,43 @@ describe("the token file", () => {
     expect(new Set(values).size).toBe(values.length);
   });
 
-  // 007 decision 3: 48 becomes 53.
+  // 007 decision 3: 48 becomes 53; 014 decision 1: 53 becomes 55.
   test.each(["light", "dark"] as const)(
-    "%s holds 53 names, each naming a primitive",
+    "%s holds 55 names, each naming a primitive",
     (theme) => {
       const entries = Object.entries(tokens.themes[theme]);
-      expect(entries).toHaveLength(53);
+      expect(entries).toHaveLength(55);
       for (const [, primitive] of entries)
         expect(Object.keys(tokens.primitives)).toContain(primitive);
     },
   );
 
-  test("both themes name the same 53 tokens", () => {
+  test("both themes name the same 55 tokens", () => {
     expect(Object.keys(tokens.themes.dark).sort()).toEqual(
       Object.keys(tokens.themes.light).sort(),
     );
+  });
+
+  // 014 decision 1: two code-only roles carry the code grounds; no primitive
+  // is added, and `muted` and `card` are not retuned.
+  test("syntax-ground names raised and ink-wash; syntax-active-line names paper and ink-raised", () => {
+    expect(tokens.themes.light["syntax-ground"]).toBe("raised");
+    expect(tokens.themes.dark["syntax-ground"]).toBe("ink-wash");
+    expect(tokens.themes.light["syntax-active-line"]).toBe("paper");
+    expect(tokens.themes.dark["syntax-active-line"]).toBe("ink-raised");
+  });
+
+  test("muted and card resolve as before: #E9E5DB, #FFFFFF in light; #2C2821, #221F19 in dark", () => {
+    const hex = (theme: "light" | "dark", role: string) =>
+      tokens.primitives[tokens.themes[theme][role]!]!.toUpperCase();
+    expect([hex("light", "muted"), hex("light", "card")]).toEqual([
+      "#E9E5DB",
+      "#FFFFFF",
+    ]);
+    expect([hex("dark", "muted"), hex("dark", "card")]).toEqual([
+      "#2C2821",
+      "#221F19",
+    ]);
   });
 
   test("no semantic value is a raw hex", () => {
@@ -256,11 +282,11 @@ describe("the token file", () => {
   });
 });
 
-/** 004 decision 5 and 007 decision 2: the `code` map, 21 slots, each a semantic colour. */
+/** 004 decision 5 and 007 decision 2: the `code` map, 21 slots, each a semantic colour; 014 decision 1 moves its two grounds. */
 describe("the code map", () => {
   const SLOTS: [slot: string, semantic: string][] = [
     ["foreground", "foreground"],
-    ["background", "muted"],
+    ["background", "syntax-ground"],
     ["comment", "muted-foreground"],
     ["keyword", "primary"],
     ["constant", "primary"],
@@ -279,7 +305,7 @@ describe("the code map", () => {
     ["inserted", "success"],
     ["deleted", "destructive"],
     ["changed", "primary"],
-    ["active-line", "card"],
+    ["active-line", "syntax-active-line"],
   ];
 
   test("holds 21 slots, in 007 decision 2's order, each naming its semantic colour", () => {
@@ -287,7 +313,7 @@ describe("the code map", () => {
     expect(Object.entries(tokens.code)).toEqual(SLOTS);
   });
 
-  test("21 of 21 values are among the 53 semantic names, and none is a primitive or a hex", () => {
+  test("21 of 21 values are among the 55 semantic names, and none is a primitive or a hex", () => {
     const semantic = new Set(Object.keys(tokens.themes.light));
     const values = Object.values(tokens.code);
     expect(values).toHaveLength(21);
@@ -383,9 +409,10 @@ describe("the expressive group", () => {
   });
 
   test("adds no primitive and no theme role", () => {
-    // 011 decision 2 adds one, graphite; the theme roles stay 53.
+    // 011 decision 2 adds one, graphite; the theme roles are 53, and 55
+    // since 014 decision 1's two code grounds.
     expect(Object.keys(tokens.primitives)).toHaveLength(35);
-    expect(Object.keys(tokens.themes.light)).toHaveLength(53);
+    expect(Object.keys(tokens.themes.light)).toHaveLength(55);
   });
 
   test("display names the heading family; each step is 600", () => {

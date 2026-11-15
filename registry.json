@@ -84,8 +84,10 @@
           "syntax-purple": "#903ACE",
           "syntax-teal": "#15717A",
           "syntax-cyan": "#1A6C97",
+          "syntax-ground": "#FFFFFF",
+          "syntax-active-line": "#F3F0E8",
           "code-foreground": "var(--foreground)",
-          "code-background": "var(--muted)",
+          "code-background": "var(--syntax-ground)",
           "code-comment": "var(--muted-foreground)",
           "code-keyword": "var(--primary)",
           "code-constant": "var(--primary)",
@@ -104,7 +106,7 @@
           "code-inserted": "var(--success)",
           "code-deleted": "var(--destructive)",
           "code-changed": "var(--primary)",
-          "code-active-line": "var(--card)"
+          "code-active-line": "var(--syntax-active-line)"
         },
         "dark": {
           "background": "#16140F",
@@ -160,8 +162,10 @@
           "syntax-purple": "#B780DF",
           "syntax-teal": "#20A6B3",
           "syntax-cyan": "#269DD8",
+          "syntax-ground": "#2C2821",
+          "syntax-active-line": "#221F19",
           "code-foreground": "var(--foreground)",
-          "code-background": "var(--muted)",
+          "code-background": "var(--syntax-ground)",
           "code-comment": "var(--muted-foreground)",
           "code-keyword": "var(--primary)",
           "code-constant": "var(--primary)",
@@ -180,7 +184,7 @@
           "code-inserted": "var(--success)",
           "code-deleted": "var(--destructive)",
           "code-changed": "var(--primary)",
-          "code-active-line": "var(--card)"
+          "code-active-line": "var(--syntax-active-line)"
         },
         "theme": {
           "radius": "0.5rem",
@@ -369,6 +373,10 @@
         },
         "@utility scrollbar": {
           "scrollbar-color": "var(--input) var(--muted)",
+          "scrollbar-width": "thin"
+        },
+        "@utility scrollbar-code": {
+          "scrollbar-color": "var(--input) var(--code-background)",
           "scrollbar-width": "thin"
         },
         "@utility groove-s": {
@@ -662,6 +670,12 @@
           },
           "code, kbd, samp, pre": {
             "font-variant-ligatures": "none"
+          },
+          "code:not(pre code, :is(h1, h2, h3, h4, h5, h6) code)": {
+            "@apply rounded border border-border bg-code-background px-1 text-code-foreground box-decoration-clone": {}
+          },
+          "a code:not(pre code, :is(h1, h2, h3, h4, h5, h6) code)": {
+            "@apply text-code-link": {}
           }
         },
         "@layer components": {
@@ -2181,7 +2195,7 @@
       "name": "code-block",
       "type": "registry:ui",
       "title": "Code block",
-      "description": "Code, output or a diff on the muted inset, highlighted from the code tokens, with line numbers, a copy button and a header divided by the groove.",
+      "description": "Code, output or a diff on the code ground, edged by the hairline, highlighted from the code tokens, with line numbers, a copy button and a header divided by the groove.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
       "registryDependencies": [
         "utils",

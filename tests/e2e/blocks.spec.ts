@@ -608,8 +608,9 @@ test.describe("all blocks", () => {
   });
 
   // 010: below md the product home's bar folds its links and secondary
-  // action into the sheet, so at 360 it holds its narrow list: 186.
-  test("26. targets: each of the 186 view stops at 360 is at least 24 × 24 px", async ({
+  // action into the sheet, so at 360 it holds its narrow list: 186. 014
+  // decision 11 adds the thread's second block, 2 stops: 188.
+  test("26. targets: each of the 188 view stops at 360 is at least 24 × 24 px", async ({
     page,
   }) => {
     await page.setViewportSize({ width: 360, height: 900 });
@@ -633,7 +634,7 @@ test.describe("all blocks", () => {
       }
     }
     expect(small).toEqual([]);
-    expect(counted).toBe(186);
+    expect(counted).toBe(188);
   });
 
   test("27. rings are not clipped: 40 of 40 sign-in and sign-up stops at 360", async ({
@@ -1314,6 +1315,7 @@ test.describe("the chat", () => {
       }
     }
     expect(clipped).toEqual([]);
-    expect(counted).toBe(85);
+    // 014 decision 11: the thread's second block adds 2 stops to 85.
+    expect(counted).toBe(87);
   });
 });

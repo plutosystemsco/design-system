@@ -13,7 +13,7 @@
     {
       id: "m3",
       role: "user",
-      text: "Show me a function that adds two numbers.",
+      text: "Show me a function that adds two numbers, so this works:\n\n```python\nadd(2, 3)\n```",
     },
     {
       id: "m4",

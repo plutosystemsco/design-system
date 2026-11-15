@@ -13,7 +13,7 @@
   // names are written out so Tailwind finds them in this file.
   const slots: [slot: string, semantic: string, swatch: string][] = [
     ["foreground", "foreground", "bg-code-foreground"],
-    ["background", "muted", "bg-code-background"],
+    ["background", "syntax-ground", "bg-code-background"],
     ["comment", "muted-foreground", "bg-code-comment"],
     ["keyword", "primary", "bg-code-keyword"],
     ["constant", "primary", "bg-code-constant"],
@@ -32,7 +32,7 @@
     ["inserted", "success", "bg-code-inserted"],
     ["deleted", "destructive", "bg-code-deleted"],
     ["changed", "primary", "bg-code-changed"],
-    ["active-line", "card", "bg-code-active-line"],
+    ["active-line", "syntax-active-line", "bg-code-active-line"],
   ];
 
   const table = Object.entries(tokenClasses).map(([colour, cls]) => ({
@@ -146,8 +146,8 @@ print(mean([1.5, 2.5, 3.5]), np.__version__)`;
 <PreviewSection id="accessibility" title="Accessibility">
   <ul class="grid max-w-prose list-disc gap-2 pl-6">
     <li>
-      Every text slot passes 4.5:1 on all six code grounds in both themes:
-      keywords and constants are <code>primary</code>, strings
+      Every text slot passes 4.5:1 on every code ground in both themes: keywords
+      and constants are <code>primary</code>, strings
       <code>success</code>, comments <code>muted-foreground</code>, invalid text
       and deletions <code>destructive</code>; numbers and escapes, functions,
       built-ins, types and keys take the five syntax colours, each derived to
@@ -162,7 +162,7 @@ print(mean([1.5, 2.5, 3.5]), np.__version__)`;
     </li>
     <li>
       Colour is never the only sign in a diff: an added or removed line also
-      carries its <code>+</code> or <code>−</code> marker and the opaque card step.
+      carries its <code>+</code> or <code>−</code> marker and the active line.
     </li>
     <li>
       Call <code>highlightCode</code> in a <code>load</code> function for static code:

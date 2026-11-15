@@ -406,3 +406,41 @@ export function glassRingRows(tokens: Tokens): ContrastRow[] {
     })),
   );
 }
+
+/**
+ * A colour in OKLab (Björn Ottosson, "A perceptual color space for image
+ * processing", 2020): linear sRGB to LMS, the cube root, then to L, a, b.
+ */
+function oklab(hex: string): [number, number, number] {
+  const { r, g, b } = parseHex(hex);
+  const [lr, lg, lb] = [linear(r), linear(g), linear(b)];
+  const l = Math.cbrt(
+    0.4122214708 * lr + 0.5363325363 * lg + 0.0514459929 * lb,
+  );
+  const m = Math.cbrt(
+    0.2119034982 * lr + 0.6806995451 * lg + 0.1073969566 * lb,
+  );
+  const s = Math.cbrt(
+    0.0883024619 * lr + 0.2817188376 * lg + 0.6299787005 * lb,
+  );
+  return [
+    0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s,
+    1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s,
+    0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s,
+  ];
+}
+
+/** 014 decision 8: ΔE, the OKLab distance of two opaque colours × 100. */
+export function deltaE(a: string, b: string): number {
+  const [l1, a1, b1] = oklab(a);
+  const [l2, a2, b2] = oklab(b);
+  return Math.hypot(l1 - l2, a1 - a2, b1 - b2) * 100;
+}
+
+/** 014 decision 8: `t` of the way from `a` to `b`, in sRGB, each channel rounded. */
+export function mix(a: string, b: string, t: number): string {
+  const ca = parseHex(a);
+  const cb = parseHex(b);
+  const at = (x: number, y: number) => Math.round(x + (y - x) * t);
+  return toHex({ r: at(ca.r, cb.r), g: at(ca.g, cb.g), b: at(ca.b, cb.b) });
+}

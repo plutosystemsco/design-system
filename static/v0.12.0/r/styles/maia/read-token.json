@@ -1,0 +1,27 @@
+{
+	"$schema": "https://shadcn-svelte.com/schema/registry-item.json",
+	"name": "read-token",
+	"title": "Read token",
+	"type": "registry:lib",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+	"description": "Reads the theme's runtime variables from script: a token's value, a duration in milliseconds, an easing curve, and a tween that animates a number over them.",
+	"registryDependencies": [
+		"utils",
+		"pluto-theme"
+	],
+	"meta": {
+		"since": "0.11.0",
+		"group": "foundation",
+		"modes": [
+			"productive",
+			"expressive"
+		]
+	},
+	"files": [
+		{
+			"content": "/**\n * Reads the theme's runtime variables from script, so a canvas, a count-up or\n * a meter takes its colour and its timing from the one source the stylesheet\n * uses.\n *\n * A name is a variable's name without its two dashes: `mark-1`,\n * `motion-reveal`, `ease-standard`. Only runtime variables read back: the\n * theme's colours and the values on `:root`. A Tailwind theme value such as\n * `text-xs` is inlined into utilities and reads empty.\n *\n * Call these in the browser. On the server there is no document, and\n * `readToken` returns an empty string.\n */\n\n/** The value of `--<name>` on `element`, or on the root, trimmed. */\nexport function readToken(name: string, element?: Element): string {\n  if (typeof document === \"undefined\") return \"\";\n  const value = getComputedStyle(element ?? document.documentElement)\n    .getPropertyValue(\"--\" + name)\n    .trim();\n  // A misspelled name reads empty; say so while developing.\n  if (!value && import.meta.env?.DEV)\n    console.warn(`readToken: --${name} is empty here; check the name.`);\n  return value;\n}\n\n/** A duration token in milliseconds: 600 for `600ms` or `.6s`, 0 when it does not read. */\nexport function readDuration(name: string, element?: Element): number {\n  const match = /^(-?[\\d.]+)(ms|s)$/.exec(readToken(name, element));\n  if (!match) return 0;\n  const value = parseFloat(match[1]) * (match[2] === \"s\" ? 1000 : 1);\n  // `..ms` matches the pattern but is not a number.\n  return Number.isFinite(value) ? value : 0;\n}\n\n/**\n * The curve of a `cubic-bezier(x1, y1, x2, y2)` token as a function from\n * time to progress, both 0 to 1. The time is found on the curve's x by\n * Newton's method, with bisection where the slope is too flat. A token that\n * is not a cubic-bezier reads as linear.\n */\nexport function readEase(\n  name: string,\n  element?: Element,\n): (t: number) => number {\n  const match = /^cubic-bezier\\(([^)]*)\\)$/.exec(readToken(name, element));\n  const points = match?.[1].split(\",\").map((n) => parseFloat(n));\n  if (!points || points.length !== 4 || points.some(Number.isNaN))\n    return (t) => t;\n  const [x1, y1, x2, y2] = points as [number, number, number, number];\n  // One axis of the curve, from its two control values, at parameter s.\n  const axis = (s: number, a: number, b: number) =>\n    3 * (1 - s) * (1 - s) * s * a + 3 * (1 - s) * s * s * b + s * s * s;\n  const slope = (s: number, a: number, b: number) =>\n    3 * (1 - s) * (1 - s) * a + 6 * (1 - s) * s * (b - a) + 3 * s * s * (1 - b);\n  return (t) => {\n    if (t <= 0) return 0;\n    if (t >= 1) return 1;\n    let s = t;\n    for (let i = 0; i < 8; i++) {\n      const error = axis(s, x1, x2) - t;\n      if (Math.abs(error) < 1e-7) break;\n      const d = slope(s, x1, x2);\n      if (Math.abs(d) < 1e-6) break;\n      s -= error / d;\n    }\n    if (!(s >= 0 && s <= 1) || Math.abs(axis(s, x1, x2) - t) > 1e-6) {\n      let lo = 0;\n      let hi = 1;\n      s = t;\n      for (let i = 0; i < 40; i++) {\n        if (axis(s, x1, x2) < t) lo = s;\n        else hi = s;\n        s = (lo + hi) / 2;\n      }\n    }\n    return axis(s, y1, y2);\n  };\n}\n\nexport type TweenOptions = {\n  from: number;\n  to: number;\n  /** A duration token's name, such as `motion-fill`. */\n  duration: string;\n  /** An easing token's name, such as `ease-standard`. */\n  ease: string;\n  /** Where the tokens are read; the root when omitted. */\n  element?: Element;\n  onFrame: (value: number) => void;\n};\n\n/**\n * Animates a number from `from` to `to` over a duration token and an easing\n * token, calling `onFrame` once per animation frame. When the duration reads\n * 0, as it does under reduced motion, it calls `onFrame` once with `to` at\n * once. Returns a function that cancels the animation.\n */\nexport function tween(options: TweenOptions): () => void {\n  const { from, to, element, onFrame } = options;\n  const duration = readDuration(options.duration, element);\n  if (duration <= 0 || typeof requestAnimationFrame === \"undefined\") {\n    onFrame(to);\n    return () => {};\n  }\n  const curve = readEase(options.ease, element);\n  let start: number | undefined;\n  let frame = 0;\n  // Set by the cancel function, so a cancel from inside onFrame stops the\n  // frame that step would otherwise schedule after it.\n  let cancelled = false;\n  const step = (now: number) => {\n    start ??= now;\n    const progress = Math.min(1, (now - start) / duration);\n    onFrame(progress === 1 ? to : from + (to - from) * curve(progress));\n    if (progress < 1 && !cancelled) frame = requestAnimationFrame(step);\n  };\n  frame = requestAnimationFrame(step);\n  return () => {\n    cancelled = true;\n    cancelAnimationFrame(frame);\n  };\n}\n",
+			"type": "registry:lib",
+			"target": "read-token.ts"
+		}
+	]
+}

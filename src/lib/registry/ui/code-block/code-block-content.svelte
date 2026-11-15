@@ -62,7 +62,8 @@
 {/snippet}
 
 <!--
-  The one scroll container, with the scrollbar from tokens. Its focus
+  The one scroll container, with the scrollbar from tokens, its track the
+  code ground. Its focus
   indicator is drawn by the root, so it drops its own. It draws the groove
   under a header. Whitespace inside a <pre> is rendered, so its content is a
   snippet defined outside it, where Svelte trims whitespace.
@@ -76,7 +77,7 @@
   dir="ltr"
   {tabindex}
   class={cn(
-    "scrollbar min-h-0 min-w-0 overflow-auto px-4 py-3 text-start font-mono focus-visible:focus-ring-none group-data-[size=sm]/code-block:px-3 group-data-[size=sm]/code-block:py-2 group-has-data-[slot=code-block-header]/code-block:groove data-wrap:wrap-break-word data-wrap:whitespace-pre-wrap",
+    "scrollbar-code min-h-0 min-w-0 overflow-auto px-4 py-3 text-start font-mono focus-visible:focus-ring-none group-data-[size=sm]/code-block:px-3 group-data-[size=sm]/code-block:py-2 group-has-data-[slot=code-block-header]/code-block:groove data-wrap:wrap-break-word data-wrap:whitespace-pre-wrap",
     className,
   )}
   {...restProps}>{@render content()}</pre>

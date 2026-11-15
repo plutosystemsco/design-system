@@ -1003,7 +1003,7 @@
 		"title": "Code block",
 		"type": "registry:ui",
 		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-		"description": "Code, output or a diff on the muted inset, highlighted from the code tokens, with line numbers, a copy button and a header divided by the groove.",
+		"description": "Code, output or a diff on the code ground, edged by the hairline, highlighted from the code tokens, with line numbers, a copy button and a header divided by the groove.",
 		"registryDependencies": [
 			"utils",
 			"pluto-theme",

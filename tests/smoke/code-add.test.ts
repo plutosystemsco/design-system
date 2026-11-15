@@ -16,6 +16,7 @@ import {
   existsSync,
   mkdirSync,
   mkdtempSync,
+  readdirSync,
   readFileSync,
   rmSync,
   writeFileSync,
@@ -369,7 +370,7 @@ export const load = async () => ({
 
   // 007 decision 10: the surface's rules, the dark block's slots, the
   // by-product and one @lezer/highlight.
-  test("9. app.css holds .surface-ink { and .dark .surface-ink { once each, .surface-ink { after .dark {, 21 --code- lines in .dark and 21 derived @theme inline lines", () => {
+  test("9. app.css holds .surface-ink { and .dark .surface-ink { once each, .surface-ink { after .dark {, 21 --code- lines in :root and .dark on the syntax grounds, and 21 derived @theme inline lines", () => {
     const css = r.cssAfterFirst;
     // By block, not by line: the CLI indents a plain rule it appends.
     const preludes = blocks(css).map((b) => b.prelude);
@@ -379,11 +380,18 @@ export const load = async () => ({
     expect(preludes.indexOf(".dark")).toBeLessThan(
       preludes.indexOf(".surface-ink"),
     );
-    const dark = topLevelMap(css, ".dark");
-    expect(
-      [...dark.keys()].filter((k) => k.startsWith("--code-")),
-    ).toHaveLength(21);
-    expect(dark.get("--code-background")).toBe("var(--muted)");
+    // 014 decision 1: both theme blocks name the two code-only grounds.
+    for (const block of [":root", ".dark"]) {
+      const vars = topLevelMap(css, block);
+      expect(
+        [...vars.keys()].filter((k) => k.startsWith("--code-")),
+        block,
+      ).toHaveLength(21);
+      expect(vars.get("--code-background"), block).toBe("var(--syntax-ground)");
+      expect(vars.get("--code-active-line"), block).toBe(
+        "var(--syntax-active-line)",
+      );
+    }
     const surface = topLevelMap(css, ".surface-ink");
     expect(surface.get("--code-background")).toBe("var(--background)");
     expect(surface.get("--code-active-line")).toBe("var(--muted)");
@@ -396,6 +404,30 @@ export const load = async () => ({
     );
     expect(derived).toHaveLength(21);
     for (const [name, value] of derived) expect(value).toBe(`var(${name})`);
+  });
+
+  // 014 criterion 12: the code-ground scroll track reaches the app's built
+  // CSS, and the installed block draws the hairline.
+  test("9b. the app's built CSS holds .scrollbar-code and the inline-code chip on the code ground; its code-block.svelte holds border-border", () => {
+    const assets = path.join(r.app, "build", "_app", "immutable", "assets");
+    const css = readdirSync(assets)
+      .filter((f) => f.endsWith(".css"))
+      .map((f) => readFileSync(path.join(assets, f), "utf8"))
+      .join("\n");
+    expect(css).toContain(".scrollbar-code");
+    // 014 criterion 12: the inline-code chip, compiled. The minifier drops
+    // spaces after commas, so the selector is compared with them removed.
+    const flat = css.replace(/,\s+/g, ",");
+    const chip = "code:not(pre code,:is(h1,h2,h3,h4,h5,h6) code){";
+    const at = flat.indexOf(chip);
+    expect(at, "the chip rule").toBeGreaterThan(-1);
+    const body = flat.slice(at + chip.length, flat.indexOf("}", at));
+    expect(body).toMatch(/background-color:\s*var\(--code-background\)/);
+    const block = readFileSync(
+      path.join(r.app, "src/lib/components/ui/code-block/code-block.svelte"),
+      "utf8",
+    );
+    expect(block).toContain("border-border");
   });
 
   // The page's {#await} over loadLanguage is pending at prerender, so the

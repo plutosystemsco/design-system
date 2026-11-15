@@ -145,7 +145,7 @@ describe("002's additions to pluto-theme", () => {
 describe("004's additions to pluto-theme", () => {
   const SLOTS: [slot: string, semantic: string][] = [
     ["foreground", "foreground"],
-    ["background", "muted"],
+    ["background", "syntax-ground"],
     ["comment", "muted-foreground"],
     ["keyword", "primary"],
     ["constant", "primary"],
@@ -164,7 +164,7 @@ describe("004's additions to pluto-theme", () => {
     ["inserted", "success"],
     ["deleted", "destructive"],
     ["changed", "primary"],
-    ["active-line", "card"],
+    ["active-line", "syntax-active-line"],
   ];
   const theme = () =>
     items(readFileSync("registry.json", "utf8")).get("pluto-theme") as Item & {
@@ -202,14 +202,17 @@ describe("004's additions to pluto-theme", () => {
       expect(vars[`color-code-${slot}`]).toBe(`var(--code-${slot})`);
   });
 
-  // 007 decision 3: the five syntax pairs sit in both theme blocks.
-  test("cssVars.light and cssVars.dark each hold the 5 syntax-* names", () => {
+  // 007 decision 3: the five syntax pairs sit in both theme blocks; 014
+  // decision 1 adds the two code grounds after them.
+  test("cssVars.light and cssVars.dark each hold the 5 syntax-* colours and the 2 syntax-* grounds", () => {
     const names = [
       "syntax-orange",
       "syntax-amber",
       "syntax-purple",
       "syntax-teal",
       "syntax-cyan",
+      "syntax-ground",
+      "syntax-active-line",
     ];
     for (const block of ["light", "dark"] as const) {
       const vars = theme().cssVars[block];
@@ -226,6 +229,32 @@ describe("004's additions to pluto-theme", () => {
       "scrollbar-color": "var(--input) var(--muted)",
       "scrollbar-width": "thin",
     });
+  });
+
+  // 014 decision 5: the same bar, on the code ground, for scroll boxes inside code.
+  test("css holds @utility scrollbar-code: the input thumb on the code ground, thin", () => {
+    expect(theme().css["@utility scrollbar-code"]).toEqual({
+      "scrollbar-color": "var(--input) var(--code-background)",
+      "scrollbar-width": "thin",
+    });
+  });
+
+  // 014 decision 1: the two code-only roles carry the code grounds.
+  test("cssVars hold --syntax-ground and --syntax-active-line: #FFFFFF and #F3F0E8 in light, #2C2821 and #221F19 in dark", () => {
+    const { light, dark } = theme().cssVars;
+    expect([light["syntax-ground"], light["syntax-active-line"]]).toEqual([
+      "#FFFFFF",
+      "#F3F0E8",
+    ]);
+    expect([dark["syntax-ground"], dark["syntax-active-line"]]).toEqual([
+      "#2C2821",
+      "#221F19",
+    ]);
+    for (const vars of [light, dark]) {
+      expect(vars["code-background"]).toBe("var(--syntax-ground)");
+      expect(vars["code-active-line"]).toBe("var(--syntax-active-line)");
+    }
+    // `@theme inline`'s --color-syntax-* lines are app.css's, checked below.
   });
 
   test("css holds the meter's rules in @layer components, with 5 pseudo-elements and no radius", () => {
@@ -265,7 +294,7 @@ describe("004's additions to pluto-theme", () => {
     expect(bodies[0]).toContain("@apply font-mono;");
   });
 
-  test("src/app.css carries the 21 code variables in :root and in .dark, 21 color-code-* lines, 5 syntax-* per theme block, the utility and the meter rules", () => {
+  test("src/app.css carries the 21 code variables in :root and in .dark, 21 color-code-* lines, 7 syntax-* per theme block, the utilities and the meter rules", () => {
     const css = readFileSync("src/app.css", "utf8");
     for (const block of [":root", ".dark"]) {
       const vars = topLevelMap(css, block);
@@ -276,7 +305,7 @@ describe("004's additions to pluto-theme", () => {
       expect(
         [...vars.keys()].filter((k) => k.startsWith("--syntax-")),
         block,
-      ).toHaveLength(5);
+      ).toHaveLength(7);
     }
     const inline = topLevelMap(css, "@theme inline");
     expect(
@@ -284,8 +313,75 @@ describe("004's additions to pluto-theme", () => {
     ).toHaveLength(21);
     expect(css).toContain("--color-code-keyword: var(--code-keyword);");
     expect(css).toContain("@utility scrollbar {");
+    expect(css).toContain("@utility scrollbar-code {");
+    expect(css).toContain("--color-syntax-ground: var(--syntax-ground);");
+    expect(css).toContain(
+      "--color-syntax-active-line: var(--syntax-active-line);",
+    );
     expect(css).toContain("@layer components {");
     expect(css).toContain('[data-slot="meter"]::-moz-meter-bar');
+  });
+});
+
+/** 014 decision 15, criterion 15: inline code, a chip on the code ground. */
+describe("014's inline code", () => {
+  const CHIP = "code:not(pre code, :is(h1, h2, h3, h4, h5, h6) code)";
+  const LINK = "a code:not(pre code, :is(h1, h2, h3, h4, h5, h6) code)";
+  const base = () =>
+    (
+      items(readFileSync("registry.json", "utf8")).get(
+        "pluto-theme",
+      ) as Item & {
+        css: CssTree;
+      }
+    ).css["@layer base"] as CssTree;
+
+  test("@layer base holds the chip and the link rule, each one @apply of exactly its utilities, and no var(--code-…) of its own", () => {
+    expect(base()[CHIP]).toEqual({
+      "@apply rounded border border-border bg-code-background px-1 text-code-foreground box-decoration-clone":
+        {},
+    });
+    expect(base()[LINK]).toEqual({ "@apply text-code-link": {} });
+    expect(JSON.stringify(base()[CHIP])).not.toContain("var(--code-");
+    expect(JSON.stringify(base()[LINK])).not.toContain("var(--code-");
+  });
+
+  test("the mono rule is unchanged, and no other base rule names kbd, samp or pre", () => {
+    expect(base()["code, kbd, samp, pre"]).toEqual({
+      "font-variant-ligatures": "none",
+    });
+    const others = Object.keys(base()).filter(
+      (k) => k !== "code, kbd, samp, pre" && /\b(kbd|samp)\b/.test(k),
+    );
+    expect(others).toEqual([]);
+    const pre = Object.keys(base()).filter(
+      (k) => k !== "code, kbd, samp, pre" && /\bpre\b/.test(k),
+    );
+    expect(pre).toEqual([CHIP, LINK]);
+  });
+
+  test("src/app.css holds the two rules inside @layer base", () => {
+    const css = readFileSync("src/app.css", "utf8");
+    const layer = css.slice(css.indexOf("@layer base {"));
+    const body = layer.slice(0, layer.indexOf("\n}\n"));
+    const flat = body.replace(/\s+/g, " ");
+    expect(flat).toContain(
+      `${CHIP} { @apply rounded border border-border bg-code-background px-1 text-code-foreground box-decoration-clone; }`,
+    );
+    expect(flat).toContain(`${LINK} { @apply text-code-link; }`);
+  });
+
+  test("the preview's install line takes the code ground and the hairline, not bg-muted", () => {
+    const text = readFileSync("src/lib/preview/install-command.svelte", "utf8");
+    const classes = /<code\s+class="([^"]*)"/.exec(text)![1]!.split(/\s+/);
+    for (const cls of [
+      "border",
+      "border-border",
+      "bg-code-background",
+      "text-code-foreground",
+    ])
+      expect(classes, cls).toContain(cls);
+    expect(classes).not.toContain("bg-muted");
   });
 });
 
@@ -812,6 +908,21 @@ const MOVED_011: Record<":root" | ".dark", Record<string, string>> = {
     "--syntax-amber": "#f19e20",
   },
 };
+/**
+ * 014 decision 1 moves the two code grounds onto code-only roles. These are
+ * the two v0.8.0 variables whose values move again; each is named, so no
+ * other moves silently (constitution §6).
+ */
+const MOVED_014: Record<":root" | ".dark", Record<string, string>> = {
+  ":root": {
+    "--code-background": "var(--syntax-ground)",
+    "--code-active-line": "var(--syntax-active-line)",
+  },
+  ".dark": {
+    "--code-background": "var(--syntax-ground)",
+    "--code-active-line": "var(--syntax-active-line)",
+  },
+};
 describe("v0.8.0's custom properties (criterion 2)", () => {
   const fixture = JSON.parse(
     readFileSync("tests/unit/fixtures/v0.8.0-custom-properties.json", "utf8"),
@@ -837,12 +948,30 @@ describe("v0.8.0's custom properties (criterion 2)", () => {
         ).not.toBe(value);
   });
 
+  test("014 moves 2 properties of :root and 2 of .dark, none listed by 011", () => {
+    for (const block of [":root", ".dark"] as const) {
+      expect(Object.keys(MOVED_014[block])).toHaveLength(2);
+      for (const [name, value] of Object.entries(MOVED_014[block])) {
+        expect(name in MOVED_011[block], `${block} ${name}`).toBe(false);
+        expect(
+          (fixture[block] as Record<string, string>)[name],
+          `${block} ${name}`,
+        ).not.toBe(value);
+      }
+    }
+  });
+
   test.each([":root", ".dark", "@theme inline"])(
-    "%s keeps every v0.8.0 property at its value, but for those 011 moves, which read their 0.11.0 value",
+    "%s keeps every v0.8.0 property at its value, but for those 011 and 014 move, which read their 0.12.0 value",
     (block) => {
       const now = topLevelMap(css, block);
       const moved =
-        block === "@theme inline" ? {} : MOVED_011[block as ":root" | ".dark"];
+        block === "@theme inline"
+          ? {}
+          : {
+              ...MOVED_011[block as ":root" | ".dark"],
+              ...MOVED_014[block as ":root" | ".dark"],
+            };
       const changed = Object.entries(fixture[block] as Record<string, string>)
         .map(([name, value]) => [name, moved[name] ?? value] as const)
         .filter(([name, value]) => now.get(name) !== value);

@@ -10,6 +10,6 @@
 </script>
 
 <code
-  class="block rounded bg-muted px-3 py-2 text-sm break-all whitespace-pre-wrap text-foreground"
+  class="block rounded border border-border bg-code-background px-3 py-2 text-sm break-all whitespace-pre-wrap text-code-foreground"
   >REGISTRY_URL={registry} bunx --bun shadcn-svelte@1.7.1 add {name} -y</code
 >

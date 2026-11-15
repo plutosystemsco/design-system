@@ -22,6 +22,13 @@
 
   let { data }: PageProps = $props();
 
+  // 014 decision 11: the two code-only grounds, with their values.
+  const codeGrounds = $derived(
+    data.swatches.filter((s) =>
+      ["syntax-ground", "syntax-active-line"].includes(s.name),
+    ),
+  );
+
   // The ink surface (007 decision 9): one preset, made once; the surface
   // element is the portal target for every overlay opened inside it.
   const python = pythonSetup();
@@ -287,12 +294,28 @@
     page takes the dark palette. The
     <code>scrollbar</code> utility colours a native scroll box's thumb and track
     from <code>input</code> and <code>muted</code>; the pattern is
-    <code>overflow-auto scrollbar</code> with <code>tabindex="0"</code> and a label.
+    <code>overflow-auto scrollbar</code> with <code>tabindex="0"</code> and a
+    label. The <code>scrollbar-code</code> utility is the same bar on the code ground,
+    for a scroll box inside code.
   </p>
+  <dl class="mt-4 grid gap-2 text-sm" data-testid="code-grounds">
+    {#each codeGrounds as swatch (swatch.name)}
+      <div class="flex flex-wrap items-center gap-2">
+        <dt><code>{swatch.name}</code></dt>
+        <dd class="font-mono text-xs text-muted-foreground">
+          <span class="dark:hidden">{swatch.light}</span>
+          <span class="hidden dark:inline">{swatch.dark}</span>
+          {swatch.name === "syntax-ground"
+            ? "· the code ground, --code-background"
+            : "· the active line, --code-active-line"}
+        </dd>
+      </div>
+    {/each}
+  </dl>
   <div class="mt-6 flex flex-wrap items-start gap-12">
     <div class="flex flex-col items-start gap-2">
       <pre
-        class="rounded bg-code-background px-4 py-3 font-mono text-sm text-code-foreground"><code
+        class="rounded border border-border bg-code-background px-4 py-3 font-mono text-sm text-code-foreground"><code
           ><span data-token="text-code-keyword" class="text-code-keyword"
             >def</span
           > <span class="text-code-function font-medium">area</span>(r):
@@ -321,7 +344,78 @@
       </div>
       <code class="text-xs">overflow-auto scrollbar</code>
     </div>
+    <div class="flex flex-col items-start gap-2">
+      <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+      <div
+        data-token="scrollbar-code"
+        role="region"
+        aria-label="A scroll box on the code ground"
+        tabindex="0"
+        class="w-64 overflow-auto rounded border border-border bg-code-background p-3 font-mono text-sm whitespace-nowrap text-code-foreground scrollbar-code"
+      >
+        A scroll box inside code, whose track is the code ground. This line is
+        longer than the box so that it scrolls.
+      </div>
+      <code class="text-xs">overflow-auto scrollbar-code</code>
+    </div>
   </div>
+</section>
+
+<section class="mt-16" aria-labelledby="inline-code">
+  <h2 id="inline-code" class="text-2xl font-bold tracking-section">
+    Inline code
+  </h2>
+  <p class="mt-2 max-w-prose text-sm" data-testid="inline-p">
+    A <code>code</code> element in running text, not inside a <code>pre</code>,
+    is a chip on the code ground, edged by the hairline, as a block is: the case
+    radius, 4 px of side padding and none above or below, so the line keeps its
+    height. A long token such as
+    <code>bunx --bun shadcn-svelte@1.7.1 add code-block code-editor -y</code>
+    wraps, and each piece keeps its edge. Inside a link the chip takes the link's
+    colour, as in
+    <a
+      href="#inline-code"
+      class="text-primary underline underline-offset-4"
+      data-testid="inline-link">the <code>scrollbar-code</code> utility</a
+    >. A class an item sets on its own <code>code</code> wins.
+  </p>
+  <h3 class="mt-6 text-base font-bold" data-testid="inline-h3">
+    No chip in a heading:
+    <code>code:not(pre code, :is(h1, h2, h3, h4, h5, h6) code)</code>
+  </h3>
+  <p class="mt-2 max-w-prose text-sm text-muted-foreground">
+    Code in a heading keeps the mono face and the heading's colour, size and
+    weight. A chip would stand taller than a heading's tight line.
+  </p>
+  <div class="mt-6 grid max-w-prose gap-2">
+    <p class="text-xs" data-testid="inline-line-xs">
+      Run <code>bun test</code> in text-xs.
+    </p>
+    <p class="text-xs" data-testid="inline-twin-xs">
+      Run <span class="font-mono">bun test</span> in text-xs.
+    </p>
+    <p class="text-sm" data-testid="inline-line-sm">
+      Run <code>bun test</code> in text-sm.
+    </p>
+    <p class="text-sm" data-testid="inline-twin-sm">
+      Run <span class="font-mono">bun test</span> in text-sm.
+    </p>
+    <p class="text-base" data-testid="inline-line-base">
+      Run <code>bun test</code> in text-base.
+    </p>
+    <p class="text-base" data-testid="inline-twin-base">
+      Run <span class="font-mono">bun test</span> in text-base.
+    </p>
+  </div>
+  <Card.Root class="mt-6 max-w-prose">
+    <Card.Content>
+      <p class="text-sm" data-testid="inline-card">
+        On a card the chip is white on white in light mode, told by its
+        hairline:
+        <code>--code-background</code>.
+      </p>
+    </Card.Content>
+  </Card.Root>
 </section>
 
 <section class="mt-16" aria-labelledby="surface">
@@ -350,8 +444,10 @@
             label="Surface example"
             extensions={python}
           />
-          <p class="text-sm text-muted-foreground">
-            The editor sits flush on the surface. Tab leaves it.
+          <p class="text-sm text-muted-foreground" data-testid="inline-surface">
+            The editor's ground is the surface, edged by the hairline, as inline <code
+              >code</code
+            > is. Tab leaves it.
           </p>
         </div>
         <CodeBlock.Root data-testid="surface-block">
@@ -465,9 +561,7 @@
     <code>contain</code>, or a portalled overlay inside it is clipped or
     re-anchored. The <code>.surface-ink</code> rule wins over
     <code>.dark</code> by source order, so it must stay after the
-    <code>.dark</code> block in an app's stylesheet, as the install writes it. A
-    code block that should stay an inset inside a surface, one inside a card or
-    a message, passes <code>class="bg-muted"</code>.
+    <code>.dark</code> block in an app's stylesheet, as the install writes it.
   </p>
   <ul class="mt-4 grid max-w-prose list-disc gap-2 pl-6 text-sm">
     <li>
@@ -481,7 +575,8 @@
     <li>
       A scroll box inside a surface draws its bar from the dark
       <code>input</code> on the dark <code>muted</code>, and
-      <code>color-scheme</code> is dark, so native controls draw dark too.
+      <code>color-scheme</code> is dark, so native controls draw dark too. A code
+      block's or editor's bar inside a surface draws its track on the surface itself.
     </li>
   </ul>
 </section>

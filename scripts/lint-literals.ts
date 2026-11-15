@@ -282,8 +282,14 @@ const NAMED_COLOURS = new Set(
     "steelblue tan teal thistle tomato turquoise violet wheat white whitesmoke yellow yellowgreen"
   ).split(" "),
 );
-/** 007 decision 3, L19: one of the five syntax colours, in any form. */
-const SYNTAX_COLOUR = /syntax-(?:orange|amber|purple|teal|cyan)\b/g;
+/**
+ * 007 decision 3, L19: a syntax colour, in any form. 014 decision 9 gives one
+ * pattern for 0.12.0: `v0.11.0`'s five colours, `013`'s nine and `014`'s two
+ * code grounds. A name absent from the token file is wrong in an item either
+ * way; an item reaches the code ground through `--code-*` alone.
+ */
+export const SYNTAX_COLOUR =
+  /syntax-(?:orange|amber|purple|teal|cyan|violet|blue|navy|green|yellow|plum|red|grey|ink|ground|active-line)\b/g;
 const LENGTH =
   /\d(?:px|rem|em|ex|ch|vh|vw|vmin|vmax|svh|lvh|dvh|cm|mm|in|pt|pc|q|%)(?![a-z])/i;
 const VAR_FORM = /^\(--[\w-]+\)$/;
