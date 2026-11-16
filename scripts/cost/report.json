@@ -54,9 +54,9 @@
     "outputHash": "67b6685c60a3cfc6a165e21ebdbabcdbfffdf61cd4008a2903e4f22b98e3ad55"
   },
   "catalogue": {
-    "js": 373777,
-    "css": 16584,
-    "sumOfAlone": { "js": 1085672, "css": 59980 }
+    "js": 373795,
+    "css": 16582,
+    "sumOfAlone": { "js": 1085760, "css": 59980 }
   },
   "items": {
     "utils": {
@@ -1119,16 +1119,16 @@
       "cases": {}
     },
     "code-block": {
-      "hash": "5dd812bfb22c0230c044def07711d9b99c34932ee1e050ec213cbb25c73f50d2",
+      "hash": "a0258f79b55ce62bf88e0eee22a1f04f5a37a575bbfafeac3799ca7e6055600c",
       "runtimeHash": "67f605a7fc71e7b23d3a5cb4b31b523162266d812c1e5d450cc1f952f45c22f2",
-      "outputHash": "b66ae80be883a8faa120c2c9d728bd26d50a5c4e85465869ab5a44980cf54706",
+      "outputHash": "d3e834d3908fd4db807039e5cbab82bc73c75339266c2b2a8bab2d2f4829cbaa",
       "run": "2026-11-16T06:27:03.737Z",
       "size": {
-        "js": 25566,
+        "js": 25587,
         "css": 2444,
         "lazy": 382311,
         "assets": 2147405,
-        "brotli": { "js": 22401, "css": 2134 }
+        "brotli": { "js": 22414, "css": 2134 }
       },
       "hydrate": { "ms": 59.3, "spread": [50.6, 75.2], "settledMs": 347.3 },
       "interaction": {
@@ -1143,14 +1143,14 @@
       },
       "route": "/",
       "breakdown": [
-        { "source": "item:highlighter", "js": 8613 },
-        { "source": "runtime", "js": 6228 },
-        { "source": "package:tailwind-variants", "js": 4630 },
-        { "source": "package:phosphor-svelte", "js": 2422 },
-        { "source": "own", "js": 2374 },
+        { "source": "item:highlighter", "js": 8615 },
+        { "source": "runtime", "js": 6230 },
+        { "source": "package:tailwind-variants", "js": 4631 },
+        { "source": "package:phosphor-svelte", "js": 2423 },
+        { "source": "own", "js": 2375 },
         { "source": "item:button", "js": 623 },
-        { "source": "item:use-highlighted-code", "js": 302 },
-        { "source": "item:spinner", "js": 231 },
+        { "source": "item:use-highlighted-code", "js": 317 },
+        { "source": "item:spinner", "js": 230 },
         { "source": "item:status", "js": 143 }
       ],
       "cases": {}
@@ -1221,23 +1221,23 @@
       "cases": {}
     },
     "use-highlighted-code": {
-      "hash": "d01c4dee5e7aee18cd5be43195a98a5cc6be10915665c2062f00b1c8e786e5e2",
+      "hash": "204c2d24b1dca3540efea5a1ec1741e08cca65c52d89756f963e5c970468a397",
       "runtimeHash": "c41d94bf5055b0602e716f8eddfb427782011bbf4847473991a6d9806dd43ced",
-      "outputHash": "241c3f03d88ac15c3afc78461d9cc4479c50141b94ff0c5bb38a5827bc635113",
+      "outputHash": "c9a6366fd98542e80c323e712f99c5f0e9e0d96c974b754498b9a09b614defbc",
       "run": "2026-11-16T06:27:03.737Z",
       "size": {
-        "js": 11171,
+        "js": 11194,
         "css": 418,
         "lazy": 382311,
         "assets": 2147405,
-        "brotli": { "js": 9963, "css": 336 }
+        "brotli": { "js": 9984, "css": 336 }
       },
       "hydrate": { "ms": 11.5, "spread": [4.4, 28.9], "settledMs": 284.7 },
       "interaction": null,
       "route": "/",
       "breakdown": [
-        { "source": "item:highlighter", "js": 10433 },
-        { "source": "own", "js": 489 },
+        { "source": "item:highlighter", "js": 10437 },
+        { "source": "own", "js": 508 },
         { "source": "runtime", "js": 249 }
       ],
       "cases": {}
@@ -1686,16 +1686,16 @@
       "cases": {}
     },
     "stage-card": {
-      "hash": "344b0732d57f1633cfeb7062c5848da54e65dcdd9a314061a1ea051a9f0cc076",
+      "hash": "ae675eb9d58894c77e31343e044bdb171e56b36faadc449eb773ff475d484907",
       "runtimeHash": "c93e9483f5e8ee3aa15165f357de088c4ba5c7a92c49179b97fa9f6bd319dafb",
-      "outputHash": "826db8ca0934d7992e3013907057a3efa429be16c6f5649c932a33ac0600a249",
+      "outputHash": "d4c538cdb9f8ec66b62f61d73ed9105babedceb980e787f42e4ca43a98471556",
       "run": "2026-11-16T06:27:03.737Z",
       "size": {
-        "js": 26966,
+        "js": 26989,
         "css": 2629,
         "lazy": 382311,
         "assets": 2147405,
-        "brotli": { "js": 23083, "css": 2292 }
+        "brotli": { "js": 23113, "css": 2292 }
       },
       "hydrate": { "ms": 60.5, "spread": [55.5, 96.1], "settledMs": 335.9 },
       "interaction": {
@@ -1710,16 +1710,16 @@
       },
       "route": "/",
       "breakdown": [
-        { "source": "item:highlighter", "js": 8799 },
-        { "source": "runtime", "js": 6363 },
-        { "source": "package:tailwind-variants", "js": 4732 },
-        { "source": "package:phosphor-svelte", "js": 2477 },
+        { "source": "item:highlighter", "js": 8801 },
+        { "source": "runtime", "js": 6365 },
+        { "source": "package:tailwind-variants", "js": 4733 },
+        { "source": "package:phosphor-svelte", "js": 2478 },
         { "source": "item:code-block", "js": 2157 },
         { "source": "own", "js": 1110 },
         { "source": "item:button", "js": 638 },
-        { "source": "item:use-highlighted-code", "js": 308 },
+        { "source": "item:use-highlighted-code", "js": 324 },
         { "source": "item:spinner", "js": 236 },
-        { "source": "item:status", "js": 146 }
+        { "source": "item:status", "js": 147 }
       ],
       "cases": {}
     },
@@ -1816,16 +1816,16 @@
       "cases": {}
     },
     "live-console": {
-      "hash": "fe0dd173d68c5607286cbb0a78f7009e408fe6d0b4ed64dd7b3c412382eb6a33",
+      "hash": "e67ccd0fc52669c5290b472bda1de8ffc02a587ccf6358b98a3f5713f0798d09",
       "runtimeHash": "8dee81d3cd48522547dfba8dfd21c7f72638512ce46ef35f441db6f3734b16fb",
-      "outputHash": "4bbe53f9e69ce0bc3988033ceb7004011c797ba3145554a8f3854cd400506717",
+      "outputHash": "0f76a8c2d9923c92ad28130fc79047a85f01b967658d26578c72e3ae576730ff",
       "run": "2026-11-16T06:27:03.737Z",
       "size": {
-        "js": 33138,
+        "js": 33159,
         "css": 3104,
         "lazy": 382311,
         "assets": 2147405,
-        "brotli": { "js": 29088, "css": 2707 }
+        "brotli": { "js": 29103, "css": 2707 }
       },
       "hydrate": { "ms": 79.6, "spread": [75.1, 98.9], "settledMs": 344.8 },
       "interaction": {
@@ -1840,11 +1840,11 @@
       },
       "route": "/",
       "breakdown": [
-        { "source": "item:highlighter", "js": 8510 },
-        { "source": "runtime", "js": 6939 },
-        { "source": "package:tailwind-variants", "js": 4576 },
-        { "source": "package:bits-ui", "js": 3043 },
-        { "source": "package:svelte-toolbelt", "js": 1785 },
+        { "source": "item:highlighter", "js": 8511 },
+        { "source": "runtime", "js": 6941 },
+        { "source": "package:tailwind-variants", "js": 4577 },
+        { "source": "package:bits-ui", "js": 3044 },
+        { "source": "package:svelte-toolbelt", "js": 1786 },
         { "source": "own", "js": 1602 },
         { "source": "item:code-block", "js": 1266 },
         { "source": "package:runed", "js": 1143 },
@@ -1853,7 +1853,7 @@
         { "source": "item:button", "js": 618 },
         { "source": "package:inline-style-parser", "js": 535 },
         { "source": "item:read-token", "js": 355 },
-        { "source": "item:use-highlighted-code", "js": 298 },
+        { "source": "item:use-highlighted-code", "js": 313 },
         { "source": "item:spinner", "js": 228 },
         { "source": "item:status", "js": 142 },
         { "source": "item:meter", "js": 135 },
@@ -2178,16 +2178,16 @@
       "cases": {}
     },
     "chat": {
-      "hash": "493f5b4f21537711acd125234bae7881e6af25fac3b6b5ab530707f8c4be28b6",
+      "hash": "d6e0eb2e74c258bb099f4347b6c7a7c466c3fdefc0676c1e10bf5b36700a15fc",
       "runtimeHash": "465b34e0242ba4e1523a8b07bca8501f593ebeab0b649c600bc89981a15d0538",
-      "outputHash": "1e061167acfaf189a0b7d4a08d088d66c1d9b414879ae8f5673bbf282b28649f",
+      "outputHash": "d6ce6fcb7263db04f722a509c902e3ea2d70996f6a0e6c4c7076ff846ec96e3b",
       "run": "2026-11-16T06:27:03.737Z",
       "size": {
-        "js": 38613,
+        "js": 38632,
         "css": 4906,
         "lazy": 382558,
         "assets": 2147405,
-        "brotli": { "js": 33422, "css": 4193 }
+        "brotli": { "js": 33410, "css": 4193 }
       },
       "hydrate": { "ms": 106.9, "spread": [89.7, 123], "settledMs": null },
       "interaction": {
@@ -2202,13 +2202,13 @@
       },
       "route": "/chat",
       "breakdown": [
-        { "source": "item:highlighter", "js": 7903 },
-        { "source": "runtime", "js": 6843 },
-        { "source": "package:phosphor-svelte", "js": 4632 },
+        { "source": "item:highlighter", "js": 7904 },
+        { "source": "runtime", "js": 6844 },
+        { "source": "package:phosphor-svelte", "js": 4633 },
         { "source": "package:tailwind-variants", "js": 4249 },
         { "source": "own", "js": 2796 },
-        { "source": "item:code-block", "js": 1942 },
-        { "source": "item:field", "js": 1513 },
+        { "source": "item:code-block", "js": 1943 },
+        { "source": "item:field", "js": 1514 },
         { "source": "package:svelte-toolbelt", "js": 1428 },
         { "source": "item:composer", "js": 1112 },
         { "source": "item:message-log", "js": 759 },
@@ -2220,7 +2220,7 @@
         { "source": "package:inline-style-parser", "js": 497 },
         { "source": "package:bits-ui", "js": 487 },
         { "source": "item:marker", "js": 412 },
-        { "source": "item:use-highlighted-code", "js": 277 },
+        { "source": "item:use-highlighted-code", "js": 291 },
         { "source": "item:spinner", "js": 212 },
         { "source": "item:textarea", "js": 211 },
         { "source": "item:label", "js": 150 },
@@ -2231,23 +2231,23 @@
       "cases": {}
     },
     "product-home": {
-      "hash": "c57d281aca46c17891fc4f6babba63f5a0792629071d39ef328d0e58bccf7fff",
+      "hash": "cb8df805a6163e4cf0930ded65908e845d755ef624adb18d91c1630885ae1c7d",
       "runtimeHash": "759bbdb71cd83d6dd90f202e64b1c11f5d73cebf44c9fd8efce7d6a244835bf4",
-      "outputHash": "13ea751afa138ae8e71310d67bd3af8d098ec0eee4de3f8f2a52a644e3baeeec",
+      "outputHash": "6c6ad98abb1d76557377dd143a5e37dbb582d0925765fad9055f78843054e1a3",
       "run": "2026-11-16T06:27:03.737Z",
       "size": {
-        "js": 53931,
+        "js": 53950,
         "css": 5673,
         "lazy": 382551,
         "assets": 2147405,
-        "brotli": { "js": 45686, "css": 4712 }
+        "brotli": { "js": 45761, "css": 4712 }
       },
       "hydrate": { "ms": 190.5, "spread": [178.4, 220.1], "settledMs": null },
       "interaction": null,
       "route": "/product-home",
       "breakdown": [
-        { "source": "package:bits-ui", "js": 12005 },
-        { "source": "item:highlighter", "js": 7871 },
+        { "source": "package:bits-ui", "js": 12006 },
+        { "source": "item:highlighter", "js": 7872 },
         { "source": "runtime", "js": 7055 },
         { "source": "package:tailwind-variants", "js": 4233 },
         { "source": "package:phosphor-svelte", "js": 3498 },
@@ -2257,7 +2257,7 @@
         { "source": "item:live-console", "js": 1366 },
         { "source": "item:marketing-bar", "js": 1198 },
         { "source": "item:sheet", "js": 1177 },
-        { "source": "package:runed", "js": 1060 },
+        { "source": "package:runed", "js": 1061 },
         { "source": "item:marketing-footer", "js": 953 },
         { "source": "own", "js": 918 },
         { "source": "item:stage-card", "js": 907 },
@@ -2266,15 +2266,15 @@
         { "source": "item:proof-band", "js": 656 },
         { "source": "item:button", "js": 572 },
         { "source": "package:inline-style-parser", "js": 495 },
-        { "source": "item:four-dot", "js": 477 },
+        { "source": "item:four-dot", "js": 478 },
         { "source": "item:cta-band", "js": 369 },
         { "source": "item:read-token", "js": 329 },
-        { "source": "item:use-highlighted-code", "js": 276 },
+        { "source": "item:use-highlighted-code", "js": 290 },
         { "source": "item:spinner", "js": 211 },
         { "source": "item:stage", "js": 209 },
         { "source": "item:liquid-glass", "js": 169 },
         { "source": "item:name-strip", "js": 147 },
-        { "source": "item:status", "js": 131 },
+        { "source": "item:status", "js": 132 },
         { "source": "item:meter", "js": 125 },
         { "source": "package:style-to-object", "js": 90 }
       ],

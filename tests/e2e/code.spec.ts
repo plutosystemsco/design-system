@@ -529,6 +529,34 @@ test.describe("the gallery", () => {
       page.getByTestId("role-table").locator("tbody tr"),
     ).toHaveCount(16);
   });
+
+  // 024e: `useHighlightedCode` loads nothing while its code is empty. The
+  // page's streaming block has Python set and no code until Start, so on
+  // load the page fetches no `.wasm`; the first chunk fetches the runtime
+  // and Python's grammar, each once, and the block colours.
+  test("024e. on load the highlighter page fetches no .wasm; Start fetches the runtime and Python's grammar once each, and the block colours", async ({
+    page,
+  }) => {
+    const wasm: string[] = [];
+    page.context().on("request", (r) => {
+      const path = new URL(r.url()).pathname;
+      if (path.endsWith(".wasm")) wasm.push(path.split("/").pop()!);
+    });
+    await open(page, componentPath("highlighter"));
+    await page.waitForLoadState("networkidle");
+    expect.soft(wasm, ".wasm requests on load").toEqual([]);
+    const block = page.getByTestId("growing-block");
+    await page.getByRole("button", { name: "Start", exact: true }).click();
+    await expect(
+      block.locator("span[class*='text-code-']").first(),
+    ).toBeVisible();
+    await expect(page.getByText("Highlighted as it arrived")).toBeVisible();
+    await page.waitForLoadState("networkidle");
+    expect(
+      wasm.map((f) => f.split(".")[0]).sort(),
+      "the runtime and Python's grammar, each once",
+    ).toEqual(["tree-sitter-python", "web-tree-sitter"]);
+  });
 });
 
 /** Each non-whitespace character of a block, with the role class its span carries. */
