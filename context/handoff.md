@@ -1,38 +1,49 @@
 # Handoff
 
 - **Status:** the state of the work, replaced at each release.
-- **Date:** 2026-11-15
+- **Date:** 2026-11-16
 
 ## State
 
-`v0.11.0` (2026-11-07) is the last tag. `0.12.0` is built on the `release/0.12.0` branch and not yet tagged. `package.json` reads 0.12.0, `static/v0.12.0/` is built, and the changelog has one 0.12.0 entry. Nothing is pushed.
+**Overnight, 2026-11-15 to 16** (the owner delegated decisions to the design lead: "work autonomously and do not ask questions. Use sound judgment and precedence"). Everything is on `release/0.13.0`, local only; nothing is pushed. Each landing below had a change review by an agent that did not build it, its fixes, a merge commit, and its worktree removed.
 
-The system is now the **Kuiper Design System**, a public product any team may adopt (the owner, 2026-11-15). Code names stay `pluto` until 0.13.0.
+Landed on `release/0.13.0`, in order (each spec's Landing notes hold its figures and rulings):
 
-Committed on `release/0.12.0`, one commit per specification:
+1. `020a` the site's CSS reads only code (−8.7 kB gzipped of CSS on every page). `020b` the upgrade guide's renames fit the column.
+2. `027a` link, button group, progress. `026` toast (D2 screen-reader files at `022`'s merge; D3 cost at `025`'s).
+3. `021` tokens as DTCG 2025.10, with a resolver and published files; built CSS byte-identical. Row 5: 1 → 4.
+4. `023a` API types break only between words. `022` the test matrix: seven projects, the fault ledger, the screen-reader suite, mutation sets, CI (waits on push B).
+5. `024` budgets per template (nine templates after `024d`). `025` component cost (budgets for every item; row 15: 0 → 2).
+6. `024d` the theme page loads no editor (760.9 → 462 kB). `024b` the site stops shipping the whole registry (−11.4 kB on every page; Button 375 → 364 kB).
+7. `023` prop doc comments: every one of 1,127 prop rows described; the API table in three columns. Row 2: 2 → 3.
+8. `024c` component headers hold still (CLS 0.09 → 0). `022b`, `022c`, `022d` three Firefox faults (ledger 27 → 8).
+9. `027b` pagination, search field, tag. Row 1: 35 of 40, score 4.
 
-1. **`014`, the white light-mode code ground**, with inline code on the code ground.
-2. **`013`, code highlighted by tree-sitter** in Meridian's roles, with the Tombaugh palette.
-3. **`016`, the brand yellow**: `#E2B000` light, `#F8D874` dark.
-4. **`015`, the design site**: the four doors, 75 component pages, search, Markdown twins and `llms.txt`.
-5. **`017`, Start, Brand and Foundations**: 21 pages and the six downloads.
-6. **The follow-up**: dark `type` `#A8C0D8`, `kbd` on the code ground, the site's address.
-7. **`018`, site polish**: the left navigation, the component-first page, thumbnails, search aliases, and the Kuiper name (`ea1f9bd`).
+The scorecard's rows 1–14 read 37 (32 at `020`), row 15 reads 2. Button is about 366 kB under a 445 kB `component` budget. The last gates on the merged trees: `check` 0 errors; unit about 1,850 pass; Chromium e2e green bar load timeouts that pass alone; `release-check --before-ci` exits 0; the full release check refuses only on CI evidence and the 8 ledger lines.
 
-**`019`, the error summary**, is built and change-reviewed, uncommitted. The review reads "Lands, once finding 1 is settled" (`reviews/019-the-error-summary-pr-2026-11-15.md`). Its findings are being fixed. The alert moves inside the summary, and a link brings the field's label into view.
+**Still building when the night ended** (worktrees in `.claude/worktrees/`, not merged):
 
-The tree holds 75 items. The last runs, on `019`'s build: unit 1206 pass; e2e 2738 passed, 11 skipped; smoke 132 pass; `check` 0 errors; lint clean; literal lint 0 violations and 1 allowance (L24); the release check exits 0. One timing test (`highlight-session.test.ts`, 4 ms p95) is flaky under load.
+- `026`'s D1, the toaster mounted in `app-shell` (reviewed, "land after two small fixes"; the fixes and the merge with `d79ce59` were under way).
+- `024e`, `022a`, `022e`, three lane-I small changes (built, not yet reviewed).
 
-**The rules changed today.** The constitution, `AGENTS.md` and `README.md` were amended from the older-rules audit (`research/2026-11-15-older-rules-audit.md`, "Applied 2026-11-15"). In short: breadth follows the roadmap, accessibility is proven across three engines and screen readers from 0.13.0, the motion budget is gone, and small fixes have a lighter track.
+**Specs ready to build next:** `028` forced colours (amended overnight: `code-block` joins it; text on state fills uses the inverted pair with `forced-color-adjust: none`, option A), `029` scoped schemes (then `029a`), `030` the accessibility status (after the re-base sweep), then lane T in order `031a`, `031b`, `031`. Queued small changes and specs: `022f` (Firefox editor budgets, needs a quiet machine), `024f` (example source off first paint, a spec), `024g` (theme font fallbacks, a spec), `024h` (landings' preload), and one re-base sweep after `024e` lands, before `030`.
 
 ## Waiting on the owner
 
 - **`019`'s VoiceOver listen** passed by hand (`d8d658d`). Its script is retired by `022`: the scripted VoiceOver and NVDA runs are in every `matrix` run (`tests/sr/error-summary.sr.ts`).
 - **The release check, from `022`** (the design lead's ruling, 2026-11-15). The full check, `bun scripts/site/release-check.ts`, also needs an empty fault ledger and a green `matrix` push run of HEAD, so it exits 1 until push B's run and the small changes `022a` to `022f`. **A landing gate runs `bun scripts/site/release-check.ts --before-ci`**, which skips those two, names them, and exits 0 when the rest pass. The tag uses the full check.
-- **`022`, the test matrix,** is built, reviewed, fixed and merged with `release/0.13.0` at `ba8694d` (020a, 020b, 027a, 026, 021) on its branch, and waits for push B: the first `matrix` run on GitHub (the owner pushes; agents never do). Its ledger and small changes `022a` onward are in `tests/fault-ledger.ts` and `context/specifications/022*.md`. `026`'s screen-reader files (its D2) were built at that merge; its A1 waits for the `app-shell` mount (D1).
+- **`022`, the test matrix,** is merged (`7edf047`). It waits for **push B**: the first `matrix` run on GitHub, then the owner's mutation dispatch. Agents never push. The ledger holds 8 lines (`022a` 4, `022e` 2, `022f` 2); `022a` and `022e` are built on a branch.
 
 The order to the tag: `019`'s fixes, its commit, the owner's listen, then the local `v0.12.0` tag.
 
+- **Rulings made under the overnight delegation, for the owner to confirm or reverse:**
+  - `031` Q1: the 25 high-contrast swatches approved as derived (three light swatches darkened for `sunken`).
+  - `031a`: card B as the owner chose; the restricted pairs extended to status fills and charts on `sunken`; a well resets its field roles.
+  - `031b` Q2's figures: disabled text 3:1 and edge 1.5:1, not the 4.5:1 and 3:1 the question's wording said (the question misstated them).
+  - `024`: nine templates, CLS 0.108 accepted until the re-base, `kuiper-theme` its own template; `024d`'s static specimen in place of the live editor.
+  - `023`: the three-column API table; three inert props (`FieldLegend.variant`, `ToggleGroupItem.size`, `.variant`) to 048 for deprecation.
+  - `028` decision 4 amended (option A) from `022b`'s finding.
+  - `027a`/`027b` checkpoints; `026`'s checkpoint and D1's `app-shell` cost raise (JS budget 79.1 → 89.5 kB).
 - **`025`'s QA and QB, for the morning status** (`specifications/025-component-cost.md`, "Rulings at landing (2026-11-16)"). The design lead ruled both under the overnight delegation; the owner may reverse either. QA: a runtime figure's freshness is enforced at the tag, not at every landing, which narrows the owner's Q3 answer (`bun run test` holds sizes and budgets and warns on runtime). QB: one Bun everywhere, 1.4.4, in `package.json` and in CI's `setup-bun`.
 
 ## Before the 0.13.0 tag: the cost run
