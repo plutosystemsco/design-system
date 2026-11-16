@@ -32,19 +32,6 @@ export const LEDGER: LedgerLine[] = [
   { ...SUB_MENU_ESCAPE, where: { reader: "voiceover", browser: "chromium" } },
   { ...SUB_MENU_ESCAPE, where: { reader: "nvda", browser: "chromium" } },
   { ...SUB_MENU_ESCAPE, where: { reader: "nvda", browser: "firefox" } },
-  // 022d: the overflowing section nav is a Tab stop in Firefox.
-  ...inProjects(
-    {
-      file: "keyboard.spec.ts",
-      title:
-        "at 1280 × 900 › the Components landing: Tab visits its 201 stops in order, each with the ring unclipped",
-      expect: { error: "nav:Components pages" },
-      finding:
-        "Firefox makes the overflowing section nav a Tab stop of its own, before its first link.",
-      change: "022d",
-    },
-    FIREFOX,
-  ),
   // 022f: the code editor misses 013's budgets in Firefox.
   ...inProjects(
     {
