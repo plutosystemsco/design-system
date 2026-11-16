@@ -193,6 +193,9 @@ jobs:
       # 022i: the recording needs ffmpeg-static's binary, which its own
       # install script fetches. Every other package's scripts stay off.
       - run: cd node_modules/ffmpeg-static && bun install.js
+      # The darwin-arm64 binary of ffmpeg-static's pinned release (022i's
+      # review, finding 7): a different file fails here, not in the reader.
+      - run: echo "a90e3db6a3fd35f6074b013f948b1aa45b31c6375489d39e572bea3f18336584  node_modules/ffmpeg-static/ffmpeg" | shasum -a 256 -c
       - run: bun run sr:setup --macos-record
       - run: bun run sr:install
       - run: bun --bun playwright install ${{ matrix.browser }}

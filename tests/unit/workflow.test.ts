@@ -161,6 +161,44 @@ describe("022 test 3: matrix.yml", () => {
     }
   });
 
+  test("022i: checks needs build and extracts the site before the smoke test", () => {
+    const j = wf.jobs.checks!;
+    expect(j.needs).toBe("build");
+    const r = runs(j);
+    const extract = r.findIndex(
+      (x) =>
+        x.includes("tar -xf site.tar") &&
+        x.includes("test -f build/index.html"),
+    );
+    const smoke = r.findIndex((x) => x.includes("test:smoke"));
+    expect(extract).toBeGreaterThanOrEqual(0);
+    expect(smoke).toBeGreaterThan(extract);
+    expect(
+      steps(j).some(
+        (s) =>
+          s.uses?.startsWith("actions/download-artifact@") &&
+          s.with?.name === "site",
+      ),
+    ).toBe(true);
+    expect(r.some((x) => /bun run build\b/.test(x))).toBe(false);
+  });
+
+  test("022i: voiceover fetches ffmpeg-static's binary, checks its hash, then sets up", () => {
+    const r = runs(wf.jobs.voiceover!);
+    const fetch = r.findIndex(
+      (x) => x === "cd node_modules/ffmpeg-static && bun install.js",
+    );
+    const hash = r.findIndex((x) =>
+      /^echo "[0-9a-f]{64}  node_modules\/ffmpeg-static\/ffmpeg" \| shasum -a 256 -c$/.test(
+        x,
+      ),
+    );
+    const setup = r.findIndex((x) => x.startsWith("bun run sr:setup"));
+    expect(fetch).toBeGreaterThanOrEqual(0);
+    expect(hash).toBe(fetch + 1);
+    expect(setup).toBe(hash + 1);
+  });
+
   test("eight shards per engine; browsers has timeout-minutes: 45", () => {
     const b = wf.jobs.browsers!;
     expect(b.strategy!.matrix.shard).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);

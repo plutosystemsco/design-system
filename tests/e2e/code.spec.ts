@@ -1051,6 +1051,30 @@ test.describe("the code editor", () => {
     }
   });
 
+  // 022j, the change review's finding 1: CodeMirror reads Mod as Cmd only on
+  // a Mac platform, and no browser job runs on macOS. So the page is told
+  // it is on a Mac before it loads, and each run binding is pressed apart.
+  test("022j. on a Mac platform, Ctrl+Enter and Cmd+Enter each run the example, and neither adds a line", async ({
+    page,
+  }) => {
+    await page.addInitScript(() =>
+      Object.defineProperty(Navigator.prototype, "platform", {
+        get: () => "MacIntel",
+      }),
+    );
+    await open(page, EDITOR_PAGE);
+    const runs = page.getByTestId("run-count");
+    const lines = () => main(page).locator(".cm-line").count();
+    const before = await lines();
+    await content(page).focus();
+    await expect(runs).toHaveText(/Ran 0 times/);
+    await page.keyboard.press("Control+Enter");
+    await expect(runs).toHaveText(/Ran 1 time\b/);
+    await page.keyboard.press("Meta+Enter");
+    await expect(runs).toHaveText(/Ran 2 times/);
+    expect(await lines()).toBe(before);
+  });
+
   test("E4. editing and run: typing updates the bound value; Reset clears history; 2 of 2 run keys; readonly", async ({
     page,
   }) => {
@@ -1082,7 +1106,8 @@ test.describe("the code editor", () => {
     await expect(runs).toHaveText(/Ran 0 times/);
     await page.keyboard.press("Control+Enter");
     await expect(runs).toHaveText(/Ran 1 time\b/);
-    // 022j: Mod-Enter, which is Cmd on macOS and Ctrl elsewhere.
+    // 022j: Mod-Enter, which is Cmd on macOS and Ctrl elsewhere. Off a
+    // Mac the two presses are one binding; the test below tells them apart.
     await page.keyboard.press("ControlOrMeta+Enter");
     await expect(runs).toHaveText(/Ran 2 times/);
     expect(await lines()).toBe(before);
@@ -1338,7 +1363,16 @@ test.describe("the editor agrees with the block", () => {
         await load(page, "full", specimen.language, specimen.code);
         await agree(page, "full", `${id} before`);
         await page.locator('[data-editor="full"] .cm-content').click();
-        await page.keyboard.press("ControlOrMeta+End");
+        // 022k: the click's own selection can land after the key, and leave
+        // the cursor where the click put it. Press until it is at the end.
+        await expect(async () => {
+          await page.keyboard.press("ControlOrMeta+End");
+          expect(
+            await page.evaluate(
+              `(() => { const v = ${view}; return v.state.selection.main.head === v.state.doc.length; })()`,
+            ),
+          ).toBe(true);
+        }).toPass({ timeout: 10_000 });
         await page.keyboard.type(
           id === "markdown" ? "\n\n```python\nprint(1)\n```" : "\nvalue = 1",
         );
