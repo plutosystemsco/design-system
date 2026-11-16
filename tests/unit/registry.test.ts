@@ -2539,3 +2539,74 @@ describe("021 criterion 18: the 0.13.0 changelog's token bullets", () => {
     expect(b).toContain("interface");
   });
 });
+
+/**
+ * 022t criterion 9: the error-summary page's "Your part" holds the app's
+ * duties for `attempt`, and the item's header comment names it. The page's
+ * markup is read as text: `<code>` as backticks, tags dropped.
+ */
+describe("022t: the page and the comment name attempt", () => {
+  const source = readFileSync(
+    "src/routes/(site)/components/error-summary/+page.svelte",
+    "utf8",
+  );
+  const text = (markup: string) =>
+    markup
+      .replace(/\{"(\{[^}]*\})"\}/g, "$1")
+      .replace(/<code>([\s\S]*?)<\/code>/g, "`$1`")
+      .replace(/<[^>]+>/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+  const yourPart = () => {
+    const at = source.indexOf("<strong>Your part.</strong>");
+    if (at < 0) return "";
+    return text(source.slice(at, source.indexOf("</ul>", at)));
+  };
+
+  test.each([
+    "raise `attempt`",
+    "With `announce={false}`, a new `attempt`",
+    "a link focused there is lost",
+  ])("Your part holds %p", (line) => {
+    expect(yourPart()).toContain(line);
+  });
+
+  test("the item's header comment names attempt", () => {
+    const item = readFileSync(
+      "src/lib/registry/ui/error-summary/error-summary.svelte",
+      "utf8",
+    );
+    const markup = item.slice(item.lastIndexOf("</script>"));
+    const comment = /<!--([\s\S]*?)-->/.exec(markup)?.[1] ?? "";
+    expect(comment).toContain("attempt");
+  });
+});
+
+/** 022t criterion 12: the 0.13.0 entry's two bullets for `attempt`. */
+describe("022t: the changelog", () => {
+  const log = readFileSync("CHANGELOG.md", "utf8");
+  const entry = log.includes("## 0.13.0")
+    ? log.slice(log.indexOf("## 0.13.0"), log.indexOf("\n## 0.12.0"))
+    : "";
+  const lines = entry.split("\n");
+  const item = lines.filter((l) =>
+    l.startsWith("- `error-summary`: a new optional prop, `attempt`"),
+  );
+  const blocks = lines.filter((l) =>
+    l.startsWith("- `sign-in`, `sign-up`, `settings`: no interface change."),
+  );
+
+  test("one error-summary bullet: additive, naming attempt and add error-summary", () => {
+    expect(item).toHaveLength(1);
+    expect(item[0]).toContain("nothing to change");
+    expect(item[0]).not.toContain("**interface change.**");
+    expect(item[0]).toContain("`add error-summary`");
+  });
+
+  test("one blocks bullet, after it, naming the three add commands", () => {
+    expect(blocks).toHaveLength(1);
+    for (const name of ["`add sign-in`", "`add sign-up`", "`add settings`"])
+      expect(blocks[0], name).toContain(name);
+    expect(lines.indexOf(blocks[0]!)).toBe(lines.indexOf(item[0]!) + 1);
+  });
+});

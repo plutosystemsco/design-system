@@ -1,0 +1,173 @@
+# Review of 022t — The error summary speaks again on an unchanged submit
+
+Reviews [`specifications/022t-the-error-summary-speaks-again-on-an-unchanged-submit.md`](../specifications/022t-the-error-summary-speaks-again-on-an-unchanged-submit.md) before it is built. Its research is [the error summary's re-announcement](../research/2026-11-16-error-summary-re-announcement.md) (*the memo*) and the error-summary row of [the first speech verdicts](../research/2026-11-16-the-first-speech-verdicts.md) (*the speech memo*). This reviewer wrote neither the specification nor its research (constitution §5).
+
+- **Date:** 2026-11-16
+- **Status:** dispositioned; fit to build (see the second re-check's closing verdict)
+- **Reviewer:** a reviewer; not the author
+- **Reviewed:** the specification as drafted (204 lines, untracked), on `release/0.13.0` at `c5cdd65`. Checked against:
+  - `src/lib/registry/ui/error-summary/error-summary.svelte`, the item's page, both examples;
+  - the five components (`sign-in-form`, `sign-up-form`, `sign-up-verify`, `settings-form`, `settings-delete`) and the views `/view/sign-in/`, `/view/sign-in/errors/`, `/view/sign-up/verify/`, `/view/settings/failed/`;
+  - `tests/e2e/error-summary.spec.ts`, `tests/e2e/blocks.spec.ts`, `tests/sr/error-summary.sr.ts`, `tests/sr/fixtures.ts` and, after `022q` landed during this review (`9af3248`), `tests/sr/sr.ts`, whose `fact`, `focused` and dry `judge` behave as before;
+  - `tests/sr/mutations/` (`table.ts`, `derive.ts`, patches 4, 5 and 7b, both `expected.json`), `tests/unit/mutations.test.ts`;
+  - `023` decision 5 and `tests/unit/api-described.test.ts` (V1 to V7); `scripts/cost/budgets.json` and `report.json`; `tests/unit/blocks.test.ts`'s view guard; `TEST_VIEWS` in `tests/e2e/pages.ts`;
+  - Svelte 5.57.3's `blocks/key.js`, `blocks/branches.js` and `tick()` (`runtime.js:507–522`);
+  - NVDA's `master`, read 2026-11-16 through raw.githubusercontent.com into the session's scratchpad (GPL 2, read only, nothing copied): `NVDAObjects/IAccessible/__init__.py` (`event_alert`, lines 2025–2050) and `eventHandler.py` (`FocusLossCancellableSpeechCommand`).
+- **Re-ran:** nothing in the repository was written but this file. A copy of the tree at `c5cdd65` (no `.git`, `node_modules` linked) was made in the session's scratchpad. The copy was patched as decisions 1, 2, 6 and 7 say, with a scratch test view as decision 10 says, served by `vite dev`, and driven by Playwright 1.64.1 scripts in Chromium and WebKit from `/opt/pw-browsers`. Firefox is not installed. EXECUTED:
+  - **Keyboard example, the second unchanged submit, both engines.** One `MutationObserver` callback on the root holds two records: the new content node added, then the old one removed. Nothing else is written in the root. The root is the same element, and focused. The new node has `role="alert"`, the heading and 3 links. The old node is disconnected. The height moves by 0 px.
+  - **The order, both engines:** the observer callback, then the root's `focus`, then the next animation frame and the next task. So the insertion and the focus move share one task.
+  - **Focus inside the content when the key changes** (a link focused, then `requestSubmit()` from script). The example then refocuses the root. Chromium fires `focusout` on the removed link; WebKit fires none. Focus ends on the root in both.
+  - **The five components, each path done twice** (events in order; "new" = a new content node with `role="alert"`, root focused). Sign-in empty: `add,remove,focus`. Sign-in refused: `remove,add,focus`. Sign-in errors view: `add,remove,focus` on the first submit. Sign-up empty, code step empty, settings empty name: `add,remove,focus`. Settings failed save, failed delete: `remove,add,focus`. All new, in both engines.
+  - **Criterion 5's named guard mutation** (`attempt += 1` moved after `await tick()` in sign-in's `failed()`). Refused, second time: `remove,add,focus-root,add,remove`. Empty, second time: `focus-root,add,remove`. Both engines. See finding 1.
+  - **The test view.** A: errors from `$derived`, one entry for "Notes" that reads its value. Typing 5 letters in Notes: 0 records in A or B, A's node kept. A second submit: a new node in A, B's node kept, A's root focused. With the item keyed on `errors` instead: 10 records in each summary, A's node replaced. With a derivation that does not read Notes: 0 records under `{#key errors}` too. See finding 4.
+  - **The mutation patches.** `git apply --check` on the patched copy: 4 and 7b fail ("patch does not apply" at line 141); the other nine pass, patch 5 included.
+  - `bun --bun playwright test tests/e2e/error-summary.spec.ts --list --project=chromium-light` on the repository: **19 tests**, as criterion 7 says.
+  - The proposed doc comment is **40 words** by `api-described.test.ts`'s `split(" ")`: at V4's limit.
+
+## What the brief asked, in short
+
+1. **A fresh insertion: yes.** EXECUTED, above. The reader-visible change is one content node replaced, inside one task, with its children in it.
+2. **The memo's reading of NVDA: right, and READ further.** `event_alert` drops an alert that is an ancestor of the focus, or that has no name, description or children (`__init__.py:2029–2037`). Focus lands on the root, the content's parent, and the node comes with its children. The alert speaks at `Spri.NOW`. Its speech is cancellable on focus loss, but stays valid while the object "never had focus" (`eventHandler.py`, `_checkIfValid`). The content node never takes focus. So a later "section" does not cancel it. One gap stays: on the first submit the root is created too; on the second it exists. The two submits are alike, not identical (finding 2).
+3. **The negative check holds, with one write-in.** The test view is the least addition: no unit test mounts a component in a DOM, and the example must not re-derive. Its guard is blind unless the derivation reads Notes (finding 4).
+4. **Server-refused repeats: true in all five,** by READ (each clears before it awaits). EXECUTED in three: sign-in, settings' save and settings' delete. The delete's callback rejects at once, and the removal still flushes first. The prop adds no second insertion there. The throw paths and the delete already say the failure twice, once in the summary and once in the form's `Status`. That is today's behaviour, not this change's, and out of scope.
+5. **Interface: additive and safe.** Undefined is a constant key: summary B kept its node through typing and two submits. The doc comment and "Your part" are specified, with a wording fault (finding 5). Cost: the memo's 11,872 B is under 12,900. The blocks' measured interaction is the first submit, which this does not change. Apps that pass `attempt` with no alert: with `announce={false}` the content renders anew in silence, and a focused link inside is lost. Decision 3 says the first. The page should say both (finding 7).
+6. **Patches 4 and 7b stop applying: yes.** EXECUTED. Regeneration needs a procedure, and 7b's effect on the second submit changes (finding 3).
+7. **Criteria:** see the next section. Criterion 5's guard cannot fail (finding 1), and criterion 14 is not one outcome (finding 2).
+8. **Open questions:** both are framed with options, the recommended first. One is missing: what follows a failed criterion 14 (finding 2).
+
+## Acceptance criteria against evidence
+
+1. A new content node on the second submit, before focus — countable, **seen failing holds**. EXECUTED: (a) to (f) all hold on the patched copy, in both engines. The observer's two records arrive added-then-removed; the check must not depend on their order (finding 6).
+2. Typing re-renders nothing, in the example — countable; a guard no mutation can fail, as the specification says. INFERRED: harmless, since criterion 3 carries the proof.
+3. Re-derived errors re-render nothing — countable, **proven only if the view reads Notes**. EXECUTED: 0 records with `attempt`, 10 under `{#key errors}`, and 0 again under `{#key errors}` with a derivation that skips Notes (finding 4).
+4. Each block's client check speaks again — countable, seen failing per *the memo* §1.4. EXECUTED with the fix: four new nodes. **Not sufficient:** it checks no order, so a late `attempt` passes it (finding 1).
+5. Each server path stays one insertion — **cannot fail for its own mutation.** EXECUTED: with `attempt += 1` after `await tick()`, one node is still added between the submit and the root's focus; the second comes after it (finding 1).
+6. A summary present at load is announced on the first client failure — countable. EXECUTED with the fix: `add,remove,focus`, new node with `role="alert"`.
+7. Nothing else moves — countable. EXECUTED: 19 tests listed; the look's ± 0.5 px is met (0 px moved).
+8. The dry speech run — countable. READ: a dry run fails only on `sr.dom` facts (`tests/sr/sr.ts:353–355`, where `022q` moved `Sr`), so the new fact can be seen failing on today's item. How the fact is taken is unstated (finding 6).
+9. Registry and docs — countable. INFERRED: nothing checks the new "Your part" text (finding 7).
+10. axe on the test view — countable.
+11. Cost — countable. READ: a stale runtime figure for the blocks is named, not failed (`cost.test.ts:388`); the release check holds it.
+12. The changelog — countable; the bullet's last sentence is wrong (finding 5).
+13. The gates — countable.
+14. The next CI speech run — **not one outcome** (finding 2).
+15. The scorecard — countable.
+
+## Findings, most severe first
+
+1. **High: criterion 5's guard passes under the mutation that is meant to prove it, and criterion 4 checks no order** (criteria 4 and 5; `sign-in-form.svelte:131–135`).
+   `failed()` sets state, awaits `tick()`, then calls `summary?.focus()` at once. A state write after the `tick()` is flushed in a later microtask, so after the focus move. So "exactly one content node between the submit and the root's focus" stays true when `attempt` is raised late.
+   Failure: EXECUTED, both engines, `attempt += 1` moved after `await tick()`. A refused sign-in, second time: `remove,add,focus-root,add,remove`. One node before the focus: criterion 5 **passes**. An empty sign-in, second time: `focus-root,add,remove`. The node is new and the root focused: criterion 4 **passes**. The mutated form also inserts the alert twice on its first failure (`add,focus-root,add,remove`). That is the double announcement criterion 5 exists to catch.
+   Fix: in criteria 4 and 5, count from the submit until 500 ms after the root's `focusin`. Require exactly one content node added in that span, and its observer callback before the `focusin`, as criterion 1 (b) does. Keep the named mutation; with this wording it fails both criteria (EXECUTED: the late insertion falls inside the span, and after the `focusin`).
+
+2. **Medium: criterion 14 does not say what happens when it fails, and VoiceOver may now fail L3 where it could pass** (criterion 14; decision 2, "exactly as on the first submit"; *the speech memo*, line 150).
+   Criterion 14 lands after the merge. Its NVDA bullet is an outcome. Its VoiceOver bullet passes on "did not reach it". Its last bullet records a failure and names the next step. So a reader cannot tell whether `022t` is done when NVDA still says "section". Constitution §4.4 says such a gap is a finding to fix, never a limit to record. Two risks are not stated in advance:
+   - INFERRED: today the second submit under VoiceOver is one reading, of the focused root. After this change it is an alert and a focus move, the first submit's shape. *The speech memo* saw VoiceOver read sign-in's first-submit summary twice (VO chr, once, then passed on retry): an L3 fault. So the second-submit test may now flake L3 under VoiceOver.
+   - INFERRED: the second submit is not the first. On the first, the root is created with its content; on the second, the root exists and only the content is new. Engines may order the focus and alert events differently. The memo's speech evidence is for the first.
+   Fix: state criterion 14 as one outcome. `022t` is done when "the second submit, unchanged" passes L1 and L3 in both NVDA pairs, and in each VoiceOver pair it reaches. Until that run, the Status line reads "built; awaits the speech run". A failure keeps the error-summary row failing in the release check, and opens a research memo (the Windows event probe), not a limit. Name the VoiceOver L3 risk, and say a retry-passed L3 is judged as `022` already judges the insertion test. Add the owner question in finding 8.
+
+3. **Medium: patch 7b's behaviour on the second submit changes, and its regeneration has no procedure** (decision 11; `mutations/table.ts:135–145`; `double-read/expected.json`).
+   EXECUTED: 4 and 7b no longer apply once `{#key attempt}` sits between `<WarningCircle>` and the content `<div>`. Prettier's re-indent would move more lines. The other nine patches still apply.
+   - READ: 7b's derived entries include "the second submit, unchanged" in all four pairs, with L3. Today 7b's second submit writes nothing: focus lands on an unchanged alert root. INFERRED: under `022t`, a new subtree is inserted inside the alert root, then focus lands on it. In Chromium that is a change inside a live region, not a new alert (*the memo* §4.4). Whether it is read twice is unknown. The specification says the patches keep "the same effect". Their text does; what they make readers do on the second submit does not.
+   - READ: patch 4's second-submit entries (L1) become provable for the first time, since that test should now pass unpatched. That is a gain; say so.
+   Fix: give the procedure. Make the edit by hand on the new item, inside the key block, after `prettier --write`. Write it with `git diff -- src/lib/registry/ui/error-summary/error-summary.svelte`, then restore the file. Run `mutations.test.ts`. State in advance, per `022` decision 15, that 7b's second-submit entries may not fault L3. Say they go to `notProvable` with the dispatch run that shows it, and that criterion 14's run names the next `mutate` dispatch.
+
+4. **Medium: the test view's guard is blind unless the derivation reads Notes** (decision 10, "Notes adds an entry that does not depend on its text"; criterion 3).
+   `$derived` re-runs only when a value it reads changes. An entry that "does not depend on its text" may be written without reading the text. Then typing in Notes re-derives nothing, and the `{#key errors}` mutation cannot fail the check.
+   Failure: EXECUTED. With the Notes entry written as `true && { … }`, the view under `{#key errors}` records 0 mutations for 5 letters typed. Criterion 3's guard passes under its own mutation.
+   Fix: say the derivation reads every field's value, Notes included. Example: one `validate({ name, notes })` that returns a new array each call, the Notes entry present whatever its text. Also say the errors are empty until the first submit, so neither summary is in the page at load. Add to criterion 3: "the mutation `{#key errors}` records at least 5 mutations in A", so a blind view is seen.
+
+5. **Low: the doc comment breaks `023`'s rules for a data prop, sits at V4's limit, and its last sentence is wrong** (decision 1; decision 12's first bullet).
+   - `023` decision 5: "A data prop opens with a noun phrase." The comment opens with an imperative.
+   - It is 40 words by the test's count. Any added word fails V4.
+   - "Leave it out and the summary is announced only when it appears" is false: a summary whose text changes is announced too (`019` decision 1). The changelog bullet repeats it.
+   Fix, 37 words: "The count of failed submits. Raise it by one on each, and the content renders anew, so a screen reader announces it again even when nothing changed. Without it, only a new or changed summary is announced." Changelog: "Leave it out and a summary is announced when it appears or its text changes, as before."
+
+6. **Low: three write-ins for the tests** (criteria 1 and 8; decision 11).
+   - Criterion 1 (a): the two records come added-then-removed (EXECUTED). Say the check counts records in the callback, in any order.
+   - "Seen failing": if the example passes `{attempt}` before the item knows the prop, the old item spreads it onto the root as an attribute, and the observer sees an attribute write, not "no mutation". Say the failing run is on the base's item, and that it fails as "no content node added or removed".
+   - Decision 11's fact "the content node is a new node": say how. For example, take an `ElementHandle` of the content before the second submit, and record `sr.fact("the old content node is disconnected", !(await old.evaluate((n) => n.isConnected)))`.
+
+7. **Low: the page's new text has no check, and leaves out two duties** (decision 9; criterion 9).
+   Nothing fails if "Your part" loses the `attempt` sentence or the header comment loses its own. `registry.test.ts` holds this page's lines elsewhere (`019`'s describe).
+   Fix: add to criterion 9 a unit check that the page holds "raise `attempt`" in "Your part", and the item's header comment names `attempt`. Add two sentences to "Your part": "With `announce={false}`, a new `attempt` renders the content again in silence." And: "Raise it only on a failed submit, never while focus is inside the summary: a link focused there is lost." EXECUTED: focus falls from a removed link, with `focusout` in Chromium and none in WebKit.
+
+8. **Low: one owner question is missing** (Open questions).
+   What follows a failed criterion 14 is the owner's call: it decides whether 0.13.0 ships with the row failing. Add:
+   - **(a) Keep `022t` landed (recommended).** No check shows harm. Record the run. Open the Windows event probe as research. The row stays failing until it passes.
+   - (b) Revert `022t` and defer the row to 0.14.0.
+
+## Constitution checks
+
+- §4.1 source, not a package: met. The prop is in the item's source; the blocks keep their counters inside.
+- §4.3 tokens are the one source: not touched. No colour or size; the key block adds no style (EXECUTED: 0 px).
+- §4.4 accessible by default, and proven: **at risk** until findings 1 and 2 are fixed. The order guard cannot fail, and the speech outcome reads as recordable.
+- §4.5, §4.6 pins and dependencies: met. No dependency.
+- §5 the pipeline: the research exists and is labelled. The owner's choice is recorded in the roadmap's `022t` row. Criterion 15 re-runs the scorecard.
+- §6 never: an additive prop, with a changelog bullet; no installed app breaks. Nothing copied; NVDA's source was read only.
+
+## Verdict
+
+Does not land yet: finding 1 (High), criterion 5's guard passing under its own mutation with no order check in criterion 4, and findings 2 to 4 (Medium), criterion 14's outcome, patch 7b's effect and regeneration, and the test view reading Notes.
+
+## Disposition
+
+The specification was revised on 2026-11-16 to answer all eight findings, with a "Review" section that maps each to its fix. This re-check reads the revision (251 lines, untracked) against each finding, on `release/0.13.0` at `b01e754`, where `022q` has landed. Nothing in the repository was written but this file. Nothing new was run in a browser; the readings below are READ against the code, and against the EXECUTED probes above.
+
+1. **Closed.** Criteria 4 and 5 are one ordered count over seven block paths: from the second submit or confirm until 500 ms after the root's `focusin`, exactly one content node added, its callback before the `focusin`. The review's mutation is named for each of the four forms, and the same mutation for `settings-delete`'s `catch`. INFERRED from the probes above: the client paths then add their node after the `focusin`, and the server paths add two in the span, so both shapes fail. One new fault in how it watches: finding 9.
+2. **Closed, with a write-in.** Criterion 14 now states when `022t` is done, and what the Status reads until then. A failure is a finding: the row stays failing and a research memo opens, with the mechanism not changed by guess. Both risks are stated in advance. Risk 1's flake rule is `022`'s (READ, `022` decision 18 and Q2: a release-run flake takes a ledger line unless recorded as reader timing). Decision 2 names the gap: "Alike, not identical". "In each VoiceOver pair that reaches it" is one outcome only if not reaching it is not a pass. The specification does not say so: finding 10.
+3. **Closed.** The procedure is buildable as written. Staging the built item first makes `git diff` compare against it, and `git checkout --` then restores the built file from the index (READ, git's semantics). The writer's claim about `notProvable` holds (READ):
+   - `NotProvable` is `Pair & { patch; run }`, with no test (`tests/sr/mutations/derive.ts:43`).
+   - `derive()` skips every entry of that patch under that pair (`derive.ts:88–98`).
+   - `witnessFaults()` skips the patch's witness under that pair too (`derive.ts:129–137`).
+   - So a pair-wide entry for 7b would drop its insertion witness there, and the witness rule would no longer prove L3 under that pair. `022` decision 15 step 2 meant that for patch 7, whose every entry fails together; it does not fit one test of 7b's.
+   - The added lane-E small change is sound and in scope: it is conditional on a dispatch result ("only if the dispatch needs it"), comes before any entry moves, and is out of lane I. It needs three more lines to build safely: finding 11.
+4. **Closed.** Decision 10 has one `validate({ name, notes })` that reads every field, and empty errors until the first submit. Criterion 3's mutation must record at least 5 mutations in A. EXECUTED above: 10 under `{#key errors}`, 0 with a blind derivation. So the count tells the two apart.
+5. **Closed.** Decision 1 takes the 37 words, opening with a noun phrase. Decision 12's bullet now says "when it appears or its text changes".
+6. **Closed, with a slip.** Criterion 1 counts records in any order and states how the base item fails: an attribute write, and no content node. Decision 11 takes an `ElementHandle` and records "the old content node is disconnected". But criterion 8 still names the fact "the content node is new": finding 12.
+7. **Closed.** Decision 9 adds both sentences to "Your part". Criterion 9 adds a unit check in `registry.test.ts`, seen failing on today's files, for three lines and the header comment.
+8. **Closed.** Open question 3 asks whether `022t` stays landed if criterion 14 fails: (a) keep it (recommended), or (b) revert. The three owner questions are framed with options, the recommended first, and none blocks the build.
+
+**New findings from the revision**
+
+9. **Medium: criterion 4 watches the summary root, which the three server paths remove and re-create** (criterion 4, "watches the block's summary root with a `MutationObserver` and a `focusin` listener"; `error-summary.svelte:131`).
+   The whole item, root included, sits in `{#if errors.length > 0 || message}`. Each block clears its errors before awaiting its server (decision 7). So on a server path the root is removed while the server runs, and a new root, with its content, is added to the form. An observer on the old root sees none of this: its own removal is recorded on its parent, and the new content arrives inside a new root. A `focusin` listener on the old root never fires.
+   Failure: INFERRED, from READ code and the EXECUTED event logs above (`remove,add,focus` on the refused sign-in, the failed save and the failed delete, seen by an observer on the block's form, not on the root). On a correct build, the three server paths count 0 content nodes added and see no `focusin`. Criterion 4 fails on correct code. The client paths are not affected: there the root stays.
+   Fix: observe the block's scope with `subtree: true`: the form for the four forms, `[data-slot="settings-delete"]` for the delete. Count each added element that is, or holds, `[data-slot="error-summary-content"]`. Listen for `focusin` on that scope, and match `[data-slot="error-summary"]`. Read "the new node" and "the root" fresh from the scope after the span. Criteria 1, 3 and 6 can keep watching the root: there it stays.
+
+10. **Low: "a VoiceOver pair that reaches it" needs a definition and a consequence** (criterion 14).
+    As written, a VoiceOver pair that times out, stops at the shard deadline, or ends on X0 can be read as "not reached", and the criterion then passes with no VoiceOver evidence.
+    Fix: define "reaches": the test ran to its `judge`, and its `faults.json` holds no X0. Say that a pair which does not reach it is not a pass. The landing notes name the pair and the run. The release check still needs the item heard in both VoiceOver browsers (`022` criterion 13: logs for all 28 items in each). So the gap stays open on the release path, not closed by this criterion.
+
+11. **Low: the lane-E small change needs three lines** (decision 11, the `notProvable` bullet; `derive.ts:210–242`).
+    - A titled entry must never name a patch's witness test, and must never exempt the witness rule for its pair. `mutations.test.ts` should refuse both.
+    - It amends `022` decision 15 step 2 ("each naming the pair and the run id"). Say so in the small change, and give it a roadmap row when it is raised.
+    - INFERRED: `verdict()` treats a failing test with no expected entry as a difference ("failed, and no patch expects it"). If 7b's second submit faults L3 on some runs and not on others, removing its entries makes every later `double-read` dispatch red when it does fault. Say what such a test is: kept expected and ledgered as reader timing under `022` decision 18, or allowed either outcome. Do not leave that to the build.
+
+12. **Low: one name for the dry fact** (criterion 8; decision 11).
+    Fix: in criterion 8, write "the old content node is disconnected", as decision 11 records it.
+
+**Verdict after the first re-check** (superseded below). Does not land yet: finding 9 (Medium) stood, since criterion 4's observer on the summary root could not see the three server paths' new root; findings 1 to 8 were closed, and findings 10 to 12 were Low write-ins.
+
+**Second re-check (2026-11-16).** The specification was revised again for findings 9 to 12 (270 lines, untracked). Only those four were re-read, against the revision's decision 11, its criteria 4, 8 and 14, and the mutation code at `b01e754`. Nothing was run.
+
+9. **Closed.** Criterion 4 now watches the block's scope: the form for the four forms, `[data-slot="settings-delete"]` for the delete. A `childList` and `subtree` observer counts each added element that is, or holds, the content node. A `focusin` listener on the scope keeps only the root's events; `focusin` bubbles, so the new root's focus reaches it. After the span the root and the node are read fresh. INFERRED, checked against each shape in the EXECUTED logs above:
+   - a client path adds the content node inside the root that stays (`add,remove,focus`): one added element, before the `focusin`;
+   - a server path adds a new root that holds the content node (`remove,add,focus`): one added element, before the `focusin`;
+   - the named mutation adds a second element after the `focusin`, inside the 500 ms span: the count is two, or the one comes after the `focusin`, so it fails;
+   - `settings-form` and `settings-delete` each have their own summary on `/view/settings/failed/`, and each scope holds only its own. The delete's dialog is portalled outside its scope, which is right: only the summary is counted.
+   Criteria 1, 3 and 6 keep the root, where it stays.
+10. **Closed.** Criterion 14 defines "reaches": the test ran to its `judge`, with no X0 in its `faults.json`. A timeout, the shard deadline or X0 is not reaching it. A pair that does not reach it is not a pass: the landing notes name it, and the release check still needs both VoiceOver browsers (`022` criterion 13). So the clause is one outcome for the pairs that ran, and leaves the gap open on the release path, not closed. NVDA's two pairs must pass, which needs them to reach it.
+11. **Closed, with one narrowing** (finding 13). Rule 1, no titled entry names a witness or exempts the witness rule, and rule 2, the amendment of `022` decision 15 step 2 with its own roadmap row, are as asked.
+    Rule 3, "allowed either outcome", judged against ledgering as reader timing:
+    - **What decision 15 needs.** Each patch's witness proves its fault under each pair; the other expected entries show breadth. READ: rule 1 keeps 7b's witness, the insertion test, required under every pair. So L3's power to fail under each pair stays proven, and only one breadth entry is relaxed.
+    - **Ledgering as reader timing fits worse.** `022` decision 18's reader-timing record is for a flake on a release run of unpatched code. A mutation run's expected tests are already ledger lines that must fail with their fault (`derive.ts`, `mutationLines`). Ledgering an entry that may pass would mean a design lead's ruling on every dispatch, with no rule for when it is right. "Either outcome" is a rule, stated once, and checked by `mutations.test.ts`. It weakens decision 15 no more than that, and is easier to audit.
+    - **But as worded it is wider than needed.** "`verdict()` neither requires the fault nor counts it as a difference" also hides the titled test failing on another rule (L1, if 7b silenced it), on a set-up failure, or not running at all (`derive.ts:223–240`). Those are the differences decision 15 exists to show. That is finding 13.
+12. **Closed.** Criterion 8 now names the fact "the old content node is disconnected", as decision 11 records it. The two other "the content node is new" phrases (decision 2, criterion 14's risk 2) are prose, not the fact's name.
+
+**New finding from the revision**
+
+13. **Low: "either outcome" should mean pass, or fail with the patch's fault only** (decision 11, the third rule of the lane-E small change).
+    Fix: for a titled entry's test and pair, `verdict()` accepts a pass, or a failure whose faults hold the patch's fault. Any other failure, a failure with only X0, or the test not running stays a difference, as today. Record each dispatch's outcome for that test in the run's job summary, which `report.ts` already writes, not only in landing notes: later dispatches come after `022t` has landed. This binds the lane-E small change's own specification. That change is conditional on a dispatch, outside lane I, and reviewed as built, so it does not block this build.
+
+**Closing verdict.** Fit to build: findings 1 to 12 are closed, and finding 13 is a Low write-in for the conditional lane-E small change, given with its fix; nothing stands against this build.

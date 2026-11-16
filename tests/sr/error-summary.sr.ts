@@ -4,6 +4,8 @@
  * links is followed. The pass rule, in 022's rules: the title and every
  * message are spoken whole (L1), and none is read twice in a row (L3), on
  * the insertion and on the second submit; each link's field is spoken (F1).
+ * A dry run checks the second submit's mechanism (022t decision 11): the old
+ * content node is gone, and the root is focused.
  *
  * `hears` omits `alert`: the summary passes `role={null}` to `Alert` and
  * sets its own inner `role="alert"`, so a change to alert's role map does
@@ -60,7 +62,17 @@ test(
     await ready(page);
     await sr.after(() => submit(page), "first");
     await ready(page);
+    // 022t decision 11: the example raises `attempt`, so the second submit
+    // renders the content anew, and focus lands on the root that stays.
+    const old = await fixture(page)
+      .locator('[data-slot="error-summary-content"]')
+      .elementHandle();
     const after = await sr.after(() => submit(page), "second");
+    sr.fact(
+      "the old content node is disconnected",
+      !(await old!.evaluate((n) => n.isConnected)),
+    );
+    await sr.focused(fixture(page).locator('[data-slot="error-summary"]'));
     await sr.judge(whole(after));
   },
 );

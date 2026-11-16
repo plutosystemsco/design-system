@@ -81,6 +81,7 @@
     title = "There is a problem",
     level = 2,
     announce = true,
+    attempt,
     ...restProps
   }: WithElementRef<HTMLAttributes<HTMLDivElement>> & {
     /** A link per invalid field, in field order: the field's id and its inline error. */
@@ -93,6 +94,12 @@
     level?: 1 | 2 | 3 | 4 | 5 | 6;
     /** Default true: the content carries role="alert". False when rendered from initial props. */
     announce?: boolean;
+    /**
+     * The count of failed submits. Raise it by one on each, and the content
+     * renders anew, so a screen reader announces it again even when nothing
+     * changed. Without it, only a new or changed summary is announced.
+     */
+    attempt?: number;
   } = $props();
 
   // A fragment moves the scroll position but may not focus an input, so the
@@ -126,7 +133,9 @@
   role is on the content, not on the root that takes focus, so the focus
   move and the announcement do not compete; the heading is read first. An
   app that renders errors from its server passes announce={false} and moves
-  focus here itself.
+  focus here itself. The form raises attempt on each failed submit, and each
+  new value renders the content anew, so an unchanged submit is announced
+  again.
 -->
 {#if errors.length > 0 || message}
   <Alert
@@ -139,37 +148,39 @@
     {...restProps}
   >
     <WarningCircle aria-hidden="true" />
-    <div
-      data-slot="error-summary-content"
-      role={announce ? "alert" : null}
-      class="col-start-2 row-span-2 grid gap-1"
-    >
-      <svelte:element
-        this={`h${level}`}
-        data-slot="error-summary-title"
-        class="font-heading text-base font-bold"
+    {#key attempt}
+      <div
+        data-slot="error-summary-content"
+        role={announce ? "alert" : null}
+        class="col-start-2 row-span-2 grid gap-1"
       >
-        {title}
-      </svelte:element>
-      <div class="grid gap-2">
-        {#if message}
-          <p>{message}</p>
-        {/if}
-        {#if errors.length > 0}
-          <ul class="grid gap-1">
-            {#each errors as error (error.id)}
-              <li>
-                <a
-                  href="#{error.id}"
-                  class="inline-flex min-h-6 items-center underline underline-offset-4"
-                  onclick={(event) => focusField(event, error.id)}
-                  >{error.message}</a
-                >
-              </li>
-            {/each}
-          </ul>
-        {/if}
+        <svelte:element
+          this={`h${level}`}
+          data-slot="error-summary-title"
+          class="font-heading text-base font-bold"
+        >
+          {title}
+        </svelte:element>
+        <div class="grid gap-2">
+          {#if message}
+            <p>{message}</p>
+          {/if}
+          {#if errors.length > 0}
+            <ul class="grid gap-1">
+              {#each errors as error (error.id)}
+                <li>
+                  <a
+                    href="#{error.id}"
+                    class="inline-flex min-h-6 items-center underline underline-offset-4"
+                    onclick={(event) => focusField(event, error.id)}
+                    >{error.message}</a
+                  >
+                </li>
+              {/each}
+            </ul>
+          {/if}
+        </div>
       </div>
-    </div>
+    {/key}
   </Alert>
 {/if}

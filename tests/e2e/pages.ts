@@ -302,6 +302,8 @@ export const TEST_VIEWS = [
   "/view/field-keys/",
   // 026 decision 20: the shipped shell around one button that raises a toast.
   "/view/app-shell/toast/",
+  // 022t decision 10: two summaries over errors re-derived on each keystroke.
+  "/view/error-summary-attempt/",
 ] as const;
 
 /** 010 decision 10: each composition's views, under /view/compositions/. */

@@ -23,7 +23,10 @@
     </p>
   {/snippet}
   {#snippet dos()}
-    <li>Move focus to the summary after every failed submit.</li>
+    <li>
+      Move focus to the summary, and raise <code>attempt</code>, after every
+      failed submit.
+    </li>
     <li>Use each field's inline error as its link's text.</li>
     <li>Prefix the page's title with "Error: " while the summary shows.</li>
   {/snippet}
@@ -34,36 +37,67 @@
   {/snippet}
   {#snippet accessibility()}
     <li>
-      <code>role="alert"</code> is on the summary's content, not on the root
-      that takes focus, and only when a submit in this page inserted it, never
-      on content present at load. Do not pass <code>role</code> to the summary.
+      <strong>What Kuiper provides.</strong>
+      <ul class="mt-2 grid list-disc gap-1 ps-5">
+        <li>
+          <code>role="alert"</code> is on the summary's content, not on the root that
+          takes focus, and only when a submit in this page inserted it, never on content
+          present at load.
+        </li>
+        <li>
+          The root has <code>tabindex="-1"</code>, no role and no name, and
+          stays out of the Tab order. The heading is read first.
+        </li>
+        <li>
+          A heading, "There is a problem", so a reader moving by heading finds
+          it again.
+        </li>
+        <li>
+          Each link holds its field's inline error and goes to the field's id;
+          activating it focuses the field. If the field or its label is out of
+          view or covered, it first brings the label to the top of the page, or
+          a radio or checkbox's legend. No hash joins the address. Each link is
+          at least 24 px tall.
+        </li>
+        <li>
+          A link to a radio group's id focuses its checked radio, or its first.
+        </li>
+        <li>
+          Each new <code>attempt</code> renders the content anew, so its alert
+          is announced again on an unchanged submit. With <code>attempt</code> unchanged,
+          nothing re-renders, however often the errors are re-derived.
+        </li>
+        <li>Heard with VoiceOver on macOS. NVDA and JAWS are not tested.</li>
+      </ul>
     </li>
     <li>
-      The root has <code>tabindex="-1"</code>, no role and no name: the form
-      moves focus to it after every failed submit, and it stays out of the Tab
-      order. The heading is read first.
-    </li>
-    <li>
-      A heading, "There is a problem", so a reader moving by heading finds it
-      again.
-    </li>
-    <li>
-      Each link holds its field's inline error and goes to the field's id;
-      activating it focuses the field. If the field or its label is out of view
-      or covered, it first brings the label to the top of the page, or a radio
-      or checkbox's legend. No hash joins the address. A page with a sticky
-      header declares it, with <code>data-sticky-bar</code> or its own
-      <code>scroll-padding-top</code>, so the label stops below it. Each link is
-      at least 24 px tall.
-    </li>
-    <li>
-      A link to a radio group's id focuses its checked radio, or its first. Link
-      a checkbox question to its first checkbox.
-    </li>
-    <li>Heard with VoiceOver on macOS. NVDA and JAWS are not tested.</li>
-    <li>
-      <code>titleFor(title, failed)</code> prefixes "Error: " to the page's one title
-      while a summary shows.
+      <strong>Your part.</strong>
+      <ul class="mt-2 grid list-disc gap-1 ps-5">
+        <li>Move focus to the summary's root after every failed submit.</li>
+        <li>
+          On each failed submit, raise <code>attempt</code> by one, in the same update
+          that sets the errors, then move focus. Never raise it while the person types.
+        </li>
+        <li>
+          With <code>announce={"{false}"}</code>, a new <code>attempt</code> renders
+          the content again in silence. Raise it only on a failed submit, never while
+          focus is inside the summary: a link focused there is lost.
+        </li>
+        <li>
+          Pass <code>announce={"{false}"}</code> for a summary in the page at
+          load. Do not pass <code>role</code> to the summary.
+        </li>
+        <li>
+          A page with a sticky header declares it, with
+          <code>data-sticky-bar</code> or its own
+          <code>scroll-padding-top</code>, so the label stops below it.
+        </li>
+        <li>Link a checkbox question to its first checkbox.</li>
+        <li>
+          Use <code>titleFor(title, failed)</code> for the page's one title: it prefixes
+          "Error: " while a summary shows.
+        </li>
+      </ul>
     </li>
   {/snippet}
 </Component>
