@@ -1069,5 +1069,5 @@ On the final tree (Chromium; light and dark projects; the repository's config, c
 - `bun run test:e2e`, light and dark: 3,045 passed, 28 failed, 115 skipped, in 30.6 min. Of the 28: 3 were counts this build moves and had missed (fixed); the other 25 timed out at 30 s under load, and passed when re-run alone (the specs re-run: 544 passed but 4 `bar-glass` tests at 1440, which then passed, 11 of 11, on one worker). The specs this build changed, re-run on the final build: 464 passed.
 - `bun run test:smoke`: 139 pass, 0 fail, in 9 files (784 s). The smoke sets name their items; `toast` is in none, as the spec asks none.
 - `bun scripts/site/release-check.ts`: exit 0.
-- The scorecard: below.
+- The scorecard: re-run at `367ac57` (`kuiper.ts`, `breadth.ts`, `site.ts --only kuiper`, `depth.ts`); its run log has the row. Row 1 reads 30 of 40 parts (was 29), score 3 held, as criterion 30 predicts; every other row holds; the total stays 32. The Button page reads 382 kB.
 
