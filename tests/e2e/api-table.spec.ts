@@ -81,18 +81,18 @@ test.describe("023a: type names break only between words", () => {
     });
 
   /**
-   * The tables that still scroll sideways at 1440, by the landing's ruling:
-   * in each, every column's longest unbreakable word (a name, a type piece,
-   * a code span in "What it does") plus the cells' padding is wider than the
-   * 606 px column, so the table's own scroller is the designed fallback
-   * (015 criterion 26). Each is named; a new one fails.
+   * The tables that still scroll sideways at 1440, accepted by the second
+   * ruling at landing: in each, the columns' minimum widths (each its
+   * longest unbreakable piece: a name, a type piece, a code span in "What
+   * it does") plus the cells' padding add up to more than the 606 px
+   * column. No type name causes it. The table's own scroller is the
+   * designed fallback (015 criterion 26); `023` re-plans the layout. Each is
+   * named; a new one fails.
    */
   const WIDE_AT_1440: Record<string, string> = {
     "/components/button-group/ ButtonGroup":
       "HTMLDivElement and DropdownMenu.Trigger",
     "/components/popover/ PopoverContent": "WithoutChildrenOrChild<",
-    "/components/accordion/ AccordionTrigger":
-      'AccordionPrimitive.HeaderProps["level"], which has no break point',
     "/components/highlighter/ Languages":
       "findHighlightLanguage, HighlightLanguage[] and highlight/queries/",
     "/components/highlighter/ Shiki":

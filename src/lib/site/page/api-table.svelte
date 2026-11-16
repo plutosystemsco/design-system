@@ -16,9 +16,10 @@
       .map((p) => (p.startsWith("<") ? `\`${p}\`` : p));
 
   // 023a: a type breaks only at its punctuation, after each `|`, `<`, `,`,
-  // `(`, `&` and `=>`, never inside a name. Each piece is text; a <wbr>
+  // `(`, `&`, `=>` and `.`, and before each `[`, never inside a name.
+  // Each piece is text; a <wbr>
   // between pieces adds no text, so the Markdown twin is unchanged.
-  const pieces = (type: string) => type.split(/(?<=[|<,(&]|=>)/);
+  const pieces = (type: string) => type.split(/(?<=[|<,(&.]|=>)|(?=\[)/);
 </script>
 
 {#snippet prose(

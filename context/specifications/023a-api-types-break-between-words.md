@@ -16,7 +16,7 @@ Button and Meter don't show it today only because their other columns happen to 
 
 Replace `wrap-anywhere` on the Type cell with `break-words` (`overflow-wrap: break-word`), so a word never splits. The column is then sized to its longest unbreakable piece.
 
-So that a long type can still wrap, the API table gives the browser break opportunities at type punctuation. It renders `row.type` as pieces split after each `|`, `<`, `,`, `(`, `&` and `=>`, with a `<wbr>` between pieces (before `>` runs too, if that proves needed; it did not). The pieces are text, never `{@html}`. A `<wbr>` adds no text, so the Markdown twin does not change. This is how MUI's and Radix's prop tables let a long union wrap at its tokens, never inside a name. (The ruling at landing, 2026-11-16.)
+So that a long type can still wrap, the API table gives the browser break opportunities at type punctuation. It renders `row.type` as pieces split after each `|`, `<`, `,`, `(`, `&`, `=>` and `.`, and before each `[`, with a `<wbr>` between pieces (before `>` runs too, if that proves needed; it did not). The pieces are text, never `{@html}`. A `<wbr>` adds no text, so the Markdown twin does not change. This is how MUI's and Radix's prop tables let a long union wrap at its tokens, never inside a name. (The rulings at landing, 2026-11-16: the first gave the first six marks, the second added `.` and `[`.)
 
 No item changes. No token is added.
 
@@ -86,6 +86,24 @@ The six tables the pieces fixed at 1440: TooltipContent, SheetContent, DialogCon
 - **Perf** (`--project=perf --no-deps`): **5 passed**.
 - **`bun run check`:** 0 errors, 0 warnings, 2,231 files. **lint:** clean.
 - **Screenshots** after the ruling are `wbr-*` in `/private/tmp/claude-501/-Users-claygendron-Git-Repos-design-system/7b613866-3b2d-4829-bdd1-f2b35ebc0fd1/scratchpad/023a/`: the five pages, Popover, Dialog, Sign-up, Chart and Accordion, at 1440 and 390, light and dark. The counts are in `all-wbr.txt`, the column widths in `probe.txt`, and the mutation's run in `check2-mutant.txt`. On Popover and Dialog at 1440, `WithoutChildrenOrChild<` / `ComponentProps<typeof` / `PopoverPortal>>` now wrap at their `<`, and every column is in view. On Button group the last 24 px, the `DropdownMenu.Trigger` in "What it does", still sit behind the table's scroll.
+
+### Rulings at landing (2026-11-16, second)
+
+The design lead ruled on the 8 tables above:
+
+1. **A type also breaks after `.` and before `[`.** Both are token boundaries: namespace access and indexed access. `pieces()` is now `type.split(/(?<=[|<,(&.]|=>)|(?=\[)/)`.
+   - With it, at 1440, **7 tables** scroll sideways (all 78 pages, light). Accordion's AccordionTrigger is off the list, and Highlighter's Languages went from 677 px to 661.
+   - `WIDE_AT_1440` now names these 7, each with its reason: ButtonGroup (630), PopoverContent (608), Highlighter Languages (661) and Shiki (653), CodeLanguages (609), ChartUtils (626) and SidebarMenuButton (665).
+   - At 390, check 2 still finds 0 tables scrolling.
+   - The twins are still unchanged: `diff -rq` of the 106 twins against `1238f18`'s build shows no difference.
+2. **The 7 are accepted for now.** They overflow because their columns' minimum widths add up, not because of any type name. The table's own scroller is the fallback 015 designed.
+   - **Carried to `023` as a finding.** `023` adds a "What it does" column to every table, so it must re-plan the table's layout.
+   - **If a ruling is needed then,** two suggestions: less cell padding at that width (the four cells' padding is 128 px of the 606), or stacking the rows below a width, as they already stack below `md`.
+
+After this ruling:
+
+- `api-table.spec.ts`, light and dark: **24 passed**.
+- `bun run check`: 0 errors, 0 warnings, 2,231 files. lint: clean.
 
 The notes below are from the first build, at `1238f18`, before the ruling.
 
