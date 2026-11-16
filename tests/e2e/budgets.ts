@@ -29,6 +29,7 @@ export const TEMPLATE_IDS = [
   "component",
   "component-live",
   "component-heavy",
+  "theme",
   "leaf",
   "brand",
 ] as const;
@@ -109,16 +110,23 @@ export const WASM_ALLOWED: readonly string[] = [
  * Decision 3: the component pages that alone would push `component`'s
  * transfer budget past 500 kB (a median over about 455 kB), after
  * `LIVE_HIGHLIGHT` is ruled. Changes only by a ruling with its measurement.
- * `kuiper-theme` joined at `024d` (462.1 kB without its editor; 024d's
- * landing notes). `chart` (481 kB) is still the heaviest, so the transfer
- * budget holds; the page's LCP raises `component-heavy`'s (below).
  */
-export const HEAVY: readonly string[] = ["chart", "kuiper-theme"];
+export const HEAVY: readonly string[] = ["chart"];
+
+/**
+ * The design lead's ruling at `024d` (024d landing notes): the theme item's
+ * page has a template of its own, as `/` and `/components/` have. Over
+ * `component`'s line at 462.1 kB, and at 1,348 ms too slow for
+ * `component-heavy`'s LCP without unguarding `chart`.
+ */
+export const THEME_PAGE = componentPath("kuiper-theme");
 
 const live = new Set(LIVE_HIGHLIGHT.map(componentPath));
 const heavy = new Set(HEAVY.map(componentPath));
 const isComponent = (p: SitePage) =>
-  p.door === "components" && p.parent === "/components/";
+  p.door === "components" &&
+  p.parent === "/components/" &&
+  p.path !== THEME_PAGE;
 
 /** Decision 1's mapping, one rule per template. */
 const RULES: Record<TemplateId, (p: SitePage) => boolean> = {
@@ -129,6 +137,7 @@ const RULES: Record<TemplateId, (p: SitePage) => boolean> = {
   component: (p) => isComponent(p) && !live.has(p.path) && !heavy.has(p.path),
   "component-live": (p) => isComponent(p) && live.has(p.path),
   "component-heavy": (p) => isComponent(p) && heavy.has(p.path),
+  theme: (p) => p.path === THEME_PAGE,
   leaf: (p) =>
     (p.door === null && p.path !== "/") ||
     ((p.door === "start" || p.door === "foundations") &&
@@ -282,17 +291,28 @@ export const TEMPLATES: Record<TemplateId, Template> = {
   "component-heavy": {
     figures: {
       transfer: { page: "/components/chart/", median: 479.9 },
-      // A rise, by the builder's ruling at `024d` with its measurement: the
-      // theme page joined, slower than `chart` (912 ms). Its 1,348 ms
-      // (1,348, 1,332, 1,348) is the 1,352 it had with the editor, so the
-      // editor never set it.
-      lcp: { page: "/components/kuiper-theme/", median: 1348, margin: 0.1 },
-      cls: { page: "/components/kuiper-theme/", median: 0.004 },
+      lcp: { page: "/components/chart/", median: 912, margin: 0.1 },
+      cls: { page: "/components/chart/", median: 0 },
     },
     ci: null,
-    probes: ["/components/chart/", "/components/kuiper-theme/"],
+    probes: ["/components/chart/"],
     layouts: COMPONENT_LAYOUTS,
-    ruling: `${SWEEP}; LCP and CLS from kuiper-theme by the builder's ruling at 024d (024d landing notes)`,
+    ruling: SWEEP,
+  },
+  theme: {
+    // One page, measured at `024d` without its editor (024d landing
+    // notes): 462.1 kB unthrottled, LCP 1,348 ms (1,348, 1,332, 1,348),
+    // CLS 0.004. Its LCP is not the editor's: it was 1,352 with it.
+    figures: {
+      transfer: { page: THEME_PAGE, median: 462.1 },
+      lcp: { page: THEME_PAGE, median: 1348, margin: 0.1 },
+      cls: { page: THEME_PAGE, median: 0.004 },
+    },
+    ci: null,
+    probes: [THEME_PAGE],
+    layouts: COMPONENT_LAYOUTS,
+    ruling:
+      "024d landing notes, the design lead's ruling of 2026-11-16 (a ninth template)",
   },
   leaf: {
     figures: {

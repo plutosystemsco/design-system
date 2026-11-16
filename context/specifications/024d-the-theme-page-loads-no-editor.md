@@ -1,6 +1,6 @@
 # 024d — The theme page loads no editor until it is used
 
-- **Status:** built on `release/0.13.0` at `506cfc1` (fix 2, a static specimen); awaiting its change review. Lands before `030`, with `024b`, `024c`, `024e` and one re-base sweep (`roadmap.md` §3, "`024` before `030`").
+- **Status:** built on `release/0.13.0` at `506cfc1` (fix 2, a static specimen), with the design lead's rulings of 2026-11-16 (a ninth template, `theme`); awaiting its change review. Lands before `030`, with `024b`, `024c`, `024e` and one re-base sweep (`roadmap.md` §3, "`024` before `030`").
 - **Date:** 2026-11-16
 - **Author:** the design lead
 - **Kind:** small change (AGENTS.md: a fix with no interface change, no new token or dependency, in one place). No research memo and no spec review. Its check is seen failing first, and the built change is reviewed by someone who did not write it (constitution §5).
@@ -64,9 +64,24 @@ On `506cfc1`'s tree, with only the test changes made (`kuiper-theme` out of `LIV
 
 After the fix both pass on the `.wasm` rule. The page measures **462.1 kB** unthrottled, with **0 `.wasm`** (−298.8 kB). Its largest files are now its HTML (89.5 kB) and the three fonts. That is still over `component`'s 445 kB (criterion 3).
 
-### The template, and the rulings (the builder, 2026-11-16, for the design lead to confirm)
+### The template, and the rulings
 
-The owner and the design lead were not available. Each ruling below is made with its measurement, as the 024 checkpoint's were, and is the design lead's to confirm or overturn at the change review or at the re-base.
+#### The design lead's rulings (2026-11-16), which replace the builder's 1 and 2 below
+
+1. **The theme page has a template of its own, `theme`: a ninth template.** The builder's ruling 2 is **not confirmed**: raising `component-heavy`'s LCP from 1,010 to 1,490 ms would unguard `chart` by about 480 ms. `home` and `index` are already one-page templates, so a one-page `theme` has precedent. Its figures are the page's own, measured at this change (the builder's sweep run, ruling 2 below): transfer **462.1 kB** → budget **510 kB** (decision 4's 10%, rounded up to 5 kB); LCP **1,348 ms** (1,348, 1,332, 1,348; spread 1.2%) → **1,490 ms** (10%); CLS **0.004** → **0.02** (the floor). Its probe is the page itself; its layouts are the component layouts. `kuiper-theme` leaves `HEAVY`; the `component` rule leaves the page to `theme`. This amends `024` decision 1 (eight templates → nine); `024`'s landing notes record it.
+2. **`component-heavy` is restored** to `chart`'s own figures from `024`'s sweep: 479.9 kB, 912 ms and 0. Budgets **530 kB, 1,010 ms, 0.02**, as before this change. Its probe is `chart` alone.
+3. **`component-live`'s fall is confirmed** (the builder's ruling 3 below): 725 kB, 1,260 ms, 0.02. A fall needs no ruling.
+4. **The unit test still holds every template's figures to its own pages.** `budgets.test.ts`'s own-pages, arithmetic, margin and `ci` tests run over `TEMPLATE_IDS`, so they cover `theme` with no change. The count test reads nine templates ("decision 1's eight templates and 024d's theme"), and decision 1's fixed pages now include `/components/kuiper-theme/` → `theme`. 60 pass (56 before: 4 per template).
+
+#### A finding: the theme page's LCP is its first paint, set by its HTML (for the re-base sweep)
+
+The page's LCP did not move when the editor went (1,352 → 1,348 ms), so the editor never set it. One probe (`015` decision 23's profile, 3 cold loads, the build served by `vite preview`) reads the LCP element: the header's lead paragraph, `p.mt-3.max-w-(--site-measure).text-base.text-muted-foreground`, "Kuiper's tokens for light and dark: colour, radius, spacing, type, motion, focus…". It is a text paint of 22,145 px², the same element in all 3 loads, and **LCP equals first contentful paint** each time (1,312, 1,320, 1,328 ms). The response ended at about 1,090 ms. On `chart`, the same probe gives LCP = FCP = 920 ms and a response end of 304 ms.
+
+So nothing late is painted. The page's first paint is late because its document is large. `build/components/kuiper-theme/index.html` is **1,427,450 bytes raw, 87,523 gzipped**. `chart`'s is 347,289 (27,398), and Button's 321,788 (26,147). The prerendered page holds all 18 examples. The largest parts, by raw bytes between example anchors, are: the hydration data after `</main>` about 192 kB, `surface` 182 (its two blocks and its source), `contrast` 169, `measured` 128, `fields` 85, `expressive-motion` 86 and `code` 79. Under 4× CPU throttling, parsing that document holds the first paint. The fix would be the page's own, not an item's, and it is out of this change's scope: fewer examples prerendered in full, or the contrast and measured tables trimmed. The re-base sweep after `024b`–`024e` revisits it, with `theme`'s LCP figure.
+
+#### The builder's rulings (2026-11-16), as made before the design lead's
+
+The owner and the design lead were not available at the time. Each ruling below was made with its measurement, as the 024 checkpoint's were. Rulings 1 and 2 are replaced by the design lead's above; ruling 3 is confirmed.
 
 1. **`kuiper-theme` joins `HEAVY`.** At 462.1 kB it is over decision 3's line of about 455 kB, so it cannot be in `component`. It stays under `chart` (481.0 kB on the same run), so `component-heavy`'s transfer figure stays `chart`'s 479.9 and its transfer budget stays **530 kB**. A one-page template (criterion 3's other choice) is not needed for transfer.
 2. **`component-heavy`'s LCP figure rises to the theme page's.** One `PERF_SWEEP=1` run of the template's two pages (2026-11-16 02:18, load about 8 on 10 cores): `kuiper-theme` LCP **1,348 ms** (1,348, 1,332, 1,348), CLS 0.004, 462.1 kB in every load, 0 `.wasm`; `chart` 864 ms (864, 852, 880), CLS 0, 481.0 kB. The theme page is the slower, so decision 4 makes it the LCP figure. The budget goes 1,010 → **1,490 ms** (1,348 × 1.1, rounded up to 10 ms; the spread is 1.2%, so the margin is 10%). That is the budget the page had in `component-live`. Its 1,348 ms equals the 1,352 it had with the editor (`024`'s sweep), so the editor never set it, and this change does not cause it. The CLS figure is the theme page's 0.004; the budget stays at the floor, 0.02. `kuiper-theme` becomes a probe beside `chart`.
@@ -75,7 +90,21 @@ The owner and the design lead were not available. Each ruling below is made with
 
 `024`'s landing notes ("After `024d`") record the same figures.
 
-### The checks
+### The checks after the design lead's rulings
+
+- `bun test tests/unit/budgets.test.ts --timeout 60000`: **60 pass, 0 fail** (253 expect calls).
+- **The perf project**, once, on the same build (`E2E_PREBUILT=1 E2E_PORT=5741 bun --bun playwright test --project=perf --no-deps`, 2026-11-16): **26 passed**, 0 failed, 5.9 minutes. That is 1 server check, 9 transfer tests (one per template, `024 transfer: theme` new) and 16 paint tests.
+
+  | Template | Pages | Heaviest page | Measured | Budget | Probes' LCP medians (budget) | CLS (budget) |
+  |---|---|---|---|---|---|---|
+  | `component` | 73 | `sidebar` | 405.1 kB | 445 | 1,088 on `sidebar` (1,270) | 0.09 on `label` (0.108) |
+  | `component-live` | 4 | `code-editor` | 657.0 | 725 | 928 to 1,144 (1,260) | 0.003 (0.02) |
+  | `component-heavy` | 1 | `chart` | 481.0 | 530 | 900 (**1,010**) | 0 (0.02) |
+  | `theme` | 1 | `kuiper-theme` | 462.1 | **510** | 1,380 (1,356, 1,404, 1,380) (**1,490**) | 0.004 (0.02) |
+
+  `kuiper-theme`: 0 `.wasm` in all four loads, throttled transfer equal to unthrottled. Every other template passed as on the run below.
+
+### The checks, before the design lead's rulings
 
 - **The perf project**, `E2E_PREBUILT=1 E2E_PORT=5741 bun --bun playwright test --project=perf --no-deps`, on the final build (2026-11-16, load 8 to 15 on 10 cores): **25 passed**, 0 failed, 5.9 minutes. That is 1 server check, 8 transfer tests and 16 paint tests: `component-heavy` now has 2 probes and `component-live` 4. The figures that matter here:
 
