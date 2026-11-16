@@ -79,15 +79,15 @@ export const MARGIN = {
  * Decision 5, split at the landing (024 landing notes, "Rulings at landing",
  * finding 1): the component pages whose **main frame** loads tree-sitter on
  * load. The template rule reads this list; `component-live`'s budget counts
- * the runtime and a grammar. `kuiper-theme` and `highlighter` are here
- * pending `024d` and `024e`, whose re-bases are falls.
+ * the runtime and a grammar. `highlighter` is here pending `024e`, whose
+ * re-base is a fall. `kuiper-theme` left at `024d`: its ink surface shows a
+ * static specimen, so the page loads no editor and no tree-sitter.
  */
 export const LIVE_HIGHLIGHT: readonly string[] = [
   "code-editor",
   "code-languages",
   "highlighter",
   "use-highlighted-code",
-  "kuiper-theme",
 ];
 
 /**
@@ -109,8 +109,11 @@ export const WASM_ALLOWED: readonly string[] = [
  * Decision 3: the component pages that alone would push `component`'s
  * transfer budget past 500 kB (a median over about 455 kB), after
  * `LIVE_HIGHLIGHT` is ruled. Changes only by a ruling with its measurement.
+ * `kuiper-theme` joined at `024d` (462.1 kB without its editor; 024d's
+ * landing notes). `chart` (481 kB) is still the heaviest, so the transfer
+ * budget holds; the page's LCP raises `component-heavy`'s (below).
  */
-export const HEAVY: readonly string[] = ["chart"];
+export const HEAVY: readonly string[] = ["chart", "kuiper-theme"];
 
 const live = new Set(LIVE_HIGHLIGHT.map(componentPath));
 const heavy = new Set(HEAVY.map(componentPath));
@@ -263,26 +266,33 @@ export const TEMPLATES: Record<TemplateId, Template> = {
     ruling: SWEEP,
   },
   "component-live": {
+    // `kuiper-theme` (760 kB, 1,352 ms, 0.004) set all three until it left
+    // at `024d`. A fall, so no ruling: the next pages of the same sweep,
+    // not a re-base. The re-base sweep after `024b` to `024e` re-measures.
     figures: {
-      transfer: { page: "/components/kuiper-theme/", median: 760 },
-      lcp: { page: "/components/kuiper-theme/", median: 1352, margin: 0.1 },
-      cls: { page: "/components/kuiper-theme/", median: 0.004 },
+      transfer: { page: "/components/code-editor/", median: 655.8 },
+      lcp: { page: "/components/highlighter/", median: 1140, margin: 0.1 },
+      cls: { page: "/components/code-editor/", median: 0.003 },
     },
     ci: null,
     probes: LIVE_HIGHLIGHT.map(componentPath),
     layouts: COMPONENT_LAYOUTS,
-    ruling: SWEEP,
+    ruling: `${SWEEP}; kuiper-theme's fall at 024d (024d landing notes)`,
   },
   "component-heavy": {
     figures: {
       transfer: { page: "/components/chart/", median: 479.9 },
-      lcp: { page: "/components/chart/", median: 912, margin: 0.1 },
-      cls: { page: "/components/chart/", median: 0 },
+      // A rise, by the builder's ruling at `024d` with its measurement: the
+      // theme page joined, slower than `chart` (912 ms). Its 1,348 ms
+      // (1,348, 1,332, 1,348) is the 1,352 it had with the editor, so the
+      // editor never set it.
+      lcp: { page: "/components/kuiper-theme/", median: 1348, margin: 0.1 },
+      cls: { page: "/components/kuiper-theme/", median: 0.004 },
     },
     ci: null,
-    probes: ["/components/chart/"],
+    probes: ["/components/chart/", "/components/kuiper-theme/"],
     layouts: COMPONENT_LAYOUTS,
-    ruling: SWEEP,
+    ruling: `${SWEEP}; LCP and CLS from kuiper-theme by the builder's ruling at 024d (024d landing notes)`,
   },
   leaf: {
     figures: {

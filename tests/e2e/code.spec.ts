@@ -701,6 +701,22 @@ test.describe("the ink surface", () => {
   const INK_WASH = "rgb(44, 40, 33)";
   const PAPER_RAISED = "rgb(255, 255, 255)";
 
+  // 024d: the theme item shows a surface, not an editor. Its page loads no
+  // CodeMirror and no tree-sitter: no `.wasm` in any frame, no editor.
+  test("024d. on load the theme page fetches no .wasm, in any frame, and mounts no editor", async ({
+    page,
+  }) => {
+    const wasm: string[] = [];
+    page.context().on("request", (r) => {
+      if (new URL(r.url()).pathname.endsWith(".wasm")) wasm.push(r.url());
+    });
+    await open(page, PAGE);
+    await page.waitForLoadState("networkidle");
+    await expect(surface(page)).toBeVisible();
+    expect.soft(wasm, ".wasm requests on load").toEqual([]);
+    await expect(page.locator('[data-slot="code-editor"]')).toHaveCount(0);
+  });
+
   test("S1. the surface's grounds, its overlays' placement and theme", async ({
     page,
   }, info) => {
@@ -709,24 +725,24 @@ test.describe("the ink surface", () => {
     const s = surface(page);
     await expect(s).toHaveClass(/\bdark\b/);
     await expect(s).toHaveClass(/\bsurface-ink\b/);
-    const editor = s.locator(".cm-editor");
-    await editor.locator(".cm-content").focus();
+    // 024d: the editor's place is a still specimen, a numbered block with
+    // one highlighted line. The editor reads the same two slots,
+    // --code-background and --code-active-line (G2, on its own page).
+    const specimen = s.getByTestId("surface-specimen");
+    const block = s.getByTestId("surface-block");
     const ground = light ? INK : INK_RAISED;
-    // The 8 light-page readings (the first 2 are also the dark page's).
+    // The 7 light-page readings (the first 2 are also the dark page's).
     expect(await computed(s, "background-color")).toBe(ground);
-    expect(await computed(editor, "background-color")).toBe(ground);
-    expect(
-      await computed(editor.locator(".cm-gutters"), "background-color"),
-    ).toBe(ground);
-    expect(
-      await computed(s.locator('[data-slot="code-block"]'), "background-color"),
-    ).toBe(ground);
-    // 014 decision 6: the block and the editor gain the hairline there too.
-    await expectHairline(s.locator('[data-slot="code-block"]'), "the block");
-    await expectHairline(s.locator('[data-slot="code-editor"]'), "the editor");
+    expect(await computed(specimen, "background-color")).toBe(ground);
+    expect(await computed(block, "background-color")).toBe(ground);
+    // 014 decision 6: both blocks gain the hairline there too.
+    await expectHairline(block, "the block");
+    await expectHairline(specimen, "the specimen");
     expect(
       await computed(
-        editor.locator(".cm-activeLine").first(),
+        specimen.locator(
+          '[data-slot="code-block-line"][data-variant="highlighted"]',
+        ),
         "background-color",
       ),
     ).toBe(INK_WASH);
