@@ -18,12 +18,12 @@ Landed on `release/0.13.0`, in order (each spec's Landing notes hold its figures
 7. `023` prop doc comments: every one of 1,127 prop rows described; the API table in three columns. Row 2: 2 → 3.
 8. `024c` component headers hold still (CLS 0.09 → 0). `022b`, `022c`, `022d` three Firefox faults (ledger 27 → 8).
 9. `027b` pagination, search field, tag. Row 1: 35 of 40, score 4.
+10. `026`'s D1: `app-shell` mounts the toaster (its A1 screen-reader file is written).
 
 The scorecard's rows 1–14 read 37 (32 at `020`), row 15 reads 2. Button is about 366 kB under a 445 kB `component` budget. The last gates on the merged trees: `check` 0 errors; unit about 1,850 pass; Chromium e2e green bar load timeouts that pass alone; `release-check --before-ci` exits 0; the full release check refuses only on CI evidence and the 8 ledger lines.
 
 **Still building when the night ended** (worktrees in `.claude/worktrees/`, not merged):
 
-- `026`'s D1, the toaster mounted in `app-shell` (reviewed, "land after two small fixes"; the fixes and the merge with `d79ce59` were under way).
 - `024e`, `022a`, `022e`, three lane-I small changes (built, not yet reviewed).
 
 **Specs ready to build next:** `028` forced colours (amended overnight: `code-block` joins it; text on state fills uses the inverted pair with `forced-color-adjust: none`, option A), `029` scoped schemes (then `029a`), `030` the accessibility status (after the re-base sweep), then lane T in order `031a`, `031b`, `031`. Queued small changes and specs: `022f` (Firefox editor budgets, needs a quiet machine), `024f` (example source off first paint, a spec), `024g` (theme font fallbacks, a spec), `024h` (landings' preload), and one re-base sweep after `024e` lands, before `030`.
