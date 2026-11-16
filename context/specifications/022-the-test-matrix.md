@@ -954,4 +954,66 @@ The re-review closed the 16 findings above, approved with changes, and raised R1
 - **Q8:** option 1. Push B, a likely push C for first-run fixes, then one push after each later landing. Push A happens only if Q7's route is refused. The owner makes every push; agents never push.
 - **Q9:** option 1. Rehearse in containers on this machine before push B: Playwright's Linux image at 1.64.1, and Orca in guidepup's image. These count as rehearsal only, and no macOS setting changes.
 
-Not yet landed.
+### The build (the builder, 2026-11-15)
+
+Built on `worktree-agent-a3cec37006404b9a4`, from `44cec73` ("Merge 020: the Kuiper rename"), build steps 1 to 6. Steps 7 to 11 (the checkpoint, the owner's pushes and dispatch, the change review, the landing and the scorecard) wait on the design lead and the owner. Nothing was pushed, and nothing touched GitHub's state; the release check made one read-only `gh run list` call.
+
+**Step 1, the tools.**
+
+- Bun 1.3.14 has `Bun.YAML` (EXECUTED, `bun x bun@1.3.14`, which caches a binary and installs nothing globally). Under 1.3.14 the browser suite lists 9,223 tests and the screen-reader suite 198 (66 tests × 3 projects), as under the local 1.4.4.
+- `@guidepup/playwright` 0.21.0 and `@guidepup/setup` 0.29.2 install exact beside Playwright 1.64.1 (`bun add -d --exact`; 42 packages; `bun.lock`).
+- The ledger fixture's mechanism is proven by criterion 19 below.
+
+**The tests, each seen failing first.**
+
+| Test | How it failed before its code |
+|---|---|
+| 1, 2 `matrix.test.ts` | 10 of 13 failed: three projects named `light`, `dark`, `perf`; no screen-reader config; 42 `.project.name` reads in 15 files; 31 direct imports. (The "SR_READER unset throws" case passed vacuously, since the file was missing.) |
+| 3 `workflow.test.ts` | no `scripts/ci/workflow.ts`: the file failed to load |
+| 4 `sr-rules.test.ts` | no `tests/sr/rules.ts`. Once written, 1 of 26 failed: C1 accepted a caption spoken before the figure's name, because a match across two phrases was counted from the first. C1 now compares positions in speech. |
+| 5 `sr-items.test.ts`, 5a `sr-static.test.ts` | no `tests/sr/declared.ts` or `items.ts` |
+| 6 `mutations.test.ts` | no patch table or derivation |
+| 7 `fault-ledger.test.ts`, 7a `engine-only.test.ts` | no `tests/fault-ledger.ts`, `tests/e2e/engine-only.ts`. Once written, 7a's call finder missed `brand.spec.ts`'s `onlyIn`, read as a member call because a comment ending in "." came before it; fixed. |
+| 8 `gate.test.ts`, 9 `release-check.test.ts` | no `gate.ts`, no `qualify.ts` |
+| 10 `deps.test.ts` `PACKAGES_022` | 5 failed against the lockfile before `bun add` (the packages were added, set aside, and the old `package.json` and `bun.lock` restored to see it fail) |
+
+**The counts.**
+
+- The suite at build start was 3,095 browser tests: `light` 1,558, `dark` 1,532, `perf` 5 (020 added three spec files, `field-keys`, `redirects` and `upgrade`, to the memo's 28). With three engines it lists **9,223** (1,558 + 1,532 + 5 + 4 × 1,532), as criterion 4 requires. `build-output.spec.ts` is in `chromium-light` alone.
+- **31** spec files import the shared `test` (`tests/test.ts`). The 42 reads became 38 `scheme(info)` calls, 3 `projectLabel(info)` labels, and two `onlyProjects` skips (`forced-colors.spec.ts`, and `spacing.spec.ts`, below).
+- **`ENGINE_ONLY`: `onlyIn` 1, `notIn` 0, `onlyProjects` 3** (criterion 5):
+  - `brand.spec.ts`, "under reduced transparency (emulated through CDP)…": `onlyIn("chromium", "CDP: Emulation.setEmulatedMedia for prefers-reduced-transparency")`. Playwright 1.64.1's `emulateMedia` has `colorScheme`, `reducedMotion`, `forcedColors` and `contrast`, and no reduced transparency, so no engine-neutral rewrite exists.
+  - `forced-colors.spec.ts`: `onlyProjects(["chromium-light", "firefox-light", "webkit-light"], "light schemes only")`, decision 2's entry, word for word.
+  - `spacing.spec.ts` and `tokens.spec.ts` (builder's ruling, below): their scheme skips (`test.skip` on the scheme) became `onlyProjects` over the three light projects, with their old reasons, "letter spacing is the same in both schemes" and "light theme only".
+  - `notIn` is in `engines.ts` from the start, as `028` asked.
+- **`tests/sr/`: 28 files, 66 tests**, each declaring `item`, `rules` and `hears` statically through `declared()`. The listing shows them, with the config's tag (`reader-nvda`, `reader-voiceover`; Playwright drops the `@` in the JSON) on every test.
+- **The mutation sets:** `main`, seven patches, 60 expected failures (15 tests × 4 pairs); `double-read`, patch 7b, 20 (5 tests × 4 pairs). Both apply with `git apply --check`, alone and together; `expected.json` is written by `tests/sr/mutations/write-expected.ts` and checked by test 6.
+
+**Criterion 18, flakes.** A scratch test that failed when `retry` was 0 and passed on its retry, run with `CI=1`: "1 flaky", and Playwright exited 1 under `failOnFlakyTests`. Deleted.
+
+**Criterion 19, the ledger, three ways.** A scratch spec with three ledger lines in `chromium-light` (2026-11-15, Playwright 1.64.1):
+
+1. a test failing with the error its line names: status `expected` (expected `failed`, got `failed`); the run stays green for it;
+2. the same line on a test that passes: status `unexpected`; red;
+3. a test failing for another reason: expected status set back to `passed`, a `ledger-mismatch` annotation ("an error does not contain "scratch fault C": …"), status `unexpected`; red. Under `CI=1` its retry failed the same way: "1 failed", not flaky.
+
+The scratch spec and lines were removed. `testInfo.titlePath` is the file, then the describes, then the title, so a line's `title` is the describes and the title joined by " › ".
+
+**Builder's rulings** (for the design lead to confirm at the checkpoint):
+
+1. **`E2E_PORT`.** `tests/server.ts` reads `E2E_PORT`, default 4173. Another worktree held 4173 during this build; every local run here used 4373, 4473 or 448x. CI never sets it.
+2. **`SR_DRY=1`, a dry screen-reader run, local only.** A silent reader in place of guidepup; every page, locator and action runs headless; speech is not judged, but focus and DOM facts are (`sr.focused()`, `sr.fact()`). `reader.ts` throws on it in CI, and its tag is `@reader-dry`. Every one of the 66 tests was dry-run in Chromium, WebKit and Firefox.
+3. **The engine-only title convention.** An `ENGINE_ONLY` entry's `title` is the title path below the file of the test the call skips, or of the describe a describe-level call covers; `""` covers the whole file. One entry per call, as decision 3 says. The unit test matches calls to entries by file and helper, and by arguments wherever they are literals; `engines.ts` also throws at run time on a call with no entry, so a call with computed arguments (as `028`'s will be) is still counted.
+4. **`spacing.spec.ts` and `tokens.spec.ts`** skipped by scheme with a bare `test.skip`. Decision 3 makes the three helpers the only ways to skip by project, and `030` grades an undeclared skip as a fault, so both moved onto `onlyProjects`. They run in the same tests as before.
+5. **The release check's matrix test is in `scripts/ci/qualify.ts`** from the start, which `030` asked for; `release-check.ts` imports it.
+6. **Thumbnail hashes.** 018 decision 13 hashes `package.json` into every thumbnail, so the two new devDependencies staled all 58 pairs. `bun scripts/site/thumbnails.ts --hash-only` rewrote `src/lib/site/thumbnails/manifest.json`; no picture changed. This is the one file under `src/lib/site/` the build touches, against criterion 23's letter; the review should confirm it.
+7. **`headers.test.ts`.** Its test "release-check.ts exits 0" now checks the address step alone: from `022` the check exits 1 without a green matrix run, by design (decision 19).
+8. **`tests/fixtures/pluto-allowed.json`.** Three sample-content uses of the brand's name in screen-reader tests ("Pluto Systems" twice each in `marketing-bar.sr.ts` and `product-home.sr.ts`, "pluto-sandbox" once in `alert-dialog.sr.ts`) are added to `020`'s pinned counts.
+9. **No `item`/`check` annotations on browser tests.** No browser test was written or moved by this build, only re-imported, so none gained them. `030`'s `about()` adds them with their tags.
+10. **The two waits rules for screen-reader tests:** a trigger is focused before the window, so the window's action is the key press alone and a trigger's name never satisfies O1 or F1; and no wait depends on the promise a rule checks (a dialog is waited for by role, never by name), so a mutation fails a rule, not a set-up step.
+
+**Decision 13's two edits** were made in the build, since the script they name is deleted here: `handoff.md`'s `019` line now says the listen passed and the scripted runs replace the script; `registry.test.ts` requires only `/JAWS (is|are) not tested/`. The Error summary page is unchanged.
+
+**Criterion 23.** No file under `src/lib/registry/`, `tokens/` or `static/` changed. Under `src/lib/site/`, only the thumbnail manifest (ruling 6).
+
+BUILD-RESULTS-PLACEHOLDER

@@ -4,14 +4,14 @@
  * the accordion (A1) and the toggles (T1). Runs in both projects, light and
  * dark.
  */
-import {
-  expect,
-  test,
-  type APIRequestContext,
-  type Browser,
-  type Locator,
-  type Page,
+import type {
+  APIRequestContext,
+  Browser,
+  Locator,
+  Page,
 } from "@playwright/test";
+import { expect, test } from "../test.ts";
+import { scheme } from "./scheme.ts";
 import {
   cssVar,
   hexToRgb,
@@ -697,7 +697,7 @@ test.describe("the ink surface", () => {
   test("S1. the surface's grounds, its overlays' placement and theme", async ({
     page,
   }, info) => {
-    const light = info.project.name === "light";
+    const light = scheme(info) === "light";
     await open(page, PAGE);
     const s = surface(page);
     await expect(s).toHaveClass(/\bdark\b/);
@@ -1524,7 +1524,7 @@ test.describe("the popover", () => {
     expect(holdsColour(layers[0], line), `first layer ${layers[0]}`).toBe(true);
     expect(layers[0]).toMatch(/\b0px 0px 0px 1px$/);
     expect(layers[1]).toMatch(/\b0px 12px 32px 0px$/);
-    if (info.project.name === "light") {
+    if (scheme(info) === "light") {
       expect(
         holdsColour(layers[1], await cssVar(page, "--elevation-shadow")),
         `second layer ${layers[1]}`,
@@ -1780,7 +1780,7 @@ test.describe("the code ground and its edge (014)", () => {
   test("G1. code-block: the root on the code ground with the hairline on 4 sides; 3 emphasised lines on the active line; the track on the code ground", async ({
     page,
   }, info) => {
-    const theme = info.project.name as "light" | "dark";
+    const theme = scheme(info);
     await open(page, PAGE);
     const block = python(page);
     expect(await computed(block, "background-color")).toBe(CODE_GROUND[theme]);
@@ -1800,7 +1800,7 @@ test.describe("the code ground and its edge (014)", () => {
   test("G2. code-editor: the root and .cm-editor on the code ground, the root with the hairline; the active line; the track; the ring 3 px out", async ({
     page,
   }, info) => {
-    const theme = info.project.name as "light" | "dark";
+    const theme = scheme(info);
     await open(page, EDITOR_PAGE);
     const host = page.getByTestId("editor-main");
     const root = host.locator('[data-slot="code-editor"]');
@@ -1828,7 +1828,7 @@ test.describe("the code ground and its edge (014)", () => {
   test("G3. product-home: each stage-card's block and live-console's block on the code ground with the hairline", async ({
     page,
   }, info) => {
-    const theme = info.project.name as "light" | "dark";
+    const theme = scheme(info);
     await openView(page, "/view/product-home/");
     const blocks = page.locator(
       '[data-slot="stage-card"] [data-slot="code-block"], [data-slot="live-console"] [data-slot="code-block"]',
@@ -1852,7 +1852,7 @@ test.describe("the code ground and its edge (014)", () => {
   test("G4. the chat thread: the block in m3's user bubble on the code ground with the hairline", async ({
     page,
   }, info) => {
-    const theme = info.project.name as "light" | "dark";
+    const theme = scheme(info);
     await openView(page, "/view/chat/thread/");
     const turn = page
       .locator('[data-slot="message"][data-align="end"]')
@@ -1882,7 +1882,7 @@ test.describe("inline code (014)", () => {
   test("I1. the chip: ground, hairline, code colour, 4 px side padding and none above, the case radius, cloned on a wrap", async ({
     page,
   }, info) => {
-    const theme = info.project.name as "light" | "dark";
+    const theme = scheme(info);
     await open(page, THEME_PAGE);
     const chip = page.getByTestId("inline-p").locator("code").first();
     expect(await computed(chip, "background-color")).toBe(CODE_GROUND[theme]);
@@ -1931,7 +1931,7 @@ test.describe("inline code (014)", () => {
   test("I3. in a link the code colour is the link's; in a card the same chip; in an h3 no chip; in the ink surface flush with the surface", async ({
     page,
   }, info) => {
-    const theme = info.project.name as "light" | "dark";
+    const theme = scheme(info);
     await open(page, THEME_PAGE);
     const link = page.getByTestId("inline-link").locator("code");
     await expect(page.getByTestId("inline-link")).toHaveAttribute(
@@ -1966,7 +1966,7 @@ test.describe("inline code (014)", () => {
   test("I4. the install line on an item page takes the code ground, the hairline and the code colour", async ({
     page,
   }, info) => {
-    const theme = info.project.name as "light" | "dark";
+    const theme = scheme(info);
     await open(page, componentPath("button"));
     // 015 decision 16: the install line is a code block; 018 decision 3
     // moves it from the facts card to the Install section.
@@ -1985,7 +1985,7 @@ test.describe("inline code (014)", () => {
   test("I5. a block's pre code takes no chip; kbd sits on the code ground, with its hairline and muted text", async ({
     page,
   }, info) => {
-    const theme = info.project.name as "light" | "dark";
+    const theme = scheme(info);
     await open(page, PAGE);
     const inner = python(page).locator("pre code").first();
     expect(await computed(inner, "background-color")).toBe("rgba(0, 0, 0, 0)");

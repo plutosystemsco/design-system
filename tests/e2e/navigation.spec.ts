@@ -3,14 +3,14 @@
  * (N3), the breadcrumb (N4), the sidebar (N5) and the theme (N6). Runs in
  * both projects, light and dark.
  */
-import {
-  expect,
-  test,
-  type APIRequestContext,
-  type Browser,
-  type Locator,
-  type Page,
+import type {
+  APIRequestContext,
+  Browser,
+  Locator,
+  Page,
 } from "@playwright/test";
+import { expect, test } from "../test.ts";
+import { scheme } from "./scheme.ts";
 import {
   cssVar,
   hexToRgb,
@@ -229,7 +229,7 @@ test.describe("N1. the menu", () => {
     expect(await computed(menu, "min-width")).toBe("256px");
     expect(await computed(menu, "border-top-left-radius")).toBe("8px");
     expect(await computed(menu, "overflow-y")).toBe("auto");
-    await expectElevation(page, menu, info.project.name as ThemeName);
+    await expectElevation(page, menu, scheme(info));
 
     // 0 style attributes of ours: bits-ui's inline style sits on the content
     // (its floating variables) and nowhere else.
@@ -336,7 +336,7 @@ test.describe("N2. the sheet", () => {
     expect(box.x + box.width).toBe(viewport.width);
     expect(await computed(content, "overflow-y")).toBe("auto");
     await expectScrim(page, page.locator('[data-slot="sheet-overlay"]'));
-    await expectElevation(page, content, info.project.name as ThemeName);
+    await expectElevation(page, content, scheme(info));
     expect(await computed(content, "border-left-width")).toBe("0px");
     await expectCloseLast(content);
     await expect(content.locator("nav")).toHaveAttribute("aria-label", /\S/);
@@ -456,7 +456,7 @@ test.describe("N3. the dialog", () => {
         expect(await computed(content, "overflow-y")).toBe("auto");
         expect(await computed(content, "border-top-left-radius")).toBe("8px");
         await expectScrim(page, page.locator('[data-slot="dialog-overlay"]'));
-        await expectElevation(page, content, info.project.name as ThemeName);
+        await expectElevation(page, content, scheme(info));
         await expectCloseLast(content);
         await page.keyboard.press("Escape");
         await expect(content).toHaveCount(0);
@@ -844,7 +844,7 @@ test.describe("N6. the theme", () => {
     page,
   }, info) => {
     await open(page, PAGE);
-    const theme = info.project.name as ThemeName;
+    const theme = scheme(info);
     expect(await storedTheme(page)).toBeNull();
     expect(await isDark(page)).toBe(theme === "dark");
     const toggle = page.getByTestId("keyboard-fixture").getByRole("button", {
@@ -861,7 +861,7 @@ test.describe("N6. the theme", () => {
     page,
   }, info) => {
     await open(page, PAGE);
-    const dark = info.project.name === "dark";
+    const dark = scheme(info) === "dark";
     const toggle = page.getByTestId("keyboard-fixture").getByRole("button", {
       name: "Dark theme",
     });
@@ -894,7 +894,7 @@ test.describe("N6. the theme", () => {
     page,
   }, info) => {
     await open(page, PAGE);
-    const dark = info.project.name === "dark";
+    const dark = scheme(info) === "dark";
     const toggle = page.getByTestId("keyboard-fixture").getByRole("button", {
       name: "Dark theme",
     });

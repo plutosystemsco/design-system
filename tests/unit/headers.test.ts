@@ -101,11 +101,17 @@ describe("the site's address", () => {
     expect(re.test(`${SITE_ORIGIN}/components/button/`)).toBe(true);
   });
 
-  test("scripts/site/release-check.ts exits 0", () => {
+  // From 022 the release check also needs a green matrix run of HEAD, which
+  // no local run has, so it exits 1 here by design (022 decision 19). Its
+  // address step still passes.
+  test("scripts/site/release-check.ts passes its address step", () => {
     const r = Bun.spawnSync([
       process.execPath,
       "scripts/site/release-check.ts",
     ]);
-    expect(r.exitCode).toBe(0);
+    expect(r.stdout.toString()).toContain(
+      `release-check: SITE_ORIGIN is https://`,
+    );
+    expect(r.stderr.toString()).not.toContain("SITE_ORIGIN is still");
   });
 });

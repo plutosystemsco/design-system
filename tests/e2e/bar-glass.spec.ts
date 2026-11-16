@@ -8,7 +8,8 @@
  * against every pixel of the rendered glass inside that text's box. The
  * worst pixel must reach 4.5:1.
  */
-import { expect, test, type Page } from "@playwright/test";
+import type { Page } from "@playwright/test";
+import { expect, test } from "../test.ts";
 import { contrastRatio } from "../../scripts/contrast.ts";
 import { open, settled } from "./pages.ts";
 

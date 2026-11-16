@@ -2,7 +2,8 @@
  * 003 decision 20, browser file 7: the viewer on each block's item page, in
  * both projects.
  */
-import { expect, test, type Page } from "@playwright/test";
+import type { Page } from "@playwright/test";
+import { expect, test } from "../test.ts";
 import { BLOCK_VIEWS, viewPath } from "../../src/lib/preview/blocks.ts";
 import { readFileSync } from "node:fs";
 

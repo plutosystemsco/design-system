@@ -3,14 +3,14 @@
  * hero's widths, and motion, reflow, targets and rings on every view. Runs in
  * both projects, light and dark.
  */
-import {
-  expect,
-  test,
-  type APIRequestContext,
-  type Browser,
-  type Locator,
-  type Page,
+import type {
+  APIRequestContext,
+  Browser,
+  Locator,
+  Page,
 } from "@playwright/test";
+import { expect, test } from "../test.ts";
+import { scheme } from "./scheme.ts";
 import {
   cssVar,
   hexToRgb,
@@ -989,7 +989,7 @@ test.describe("the app shell", () => {
         [png.data[i * 4], png.data[i * 4 + 1], png.data[i * 4 + 2]]
           .map((c: number) => c.toString(16).padStart(2, "0"))
           .join("");
-      const dark = info.project.name === "dark";
+      const dark = scheme(info) === "dark";
       const ground = dark ? "#16140f" : "#f3f0e8";
       expect([px(0), px(1), px(2), px(3)]).toEqual([
         ground,

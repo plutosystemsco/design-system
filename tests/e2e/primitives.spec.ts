@@ -3,7 +3,9 @@
  * borders, elevation and scrim, motion, the code input and field wiring.
  * Runs in both projects, light and dark.
  */
-import { expect, test, type Locator, type Page } from "@playwright/test";
+import type { Locator, Page } from "@playwright/test";
+import { expect, test } from "../test.ts";
+import { scheme } from "./scheme.ts";
 import {
   compositeAlphaByte,
   contrastRatio,
@@ -359,7 +361,7 @@ test.describe("elevation and scrim", () => {
       ),
       `box-shadow ${shadow} holds ${line}`,
     ).toBe(true);
-    if (info.project.name === "dark") {
+    if (scheme(info) === "dark") {
       const background = await cssVar(page, "--background");
       const s = hexChannels(scrim);
       const scrimHex = `${toHex(s)}${Math.round(s.a * 255)

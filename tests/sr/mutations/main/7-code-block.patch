@@ -1,0 +1,9 @@
+diff --git a/src/lib/registry/ui/code-block/code-block-copy-button.svelte b/src/lib/registry/ui/code-block/code-block-copy-button.svelte
+index 6d2a943..59bbc9a 100644
+--- a/src/lib/registry/ui/code-block/code-block-copy-button.svelte
++++ b/src/lib/registry/ui/code-block/code-block-copy-button.svelte
+@@ -72,3 +72,4 @@
+   {/if}
+ </Button>
+ <Status text={copied ? "Copied" : failed ? "Could not copy" : ""} />
++<Status text={copied ? "Copied" : failed ? "Could not copy" : ""} />

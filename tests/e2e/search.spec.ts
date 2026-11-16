@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
  * 015 decision 18, criterion 21: the search palette, in both projects.
  */
 import AxeBuilder from "@axe-core/playwright";
-import { expect, test } from "@playwright/test";
+import { expect, test } from "../test.ts";
 import { DOORS } from "../../src/lib/site/doors.ts";
 import { addCommand } from "../../src/lib/site/site.ts";
 import { open } from "./pages.ts";

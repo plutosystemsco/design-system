@@ -2,7 +2,7 @@
  * 020 test 17, decision 12: the "Upgrade to 0.13.0" guide. And test 2's half
  * that reads the prerendered page: every rename row is on it, in code.
  */
-import { expect, test } from "@playwright/test";
+import { expect, test } from "../test.ts";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { RENAMES } from "../../src/lib/site/upgrade/renames.ts";

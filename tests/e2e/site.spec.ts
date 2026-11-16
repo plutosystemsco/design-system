@@ -5,7 +5,8 @@
  * (criterion 26).
  */
 import AxeBuilder from "@axe-core/playwright";
-import { expect, test } from "@playwright/test";
+import { expect, test } from "../test.ts";
+import { projectLabel, scheme } from "./scheme.ts";
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { withListedItems } from "../../src/lib/site/items.ts";
 import path from "node:path";
@@ -243,7 +244,7 @@ test.describe("015 criterion 23: the 404 page at any depth", () => {
       expect(response?.status()).toBe(404);
       await expect(page.locator("body")).toHaveCSS(
         "background-color",
-        GROUND[info.project.name as ThemeName],
+        GROUND[scheme(info)],
       );
       // The whole frame, at any depth: the bar with its lockup, the footer,
       // and the theme script's choice (the canvas above, in either theme).
@@ -739,7 +740,7 @@ test.describe("018 criteria 12 to 14: the measure, one h3, smoothing", () => {
         return per.length ? per[Math.floor(per.length / 2)] : null;
       });
       out.push(`${p} ${cpl?.toFixed(1)}`);
-      console.log(`CPL ${info.project.name} ${p}: ${cpl?.toFixed(1)}`);
+      console.log(`CPL ${projectLabel(info)} ${p}: ${cpl?.toFixed(1)}`);
       expect(cpl, p).not.toBeNull();
       expect(cpl!, p).toBeGreaterThanOrEqual(58);
       expect(cpl!, p).toBeLessThanOrEqual(70);
@@ -808,7 +809,7 @@ test.describe("018 criterion 18: the Components index", () => {
   test("75 tiles, each image sized, lazy and alt-less; no other-scheme images fetched; the filter narrows and counts", async ({
     page,
   }, info) => {
-    const other = info.project.name === "dark" ? "light" : "dark";
+    const other = scheme(info) === "dark" ? "light" : "dark";
     const fetched: string[] = [];
     page.on("request", (r) => {
       if (/\.webp/.test(r.url())) fetched.push(r.url());

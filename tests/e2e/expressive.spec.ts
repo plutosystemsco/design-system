@@ -2,7 +2,9 @@
  * 009: expressive mode and the brand slots, in the browser. Both projects run
  * every test, so each holds in the light and the dark theme.
  */
-import { expect, test, type Page } from "@playwright/test";
+import type { Page } from "@playwright/test";
+import { expect, test } from "../test.ts";
+import { scheme } from "./scheme.ts";
 import { hexToRgb, ITEMS, open, componentPath } from "./pages.ts";
 
 /**
@@ -233,7 +235,7 @@ test.describe("criterion 12: read-token in the browser", () => {
     const inDark = await page.getByTestId("read-dark-mark-1").textContent();
     // The light theme's mark-1 is blue; the dark theme's marks are paper.
     expect(rgb(onPage!)).toBe(
-      info.project.name === "light" ? "rgb(45, 72, 212)" : "rgb(243, 240, 232)",
+      scheme(info) === "light" ? "rgb(45, 72, 212)" : "rgb(243, 240, 232)",
     );
     expect(rgb(inDark!)).toBe("rgb(243, 240, 232)");
   });
@@ -255,7 +257,7 @@ test.describe("criterion 12: read-token in the browser", () => {
         const [r, g, b] = ctx.getImageData(x, y, 1, 1).data;
         return `rgb(${r}, ${g}, ${b})`;
       });
-    const light = info.project.name === "light";
+    const light = scheme(info) === "light";
     expect(await pixel()).toBe(
       light ? "rgb(45, 72, 212)" : "rgb(243, 240, 232)",
     );

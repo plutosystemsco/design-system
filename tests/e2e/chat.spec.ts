@@ -3,14 +3,13 @@
  * the marker (L3) and the composer (L4). Runs in both projects, light and
  * dark.
  */
-import {
-  expect,
-  test,
-  type APIRequestContext,
-  type Browser,
-  type Locator,
-  type Page,
+import type {
+  APIRequestContext,
+  Browser,
+  Locator,
+  Page,
 } from "@playwright/test";
+import { expect, test } from "../test.ts";
 import { cssVar, hexToRgb, open, componentPath } from "./pages.ts";
 
 async function computed(locator: Locator, property: string): Promise<string> {

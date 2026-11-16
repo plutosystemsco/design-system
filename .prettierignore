@@ -9,3 +9,6 @@ playwright-report/
 bun.lock
 .claude/
 tests/fixtures/markdown/
+blob-report/
+matrix-report/
+recordings/

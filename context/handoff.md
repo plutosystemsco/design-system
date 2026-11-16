@@ -27,7 +27,7 @@ The tree holds 75 items. The last runs, on `019`'s build: unit 1206 pass; e2e 27
 
 ## Waiting on the owner
 
-- **`019`'s VoiceOver listen, before the tag.** The owner runs `scripts/a11y/voiceover-error-summary.ts` (after enabling VoiceOver's AppleScript control), or listens for one minute. The pass rule is in `019` decision 12. If it fails, the owner chooses between keeping the inner alert and dropping the live role (`019`, Risks).
+- **`019`'s VoiceOver listen** passed by hand (`d8d658d`). Its script is retired by `022`: the scripted VoiceOver and NVDA runs are in every `matrix` run (`tests/sr/error-summary.sr.ts`).
 
 The order to the tag: `019`'s fixes, its commit, the owner's listen, then the local `v0.12.0` tag.
 

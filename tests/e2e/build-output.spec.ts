@@ -4,7 +4,7 @@
  * unit test reads it. This file opens no page, and runs in the light project
  * only (`playwright.config.ts`).
  */
-import { expect, test } from "@playwright/test";
+import { expect, test } from "../test.ts";
 import { execFileSync } from "node:child_process";
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { withListedItems } from "../../src/lib/site/items.ts";

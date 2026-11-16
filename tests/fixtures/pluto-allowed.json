@@ -25,7 +25,7 @@
     {
       "files": "**",
       "pattern": "Pluto Systems",
-      "count": 312,
+      "count": 316,
       "class": "brand",
       "reason": "The company's name (decision 2).",
       "byFile": {
@@ -140,6 +140,8 @@
         "tests/e2e/site.spec.ts": 2,
         "tests/fixtures/highlight/specimens.ts": 1,
         "tests/smoke/registry-add.test.ts": 1,
+        "tests/sr/marketing-bar.sr.ts": 2,
+        "tests/sr/product-home.sr.ts": 2,
         "tests/unit/blocks.test.ts": 8,
         "tests/unit/brand-assets.test.ts": 1,
         "tests/unit/registry.test.ts": 1,
@@ -170,7 +172,7 @@
     {
       "files": "**",
       "pattern": "pluto-sandbox",
-      "count": 10,
+      "count": 11,
       "class": "brand",
       "reason": "Sample content: the example project's name."
     },

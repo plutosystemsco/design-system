@@ -4,7 +4,8 @@
  * 10 and 22).
  */
 import AxeBuilder from "@axe-core/playwright";
-import { expect, test, type Page } from "@playwright/test";
+import type { Page } from "@playwright/test";
+import { expect, test } from "../test.ts";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { DOORS } from "../../src/lib/site/doors.ts";

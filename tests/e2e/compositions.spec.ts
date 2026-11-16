@@ -4,7 +4,9 @@
  * Criteria 4 to 9, the item pages' frames, and the compositions' own views.
  */
 import AxeBuilder from "@axe-core/playwright";
-import { expect, test, type Page } from "@playwright/test";
+import type { Page } from "@playwright/test";
+import { expect, test } from "../test.ts";
+import { scheme } from "./scheme.ts";
 import {
   COMPOSITION_VIEW_LIST,
   COMPOSITIONS,
@@ -758,7 +760,7 @@ test.describe("the composition views' theme", () => {
       request,
     }, info) => {
       await openView(page, view.path);
-      const theme = info.project.name as ThemeName;
+      const theme = scheme(info);
       await expect(page.locator("body")).toHaveCSS(
         "background-color",
         GROUND[theme],

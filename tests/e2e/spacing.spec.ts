@@ -3,20 +3,22 @@
  * text on any site page sets a letter spacing of its own. Every page of the
  * sitemap, at 1440: every element that holds text of its own computes
  * `letter-spacing` as `normal` or `0px`. Spacing does not depend on the
- * scheme, so the dark project skips it.
+ * scheme, so the dark projects skip it.
  */
-import { expect, test } from "@playwright/test";
+import { expect, test } from "../test.ts";
+import { onlyProjects } from "./engines.ts";
 import { open, SITEMAP } from "./pages.ts";
 
 test.describe("the font's own letter spacing", () => {
   test.use({ viewport: { width: 1440, height: 900 } });
+  // 022 decision 3: a skip by scheme is counted in ENGINE_ONLY.
+  onlyProjects(
+    ["chromium-light", "firefox-light", "webkit-light"],
+    "letter spacing is the same in both schemes",
+  );
 
   for (const { path } of SITEMAP)
-    test(`${path}: no text sets a letter spacing`, async ({ page }, info) => {
-      test.skip(
-        info.project.name === "dark",
-        "letter spacing is the same in both schemes",
-      );
+    test(`${path}: no text sets a letter spacing`, async ({ page }) => {
       await open(page, path);
       const found = await page.evaluate(() => {
         const out: string[] = [];

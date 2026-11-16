@@ -3,7 +3,8 @@
  * specimens, read from the token file. Both projects. `017`'s token-page
  * checks (`tokens-pages.test.ts`, `build-output.spec.ts`) stay as they are.
  */
-import { expect, test, type Locator, type Page } from "@playwright/test";
+import type { Locator, Page } from "@playwright/test";
+import { expect, test } from "../test.ts";
 import { contrastTable } from "../../scripts/contrast.ts";
 import { readTokens, resolveColor } from "../../scripts/tokens.ts";
 import { open } from "./pages.ts";

@@ -1,4 +1,6 @@
-import { expect, test, type Page } from "@playwright/test";
+import type { Page } from "@playwright/test";
+import { expect, test } from "../test.ts";
+import { scheme } from "./scheme.ts";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import {
@@ -26,7 +28,7 @@ async function expectTheme(page: Page, theme: ThemeName): Promise<void> {
 for (const path of PAGES) {
   test(`${path} takes the theme from the system`, async ({ page }, info) => {
     await open(page, path);
-    await expectTheme(page, info.project.name as ThemeName);
+    await expectTheme(page, scheme(info));
   });
 }
 
@@ -35,7 +37,7 @@ for (const view of VIEWS) {
     page,
   }, info) => {
     await openView(page, view.path);
-    await expectTheme(page, info.project.name as ThemeName);
+    await expectTheme(page, scheme(info));
   });
 }
 
@@ -43,7 +45,7 @@ for (const view of VIEWS) {
 for (const path of TEST_VIEWS) {
   test(`${path} takes the theme from the system`, async ({ page }, info) => {
     await openView(page, path);
-    await expectTheme(page, info.project.name as ThemeName);
+    await expectTheme(page, scheme(info));
   });
 }
 
@@ -227,9 +229,7 @@ test.describe("020: the head script carries an old choice over", () => {
       }, before);
       await page.reload();
       const want =
-        dark === "system"
-          ? (system ?? (info.project.name as ThemeName)) === "dark"
-          : dark;
+        dark === "system" ? (system ?? scheme(info)) === "dark" : dark;
       expect(
         await page.evaluate(() =>
           document.documentElement.classList.contains("dark"),
