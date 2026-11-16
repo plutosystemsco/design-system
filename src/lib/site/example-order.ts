@@ -59,6 +59,17 @@ export const EXAMPLE_ORDER: Record<string, string[]> = {
   spinner: ["variants", "states"],
   status: ["variants", "states"],
   "error-summary": ["variants", "keyboard"],
+  // 026 decision 22.
+  toast: [
+    "kinds",
+    "raise",
+    "action",
+    "promise",
+    "from-a-dialog",
+    "setting",
+    "keyboard",
+    "route",
+  ],
   label: ["variants", "states"],
   field: ["variants", "states", "wiring", "keyboard"],
   input: ["variants", "states", "keyboard"],

@@ -773,6 +773,28 @@
 		"relativeUrl": "progress.json"
 	},
 	{
+		"name": "toast",
+		"title": "Toast",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+		"description": "A short message in the corner, spoken by one of two announcers, that never covers the focus; success and info leave after at least 6 s, and everything else waits to be dismissed.",
+		"registryDependencies": [
+			"utils",
+			"kuiper-theme",
+			"status",
+			"button",
+			"spinner"
+		],
+		"meta": {
+			"since": "0.13.0",
+			"group": "feedback",
+			"modes": [
+				"productive"
+			]
+		},
+		"relativeUrl": "toast.json"
+	},
+	{
 		"name": "label",
 		"title": "Label",
 		"type": "registry:ui",

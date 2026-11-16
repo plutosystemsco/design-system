@@ -96,7 +96,7 @@ Not a spec: **the Kuiper lockup mock-ups.** Drawn and put to the owner on 2026-1
 | `033` the pilot | Guidance for `button`, `dialog`, `field`, `dropdown-menu`, `error-summary` | site guidance and examples | `032` | 2: 3 → 4 |
 | `034` the part first | The frame's title and scheme switch on one row; the stage above y = 500 at 1440 | S (frames) | `032` | 7: 2 → 3 |
 | `035` states in axe | Hover, pressed, disabled, invalid and open states driven and scanned, in both schemes | E | `022` | 3: (b) |
-| `036` info, banner and count | An `info` tone; a page-level banner from `alert`; count and dot badges; `toast.info` | T, then I | `031` | 1: held |
+| `036` info, banner and count | An `info` tone (which `toast`'s `info` kind then takes; `toast.info` shipped with `026`); a page-level banner from `alert`; count and dot badges | T, then I | `031` | 1: held |
 | `037` batch B | Custom select, combobox, multi-select, slider, choice cards, toggletip, context menu. Combobox gets a 1,000-option cost case | N | `027b` (tag) | 1: 37 of 40; 15: (d) → 4 |
 | `038` the data palette | Eight categorical colours, sequential and diverging scales, each measured for contrast and colour-blind distance | T, then I (chart) | `036` | 4, 5: held |
 | `039` motion | Motion tokens by size of change; sheets, drawers and toasts slide; accordions open by height; nothing moves under reduced motion | T, then I | `038` | — |

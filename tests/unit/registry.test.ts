@@ -78,6 +78,8 @@ const GROUPS: [group: string, names: string[]][] = [
       "status",
       "error-summary",
       "progress",
+      // 026 decision 1.
+      "toast",
     ],
   ],
   [
@@ -333,12 +335,15 @@ const BLOCKS = [...BLOCKS_003, ...ITEMS_006.map(([n]) => n), "product-home"];
 const ITEMS_003 = ["status", "error-summary", ...BLOCKS_003];
 /** 027a decision 1: 0.13.0's batch A items, so far. */
 const ITEMS_027A = ["button-group", "progress", "link"];
+/** 026 decision 1: the toast. Its own checks are in toast-site.test.ts. */
+const ITEMS_026 = ["toast"];
 /** 002's 26 items. */
 const ITEMS_002 = GROUPS.slice(1)
   .flatMap(([, names]) => names)
   .filter(
     (n) =>
       !ITEMS_003.includes(n) &&
+      !ITEMS_026.includes(n) &&
       !TYPE_004.has(n) &&
       !TYPE_005.has(n) &&
       !ITEMS_006.some(([name]) => name === n) &&
@@ -450,8 +455,8 @@ describe("registry.json", () => {
     expect(() => registrySchema.parse(registry)).not.toThrow();
   });
 
-  test("holds the 78 items of 006 decision 3, 007 decision 7, 009 decision 10, 010 decision 1, 011 decision 8 and 027a decision 1, in order, with their types (1, 3, 4, 2, 60, 8)", () => {
-    expect(ITEMS).toHaveLength(78);
+  test("holds the 79 items of 006 decision 3, 007 decision 7, 009 decision 10, 010 decision 1, 011 decision 8 027a decision 1 and 026 decision 1, in order, with their types (1, 3, 4, 2, 61, 8)", () => {
+    expect(ITEMS).toHaveLength(79);
     const types = ITEMS.map(([, t]) => t);
     expect(
       [
@@ -462,7 +467,7 @@ describe("registry.json", () => {
         "registry:ui",
         "registry:block",
       ].map((t) => types.filter((x) => x === t).length),
-    ).toEqual([1, 3, 4, 2, 60, 8]);
+    ).toEqual([1, 3, 4, 2, 61, 8]);
     expect(
       registry.items.map((i: { name: string; type: string }) => [
         i.name,
@@ -560,11 +565,11 @@ describe("registry.json", () => {
       (i: { type: string }) => i.type === "registry:ui",
     );
     expect(ui).toHaveLength(UI_COUNT);
-    expect(UI_COUNT).toBe(60);
+    expect(UI_COUNT).toBe(61);
     for (const item of ui) expect(item.files.length).toBeGreaterThanOrEqual(2);
   });
 
-  test("78 of 78 items carry a meta.group among the 11, in the order their specifications give", () => {
+  test("79 of 79 items carry a meta.group among the 11, in the order their specifications give", () => {
     expect(GROUPS).toHaveLength(11);
     const groups = new Set(GROUPS.map(([g]) => g));
     for (const item of registry.items as {
@@ -999,9 +1004,9 @@ describe("the built registry", () => {
     if (out) rmSync(out, { recursive: true, force: true });
   });
 
-  // 020 decision 3: the 78 items, and the one deprecated entry, which the
+  // 020 decision 3: the 79 items (with 027a's and 026's), and the one deprecated entry, which the
   // CLI must find in the index.
-  test("80 files under r/styles/maia and 80 byte-identical files under the versioned path", () => {
+  test("81 files under r/styles/maia and 81 byte-identical files under the versioned path", () => {
     const files = readdirSync(latest()).sort();
     expect(files).toEqual(
       [
@@ -1014,7 +1019,7 @@ describe("the built registry", () => {
           .map((i: { name: string }) => `${i.name}.json`),
       ].sort(),
     );
-    expect(files).toHaveLength(80);
+    expect(files).toHaveLength(81);
     expect(readdirSync(versioned()).sort()).toEqual(files);
     for (const file of files) {
       expect(readFileSync(path.join(versioned(), file))).toEqual(
@@ -1045,9 +1050,9 @@ describe("the built registry", () => {
     }
   });
 
-  test("every target of the 60 registry:ui items starts <name>/", () => {
+  test("every target of the 61 registry:ui items starts <name>/", () => {
     const ui = ITEMS.filter(([, type]) => type === "registry:ui");
-    expect(ui).toHaveLength(60);
+    expect(ui).toHaveLength(61);
     for (const [name] of ui) {
       const item = JSON.parse(
         readFileSync(path.join(latest(), `${name}.json`), "utf8"),
@@ -1275,9 +1280,9 @@ describe("the built registry", () => {
 
   // 005 decision 4: an app that adds one item into an
   // empty project must get every file it imports.
-  test("60 of 60 built registry:ui items import only $UI$ names in their own registryDependencies", () => {
+  test("61 of 61 built registry:ui items import only $UI$ names in their own registryDependencies", () => {
     const ui = ITEMS.filter(([, type]) => type === "registry:ui");
-    expect(ui).toHaveLength(60);
+    expect(ui).toHaveLength(61);
     const offending: string[] = [];
     for (const [name] of ui) {
       const item = JSON.parse(
@@ -1373,7 +1378,7 @@ describe("the built registry", () => {
     expect(built("composer").files).toHaveLength(2);
   });
 
-  test("0 of 76 built files carry $UTILS$.js or an /index.js import", () => {
+  test("0 of 78 built files carry $UTILS$.js or an /index.js import", () => {
     const offending: string[] = [];
     for (const file of readdirSync(latest())) {
       const text = readFileSync(path.join(latest(), file), "utf8");
@@ -2089,12 +2094,12 @@ describe("020 test 3: kuiper-theme is the theme", () => {
     expect(Object.keys(theme?.css ?? {}).length).toBeGreaterThan(10);
   });
 
-  // 027a: link, button-group and progress name it too.
-  test("the 73 items that name the theme name kuiper-theme, and none names pluto-theme", () => {
+  // 027a: link, button-group and progress name it too, and 026's toast.
+  test("the 74 items that name the theme name kuiper-theme, and none names pluto-theme", () => {
     const naming = all.filter((i) =>
       (i.registryDependencies ?? []).includes("kuiper-theme"),
     );
-    expect(naming.filter((i) => !i.meta?.deprecated)).toHaveLength(73);
+    expect(naming.filter((i) => !i.meta?.deprecated)).toHaveLength(74);
     expect(
       all.filter((i) => (i.registryDependencies ?? []).includes("pluto-theme")),
     ).toEqual([]);
@@ -2133,17 +2138,17 @@ describe("020 test 4: the pluto-theme alias", () => {
       readFileSync("static/r/styles/maia/index.json", "utf8"),
     ) as { name: string }[];
     expect(index.filter((i) => i.name === "pluto-theme")).toHaveLength(1);
-    expect(index).toHaveLength(79);
+    expect(index).toHaveLength(80);
     expect(existsSync("static/r/styles/maia/pluto-theme.json")).toBe(true);
     expect(existsSync("static/r/styles/maia/kuiper-theme.json")).toBe(true);
   });
 });
 
 describe("020 test 5: a deprecated item is not listed", () => {
-  test("listedItems() returns the 78 items, without pluto-theme", async () => {
+  test("listedItems() returns the 79 items, without pluto-theme", async () => {
     const { listedItems } = await import("../../src/lib/site/items.ts");
     const listed = listedItems();
-    expect(listed).toHaveLength(78);
+    expect(listed).toHaveLength(79);
     expect(listed.map((i) => i.name)).not.toContain("pluto-theme");
     expect(listed.map((i) => i.name)).toContain("kuiper-theme");
   });
@@ -2173,7 +2178,7 @@ describe("020 test 5: a deprecated item is not listed", () => {
     const manifest = JSON.parse(
       readFileSync("src/lib/site/thumbnails/manifest.json", "utf8"),
     );
-    expect(Object.keys(manifest)).toHaveLength(78);
+    expect(Object.keys(manifest)).toHaveLength(79);
     expect(Object.keys(manifest)).not.toContain("pluto-theme");
     expect(Object.keys(manifest)).toContain("kuiper-theme");
 
@@ -2183,7 +2188,7 @@ describe("020 test 5: a deprecated item is not listed", () => {
     expect(Object.keys(EXAMPLE_ORDER)).toContain("kuiper-theme");
 
     const { DOORS } = await import("../../src/lib/site/doors.ts");
-    expect(DOORS.find((d) => d.id === "components")?.line).toBe("78 parts");
+    expect(DOORS.find((d) => d.id === "components")?.line).toBe("79 parts");
 
     // The components index's loader lists through listedItems; its
     // rendered cards are counted in upgrade.spec.ts.

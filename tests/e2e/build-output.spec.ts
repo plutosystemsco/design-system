@@ -13,7 +13,7 @@ import { apiTables } from "../../src/lib/site/api.server.ts";
 import { CITATION_PATTERNS } from "../../src/lib/site/citations.ts";
 import { DOORS } from "../../src/lib/site/doors.ts";
 import { filesYouOwn } from "../../src/lib/site/files.ts";
-import { shownSource } from "../../src/lib/site/shown-source.ts";
+import { isPairFile, shownSource } from "../../src/lib/site/shown-source.ts";
 import { SITE_ORIGIN } from "../../src/lib/site/site.ts";
 import { SITEMAP } from "../../src/lib/site/sitemap.ts";
 
@@ -64,7 +64,7 @@ test.describe("015: the pages in build/", () => {
       registry.items.filter((i) =>
         existsSync(path.join(BUILD, "components", i.name, "index.html")),
       ),
-    ).toHaveLength(78);
+    ).toHaveLength(79);
     for (const gone of ["items", "identity", "workbench"])
       expect(existsSync(path.join(BUILD, gone)), gone).toBe(false);
     expect(readFileSync(path.join(BUILD, "_redirects"), "utf8")).toBe(
@@ -206,7 +206,7 @@ test.describe("015: the Markdown twins", () => {
 
   // A pair file (`do-*`, `dont-*`) renders in the Usage lists, not as a
   // page example with its code (026 decision 22; 027 decision 12).
-  test("criterion 19: 78 of 78 component twins hold the shown source of each of their examples, fenced as svelte", () => {
+  test("criterion 19: 79 of 79 component twins hold the shown source of each of their examples, fenced as svelte", () => {
     const registry = withListedItems(
       JSON.parse(readFileSync("registry.json", "utf8")),
     ) as {
@@ -219,7 +219,7 @@ test.describe("015: the Markdown twins", () => {
       const dir = path.join("src/lib/site/examples", item.name);
       if (existsSync(dir))
         for (const f of readdirSync(dir).filter(
-          (f) => f.endsWith(".svelte") && !/^(do|dont)-/.test(f),
+          (f) => f.endsWith(".svelte") && !isPairFile(f),
         )) {
           const shown = shownSource(
             readFileSync(path.join(dir, f), "utf8"),
@@ -229,7 +229,7 @@ test.describe("015: the Markdown twins", () => {
         }
       checked++;
     }
-    expect(checked).toBe(78);
+    expect(checked).toBe(79);
     expect(wrong).toEqual([]);
   });
 
@@ -547,7 +547,7 @@ test.describe("018: the footer link and the twins", () => {
 });
 
 test.describe("018 criterion 18: the first stage is exampleOrder's first", () => {
-  test("on 78 of 78 pages, the first frame's data-example (or the viewer's first view) is the one exampleOrder names", async () => {
+  test("on 79 of 79 pages, the first frame's data-example (or the viewer's first view) is the one exampleOrder names", async () => {
     const { firstStage } = await import("../../src/lib/site/example-order.ts");
     const registry = withListedItems(
       JSON.parse(readFileSync("registry.json", "utf8")),
@@ -574,7 +574,7 @@ test.describe("018 criterion 18: the first stage is exampleOrder's first", () =>
 });
 
 test.describe("018 review, finding 7: the index without scripts", () => {
-  test("each of the 75 lazy tiles holds its light picture in a <noscript>, with a src", () => {
+  test("each of the 76 lazy tiles holds its light picture in a <noscript>, with a src", () => {
     const html = readFileSync(
       path.join(BUILD, "components", "index.html"),
       "utf8",
@@ -582,7 +582,7 @@ test.describe("018 review, finding 7: the index without scripts", () => {
     const pics = [...html.matchAll(/<noscript>\s*<img[^>]*src="([^"]+)"/g)].map(
       (m) => m[1],
     );
-    expect(pics).toHaveLength(75);
+    expect(pics).toHaveLength(76);
     for (const src of pics) expect(src).toMatch(/-light\.[\w-]+\.webp$/);
   });
 });
