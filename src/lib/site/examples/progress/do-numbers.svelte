@@ -3,7 +3,8 @@
     kind: "do",
     pair: "numbers",
     title: "Do: the numbers beside the bar",
-    caption: "The numbers beside the bar say how much is done.",
+    caption:
+      "“3 of 12 files” is written beside the bar, and a screen reader hears the same words.",
   };
 </script>
 

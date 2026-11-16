@@ -12,10 +12,10 @@
     "class" | "children"
   > & {
     /** Attached joins the buttons edge to edge, for a few related actions of equal weight; give it secondary buttons. Spaced sets them in a row with a gap that wraps, and stacks them below 640 px, for a form's actions. */
-    variant?: ButtonGroupVariant;
+    variant?: "attached" | "spaced";
     /** The direction the buttons run. */
-    orientation?: ButtonGroupOrientation;
-    /** What the buttons are for, such as "Text alignment". Or name the group with `aria-labelledby`. Without a name, the grouping is only visual. */
+    orientation?: "horizontal" | "vertical";
+    /** What the buttons are for, such as "Clipboard". Or name the group with `aria-labelledby`. Without a name, the grouping is only visual. */
     "aria-label"?: string;
     /** Classes for the group. */
     class?: string;

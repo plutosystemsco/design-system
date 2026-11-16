@@ -83,11 +83,13 @@ test.describe(
           return;
         }
         await page.emulateMedia({ forcedColors: "active" });
+        // The bar keeps its own colours: the system does not repaint it.
         const f10 = await pixelOf(page, bar, 0.1);
         const f90 = await pixelOf(page, bar, 0.9);
-        expect(f10, "forced colours: the fill and the track differ").not.toBe(
-          f90,
+        expect(near(f10, primary), `forced 10%: ${f10} vs ${primary}`).toBe(
+          true,
         );
+        expect(near(f90, muted), `forced 90%: ${f90} vs ${muted}`).toBe(true);
       },
     );
 

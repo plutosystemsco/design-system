@@ -3,7 +3,8 @@
     kind: "do",
     pair: "state",
     title: "Do: a toggle group for a state",
-    caption: "A choice of state is a toggle group: it says what is pressed.",
+    caption:
+      "Bold is pressed, and a screen reader says so; italic and underline are not.",
   };
 </script>
 

@@ -44,7 +44,7 @@
       id="index-failed"
       value={40}
       variant="destructive"
-      valuetext="Failed at 40 of 100"
+      valuetext="Failed at 40%"
     />
   </div>
   <!-- site:hide -->

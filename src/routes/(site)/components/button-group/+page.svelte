@@ -83,7 +83,7 @@
       <ul class="mt-2 grid list-disc gap-1 ps-5">
         <li>
           A <code>role="group"</code>, named by your <code>aria-label</code>: a
-          screen reader says "Text alignment, group" as focus enters it.
+          screen reader says "Clipboard, group" as focus enters it.
         </li>
         <li>
           Each button is its own Tab stop. Arrow keys do nothing here: roving

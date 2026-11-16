@@ -297,6 +297,42 @@ describe("027a test 3: batch A has 0 empty API rows", () => {
     expect(table!.rows.filter((r) => !r.doc).map((r) => r.name)).toEqual([]);
   });
 
+  // The design lead's ruling at the landing: the table names the element,
+  // not a TypeScript type; each variant prop shows its values.
+  test.each([
+    [
+      "link",
+      "Link",
+      "every attribute of `<a>`",
+      { variant: '"default" | "inherit"' },
+    ],
+    [
+      "button-group",
+      "ButtonGroup",
+      "every attribute of `<div>`",
+      {
+        variant: '"attached" | "spaced"',
+        orientation: '"horizontal" | "vertical"',
+      },
+    ],
+    [
+      "progress",
+      "Progress",
+      "every attribute of `<progress>`",
+      { variant: '"default" | "destructive"' },
+    ],
+  ] as const)(
+    "%s: %s inherits %s, and its variants read as their values",
+    async (name, part, inherits, types) => {
+      const { apiTables } = await import("../../src/lib/site/api.server.ts");
+      const item = registry.items.find((i) => i.name === name)!;
+      const table = apiTables(item).find((t) => t.part === part)!;
+      expect(table.inherits).toBe(`and ${inherits}`);
+      for (const [prop, type] of Object.entries(types))
+        expect(table.rows.find((r) => r.name === prop)?.type, prop).toBe(type);
+    },
+  );
+
   test("every member of LinkStrings has a doc comment", async () => {
     const ts = (await import("typescript")).default;
     const file = path.join(ROOT, "src/lib/registry/ui/link/link.svelte");

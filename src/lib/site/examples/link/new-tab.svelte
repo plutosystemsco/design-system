@@ -25,3 +25,8 @@
     >.
   </p>
 </div>
+<!-- site:hide -->
+<div hidden data-testid="link-target-blank">
+  <Link href="https://www.w3.org/WAI/" target="_blank">WAI</Link>
+</div>
+<!-- site:show -->

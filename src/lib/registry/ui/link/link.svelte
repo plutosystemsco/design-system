@@ -21,22 +21,26 @@
 
   /**
    * The link's classes, for a plain `<a>` that cannot be a `Link`, such as
-   * one rendered from Markdown: always underlined, thicker on hover.
+   * one rendered from Markdown: always underlined, thicker on hover. It
+   * takes `class` last, as the other variant functions do.
    */
   export function linkVariants({
     variant = "default",
     standalone = false,
     visited = false,
+    class: className,
   }: {
-    variant?: LinkVariant;
+    variant?: "default" | "inherit";
     standalone?: boolean;
     visited?: boolean;
+    class?: string;
   } = {}): string {
     return cn(
       "underline underline-offset-4 hover:decoration-2",
       VARIANT[variant],
       standalone && "inline-flex min-h-6 items-center",
       visited && "visited:text-foreground",
+      className,
     );
   }
 
@@ -47,14 +51,14 @@
     /** Where it goes. A link always goes somewhere; for an action, use `Button`. */
     href: string;
     /** The primary colour, or the surrounding text's, for a link inside muted text or a footer. Both are underlined. */
-    variant?: LinkVariant;
+    variant?: "default" | "inherit";
     /** A link alone on its line, such as in a list: it gets a 24 px tall target. A link inside a sentence does not need one. */
     standalone?: boolean;
-    /** Opens in a new tab, with `rel="noopener noreferrer"`, an icon, and "(opens in a new tab)" for screen readers. Use it rarely: it takes the Back button away. */
+    /** Opens in a new tab, with `rel="noopener noreferrer"`, an icon, and "(opens in a new tab)" for screen readers. Use it rarely: it takes the Back button away. A `target="_blank"` passed directly is treated the same. */
     newTab?: boolean;
     /** Shows visited links in the text colour, for long lists of documents a person works through. */
     visited?: boolean;
-    /** Link types of your own, such as `"external"`. With `newTab`, `noopener noreferrer` is merged in. */
+    /** Link types of your own, such as `"external"`. With a new tab, `noopener noreferrer` is merged in. */
     rel?: string;
     /** Every word it says: `newTab`, " (opens in a new tab)". */
     strings?: Partial<LinkStrings>;
@@ -95,6 +99,8 @@
   }: LinkProps = $props();
 
   const s = $derived({ ...STRINGS, ...strings });
+  // A new tab asked for by `target` is said and made safe, as `newTab` is.
+  const opensTab = $derived(newTab || restProps.target === "_blank");
 </script>
 
 <!--
@@ -108,10 +114,10 @@
   bind:this={ref}
   data-slot="link"
   {href}
-  target={newTab ? "_blank" : restProps.target}
-  rel={mergeRel(rel, newTab ? ["noopener", "noreferrer"] : [])}
-  class={cn(linkVariants({ variant, standalone, visited }), className)}
-  >{@render children?.()}{#if newTab}<ArrowSquareOut
+  target={opensTab ? "_blank" : restProps.target}
+  rel={mergeRel(rel, opensTab ? ["noopener", "noreferrer"] : [])}
+  class={linkVariants({ variant, standalone, visited, class: className })}
+  >{@render children?.()}{#if opensTab}<ArrowSquareOut
       data-slot="link-icon"
       aria-hidden="true"
       class="ms-1 inline size-4 align-text-bottom"

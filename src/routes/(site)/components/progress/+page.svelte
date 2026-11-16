@@ -14,8 +14,15 @@
     <p>
       Use a progress bar for a task with a known amount to do, such as files
       uploaded or steps run. For a measurement within a range, such as memory
-      against a limit, use a <code>meter</code>. For a wait of unknown length,
-      use a <code>spinner</code>.
+      against a limit, use a
+      <a
+        href="/components/meter/"
+        class="text-primary underline underline-offset-4">meter</a
+      >. For a wait of unknown length, use a
+      <a
+        href="/components/spinner/"
+        class="text-primary underline underline-offset-4">spinner</a
+      >.
     </p>
   {/snippet}
   {#snippet dos()}

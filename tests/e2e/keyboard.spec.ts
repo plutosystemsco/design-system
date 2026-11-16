@@ -1532,9 +1532,9 @@ test.describe("027a test 53: the keyboard rows", () => {
     async ({ page }) => {
       await view(page, "button-group", "attached");
       const buttons = page
-        .getByRole("group", { name: "Text alignment" })
+        .getByRole("group", { name: "Clipboard" })
         .getByRole("button");
-      for (const name of ["Left", "Center", "Right"]) {
+      for (const name of ["Cut", "Copy", "Paste"]) {
         await page.keyboard.press("Tab");
         await expect(page.getByRole("button", { name })).toBeFocused();
       }
@@ -1552,11 +1552,11 @@ test.describe("027a test 53: the keyboard rows", () => {
     },
     async ({ page }) => {
       await view(page, "button-group", "attached");
-      const center = page.getByRole("button", { name: "Center" });
-      await center.focus();
+      const copy = page.getByRole("button", { name: "Copy" });
+      await copy.focus();
       for (const key of ["ArrowRight", "ArrowLeft", "ArrowDown", "ArrowUp"]) {
         await page.keyboard.press(key);
-        await expect(center, key).toBeFocused();
+        await expect(copy, key).toBeFocused();
       }
     },
   );

@@ -103,7 +103,8 @@
         </li>
         <li>
           No disabled link: a link that goes nowhere is text.
-          <code>visited</code> changes only the colour, so it is never the only sign.
+          <code>visited</code> changes only the colour; the underline stays, so a
+          visited link still reads as a link.
         </li>
       </ul>
     </li>

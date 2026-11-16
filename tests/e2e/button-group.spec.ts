@@ -23,10 +23,10 @@ test.describe(
       async ({ page }, info) => {
         await openExample(page, info, ITEM, "attached");
         await expect(
-          page.getByRole("group", { name: "Text alignment" }),
+          page.getByRole("group", { name: "Clipboard" }),
         ).toHaveCount(1);
         const buttons = page
-          .getByRole("group", { name: "Text alignment" })
+          .getByRole("group", { name: "Clipboard" })
           .getByRole("button");
         await expect(buttons).toHaveCount(3);
         for (let i = 0; i < 3; i++) {

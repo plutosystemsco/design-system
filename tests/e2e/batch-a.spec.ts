@@ -22,7 +22,8 @@ const TAGS = [
  * Slots of existing items whose own surfaces `031b` audits, as decision 13
  * leaves an existing item's inherited rules to it: the card's hairline edge
  * is one. An element with one of these slots is skipped; its descendants
- * are not.
+ * are not. 031b removes this list when it makes `card`'s edge solid, so a
+ * translucent edge that came back would fail here.
  */
 const AUDITED_BY_031B = ["card"];
 

@@ -3,7 +3,7 @@
     kind: "do",
     pair: "unknown",
     title: "Do: a spinner for an unknown wait",
-    caption: "A wait of unknown length gets a spinner.",
+    caption: "The spinner turns, and its label says what is loading.",
   };
 </script>
 

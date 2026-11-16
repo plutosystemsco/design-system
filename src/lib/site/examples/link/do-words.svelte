@@ -3,7 +3,8 @@
     kind: "do",
     pair: "words",
     title: "Do: words that say where",
-    caption: "Link words that say where they go, read alone.",
+    caption:
+      "“Read the colour guide” still says where it goes in a screen reader’s list of links.",
   };
 </script>
 

@@ -87,7 +87,9 @@ test.describe(
       { annotation: { type: "check", description: "structure" } },
       async ({ page }, info) => {
         await openExample(page, info, ITEM, "new-tab");
-        const links = page.locator('[data-slot="link"]');
+        const links = page
+          .locator('[data-slot="link"]')
+          .filter({ visible: true });
         await expect(links).toHaveCount(2);
         const rel = async (i: number) =>
           ((await links.nth(i).getAttribute("rel")) ?? "").split(/\s+/);
@@ -105,6 +107,30 @@ test.describe(
         // The second passes rel="external": all three, each once.
         expect((await rel(1)).sort()).toEqual(
           ["external", "noopener", "noreferrer"].sort(),
+        );
+      },
+    );
+
+    test(
+      '45a. target="_blank" is treated as newTab',
+      { annotation: { type: "check", description: "structure" } },
+      async ({ page }, info) => {
+        // The design lead's ruling at the landing (review finding 10): a new
+        // tab asked for through `target` is said and made safe too.
+        await openExample(page, info, ITEM, "new-tab");
+        const link = page
+          .getByTestId("link-target-blank")
+          .locator('[data-slot="link"]');
+        await expect(link).toHaveCount(1);
+        await expect(link).toHaveAttribute("target", "_blank");
+        const rel = ((await link.getAttribute("rel")) ?? "").split(/\s+/);
+        expect(rel.sort()).toEqual(["noopener", "noreferrer"]);
+        await expect(link.locator('[data-slot="link-icon"]')).toHaveAttribute(
+          "aria-hidden",
+          "true",
+        );
+        await expect(link.locator('[data-slot="link-new-tab"]')).toHaveText(
+          " (opens in a new tab)",
         );
       },
     );

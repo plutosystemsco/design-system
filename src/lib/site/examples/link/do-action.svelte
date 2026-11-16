@@ -3,7 +3,8 @@
     kind: "do",
     pair: "action",
     title: "Do: a button for an action",
-    caption: "An action is a button: it does something where you are.",
+    caption:
+      "Delete acts on this page and goes nowhere, so it is a destructive button.",
   };
 </script>
 

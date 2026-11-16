@@ -3,7 +3,8 @@
     kind: "do",
     pair: "weight",
     title: "Do: one primary, spaced",
-    caption: "One primary, first, spaced from the rest.",
+    caption:
+      "Publish leads; Save a draft follows as a secondary button, with space between them.",
   };
 </script>
 

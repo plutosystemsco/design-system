@@ -15,7 +15,7 @@
     /** What a reader hears instead of a percentage, such as "3 of 12 files". */
     valuetext?: string;
     /** Destructive when the task stopped on an error. Say so in words beside it; the colour is not the only sign. */
-    variant?: ProgressVariant;
+    variant?: "default" | "destructive";
     /** Classes for the bar. */
     class?: string;
     /** The bar, bound. */
