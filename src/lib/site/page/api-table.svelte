@@ -35,7 +35,7 @@
     <div
       data-slot="site-scroll"
       role="region"
-      aria-label="{table.part}, API"
+      aria-label="{table.part}, {table.kind === 'module' ? 'exports' : 'API'}"
       tabindex="0"
       class="min-w-0 overflow-x-auto rounded border border-border"
     >

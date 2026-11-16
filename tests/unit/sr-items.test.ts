@@ -15,7 +15,7 @@ import { RULE_IDS } from "../sr/rules.ts";
 const TESTS = declaredTests();
 
 describe("022 test 5: the scripted set", () => {
-  test("SR_ITEMS holds the 28 items of decision 11", () => {
+  test("SR_ITEMS holds the 28 items of decision 11, and 026's toast", () => {
     expect(Object.keys(SR_ITEMS).sort()).toEqual(
       [
         "status",
@@ -46,6 +46,7 @@ describe("022 test 5: the scripted set", () => {
         "app-shell",
         "chat",
         "product-home",
+        "toast",
       ].sort(),
     );
   });
@@ -67,7 +68,7 @@ describe("022 test 5: the scripted set", () => {
 });
 
 describe("022 test 5: one file per item, a test per kind", () => {
-  test("28 files, one per item in SR_ITEMS, and no other", () => {
+  test("29 files, one per item in SR_ITEMS, and no other", () => {
     const files = [...new Set(TESTS.map((t) => t.file))].sort();
     expect(files).toEqual(
       Object.keys(SR_ITEMS)

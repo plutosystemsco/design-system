@@ -92,6 +92,19 @@ export const PATCHES: Patch[] = [
     },
   },
   {
+    // 026 decision 20 (D2, built at 022's merge): a div with no live role
+    // and no aria-live is spoken by no reader when its text changes.
+    set: "main",
+    patch: "8-toast.patch",
+    target: "toast:assertive",
+    fault: "L1",
+    why: 'the assertive announcer loses role="alert" and aria-live',
+    witness: {
+      file: "toast.sr.ts",
+      title: "S2 assertive: the error is spoken whole",
+    },
+  },
+  {
     set: "double-read",
     patch: "7b-error-summary.patch",
     target: "error-summary",

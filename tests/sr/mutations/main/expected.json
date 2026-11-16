@@ -35,6 +35,11 @@
       "patch": "7-code-block.patch",
       "target": "code-block",
       "fault": "L3"
+    },
+    {
+      "patch": "8-toast.patch",
+      "target": "toast:assertive",
+      "fault": "L1"
     }
   ],
   "expected": [
@@ -517,6 +522,70 @@
       "reader": "voiceover",
       "browser": "webkit",
       "fault": "L3"
+    },
+    {
+      "patch": "8-toast.patch",
+      "file": "toast.sr.ts",
+      "title": "S10 both channels: the error and the success are each spoken whole",
+      "reader": "nvda",
+      "browser": "chromium",
+      "fault": "L1"
+    },
+    {
+      "patch": "8-toast.patch",
+      "file": "toast.sr.ts",
+      "title": "S10 both channels: the error and the success are each spoken whole",
+      "reader": "nvda",
+      "browser": "firefox",
+      "fault": "L1"
+    },
+    {
+      "patch": "8-toast.patch",
+      "file": "toast.sr.ts",
+      "title": "S10 both channels: the error and the success are each spoken whole",
+      "reader": "voiceover",
+      "browser": "chromium",
+      "fault": "L1"
+    },
+    {
+      "patch": "8-toast.patch",
+      "file": "toast.sr.ts",
+      "title": "S10 both channels: the error and the success are each spoken whole",
+      "reader": "voiceover",
+      "browser": "webkit",
+      "fault": "L1"
+    },
+    {
+      "patch": "8-toast.patch",
+      "file": "toast.sr.ts",
+      "title": "S2 assertive: the error is spoken whole",
+      "reader": "nvda",
+      "browser": "chromium",
+      "fault": "L1"
+    },
+    {
+      "patch": "8-toast.patch",
+      "file": "toast.sr.ts",
+      "title": "S2 assertive: the error is spoken whole",
+      "reader": "nvda",
+      "browser": "firefox",
+      "fault": "L1"
+    },
+    {
+      "patch": "8-toast.patch",
+      "file": "toast.sr.ts",
+      "title": "S2 assertive: the error is spoken whole",
+      "reader": "voiceover",
+      "browser": "chromium",
+      "fault": "L1"
+    },
+    {
+      "patch": "8-toast.patch",
+      "file": "toast.sr.ts",
+      "title": "S2 assertive: the error is spoken whole",
+      "reader": "voiceover",
+      "browser": "webkit",
+      "fault": "L1"
     }
   ],
   "notProvable": []

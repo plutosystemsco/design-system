@@ -59,6 +59,17 @@ export const EXAMPLE_ORDER: Record<string, string[]> = {
   spinner: ["variants", "states"],
   status: ["variants", "states"],
   "error-summary": ["variants", "keyboard"],
+  // 026 decision 22.
+  toast: [
+    "kinds",
+    "raise",
+    "action",
+    "promise",
+    "from-a-dialog",
+    "setting",
+    "keyboard",
+    "route",
+  ],
   label: ["variants", "states"],
   field: ["variants", "states", "wiring", "keyboard"],
   input: ["variants", "states", "keyboard"],
@@ -86,6 +97,10 @@ export const EXAMPLE_ORDER: Record<string, string[]> = {
   message: ["variants"],
   marker: ["variants", "states"],
   composer: ["variants", "states", "keyboard"],
+  // 027a decision 12: batch A's quiet items.
+  link: ["inline", "standalone", "new-tab", "visited", "inherit"],
+  "button-group": ["attached", "with-menu", "vertical", "spaced"],
+  progress: ["upload", "states", "in-a-card"],
 };
 
 /** An item's example ids, in page order; empty for a block or a composition. */

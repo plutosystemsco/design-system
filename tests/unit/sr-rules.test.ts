@@ -5,6 +5,7 @@
  */
 import { describe, expect, test } from "bun:test";
 import {
+  B1,
   C1,
   C2,
   F1,
@@ -20,6 +21,7 @@ import {
   T2,
   normalise,
   spokenWhole,
+  U1,
 } from "../sr/rules.ts";
 
 const ids = (faults: { rule: string }[]) => faults.map((f) => f.rule);
@@ -249,5 +251,44 @@ describe("the two readers' wordings both pass", () => {
   test("a status, as VoiceOver and as NVDA say it", () => {
     expect(ids(L1(["Copied"], "Copied"))).toEqual([]);
     expect(ids(L1(["status  Copied"], "Copied"))).toEqual([]);
+  });
+});
+
+describe("026 test 76: unspoken (U1) and before (B1)", () => {
+  // The toast's phrases as VoiceOver and as NVDA say them (026 decision 20).
+  const vo = [
+    "Save, button",
+    "Success: Project saved.",
+    "Message deleted. Press F8, or go to Notifications, to reach Undo.",
+  ];
+  const nvda = [
+    "Save  button",
+    "Success: Project saved",
+    "Message deleted. Press F8, or go to Notifications, to reach Undo",
+  ];
+  test("U1: a word never spoken passes; one spoken fails, in both readers", () => {
+    for (const log of [vo, nvda]) {
+      expect(ids(U1(log, "Dismiss"))).toEqual([]);
+      expect(ids(U1([...log, "Dismiss, button"], "Dismiss"))).toEqual(["U1"]);
+    }
+    expect(ids(U1([], "Dismiss"))).toEqual(["X0"]);
+  });
+  test("B1: first, whole, then the message passes; the reverse fails; no message is X0", () => {
+    for (const log of [vo, nvda]) {
+      expect(ids(B1(log, "Save", "Success: Project saved"))).toEqual([]);
+      expect(
+        ids(B1([...log].reverse(), "Save", "Success: Project saved")),
+      ).toEqual(["B1"]);
+    }
+    expect(
+      ids(
+        B1(
+          ["Toast, heading level 1, Project created"],
+          "Toast",
+          "Project created",
+        ),
+      ),
+    ).toEqual([]);
+    expect(ids(B1(vo, "Save", "Success: Project deleted"))).toEqual(["X0"]);
   });
 });

@@ -49,6 +49,8 @@ export const ITEMS = [
   "kbd",
   "toggle",
   "toggle-group",
+  // actions (027a)
+  "button-group",
   // surfaces
   "card",
   "separator",
@@ -68,6 +70,8 @@ export const ITEMS = [
   "spinner",
   "status",
   "error-summary",
+  // feedback (027a)
+  "progress",
   // forms
   "label",
   "field",
@@ -96,6 +100,8 @@ export const ITEMS = [
   "breadcrumb",
   "sidebar",
   "is-mobile",
+  // navigation (027a)
+  "link",
   // chat (005)
   "message-log",
   "message",
@@ -158,6 +164,8 @@ export const ITEMS_007 = ["code-languages"];
 export const ITEMS_009 = ["read-token"];
 /** 011 decision 8: 011's one item. */
 export const ITEMS_011 = ["liquid-glass"];
+/** 027a decision 1: batch A's quiet items. */
+export const ITEMS_027A = ["button-group", "progress", "link"];
 /** 010 decision 1: the nine compositions, in registry order. */
 export const COMPOSITIONS = [
   "stage",
@@ -189,7 +197,8 @@ export const ITEMS_002 = ITEMS.slice(8).filter(
     !ITEMS_006.includes(name) &&
     !ITEMS_007.includes(name) &&
     !ITEMS_010.includes(name) &&
-    !ITEMS_011.includes(name),
+    !ITEMS_011.includes(name) &&
+    !ITEMS_027A.includes(name),
 );
 /** The 7 items 003 adds. */
 export const ITEMS_003 = [
@@ -227,9 +236,11 @@ export const PAGES_009 = ITEMS_009.map(componentPath);
 export const PAGES_010 = ITEMS_010.map(componentPath);
 /** The item page of 011. */
 export const PAGES_011 = ITEMS_011.map(componentPath);
+/** 027a's 3 item pages. */
+export const PAGES_027A = ITEMS_027A.map(componentPath);
 /** Every page of the site, from the one list (015 decision 1). */
 export const PAGES = SITEMAP.map((p) => p.path);
-/** The 75 component pages. */
+/** The 79 component pages. */
 export const COMPONENT_PAGES = ITEMS.map(componentPath);
 /** 002's 32 component pages. */
 export const PAGES_002 = COMPONENT_PAGES.filter(
@@ -241,7 +252,8 @@ export const PAGES_002 = COMPONENT_PAGES.filter(
     !PAGES_007.includes(p) &&
     !PAGES_009.includes(p) &&
     !PAGES_010.includes(p) &&
-    !PAGES_011.includes(p),
+    !PAGES_011.includes(p) &&
+    !PAGES_027A.includes(p),
 );
 
 /** The views (003 decision 16; 006 decision 12), each with its block and label. */
@@ -738,7 +750,7 @@ export const BAR_STOPS = [
 
 /**
  * The footer's stops: one link per door's landing and the door's pages (the
- * Components door lists its landing; its 75 pages are on it), the registry
+ * Components door lists its landing; its 79 pages are on it), the registry
  * group, then the source link.
  */
 export const FOOTER_STOPS = [

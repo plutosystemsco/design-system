@@ -73,7 +73,7 @@ export const LEDGER: LedgerLine[] = [
     {
       file: "keyboard.spec.ts",
       title:
-        "at 1280 × 900 › the Components landing: Tab visits its 193 stops in order, each with the ring unclipped",
+        "at 1280 × 900 › the Components landing: Tab visits its 201 stops in order, each with the ring unclipped",
       expect: { error: "nav:Components pages" },
       finding:
         "Firefox makes the overflowing section nav a Tab stop of its own, before its first link.",

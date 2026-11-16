@@ -123,6 +123,31 @@ export const ENGINE_ONLY: EngineOnly[] = [
     reason:
       "pixels: WebKit blends the translucent hairline up to 2 steps a channel off Chromium's exact values",
   },
+  // 022's merge with 027a, 026 and 021.
+  {
+    file: "progress.spec.ts",
+    title: "027a: the progress bar › 48. the classes draw it in every engine",
+    helper: "adaptsIn",
+    engine: "webkit",
+    // The bar's own colours are checked in WebKit; the forced half is not.
+    reason: "forced colours: Playwright's WebKit does not emulate forcedColors",
+  },
+  {
+    file: "toast.spec.ts",
+    title:
+      "026: forced colours › 68. forced colours draw the edge, and the icons differ",
+    helper: "notIn",
+    engine: "webkit",
+    reason: "forced colours: Playwright's WebKit does not emulate forcedColors",
+  },
+  {
+    file: "tokens-files.spec.ts",
+    title: "021 T17: an app without Tailwind gets the colours",
+    helper: "onlyProjects",
+    projects: ["chromium-light", "firefox-light", "webkit-light"],
+    reason:
+      "the page sets its own scheme, so each engine's light project covers it",
+  },
   {
     file: "spacing.spec.ts",
     title: "the font's own letter spacing",

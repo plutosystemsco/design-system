@@ -303,6 +303,26 @@
 		"relativeUrl": "toggle-group.json"
 	},
 	{
+		"name": "button-group",
+		"title": "Button group",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+		"description": "A named group of related buttons, joined edge to edge or spaced in a row, each its own Tab stop.",
+		"registryDependencies": [
+			"utils",
+			"kuiper-theme",
+			"button"
+		],
+		"meta": {
+			"since": "0.13.0",
+			"group": "actions",
+			"modes": [
+				"productive"
+			]
+		},
+		"relativeUrl": "button-group.json"
+	},
+	{
 		"name": "card",
 		"title": "Card",
 		"type": "registry:ui",
@@ -732,6 +752,47 @@
 			]
 		},
 		"relativeUrl": "error-summary.json"
+	},
+	{
+		"name": "progress",
+		"title": "Progress bar",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+		"description": "A task's progress as the native progress bar, on the muted track with a primary fill, its numbers written beside it.",
+		"registryDependencies": [
+			"utils",
+			"kuiper-theme"
+		],
+		"meta": {
+			"since": "0.13.0",
+			"group": "feedback",
+			"modes": [
+				"productive"
+			]
+		},
+		"relativeUrl": "progress.json"
+	},
+	{
+		"name": "toast",
+		"title": "Toast",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+		"description": "A short message in the corner, spoken by one of two announcers, that never covers the focus; success and info leave after at least 6 s, and everything else waits to be dismissed.",
+		"registryDependencies": [
+			"utils",
+			"kuiper-theme",
+			"status",
+			"button",
+			"spinner"
+		],
+		"meta": {
+			"since": "0.13.0",
+			"group": "feedback",
+			"modes": [
+				"productive"
+			]
+		},
+		"relativeUrl": "toast.json"
 	},
 	{
 		"name": "label",
@@ -1355,6 +1416,25 @@
 			}
 		},
 		"relativeUrl": "is-mobile.json"
+	},
+	{
+		"name": "link",
+		"title": "Link",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+		"description": "The inline link: always underlined, in the primary colour or the text's, with standalone, new-tab and visited forms.",
+		"registryDependencies": [
+			"utils",
+			"kuiper-theme"
+		],
+		"meta": {
+			"since": "0.13.0",
+			"group": "navigation",
+			"modes": [
+				"productive"
+			]
+		},
+		"relativeUrl": "link.json"
 	},
 	{
 		"name": "message-log",

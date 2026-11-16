@@ -59,7 +59,7 @@ export function declaredTests(dir = "tests/sr"): Declared[] {
 export function kindsOf(rules: string[]): ("live" | "focus" | "overlay")[] {
   const out = new Set<"live" | "focus" | "overlay">();
   for (const r of rules) {
-    if (r.startsWith("L")) out.add("live");
+    if (r.startsWith("L") || r === "U1" || r === "B1") out.add("live");
     else if (r === "F1") out.add("focus");
     else if (/^(O|T|C)/.test(r)) out.add("overlay");
   }

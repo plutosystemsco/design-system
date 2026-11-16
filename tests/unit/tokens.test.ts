@@ -1,18 +1,61 @@
+/**
+ * The tokens, as the lowering returns them, and the validator's faults.
+ * 021 T15: each failure case is written on the DTCG files and throws a
+ * `TokenError` that names the file and the token path at fault.
+ */
 import { describe, expect, test } from "bun:test";
-import { readFileSync } from "node:fs";
-import {
-  readTokens,
-  validateTokens,
-  TOKENS_PATH,
-} from "../../scripts/tokens.ts";
+import * as tokensModule from "../../scripts/tokens.ts";
+import { readTokens, TokenError } from "../../scripts/tokens.ts";
 
-const raw = JSON.parse(readFileSync(TOKENS_PATH, "utf8"));
 const tokens = readTokens();
 const HEX = /^#(?:[0-9A-Fa-f]{6}|[0-9A-Fa-f]{8})$/;
 
+// The DTCG files, parsed, by file name; each case mutates a copy.
+type Any = any;
+const { lowerTokens, readTokenFiles } = tokensModule as unknown as {
+  lowerTokens: (files: Record<string, unknown>) => unknown;
+  readTokenFiles: (root?: string) => Record<string, unknown>;
+};
+const files: Record<string, Any> =
+  typeof readTokenFiles === "function" ? readTokenFiles() : {};
+const BASE = "kuiper.tokens.json";
+const LIGHT = "kuiper.light.tokens.json";
+const DARK = "kuiper.dark.tokens.json";
+const CONTRAST = "kuiper.contrast.json";
+
+/** A copy of the files with one change, and the lowering's verdict on it. */
+function lowered(change: (f: Record<string, Any>) => void): () => unknown {
+  const copy = structuredClone(files);
+  change(copy);
+  return () => lowerTokens(copy);
+}
+
+/** The lowering throws a TokenError naming `file: path`. */
+function rejects(change: (f: Record<string, Any>) => void, at: string) {
+  const run = lowered(change);
+  let error: unknown;
+  try {
+    run();
+  } catch (e) {
+    error = e;
+  }
+  expect(error, at).toBeInstanceOf(TokenError);
+  expect((error as Error).message, at).toContain(at);
+  return (error as Error).message;
+}
+
+const colour = (hex: string) => ({
+  colorSpace: "srgb",
+  components: [1, 3, 5].map(
+    (i) => Math.round((parseInt(hex.slice(i, i + 2), 16) / 255) * 1e4) / 1e4,
+  ),
+  hex,
+});
+
 describe("the token file", () => {
   test("validates", () => {
-    expect(() => validateTokens(raw)).not.toThrow();
+    expect(typeof lowerTokens).toBe("function");
+    expect(() => lowerTokens(files)).not.toThrow();
   });
 
   // 007 decision 3: 004's 25 plus the nine text-safe hue primitives; 011
@@ -187,26 +230,94 @@ describe("the token file", () => {
     ]);
   });
 
-  test("no semantic value is a raw hex", () => {
-    for (const theme of ["light", "dark"]) {
-      for (const value of Object.values(
-        raw.themes[theme] as Record<string, string>,
+  test("no semantic value is a raw hex: every role is an alias in both files", () => {
+    for (const file of [LIGHT, DARK])
+      for (const [name, role] of Object.entries(
+        files[file].role as Record<string, Any>,
       )) {
-        expect(value.startsWith("#")).toBe(false);
+        if (name.startsWith("$")) continue;
+        expect(role.$value, `${file}: ${name}`).toMatch(
+          /^\{primitive\.[^.]+\}$/,
+        );
       }
-    }
+    for (const theme of ["light", "dark"] as const)
+      for (const value of Object.values(tokens.themes[theme]))
+        expect(value.startsWith("#")).toBe(false);
   });
 
-  test("fails with the key at fault", () => {
-    const bad = structuredClone(raw);
-    bad.themes.light.background = "#F7F7F4";
-    expect(() => validateTokens(bad)).toThrow(/themes\.light\.background/);
-    const badHex = structuredClone(raw);
-    badHex.primitives.ink = "#12345";
-    expect(() => validateTokens(badHex)).toThrow(/primitives\.ink/);
-    const missing = structuredClone(raw);
-    delete missing.spacing;
-    expect(() => validateTokens(missing)).toThrow(/spacing/);
+  test("fails with the file and the path at fault", () => {
+    rejects((f) => {
+      f[LIGHT].role.background.$value = colour("#F7F7F4");
+    }, "kuiper.light.tokens.json: role.background");
+    rejects((f) => {
+      f[BASE].primitive.ink.$value.hex = "#12345";
+    }, "kuiper.tokens.json: primitive.ink");
+    rejects((f) => {
+      delete f[BASE].spacing;
+    }, "kuiper.tokens.json: spacing");
+  });
+
+  // 021 T15: the faults the DTCG shape adds.
+  test("rejects a dark file missing a light path", () => {
+    rejects((f) => {
+      delete f[DARK].role.ring;
+    }, "kuiper.dark.tokens.json: role");
+  });
+
+  test("rejects a 5-digit, an 8-digit and a lower-case hex, and components that disagree with the hex", () => {
+    rejects((f) => {
+      f[BASE].primitive.paper.$value.hex = "#F3F0E";
+    }, "kuiper.tokens.json: primitive.paper");
+    rejects((f) => {
+      f[BASE].primitive.line.$value.hex = "#0B0F171A";
+    }, "kuiper.tokens.json: primitive.line");
+    rejects((f) => {
+      f[BASE].primitive.paper.$value.hex = "#f3f0e8";
+    }, "kuiper.tokens.json: primitive.paper");
+    const message = rejects((f) => {
+      f[BASE].primitive.paper.$value.components = [0.95, 0.9412, 0.9098];
+    }, "kuiper.tokens.json: primitive.paper");
+    // The fault prints the components to write.
+    expect(message).toContain("0.9529, 0.9412, 0.9098");
+  });
+
+  // 021 review, finding 3: an alpha of 1 would lower to an `FF` suffix and
+  // change the CSS with no change of colour. An opaque colour has no alpha.
+  test("rejects an alpha of 1 on an opaque colour", () => {
+    const message = rejects((f) => {
+      f[BASE].primitive.ink.$value.alpha = 1;
+    }, "kuiper.tokens.json: primitive.ink");
+    expect(message).toContain("below 1");
+  });
+
+  test("rejects a light expressive mark that aliases another primitive than its role", () => {
+    rejects((f) => {
+      f[LIGHT]["expressive-mark"]["mark-1"].$value = "{primitive.red}";
+    }, "kuiper.light.tokens.json: expressive-mark.mark-1");
+  });
+
+  test("rejects an em dimension, an alias to nothing and an alias cycle", () => {
+    rejects((f) => {
+      f[BASE].mark.dot.$type = "dimension";
+      f[BASE].mark.dot.$value = { value: 0.3, unit: "em" };
+    }, "kuiper.tokens.json: mark.dot");
+    rejects((f) => {
+      f[DARK].role.ring.$value = "{primitive.blu-lifted}";
+    }, "kuiper.dark.tokens.json: role.ring");
+    rejects((f) => {
+      f[BASE].code.text.$value = "{code.comment}";
+      f[BASE].code.comment.$value = "{code.text}";
+    }, "kuiper.tokens.json: code.");
+  });
+
+  test("rejects a ladder step that is not a whole atom, or not named by its count", () => {
+    rejects((f) => {
+      f[BASE].spacing.ladder["3"].$value.value = 13;
+    }, "kuiper.tokens.json: spacing.ladder.3");
+    rejects((f) => {
+      f[BASE].spacing.ladder["5"] = f[BASE].spacing.ladder["6"];
+      delete f[BASE].spacing.ladder["6"];
+    }, "kuiper.tokens.json: spacing.ladder.5");
   });
 
   test("holds the ladder, the radius and the mark geometry", () => {
@@ -336,19 +447,23 @@ describe("the token file", () => {
   });
 
   test("rejects an elevation off the ladder and a scrim row with a raw colour", () => {
-    const offLadder = structuredClone(raw);
-    offLadder.elevation.y = 10;
-    expect(() => validateTokens(offLadder)).toThrow(/elevation\.y/);
-    const missing = structuredClone(raw);
-    delete missing.elevation;
-    expect(() => validateTokens(missing)).toThrow(/elevation/);
-    const badScrim = structuredClone(raw);
-    badScrim.contrast.scrim[0].edge = "raised";
-    expect(() => validateTokens(badScrim)).not.toThrow();
-    badScrim.contrast.scrim[0].edge = "ink";
-    expect(() => validateTokens(badScrim)).toThrow(
-      /contrast\.scrim\[0\]\.edge/,
-    );
+    rejects((f) => {
+      f[BASE].elevation.y.$value = { value: 10, unit: "px" };
+    }, "kuiper.tokens.json: elevation.y");
+    rejects((f) => {
+      f[BASE].elevation.y.$value = "{radius.case}";
+    }, "kuiper.tokens.json: elevation.y");
+    rejects((f) => {
+      delete f[BASE].elevation;
+    }, "kuiper.tokens.json: elevation");
+    expect(
+      lowered((f) => {
+        f[CONTRAST].scrim[0].edge = "raised";
+      }),
+    ).not.toThrow();
+    rejects((f) => {
+      f[CONTRAST].scrim[0].edge = "ink";
+    }, "kuiper.contrast.json: scrim[0].edge");
   });
 });
 
@@ -390,18 +505,18 @@ describe("the code map", () => {
   });
 
   test("rejects a slot that names a primitive, a raw hex, or nothing, and a missing map", () => {
-    const primitive = structuredClone(raw);
-    primitive.code.keyword = "blue";
-    expect(() => validateTokens(primitive)).toThrow(/code\.keyword/);
-    const hex = structuredClone(raw);
-    hex.code.string = "#136E3E";
-    expect(() => validateTokens(hex)).toThrow(/code\.string/);
-    const unknown = structuredClone(raw);
-    unknown.code.comment = "no-such-colour";
-    expect(() => validateTokens(unknown)).toThrow(/code\.comment/);
-    const missing = structuredClone(raw);
-    delete missing.code;
-    expect(() => validateTokens(missing)).toThrow(/code/);
+    rejects((f) => {
+      f[BASE].code.keyword.$value = "{primitive.blue}";
+    }, "kuiper.tokens.json: code.keyword");
+    rejects((f) => {
+      f[BASE].code.string.$value = colour("#136E3E");
+    }, "kuiper.tokens.json: code.string");
+    rejects((f) => {
+      f[BASE].code.comment.$value = "{role.no-such-colour}";
+    }, "kuiper.tokens.json: code.comment");
+    rejects((f) => {
+      delete f[BASE].code;
+    }, "kuiper.tokens.json: code");
   });
 });
 
@@ -431,15 +546,16 @@ describe("the entrance", () => {
   });
 
   test("rejects a missing orbit, a share of 1 or more, and an entrance past the budget", () => {
-    const noOrbit = structuredClone(raw);
-    delete noOrbit.mark.orbit;
-    expect(() => validateTokens(noOrbit)).toThrow(/mark\.orbit/);
-    const whole = structuredClone(raw);
-    whole.motion.entranceDot = 1;
-    expect(() => validateTokens(whole)).toThrow(/motion\.entranceDot/);
-    const over = structuredClone(raw);
-    over.motion.entranceStagger = 0.2;
-    expect(() => validateTokens(over)).toThrow(/budget/);
+    rejects((f) => {
+      delete f[BASE].mark.orbit;
+    }, "kuiper.tokens.json: mark.orbit");
+    rejects((f) => {
+      f[BASE].motion["entrance-dot"].$value = 1;
+    }, "kuiper.tokens.json: motion.entrance-dot");
+    const message = rejects((f) => {
+      f[BASE].motion["entrance-stagger"].$value = 0.2;
+    }, "kuiper.tokens.json: motion.entrance-dot");
+    expect(message).toMatch(/budget/);
   });
 });
 
@@ -449,7 +565,7 @@ describe("the expressive group", () => {
   // poster step. 012 decision 1 removes the stage, its light, the stage
   // radius and the veil's blur.
   test("validates, with its six parts", () => {
-    expect(Object.keys(raw.expressive)).toEqual([
+    expect(Object.keys(tokens.expressive)).toEqual([
       "display",
       "motion",
       "size",
@@ -469,8 +585,10 @@ describe("the expressive group", () => {
   // blur leave the file, the type and the validator.
   test("holds no stage, light, radius or blur, and the validator does not ask for them", () => {
     for (const part of ["stage", "light", "radius", "blur"])
-      expect(part in raw.expressive, part).toBe(false);
-    expect("stage" in raw.contrast).toBe(false);
+      expect(part in tokens.expressive, part).toBe(false);
+    for (const part of ["stage", "stage-light", "stage-radius", "veil-blur"])
+      expect(part in (files[BASE]?.expressive ?? {}), part).toBe(false);
+    expect("stage" in tokens.contrast).toBe(false);
   });
 
   test("adds no primitive and no theme role", () => {
@@ -488,29 +606,28 @@ describe("the expressive group", () => {
   });
 
   test("rejects a display family that is not a role, a step past its max, and a missing group", () => {
-    const family = structuredClone(raw);
-    family.expressive.display.family = "display";
-    expect(() => validateTokens(family)).toThrow(/expressive\.display\.family/);
-    const step = structuredClone(raw);
-    step.expressive.display.steps.section.minPx = 80;
-    expect(() => validateTokens(step)).toThrow(
-      /expressive\.display\.steps\.section/,
-    );
-    const ease = structuredClone(raw);
-    ease.expressive.motion.easeStandard = [0.2, 0.7];
-    expect(() => validateTokens(ease)).toThrow(
-      /expressive\.motion\.easeStandard/,
-    );
-    const missing = structuredClone(raw);
-    delete missing.expressive;
-    expect(() => validateTokens(missing)).toThrow(/expressive/);
+    rejects((f) => {
+      f[BASE].expressive.display.family.$value = "{font.family.display}";
+    }, "kuiper.tokens.json: expressive.display.family");
+    rejects((f) => {
+      f[BASE].expressive.display.family.$value = ["Inter", "sans-serif"];
+    }, "kuiper.tokens.json: expressive.display.family");
+    rejects((f) => {
+      f[BASE].expressive.display.section.size.min.$value.value = 80;
+    }, "kuiper.tokens.json: expressive.display.section.size");
+    rejects((f) => {
+      f[BASE].expressive.motion["ease-standard"].$value = [0.2, 0.7];
+    }, "kuiper.tokens.json: expressive.motion.ease-standard");
+    rejects((f) => {
+      delete f[BASE].expressive;
+    }, "kuiper.tokens.json: expressive");
   });
 });
 
 /** 011 decisions 6, 8, 9 and 10: the shapes the brand adds to the expressive group. */
 describe("011's expressive shapes", () => {
   test("decision 6: four fields per theme, each a [fill, legend] pair of primitives", () => {
-    expect(raw.expressive.field).toEqual({
+    expect(tokens.expressive.field).toEqual({
       light: {
         "field-1": ["blue", "raised"],
         "field-2": ["red", "raised"],
@@ -528,7 +645,7 @@ describe("011's expressive shapes", () => {
 
   // The owner: "Frost only, no lens" (decisions.md, 2026-11-07).
   test("decision 8: the glass per theme and its blur; no lens", () => {
-    expect(raw.expressive.glass).toEqual({
+    expect(tokens.expressive.glass).toEqual({
       light: {
         tint: "#F3F0E8DB",
         rim: "#FFFFFFCC",
@@ -547,11 +664,11 @@ describe("011's expressive shapes", () => {
       },
       blur: 16,
     });
-    expect(raw.expressive.motion.light).toBe(600);
+    expect(tokens.expressive.motion.light).toBe(600);
   });
 
   test("decision 9: the poster step, for launches only", () => {
-    expect(raw.expressive.display.steps.poster).toEqual({
+    expect(tokens.expressive.display.steps.poster).toEqual({
       minPx: 56,
       vw: 12,
       maxPx: 160,
@@ -564,20 +681,18 @@ describe("011's expressive shapes", () => {
   // 019a decision 1 (the owner, 2026-11-15): every tracking value is the
   // font's default.
   test("every tracking value is 0: the four type tokens and the four expressive steps", () => {
-    expect(raw.type.tracking).toEqual({
+    expect(tokens.type.tracking).toEqual({
       display: 0,
       section: 0,
       eyebrow: 0,
       mark: 0,
     });
-    for (const [step, value] of Object.entries(
-      raw.expressive.display.steps as Record<string, { tracking: number }>,
-    ))
+    for (const [step, value] of Object.entries(tokens.expressive.display.steps))
       expect(value.tracking, step).toBe(0);
   });
 
   test("decision 10: the spring", () => {
-    expect(raw.expressive.motion.spring).toEqual({
+    expect(tokens.expressive.motion.spring).toEqual({
       dampingRatio: 0.65,
       settle: 0.002,
       samples: 32,
@@ -585,73 +700,58 @@ describe("011's expressive shapes", () => {
   });
 
   test("decision 11: the field and glass contrast sets name their rows", () => {
-    expect(raw.contrast.field).toHaveLength(8);
-    expect(raw.contrast.glass).toHaveLength(33);
+    expect(tokens.contrast.field).toHaveLength(8);
+    expect(tokens.contrast.glass).toHaveLength(33);
     expect(
-      raw.contrast.glass.filter((r: { theme: string }) => r.theme === "light"),
+      tokens.contrast.glass.filter((r) => r.theme === "light"),
     ).toHaveLength(18);
   });
 
   // 012 decision 4: the bar's text on its glass over the hero's glass over
   // the canvas and each field, both themes: foreground and primary only.
   test("012 decision 4: glassOverGlass names 20 rows, and rejects a muted row or a ground that is not the canvas or a field", () => {
-    expect(raw.contrast.glassOverGlass).toHaveLength(20);
-    const muted = structuredClone(raw);
-    muted.contrast.glassOverGlass[0].text = "muted-foreground";
-    expect(() => validateTokens(muted)).toThrow(
-      /contrast\.glassOverGlass\[0\]\.text/,
-    );
-    const ground = structuredClone(raw);
-    ground.contrast.glassOverGlass[0].over = "foreground";
-    expect(() => validateTokens(ground)).toThrow(
-      /contrast\.glassOverGlass\[0\]\.over/,
-    );
+    expect(tokens.contrast.glassOverGlass).toHaveLength(20);
+    rejects((f) => {
+      f[CONTRAST].glassOverGlass[0].text = "muted-foreground";
+    }, "kuiper.contrast.json: glassOverGlass[0].text");
+    rejects((f) => {
+      f[CONTRAST].glassOverGlass[0].over = "foreground";
+    }, "kuiper.contrast.json: glassOverGlass[0].over");
   });
 
   test("rejects a field that is not a pair of primitives, a glass colour that is neither a primitive nor a hex, a fifth field, a spring ratio of 1 or more, and a fractional sample count", () => {
-    const pair = structuredClone(raw);
-    pair.expressive.field.light["field-1"] = ["blue"];
-    expect(() => validateTokens(pair)).toThrow(
-      /expressive\.field\.light\.field-1/,
-    );
-    const hex = structuredClone(raw);
-    hex.expressive.field.dark["field-2"] = ["#FF9491", "graphite"];
-    expect(() => validateTokens(hex)).toThrow(
-      /expressive\.field\.dark\.field-2/,
-    );
-    const fifth = structuredClone(raw);
-    fifth.expressive.field.light["field-5"] = ["blue", "raised"];
-    expect(() => validateTokens(fifth)).toThrow(/expressive\.field\.light/);
-    const tint = structuredClone(raw);
-    tint.expressive.glass.light.tint = "frosted";
-    expect(() => validateTokens(tint)).toThrow(
-      /expressive\.glass\.light\.tint/,
-    );
-    const shadow = structuredClone(raw);
-    shadow.expressive.glass.dark.shadow = ["#000000B3"];
-    expect(() => validateTokens(shadow)).toThrow(
-      /expressive\.glass\.dark\.shadow/,
-    );
-    const ratio = structuredClone(raw);
-    ratio.expressive.motion.spring.dampingRatio = 1;
-    expect(() => validateTokens(ratio)).toThrow(
-      /expressive\.motion\.spring\.dampingRatio/,
-    );
-    const samples = structuredClone(raw);
-    samples.expressive.motion.spring.samples = 32.5;
-    expect(() => validateTokens(samples)).toThrow(
-      /expressive\.motion\.spring\.samples/,
-    );
-    const poster = structuredClone(raw);
-    delete poster.expressive.display.steps.poster;
-    expect(() => validateTokens(poster)).toThrow(
-      /expressive\.display\.steps\.poster/,
-    );
-    const scale = structuredClone(raw);
-    delete scale.mark.lockupScale;
-    expect(() => validateTokens(scale)).toThrow(/mark\.lockupScale/);
-    const row = structuredClone(raw);
-    row.contrast.glass[0].over = "nowhere";
-    expect(() => validateTokens(row)).toThrow(/contrast\.glass\[0\]\.over/);
+    rejects((f) => {
+      delete f[LIGHT].field["field-1"].legend;
+      delete f[DARK].field["field-1"].legend;
+    }, "kuiper.light.tokens.json: field.field-1");
+    rejects((f) => {
+      f[DARK].field["field-2"].fill.$value = colour("#FF9491");
+    }, "kuiper.dark.tokens.json: field.field-2.fill");
+    rejects((f) => {
+      for (const file of [LIGHT, DARK])
+        f[file].field["field-5"] = structuredClone(f[file].field["field-4"]);
+    }, "kuiper.light.tokens.json: field");
+    rejects((f) => {
+      f[LIGHT].glass.tint.$value = "frosted";
+    }, "kuiper.light.tokens.json: glass.tint");
+    rejects((f) => {
+      delete f[LIGHT].glass.shadow.far;
+      delete f[DARK].glass.shadow.far;
+    }, "kuiper.light.tokens.json: glass.shadow");
+    rejects((f) => {
+      f[BASE].expressive.motion.spring["damping-ratio"].$value = 1;
+    }, "kuiper.tokens.json: expressive.motion.spring.damping-ratio");
+    rejects((f) => {
+      f[BASE].expressive.motion.spring.samples.$value = 32.5;
+    }, "kuiper.tokens.json: expressive.motion.spring.samples");
+    rejects((f) => {
+      delete f[BASE].expressive.display.poster;
+    }, "kuiper.tokens.json: expressive.display.poster");
+    rejects((f) => {
+      delete f[BASE].mark["lockup-scale"];
+    }, "kuiper.tokens.json: mark.lockup-scale");
+    rejects((f) => {
+      f[CONTRAST].glass[0].over = "nowhere";
+    }, "kuiper.contrast.json: glass[0].over");
   });
 });

@@ -4,7 +4,7 @@
 - **Date:** 2026-11-15
 - **Author:** `022`'s builder, for the design lead to open
 - **Kind:** small change (AGENTS.md: a fix with no interface change, no new token or dependency, in the site's layout). No research memo and no spec review. Its check is already seen failing; the built change is reviewed by someone who did not write it (constitution §5).
-- **Found by:** `022`'s local engine run, 2026-11-15: `keyboard.spec.ts`, "at 1280 × 900 › the Components landing: Tab visits its 193 stops in order, each with the ring unclipped", in `firefox-light`: stop 9 is `nav:Components pages`, not `a:Components`.
+- **Found by:** `022`'s local engine run, 2026-11-15: `keyboard.spec.ts`, "at 1280 × 900 › the Components landing: Tab visits its 201 stops (193 before the merge with `release/0.13.0`) in order, each with the ring unclipped", in `firefox-light`: stop 9 is `nav:Components pages`, not `a:Components`.
 
 ## The defect
 

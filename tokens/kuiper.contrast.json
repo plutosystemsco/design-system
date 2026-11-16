@@ -1,0 +1,240 @@
+{
+  "text": [
+    ["foreground", "background"],
+    ["card-foreground", "card"],
+    ["popover-foreground", "popover"],
+    ["secondary-foreground", "secondary"],
+    ["foreground", "muted"],
+    ["accent-foreground", "accent"],
+    ["muted-foreground", "background"],
+    ["muted-foreground", "card"],
+    ["muted-foreground", "muted"],
+    ["primary-foreground", "primary"],
+    ["primary", "background"],
+    ["primary", "card"],
+    ["primary", "muted"],
+    ["destructive", "background"],
+    ["destructive", "card"],
+    ["destructive", "muted"],
+    ["destructive-foreground", "destructive"],
+    ["success", "background"],
+    ["success", "card"],
+    ["success", "muted"],
+    ["success-foreground", "success"],
+    ["caution-foreground", "caution"],
+    ["sidebar-foreground", "sidebar"],
+    ["sidebar-primary-foreground", "sidebar-primary"],
+    ["sidebar-accent-foreground", "sidebar-accent"],
+    ["sidebar-primary", "sidebar"],
+    ["muted-foreground", "syntax-ground"],
+    ["muted-foreground", "syntax-active-line"],
+    ["success", "syntax-active-line"],
+    ["destructive", "syntax-active-line"],
+    ["caution-text", "background"],
+    ["caution-text", "card"],
+    ["caution-text", "muted"]
+  ],
+  "tints": [
+    {
+      "text": "destructive",
+      "tint": "destructive",
+      "over": "background",
+      "alpha": { "light": 0.1, "dark": 0.2 }
+    },
+    {
+      "text": "destructive",
+      "tint": "destructive",
+      "over": "card",
+      "alpha": { "light": 0.1, "dark": 0.2 }
+    },
+    {
+      "text": "success",
+      "tint": "success",
+      "over": "background",
+      "alpha": { "light": 0.1, "dark": 0.2 }
+    },
+    {
+      "text": "success",
+      "tint": "success",
+      "over": "card",
+      "alpha": { "light": 0.1, "dark": 0.2 }
+    }
+  ],
+  "nonText": [
+    ["input", "background"],
+    ["input", "card"],
+    ["input", "muted"],
+    ["ring", "background"],
+    ["ring", "card"],
+    ["sidebar-ring", "sidebar"],
+    ["destructive-fill", "background"],
+    ["destructive-fill", "card"],
+    ["success-fill", "background"],
+    ["success-fill", "card"],
+    ["chart-1", "background"],
+    ["chart-1", "card"],
+    ["chart-2", "background"],
+    ["chart-2", "card"],
+    ["chart-3", "background"],
+    ["chart-3", "card"],
+    ["chart-4", "background"],
+    ["chart-4", "card"],
+    ["chart-5", "background"],
+    ["chart-5", "card"],
+    ["primary", "syntax-active-line"]
+  ],
+  "exceptions": [
+    {
+      "theme": "light",
+      "pair": ["chart-3", "background"],
+      "why": "yellow series are labelled directly (the design book §03; WCAG 1.4.11)"
+    },
+    {
+      "theme": "light",
+      "pair": ["chart-3", "card"],
+      "why": "yellow series are labelled directly (the design book §03; WCAG 1.4.11)"
+    }
+  ],
+  "forbidden": {
+    "measured": [
+      {
+        "theme": "light",
+        "text": "destructive",
+        "tint": "destructive",
+        "over": "muted",
+        "alpha": 0.1,
+        "ratio": 4.08,
+        "why": "no state tint on muted (001 decision 8)"
+      }
+    ],
+    "ruleOnly": [
+      {
+        "theme": "dark",
+        "text": "destructive",
+        "tint": "destructive",
+        "over": "muted",
+        "alpha": 0.2,
+        "why": "no state tint on muted (001 decision 8), kept by rule (011 decision 11)"
+      },
+      {
+        "theme": "dark",
+        "text": "success",
+        "tint": "success",
+        "over": "muted",
+        "alpha": 0.2,
+        "why": "no state tint on muted (001 decision 8), kept by rule (011 decision 11)"
+      }
+    ]
+  },
+  "field": [
+    { "theme": "light", "field": "field-1" },
+    { "theme": "light", "field": "field-2" },
+    { "theme": "light", "field": "field-3" },
+    { "theme": "light", "field": "field-4" },
+    { "theme": "dark", "field": "field-1" },
+    { "theme": "dark", "field": "field-2" },
+    { "theme": "dark", "field": "field-3" },
+    { "theme": "dark", "field": "field-4" }
+  ],
+  "glass": [
+    { "theme": "light", "text": "foreground", "over": "background" },
+    { "theme": "light", "text": "foreground", "over": "field-1" },
+    { "theme": "light", "text": "foreground", "over": "field-2" },
+    { "theme": "light", "text": "foreground", "over": "field-3" },
+    { "theme": "light", "text": "foreground", "over": "field-4" },
+    { "theme": "light", "text": "foreground", "over": "foreground" },
+    { "theme": "light", "text": "muted-foreground", "over": "background" },
+    { "theme": "light", "text": "muted-foreground", "over": "field-1" },
+    { "theme": "light", "text": "muted-foreground", "over": "field-2" },
+    { "theme": "light", "text": "muted-foreground", "over": "field-3" },
+    { "theme": "light", "text": "muted-foreground", "over": "field-4" },
+    { "theme": "light", "text": "muted-foreground", "over": "foreground" },
+    { "theme": "light", "text": "primary", "over": "background" },
+    { "theme": "light", "text": "primary", "over": "field-1" },
+    { "theme": "light", "text": "primary", "over": "field-2" },
+    { "theme": "light", "text": "primary", "over": "field-3" },
+    { "theme": "light", "text": "primary", "over": "field-4" },
+    { "theme": "light", "text": "primary", "over": "foreground" },
+    { "theme": "dark", "text": "foreground", "over": "background" },
+    { "theme": "dark", "text": "foreground", "over": "field-1" },
+    { "theme": "dark", "text": "foreground", "over": "field-2" },
+    { "theme": "dark", "text": "foreground", "over": "field-3" },
+    { "theme": "dark", "text": "foreground", "over": "field-4" },
+    { "theme": "dark", "text": "muted-foreground", "over": "background" },
+    { "theme": "dark", "text": "muted-foreground", "over": "field-1" },
+    { "theme": "dark", "text": "muted-foreground", "over": "field-2" },
+    { "theme": "dark", "text": "muted-foreground", "over": "field-3" },
+    { "theme": "dark", "text": "muted-foreground", "over": "field-4" },
+    { "theme": "dark", "text": "primary", "over": "background" },
+    { "theme": "dark", "text": "primary", "over": "field-1" },
+    { "theme": "dark", "text": "primary", "over": "field-2" },
+    { "theme": "dark", "text": "primary", "over": "field-3" },
+    { "theme": "dark", "text": "primary", "over": "field-4" }
+  ],
+  "glassOverGlass": [
+    { "theme": "light", "text": "foreground", "over": "background" },
+    { "theme": "light", "text": "foreground", "over": "field-1" },
+    { "theme": "light", "text": "foreground", "over": "field-2" },
+    { "theme": "light", "text": "foreground", "over": "field-3" },
+    { "theme": "light", "text": "foreground", "over": "field-4" },
+    { "theme": "light", "text": "primary", "over": "background" },
+    { "theme": "light", "text": "primary", "over": "field-1" },
+    { "theme": "light", "text": "primary", "over": "field-2" },
+    { "theme": "light", "text": "primary", "over": "field-3" },
+    { "theme": "light", "text": "primary", "over": "field-4" },
+    { "theme": "dark", "text": "foreground", "over": "background" },
+    { "theme": "dark", "text": "foreground", "over": "field-1" },
+    { "theme": "dark", "text": "foreground", "over": "field-2" },
+    { "theme": "dark", "text": "foreground", "over": "field-3" },
+    { "theme": "dark", "text": "foreground", "over": "field-4" },
+    { "theme": "dark", "text": "primary", "over": "background" },
+    { "theme": "dark", "text": "primary", "over": "field-1" },
+    { "theme": "dark", "text": "primary", "over": "field-2" },
+    { "theme": "dark", "text": "primary", "over": "field-3" },
+    { "theme": "dark", "text": "primary", "over": "field-4" }
+  ],
+  "scrim": [
+    {
+      "theme": "light",
+      "edge": "popover",
+      "over": "background",
+      "scrim": "scrim",
+      "min": 3
+    },
+    {
+      "theme": "light",
+      "edge": "popover",
+      "over": "card",
+      "scrim": "scrim",
+      "min": 3
+    },
+    {
+      "theme": "light",
+      "edge": "popover",
+      "over": "muted",
+      "scrim": "scrim",
+      "min": 3
+    },
+    {
+      "theme": "dark",
+      "edge": "elevation-line",
+      "over": "background",
+      "scrim": "scrim",
+      "min": 3
+    },
+    {
+      "theme": "dark",
+      "edge": "elevation-line",
+      "over": "card",
+      "scrim": "scrim",
+      "min": 3
+    },
+    {
+      "theme": "dark",
+      "edge": "elevation-line",
+      "over": "muted",
+      "scrim": "scrim",
+      "min": 3
+    }
+  ]
+}

@@ -46,6 +46,8 @@ export const SR_ITEMS: Record<string, Kind[]> = {
   "app-shell": ["focus", "overlay"],
   chat: ["live", "focus"],
   "product-home": ["live", "overlay"],
+  // 026 decision 20 (D2, built at 022's merge): two announcers and F8.
+  toast: ["live", "focus"],
 };
 
 export const SR_EXCLUDED: Record<string, string> = {

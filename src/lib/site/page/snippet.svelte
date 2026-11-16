@@ -7,6 +7,7 @@
     code,
     lines,
     label,
+    name,
     language,
     mdLabel,
     step,
@@ -16,8 +17,10 @@
     code: string;
     /** Its tokens, highlighted at prerender, so the page loads no highlighter. */
     lines: HighlightedLine[] | null | undefined;
-    /** The code's name, for the scrolling region. */
+    /** The code's title, shown above it, and the scrolling region's name. */
     label: string;
+    /** The region's name, when the title alone would repeat another's on the page. */
+    name?: string;
     /** The language, for the Markdown twin's fence. */
     language: string;
     /** A line the Markdown twin writes before the code. */
@@ -44,7 +47,7 @@
     lines={lines ?? undefined}
     code={lines ? undefined : code}
     role="region"
-    aria-label={label}
+    aria-label={name ?? label}
     data-language={language}
   />
 </CodeBlock.Root>

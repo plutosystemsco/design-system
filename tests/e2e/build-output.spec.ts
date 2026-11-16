@@ -13,7 +13,7 @@ import { apiTables } from "../../src/lib/site/api.server.ts";
 import { CITATION_PATTERNS } from "../../src/lib/site/citations.ts";
 import { DOORS } from "../../src/lib/site/doors.ts";
 import { filesYouOwn } from "../../src/lib/site/files.ts";
-import { shownSource } from "../../src/lib/site/shown-source.ts";
+import { isPairFile, shownSource } from "../../src/lib/site/shown-source.ts";
 import { SITE_ORIGIN } from "../../src/lib/site/site.ts";
 import { SITEMAP } from "../../src/lib/site/sitemap.ts";
 
@@ -54,7 +54,7 @@ test.describe("015: the pages in build/", () => {
   });
 
   // 020 decision 10: the one _redirects is static/_redirects, copied whole.
-  test("criterion 3: 75 of 75 components/<name>/index.html; nothing under items/, identity/ or workbench/; _redirects is static/_redirects", () => {
+  test("criterion 3: 78 of 78 components/<name>/index.html; nothing under items/, identity/ or workbench/; _redirects is static/_redirects", () => {
     const registry = withListedItems(
       JSON.parse(readFileSync("registry.json", "utf8")),
     ) as {
@@ -64,7 +64,7 @@ test.describe("015: the pages in build/", () => {
       registry.items.filter((i) =>
         existsSync(path.join(BUILD, "components", i.name, "index.html")),
       ),
-    ).toHaveLength(75);
+    ).toHaveLength(79);
     for (const gone of ["items", "identity", "workbench"])
       expect(existsSync(path.join(BUILD, gone)), gone).toBe(false);
     expect(readFileSync(path.join(BUILD, "_redirects"), "utf8")).toBe(
@@ -204,7 +204,9 @@ test.describe("015: the Markdown twins", () => {
     expect(wrong).toEqual([]);
   });
 
-  test("criterion 19: 75 of 75 component twins hold the shown source of each of their examples, fenced as svelte", () => {
+  // A pair file (`do-*`, `dont-*`) renders in the Usage lists, not as a
+  // page example with its code (026 decision 22; 027 decision 12).
+  test("criterion 19: 79 of 79 component twins hold the shown source of each of their examples, fenced as svelte", () => {
     const registry = withListedItems(
       JSON.parse(readFileSync("registry.json", "utf8")),
     ) as {
@@ -216,7 +218,9 @@ test.describe("015: the Markdown twins", () => {
       const twin = readFileSync(twinOf(`/components/${item.name}/`), "utf8");
       const dir = path.join("src/lib/site/examples", item.name);
       if (existsSync(dir))
-        for (const f of readdirSync(dir).filter((f) => f.endsWith(".svelte"))) {
+        for (const f of readdirSync(dir).filter(
+          (f) => f.endsWith(".svelte") && !isPairFile(f),
+        )) {
           const shown = shownSource(
             readFileSync(path.join(dir, f), "utf8"),
           ).replace(/\n+$/, "");
@@ -225,7 +229,7 @@ test.describe("015: the Markdown twins", () => {
         }
       checked++;
     }
-    expect(checked).toBe(75);
+    expect(checked).toBe(79);
     expect(wrong).toEqual([]);
   });
 
@@ -543,7 +547,7 @@ test.describe("018: the footer link and the twins", () => {
 });
 
 test.describe("018 criterion 18: the first stage is exampleOrder's first", () => {
-  test("on 75 of 75 pages, the first frame's data-example (or the viewer's first view) is the one exampleOrder names", async () => {
+  test("on 79 of 79 pages, the first frame's data-example (or the viewer's first view) is the one exampleOrder names", async () => {
     const { firstStage } = await import("../../src/lib/site/example-order.ts");
     const registry = withListedItems(
       JSON.parse(readFileSync("registry.json", "utf8")),
@@ -570,7 +574,7 @@ test.describe("018 criterion 18: the first stage is exampleOrder's first", () =>
 });
 
 test.describe("018 review, finding 7: the index without scripts", () => {
-  test("each of the 72 lazy tiles holds its light picture in a <noscript>, with a src", () => {
+  test("each of the 76 lazy tiles holds its light picture in a <noscript>, with a src", () => {
     const html = readFileSync(
       path.join(BUILD, "components", "index.html"),
       "utf8",
@@ -578,7 +582,29 @@ test.describe("018 review, finding 7: the index without scripts", () => {
     const pics = [...html.matchAll(/<noscript>\s*<img[^>]*src="([^"]+)"/g)].map(
       (m) => m[1],
     );
-    expect(pics).toHaveLength(72);
+    expect(pics).toHaveLength(76);
     for (const src of pics) expect(src).toMatch(/-light\.[\w-]+\.webp$/);
+  });
+});
+
+test.describe("020a: the site's CSS reads only code", () => {
+  // The five classes of 020a's two fixtures live only in context/ and
+  // tests/, so they are canaries: present in the built CSS (1, 1, 1, 2 and
+  // 2 times before 020a), they mean Tailwind read a folder it must not. This
+  // ties the unit test's model of the scan to the real build.
+  test("the built CSS holds none of the fixtures' five classes", () => {
+    const assets = path.join(BUILD, "_app", "immutable", "assets");
+    const css = readdirSync(assets)
+      .filter((f) => f.endsWith(".css"))
+      .map((f) => readFileSync(path.join(assets, f), "utf8"))
+      .join("\n");
+    const found = [
+      "bg-fuchsia-950",
+      "row-8",
+      "row-15",
+      "inset-shadow-red-500",
+      "text-shadow-black",
+    ].filter((c) => new RegExp(`\\.${c}(?![\\w-])`).test(css));
+    expect(found).toEqual([]);
   });
 });

@@ -40,6 +40,17 @@ async function productiveFaces(page: Page) {
     };
     const buttons = [...document.querySelectorAll('[class*="group/button"]')]
       .filter((el) => !el.closest('[data-mode="expressive"]'))
+      // 027a decision 5: an attached button group squares its children's
+      // inner corners. The first child keeps this corner, so only a child
+      // with a neighbour before it is exempt.
+      .filter(
+        (el) =>
+          !(
+            el.parentElement?.matches(
+              '[data-slot="button-group"][data-variant="attached"]',
+            ) && el.previousElementSibling
+          ),
+      )
       .filter(
         (el) =>
           ![...el.classList].some((c) => /^rounded(-|$)/.test(c) && c !== own),

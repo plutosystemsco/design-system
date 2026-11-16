@@ -143,3 +143,64 @@ The media rule repeats the attribute rule's declarations, so it costs almost not
 - **Two owner questions follow from the evidence:** whether the glass stays translucent under high contrast (macOS may already reduce transparency there, §2), and whether dividers, not only control edges, rise to 4.5:1 (§1, Primer does both).
 
 No code was copied from prior art. Nothing in the repository was built, installed or changed, except this memo and its folder.
+
+## 6. Corrections, 2026-11-15, after `031`'s specification review
+
+Added by the spec author for `031`, from the review ([`../reviews/031-high-contrast-spec-2026-11-15.md`](../reviews/031-high-contrast-spec-2026-11-15.md); its probes in the session scratchpad's `031-review/`, cited **EXECUTED (review)**) and from a re-derivation. Sections 1 to 5 stand as written; where this section disagrees, it wins.
+
+- **The derivation now reads its grounds from the files, not from a list in the script.** `palette.ts` (replaced in this folder) takes every row from `tokens/kuiper.tokens.json`'s contrast rows, from [`tree.draft.json`](2026-11-15-high-contrast/tree.draft.json) (`029`'s solid tints; `031b`'s draft solid hairline `#DCDAD3` / `#37342E` and its three disabled roles, which re-run if `031b`'s review changes them) and from [`more.draft.json`](2026-11-15-high-contrast/more.draft.json) (`031`'s proposed `more` section). A swatch is derived against every row it appears in, as text, line or ground. It also checks that every role of both schemes is in a row or exempt with a reason. On its first run it found one role in no row, light `elevation-line`; three rows were added for it (EXECUTED).
+- **The result: the same 25 swatches, one hex different.** `red-lifted-more` is `#FFA29E`, not `#FFA29F`. The new script rounds each channel half up (`Math.round`), and lets chroma fall in exact steps of 0.001 from the source's. The review derived the same `#FFA29E` from the prose (EXECUTED; EXECUTED (review)). Its tint is still `#382C26`, and text on it still 7.01.
+- **216 pairs, 0 below target** (EXECUTED). 103 light and 113 dark: 35 text, 35 non-text (the contrast file's 21, and 14 new line rows), 4 field, 3 glass, 3 scrim and 3 disabled floors per scheme, and 20 light and 30 dark code rows. §3's "196" counted `[caution-foreground, caution]` twice, measured every field at a `-more` fill, and had no line rows but `border`'s.
+- **The fields, as adopted** (only light field-2 and field-4 change): light 7.02, 8.82, 9.53, 8.88; dark 8.67, 8.67, 13.2, 8.62 (EXECUTED). Light field-1 is the closest pass of any row in the scheme at 7.02.
+- **`031b`'s roles under high contrast:** the disabled floors read 3.14, 3.96 and 3.47 in light, 4.14, 4.64 and 5.20 in dark, unchanged, since no ground changes (EXECUTED).
+- **§3's largest move was wrong.** Yellow moves most, OKLCH L 0.512 to 0.411, then green (0.492 to 0.398), then red (0.524 to 0.432) (EXECUTED; EXECUTED (review)).
+- **§3's chart figures mixed two visions.** Light, standard: deuteranopia 7.0 (chart-2/chart-4), protanopia 6.8 (chart-2/chart-5). Light, high contrast: deuteranopia **4.1** (chart-2/chart-3), protanopia 6.8. Dark, both contrasts: deuteranopia 4.8, protanopia 3.1 (EXECUTED; EXECUTED (review)). So the drop is 7.0 to 4.1, under deuteranopia.
+- **§2's "27 runs":** `engines-out.txt` logs 33. 27 were judged, 0 mismatched; 6 were forced-colours runs, printed and not judged.
+- **§4's fallback figure:** the review measured the fallback's two sets at +0.42 kB, not +0.36 (its total with the glass rule: +0.865 kB). Its other figures agree within 2 B (EXECUTED (review)).
+- **The hue rule.** The derivation keeps hue exactly; 8-bit rounding moves it, more as chroma falls. Rounded, the neutrals move 1.37° to 1.57° and `code-grey-more` 3.95° (EXECUTED; EXECUTED (review)). Each is within `max(1°, atan(0.002 / C))`, where C is the swatch's own chroma (EXECUTED).
+- **The positive `@supports` survives a real build.** The review built the block with Vite 8.3.5, `@tailwindcss/vite` 4.3.3 and Lightning CSS 1.33.0, three ways. Every build kept `@supports (color:light-dark(#000, #fff))` with `@media (prefers-contrast:more)` inside it, and its pairs unlowered. Read in three engines, 66 runs, 0 mismatches (EXECUTED (review)).
+- **The CLI, run.** shadcn-svelte 1.7.1's merge wrote the nested at-rules, and the second and third `add`s were byte-identical (EXECUTED (review)). §2's READ claim is now EXECUTED.
+- **The bar's room** (EXECUTED (review), the existing `build/` in Chromium): 26 px to spare at 320 px, 66 at 360, 96 at 390.
+- **`031a`'s stage.** On the Components index the stage behind each picture holds only an `<img alt="">` and the `.site-thumb` background picture. The words sit below it on the card (READ, `src/routes/(site)/components/+page.svelte` lines 153 to 181; `031a` decision 3's anatomy). So no text in a role colour sits on that ground. The review measured that `031`'s swatches would fail on `031a`'s light `sunken` if it became a public ground: `ink-soft-more` 6.20, `line-more` 3.95 (EXECUTED (review)).
+- **The exhibit is redrawn** from the new `palette.json`: [`swatches.png`](2026-11-15-high-contrast/swatches.png), [`in-use.png`](2026-11-15-high-contrast/in-use.png), [`swatches.html`](2026-11-15-high-contrast/swatches.html). It now says what the owner will notice: light yellow text reads olive-brown, and the light charts get closer under deuteranopia. It also shows `031b`'s solid line and disabled button.
+
+## 7. Correction, 2026-11-15, after `031b`'s review
+
+Added by the spec author for `031`. Where this section disagrees with §6, it wins.
+
+- **`031b`'s disabled pairs stay out of `kuiper.contrast.json`,** with `031b`'s own targets: 4.5:1 for text, 3:1 for an edge (the coordinator, relaying `031b`'s review). So the derivation no longer measures them. `tree.draft.json` drops its floor rows, and `more.draft.json` lists the three disabled roles as exempt, held by `031b`'s own check. §6's disabled figures (3.14 and up) were measured on `031b`'s draft values against a 3:1 floor, and do not meet its new 4.5:1 text target; `031b` will change them. None of `031`'s swatches depends on them.
+- **The count is now 210 pairs, 0 below target:** 100 light and 110 dark (EXECUTED, `palette.ts` re-run). The 25 swatches are unchanged.
+- **`031b`'s light hairline is provisional.** It may get darker, or be redeclared on `031a`'s stage ground. No swatch depends on it: the line roles' high-contrast values come from `line-input` and `paper-line-input`. Only the "before" figures of the standard line rows would move. The derivation re-runs from the token file when `031b` lands.
+- **The exhibit is redrawn** with these words and the 210 count.
+
+## 8. Re-derivation, 2026-11-15, after `031a` made `sunken` public
+
+Added by the spec author for `031`. Where this section disagrees with §§6 and 7, it wins.
+
+- **The inputs.** The owner made `sunken` a public role: `#DCD7CA` light, `#0B0A07` dark (`031a` decisions 1 and 1a). It comes with its allowed rows and a `restricted` block of four pairs, in both schemes: `destructive`, `success` and `caution-text` as text, and the `input` edge. `031b` adds a public `sunken-line`, `ink` at 10% over `paper-sunken` (`#C7C3B8`) and `paper` at 10% over `ink-sunken` (`#22211E`) (`031a`, Knock-ons). Lane T is now `031a`, then `031b`, then `031`. `tree.draft.json` carries all of this, and `palette.ts` reads the allowed rows and the `restricted` block from it. Neither list is typed into the script. `more.draft.json` adds one line row, `[sunken-line, sunken]`.
+- **The result: 234 pairs, 0 below target; every role is in a row or exempt** (EXECUTED). 112 light and 122 dark: 38 text, 44 non-text, 4 field, 3 glass and 3 scrim rows per scheme, and 20 light and 30 dark code rows. No `more` row names a restricted pair.
+- **Three light swatches change.** Each now binds on `sunken`, and each reads higher than before on every other ground:
+
+  | Swatch | Before | After | Binding row | On `sunken`, before → after |
+  |---|---|---|---|---|
+  | `ink-soft-more` | `#444A55` | `#3D424D` | `muted-foreground` on `sunken` | 6.20 → **7.01** |
+  | `blue-more` | `#2236C3` | `#1D2AB8` | `primary` on `sunken` | 6.13 → **7.04** |
+  | `line-more` | `#6D6659` | `#645D50` | `sunken-line` on `sunken` | 3.95 → **4.53** |
+
+  `031a` estimated `#3D424D` and `#645D50`, and the derivation gives exactly those. It did not foresee `blue-more`: `primary` is an allowed text pair on `sunken`, so it must reach 7:1 there. The other 22 swatches are unchanged. Every dark swatch already passes on `#0B0A07`; the lowest is `paper-line-more` at 6.08.
+- **Light charts and fills move.** Each must reach 4.5:1 on `sunken` now. Standard `red` reads 3.91 there, `yellow-text` 3.99 and `green-text` 4.09. So light `chart-2` and `destructive-fill` take `red-more`, `chart-3` takes `yellow-more`, and `chart-4` and `success-fill` take `green-more`, the first candidates that pass. `chart-1` (`blue`, 4.88) and `chart-5` (`ink-soft`, 5.13) keep their colours.
+- **Chart distinctness falls again, in light.** Under deuteranopia the closest pair falls from 7.0 at standard to **3.0** ΔE (chart-2 against chart-3), not §6's 4.1. Under protanopia it is 5.7 (chart-3 against chart-4), against 6.8 at standard. Dark is unchanged (EXECUTED). Three chart-only fills derived to just 4.5:1 would give 3.5 and 6.5 instead: `#BD0A2B`, `#765A01` and `#036C4A` (EXECUTED, `chartprobe.ts`). They would be three more swatches for the owner.
+- **The restricted pairs under high contrast**, for information only, since they are not rows. Light: `destructive` 6.14, `success` 6.18, `caution-text` 6.14 and `input` 4.53 on `sunken`. Dark: 10.28, 10.22, 14.20 and 6.08. They stay restricted by rule in both schemes.
+- **The hue constant is now 0.0025.** Rounding to 8-bit sRGB moves a colour at most 0.0021 in the OKLab a–b plane, over 120,871 samples (EXECUTED (review), `quant.py`). 0.0025 clears that worst case. Every swatch is within the new tolerance. The largest moves are `code-grey-more` 3.95° of 8.78°, `ink-soft-more` 3.36° of 7.14°, and `line-more` 1.58° of 6.46°.
+- **The exhibit is redrawn**, with `sunken` as a fourth ground column and a well in each sample: [`swatches.png`](2026-11-15-high-contrast/swatches.png), [`in-use.png`](2026-11-15-high-contrast/in-use.png), [`swatches.html`](2026-11-15-high-contrast/swatches.html).
+
+## 9. Re-derivation, 2026-11-15, after `031a`'s second re-check (S1)
+
+Added by the spec author for `031`. Where this section disagrees with §8, it wins.
+
+- **The ruling.** `031a`'s second re-check found that, on light `sunken` under high contrast, the status fills and chart colours fail 4.5:1 as well: `red` 3.90, `green-text` 4.09, `yellow-text` 3.98. The design lead ruled that `031a` restricts them on `sunken`, in every context, since an item cannot change by contrast mode any more than by scheme. `tree.draft.json` now lists `destructive-fill`, `success-fill` and `chart-1` to `chart-5` in the `restricted` block, beside the four pairs. Its `sunken` rows are now `foreground`, `muted-foreground` and `primary` text, and the `ring`. `more.draft.json` adds the line row `[sunken-line, sunken]`.
+- **The result: 220 pairs, 0 below target; every role is in a row or exempt; every hue within tolerance** (EXECUTED). 105 light and 115 dark: 38 text, 37 non-text, 4 field, 3 glass and 3 scrim rows per scheme, and 20 light and 30 dark code rows.
+- **Exactly three light swatches change, as in §8:** `ink-soft-more` `#3D424D` (7.01 on `sunken`), `blue-more` `#1D2AB8` (7.04) and `line-more` `#645D50` (4.53). The S1 estimates were `#3C424D` and `#1C2AB8`. The derivation's exact values are one step lighter in one channel, because each is the first lightness step that passes. The other 22 are unchanged.
+- **§8's chart and fill moves are withdrawn.** Light `chart-2` and `destructive-fill` keep `red`, `chart-3` takes `yellow-text`, and `chart-4` and `success-fill` take `green-text`, as in §6. So the light chart floor under deuteranopia is **4.1** ΔE again, and protanopia 6.8. §8's 3.0, and its three chart-only fills, no longer apply.
+- **The block holds 32 variables:** 28 light roles (18 dark), two fields and two glass variables.
+- **The exhibit is redrawn**, marking the `sunken` column "restricted on sunken" where a swatch's pair is restricted there: [`swatches.png`](2026-11-15-high-contrast/swatches.png), [`in-use.png`](2026-11-15-high-contrast/in-use.png), [`swatches.html`](2026-11-15-high-contrast/swatches.html).

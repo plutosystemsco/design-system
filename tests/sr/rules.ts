@@ -25,7 +25,9 @@ export type RuleId =
   | "T1"
   | "T2"
   | "C1"
-  | "C2";
+  | "C2"
+  | "U1"
+  | "B1";
 
 export const RULE_IDS: RuleId[] = [
   "L1",
@@ -41,6 +43,8 @@ export const RULE_IDS: RuleId[] = [
   "T2",
   "C1",
   "C2",
+  "U1",
+  "B1",
 ];
 
 export type Fault = { rule: RuleId; message: string };
@@ -322,4 +326,37 @@ export function C2(
       rule: "C2" as const,
       message: `the pointer tooltip's "${t}" was spoken`,
     }));
+}
+
+/**
+ * U1 (026 decision 20, `unspoken`): a fault for each phrase that holds
+ * `phrase`. Precondition: the window is not empty (a silent reader would
+ * pass any "never said").
+ */
+export function U1(window: string[], phrase: string): Fault[] {
+  if (!nonEmpty(window)) return x0("U1: the window is empty");
+  const want = normalise(phrase);
+  return window
+    .filter((p) => normalise(p).includes(want))
+    .map((p) => ({
+      rule: "U1" as const,
+      message: `"${phrase}" was spoken: "${p}"`,
+    }));
+}
+
+/**
+ * B1 (026 decision 20, `before`): `first` is spoken whole and ends before
+ * `then` begins. Precondition: `then` is spoken whole.
+ */
+export function B1(window: string[], first: string, then: string): Fault[] {
+  if (!nonEmpty(window)) return x0("B1: the window is empty");
+  const at = spokenAt(window, then);
+  if (at < 0) return x0(`B1: "${then}" was not spoken, so nothing comes after`);
+  // `first` must be whole within the phrases before `then`'s, or in the same
+  // phrase before it.
+  const n = window.map(normalise);
+  const before = [...n.slice(0, at), n[at]!.split(normalise(then))[0]!];
+  return spokenWhole(before, first)
+    ? []
+    : fault("B1", `"${first}" was not spoken whole before "${then}"`);
 }

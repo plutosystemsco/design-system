@@ -49,8 +49,8 @@ describe("022 test 6: the patches apply", () => {
     expect(files).toEqual(PATCHES.map((p) => `${p.set}/${p.patch}`).sort());
   });
 
-  test("the main set has seven patches; no two patches in a set touch the same file", () => {
-    expect(PATCHES.filter((p) => p.set === "main")).toHaveLength(7);
+  test("the main set has eight patches (022's seven and 026's); no two patches in a set touch the same file", () => {
+    expect(PATCHES.filter((p) => p.set === "main")).toHaveLength(8); // 022's seven, and 026's toast-alert
     for (const set of SETS) {
       const seen = new Map<string, string>();
       for (const p of PATCHES.filter((x) => x.set === set))

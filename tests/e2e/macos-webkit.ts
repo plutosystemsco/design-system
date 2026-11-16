@@ -156,7 +156,7 @@ export const MACOS_WEBKIT: MacosWebkit[] = [
   {
     file: "keyboard.spec.ts",
     title:
-      "at 1280 × 900 › the Components landing: Tab visits its 193 stops in order, each with the ring unclipped",
+      "at 1280 × 900 › the Components landing: Tab visits its 201 stops in order, each with the ring unclipped",
     cause: "tab-to-links",
   },
   {

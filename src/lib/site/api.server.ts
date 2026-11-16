@@ -207,6 +207,7 @@ const ELEMENTS: Record<string, string> = {
   HTMLLiAttributes: "li",
   HTMLFormAttributes: "form",
   HTMLMeterAttributes: "meter",
+  HTMLProgressAttributes: "progress",
   HTMLDetailsAttributes: "details",
 };
 
