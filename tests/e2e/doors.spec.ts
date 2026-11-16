@@ -295,7 +295,7 @@ test.describe("015 criterion 11: the red door, against the error reading", () =>
     }
   });
 
-  test('the "Do" and "Don\'t" headings compute to --foreground on 75 of 75 component pages', async ({
+  test('the "Do" and "Don\'t" headings compute to --foreground on 78 of 78 component pages', async ({
     page,
   }) => {
     test.setTimeout(300_000);

@@ -86,6 +86,10 @@ export const EXAMPLE_ORDER: Record<string, string[]> = {
   message: ["variants"],
   marker: ["variants", "states"],
   composer: ["variants", "states", "keyboard"],
+  // 027a decision 12: batch A's quiet items.
+  link: ["inline", "standalone", "new-tab", "visited", "inherit"],
+  "button-group": ["attached", "with-menu", "vertical", "spaced"],
+  progress: ["upload", "states", "in-a-card"],
 };
 
 /** An item's example ids, in page order; empty for a block or a composition. */

@@ -34,7 +34,7 @@ describe("015: the search index", () => {
     const pages = index.filter((e) => !e.path.includes("#")).map((e) => e.path);
     expect(pages).toEqual(SITEMAP.map((p) => p.path));
     expect(new Set(index.map((e) => e.path)).size).toBe(index.length);
-    expect(SITEMAP.filter((p) => p.spec === "015")).toHaveLength(81);
+    expect(SITEMAP.filter((p) => p.spec === "015")).toHaveLength(84);
   });
 
   test('"dial" ranks Dialog first, and "but" ranks Button first', () => {
@@ -174,13 +174,29 @@ describe("018 decision 8: search that finds what was meant", () => {
   });
 
   // 018 checkpoint 2 drops "select": it starts a word of Native select.
-  // 020 adds the old name of the renamed theme item.
-  test("the aliases equal their fixture list of 5", async () => {
+  // 020 adds the old name of the renamed theme item. 027a adds hyperlink
+  // and anchor, for the link.
+  test("the aliases equal their fixture list of 7", async () => {
     const { ALIASES } = await aliases();
-    expect(fixture).toHaveLength(5);
+    expect(fixture).toHaveLength(7);
     expect(ALIASES.map(({ alias, path }) => ({ alias, path }))).toEqual(
       fixture.map(({ alias, path }) => ({ alias, path })),
     );
+  });
+
+  // 027a test 7: the link's two aliases lead to its page.
+  test('"hyperlink" and "anchor" return Link first, each with its alias', () => {
+    for (const q of ["hyperlink", "anchor"]) {
+      const r = Search.search(index, q);
+      expect(r[0]?.path, q).toBe("/components/link/");
+      expect(r[0]?.title, q).toBe("Link");
+      expect(r[0]?.alias, q).toBe(q);
+      expect(fixture).toContainEqual({
+        alias: q,
+        path: "/components/link/",
+        title: "Link",
+      });
+    }
   });
 
   test("each alias's target is in SITEMAP, with the fixture's title", async () => {

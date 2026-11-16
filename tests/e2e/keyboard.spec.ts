@@ -1509,3 +1509,73 @@ test.describe("017: the downloads by keyboard", () => {
     expect(reached).toEqual(files);
   });
 });
+
+/**
+ * 027a test 53: decision 9's rows for link and button-group, each a test on
+ * its example view. progress has no keyboard behaviour.
+ */
+test.describe("027a test 53: the keyboard rows", () => {
+  test.use({ viewport: { width: 1440, height: 900 } });
+  const view = async (page: Page, item: string, id: string) => {
+    await page.goto(`/example/${item}/${id}/`);
+    await page.locator("body[data-view-ready]").waitFor();
+  };
+
+  test(
+    "button-group, Tab from before it: each button in order",
+    {
+      annotation: [
+        { type: "item", description: "button-group" },
+        { type: "check", description: "keyboard" },
+      ],
+    },
+    async ({ page }) => {
+      await view(page, "button-group", "attached");
+      const buttons = page
+        .getByRole("group", { name: "Text alignment" })
+        .getByRole("button");
+      for (const name of ["Left", "Center", "Right"]) {
+        await page.keyboard.press("Tab");
+        await expect(page.getByRole("button", { name })).toBeFocused();
+      }
+      await expect(buttons).toHaveCount(3);
+    },
+  );
+
+  test(
+    "button-group, arrow keys on a button: nothing",
+    {
+      annotation: [
+        { type: "item", description: "button-group" },
+        { type: "check", description: "keyboard" },
+      ],
+    },
+    async ({ page }) => {
+      await view(page, "button-group", "attached");
+      const center = page.getByRole("button", { name: "Center" });
+      await center.focus();
+      for (const key of ["ArrowRight", "ArrowLeft", "ArrowDown", "ArrowUp"]) {
+        await page.keyboard.press(key);
+        await expect(center, key).toBeFocused();
+      }
+    },
+  );
+
+  test(
+    "link, Enter on the link: follows it",
+    {
+      annotation: [
+        { type: "item", description: "link" },
+        { type: "check", description: "keyboard" },
+      ],
+    },
+    async ({ page }) => {
+      await view(page, "link", "inline");
+      const link = page.locator('[data-slot="link"]').first();
+      const href = (await link.getAttribute("href"))!;
+      await link.focus();
+      await page.keyboard.press("Enter");
+      await page.waitForURL((u) => u.pathname === href);
+    },
+  );
+});

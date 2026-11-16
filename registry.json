@@ -1063,6 +1063,29 @@
       }
     },
     {
+      "name": "button-group",
+      "type": "registry:ui",
+      "title": "Button group",
+      "description": "A named group of related buttons, joined edge to edge or spaced in a row, each its own Tab stop.",
+      "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+      "registryDependencies": ["utils", "kuiper-theme", "button"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/button-group/button-group.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/button-group/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.13.0",
+        "group": "actions",
+        "modes": ["productive"]
+      }
+    },
+    {
       "name": "card",
       "type": "registry:ui",
       "title": "Card",
@@ -1794,6 +1817,29 @@
       ],
       "meta": {
         "since": "0.3.0",
+        "group": "feedback",
+        "modes": ["productive"]
+      }
+    },
+    {
+      "name": "progress",
+      "type": "registry:ui",
+      "title": "Progress bar",
+      "description": "A task's progress as the native progress bar, on the muted track with a primary fill, its numbers written beside it.",
+      "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+      "registryDependencies": ["utils", "kuiper-theme"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/progress/progress.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/progress/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.13.0",
         "group": "feedback",
         "modes": ["productive"]
       }
@@ -3018,6 +3064,29 @@
           "date": "2026-11-01",
           "sha256": "f4a286715fe4b3a1610b94e75565422e0a8cae30d7d05463b7c5c3d909f677b5"
         }
+      }
+    },
+    {
+      "name": "link",
+      "type": "registry:ui",
+      "title": "Link",
+      "description": "The inline link: always underlined, in the primary colour or the text's, with standalone, new-tab and visited forms.",
+      "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+      "registryDependencies": ["utils", "kuiper-theme"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/link/link.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/link/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.13.0",
+        "group": "navigation",
+        "modes": ["productive"]
       }
     },
     {

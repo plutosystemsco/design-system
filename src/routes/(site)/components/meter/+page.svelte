@@ -9,7 +9,10 @@
     <p>
       Use a meter for a measurement within a known range, such as fuel used
       against a cap, or memory against a limit. For a task that moves towards
-      done, use a native <code>&lt;progress&gt;</code>.
+      done, use a <a
+        href="/components/progress/"
+        class="text-primary underline underline-offset-4">progress bar</a
+      >.
     </p>
   {/snippet}
   {#snippet dos()}
@@ -22,8 +25,11 @@
     <li>Let the fill be the only sign of the value.</li>
     <li>Use it to warn. Say "Stopped: out of fuel" in an alert.</li>
     <li>
-      Use it for a task's progress. Use <code>&lt;progress&gt;</code>, which has
-      its own role.
+      Use it for a task's progress. Use a
+      <a
+        href="/components/progress/"
+        class="text-primary underline underline-offset-4">progress bar</a
+      >, which has its own role.
     </li>
   {/snippet}
   {#snippet accessibility()}
