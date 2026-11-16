@@ -1,25 +1,29 @@
-# 020c — The guide's column test reads line fragments, in the page's fonts
+# 020c — The guide's inline code stays in its column
 
-- **Status:** built 2026-11-16; waits for its change review. Lane S (a test only).
+- **Status:** rebuilt 2026-11-16 after its change review (`reviews/020c-022p-two-test-measures-pr-2026-11-16.md`, findings 1 to 3); waits for that review's re-check. Lane S (one page and its test).
 - **Date:** 2026-11-16
 - **Author:** the design lead
-- **Kind:** small change (`context/README.md`: a fix with no interface change, no new token or dependency, in one test). Its check is seen failing first; a check written after its fix is proven by mutation. The built change is reviewed by someone who did not write it (constitution §5).
+- **Kind:** small change (`context/README.md`: a fix with no interface change, no new token or dependency, in one page). Its check is seen failing first. The built change is reviewed by someone who did not write it (constitution §5).
 - **Depends on:** `020b`.
 - **Found by:** the `matrix` runs 1 to 4: `upgrade.spec.ts`, "020b … at 320, nothing in the column scrolls sideways, and every rename reads in it", fails in `chromium-*` (`research/2026-11-16-the-fourth-matrix-run.md`, §2).
 
 ## The defect
 
-The test reports `code "pluto:field-set…": 290 wide, past the column` and the same for `pluto:field-label`. Three things were wrong in how it measures, and none in the page. EXECUTED in this session, Chromium 156 (the CI build):
+Inline code in the guide's sentences runs past the text column. EXECUTED (the change review, and this session, Chromium 156 and WebKit):
 
-1. **It measures before the fonts load.** It reads the layout right after `goto`, which may be the fallback font's. Other specs wait for `document.fonts.ready` (`doors.spec.ts`, `expressive.spec.ts`).
-2. **It measures an inline element's union box.** `pluto:field-set` in a "What to do" sentence wraps after its hyphen, so its outer box spans both lines: 282 px in Chrome, 290 in the test. Each fragment fits.
-3. **The headless shell paints a line's last run 2 px past where it broke it.** With the first two fixed, the fragment `pluto:field-` runs from 176 to 306 px in a column ending at 304 in Playwright's headless shell, and from 172 to 298 in full Chrome. The overhang lies in the page's 16 px gutter: the page does not scroll sideways, and the text reads whole, which is what the test is for.
+- Inline code has its padding and border repeated on each line piece (`box-decoration-clone`, `px-1` and `border`, `src/app.css:840`). Line breaking does not count those 5 px. So when `pluto:field-set` in a "What to do" sentence breaks after its hyphen, its first piece ends up to 5 px past the column's edge.
+- At 320 in Playwright's headless shell, the piece `pluto:field-` runs from 176 to 306 in a column ending at 304. Full Chromium and WebKit show the same overhang, up to 4.7 and 5.0 px, at other widths from 320 to 440 that the test does not take. The page never scrolls sideways; the overhang lies in its gutter.
+- This is the defect `020b`'s "Findings for later" logged. It is a page defect, not the test's.
+
+The first version of this change let the test allow 2 px of overhang. The change review showed that hid the page defect, with no margin (one more pixel of padding failed it again), and that the cause was not a headless-shell quirk. That version is withdrawn.
 
 ## The fix
 
-The test waits for `document.fonts.ready`, measures each `getClientRects()` fragment, and lets an inline element's fragment overhang the column by 2 px, the shell's measured overhang; a block box keeps the 1 px it had. The page does not change.
+- **The page.** In `+page.svelte`'s `inline` snippet, inline code takes `inline-block max-w-full wrap-anywhere`: `020b` ruling 3's recipe for the same page's rename names. A code run then breaks inside its own box, which holds its padding and border, and the box never passes the column. The rendered text does not change.
+- **The test** keeps the 1 px it had, with no extra allowance. It waits for `document.fonts.ready`, as other specs do (`doors.spec.ts`, `expressive.spec.ts`); in these runs the fonts had loaded by `goto`'s return, and the wait makes that certain. It measures each `getClientRects()` piece: an element's outer box is past the column exactly when a piece is, so the verdict is the same, but the message names the 130 px piece rather than a 290 px box.
 
 ## The check
 
-1. Seen failing first: the unchanged test fails at 320 in `chromium-light` and `chromium-dark`, 6 of 6 (Chromium 156). After the font wait and the fragments alone, it still failed, naming the 130 px fragment at [176, 306]; with the 2 px slack, `upgrade.spec.ts` passes 126 of 126 in `chromium-light`, `chromium-dark` and `webkit-light`, three repeats.
-2. Proven by mutation: with the guide's inline code made `whitespace-nowrap` and three times as long, in a rebuilt site, the 320 test fails, naming the boxes past the column (528 px wide). Restored, it passes.
+1. Seen failing first (EXECUTED): with the page as it was at `c5cdd65`, the new test fails at 320 in `chromium-light` and `chromium-dark`, naming `pluto:field-set` and `pluto:field-label` at 130 px past the column. With the page fix, `upgrade.spec.ts` passes 84 of 84 in `chromium-light`, `chromium-dark` and `webkit-light`, two repeats.
+2. The change review, with the fix's CSS injected: from 320 to 440, step 2, the worst overhang is 0.02 px in the shell, full Chromium and WebKit.
+3. Firefox runs in CI's matrix.

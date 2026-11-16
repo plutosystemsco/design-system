@@ -55,7 +55,8 @@
 {/snippet}
 
 {#snippet inline(x: Inline)}
-  {#if x.kind === "code"}<code>{x.text}</code
+  {#if x.kind === "code"}<code class="inline-block max-w-full wrap-anywhere"
+      >{x.text}</code
     >{:else if x.kind === "strong"}<strong>{x.text}</strong
     >{:else if x.kind === "href"}<a href={x.href} class={link}>{x.text}</a
     >{:else}{x.text}{/if}

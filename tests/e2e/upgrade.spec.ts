@@ -218,15 +218,10 @@ test.describe("020b: the guide fits its column", () => {
             let up = el.parentElement;
             while (up && up !== column && !clips(up)) up = up.parentElement;
             if (up !== column) continue;
-            // 020c: each line's fragment, not their union: a wrapped inline
-            // element's outer box spans every line it is on. A line's last
-            // fragment may overhang by 2 px: Chromium's headless shell breaks
-            // the line on one glyph width and paints another (a monospace
-            // run ended at 306 in a 304 column there, at 298 in Chrome), and
-            // the overhang lies in the page's gutter, read whole.
-            const slack = getComputedStyle(el).display === "inline" ? 2 : 1;
+            // 020c: each line's fragment, so the message names the piece
+            // past the column, not a wrapped element's whole outer box.
             for (const r of el.getClientRects())
-              if (r.left < box.left - slack || r.right > box.right + slack) {
+              if (r.left < box.left - 1 || r.right > box.right + 1) {
                 wide.push(
                   `${name(el)}: ${Math.round(r.width)} wide, past the column`,
                 );
