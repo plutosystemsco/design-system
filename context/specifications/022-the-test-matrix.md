@@ -1155,4 +1155,13 @@ Committed as "022: the review's fixes". By finding:
 - **The release check** leaves room for `025`'s cost step after the matrix step (a comment where it goes); `025` has not landed.
 - **Counts on the merged tree:** the browser suite lists **10,256** tests (`chromium-light` 1,731, `chromium-dark` 1,704, each Firefox and WebKit project 1,704, `perf` 5): Chromium's `test:e2e` is 3,440. The screen-reader suite lists 228 (76 tests × 3 browsers). `ENGINE_ONLY`: onlyIn 2, notIn 1, onlyProjects 4, adaptsIn 10.
 
-MERGE-RESULTS-PLACEHOLDER
+**Checks on the merged tree (2026-11-16, load average 42 to 50 on 10 cores):**
+
+- `check` 0 errors over 2,337 files; lint clean; the unit suite 1,558 of 1,560 pass on the first run, the two misses being the Components landing's new title (fixed above), then all pass; the screen-reader unit files (`sr-rules`, `sr-items`, `sr-static`, `mutations`) 64 pass.
+- **Chromium's suite with `perf`:** 3,305 passed, 121 skipped, 9 timed out (eight `bar-glass.spec.ts` cases at 1440 and one axe page, all in `chromium-dark`, all "Test timeout of 30000ms exceeded" in a `waitForTimeout` or a page load). Rerun with two workers, 11 of 12 pass; the twelfth passes alone. `perf` did not run in the full run, since a dependency project failed; run alone (`--no-deps`), its 5 pass, Button still at 382 kB.
+- **The new items and the token pages in Firefox and WebKit** (`link`, `button-group`, `progress`, `batch-a`, `toast`, `tokens-files`, `tokens`, `upgrade`; 195 tests in each of the four projects, 780 in all): 765 passed, 12 skipped (the `ENGINE_ONLY` skips and T17's dark projects), 3 timed out, all `toast.spec.ts` test 57 in `firefox-dark` (hover, window blur, the page hidden hold the clock).
+- **Test 57 in Firefox, triaged:** a rerun of its ten cases in both Firefox projects with four workers failed four (a count assertion, not a timeout); then 2 of 2, 8 of 8 (with Chromium), 18 of 18 (three repeats, three workers) and the whole of `toast.spec.ts` in both Firefox projects with four workers (88 of 88) passed. No failure reproduced at lower load, so it is neither a ledger line (a line must fail every time, or the ledger reports a mismatch) nor a small change yet. **To watch in push B's run:** CI's `failOnFlakyTests` turns a pass on retry into a failure, so a repeat there opens `022g` (the likely cause is the clock and Firefox's event order under load, a harness question first).
+- **Smoke:** 137 of 139 on the first run; the two misses are `dev-loop.test.ts`'s 10 s watch deadlines (10.1 s and 9.3 s); rerun alone, both pass.
+- **The screen-reader suite dry** (`SR_DRY=1`), toast's ten tests in the three browsers: 30 of 30.
+- The release check `--before-ci` exits 0, naming its two skips.
+- **New ledger lines: none.** The ledger still holds its 27 lines; no new engine fault reproduced, so no `022g` stub was opened.
