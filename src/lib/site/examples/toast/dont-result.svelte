@@ -2,6 +2,7 @@
   export const meta = {
     kind: "dont",
     pair: "result",
+    title: "Don't: a form's error as a toast",
     caption: "A form's error as a toast, far from the field it belongs to.",
     breaks: "A form's error far from its field. Use an error summary.",
   };

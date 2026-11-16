@@ -2,6 +2,7 @@
   export const meta = {
     kind: "dont",
     pair: "words",
+    title: "Don't: a paragraph",
     caption: "A 45-word toast in two paragraphs.",
     breaks: "Too long to read in the time, and too long to hear.",
   };

@@ -2,6 +2,7 @@
   export const meta = {
     kind: "dont",
     pair: "action",
+    title: "Don't: the action only in the toast",
     caption: "Retry offered only in the toast.",
     breaks: "The only way to do it is behind F8. Offer it on the page too.",
   };

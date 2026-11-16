@@ -10,6 +10,7 @@ import path from "node:path";
 import ts from "typescript";
 import { apiTables } from "../../src/lib/site/api.server.ts";
 import { EXAMPLE_ORDER } from "../../src/lib/site/example-order.ts";
+import { isPairFile } from "../../src/lib/site/shown-source.ts";
 
 type Item = {
   name: string;
@@ -61,10 +62,10 @@ describe("026: the registry entry", () => {
       ...(built.dependencies ?? []),
       ...(built.devDependencies ?? []),
     ]).toEqual(["phosphor-svelte@^3.1.1"]);
-    // The registry sits the toast with the feedback items, after the error
-    // summary.
+    // The registry sits the toast with the feedback items, in landing order:
+    // after the error summary and 027a's progress bar.
     const names = registry.items.map((i) => i.name);
-    expect(names.indexOf("toast")).toBe(names.indexOf("error-summary") + 1);
+    expect(names.indexOf("toast")).toBe(names.indexOf("progress") + 1);
   });
 
   test("the six files of decision 1, and index.ts exports decision 3's names and no others", () => {
@@ -229,7 +230,7 @@ describe("026: the page's examples and pairs", () => {
     const files = readdirSync(EXAMPLES).filter((f) => f.endsWith(".svelte"));
     expect(
       files
-        .filter((f) => !/^(do|dont)-/.test(f))
+        .filter((f) => !isPairFile(f))
         .map((f) => f.replace(".svelte", ""))
         .sort(),
     ).toEqual([...ORDER].sort());
@@ -237,7 +238,7 @@ describe("026: the page's examples and pairs", () => {
 
   test("41b. three pairs: each file has kind, pair and a caption of 20 words or fewer; each don't has breaks", () => {
     const pairs = readdirSync(EXAMPLES)
-      .filter((f) => /^(do|dont)-.*\.svelte$/.test(f))
+      .filter((f) => isPairFile(f))
       .sort();
     expect(pairs).toEqual(
       [
@@ -266,7 +267,7 @@ describe("026: the page's examples and pairs", () => {
 
   test("41c. every specimen renders in an ol inside inert", () => {
     const specimens = readdirSync(EXAMPLES).filter(
-      (f) => /^(do|dont)-.*\.svelte$/.test(f) || f === "kinds.svelte",
+      (f) => isPairFile(f) || f === "kinds.svelte",
     );
     expect(specimens).toHaveLength(7);
     for (const f of specimens) {

@@ -1,8 +1,16 @@
 {
   "date": "2026-11-15",
+  "revised": "after the spec review",
+  "reads": [
+    "tokens/kuiper.tokens.json (contrast rows, primitives, roles, fields, glass)",
+    "tree.draft.json (029 tints; 031b draft: solid line, disabled roles)",
+    "more.draft.json (031's proposed `more` section)"
+  ],
+  "rules": "lightness only, steps of 0.001; chroma from the source's down in steps of 0.001 until in gamut (±1e-6, linear); channels rounded half up; first passing step; passes repeat until stable",
   "targets": {
     "text": 7,
-    "nonText": 4.5
+    "nonText": 4.5,
+    "scrim": 4.5
   },
   "swatches": [
     {
@@ -10,27 +18,31 @@
       "scheme": "light",
       "from": "ink-soft",
       "fromHex": "#505661",
-      "hex": "#444A55",
-      "why": "muted text, 7:1 on wash",
-      "on": {
-        "background": 7.82,
-        "card": 8.91,
-        "muted": 7.08
-      },
-      "fromOn": {
-        "background": 6.48,
-        "card": 7.38,
-        "muted": 5.86
+      "hex": "#3D424D",
+      "composite": null,
+      "jobs": [
+        "muted-foreground"
+      ],
+      "binding": {
+        "label": "muted-foreground on sunken",
+        "min": 7,
+        "ratio": 7.01,
+        "before": 5.13
       },
       "oklch": {
-        "L": 0.408,
+        "L": 0.379,
         "C": 0.02,
-        "h": 262.6
+        "h": 266
       },
       "fromOklch": {
         "L": 0.452,
         "C": 0.02,
         "h": 262.7
+      },
+      "hue": {
+        "rounded": 3.36,
+        "unrounded": 0,
+        "tolerance": 7.14
       }
     },
     {
@@ -38,27 +50,34 @@
       "scheme": "light",
       "from": "blue",
       "fromHex": "#2D48D4",
-      "hex": "#2236C3",
-      "why": "primary, link, ring, chart-1, field-1: 7:1 on wash",
-      "on": {
-        "background": 7.73,
-        "card": 8.8,
-        "muted": 7
-      },
-      "fromOn": {
-        "background": 6.16,
-        "card": 7.02,
-        "muted": 5.58
+      "hex": "#1D2AB8",
+      "composite": null,
+      "jobs": [
+        "primary",
+        "ring",
+        "sidebar-primary",
+        "sidebar-ring"
+      ],
+      "binding": {
+        "label": "primary on sunken",
+        "min": 7,
+        "ratio": 7.04,
+        "before": 4.88
       },
       "oklch": {
-        "L": 0.429,
+        "L": 0.397,
         "C": 0.216,
-        "h": 268
+        "h": 268.1
       },
       "fromOklch": {
         "L": 0.479,
         "C": 0.215,
         "h": 268
+      },
+      "hue": {
+        "rounded": 0.09,
+        "unrounded": 0,
+        "tolerance": 1
       }
     },
     {
@@ -67,26 +86,31 @@
       "from": "red-text",
       "fromHex": "#C11E31",
       "hex": "#99011F",
-      "why": "destructive text and fill, chart-2, field-2: 7:1 on wash and on its tint",
-      "on": {
-        "background": 7.75,
-        "card": 8.82,
-        "muted": 7.01
-      },
-      "fromOn": {
-        "background": 5.27,
-        "card": 6,
-        "muted": 4.77
+      "composite": null,
+      "jobs": [
+        "destructive",
+        "field-2 fill"
+      ],
+      "binding": {
+        "label": "destructive on muted",
+        "min": 7,
+        "ratio": 7.01,
+        "before": 4.77
       },
       "oklch": {
         "L": 0.432,
         "C": 0.173,
-        "h": 22.19999999999999
+        "h": 22.2
       },
       "fromOklch": {
         "L": 0.524,
         "C": 0.195,
-        "h": 22.30000000000001
+        "h": 22.3
+      },
+      "hue": {
+        "rounded": 0.15,
+        "unrounded": 0,
+        "tolerance": 1
       }
     },
     {
@@ -95,26 +119,31 @@
       "from": "green-text",
       "fromHex": "#007351",
       "hex": "#01553B",
-      "why": "success text and fill, chart-4, field-4: 7:1 on wash and on its tint",
-      "on": {
-        "background": 7.8,
-        "card": 8.88,
-        "muted": 7.06
-      },
-      "fromOn": {
-        "background": 5.16,
-        "card": 5.88,
-        "muted": 4.67
+      "composite": null,
+      "jobs": [
+        "success",
+        "field-4 fill"
+      ],
+      "binding": {
+        "label": "success on muted",
+        "min": 7,
+        "ratio": 7.06,
+        "before": 4.67
       },
       "oklch": {
         "L": 0.398,
         "C": 0.084,
-        "h": 164.29999999999995
+        "h": 164.3
       },
       "fromOklch": {
         "L": 0.492,
         "C": 0.104,
-        "h": 164.29999999999995
+        "h": 164.3
+      },
+      "hue": {
+        "rounded": 0.01,
+        "unrounded": 0,
+        "tolerance": 1.7
       }
     },
     {
@@ -123,26 +152,30 @@
       "from": "yellow-text",
       "fromHex": "#806200",
       "hex": "#5E4701",
-      "why": "caution text, chart-3: 7:1 on wash",
-      "on": {
-        "background": 7.75,
-        "card": 8.83,
-        "muted": 7.02
-      },
-      "fromOn": {
-        "background": 5.03,
-        "card": 5.73,
-        "muted": 4.55
+      "composite": null,
+      "jobs": [
+        "caution-text"
+      ],
+      "binding": {
+        "label": "caution-text on muted",
+        "min": 7,
+        "ratio": 7.02,
+        "before": 4.55
       },
       "oklch": {
         "L": 0.411,
         "C": 0.084,
-        "h": 87.19999999999999
+        "h": 87.2
       },
       "fromOklch": {
         "L": 0.512,
         "C": 0.105,
-        "h": 87.60000000000002
+        "h": 87.6
+      },
+      "hue": {
+        "rounded": 0.38,
+        "unrounded": 0,
+        "tolerance": 1.71
       }
     },
     {
@@ -150,68 +183,38 @@
       "scheme": "light",
       "from": "line-input",
       "fromHex": "#857E70",
-      "hex": "#6D6659",
-      "why": "input, border, groove, elevation line, glass edge: 4.5:1 on wash",
-      "on": {
-        "background": 4.99,
-        "card": 5.68,
-        "muted": 4.51
-      },
-      "fromOn": {
-        "background": 3.53,
-        "card": 4.02,
-        "muted": 3.2
+      "hex": "#645D50",
+      "composite": null,
+      "jobs": [
+        "input",
+        "elevation-line",
+        "border",
+        "sidebar-border",
+        "groove-line",
+        "sunken-line",
+        "glass-edge"
+      ],
+      "binding": {
+        "label": "sunken-line on sunken",
+        "min": 4.5,
+        "ratio": 4.53,
+        "before": 1.22
       },
       "oklch": {
-        "L": 0.513,
+        "L": 0.481,
         "C": 0.022,
         "h": 83
       },
       "fromOklch": {
         "L": 0.595,
         "C": 0.022,
-        "h": 84.60000000000002
+        "h": 84.6
+      },
+      "hue": {
+        "rounded": 1.58,
+        "unrounded": 0,
+        "tolerance": 6.46
       }
-    },
-    {
-      "name": "red-tint-more",
-      "scheme": "light",
-      "from": "red-more over raised, 10%",
-      "fromHex": null,
-      "hex": "#F5E6E9",
-      "why": "destructive alert ground",
-      "on": {
-        "background": 1.06,
-        "card": 1.2,
-        "muted": 1.04
-      },
-      "fromOn": null,
-      "oklch": {
-        "L": 0.938,
-        "C": 0.017,
-        "h": 3.6999999999999886
-      },
-      "fromOklch": null
-    },
-    {
-      "name": "green-tint-more",
-      "scheme": "light",
-      "from": "green-more over raised, 10%",
-      "fromHex": null,
-      "hex": "#E6EEEB",
-      "why": "success alert ground",
-      "on": {
-        "background": 1.03,
-        "card": 1.18,
-        "muted": 1.06
-      },
-      "fromOn": null,
-      "oklch": {
-        "L": 0.942,
-        "C": 0.009,
-        "h": 171.79999999999995
-      },
-      "fromOklch": null
     },
     {
       "name": "paper-soft-more",
@@ -219,16 +222,15 @@
       "from": "paper-soft",
       "fromHex": "#A39D90",
       "hex": "#B9B3A5",
-      "why": "muted text, 7:1 on ink-wash",
-      "on": {
-        "background": 8.81,
-        "card": 7.86,
-        "muted": 7.01
-      },
-      "fromOn": {
-        "background": 6.82,
-        "card": 6.08,
-        "muted": 5.43
+      "composite": null,
+      "jobs": [
+        "muted-foreground"
+      ],
+      "binding": {
+        "label": "muted-foreground on muted",
+        "min": 7,
+        "ratio": 7.01,
+        "before": 5.43
       },
       "oklch": {
         "L": 0.768,
@@ -238,7 +240,12 @@
       "fromOklch": {
         "L": 0.697,
         "C": 0.02,
-        "h": 86.19999999999999
+        "h": 86.2
+      },
+      "hue": {
+        "rounded": 1.37,
+        "unrounded": 0,
+        "tolerance": 6.89
       }
     },
     {
@@ -247,16 +254,19 @@
       "from": "blue-lifted",
       "fromHex": "#93B0FF",
       "hex": "#95B2FF",
-      "why": "primary, link, ring, chart-1, field-1: 7:1 on ink-wash",
-      "on": {
-        "background": 8.84,
-        "card": 7.89,
-        "muted": 7.04
-      },
-      "fromOn": {
-        "background": 8.67,
-        "card": 7.74,
-        "muted": 6.9
+      "composite": null,
+      "jobs": [
+        "primary",
+        "ring",
+        "sidebar-primary",
+        "sidebar-ring",
+        "syntax-blue"
+      ],
+      "binding": {
+        "label": "primary on muted",
+        "min": 7,
+        "ratio": 7.04,
+        "before": 6.9
       },
       "oklch": {
         "L": 0.772,
@@ -267,6 +277,11 @@
         "L": 0.767,
         "C": 0.118,
         "h": 268.2
+      },
+      "hue": {
+        "rounded": 0.28,
+        "unrounded": 0,
+        "tolerance": 1.24
       }
     },
     {
@@ -274,27 +289,31 @@
       "scheme": "dark",
       "from": "red-lifted",
       "fromHex": "#FF9491",
-      "hex": "#FFA29F",
-      "why": "destructive: 7:1 on ink-wash and on its tint",
-      "on": {
-        "background": 9.57,
-        "card": 8.54,
-        "muted": 7.62
-      },
-      "fromOn": {
-        "background": 8.67,
-        "card": 7.74,
-        "muted": 6.9
+      "hex": "#FFA29E",
+      "composite": null,
+      "jobs": [
+        "destructive"
+      ],
+      "binding": {
+        "label": "destructive on destructive-tint",
+        "min": 7,
+        "ratio": 7.01,
+        "before": 5.21
       },
       "oklch": {
-        "L": 0.805,
+        "L": 0.804,
         "C": 0.111,
-        "h": 21.80000000000001
+        "h": 22.5
       },
       "fromOklch": {
         "L": 0.779,
         "C": 0.129,
-        "h": 22.19999999999999
+        "h": 22.2
+      },
+      "hue": {
+        "rounded": 0.34,
+        "unrounded": 0,
+        "tolerance": 1.29
       }
     },
     {
@@ -303,16 +322,15 @@
       "from": "green-lifted",
       "fromHex": "#60C498",
       "hex": "#69CDA0",
-      "why": "success: 7:1 on ink-wash and on its tint",
-      "on": {
-        "background": 9.5,
-        "card": 8.48,
-        "muted": 7.56
-      },
-      "fromOn": {
-        "background": 8.62,
-        "card": 7.7,
-        "muted": 6.87
+      "composite": null,
+      "jobs": [
+        "success"
+      ],
+      "binding": {
+        "label": "success on success-tint",
+        "min": 7,
+        "ratio": 7.01,
+        "before": 5.19
       },
       "oklch": {
         "L": 0.775,
@@ -322,7 +340,12 @@
       "fromOklch": {
         "L": 0.748,
         "C": 0.115,
-        "h": 162.79999999999995
+        "h": 162.8
+      },
+      "hue": {
+        "rounded": 0.25,
+        "unrounded": 0,
+        "tolerance": 1.24
       }
     },
     {
@@ -331,67 +354,37 @@
       "from": "paper-line-input",
       "fromHex": "#7A7366",
       "hex": "#958E80",
-      "why": "input, border, groove, elevation line, glass edge: 4.5:1 on ink-wash",
-      "on": {
-        "background": 5.66,
-        "card": 5.05,
-        "muted": 4.5
-      },
-      "fromOn": {
-        "background": 3.91,
-        "card": 3.49,
-        "muted": 3.12
+      "composite": null,
+      "jobs": [
+        "input",
+        "elevation-line",
+        "border",
+        "sidebar-border",
+        "groove-line",
+        "sunken-line",
+        "glass-edge"
+      ],
+      "binding": {
+        "label": "input on muted",
+        "min": 4.5,
+        "ratio": 4.5,
+        "before": 3.12
       },
       "oklch": {
         "L": 0.649,
         "C": 0.022,
-        "h": 84.60000000000002
+        "h": 84.6
       },
       "fromOklch": {
         "L": 0.558,
         "C": 0.021,
         "h": 83
+      },
+      "hue": {
+        "rounded": 1.56,
+        "unrounded": 0,
+        "tolerance": 6.5
       }
-    },
-    {
-      "name": "red-tint-lifted-more",
-      "scheme": "dark",
-      "from": "red-lifted-more over ink-raised, 10%",
-      "fromHex": null,
-      "hex": "#382C26",
-      "why": "destructive alert ground",
-      "on": {
-        "background": 1.36,
-        "card": 1.21,
-        "muted": 1.08
-      },
-      "fromOn": null,
-      "oklch": {
-        "L": 0.305,
-        "C": 0.021,
-        "h": 48
-      },
-      "fromOklch": null
-    },
-    {
-      "name": "green-tint-lifted-more",
-      "scheme": "dark",
-      "from": "green-lifted-more over ink-raised, 10%",
-      "fromHex": null,
-      "hex": "#293027",
-      "why": "success alert ground",
-      "on": {
-        "background": 1.35,
-        "card": 1.2,
-        "muted": 1.07
-      },
-      "fromOn": null,
-      "oklch": {
-        "L": 0.299,
-        "C": 0.019,
-        "h": 138.7
-      },
-      "fromOklch": null
     },
     {
       "name": "code-violet-more",
@@ -399,16 +392,15 @@
       "from": "code-violet",
       "fromHex": "#7032B9",
       "hex": "#6B2BB3",
-      "why": "code text: 7:1 on raised and paper",
-      "on": {
-        "background": 7.03,
-        "card": 8.01,
-        "muted": 6.36
-      },
-      "fromOn": {
-        "background": 6.47,
-        "card": 7.37,
-        "muted": 5.86
+      "composite": null,
+      "jobs": [
+        "syntax-violet"
+      ],
+      "binding": {
+        "label": "syntax-violet on syntax-active-line",
+        "min": 7,
+        "ratio": 7.03,
+        "before": 6.47
       },
       "oklch": {
         "L": 0.457,
@@ -419,6 +411,11 @@
         "L": 0.476,
         "C": 0.199,
         "h": 299.6
+      },
+      "hue": {
+        "rounded": 0.07,
+        "unrounded": 0,
+        "tolerance": 1
       }
     },
     {
@@ -427,16 +424,15 @@
       "from": "code-blue",
       "fromHex": "#3350CB",
       "hex": "#2943BD",
-      "why": "code text: 7:1 on raised and paper",
-      "on": {
-        "background": 7,
-        "card": 7.97,
-        "muted": 6.34
-      },
-      "fromOn": {
-        "background": 5.85,
-        "card": 6.66,
-        "muted": 5.29
+      "composite": null,
+      "jobs": [
+        "syntax-blue"
+      ],
+      "binding": {
+        "label": "syntax-blue on syntax-active-line",
+        "min": 7,
+        "ratio": 7,
+        "before": 5.85
       },
       "oklch": {
         "L": 0.447,
@@ -447,6 +443,11 @@
         "L": 0.488,
         "C": 0.193,
         "h": 268.1
+      },
+      "hue": {
+        "rounded": 0.15,
+        "unrounded": 0,
+        "tolerance": 1
       }
     },
     {
@@ -455,16 +456,15 @@
       "from": "code-green",
       "fromHex": "#007150",
       "hex": "#015C41",
-      "why": "code text: 7:1 on raised and paper",
-      "on": {
-        "background": 7.06,
-        "card": 8.05,
-        "muted": 6.4
-      },
-      "fromOn": {
-        "background": 5.3,
-        "card": 6.03,
-        "muted": 4.8
+      "composite": null,
+      "jobs": [
+        "syntax-green"
+      ],
+      "binding": {
+        "label": "syntax-green on syntax-active-line",
+        "min": 7,
+        "ratio": 7.06,
+        "before": 5.3
       },
       "oklch": {
         "L": 0.421,
@@ -474,7 +474,12 @@
       "fromOklch": {
         "L": 0.486,
         "C": 0.103,
-        "h": 164.60000000000002
+        "h": 164.6
+      },
+      "hue": {
+        "rounded": 0.37,
+        "unrounded": 0,
+        "tolerance": 1.62
       }
     },
     {
@@ -483,26 +488,30 @@
       "from": "code-yellow",
       "fromHex": "#6C5A00",
       "hex": "#5F4F02",
-      "why": "code text: 7:1 on raised and paper",
-      "on": {
-        "background": 7.07,
-        "card": 8.05,
-        "muted": 6.4
-      },
-      "fromOn": {
-        "background": 5.94,
-        "card": 6.77,
-        "muted": 5.38
+      "composite": null,
+      "jobs": [
+        "syntax-yellow"
+      ],
+      "binding": {
+        "label": "syntax-yellow on syntax-active-line",
+        "min": 7,
+        "ratio": 7.07,
+        "before": 5.94
       },
       "oklch": {
         "L": 0.431,
         "C": 0.088,
-        "h": 95.39999999999998
+        "h": 95.4
       },
       "fromOklch": {
         "L": 0.471,
         "C": 0.097,
         "h": 95.5
+      },
+      "hue": {
+        "rounded": 0.1,
+        "unrounded": 0,
+        "tolerance": 1.63
       }
     },
     {
@@ -511,26 +520,30 @@
       "from": "code-orange",
       "fromHex": "#A34D15",
       "hex": "#863A01",
-      "why": "code text: 7:1 on raised and paper",
-      "on": {
-        "background": 7.04,
-        "card": 8.01,
-        "muted": 6.37
-      },
-      "fromOn": {
-        "background": 5.08,
-        "card": 5.78,
-        "muted": 4.59
+      "composite": null,
+      "jobs": [
+        "syntax-orange"
+      ],
+      "binding": {
+        "label": "syntax-orange on syntax-active-line",
+        "min": 7,
+        "ratio": 7.04,
+        "before": 5.08
       },
       "oklch": {
         "L": 0.444,
         "C": 0.12,
-        "h": 48.39999999999998
+        "h": 48.4
       },
       "fromOklch": {
         "L": 0.521,
         "C": 0.131,
-        "h": 48.19999999999999
+        "h": 48.2
+      },
+      "hue": {
+        "rounded": 0.12,
+        "unrounded": 0,
+        "tolerance": 1.2
       }
     },
     {
@@ -539,16 +552,15 @@
       "from": "code-plum",
       "fromHex": "#922F6E",
       "hex": "#8B2968",
-      "why": "code text: 7:1 on raised and paper",
-      "on": {
-        "background": 7.05,
-        "card": 8.03,
-        "muted": 6.38
-      },
-      "fromOn": {
-        "background": 6.46,
-        "card": 7.35,
-        "muted": 5.84
+      "composite": null,
+      "jobs": [
+        "syntax-plum"
+      ],
+      "binding": {
+        "label": "syntax-plum on syntax-active-line",
+        "min": 7,
+        "ratio": 7.05,
+        "before": 6.46
       },
       "oklch": {
         "L": 0.452,
@@ -559,6 +571,11 @@
         "L": 0.472,
         "C": 0.15,
         "h": 345.2
+      },
+      "hue": {
+        "rounded": 0.03,
+        "unrounded": 0,
+        "tolerance": 1
       }
     },
     {
@@ -567,16 +584,15 @@
       "from": "code-red",
       "fromHex": "#B81C2E",
       "hex": "#A50021",
-      "why": "code text: 7:1 on raised and paper",
-      "on": {
-        "background": 7.03,
-        "card": 8,
-        "muted": 6.36
-      },
-      "fromOn": {
-        "background": 5.68,
-        "card": 6.47,
-        "muted": 5.14
+      "composite": null,
+      "jobs": [
+        "syntax-red"
+      ],
+      "binding": {
+        "label": "syntax-red on syntax-active-line",
+        "min": 7,
+        "ratio": 7.03,
+        "before": 5.68
       },
       "oklch": {
         "L": 0.456,
@@ -586,7 +602,12 @@
       "fromOklch": {
         "L": 0.506,
         "C": 0.188,
-        "h": 22.399999999999977
+        "h": 22.4
+      },
+      "hue": {
+        "rounded": 0.08,
+        "unrounded": 0,
+        "tolerance": 1
       }
     },
     {
@@ -595,26 +616,30 @@
       "from": "code-red-lifted",
       "fromHex": "#FC8D8A",
       "hex": "#FF9692",
-      "why": "code text: 7:1 on ink-wash, ink-raised and graphite",
-      "on": {
-        "background": 8.78,
-        "card": 7.84,
-        "muted": 7
-      },
-      "fromOn": {
-        "background": 8.16,
-        "card": 7.28,
-        "muted": 6.5
+      "composite": null,
+      "jobs": [
+        "syntax-red"
+      ],
+      "binding": {
+        "label": "syntax-red on syntax-ground",
+        "min": 7,
+        "ratio": 7,
+        "before": 6.5
       },
       "oklch": {
         "L": 0.782,
         "C": 0.127,
-        "h": 22.69999999999999
+        "h": 22.7
       },
       "fromOklch": {
         "L": 0.762,
         "C": 0.135,
-        "h": 22.399999999999977
+        "h": 22.4
+      },
+      "hue": {
+        "rounded": 0.34,
+        "unrounded": 0,
+        "tolerance": 1.13
       }
     },
     {
@@ -623,16 +648,15 @@
       "from": "code-grey",
       "fromHex": "#636972",
       "hex": "#4C515A",
-      "why": "code text: 7:1 on raised and paper",
-      "on": {
-        "background": 7,
-        "card": 7.97,
-        "muted": 6.34
-      },
-      "fromOn": {
-        "background": 4.86,
-        "card": 5.53,
-        "muted": 4.4
+      "composite": null,
+      "jobs": [
+        "syntax-grey"
+      ],
+      "binding": {
+        "label": "syntax-grey on syntax-active-line",
+        "min": 7,
+        "ratio": 7,
+        "before": 4.86
       },
       "oklch": {
         "L": 0.434,
@@ -643,6 +667,11 @@
         "L": 0.519,
         "C": 0.016,
         "h": 258.4
+      },
+      "hue": {
+        "rounded": 3.95,
+        "unrounded": 0,
+        "tolerance": 8.78
       }
     },
     {
@@ -651,16 +680,15 @@
       "from": "code-grey-lifted",
       "fromHex": "#9EA4AE",
       "hex": "#AEB4BE",
-      "why": "code text: 7:1 on ink-wash, ink-raised and graphite",
-      "on": {
-        "background": 8.82,
-        "card": 7.88,
-        "muted": 7.03
-      },
-      "fromOn": {
-        "background": 7.33,
-        "card": 6.55,
-        "muted": 5.84
+      "composite": null,
+      "jobs": [
+        "syntax-grey"
+      ],
+      "binding": {
+        "label": "syntax-grey on syntax-ground",
+        "min": 7,
+        "ratio": 7.03,
+        "before": 5.84
       },
       "oklch": {
         "L": 0.768,
@@ -671,8 +699,182 @@
         "L": 0.717,
         "C": 0.016,
         "h": 260.7
+      },
+      "hue": {
+        "rounded": 0,
+        "unrounded": 0,
+        "tolerance": 9.02
       }
+    },
+    {
+      "name": "red-tint-more",
+      "scheme": "light",
+      "from": "red-more at 10% over raised",
+      "fromHex": null,
+      "hex": "#F5E6E9",
+      "composite": {
+        "of": "red-more",
+        "over": "raised",
+        "alpha": 0.1,
+        "scheme": "light"
+      },
+      "jobs": [
+        "destructive-tint"
+      ],
+      "binding": {
+        "label": "destructive on destructive-tint",
+        "min": 7,
+        "ratio": 7.3,
+        "before": 5.1
+      },
+      "oklch": {
+        "L": 0.938,
+        "C": 0.017,
+        "h": 3.7
+      },
+      "fromOklch": null,
+      "hue": null
+    },
+    {
+      "name": "green-tint-more",
+      "scheme": "light",
+      "from": "green-more at 10% over raised",
+      "fromHex": null,
+      "hex": "#E6EEEB",
+      "composite": {
+        "of": "green-more",
+        "over": "raised",
+        "alpha": 0.1,
+        "scheme": "light"
+      },
+      "jobs": [
+        "success-tint"
+      ],
+      "binding": {
+        "label": "success on success-tint",
+        "min": 7,
+        "ratio": 7.52,
+        "before": 5.09
+      },
+      "oklch": {
+        "L": 0.942,
+        "C": 0.009,
+        "h": 171.8
+      },
+      "fromOklch": null,
+      "hue": null
+    },
+    {
+      "name": "red-tint-lifted-more",
+      "scheme": "dark",
+      "from": "red-lifted-more at 10% over ink-raised",
+      "fromHex": null,
+      "hex": "#382C26",
+      "composite": {
+        "of": "red-lifted-more",
+        "over": "ink-raised",
+        "alpha": 0.1,
+        "scheme": "dark"
+      },
+      "jobs": [
+        "destructive-tint"
+      ],
+      "binding": {
+        "label": "destructive on destructive-tint",
+        "min": 7,
+        "ratio": 7.01,
+        "before": 5.21
+      },
+      "oklch": {
+        "L": 0.305,
+        "C": 0.021,
+        "h": 48
+      },
+      "fromOklch": null,
+      "hue": null
+    },
+    {
+      "name": "green-tint-lifted-more",
+      "scheme": "dark",
+      "from": "green-lifted-more at 10% over ink-raised",
+      "fromHex": null,
+      "hex": "#293027",
+      "composite": {
+        "of": "green-lifted-more",
+        "over": "ink-raised",
+        "alpha": 0.1,
+        "scheme": "dark"
+      },
+      "jobs": [
+        "success-tint"
+      ],
+      "binding": {
+        "label": "success on success-tint",
+        "min": 7,
+        "ratio": 7.01,
+        "before": 5.19
+      },
+      "oklch": {
+        "L": 0.299,
+        "C": 0.019,
+        "h": 138.7
+      },
+      "fromOklch": null,
+      "hue": null
     }
+  ],
+  "alias": {
+    "yellow-lifted-more": "yellow-lifted",
+    "code-violet-lifted-more": "code-violet-lifted",
+    "code-blue-lifted-more": "blue-lifted-more",
+    "code-navy-more": "code-navy",
+    "code-navy-lifted-more": "code-navy-lifted",
+    "code-green-lifted-more": "code-green-lifted",
+    "code-yellow-lifted-more": "code-yellow-lifted",
+    "code-orange-lifted-more": "code-orange-lifted",
+    "code-plum-lifted-more": "code-plum-lifted",
+    "code-ink-more": "code-ink",
+    "code-ink-lifted-more": "code-ink-lifted"
+  },
+  "chosen": {
+    "light": {
+      "chart-1": "blue",
+      "chart-2": "red",
+      "chart-3": "yellow-text",
+      "chart-4": "green-text",
+      "chart-5": "ink-soft",
+      "destructive-fill": "red",
+      "success-fill": "green-text",
+      "scrim": "ink-scrim-deep"
+    },
+    "dark": {
+      "chart-1": "blue-lifted",
+      "chart-2": "red-lifted",
+      "chart-3": "yellow-lifted",
+      "chart-4": "green-lifted",
+      "chart-5": "paper-soft",
+      "destructive-fill": "red-lifted",
+      "success-fill": "green-lifted",
+      "scrim": "ink-scrim-deep"
+    }
+  },
+  "fieldFill": {
+    "light": {
+      "field-1": "blue",
+      "field-2": "red-more",
+      "field-3": "yellow",
+      "field-4": "green-more"
+    },
+    "dark": {
+      "field-1": "blue-lifted",
+      "field-2": "red-lifted",
+      "field-3": "yellow-lifted",
+      "field-4": "green-lifted"
+    }
+  },
+  "fieldsChanged": [
+    "light field-2",
+    "light field-4"
   ],
   "roles": {
     "light": {
@@ -681,34 +883,28 @@
       "ring": "blue-more",
       "sidebar-primary": "blue-more",
       "sidebar-ring": "blue-more",
-      "chart-1": "blue",
       "destructive": "red-more",
-      "destructive-fill": "red",
-      "chart-2": "red",
       "success": "green-more",
-      "success-fill": "green-text",
-      "chart-4": "green-text",
       "caution-text": "yellow-more",
-      "chart-3": "yellow-text",
-      "chart-5": "ink-soft",
       "input": "line-more",
+      "elevation-line": "line-more",
       "border": "line-more",
       "sidebar-border": "line-more",
       "groove-line": "line-more",
-      "elevation-line": "line-more",
+      "sunken-line": "line-more",
+      "glass-edge": "line-more",
       "destructive-tint": "red-tint-more",
       "success-tint": "green-tint-more",
-      "scrim": "ink-scrim-deep",
       "syntax-violet": "code-violet-more",
       "syntax-blue": "code-blue-more",
-      "syntax-navy": "code-navy",
+      "syntax-navy": "code-navy-more",
       "syntax-green": "code-green-more",
       "syntax-yellow": "code-yellow-more",
       "syntax-orange": "code-orange-more",
       "syntax-plum": "code-plum-more",
       "syntax-red": "code-red-more",
       "syntax-grey": "code-grey-more",
-      "syntax-ink": "code-ink"
+      "syntax-ink": "code-ink-more"
     },
     "dark": {
       "muted-foreground": "paper-soft-more",
@@ -716,2193 +912,3071 @@
       "ring": "blue-lifted-more",
       "sidebar-primary": "blue-lifted-more",
       "sidebar-ring": "blue-lifted-more",
-      "chart-1": "blue-lifted",
       "destructive": "red-lifted-more",
-      "destructive-fill": "red-lifted",
-      "chart-2": "red-lifted",
       "success": "green-lifted-more",
-      "success-fill": "green-lifted",
-      "chart-4": "green-lifted",
-      "caution-text": "yellow-lifted",
-      "chart-3": "yellow-lifted",
-      "chart-5": "paper-soft",
+      "caution-text": "yellow-lifted-more",
       "input": "paper-line-more",
+      "elevation-line": "paper-line-more",
       "border": "paper-line-more",
       "sidebar-border": "paper-line-more",
       "groove-line": "paper-line-more",
-      "elevation-line": "paper-line-more",
+      "sunken-line": "paper-line-more",
+      "glass-edge": "paper-line-more",
       "destructive-tint": "red-tint-lifted-more",
       "success-tint": "green-tint-lifted-more",
-      "syntax-violet": "code-violet-lifted",
-      "syntax-blue": "blue-lifted-more",
-      "syntax-navy": "code-navy-lifted",
-      "syntax-green": "code-green-lifted",
-      "syntax-yellow": "code-yellow-lifted",
-      "syntax-orange": "code-orange-lifted",
-      "syntax-plum": "code-plum-lifted",
+      "syntax-violet": "code-violet-lifted-more",
+      "syntax-blue": "code-blue-lifted-more",
+      "syntax-navy": "code-navy-lifted-more",
+      "syntax-green": "code-green-lifted-more",
+      "syntax-yellow": "code-yellow-lifted-more",
+      "syntax-orange": "code-orange-lifted-more",
+      "syntax-plum": "code-plum-lifted-more",
       "syntax-red": "code-red-lifted-more",
       "syntax-grey": "code-grey-lifted-more",
-      "syntax-ink": "code-ink-lifted"
+      "syntax-ink": "code-ink-lifted-more"
     }
   },
+  "variables": [
+    "border",
+    "caution-text",
+    "chart-3",
+    "chart-4",
+    "destructive",
+    "destructive-tint",
+    "elevation-line",
+    "groove-line",
+    "input",
+    "muted-foreground",
+    "primary",
+    "ring",
+    "scrim",
+    "sidebar-border",
+    "sidebar-primary",
+    "sidebar-ring",
+    "success",
+    "success-fill",
+    "success-tint",
+    "sunken-line",
+    "syntax-blue",
+    "syntax-green",
+    "syntax-grey",
+    "syntax-orange",
+    "syntax-plum",
+    "syntax-red",
+    "syntax-violet",
+    "syntax-yellow"
+  ],
+  "variableCount": 32,
+  "unclassified": {
+    "light": [],
+    "dark": []
+  },
+  "charts": [
+    {
+      "scheme": "light",
+      "contrast": "standard",
+      "vision": "typical",
+      "closest": "chart-4/chart-5",
+      "deltaE": 14.3,
+      "colours": [
+        "#2D48D4",
+        "#C92035",
+        "#E2B000",
+        "#008058",
+        "#505661"
+      ]
+    },
+    {
+      "scheme": "light",
+      "contrast": "standard",
+      "vision": "deuteranopia",
+      "closest": "chart-2/chart-4",
+      "deltaE": 7,
+      "colours": [
+        "#2D48D4",
+        "#C92035",
+        "#E2B000",
+        "#008058",
+        "#505661"
+      ]
+    },
+    {
+      "scheme": "light",
+      "contrast": "standard",
+      "vision": "protanopia",
+      "closest": "chart-2/chart-5",
+      "deltaE": 6.8,
+      "colours": [
+        "#2D48D4",
+        "#C92035",
+        "#E2B000",
+        "#008058",
+        "#505661"
+      ]
+    },
+    {
+      "scheme": "light",
+      "contrast": "more",
+      "vision": "typical",
+      "closest": "chart-4/chart-5",
+      "deltaE": 11.6,
+      "colours": [
+        "#2D48D4",
+        "#C92035",
+        "#806200",
+        "#007351",
+        "#505661"
+      ]
+    },
+    {
+      "scheme": "light",
+      "contrast": "more",
+      "vision": "deuteranopia",
+      "closest": "chart-2/chart-3",
+      "deltaE": 4.1,
+      "colours": [
+        "#2D48D4",
+        "#C92035",
+        "#806200",
+        "#007351",
+        "#505661"
+      ]
+    },
+    {
+      "scheme": "light",
+      "contrast": "more",
+      "vision": "protanopia",
+      "closest": "chart-2/chart-5",
+      "deltaE": 6.8,
+      "colours": [
+        "#2D48D4",
+        "#C92035",
+        "#806200",
+        "#007351",
+        "#505661"
+      ]
+    },
+    {
+      "scheme": "dark",
+      "contrast": "standard",
+      "vision": "typical",
+      "closest": "chart-4/chart-5",
+      "deltaE": 12.3,
+      "colours": [
+        "#93B0FF",
+        "#FF9491",
+        "#F8D874",
+        "#60C498",
+        "#A39D90"
+      ]
+    },
+    {
+      "scheme": "dark",
+      "contrast": "standard",
+      "vision": "deuteranopia",
+      "closest": "chart-4/chart-5",
+      "deltaE": 4.8,
+      "colours": [
+        "#93B0FF",
+        "#FF9491",
+        "#F8D874",
+        "#60C498",
+        "#A39D90"
+      ]
+    },
+    {
+      "scheme": "dark",
+      "contrast": "standard",
+      "vision": "protanopia",
+      "closest": "chart-2/chart-5",
+      "deltaE": 3.1,
+      "colours": [
+        "#93B0FF",
+        "#FF9491",
+        "#F8D874",
+        "#60C498",
+        "#A39D90"
+      ]
+    },
+    {
+      "scheme": "dark",
+      "contrast": "more",
+      "vision": "typical",
+      "closest": "chart-4/chart-5",
+      "deltaE": 12.3,
+      "colours": [
+        "#93B0FF",
+        "#FF9491",
+        "#F8D874",
+        "#60C498",
+        "#A39D90"
+      ]
+    },
+    {
+      "scheme": "dark",
+      "contrast": "more",
+      "vision": "deuteranopia",
+      "closest": "chart-4/chart-5",
+      "deltaE": 4.8,
+      "colours": [
+        "#93B0FF",
+        "#FF9491",
+        "#F8D874",
+        "#60C498",
+        "#A39D90"
+      ]
+    },
+    {
+      "scheme": "dark",
+      "contrast": "more",
+      "vision": "protanopia",
+      "closest": "chart-2/chart-5",
+      "deltaE": 3.1,
+      "colours": [
+        "#93B0FF",
+        "#FF9491",
+        "#F8D874",
+        "#60C498",
+        "#A39D90"
+      ]
+    }
+  ],
+  "restricted": [
+    {
+      "scheme": "light",
+      "pair": "destructive on sunken",
+      "std": 4.17,
+      "hc": 6.14,
+      "rule": "measured",
+      "inMoreRows": false
+    },
+    {
+      "scheme": "light",
+      "pair": "success on sunken",
+      "std": 4.09,
+      "hc": 6.18,
+      "rule": "measured",
+      "inMoreRows": false
+    },
+    {
+      "scheme": "light",
+      "pair": "caution-text on sunken",
+      "std": 3.98,
+      "hc": 6.14,
+      "rule": "measured",
+      "inMoreRows": false
+    },
+    {
+      "scheme": "light",
+      "pair": "input on sunken",
+      "std": 2.8,
+      "hc": 4.53,
+      "rule": "measured",
+      "inMoreRows": false
+    },
+    {
+      "scheme": "light",
+      "pair": "destructive-fill on sunken",
+      "std": 3.9,
+      "hc": 3.9,
+      "rule": "by rule (S1)",
+      "inMoreRows": false
+    },
+    {
+      "scheme": "light",
+      "pair": "success-fill on sunken",
+      "std": 3.45,
+      "hc": 4.09,
+      "rule": "by rule (S1)",
+      "inMoreRows": false
+    },
+    {
+      "scheme": "light",
+      "pair": "chart-1 on sunken",
+      "std": 4.88,
+      "hc": 4.88,
+      "rule": "by rule (S1)",
+      "inMoreRows": false
+    },
+    {
+      "scheme": "light",
+      "pair": "chart-2 on sunken",
+      "std": 3.9,
+      "hc": 3.9,
+      "rule": "by rule (S1)",
+      "inMoreRows": false
+    },
+    {
+      "scheme": "light",
+      "pair": "chart-3 on sunken",
+      "std": 1.39,
+      "hc": 3.98,
+      "rule": "by rule (S1)",
+      "inMoreRows": false
+    },
+    {
+      "scheme": "light",
+      "pair": "chart-4 on sunken",
+      "std": 3.45,
+      "hc": 4.09,
+      "rule": "by rule (S1)",
+      "inMoreRows": false
+    },
+    {
+      "scheme": "light",
+      "pair": "chart-5 on sunken",
+      "std": 5.13,
+      "hc": 5.13,
+      "rule": "by rule (S1)",
+      "inMoreRows": false
+    },
+    {
+      "scheme": "dark",
+      "pair": "destructive on sunken",
+      "std": 9.33,
+      "hc": 10.28,
+      "rule": "by rule",
+      "inMoreRows": false
+    },
+    {
+      "scheme": "dark",
+      "pair": "success on sunken",
+      "std": 9.28,
+      "hc": 10.22,
+      "rule": "by rule",
+      "inMoreRows": false
+    },
+    {
+      "scheme": "dark",
+      "pair": "caution-text on sunken",
+      "std": 14.2,
+      "hc": 14.2,
+      "rule": "by rule",
+      "inMoreRows": false
+    },
+    {
+      "scheme": "dark",
+      "pair": "input on sunken",
+      "std": 4.21,
+      "hc": 6.08,
+      "rule": "by rule",
+      "inMoreRows": false
+    },
+    {
+      "scheme": "dark",
+      "pair": "destructive-fill on sunken",
+      "std": 9.33,
+      "hc": 9.33,
+      "rule": "by rule (S1)",
+      "inMoreRows": false
+    },
+    {
+      "scheme": "dark",
+      "pair": "success-fill on sunken",
+      "std": 9.28,
+      "hc": 9.28,
+      "rule": "by rule (S1)",
+      "inMoreRows": false
+    },
+    {
+      "scheme": "dark",
+      "pair": "chart-1 on sunken",
+      "std": 9.32,
+      "hc": 9.32,
+      "rule": "by rule (S1)",
+      "inMoreRows": false
+    },
+    {
+      "scheme": "dark",
+      "pair": "chart-2 on sunken",
+      "std": 9.33,
+      "hc": 9.33,
+      "rule": "by rule (S1)",
+      "inMoreRows": false
+    },
+    {
+      "scheme": "dark",
+      "pair": "chart-3 on sunken",
+      "std": 14.2,
+      "hc": 14.2,
+      "rule": "by rule (S1)",
+      "inMoreRows": false
+    },
+    {
+      "scheme": "dark",
+      "pair": "chart-4 on sunken",
+      "std": 9.28,
+      "hc": 9.28,
+      "rule": "by rule (S1)",
+      "inMoreRows": false
+    },
+    {
+      "scheme": "dark",
+      "pair": "chart-5 on sunken",
+      "std": 7.33,
+      "hc": 7.33,
+      "rule": "by rule (S1)",
+      "inMoreRows": false
+    }
+  ],
   "rows": [
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "text",
+      "source": "contrast.text",
       "label": "foreground on background",
       "fg": "#0B0F17",
       "bg": "#F3F0E8",
-      "std": 16.84,
       "hc": 16.84,
+      "std": 16.84,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "text",
+      "source": "contrast.text",
       "label": "card-foreground on card",
       "fg": "#0B0F17",
       "bg": "#FFFFFF",
-      "std": 19.17,
       "hc": 19.17,
+      "std": 19.17,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "text",
+      "source": "contrast.text",
       "label": "popover-foreground on popover",
       "fg": "#0B0F17",
       "bg": "#FFFFFF",
-      "std": 19.17,
       "hc": 19.17,
+      "std": 19.17,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "text",
+      "source": "contrast.text",
       "label": "secondary-foreground on secondary",
       "fg": "#0B0F17",
       "bg": "#FFFFFF",
-      "std": 19.17,
       "hc": 19.17,
+      "std": 19.17,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "text",
+      "source": "contrast.text",
       "label": "foreground on muted",
       "fg": "#0B0F17",
       "bg": "#E9E5DB",
-      "std": 15.24,
       "hc": 15.24,
+      "std": 15.24,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "text",
+      "source": "contrast.text",
       "label": "accent-foreground on accent",
       "fg": "#0B0F17",
       "bg": "#E9E5DB",
-      "std": 15.24,
       "hc": 15.24,
+      "std": 15.24,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "text",
+      "source": "contrast.text",
       "label": "muted-foreground on background",
-      "fg": "#444A55",
+      "fg": "#3D424D",
       "bg": "#F3F0E8",
+      "hc": 8.84,
       "std": 6.48,
-      "hc": 7.82,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "text",
+      "source": "contrast.text",
       "label": "muted-foreground on card",
-      "fg": "#444A55",
+      "fg": "#3D424D",
       "bg": "#FFFFFF",
+      "hc": 10.07,
       "std": 7.38,
-      "hc": 8.91,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "text",
+      "source": "contrast.text",
       "label": "muted-foreground on muted",
-      "fg": "#444A55",
+      "fg": "#3D424D",
       "bg": "#E9E5DB",
+      "hc": 8,
       "std": 5.86,
-      "hc": 7.08,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "text",
+      "source": "contrast.text",
       "label": "primary-foreground on primary",
       "fg": "#FFFFFF",
-      "bg": "#2236C3",
+      "bg": "#1D2AB8",
+      "hc": 10.11,
       "std": 7.02,
-      "hc": 8.8,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "text",
+      "source": "contrast.text",
       "label": "primary on background",
-      "fg": "#2236C3",
+      "fg": "#1D2AB8",
       "bg": "#F3F0E8",
+      "hc": 8.88,
       "std": 6.16,
-      "hc": 7.73,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "text",
+      "source": "contrast.text",
       "label": "primary on card",
-      "fg": "#2236C3",
+      "fg": "#1D2AB8",
       "bg": "#FFFFFF",
+      "hc": 10.11,
       "std": 7.02,
-      "hc": 8.8,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "text",
+      "source": "contrast.text",
       "label": "primary on muted",
-      "fg": "#2236C3",
+      "fg": "#1D2AB8",
       "bg": "#E9E5DB",
+      "hc": 8.04,
       "std": 5.58,
-      "hc": 7,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "text",
+      "source": "contrast.text",
       "label": "destructive on background",
       "fg": "#99011F",
       "bg": "#F3F0E8",
-      "std": 5.27,
       "hc": 7.75,
+      "std": 5.27,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "text",
+      "source": "contrast.text",
       "label": "destructive on card",
       "fg": "#99011F",
       "bg": "#FFFFFF",
-      "std": 6,
       "hc": 8.82,
+      "std": 6,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "text",
+      "source": "contrast.text",
       "label": "destructive on muted",
       "fg": "#99011F",
       "bg": "#E9E5DB",
-      "std": 4.77,
       "hc": 7.01,
+      "std": 4.77,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "text",
+      "source": "contrast.text",
       "label": "destructive-foreground on destructive",
       "fg": "#FFFFFF",
       "bg": "#99011F",
-      "std": 6,
       "hc": 8.82,
+      "std": 6,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "text",
+      "source": "contrast.text",
       "label": "success on background",
       "fg": "#01553B",
       "bg": "#F3F0E8",
-      "std": 5.16,
       "hc": 7.8,
+      "std": 5.16,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "text",
+      "source": "contrast.text",
       "label": "success on card",
       "fg": "#01553B",
       "bg": "#FFFFFF",
-      "std": 5.88,
       "hc": 8.88,
+      "std": 5.88,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "text",
+      "source": "contrast.text",
       "label": "success on muted",
       "fg": "#01553B",
       "bg": "#E9E5DB",
-      "std": 4.67,
       "hc": 7.06,
+      "std": 4.67,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "text",
+      "source": "contrast.text",
       "label": "success-foreground on success",
       "fg": "#FFFFFF",
       "bg": "#01553B",
-      "std": 5.88,
       "hc": 8.88,
+      "std": 5.88,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "text",
+      "source": "contrast.text",
       "label": "caution-foreground on caution",
       "fg": "#0B0F17",
       "bg": "#E2B000",
-      "std": 9.53,
       "hc": 9.53,
+      "std": 9.53,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "text",
+      "source": "contrast.text",
       "label": "sidebar-foreground on sidebar",
       "fg": "#0B0F17",
       "bg": "#F3F0E8",
-      "std": 16.84,
       "hc": 16.84,
+      "std": 16.84,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "text",
+      "source": "contrast.text",
       "label": "sidebar-primary-foreground on sidebar-primary",
       "fg": "#FFFFFF",
-      "bg": "#2236C3",
+      "bg": "#1D2AB8",
+      "hc": 10.11,
       "std": 7.02,
-      "hc": 8.8,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "text",
+      "source": "contrast.text",
       "label": "sidebar-accent-foreground on sidebar-accent",
       "fg": "#0B0F17",
       "bg": "#E9E5DB",
-      "std": 15.24,
       "hc": 15.24,
+      "std": 15.24,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "text",
+      "source": "contrast.text",
       "label": "sidebar-primary on sidebar",
-      "fg": "#2236C3",
+      "fg": "#1D2AB8",
       "bg": "#F3F0E8",
+      "hc": 8.88,
       "std": 6.16,
-      "hc": 7.73,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "text",
+      "source": "contrast.text",
       "label": "muted-foreground on syntax-ground",
-      "fg": "#444A55",
+      "fg": "#3D424D",
       "bg": "#FFFFFF",
+      "hc": 10.07,
       "std": 7.38,
-      "hc": 8.91,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "text",
+      "source": "contrast.text",
       "label": "muted-foreground on syntax-active-line",
-      "fg": "#444A55",
+      "fg": "#3D424D",
       "bg": "#F3F0E8",
+      "hc": 8.84,
       "std": 6.48,
-      "hc": 7.82,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "text",
+      "source": "contrast.text",
       "label": "success on syntax-active-line",
       "fg": "#01553B",
       "bg": "#F3F0E8",
-      "std": 5.16,
       "hc": 7.8,
+      "std": 5.16,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "text",
+      "source": "contrast.text",
       "label": "destructive on syntax-active-line",
       "fg": "#99011F",
       "bg": "#F3F0E8",
-      "std": 5.27,
       "hc": 7.75,
+      "std": 5.27,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "text",
+      "source": "contrast.text",
       "label": "caution-text on background",
       "fg": "#5E4701",
       "bg": "#F3F0E8",
-      "std": 5.03,
       "hc": 7.75,
+      "std": 5.03,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "text",
+      "source": "contrast.text",
       "label": "caution-text on card",
       "fg": "#5E4701",
       "bg": "#FFFFFF",
-      "std": 5.73,
       "hc": 8.83,
+      "std": 5.73,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "text",
+      "source": "contrast.text",
       "label": "caution-text on muted",
       "fg": "#5E4701",
       "bg": "#E9E5DB",
-      "std": 4.55,
       "hc": 7.02,
+      "std": 4.55,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "text",
+      "source": "contrast.text",
       "label": "destructive on destructive-tint",
       "fg": "#99011F",
       "bg": "#F5E6E9",
-      "std": 5.1,
       "hc": 7.3,
+      "std": 5.1,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "text",
+      "source": "contrast.text",
       "label": "success on success-tint",
       "fg": "#01553B",
       "bg": "#E6EEEB",
-      "std": 5.09,
       "hc": 7.52,
+      "std": 5.09,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
+      "kind": "text",
+      "source": "contrast.text",
+      "label": "foreground on sunken",
+      "fg": "#0B0F17",
+      "bg": "#DCD7CA",
+      "hc": 13.34,
+      "std": 13.34,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "scheme": "light",
+      "kind": "text",
+      "source": "contrast.text",
+      "label": "muted-foreground on sunken",
+      "fg": "#3D424D",
+      "bg": "#DCD7CA",
+      "hc": 7.01,
+      "std": 5.13,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "scheme": "light",
+      "kind": "text",
+      "source": "contrast.text",
+      "label": "primary on sunken",
+      "fg": "#1D2AB8",
+      "bg": "#DCD7CA",
+      "hc": 7.04,
+      "std": 4.88,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "scheme": "light",
       "kind": "non-text",
+      "source": "contrast.nonText",
       "label": "input on background",
-      "fg": "#6D6659",
+      "fg": "#645D50",
       "bg": "#F3F0E8",
+      "hc": 5.72,
       "std": 3.53,
-      "hc": 4.99,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "non-text",
+      "source": "contrast.nonText",
       "label": "input on card",
-      "fg": "#6D6659",
+      "fg": "#645D50",
       "bg": "#FFFFFF",
+      "hc": 6.51,
       "std": 4.02,
-      "hc": 5.68,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "non-text",
+      "source": "contrast.nonText",
       "label": "input on muted",
-      "fg": "#6D6659",
+      "fg": "#645D50",
       "bg": "#E9E5DB",
+      "hc": 5.17,
       "std": 3.2,
-      "hc": 4.51,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "non-text",
+      "source": "contrast.nonText",
       "label": "ring on background",
-      "fg": "#2236C3",
+      "fg": "#1D2AB8",
       "bg": "#F3F0E8",
+      "hc": 8.88,
       "std": 6.16,
-      "hc": 7.73,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "non-text",
+      "source": "contrast.nonText",
       "label": "ring on card",
-      "fg": "#2236C3",
+      "fg": "#1D2AB8",
       "bg": "#FFFFFF",
+      "hc": 10.11,
       "std": 7.02,
-      "hc": 8.8,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "non-text",
+      "source": "contrast.nonText",
       "label": "sidebar-ring on sidebar",
-      "fg": "#2236C3",
+      "fg": "#1D2AB8",
       "bg": "#F3F0E8",
+      "hc": 8.88,
       "std": 6.16,
-      "hc": 7.73,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "non-text",
+      "source": "contrast.nonText",
       "label": "destructive-fill on background",
       "fg": "#C92035",
       "bg": "#F3F0E8",
-      "std": 4.92,
       "hc": 4.92,
+      "std": 4.92,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "non-text",
+      "source": "contrast.nonText",
       "label": "destructive-fill on card",
       "fg": "#C92035",
       "bg": "#FFFFFF",
-      "std": 5.61,
       "hc": 5.61,
+      "std": 5.61,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "non-text",
+      "source": "contrast.nonText",
       "label": "success-fill on background",
       "fg": "#007351",
       "bg": "#F3F0E8",
-      "std": 4.36,
       "hc": 5.16,
+      "std": 4.36,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "non-text",
+      "source": "contrast.nonText",
       "label": "success-fill on card",
       "fg": "#007351",
       "bg": "#FFFFFF",
-      "std": 4.96,
       "hc": 5.88,
+      "std": 4.96,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "non-text",
+      "source": "contrast.nonText",
       "label": "chart-1 on background",
       "fg": "#2D48D4",
       "bg": "#F3F0E8",
-      "std": 6.16,
       "hc": 6.16,
+      "std": 6.16,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "non-text",
+      "source": "contrast.nonText",
       "label": "chart-1 on card",
       "fg": "#2D48D4",
       "bg": "#FFFFFF",
-      "std": 7.02,
       "hc": 7.02,
+      "std": 7.02,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "non-text",
+      "source": "contrast.nonText",
       "label": "chart-2 on background",
       "fg": "#C92035",
       "bg": "#F3F0E8",
-      "std": 4.92,
       "hc": 4.92,
+      "std": 4.92,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "non-text",
+      "source": "contrast.nonText",
       "label": "chart-2 on card",
       "fg": "#C92035",
       "bg": "#FFFFFF",
-      "std": 5.61,
       "hc": 5.61,
+      "std": 5.61,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "non-text",
+      "source": "contrast.nonText",
       "label": "chart-3 on background",
       "fg": "#806200",
       "bg": "#F3F0E8",
-      "std": 1.76,
       "hc": 5.03,
+      "std": 1.76,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "non-text",
+      "source": "contrast.nonText",
       "label": "chart-3 on card",
       "fg": "#806200",
       "bg": "#FFFFFF",
-      "std": 2.01,
       "hc": 5.73,
+      "std": 2.01,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "non-text",
+      "source": "contrast.nonText",
       "label": "chart-4 on background",
       "fg": "#007351",
       "bg": "#F3F0E8",
-      "std": 4.36,
       "hc": 5.16,
+      "std": 4.36,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "non-text",
+      "source": "contrast.nonText",
       "label": "chart-4 on card",
       "fg": "#007351",
       "bg": "#FFFFFF",
-      "std": 4.96,
       "hc": 5.88,
+      "std": 4.96,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "non-text",
+      "source": "contrast.nonText",
       "label": "chart-5 on background",
       "fg": "#505661",
       "bg": "#F3F0E8",
-      "std": 6.48,
       "hc": 6.48,
+      "std": 6.48,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "non-text",
+      "source": "contrast.nonText",
       "label": "chart-5 on card",
       "fg": "#505661",
       "bg": "#FFFFFF",
-      "std": 7.38,
       "hc": 7.38,
+      "std": 7.38,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "non-text",
+      "source": "contrast.nonText",
       "label": "primary on syntax-active-line",
-      "fg": "#2236C3",
+      "fg": "#1D2AB8",
       "bg": "#F3F0E8",
+      "hc": 8.88,
       "std": 6.16,
-      "hc": 7.73,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "non-text",
+      "source": "contrast.nonText",
+      "label": "ring on sunken",
+      "fg": "#1D2AB8",
+      "bg": "#DCD7CA",
+      "hc": 7.04,
+      "std": 4.88,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "scheme": "light",
+      "kind": "non-text",
+      "source": "contrast.nonText",
       "label": "border on background",
-      "fg": "#6D6659",
+      "fg": "#645D50",
       "bg": "#F3F0E8",
-      "std": 1.23,
-      "hc": 4.99,
+      "hc": 5.72,
+      "std": 1.22,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "non-text",
+      "source": "contrast.nonText",
       "label": "border on card",
-      "fg": "#6D6659",
+      "fg": "#645D50",
       "bg": "#FFFFFF",
-      "std": 1.23,
-      "hc": 5.68,
+      "hc": 6.51,
+      "std": 1.39,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "non-text",
+      "source": "contrast.nonText",
       "label": "border on muted",
-      "fg": "#6D6659",
+      "fg": "#645D50",
       "bg": "#E9E5DB",
-      "std": 1.23,
-      "hc": 4.51,
+      "hc": 5.17,
+      "std": 1.11,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
+      "kind": "non-text",
+      "source": "contrast.nonText",
+      "label": "sidebar-border on sidebar",
+      "fg": "#645D50",
+      "bg": "#F3F0E8",
+      "hc": 5.72,
+      "std": 1.22,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "scheme": "light",
+      "kind": "non-text",
+      "source": "contrast.nonText",
+      "label": "sidebar-border on sidebar-accent",
+      "fg": "#645D50",
+      "bg": "#E9E5DB",
+      "hc": 5.17,
+      "std": 1.11,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "scheme": "light",
+      "kind": "non-text",
+      "source": "contrast.nonText",
+      "label": "groove-line on background",
+      "fg": "#645D50",
+      "bg": "#F3F0E8",
+      "hc": 5.72,
+      "std": 1.22,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "scheme": "light",
+      "kind": "non-text",
+      "source": "contrast.nonText",
+      "label": "groove-line on card",
+      "fg": "#645D50",
+      "bg": "#FFFFFF",
+      "hc": 6.51,
+      "std": 1.39,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "scheme": "light",
+      "kind": "non-text",
+      "source": "contrast.nonText",
+      "label": "groove-line on muted",
+      "fg": "#645D50",
+      "bg": "#E9E5DB",
+      "hc": 5.17,
+      "std": 1.11,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "scheme": "light",
+      "kind": "non-text",
+      "source": "contrast.nonText",
+      "label": "elevation-line on background",
+      "fg": "#645D50",
+      "bg": "#F3F0E8",
+      "hc": 5.72,
+      "std": 3.53,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "scheme": "light",
+      "kind": "non-text",
+      "source": "contrast.nonText",
+      "label": "elevation-line on card",
+      "fg": "#645D50",
+      "bg": "#FFFFFF",
+      "hc": 6.51,
+      "std": 4.02,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "scheme": "light",
+      "kind": "non-text",
+      "source": "contrast.nonText",
+      "label": "elevation-line on muted",
+      "fg": "#645D50",
+      "bg": "#E9E5DB",
+      "hc": 5.17,
+      "std": 3.2,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "scheme": "light",
+      "kind": "non-text",
+      "source": "contrast.nonText",
+      "label": "sunken-line on sunken",
+      "fg": "#645D50",
+      "bg": "#DCD7CA",
+      "hc": 4.53,
+      "std": 1.22,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "scheme": "light",
       "kind": "field",
-      "label": "field-1 legend on fill",
+      "source": "contrast.field",
+      "label": "field-1-legend on field-1",
       "fg": "#FFFFFF",
-      "bg": "#2236C3",
+      "bg": "#2D48D4",
+      "hc": 7.02,
       "std": 7.02,
-      "hc": 8.8,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "field",
-      "label": "field-2 legend on fill",
+      "source": "contrast.field",
+      "label": "field-2-legend on field-2",
       "fg": "#FFFFFF",
       "bg": "#99011F",
-      "std": 5.61,
       "hc": 8.82,
+      "std": 5.61,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "field",
-      "label": "field-3 legend on fill",
+      "source": "contrast.field",
+      "label": "field-3-legend on field-3",
       "fg": "#0B0F17",
       "bg": "#E2B000",
-      "std": 9.53,
       "hc": 9.53,
+      "std": 9.53,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "field",
-      "label": "field-4 legend on fill",
+      "source": "contrast.field",
+      "label": "field-4-legend on field-4",
       "fg": "#FFFFFF",
       "bg": "#01553B",
-      "std": 4.96,
       "hc": 8.88,
+      "std": 4.96,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "glass",
-      "label": "foreground on solid glass",
+      "source": "contrast.glass (solid under HC)",
+      "label": "foreground on glass",
       "fg": "#0B0F17",
       "bg": "#FBFAF6",
-      "std": null,
       "hc": 18.36,
+      "std": 18.36,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "glass",
-      "label": "muted-foreground on solid glass",
-      "fg": "#444A55",
+      "source": "contrast.glass (solid under HC)",
+      "label": "muted-foreground on glass",
+      "fg": "#3D424D",
       "bg": "#FBFAF6",
-      "std": null,
-      "hc": 8.53,
+      "hc": 9.64,
+      "std": 7.06,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "glass",
-      "label": "primary on solid glass",
-      "fg": "#2236C3",
+      "source": "contrast.glass (solid under HC)",
+      "label": "primary on glass",
+      "fg": "#1D2AB8",
       "bg": "#FBFAF6",
-      "std": null,
-      "hc": 8.43,
+      "hc": 9.68,
+      "std": 6.72,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "non-text",
-      "label": "glass edge (line-more) on #F3F0E8",
-      "fg": "#6D6659",
+      "source": "more.glassEdge",
+      "label": "glass-edge on background",
+      "fg": "#645D50",
       "bg": "#F3F0E8",
-      "std": null,
-      "hc": 4.99,
+      "hc": 5.72,
+      "std": 1.17,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "non-text",
-      "label": "glass edge (line-more) on #FFFFFF",
-      "fg": "#6D6659",
+      "source": "more.glassEdge",
+      "label": "glass-edge on card",
+      "fg": "#645D50",
       "bg": "#FFFFFF",
-      "std": null,
-      "hc": 5.68,
+      "hc": 6.51,
+      "std": 1.18,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "non-text",
-      "label": "glass edge (line-more) on #E9E5DB",
-      "fg": "#6D6659",
+      "source": "more.glassEdge",
+      "label": "glass-edge on muted",
+      "fg": "#645D50",
       "bg": "#E9E5DB",
-      "std": null,
-      "hc": 4.51,
+      "hc": 5.17,
+      "std": 1.17,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "scrim",
-      "label": "popover edge over background under the scrim",
+      "source": "contrast.scrim",
+      "label": "popover on background under scrim",
       "fg": "#FFFFFF",
       "bg": "#68696B",
-      "std": 4,
       "hc": 5.49,
+      "std": 4,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "scrim",
-      "label": "popover edge over card under the scrim",
+      "source": "contrast.scrim",
+      "label": "popover on card under scrim",
       "fg": "#FFFFFF",
       "bg": "#6D6F74",
-      "std": 3.59,
       "hc": 5.02,
+      "std": 3.59,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "scrim",
-      "label": "popover edge over muted under the scrim",
+      "source": "contrast.scrim",
+      "label": "popover on muted under scrim",
       "fg": "#FFFFFF",
       "bg": "#646565",
-      "std": 4.29,
       "hc": 5.84,
+      "std": 4.29,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-violet on syntax-ground",
       "fg": "#6B2BB3",
       "bg": "#FFFFFF",
-      "std": 7.37,
       "hc": 8.01,
+      "std": 7.37,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-violet on syntax-active-line",
       "fg": "#6B2BB3",
       "bg": "#F3F0E8",
-      "std": 6.47,
       "hc": 7.03,
+      "std": 6.47,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-blue on syntax-ground",
       "fg": "#2943BD",
       "bg": "#FFFFFF",
-      "std": 6.66,
       "hc": 7.97,
+      "std": 6.66,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-blue on syntax-active-line",
       "fg": "#2943BD",
       "bg": "#F3F0E8",
-      "std": 5.85,
       "hc": 7,
+      "std": 5.85,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-navy on syntax-ground",
       "fg": "#243B7A",
       "bg": "#FFFFFF",
-      "std": 10.59,
       "hc": 10.59,
+      "std": 10.59,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-navy on syntax-active-line",
       "fg": "#243B7A",
       "bg": "#F3F0E8",
-      "std": 9.3,
       "hc": 9.3,
+      "std": 9.3,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-green on syntax-ground",
       "fg": "#015C41",
       "bg": "#FFFFFF",
-      "std": 6.03,
       "hc": 8.05,
+      "std": 6.03,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-green on syntax-active-line",
       "fg": "#015C41",
       "bg": "#F3F0E8",
-      "std": 5.3,
       "hc": 7.06,
+      "std": 5.3,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-yellow on syntax-ground",
       "fg": "#5F4F02",
       "bg": "#FFFFFF",
-      "std": 6.77,
       "hc": 8.05,
+      "std": 6.77,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-yellow on syntax-active-line",
       "fg": "#5F4F02",
       "bg": "#F3F0E8",
-      "std": 5.94,
       "hc": 7.07,
+      "std": 5.94,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-orange on syntax-ground",
       "fg": "#863A01",
       "bg": "#FFFFFF",
-      "std": 5.78,
       "hc": 8.01,
+      "std": 5.78,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-orange on syntax-active-line",
       "fg": "#863A01",
       "bg": "#F3F0E8",
-      "std": 5.08,
       "hc": 7.04,
+      "std": 5.08,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-plum on syntax-ground",
       "fg": "#8B2968",
       "bg": "#FFFFFF",
-      "std": 7.35,
       "hc": 8.03,
+      "std": 7.35,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-plum on syntax-active-line",
       "fg": "#8B2968",
       "bg": "#F3F0E8",
-      "std": 6.46,
       "hc": 7.05,
+      "std": 6.46,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-red on syntax-ground",
       "fg": "#A50021",
       "bg": "#FFFFFF",
-      "std": 6.47,
       "hc": 8,
+      "std": 6.47,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-red on syntax-active-line",
       "fg": "#A50021",
       "bg": "#F3F0E8",
-      "std": 5.68,
       "hc": 7.03,
+      "std": 5.68,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-grey on syntax-ground",
       "fg": "#4C515A",
       "bg": "#FFFFFF",
-      "std": 5.53,
       "hc": 7.97,
+      "std": 5.53,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-grey on syntax-active-line",
       "fg": "#4C515A",
       "bg": "#F3F0E8",
-      "std": 4.86,
       "hc": 7,
+      "std": 4.86,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-ink on syntax-ground",
       "fg": "#25292F",
       "bg": "#FFFFFF",
-      "std": 14.61,
       "hc": 14.61,
+      "std": 14.61,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "light",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-ink on syntax-active-line",
       "fg": "#25292F",
       "bg": "#F3F0E8",
-      "std": 12.83,
       "hc": 12.83,
+      "std": 12.83,
       "min": 7,
       "pass": true
     },
     {
-      "set": "light",
+      "scheme": "dark",
       "kind": "text",
-      "label": "caution-foreground on caution",
-      "fg": "#0B0F17",
-      "bg": "#E2B000",
-      "std": 9.53,
-      "hc": 9.53,
-      "min": 7,
-      "pass": true
-    },
-    {
-      "set": "dark",
-      "kind": "text",
+      "source": "contrast.text",
       "label": "foreground on background",
       "fg": "#F3F0E8",
       "bg": "#16140F",
-      "std": 16.16,
       "hc": 16.16,
+      "std": 16.16,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "text",
+      "source": "contrast.text",
       "label": "card-foreground on card",
       "fg": "#F3F0E8",
       "bg": "#221F19",
-      "std": 14.42,
       "hc": 14.42,
+      "std": 14.42,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "text",
+      "source": "contrast.text",
       "label": "popover-foreground on popover",
       "fg": "#F3F0E8",
       "bg": "#221F19",
-      "std": 14.42,
       "hc": 14.42,
+      "std": 14.42,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "text",
+      "source": "contrast.text",
       "label": "secondary-foreground on secondary",
       "fg": "#F3F0E8",
       "bg": "#221F19",
-      "std": 14.42,
       "hc": 14.42,
+      "std": 14.42,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "text",
+      "source": "contrast.text",
       "label": "foreground on muted",
       "fg": "#F3F0E8",
       "bg": "#2C2821",
-      "std": 12.87,
       "hc": 12.87,
+      "std": 12.87,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "text",
+      "source": "contrast.text",
       "label": "accent-foreground on accent",
       "fg": "#F3F0E8",
       "bg": "#2C2821",
-      "std": 12.87,
       "hc": 12.87,
+      "std": 12.87,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "text",
+      "source": "contrast.text",
       "label": "muted-foreground on background",
       "fg": "#B9B3A5",
       "bg": "#16140F",
-      "std": 6.82,
       "hc": 8.81,
+      "std": 6.82,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "text",
+      "source": "contrast.text",
       "label": "muted-foreground on card",
       "fg": "#B9B3A5",
       "bg": "#221F19",
-      "std": 6.08,
       "hc": 7.86,
+      "std": 6.08,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "text",
+      "source": "contrast.text",
       "label": "muted-foreground on muted",
       "fg": "#B9B3A5",
       "bg": "#2C2821",
-      "std": 5.43,
       "hc": 7.01,
+      "std": 5.43,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "text",
+      "source": "contrast.text",
       "label": "primary-foreground on primary",
       "fg": "#0B0F17",
       "bg": "#95B2FF",
-      "std": 9.03,
       "hc": 9.21,
+      "std": 9.03,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "text",
+      "source": "contrast.text",
       "label": "primary on background",
       "fg": "#95B2FF",
       "bg": "#16140F",
-      "std": 8.67,
       "hc": 8.84,
+      "std": 8.67,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "text",
+      "source": "contrast.text",
       "label": "primary on card",
       "fg": "#95B2FF",
       "bg": "#221F19",
-      "std": 7.74,
       "hc": 7.89,
+      "std": 7.74,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "text",
+      "source": "contrast.text",
       "label": "primary on muted",
       "fg": "#95B2FF",
       "bg": "#2C2821",
-      "std": 6.9,
       "hc": 7.04,
-      "min": 7,
-      "pass": true
-    },
-    {
-      "set": "dark",
-      "kind": "text",
-      "label": "destructive on background",
-      "fg": "#FFA29F",
-      "bg": "#16140F",
-      "std": 8.67,
-      "hc": 9.57,
-      "min": 7,
-      "pass": true
-    },
-    {
-      "set": "dark",
-      "kind": "text",
-      "label": "destructive on card",
-      "fg": "#FFA29F",
-      "bg": "#221F19",
-      "std": 7.74,
-      "hc": 8.54,
-      "min": 7,
-      "pass": true
-    },
-    {
-      "set": "dark",
-      "kind": "text",
-      "label": "destructive on muted",
-      "fg": "#FFA29F",
-      "bg": "#2C2821",
       "std": 6.9,
-      "hc": 7.62,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "text",
+      "source": "contrast.text",
+      "label": "destructive on background",
+      "fg": "#FFA29E",
+      "bg": "#16140F",
+      "hc": 9.56,
+      "std": 8.67,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "scheme": "dark",
+      "kind": "text",
+      "source": "contrast.text",
+      "label": "destructive on card",
+      "fg": "#FFA29E",
+      "bg": "#221F19",
+      "hc": 8.53,
+      "std": 7.74,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "scheme": "dark",
+      "kind": "text",
+      "source": "contrast.text",
+      "label": "destructive on muted",
+      "fg": "#FFA29E",
+      "bg": "#2C2821",
+      "hc": 7.61,
+      "std": 6.9,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "scheme": "dark",
+      "kind": "text",
+      "source": "contrast.text",
       "label": "destructive-foreground on destructive",
       "fg": "#0B0F17",
-      "bg": "#FFA29F",
+      "bg": "#FFA29E",
+      "hc": 9.96,
       "std": 9.03,
-      "hc": 9.97,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "text",
+      "source": "contrast.text",
       "label": "success on background",
       "fg": "#69CDA0",
       "bg": "#16140F",
-      "std": 8.62,
       "hc": 9.5,
+      "std": 8.62,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "text",
+      "source": "contrast.text",
       "label": "success on card",
       "fg": "#69CDA0",
       "bg": "#221F19",
-      "std": 7.7,
       "hc": 8.48,
+      "std": 7.7,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "text",
+      "source": "contrast.text",
       "label": "success on muted",
       "fg": "#69CDA0",
       "bg": "#2C2821",
-      "std": 6.87,
       "hc": 7.56,
+      "std": 6.87,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "text",
+      "source": "contrast.text",
       "label": "success-foreground on success",
       "fg": "#0B0F17",
       "bg": "#69CDA0",
-      "std": 8.99,
       "hc": 9.9,
+      "std": 8.99,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "text",
+      "source": "contrast.text",
       "label": "caution-foreground on caution",
       "fg": "#0B0F17",
       "bg": "#F8D874",
-      "std": 13.75,
       "hc": 13.75,
+      "std": 13.75,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "text",
+      "source": "contrast.text",
       "label": "sidebar-foreground on sidebar",
       "fg": "#F3F0E8",
       "bg": "#16140F",
-      "std": 16.16,
       "hc": 16.16,
+      "std": 16.16,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "text",
+      "source": "contrast.text",
       "label": "sidebar-primary-foreground on sidebar-primary",
       "fg": "#0B0F17",
       "bg": "#95B2FF",
-      "std": 9.03,
       "hc": 9.21,
+      "std": 9.03,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "text",
+      "source": "contrast.text",
       "label": "sidebar-accent-foreground on sidebar-accent",
       "fg": "#F3F0E8",
       "bg": "#2C2821",
-      "std": 12.87,
       "hc": 12.87,
+      "std": 12.87,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "text",
+      "source": "contrast.text",
       "label": "sidebar-primary on sidebar",
       "fg": "#95B2FF",
       "bg": "#16140F",
-      "std": 8.67,
       "hc": 8.84,
+      "std": 8.67,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "text",
+      "source": "contrast.text",
       "label": "muted-foreground on syntax-ground",
       "fg": "#B9B3A5",
       "bg": "#2C2821",
-      "std": 5.43,
       "hc": 7.01,
+      "std": 5.43,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "text",
+      "source": "contrast.text",
       "label": "muted-foreground on syntax-active-line",
       "fg": "#B9B3A5",
       "bg": "#221F19",
-      "std": 6.08,
       "hc": 7.86,
+      "std": 6.08,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "text",
+      "source": "contrast.text",
       "label": "success on syntax-active-line",
       "fg": "#69CDA0",
       "bg": "#221F19",
-      "std": 7.7,
       "hc": 8.48,
+      "std": 7.7,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "text",
+      "source": "contrast.text",
       "label": "destructive on syntax-active-line",
-      "fg": "#FFA29F",
+      "fg": "#FFA29E",
       "bg": "#221F19",
+      "hc": 8.53,
       "std": 7.74,
-      "hc": 8.54,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "text",
+      "source": "contrast.text",
       "label": "caution-text on background",
       "fg": "#F8D874",
       "bg": "#16140F",
-      "std": 13.2,
       "hc": 13.2,
+      "std": 13.2,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "text",
+      "source": "contrast.text",
       "label": "caution-text on card",
       "fg": "#F8D874",
       "bg": "#221F19",
-      "std": 11.78,
       "hc": 11.78,
+      "std": 11.78,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "text",
+      "source": "contrast.text",
       "label": "caution-text on muted",
       "fg": "#F8D874",
       "bg": "#2C2821",
-      "std": 10.51,
       "hc": 10.51,
+      "std": 10.51,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "text",
+      "source": "contrast.text",
       "label": "destructive on destructive-tint",
-      "fg": "#FFA29F",
+      "fg": "#FFA29E",
       "bg": "#382C26",
-      "std": 5.21,
       "hc": 7.01,
+      "std": 5.21,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "text",
+      "source": "contrast.text",
       "label": "success on success-tint",
       "fg": "#69CDA0",
       "bg": "#293027",
-      "std": 5.19,
       "hc": 7.01,
+      "std": 5.19,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
+      "kind": "text",
+      "source": "contrast.text",
+      "label": "foreground on sunken",
+      "fg": "#F3F0E8",
+      "bg": "#0B0A07",
+      "hc": 17.38,
+      "std": 17.38,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "scheme": "dark",
+      "kind": "text",
+      "source": "contrast.text",
+      "label": "muted-foreground on sunken",
+      "fg": "#B9B3A5",
+      "bg": "#0B0A07",
+      "hc": 9.47,
+      "std": 7.33,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "scheme": "dark",
+      "kind": "text",
+      "source": "contrast.text",
+      "label": "primary on sunken",
+      "fg": "#95B2FF",
+      "bg": "#0B0A07",
+      "hc": 9.51,
+      "std": 9.32,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "scheme": "dark",
       "kind": "non-text",
+      "source": "contrast.nonText",
       "label": "input on background",
       "fg": "#958E80",
       "bg": "#16140F",
-      "std": 3.91,
       "hc": 5.66,
+      "std": 3.91,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "non-text",
+      "source": "contrast.nonText",
       "label": "input on card",
       "fg": "#958E80",
       "bg": "#221F19",
-      "std": 3.49,
       "hc": 5.05,
+      "std": 3.49,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "non-text",
+      "source": "contrast.nonText",
       "label": "input on muted",
       "fg": "#958E80",
       "bg": "#2C2821",
-      "std": 3.12,
       "hc": 4.5,
+      "std": 3.12,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "non-text",
+      "source": "contrast.nonText",
       "label": "ring on background",
       "fg": "#95B2FF",
       "bg": "#16140F",
-      "std": 8.67,
       "hc": 8.84,
+      "std": 8.67,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "non-text",
+      "source": "contrast.nonText",
       "label": "ring on card",
       "fg": "#95B2FF",
       "bg": "#221F19",
-      "std": 7.74,
       "hc": 7.89,
+      "std": 7.74,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "non-text",
+      "source": "contrast.nonText",
       "label": "sidebar-ring on sidebar",
       "fg": "#95B2FF",
       "bg": "#16140F",
-      "std": 8.67,
       "hc": 8.84,
+      "std": 8.67,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "non-text",
+      "source": "contrast.nonText",
       "label": "destructive-fill on background",
       "fg": "#FF9491",
       "bg": "#16140F",
-      "std": 8.67,
       "hc": 8.67,
+      "std": 8.67,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "non-text",
+      "source": "contrast.nonText",
       "label": "destructive-fill on card",
       "fg": "#FF9491",
       "bg": "#221F19",
-      "std": 7.74,
       "hc": 7.74,
+      "std": 7.74,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "non-text",
+      "source": "contrast.nonText",
       "label": "success-fill on background",
       "fg": "#60C498",
       "bg": "#16140F",
-      "std": 8.62,
       "hc": 8.62,
+      "std": 8.62,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "non-text",
+      "source": "contrast.nonText",
       "label": "success-fill on card",
       "fg": "#60C498",
       "bg": "#221F19",
-      "std": 7.7,
       "hc": 7.7,
+      "std": 7.7,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "non-text",
+      "source": "contrast.nonText",
       "label": "chart-1 on background",
       "fg": "#93B0FF",
       "bg": "#16140F",
-      "std": 8.67,
       "hc": 8.67,
+      "std": 8.67,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "non-text",
+      "source": "contrast.nonText",
       "label": "chart-1 on card",
       "fg": "#93B0FF",
       "bg": "#221F19",
-      "std": 7.74,
       "hc": 7.74,
+      "std": 7.74,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "non-text",
+      "source": "contrast.nonText",
       "label": "chart-2 on background",
       "fg": "#FF9491",
       "bg": "#16140F",
-      "std": 8.67,
       "hc": 8.67,
+      "std": 8.67,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "non-text",
+      "source": "contrast.nonText",
       "label": "chart-2 on card",
       "fg": "#FF9491",
       "bg": "#221F19",
-      "std": 7.74,
       "hc": 7.74,
+      "std": 7.74,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "non-text",
+      "source": "contrast.nonText",
       "label": "chart-3 on background",
       "fg": "#F8D874",
       "bg": "#16140F",
-      "std": 13.2,
       "hc": 13.2,
+      "std": 13.2,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "non-text",
+      "source": "contrast.nonText",
       "label": "chart-3 on card",
       "fg": "#F8D874",
       "bg": "#221F19",
-      "std": 11.78,
       "hc": 11.78,
+      "std": 11.78,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "non-text",
+      "source": "contrast.nonText",
       "label": "chart-4 on background",
       "fg": "#60C498",
       "bg": "#16140F",
-      "std": 8.62,
       "hc": 8.62,
+      "std": 8.62,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "non-text",
+      "source": "contrast.nonText",
       "label": "chart-4 on card",
       "fg": "#60C498",
       "bg": "#221F19",
-      "std": 7.7,
       "hc": 7.7,
+      "std": 7.7,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "non-text",
+      "source": "contrast.nonText",
       "label": "chart-5 on background",
       "fg": "#A39D90",
       "bg": "#16140F",
-      "std": 6.82,
       "hc": 6.82,
+      "std": 6.82,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "non-text",
+      "source": "contrast.nonText",
       "label": "chart-5 on card",
       "fg": "#A39D90",
       "bg": "#221F19",
-      "std": 6.08,
       "hc": 6.08,
+      "std": 6.08,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "non-text",
+      "source": "contrast.nonText",
       "label": "primary on syntax-active-line",
       "fg": "#95B2FF",
       "bg": "#221F19",
-      "std": 7.74,
       "hc": 7.89,
+      "std": 7.74,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "non-text",
+      "source": "contrast.nonText",
+      "label": "ring on sunken",
+      "fg": "#95B2FF",
+      "bg": "#0B0A07",
+      "hc": 9.51,
+      "std": 9.32,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "scheme": "dark",
+      "kind": "non-text",
+      "source": "contrast.nonText",
       "label": "border on background",
       "fg": "#958E80",
       "bg": "#16140F",
-      "std": 1.28,
       "hc": 5.66,
+      "std": 1.48,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "non-text",
+      "source": "contrast.nonText",
       "label": "border on card",
       "fg": "#958E80",
       "bg": "#221F19",
-      "std": 1.32,
       "hc": 5.05,
+      "std": 1.32,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "non-text",
+      "source": "contrast.nonText",
       "label": "border on muted",
       "fg": "#958E80",
       "bg": "#2C2821",
-      "std": 1.33,
       "hc": 4.5,
+      "std": 1.18,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "dark",
-      "kind": "field",
-      "label": "field-1 legend on fill",
-      "fg": "#16140F",
-      "bg": "#95B2FF",
-      "std": 8.67,
-      "hc": 8.84,
-      "min": 7,
-      "pass": true
-    },
-    {
-      "set": "dark",
-      "kind": "field",
-      "label": "field-2 legend on fill",
-      "fg": "#16140F",
-      "bg": "#FFA29F",
-      "std": 8.67,
-      "hc": 9.57,
-      "min": 7,
-      "pass": true
-    },
-    {
-      "set": "dark",
-      "kind": "field",
-      "label": "field-3 legend on fill",
-      "fg": "#16140F",
-      "bg": "#F8D874",
-      "std": 13.2,
-      "hc": 13.2,
-      "min": 7,
-      "pass": true
-    },
-    {
-      "set": "dark",
-      "kind": "field",
-      "label": "field-4 legend on fill",
-      "fg": "#16140F",
-      "bg": "#69CDA0",
-      "std": 8.62,
-      "hc": 9.5,
-      "min": 7,
-      "pass": true
-    },
-    {
-      "set": "dark",
-      "kind": "glass",
-      "label": "foreground on solid glass",
-      "fg": "#F3F0E8",
-      "bg": "#221F19",
-      "std": null,
-      "hc": 14.42,
-      "min": 7,
-      "pass": true
-    },
-    {
-      "set": "dark",
-      "kind": "glass",
-      "label": "muted-foreground on solid glass",
-      "fg": "#B9B3A5",
-      "bg": "#221F19",
-      "std": null,
-      "hc": 7.86,
-      "min": 7,
-      "pass": true
-    },
-    {
-      "set": "dark",
-      "kind": "glass",
-      "label": "primary on solid glass",
-      "fg": "#95B2FF",
-      "bg": "#221F19",
-      "std": null,
-      "hc": 7.89,
-      "min": 7,
-      "pass": true
-    },
-    {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "non-text",
-      "label": "glass edge (paper-line-more) on #16140F",
+      "source": "contrast.nonText",
+      "label": "sidebar-border on sidebar",
       "fg": "#958E80",
       "bg": "#16140F",
-      "std": null,
       "hc": 5.66,
+      "std": 1.48,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "non-text",
-      "label": "glass edge (paper-line-more) on #221F19",
-      "fg": "#958E80",
-      "bg": "#221F19",
-      "std": null,
-      "hc": 5.05,
-      "min": 4.5,
-      "pass": true
-    },
-    {
-      "set": "dark",
-      "kind": "non-text",
-      "label": "glass edge (paper-line-more) on #2C2821",
+      "source": "contrast.nonText",
+      "label": "sidebar-border on sidebar-accent",
       "fg": "#958E80",
       "bg": "#2C2821",
-      "std": null,
       "hc": 4.5,
+      "std": 1.18,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
+      "kind": "non-text",
+      "source": "contrast.nonText",
+      "label": "groove-line on background",
+      "fg": "#958E80",
+      "bg": "#16140F",
+      "hc": 5.66,
+      "std": 1.48,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "scheme": "dark",
+      "kind": "non-text",
+      "source": "contrast.nonText",
+      "label": "groove-line on card",
+      "fg": "#958E80",
+      "bg": "#221F19",
+      "hc": 5.05,
+      "std": 1.32,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "scheme": "dark",
+      "kind": "non-text",
+      "source": "contrast.nonText",
+      "label": "groove-line on muted",
+      "fg": "#958E80",
+      "bg": "#2C2821",
+      "hc": 4.5,
+      "std": 1.18,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "scheme": "dark",
+      "kind": "non-text",
+      "source": "contrast.nonText",
+      "label": "elevation-line on background",
+      "fg": "#958E80",
+      "bg": "#16140F",
+      "hc": 5.66,
+      "std": 3.91,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "scheme": "dark",
+      "kind": "non-text",
+      "source": "contrast.nonText",
+      "label": "elevation-line on card",
+      "fg": "#958E80",
+      "bg": "#221F19",
+      "hc": 5.05,
+      "std": 3.49,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "scheme": "dark",
+      "kind": "non-text",
+      "source": "contrast.nonText",
+      "label": "elevation-line on muted",
+      "fg": "#958E80",
+      "bg": "#2C2821",
+      "hc": 4.5,
+      "std": 3.12,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "scheme": "dark",
+      "kind": "non-text",
+      "source": "contrast.nonText",
+      "label": "sunken-line on sunken",
+      "fg": "#958E80",
+      "bg": "#0B0A07",
+      "hc": 6.08,
+      "std": 1.22,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "scheme": "dark",
+      "kind": "field",
+      "source": "contrast.field",
+      "label": "field-1-legend on field-1",
+      "fg": "#16140F",
+      "bg": "#93B0FF",
+      "hc": 8.67,
+      "std": 8.67,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "scheme": "dark",
+      "kind": "field",
+      "source": "contrast.field",
+      "label": "field-2-legend on field-2",
+      "fg": "#16140F",
+      "bg": "#FF9491",
+      "hc": 8.67,
+      "std": 8.67,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "scheme": "dark",
+      "kind": "field",
+      "source": "contrast.field",
+      "label": "field-3-legend on field-3",
+      "fg": "#16140F",
+      "bg": "#F8D874",
+      "hc": 13.2,
+      "std": 13.2,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "scheme": "dark",
+      "kind": "field",
+      "source": "contrast.field",
+      "label": "field-4-legend on field-4",
+      "fg": "#16140F",
+      "bg": "#60C498",
+      "hc": 8.62,
+      "std": 8.62,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "scheme": "dark",
+      "kind": "glass",
+      "source": "contrast.glass (solid under HC)",
+      "label": "foreground on glass",
+      "fg": "#F3F0E8",
+      "bg": "#221F19",
+      "hc": 14.42,
+      "std": 14.42,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "scheme": "dark",
+      "kind": "glass",
+      "source": "contrast.glass (solid under HC)",
+      "label": "muted-foreground on glass",
+      "fg": "#B9B3A5",
+      "bg": "#221F19",
+      "hc": 7.86,
+      "std": 6.08,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "scheme": "dark",
+      "kind": "glass",
+      "source": "contrast.glass (solid under HC)",
+      "label": "primary on glass",
+      "fg": "#95B2FF",
+      "bg": "#221F19",
+      "hc": 7.89,
+      "std": 7.74,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "scheme": "dark",
+      "kind": "non-text",
+      "source": "more.glassEdge",
+      "label": "glass-edge on background",
+      "fg": "#958E80",
+      "bg": "#16140F",
+      "hc": 5.66,
+      "std": 1.21,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "scheme": "dark",
+      "kind": "non-text",
+      "source": "more.glassEdge",
+      "label": "glass-edge on card",
+      "fg": "#958E80",
+      "bg": "#221F19",
+      "hc": 5.05,
+      "std": 1.26,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "scheme": "dark",
+      "kind": "non-text",
+      "source": "more.glassEdge",
+      "label": "glass-edge on muted",
+      "fg": "#958E80",
+      "bg": "#2C2821",
+      "hc": 4.5,
+      "std": 1.27,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "scheme": "dark",
       "kind": "scrim",
-      "label": "elevation-line edge over background under the scrim",
+      "source": "contrast.scrim",
+      "label": "elevation-line on background under scrim",
       "fg": "#958E80",
       "bg": "#0F1114",
-      "std": 4.02,
       "hc": 5.81,
+      "std": 4.02,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "scrim",
-      "label": "elevation-line edge over card under the scrim",
+      "source": "contrast.scrim",
+      "label": "elevation-line on card under scrim",
       "fg": "#958E80",
       "bg": "#141518",
-      "std": 3.88,
       "hc": 5.61,
+      "std": 3.88,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "scrim",
-      "label": "elevation-line edge over muted under the scrim",
+      "source": "contrast.scrim",
+      "label": "elevation-line on muted under scrim",
       "fg": "#958E80",
       "bg": "#18191B",
-      "std": 3.74,
       "hc": 5.41,
+      "std": 3.74,
       "min": 4.5,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-violet on syntax-ground",
       "fg": "#C4A4FE",
       "bg": "#2C2821",
-      "std": 7.04,
       "hc": 7.04,
+      "std": 7.04,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-violet on syntax-active-line",
       "fg": "#C4A4FE",
       "bg": "#221F19",
-      "std": 7.89,
       "hc": 7.89,
+      "std": 7.89,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-violet on background",
       "fg": "#C4A4FE",
       "bg": "#16140F",
-      "std": 8.84,
       "hc": 8.84,
+      "std": 8.84,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-blue on syntax-ground",
       "fg": "#95B2FF",
       "bg": "#2C2821",
-      "std": 6.75,
       "hc": 7.04,
+      "std": 6.75,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-blue on syntax-active-line",
       "fg": "#95B2FF",
       "bg": "#221F19",
-      "std": 7.57,
       "hc": 7.89,
+      "std": 7.57,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-blue on background",
       "fg": "#95B2FF",
       "bg": "#16140F",
-      "std": 8.48,
       "hc": 8.84,
+      "std": 8.48,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-navy on syntax-ground",
       "fg": "#A8C0D8",
       "bg": "#2C2821",
-      "std": 7.81,
       "hc": 7.81,
+      "std": 7.81,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-navy on syntax-active-line",
       "fg": "#A8C0D8",
       "bg": "#221F19",
-      "std": 8.76,
       "hc": 8.76,
+      "std": 8.76,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-navy on background",
       "fg": "#A8C0D8",
       "bg": "#16140F",
-      "std": 9.81,
       "hc": 9.81,
+      "std": 9.81,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-green on syntax-ground",
       "fg": "#5CC89A",
       "bg": "#2C2821",
-      "std": 7.1,
       "hc": 7.1,
+      "std": 7.1,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-green on syntax-active-line",
       "fg": "#5CC89A",
       "bg": "#221F19",
-      "std": 7.96,
       "hc": 7.96,
+      "std": 7.96,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-green on background",
       "fg": "#5CC89A",
       "bg": "#16140F",
-      "std": 8.92,
       "hc": 8.92,
+      "std": 8.92,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-yellow on syntax-ground",
       "fg": "#E5CD72",
       "bg": "#2C2821",
-      "std": 9.28,
       "hc": 9.28,
+      "std": 9.28,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-yellow on syntax-active-line",
       "fg": "#E5CD72",
       "bg": "#221F19",
-      "std": 10.41,
       "hc": 10.41,
+      "std": 10.41,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-yellow on background",
       "fg": "#E5CD72",
       "bg": "#16140F",
-      "std": 11.66,
       "hc": 11.66,
+      "std": 11.66,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-orange on syntax-ground",
       "fg": "#FFA373",
       "bg": "#2C2821",
-      "std": 7.49,
       "hc": 7.49,
+      "std": 7.49,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-orange on syntax-active-line",
       "fg": "#FFA373",
       "bg": "#221F19",
-      "std": 8.4,
       "hc": 8.4,
+      "std": 8.4,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-orange on background",
       "fg": "#FFA373",
       "bg": "#16140F",
-      "std": 9.41,
       "hc": 9.41,
+      "std": 9.41,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-plum on syntax-ground",
       "fg": "#EB9BC8",
       "bg": "#2C2821",
-      "std": 7.01,
       "hc": 7.01,
+      "std": 7.01,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-plum on syntax-active-line",
       "fg": "#EB9BC8",
       "bg": "#221F19",
-      "std": 7.86,
       "hc": 7.86,
+      "std": 7.86,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-plum on background",
       "fg": "#EB9BC8",
       "bg": "#16140F",
-      "std": 8.81,
       "hc": 8.81,
+      "std": 8.81,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-red on syntax-ground",
       "fg": "#FF9692",
       "bg": "#2C2821",
-      "std": 6.5,
       "hc": 7,
+      "std": 6.5,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-red on syntax-active-line",
       "fg": "#FF9692",
       "bg": "#221F19",
-      "std": 7.28,
       "hc": 7.84,
+      "std": 7.28,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-red on background",
       "fg": "#FF9692",
       "bg": "#16140F",
-      "std": 8.16,
       "hc": 8.78,
+      "std": 8.16,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-grey on syntax-ground",
       "fg": "#AEB4BE",
       "bg": "#2C2821",
-      "std": 5.84,
       "hc": 7.03,
+      "std": 5.84,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-grey on syntax-active-line",
       "fg": "#AEB4BE",
       "bg": "#221F19",
-      "std": 6.55,
       "hc": 7.88,
+      "std": 6.55,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-grey on background",
       "fg": "#AEB4BE",
       "bg": "#16140F",
-      "std": 7.33,
       "hc": 8.82,
+      "std": 7.33,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-ink on syntax-ground",
       "fg": "#D9DFE8",
       "bg": "#2C2821",
-      "std": 10.93,
       "hc": 10.93,
+      "std": 10.93,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-ink on syntax-active-line",
       "fg": "#D9DFE8",
       "bg": "#221F19",
-      "std": 12.26,
       "hc": 12.26,
+      "std": 12.26,
       "min": 7,
       "pass": true
     },
     {
-      "set": "dark",
+      "scheme": "dark",
       "kind": "code",
+      "source": "more.code",
       "label": "syntax-ink on background",
       "fg": "#D9DFE8",
       "bg": "#16140F",
-      "std": 13.73,
       "hc": 13.73,
-      "min": 7,
-      "pass": true
-    },
-    {
-      "set": "dark",
-      "kind": "text",
-      "label": "caution-foreground on caution",
-      "fg": "#0B0F17",
-      "bg": "#F8D874",
-      "std": 13.75,
-      "hc": 13.75,
+      "std": 13.73,
       "min": 7,
       "pass": true
     }
   ],
+  "total": 220,
   "fails": 0,
-  "total": 196
+  "tree": {
+    "paper-sunken": "#DCD7CA",
+    "ink-sunken": "#0B0A07",
+    "red-tint": "#F9E9EA",
+    "green-tint": "#E6F1EE",
+    "red-tint-lifted": "#4E3631",
+    "green-tint-lifted": "#2E4032",
+    "line": "#DCDAD3",
+    "paper-line": "#37342E",
+    "ink-half": "#7F8080",
+    "paper-half": "#8B8881",
+    "line-input-half": "#BCB7AC",
+    "paper-line-input-half": "#4E4940",
+    "paper-sunken-line": "#C7C3B8",
+    "ink-sunken-line": "#22211E"
+  }
 }

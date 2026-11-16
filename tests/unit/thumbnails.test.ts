@@ -53,8 +53,8 @@ function webpSize(buf: Buffer): [number, number] | null {
 }
 
 describe("018 decision 13: the thumbnails", () => {
-  test("76 of 76 items have 2 images, each a WebP of 480 × 300 and at most 20 kB", () => {
-    expect(NAMES).toHaveLength(76);
+  test("79 of 79 items have 2 images, each a WebP of 480 × 300 and at most 20 kB", () => {
+    expect(NAMES).toHaveLength(79);
     const wrong: string[] = [];
     for (const n of NAMES)
       for (const scheme of ["light", "dark"]) {
@@ -84,7 +84,7 @@ describe("018 decision 13: the thumbnails", () => {
     const small = Object.entries(sizes).filter(
       ([, px]) => px !== null && px < 8.95,
     );
-    expect(Object.keys(sizes)).toHaveLength(152);
+    expect(Object.keys(sizes)).toHaveLength(158);
     expect(small).toEqual([]);
   });
 
@@ -104,6 +104,7 @@ describe("018 decision 13: the thumbnails", () => {
       "src/lib/site/page/frame.svelte",
       "src/lib/site/site.css",
       "src/app.css",
+      "src/routes/layout.css",
       "scripts/site/thumbnails.ts",
     ])
       expect(inputs).toContain(f);

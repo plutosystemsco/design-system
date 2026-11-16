@@ -25,6 +25,11 @@ export type ExampleMeta = {
  */
 export const PAIR_FILE = /^(?:do|dont)-[^/]*\.svelte$/;
 
+/** True when `file`, a name or a path, is a pair file: the one test of `PAIR_FILE`. */
+export function isPairFile(file: string): boolean {
+  return PAIR_FILE.test(path.basename(file));
+}
+
 /** The `meta` an example's module script exports. */
 export function exampleMeta(text: string): ExampleMeta {
   const module =

@@ -2,6 +2,7 @@
   export const meta = {
     kind: "do",
     pair: "result",
+    title: "Do: the result is also on the page",
     caption:
       "The result is also on the page: the archived project now sits under Archived.",
   };

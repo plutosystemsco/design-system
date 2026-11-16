@@ -2,6 +2,7 @@
   export const meta = {
     kind: "do",
     pair: "words",
+    title: "Do: a few words",
     caption:
       "A five-word title and one short sentence, read and heard in the time.",
   };

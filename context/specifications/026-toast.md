@@ -1108,3 +1108,15 @@ The change review, [`../reviews/026-toast-pr-2026-11-15.md`](../reviews/026-toas
 - `tests/e2e/toast.spec.ts` in Chromium light and dark, Firefox and WebKit: 175 passed, 1 skipped (test 68 in WebKit).
 - `upgrade.spec.ts` and `axe.spec.ts` on the guide and the toast page, light and dark: 32 passed.
 - The toast's thumbnail hash moved with its files; the manifest was rewritten with `--hash-only`, since the pictures, the specimens, do not change.
+
+### The merge with `release/0.13.0` (after `027a`)
+
+`release/0.13.0` at `874c5da` (`020a`, `020b`, `027a`) was merged into this branch as a merge commit, following the change review's merge notes:
+
+- **The guide page** is `020b`'s, with both its `<dl>` and its hidden `<table>` inside `{#if section.renames.length}`, so `026`'s section has neither a rename list nor a header-only table in the Markdown twin. Each command keeps its visible "Step N" and takes its region's name from `Snippet`'s `name`.
+- **The pair rule has one definition.** `shown-source.ts` exports `PAIR_FILE` and `isPairFile(file)`, which tests a name or a path. `027a`'s `files()` in `examples.test.ts` is kept, and its `isPair`, its two inline patterns, the twin test in `build-output.spec.ts`, `componentData` and `toast-site.test.ts` all call `isPairFile` (the review's finding 9). `027a`'s two pair filters ran after `.svelte` was stripped; with the one helper they filter first.
+- **Pair files keep their own views.** The review expected them to lose their `/example/<item>/do-*/` views, but `027a`'s test 52 scans each pair's view with axe; the first full run failed it 48 times. So the example route lists every file again, pairs included, as `027a` did, and a pair is still no example on the page (`componentData` skips it). The toast's six pair files gain a `title`, as `027a`'s carry, for their views.
+- **Ledgers, hand-merged in landing order, `027a` first:** `registry.json` (`toast` after `progress`, in the feedback group; test 37 now says so), `CHANGELOG.md` (the three batch-A bullets, then `toast`), `example-order.ts`, the aliases and their fixture (hyperlink, anchor, then snackbar, notification), and `pluto-allowed.json`, re-derived from the merged tree: "Pluto Systems" 324, `plutosystemsco` 262, `registry.json` and the built index 81 each.
+- **Regenerated, not merged:** `static/r/` and `static/v0.13.0/r/` (`build:registry`), the thumbnails' manifest (`--hash-only`; every hash moved, no picture), and `text-sizes.json` (all eight new pictures present).
+- **The counts, each read from its test:** registry items 79 (types 1, 3, 4, 2, 61, 8), `registry:ui` 61, the literal lint's `FILE_COUNT` 365, items with examples 62, component pages and twins 79, `r/styles/maia` 81 files, `registry-comments` 80 entries, the sitemap's own entries 85 and components 80, the left nav's links 80, the index's lazy tiles 76, framed pages 62, thumbnails 79 items and 158 text sizes.
+- **The roadmap.** Row `036` no longer lists `toast.info`, which `026` ships; it keeps the `info` tone, which the toast's `info` kind then takes. The design lead's ruling, 2026-11-15, at this landing (Q2).

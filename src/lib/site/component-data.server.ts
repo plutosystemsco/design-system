@@ -16,7 +16,7 @@ import { listedItems } from "./items.ts";
 import {
   exampleMeta,
   hasSwitch,
-  PAIR_FILE,
+  isPairFile,
   shownSource,
   type ExampleMeta,
 } from "./shown-source.ts";
@@ -69,7 +69,7 @@ export async function componentData(name: string): Promise<ComponentData> {
   const examples: Record<string, ExampleData> = {};
   if (existsSync(dir))
     for (const file of readdirSync(dir)
-      .filter((f) => f.endsWith(".svelte") && !PAIR_FILE.test(f))
+      .filter((f) => f.endsWith(".svelte") && !isPairFile(f))
       .sort()) {
       const text = readFileSync(path.join(dir, file), "utf8");
       const meta = exampleMeta(text);

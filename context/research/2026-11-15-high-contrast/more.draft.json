@@ -1,0 +1,99 @@
+{
+  "$comment": "031 decision 13: the contrast file's proposed `more` section. The derivation and T3 read every ground from here and from the contrast file's own rows; nothing is typed in the script.",
+  "text": 7,
+  "nonText": 4.5,
+  "scrim": 4.5,
+  "nonTextAdded": [
+    [
+      "border",
+      "background"
+    ],
+    [
+      "border",
+      "card"
+    ],
+    [
+      "border",
+      "muted"
+    ],
+    [
+      "sidebar-border",
+      "sidebar"
+    ],
+    [
+      "sidebar-border",
+      "sidebar-accent"
+    ],
+    [
+      "groove-line",
+      "background"
+    ],
+    [
+      "groove-line",
+      "card"
+    ],
+    [
+      "groove-line",
+      "muted"
+    ],
+    [
+      "elevation-line",
+      "background"
+    ],
+    [
+      "elevation-line",
+      "card"
+    ],
+    [
+      "elevation-line",
+      "muted"
+    ],
+    [
+      "sunken-line",
+      "sunken"
+    ]
+  ],
+  "glassEdge": [
+    "background",
+    "card",
+    "muted"
+  ],
+  "code": {
+    "roles": [
+      "syntax-violet",
+      "syntax-blue",
+      "syntax-navy",
+      "syntax-green",
+      "syntax-yellow",
+      "syntax-orange",
+      "syntax-plum",
+      "syntax-red",
+      "syntax-grey",
+      "syntax-ink"
+    ],
+    "grounds": {
+      "light": [
+        "syntax-ground",
+        "syntax-active-line"
+      ],
+      "dark": [
+        "syntax-ground",
+        "syntax-active-line",
+        "background"
+      ]
+    }
+  },
+  "exempt": {
+    "mark-1": "the logotype's dots: WCAG 1.4.3 and 1.4.6 exempt logotypes",
+    "mark-2": "the logotype's dots",
+    "mark-3": "the logotype's dots",
+    "mark-4": "the logotype's dots",
+    "groove-light": "clear in both schemes: paints nothing",
+    "elevation-shadow": "clear in both schemes: paints nothing",
+    "raised": "a ground with card's primitive; measured as card",
+    "disabled-edge": "exempt (WCAG 1.4.11); 031b's own check: 1.5:1 or more on background and card, in every context",
+    "disabled-foreground": "exempt (WCAG 1.4.3); 031b's own check: 3:1 or more on disabled, card and background, in every context",
+    "disabled": "031b's disabled roles keep their standard values under high contrast, exempt from 031's targets (WCAG 1.4.3 and 1.4.11); 031b's own check holds them, the same in every context"
+  },
+  "restricted": "Read from the contrast file's `restricted` block (031a); it holds in all four contexts, and no `more` row is made for a restricted pair."
+}

@@ -10,8 +10,9 @@ export const entries: EntryGenerator = () =>
     .filter((item) => item !== "theme")
     .flatMap((item) =>
       readdirSync(path.resolve(ROOT, item))
-        // 026 decision 22: a pair file is no example, and has no view.
-        .filter((f) => f.endsWith(".svelte") && !/^(?:do|dont)-/.test(f))
+        // A pair file is no example on the page, but has a view of its own,
+        // which `027a` test 52 scans with axe.
+        .filter((f) => f.endsWith(".svelte"))
         .map((f) => ({ item, example: f.replace(/\.svelte$/, "") })),
     );
 

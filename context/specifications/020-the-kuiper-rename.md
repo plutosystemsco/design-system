@@ -669,8 +669,11 @@ The alias entry (at the end of `registry.json`, so the listed order is unchanged
 
 - **The site's CSS follows prose in `context/`** (the builder's finding, confirmed by the review). `src/app.css` imports Tailwind with no `@source` line, so its source scan reads `context/`: any utility a specification names in backticks joins every page's CSS. Not fixed in 020. It becomes a small change, **`020a`**, after 020 lands: `@source not` for `context/` beside the site's Tailwind import (through `build-tokens.ts`, since `src/app.css` is generated), and a test that a utility named only in `context/` is absent from the built CSS.
 
+- **The guide's rename table did not fit its column** (the design lead's checkpoint, criterion 24, 2026-11-15). It was 1,053 px wide in a 608 px column, or 358 px at 390. "Who sees it" was cut mid-word, and "What to do" was off-screen. Fixed by small change [`020b`](020b-the-guides-renames-fit-the-column.md), merged at the merge commit after `7bba055`: one block per rename, with a hidden plain table kept for the Markdown twin.
+- **The site's CSS follows prose:** fixed by small change [`020a`](020a-the-sites-css-reads-only-code.md), merged at `ec71e34`. The site's own stylesheet excludes `context/` and `tests/` from Tailwind's scan; `src/app.css` is untouched.
+
 ### Waiting
 
-- **The checkpoint** (criterion 24) is the design lead's. Screenshots of the guide (both schemes, 1440 and 390), the theme page reached from `/components/pluto-theme/#fields` (it lands on the section), and a reload with `pluto-theme = dark` (dark at first paint; the key carried over) are with the builder's report. The search for `pluto-theme` is held by test 18. One thing to look at: the rename table is wider than the prose measure, so at 1440 its last three columns scroll inside the table's region.
+- **The checkpoint** (criterion 24) was the design lead's; it found the rename table's overflow (above, `020b`). Screenshots of the guide (both schemes, 1440 and 390), the theme page reached from `/components/pluto-theme/#fields` (it lands on the section), and a reload with `pluto-theme = dark` (dark at first paint; the key carried over) are with the builder's report. The search for `pluto-theme` is held by test 18. One thing to look at: the rename table is wider than the prose measure, so at 1440 its last three columns scroll inside the table's region.
 - **The host check** (criterion 26) waits for the first deploy of 0.13.0.
 - **F1** stands: tests 9, 15 and 17 run in Chromium only, until `022`.

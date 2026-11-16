@@ -2,6 +2,7 @@
   export const meta = {
     kind: "do",
     pair: "action",
+    title: "Do: the action is on the page too",
     caption:
       "Undo in the toast, and the message in Trash, where it can be restored too.",
   };

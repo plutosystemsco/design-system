@@ -25,6 +25,16 @@
     "title": "Kuiper theme"
   },
   {
+    "alias": "hyperlink",
+    "path": "/components/link/",
+    "title": "Link"
+  },
+  {
+    "alias": "anchor",
+    "path": "/components/link/",
+    "title": "Link"
+  },
+  {
     "alias": "snackbar",
     "path": "/components/toast/",
     "title": "Toast"

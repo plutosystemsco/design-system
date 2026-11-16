@@ -17,7 +17,8 @@ const rules = loadRules();
 // a row of 002's rule table.
 
 /**
- * 026 decision 1, test 40: 359 files, as toast adds its six.
+ * 027a test 4: 359 files, as link, button-group and progress add 2 each.
+ * 026 decision 1, test 40: 365 files, merged after 027a, as toast adds its six.
  * 020 decision 5: 353 files, as theme gains stored.ts.
  * 013 decisions 5 and 16: 352 files, as highlighter grows from 1 file to 29
  * (its 24 query files among them) and code-editor gains its highlighting.
@@ -31,7 +32,7 @@ const rules = loadRules();
  * 006 decision 13: 300 files, 005's 286 plus the 14 of app-shell (9) and
  * chat (5).
  */
-const FILE_COUNT = 359;
+const FILE_COUNT = 365;
 
 describe("the item files", () => {
   const files = itemFiles();
@@ -65,6 +66,29 @@ describe("the item files", () => {
     expect(allowances.map((a) => [a.file, a.rule])).toEqual([
       ["src/lib/registry/ui/liquid-glass/pointer-light.ts", "L24"],
     ]);
+  });
+});
+
+// 027a test 4: batch A's six files are in the lint's list, with 0 literals
+// and 0 allowances.
+describe("027a test 4: batch A's files", () => {
+  const BATCH_A_FILES = [
+    "src/lib/registry/ui/link/link.svelte",
+    "src/lib/registry/ui/link/index.ts",
+    "src/lib/registry/ui/button-group/button-group.svelte",
+    "src/lib/registry/ui/button-group/index.ts",
+    "src/lib/registry/ui/progress/progress.svelte",
+    "src/lib/registry/ui/progress/index.ts",
+  ];
+
+  test("are linted, with 0 literals and 0 allowances", () => {
+    const files = itemFiles();
+    for (const f of BATCH_A_FILES) expect(files, f).toContain(f);
+    const allowances: ReturnType<typeof lintFiles> = [];
+    expect(
+      lintFiles(BATCH_A_FILES, rules, undefined, undefined, allowances),
+    ).toEqual([]);
+    expect(allowances).toEqual([]);
   });
 });
 

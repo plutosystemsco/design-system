@@ -1,5 +1,4 @@
 <script lang="ts">
-  import * as Table from "#lib/registry/ui/table";
   import { inlines, type Inline } from "#lib/site/changelog";
   import Leaf from "#lib/site/page/leaf.svelte";
   import Snippet from "#lib/site/page/snippet.svelte";
@@ -10,6 +9,7 @@
     SECTIONS,
     UNCHANGED,
     UNTIL,
+    VERSION,
     WHO,
   } from "#lib/site/upgrade/0.13.0";
   import type { Rename } from "#lib/site/upgrade/renames";
@@ -30,13 +30,21 @@
     { id: "unchanged", title: "What did not change" },
   ];
 
-  /** When the old name stops working. */
+  /** When the old name stops working: the twin's table column. */
   const until = (r: Rename) =>
     r.alias !== "none"
       ? r.alias
       : r.kind === "site page"
         ? "Redirects, always"
         : "Now";
+
+  /** The same, as the end of a rename's line on the page (020b). */
+  const line = (r: Rename) =>
+    r.alias !== "none"
+      ? `works until ${r.alias}`
+      : r.kind === "site page"
+        ? "always redirects"
+        : `removed in ${VERSION}`;
 
   const commands = (id: string) =>
     data.sections.find((s) => s.id === id)?.steps ?? [];
@@ -96,32 +104,49 @@
       <h2 id={section.id} class={h2}>{section.title}</h2>
       <p>{@render text(section.summary)}</p>
       {#if section.renames.length}
-        <Table.Root label="Renamed names">
-          <Table.Header>
-            <Table.Row>
-              <Table.Head>Old name</Table.Head>
-              <Table.Head>New name</Table.Head>
-              <Table.Head>Who sees it</Table.Head>
-              <Table.Head>What to do</Table.Head>
-              <Table.Head>Old name works until</Table.Head>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
+        <!--
+        020b: one block per rename, read in the column. The Markdown twin
+        keeps the table below, which the page never shows: a Markdown reader
+        scrolls freely.
+      -->
+        <dl data-md="skip" class="mt-2 grid gap-8">
+          {#each section.renames as r (`${r.kind} ${r.old}`)}
+            <div class="grid gap-2">
+              <dt class="max-w-(--site-measure) wrap-anywhere">
+                <code class="inline-block max-w-full">{r.old}</code> →
+                <code class="inline-block max-w-full">{r.new}</code>
+                <span class="text-muted-foreground">{r.kind}, {line(r)}</span>
+              </dt>
+              <dd class="grid gap-2">
+                <p><strong>Who sees it.</strong> {@render text(r.seenBy)}</p>
+                <p><strong>What to do.</strong> {@render text(r.todo)}</p>
+              </dd>
+            </div>
+          {/each}
+        </dl>
+        <!-- Plain, as api-table.svelte writes one: no class the page never shows. -->
+        <table hidden>
+          <thead>
+            <tr>
+              <th scope="col">Old name</th>
+              <th scope="col">New name</th>
+              <th scope="col">Who sees it</th>
+              <th scope="col">What to do</th>
+              <th scope="col">Old name works until</th>
+            </tr>
+          </thead>
+          <tbody>
             {#each section.renames as r (`${r.kind} ${r.old}`)}
-              <Table.Row>
-                <Table.Cell class="align-top"><code>{r.old}</code></Table.Cell>
-                <Table.Cell class="align-top"><code>{r.new}</code></Table.Cell>
-                <Table.Cell class="min-w-48 align-top whitespace-normal"
-                  >{r.kind}. {@render text(r.seenBy)}</Table.Cell
-                >
-                <Table.Cell class="min-w-48 align-top whitespace-normal"
-                  >{@render text(r.todo)}</Table.Cell
-                >
-                <Table.Cell class="align-top">{until(r)}</Table.Cell>
-              </Table.Row>
+              <tr>
+                <td><code>{r.old}</code></td>
+                <td><code>{r.new}</code></td>
+                <td>{r.kind}. {@render text(r.seenBy)}</td>
+                <td>{@render text(r.todo)}</td>
+                <td>{until(r)}</td>
+              </tr>
             {/each}
-          </Table.Body>
-        </Table.Root>
+          </tbody>
+        </table>
       {/if}
       <h3 class="site-h3 mt-4">The steps, in order</h3>
       <ol class="grid list-decimal gap-6 ps-6">
