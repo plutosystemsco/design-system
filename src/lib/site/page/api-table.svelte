@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { ApiTable } from "../api.server.ts";
+  import { typePieces } from "../type-pieces.ts";
 
   let { tables }: { tables: ApiTable[] } = $props();
 
@@ -16,11 +17,20 @@
       .map((p) => (p.startsWith("<") ? `\`${p}\`` : p));
 </script>
 
+<!-- 023a: code that may break only at its punctuation (type-pieces.ts).
+     Each piece is text, so the Markdown twin and a copy are unchanged. The
+     <wbr> is hidden, so Chromium's accessible name gains no space at it. -->
+{#snippet code(text: string)}<code
+    >{#each typePieces(text) as p, i (i)}{#if i}<wbr
+          aria-hidden="true"
+        />{/if}{p}{/each}</code
+  >{/snippet}
+
 {#snippet prose(
   text: string,
-)}{#each parts(text) as p, i (i)}{#if p.startsWith("`")}<code
-        >{p.slice(1, -1)}</code
-      >{:else}{p}{/if}{/each}{/snippet}
+)}{#each parts(text) as p, i (i)}{#if p.startsWith("`")}{@render code(
+        p.slice(1, -1),
+      )}{:else}{p}{/if}{/each}{/snippet}
 
 {#if tables.length === 0}
   <p class="max-w-(--site-measure) text-muted-foreground">
@@ -35,7 +45,7 @@
     <div
       data-slot="site-scroll"
       role="region"
-      aria-label="{table.part}, API"
+      aria-label="{table.part}, {table.kind === 'module' ? 'exports' : 'API'}"
       tabindex="0"
       class="min-w-0 overflow-x-auto rounded border border-border"
     >
@@ -59,8 +69,8 @@
           {#each table.rows as row (row.name)}
             <tr>
               <td><code>{row.name}</code></td>
-              <td class="wrap-anywhere"
-                >{#if row.type}<code>{row.type}</code>{:else}<span
+              <td class="break-words"
+                >{#if row.type}{@render code(row.type)}{:else}<span
                     class="text-muted-foreground">inherited</span
                   >{/if}</td
               >

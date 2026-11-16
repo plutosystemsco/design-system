@@ -73,7 +73,7 @@
       </figcaption>
     </figure>
     <ul data-figure-dims="lockup" class="grid gap-1 text-sm">
-      <!-- source: tokens/kuiper.tokens.json, mark.lockupScale; decisions.md, E6 -->
+      <!-- source: tokens/kuiper.tokens.json, mark.lockup-scale; decisions.md, E6 -->
       <li
         data-claim="settled"
         data-dim="lockupScale"
@@ -81,7 +81,7 @@
       >
         D. The mark's size: {f(m.lockupScale)} of the word's.
       </li>
-      <!-- source: tokens/kuiper.tokens.json, mark.lockupGap; decisions.md, E6 -->
+      <!-- source: tokens/kuiper.tokens.json, mark.lockup-gap; decisions.md, E6 -->
       <li data-claim="settled" data-dim="lockupGap" data-value={m.lockupGap}>
         E. From the word: {f(m.lockupGap)} em.
       </li>
@@ -117,7 +117,7 @@
       field, use one colour: on screen, the mark takes the field's own legend,
       as below.
     </p>
-    <!-- source: 017 decision 4, the paper colourway; tokens/kuiper.tokens.json, primitives.paper -->
+    <!-- source: 017 decision 4, the paper colourway; tokens/kuiper.tokens.json, primitive.paper -->
     <p data-claim="settled">
       The paper downloads are drawn in the brand's paper, {data.canvas}, not
       white, for the colour fields and dark grounds.

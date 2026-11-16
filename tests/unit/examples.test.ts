@@ -12,6 +12,7 @@ import {
   exampleMeta,
   hasSwitch,
   importGraph,
+  isPairFile,
   shownSource,
 } from "../../src/lib/site/shown-source.ts";
 
@@ -45,12 +46,12 @@ const ALL = WITH_EXAMPLES.flatMap((i) =>
  * (`026` decision 22; `027` decision 12). They carry a pair's meta in place
  * of a title and an intro.
  */
-const isPair = (file: string) => /^(do|dont)-/.test(path.basename(file));
+const isPair = isPairFile;
 
 describe("015: examples are files", () => {
-  // 027a: link, button-group and progress join the 58.
-  test("each of the 61 items that are not blocks or compositions has at least 1 example file", () => {
-    expect(WITH_EXAMPLES).toHaveLength(61);
+  // 027a: link, button-group and progress join the 58; 026's toast, a 62nd.
+  test("each of the 62 items that are not blocks or compositions has at least 1 example file", () => {
+    expect(WITH_EXAMPLES).toHaveLength(62);
     expect(
       WITH_EXAMPLES.filter((i) => files(i.name).length === 0).map(
         (i) => i.name,
@@ -226,8 +227,8 @@ describe("027a test 5: batch A's examples and pairs", () => {
           true,
         );
       const pages = files(name)
+        .filter((f) => !isPairFile(f))
         .map((f) => path.basename(f, ".svelte"))
-        .filter((f) => !/^(do|dont)-/.test(f))
         .sort();
       expect(pages).toEqual([...ORDER[name]].sort());
     },
@@ -241,8 +242,8 @@ describe("027a test 5: batch A's examples and pairs", () => {
         "utf8",
       );
       const pairFiles = files(name)
+        .filter((f) => isPairFile(f))
         .map((f) => path.basename(f, ".svelte"))
-        .filter((f) => /^(do|dont)-/.test(f))
         .sort();
       expect(pairFiles).toEqual(
         PAIRS[name].flatMap((p) => [`do-${p}`, `dont-${p}`]).sort(),

@@ -46,7 +46,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { isListed } from "../src/lib/site/items.ts";
-import { readTokens, TOKENS_PATH } from "./tokens.ts";
+import { readTokens } from "./tokens.ts";
 
 export type Violation = {
   file: string;
@@ -308,7 +308,7 @@ function holdsLiteral(value: string): boolean {
 
 /** Reads the rules from the token file and the pinned Tailwind theme. */
 export function loadRules(root: string = process.cwd()): Rules {
-  const tokens = readTokens(path.join(root, TOKENS_PATH));
+  const tokens = readTokens(root);
   const theme = readFileSync(
     path.join(root, "node_modules", "tailwindcss", "theme.css"),
     "utf8",

@@ -103,49 +103,51 @@
     >
       <h2 id={section.id} class={h2}>{section.title}</h2>
       <p>{@render text(section.summary)}</p>
-      <!--
+      {#if section.renames.length}
+        <!--
         020b: one block per rename, read in the column. The Markdown twin
         keeps the table below, which the page never shows: a Markdown reader
         scrolls freely.
       -->
-      <dl data-md="skip" class="mt-2 grid gap-8">
-        {#each section.renames as r (`${r.kind} ${r.old}`)}
-          <div class="grid gap-2">
-            <dt class="max-w-(--site-measure) wrap-anywhere">
-              <code class="inline-block max-w-full">{r.old}</code> →
-              <code class="inline-block max-w-full">{r.new}</code>
-              <span class="text-muted-foreground">{r.kind}, {line(r)}</span>
-            </dt>
-            <dd class="grid gap-2">
-              <p><strong>Who sees it.</strong> {@render text(r.seenBy)}</p>
-              <p><strong>What to do.</strong> {@render text(r.todo)}</p>
-            </dd>
-          </div>
-        {/each}
-      </dl>
-      <!-- Plain, as api-table.svelte writes one: no class the page never shows. -->
-      <table hidden>
-        <thead>
-          <tr>
-            <th scope="col">Old name</th>
-            <th scope="col">New name</th>
-            <th scope="col">Who sees it</th>
-            <th scope="col">What to do</th>
-            <th scope="col">Old name works until</th>
-          </tr>
-        </thead>
-        <tbody>
+        <dl data-md="skip" class="mt-2 grid gap-8">
           {#each section.renames as r (`${r.kind} ${r.old}`)}
-            <tr>
-              <td><code>{r.old}</code></td>
-              <td><code>{r.new}</code></td>
-              <td>{r.kind}. {@render text(r.seenBy)}</td>
-              <td>{@render text(r.todo)}</td>
-              <td>{until(r)}</td>
-            </tr>
+            <div class="grid gap-2">
+              <dt class="max-w-(--site-measure) wrap-anywhere">
+                <code class="inline-block max-w-full">{r.old}</code> →
+                <code class="inline-block max-w-full">{r.new}</code>
+                <span class="text-muted-foreground">{r.kind}, {line(r)}</span>
+              </dt>
+              <dd class="grid gap-2">
+                <p><strong>Who sees it.</strong> {@render text(r.seenBy)}</p>
+                <p><strong>What to do.</strong> {@render text(r.todo)}</p>
+              </dd>
+            </div>
           {/each}
-        </tbody>
-      </table>
+        </dl>
+        <!-- Plain, as api-table.svelte writes one: no class the page never shows. -->
+        <table hidden>
+          <thead>
+            <tr>
+              <th scope="col">Old name</th>
+              <th scope="col">New name</th>
+              <th scope="col">Who sees it</th>
+              <th scope="col">What to do</th>
+              <th scope="col">Old name works until</th>
+            </tr>
+          </thead>
+          <tbody>
+            {#each section.renames as r (`${r.kind} ${r.old}`)}
+              <tr>
+                <td><code>{r.old}</code></td>
+                <td><code>{r.new}</code></td>
+                <td>{r.kind}. {@render text(r.seenBy)}</td>
+                <td>{@render text(r.todo)}</td>
+                <td>{until(r)}</td>
+              </tr>
+            {/each}
+          </tbody>
+        </table>
+      {/if}
       <h3 class="site-h3 mt-4">The steps, in order</h3>
       <ol class="grid list-decimal gap-6 ps-6">
         {#each section.steps as step, i (i)}
@@ -158,6 +160,7 @@
                   code={command.code}
                   lines={command.lines}
                   label={`Step ${i + 1}`}
+                  name={`${section.title}, step ${i + 1}`}
                   language={step.language ?? "bash"}
                 />
               </div>

@@ -1,6 +1,6 @@
 # 024 — Budgets per template
 
-- **Status:** Built and committed on its build branch (2026-11-16), not yet change-reviewed. The checkpoint's rulings were made by the builder under the owner's delegation and wait for the design lead (Landing notes). Review approved with changes, all applied; the owner answered Q1 to Q5 on 2026-11-15, each with the recommended option.
+- **Status:** Built; change-reviewed (`reviews/024-budgets-per-template-pr-2026-11-16.md`, land after fixes); the design lead's rulings at landing and the review's fixes applied; `release/0.13.0` at `4a0bdde` merged in and the perf project re-run on the merged tree (Landing notes). Awaiting the landing. Build step 7, the CI runner's LCP figures, is still open, and the release check holds the tag on it. The owner answered Q1 to Q5 on 2026-11-15, each with the recommended option.
 - **Date:** 2026-11-15
 - **Author:** the design lead
 - **Kind:** test harness, the perf suite only. Two new files and one rewritten file, all under `tests/` (see "Files"). **Interface changes:** none for an installed app. No registry item, token, page or dependency changes. **Not a small change,** although the roadmap calls it one (next section but one).
@@ -601,3 +601,24 @@ The change review ([`../reviews/024-budgets-per-template-pr-2026-11-16.md`](../r
 - **Finding 8:** decision 6 says "its six largest files", and that a failure is read against the last sweep's `perf-sweep.json`. **The build sweep's `perf-sweep.json` was not kept:** it went with the scratch files before the first commit. Its medians are the table above; its ten-largest-files lists are lost. The re-base sweep's file is to be kept in the scratchpad record.
 - **Finding 11:** test titles name the template and page only: `024 transfer: <template>`, `024 paint: <template>: <page>`, `024 sweep: <template>: <page>`. The budgets go in a `budget` annotation beside the `lcp` one. A unit test reads every title in `perf.spec.ts` and fails on a figure in one.
 - **Tests for the fixes.** The four release-check tests were written before `ciLcpCheck` existed and failed to load ("Export named 'ciLcpCheck' not found"). The `WASM_ALLOWED` and title tests were written with their code and proven by mutation: with `chart` added to `WASM_ALLOWED` and a `≤ ${lcp.ms} ms` put back in the paint test's title, both failed (54 pass, 2 fail), then passed once reverted.
+
+### The merge of `release/0.13.0` (2026-11-16)
+
+`release/0.13.0` at `4a0bdde` (`021`, `023a`, `026` and the context since `874c5da`) merged in with a merge commit, "024: merge release/0.13.0". Two conflicts, both ledgers: `roadmap.md`'s `024b` row (the release's written row kept, this branch's `024c`, `024d` and `024e` rows after it) and the scorecard's run log (both sides' rows kept, the release's first). `perf.spec.ts` and `budgets.ts` merged without conflict. No budget was re-based (the change review's merge note): the perf project ran once on the merged tree to see that every page still fits.
+
+`bun --bun playwright test --project=perf --no-deps`, the real config and command, 2026-11-16 01:48 to 01:54 EST, load 13 to 28 on 10 cores: **25 passed** (1 server check, 8 transfer tests over 107 pages, 16 paint tests), 6.2 minutes with the web server's build; the tests' own time **4.4 minutes** (267 s). The toast's page, `/components/toast/`, joined `component` from its sitemap entry with no edit, at 383.5 kB. Every page grew by about 0.7 to 1.2 kB (`026`'s toast on every page, and `021`'s ledgers), as `026` stated.
+
+| Template | Pages | Heaviest page | Measured | Budget | Headroom | Probes' LCP medians (budget) | CLS (budget) |
+|---|---|---|---|---|---|---|---|
+| `home` | 1 | `/` | 301.5 kB | 335 | 33.5 | 772 (860) | 0.005 (0.02) |
+| `index` | 1 | `/components/` | 350.5 | 385 | 34.5 | 2,476 (2,720) | 0 (0.02) |
+| `landing` | 3 | `/start/` | 301.4 | 335 | 33.6 | 832, 812 (1,090) | 0 (0.02) |
+| `component` | 73 | `sidebar` | 405.0 | 445 | 40.0 (Button 375.2: 69.8) | 1,068, 876, 848 (1,270) | 0.09 on `label` (0.108) |
+| `component-live` | 5 | `kuiper-theme` | 760.8 | 840 | 79.2 | 872 to 1,308 (1,490) | 0.004 (0.02) |
+| `component-heavy` | 1 | `chart` | 480.9 | 530 | 49.1 | 884 (1,010) | 0 (0.02) |
+| `leaf` | 14 | `/changelog/` | 335.4 | 370 | 34.6 | 1,016 (1,110) | 0.001 (0.02) |
+| `brand` | 9 | `/brand/downloads/` | 300.4 | 330 | 29.6 | 760, 756 (950) | 0 (0.02) |
+
+The four live-console pages, now in `component`, measure 328.4 to 332.4 kB. Every probe's throttled transfer equalled its unthrottled figure, `kuiper-theme`'s included (760.8 kB both ways on this run).
+
+**The checks on the merged tree:** `bun run check` 0 errors, 0 warnings; `bun run lint` clean; `bun test tests/unit/budgets.test.ts` 56 pass, 0 fail; `bun scripts/site/release-check.ts` exits **1**, naming the eight templates with no runner LCP figure and "024 build step 7", as ruled; `bun scripts/site/release-check.ts --before-ci` exits **0** and names the skip.

@@ -1,6 +1,6 @@
 # 021 — Tokens for everyone
 
-- **Status:** Ready to build after `020`: owner answers recorded, review approved with changes, all applied. The specification review ([`../reviews/021-tokens-for-everyone-spec-2026-11-15.md`](../reviews/021-tokens-for-everyone-spec-2026-11-15.md)) approved it with changes; all 13 findings are answered in the text, and each is listed under "Review". The owner answered its five questions on 2026-11-15; the answers are in the decisions and under "Landing notes". Committed as a specification on `release/0.13.0` (`f9e1c1a`). Not built.
+- **Status:** Ready to build after `020`: owner answers recorded, review approved with changes, all applied. The specification review ([`../reviews/021-tokens-for-everyone-spec-2026-11-15.md`](../reviews/021-tokens-for-everyone-spec-2026-11-15.md)) approved it with changes; all 13 findings are answered in the text, and each is listed under "Review". The owner answered its five questions on 2026-11-15; the answers are in the decisions and under "Landing notes". Committed as a specification on `release/0.13.0` (`f9e1c1a`). Built on its branch, 2026-11-15; awaiting the change review (Landing notes).
 - **Date:** 2026-11-15
 - **Author:** the design lead
 - **Kind:** a feature in lane T (tokens). It changes the token source's shape and adds published files. **No interface change:** every custom property, value, utility and rule an app receives is unchanged, byte for byte (decision 3). It adds no CSS token and no dependency. In the DTCG files, the script constant `EXPRESSIVE_DARK_MARKS` becomes four tokens per scheme, eight in all (decision 6), and the 48 primitives become public DTCG paths (decision 10; the owner, 2026-11-15). From 0.13.0 the DTCG paths are an interface, covered by the record (decision 10). It removes one site module, `words.ts`, whose words move into the token files (decision 9).
@@ -583,7 +583,109 @@ The memo's wrong figures are corrected in its §8, dated 2026-11-15: 18 colours 
 
 ## Landing notes
 
-Not landed.
+Built on its branch from `release/0.13.0` at `421cea7` (after `020`, `020a` and `020b`), by a builder, 2026-11-15. Not yet change-reviewed.
+
+### What was built
+
+- **The source.** `tokens/` holds the six files of decision 2. `kuiper.tokens.json` is rewritten as the DTCG base file (11 groups); `kuiper.light.tokens.json` and `kuiper.dark.tokens.json` hold `role`, `field`, `glass` and `expressive-mark`; `kuiper.resolver.json` is decision 7's resolver, verbatim; `kuiper.contrast.json` is today's `contrast` group, unchanged; `kuiper.removed.json` is the record, seeded with the 24 names. The files were written once by a conversion script in the scratchpad, from the old file and the words fixture, and the script was discarded.
+- **The lowering.** `scripts/tokens.ts` exports `readTokenFiles(root)`, `lowerTokens(files)`, `validateTokens(files)`, `flattenScheme(files, theme)` and `readTokens(root = process.cwd())`, with the path constants and `VENDOR`. `lowerTokens` checks the resolver, each file against the format's rules for the types used, the two scheme files' paths and order, every alias in each scheme (exists, same type, no cycle), then every Kuiper rule of the old validator on DTCG paths, and returns today's `Tokens` with `descriptions` and `expressiveDarkMarks` added.
+- **The build.** `EXPRESSIVE_DARK_MARKS` is gone; the mode rule reads `tokens.expressiveDarkMarks`. `build-tokens.ts` adds `kuiperCss()`, the flattened pair and the copies; `generateTokenOutputs()` returns `published` beside `registryJson` and `appCss`, and `buildTokens()` writes the 8 files to `static/r/tokens/` and `static/v0.13.0/r/tokens/`, each only when it changes.
+- **The readers.** `tables.ts` reads `tokens.descriptions`; `words.ts` is deleted; the search source imports the five files and calls `lowerTokens`; the Foundations index reads through `readTokens()`; `lint-literals.ts` and `build-tokens.ts` pass `root`; the smoke loop edits `motion.micro.$value.value`; `generated.test.ts`'s spring test reads the DTCG group; the brand pages' source comments name the new paths, and `brand-sources.test.ts` accepts them; `scripts/bench/kuiper.ts`'s token block reads either shape.
+- **The site.** `/foundations/tokens/`'s first paragraph names the files; a new last section, "Use the tokens anywhere", links `kuiper.css`, the resolver, the two flattened files and the record at `SITE_REGISTRY`, and gives the three address forms. One page gains weight (a section of text and five links); no template's every page does.
+- **The record's scope.** `020`'s `RENAMES` holds 0 custom-property rows, so the record holds exactly the 24.
+- **Counts in the files.** 224 colours (48 primitives, 61 roles × 2, 16 code slots, 8 field colours × 2, 7 glass colours × 2, 4 expressive-mark colours × 2); 18 unit extensions (13 `em`, 5 `vw`); 317 tokens across the three files; every role, code slot, group and file described (286 `$description` keys across the three files).
+
+### Deviations, each with its reason
+
+1. **`lowerTokens(files)` takes the parsed files keyed by their names in `tokens/`** (`"kuiper.resolver.json"`, …), and follows the resolver's `$ref`s. The specification gave no shape; keyed by name, `031`'s added files need no new signature. `readTokenFiles(root)` and `flattenScheme(files, theme)` are exported beside it, for the build and the tests.
+2. **The validator is a little stricter than decision 12 lists,** each for a rule the lowering relies on: every file and group must carry a `$description` (T6, enforced at build too); Kuiper's dimensions must be `px` (the CSS divides by 16); a primitive and a ladder step are literals, never aliases; the display family aliases a `font.family` token; the scheme files' roles carry equal words (T4, enforced at build too).
+3. **T17 launches Firefox and WebKit itself** from each Chromium theme project, since `playwright.config.ts` is `022`'s file. When `022`'s engine projects land, the test can use its project's browser alone.
+4. **T12 counts a font item's `font.variable` as shipping it.** `--font-sans`, `--font-heading` and `--font-mono` never sat in a theme item; the font items carry them. Names first shipped before 0.4.0 take their `since` from the tags' `src/app.css` (`v0.1.0` to `v0.3.0`), which T12 allows ("0.4.0 or earlier").
+5. **Two existing tests' scopes are narrowed,** which criterion 19 did not foresee. `registry.test.ts`'s 016 test (no "amber" in `tokens/` or `static/r/`) skips `kuiper.removed.json`: the record must name `--syntax-amber` (decision 10). `generated.test.ts`'s 012 class-token test skips the published DTCG JSON: a token named `glass.rim` and the scrim's words ("The veil behind a dialog") read as the removed classes `rim` and `veil`. `kuiper.css` stays in both scans.
+6. **`020`'s allowlist (`tests/fixtures/pluto-allowed.json`) gains two entries and one count:** the vendor key `co.plutosystems.kuiper` (1,152 uses, brand, before `\bplutosystems\b`), the lifecycle test's `pluto-theme.json` (1, history), and `plutosystemsco` 249 → 250 (`kuiper.css`'s source line). The vendor-key count grows with every token a later specification adds.
+7. **The changelog's new-files bullet gives the folder, `/v0.13.0/r/tokens/`, once,** and each file by its name, not each file's absolute workers.dev URL. The address moves once (Risks), the allowlist's changelog count holds, and a full path in inline code widened `/changelog/` past a 360 px screen (`site.spec.ts`, criterion 9 of `015`, seen failing at 408 px). The tokens page gives the absolute URLs, each `wrap-anywhere`, after the same check saw it at 586 px.
+8. **`lint-literals.ts` changes in two lines,** not one: the call, and its import, which no longer names the unused `TOKENS_PATH`.
+9. **The thumbnail manifest's four hashes are rewritten** (`kuiper-theme` and the three font items), by `thumbnails.ts --hash-only`: their example graphs read `scripts/tokens.ts`. The pictures are unchanged, since the CSS is.
+10. **The hash fixture also holds `static/v0.13.0/r/styles/maia/kuiper-theme.json`,** which decision 3 names among the byte-identical files.
+11. **The bench's old-shape `groups` reads 13 at `ea1f9bd`,** not the 14 decision 14 assumed: the old file has 13 top-level keys. The new shape reads 15.
+12. **Decision 16 (c), the Penpot import, was not run.** It is the design lead's, in Penpot's interface, and this build had none. Row 12 stays 0 until it is run (criterion 21); the change review or the design lead records the result here.
+
+### Tests first
+
+Recorded before any code, on the tree at `421cea7` with the three fixtures written:
+
+- `tokens-dtcg.test.ts` (T1–T6): 0 pass, 24 fail. Six subtests that first passed vacuously on the missing files were given a non-empty guard and seen failing.
+- `tokens-unchanged.test.ts` (T7, T8, criterion 6): 4 pass (T7's comparison and T8's three, the guards), 3 fail (T7's new fields, criterion 6's two).
+- `tokens-published.test.ts` (T9–T11): 0 pass, 12 fail.
+- `tokens-lifecycle.test.ts` (T12–T14): 0 pass, 9 fail.
+- `tokens.test.ts` (T15, rekeyed): 14 fail (every failure case, rewritten on the DTCG files, and "validates"); 30 pass (assertions on the lowered object, regression guards).
+- `registry.test.ts`: the 2 changelog checks of criterion 18 fail. `generated.test.ts`: the spring test fails on the new path. `brand-sources.test.ts`: passes (the widened pattern is a guard).
+- `tokens-files.spec.ts` (T16, T17): 10 of 10 fail, in both theme projects (T17's blank page never loads `kuiper.css`).
+
+**The mutation proofs** (on the built files, restored after each):
+
+1. `primitive.paper` one step, `#F3F0E8` → `#F3F0E9` with its components: T7's comparison fails; T8's fresh build fails. T2 passes, as it should: the colour is consistent.
+2. Two roles swapped in the dark file alone (`background`, `foreground`): the validator rejects the order, so T7 (2), criterion 6 (2) and T8's fresh build fail, and T4 (2). The same swap in both scheme files, which validates: T7's comparison fails on key order, and T8's fresh build fails.
+3. `--shadow-elevation` deleted from `kuiper.css`'s `.dark`: T9 fails (fresh build, and the `:root`/`.dark` order and counts), and T10's two-folder identity. In the served copy, T17's nested case fails in all three engines: the nested hairline reads `rgb(133, 126, 112)`, the light one.
+
+### The checks outside the tree (decision 16)
+
+Run 2026-11-15 in the scratchpad, outside `bun.lock` and `package.json`; nothing kept in the tree.
+
+- **(a) Ajv 8.17.1** (one instance per schema, `strict: false`; the schemas fetched that day, both 200 `application/json`): `kuiper.tokens.json`, `kuiper.light.tokens.json`, `kuiper.dark.tokens.json`, `kuiper.flat-light.tokens.json` and `kuiper.flat-dark.tokens.json` valid against `format.json`; `kuiper.resolver.json` valid against `resolver.json`. A control `dimension` in `em` is rejected. Ajv warns that it ignores the schemas' `uri-reference` and `json-pointer-uri-fragment` formats.
+- **(b) `@terrazzo/cli` 2.10.0, `tz check`:** "No errors" on each flattened file. A control copy of the dark file with `{primitive.blu-lifted}` fails ("Could not resolve alias").
+- **(c) Penpot:** not run (deviation 12).
+
+### Figures
+
+- **Byte-identical CSS:** T8 passes. `src/app.css`, `static/r/styles/maia/kuiper-theme.json`, its `static/v0.13.0/` copy and the four `registry.json` items hash as at `421cea7`. `bun run build:tokens` run twice: the first wrote the 16 published copies and nothing else; the second wrote 0 files. `git diff` shows no change to `src/app.css`, `registry.json` or `static/r/styles/`.
+- **`kuiper.css`:** `:root` holds `src/app.css`'s `:root` plus 24 declarations; `.dark` its `.dark` plus 1.
+- **The bench** (criterion 17), working tree: `primitives` 48, `themes` light and dark, `rolesPerTheme` 61, `rolesWithWords` 61, `groups` 15, `contrastPairs` 129, `dtcgValueKeys` 317, `dtcgTypeKeys` 317, `descriptionsInFile` 286. At `ea1f9bd` (`020`'s test 19): 48, light and dark, 61, 61, 13, 0, 0, 0, 129, as logged. At a commit with neither shape: exits 1, naming the commit.
+
+### The change review's fixes (2026-11-16)
+
+The change review ([`../reviews/021-tokens-for-everyone-pr-2026-11-15.md`](../reviews/021-tokens-for-everyone-pr-2026-11-15.md)) says land; its five findings are Low. Findings 1 to 3 are applied in "021: the review's fixes". Finding 4 is recorded in `031`, by the coordinator. Finding 5 stays as deviation 12: the Penpot import is the owner's and the design lead's.
+
+1. **"Use the tokens anywhere"** gives each file as a list item with its own words: `:root` and `.dark` are in code, and the resolver's item names and links the three files it needs, in the same folder. The three addresses of `kuiper.css` are a list, each address on its own line. Seen at 1440 and 390 in both themes: no sideways scroll, every address wraps inside the column.
+2. (a) **The 016 amber scan drops only the names `--syntax-amber` and `--color-syntax-amber`** from `kuiper.removed.json`'s text and scans the rest. Proven by mutation: `#F19E20` written into a note fails the test. (b) **The changelog reads `/v0.13.0/r/tokens/<name>`** (`/r/tokens/<name>` for the latest release).
+3. **The validator rejects `alpha: 1`:** "its alpha must be below 1; leave it out for an opaque colour". A new T15 case, seen failing first (the lowering returned `#0B0F17FF`), then passing.
+
+Re-run after the fixes: `bun run check` 0 errors; lint clean; the token unit files with `registry`, `rename`, `search` and `tokens-pages`, 226 pass, 0 fail (one 5 s timeout in T9 at load average 98, passing alone); `tokens.spec.ts` and `tokens-files.spec.ts` in light and dark, 96 passed, 4 skipped; `build:tokens` reports no changes.
+
+### The merge of `release/0.13.0` (2026-11-16)
+
+`release/0.13.0` at `a30ffa7`, after `027a` and `026`, is merged into this branch as `c5df65b`, following the change review's merge notes. Five files conflicted:
+
+- `tests/unit/registry.test.ts`: the release's file kept whole; `021`'s narrowed amber skip applied to its 016 test; `021`'s criterion 18 block appended after it.
+- `CHANGELOG.md`: `027a`'s three bullets and `026`'s, then `021`'s two, in landing order.
+- `tests/fixtures/pluto-allowed.json`: counts derived from the rename test after `git add`. `plutosystemsco` is 263: the release's 262 and `kuiper.css`'s source line. The vendor key holds at 1,152; the lifecycle test's entry at 1.
+- `src/lib/site/thumbnails/manifest.json`: the release's side, then `thumbnails.ts --hash-only`, which rewrote the same four hashes (`kuiper-theme` and the three font items).
+- `context/research/benchmark-scorecard.md`: every run-log row kept, in landing order; the "In short" line names `020`, `027a`, `026` and `021`.
+
+After the merge, `build:tokens` reports no changes, and `build:registry` keeps `static/r/tokens/` and `static/v0.13.0/r/tokens/` (8 files each).
+
+On the merged tree:
+
+- `bun run check`: 0 errors, 0 warnings (2,267 files). `bun run lint`: clean. Literal lint: 0 violations, 1 allowance.
+- Unit: 1,401 pass, 2 skip, 4 fail (1,407 tests, 49 files). The 4 were `thumbnails.test.ts` hash tests at the 5 s timeout; run alone, 10 of 10 pass at the default timeout.
+- `tokens.spec.ts`, `tokens-files.spec.ts` and `build-output.spec.ts`, light and dark: 119 passed, 4 skipped.
+- The perf project: 5 passed (home, the components index, Button, code block, the Colour page).
+- Smoke: 139 pass, 0 fail. The release check exits 0.
+- The scorecard at `c5df65b`: rows 3 2 1 2 4 4 2 4 3 3 3 0 1 3, total 35. Row 5 is 4, row 12 0. `site.ts --only kuiper`: Button 375 kB, LCP 868 ms, the part at 572 (1440) and 661 (390). `kuiper.ts --rev c5df65b`: tokens as at `b37dcf4`, 80 registry entries, 34 interface marks.
+
+### The suites
+
+On the final tree, 2026-11-15, on a machine shared with other builds (load average 35 to 70):
+
+- `bun run check`: 0 errors, 0 warnings (2,198 files). `bun run lint`: clean. Literal lint: 0 violations, 1 allowance (L24), unchanged.
+- `bun run test:unit`: 1,319 pass, 0 fail, 2 skip (1,321 tests, 43 files). Under the heaviest load, four `thumbnails.test.ts` hash tests timed out at 5 s and `highlight-session.test.ts`'s 4 ms budget failed; the same four fail the same way on an export of `421cea7` under the same load, and all pass in the final run.
+- `bun run test:e2e`, the light, dark and perf projects: 3,114 tests; first run 2,986 passed, 114 skipped, 9 failed, 5 (perf) not run. The 9: `site.spec.ts`'s sideways-scroll check at 360 and 390 in both themes (4), on `/foundations/tokens/` and `/changelog/`, which deviation 7 fixed, and which pass on re-run; T17 in Firefox (a 30 s timeout under load), `chat.spec.ts` L1, and three `bar-glass.spec.ts` 1440 blurs (30 s timeouts), each passing on re-run alone. The re-run of `site`, `tokens-files`, `chat` and `bar-glass` after the fix: 165 passed, 1 failed (one bar-glass 1440 timeout, passing alone, at 8.4 s). The perf project alone: 5 passed. `build-output`, `axe` and `keyboard` on the changed pages after the fix: 31 passed.
+- `bun run test:smoke`: 139 pass, 0 fail (`dev-loop.test.ts` on the DTCG file included).
+- `scripts/site/release-check.ts`: exits 0.
+
+**The scorecard** (criterion 21), run at `b37dcf4` (`kuiper.ts --rev b37dcf4`; run log row of 2026-11-15): row 5, Tokens, 1 → 4 ((c), (d), (f) and (g) join (a), (b) and (e): 7 of 7), tying Primer; row 12 holds at 0, since the Penpot import was not run (deviation 12). Total 32 → 35. Every other row holds. `roadmap.md` is the design lead's to re-rank.
+
+Ledger files touched, each append-only: `CHANGELOG.md` (two bullets at the end of 0.13.0), `static/r/tokens/` and `static/v0.13.0/r/tokens/` (new folders, written by `build:tokens`). `registry.json`, the sitemap and the upgrade guide are untouched. Two shared fixtures also change and may conflict at merge: `tests/fixtures/pluto-allowed.json` (deviation 6) and `src/lib/site/thumbnails/manifest.json` (deviation 9); regenerate the second with `thumbnails.ts --hash-only` after merging.
 
 ### The owner's answers (2026-11-15)
 

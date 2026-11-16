@@ -6,7 +6,7 @@ Each product brings its own identity: its logo, its name and its words. The app 
 
 ## What is here
 
-- `tokens/kuiper.tokens.json`: the one source of every colour and size, light and dark.
+- `tokens/`: the one source of every colour and size, light and dark, in the W3C Design Tokens format (DTCG 2025.10). `kuiper.resolver.json` combines `kuiper.tokens.json`, the tokens both schemes share, with `kuiper.light.tokens.json` or `kuiper.dark.tokens.json`; `kuiper.contrast.json` holds the contrast rules the tests check; `kuiper.removed.json` records every name that shipped and is gone. Each release publishes them, with `kuiper.css`, under `/r/tokens/`.
 - `registry.json` and `src/lib/registry/`: the registry's items. Today 63, in ten groups: foundation (`kuiper-theme`, `theme`, three font items, `utils`, `four-dot`), actions, surfaces, feedback, forms, code, data, navigation, chat and blocks. A block is a whole page or section (sign in, sign up, a hero, page states, a settings form, an app shell, a chat pane) that installs as a route plus its components. Every colour and size in them comes from the token file.
 - `src/routes/`: a preview app, one page per item, in both themes. A block's page embeds it live at phone, tablet and desktop widths; the chrome-less `/view/<block>/` routes are what the frame shows. It is not a website.
 - `context/`: the research, specifications, reviews and decisions this code is built from. Read [`context/README.md`](context/README.md) first.

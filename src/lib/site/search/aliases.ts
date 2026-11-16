@@ -4,7 +4,7 @@
  * says "Also called <alias>".
  *
  * An alias names a part this system has, and only that part: never a part
- * it lacks ("toast"), and never another item ("toggle" is Toggle). Or it is
+ * it lacks ("combobox"), and never another item ("toggle" is Toggle). Or it is
  * the old name of a renamed item, which leads to the item's new page until
  * the old name goes (020 decision 10). It does not start a word of another
  * page's title. `search.test.ts` checks the list against a fixture
@@ -22,6 +22,9 @@ export const ALIASES: readonly SearchAlias[] = [
   // 027a decision 12: the link's other names.
   { alias: "hyperlink", path: "/components/link/" },
   { alias: "anchor", path: "/components/link/" },
+  // 026 decision 22: Material's name for a toast, and the generic one.
+  { alias: "snackbar", path: "/components/toast/" },
+  { alias: "notification", path: "/components/toast/" },
 ];
 
 /** A page's aliases, in the list's order. */
