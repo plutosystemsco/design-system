@@ -24,7 +24,7 @@ The scorecard's rows 1–14 read 37 (32 at `020`), row 15 reads 2. Button is abo
 
 **Still building when the night ended** (worktrees in `.claude/worktrees/`, not merged):
 
-- `024e`, `022a`, `022e`, three lane-I small changes (built, not yet reviewed).
+- `024e`, `022a`, `022e`, three lane-I small changes: built and committed on `worktree-agent-a3f878ca5d391520b` (`c93e994`, `a22da47`, `be7003d`, from `1a116a4`), each seen failing first, gate green. They wait for one change review, then a merge with the release (expect conflicts in the ledger, the thumbnails manifest, `budgets.ts` and the cost report). The reviewer checks the builder's four calls: `use-highlighted-code` also leaves the live template (component-live LCP falls to 1,010 ms); a text-only sidebar box gets `tabindex="0"`; N5 now expects `-1`; and runs `bun run cost --only sidebar`. With them the highlighter page falls 532 → 359 kB and the ledger to 2 lines (`022f`).
 
 **Specs ready to build next:** `028` forced colours (amended overnight: `code-block` joins it; text on state fills uses the inverted pair with `forced-color-adjust: none`, option A), `029` scoped schemes (then `029a`), `030` the accessibility status (after the re-base sweep), then lane T in order `031a`, `031b`, `031`. Queued small changes and specs: `022f` (Firefox editor budgets, needs a quiet machine), `024f` (example source off first paint, a spec), `024g` (theme font fallbacks, a spec), `024h` (landings' preload), and one re-base sweep after `024e` lands, before `030`.
 
