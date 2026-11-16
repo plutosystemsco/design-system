@@ -3,7 +3,7 @@
 Reviews [`specifications/022q-the-speech-suites-own-faults.md`](../specifications/022q-the-speech-suites-own-faults.md) before it is built. Its research is [the first speech verdicts](../research/2026-11-16-the-first-speech-verdicts.md) (*the memo*) and [the fourth matrix run](../research/2026-11-16-the-fourth-matrix-run.md). This reviewer wrote neither the specification nor its research (constitution §5).
 
 - **Date:** 2026-11-16
-- **Status:** in review
+- **Status:** dispositioned; does not land yet: new findings 16 and 17 (Medium) stand
 - **Reviewer:** a reviewer; not the author
 - **Reviewed:** the specification as drafted (76 lines, untracked), on `release/0.13.0` at `c5cdd65`. Checked against:
   - `022` decisions 10 to 16, its criteria 13, 15 and 22, and its Q9 rehearsal notes (step 5 of its landing notes);
@@ -115,3 +115,40 @@ Does not land yet: findings 1 to 5 (High) stand: O2 must judge the sentinel befo
 
 ## Disposition
 
+The specification was rewritten on 2026-11-16 to answer all fifteen findings. This re-check reads the rewrite (94 lines, untracked) against each finding and against the code read above. Nothing new was run.
+
+1. **Closed.** Decision 1 now orders O2: got in, moved, the sentinel, then the stall. A leaking walk faults at step 3, before any stall evidence. Criterion 1 holds the leaking walk as a guard that faults O2. Criterion 7 asks for the patch 6 dispatch.
+2. **Closed, for a reader that never moved.** "Moved" is now read from the steps alone. It needs an overlay text other than the focused element's. Criterion 1 holds ten copies of the focused element's phrase as an X0 guard. Finding 16 is about a reader that never got in, a separate gap.
+3. **Closed.** The selector adds `[role="heading"]` and the `aria-labelledby` and `aria-describedby` targets. The trigger-named action counts for "moved" and the stall. `steps(n, { trigger })` names the trigger. INFERRED: the memo's walks now pass. VoiceOver's dialog walk moves from the Name field to Cancel and ends on "Close". VoiceOver's alert-dialog walk moves from Cancel to "Delete project" and ends on "end of Delete pluto-sandbox? …", which holds the title. NVDA's alert-dialog walk ends on "Delete project". A first step that repeats the focused element is harmless, because "moved" looks at any step.
+4. **Closed.** NVDA+Space, read back, and pressed again on "focus mode". NVDA keeps that key, so nothing reaches the page. `exitFocusMode` is named as unused inside an overlay. The dry check that the overlay is still open cannot fail, since the dry reader presses nothing. The proof is criterion 6's NVDA rows.
+5. **Closed.** Decision 7 now splits by reader. VoiceOver keeps two captures and drops the stale repeat at the join, and criterion 1 has a unit case for that.
+6. **Closed.** Decision 7 states patch 7's VoiceOver risk in advance, with `022` decision 15's four steps. Criterion 7 records the outcome. Decision 10 is qualified.
+7. **Closed, as asked.** The chart test now has a 10-minute timeout. That raises a new conflict with the shard deadline: finding 17.
+8. **Closed.** S6 now waits, bounded, until the success toast is gone. It records that as a fact, then judges the Escape that returns focus. Criterion 4 runs the wait dry. The bound is unnamed: finding 18.
+9. **Closed.** Item text is recorded under VoiceOver only, and cleared at each window's start. NVDA records nothing, and decision 8 says so.
+10. **Closed.** The cover is now defined, and records its hit. The "no click" X0 applies only under NVDA, which is right: the VoiceOver helper clicks nothing (READ, `navigateVoiceOverToWebContent.js`). Under VoiceOver only the URL check applies. Criterion 3 is a browser check, seen failing first. How a fault in `open` becomes X0, and why it never fires dry, is unstated: finding 18.
+11. **Closed.** Decision 9 gives the measured split (19, 17, 19, 16, 16), the 32 and 18 minute figures, criterion 22's bar re-measured, the two waves, and the warning about sharing slots with a dispatch. It leaves out the chart test's new cost: finding 17.
+12. **Closed.** Commas become spaces, before whitespace collapses.
+13. **Closed, with a slip.** Decision 5 names the rules that take a list and what each does with one. U1 is given a meaning, but it is missing from the list of rules that take one: finding 18.
+14. **Closed.** The Scope section is added. It covers all six `tests/fixtures/ci/*.json` files (READ: each names six `voiceover` jobs today) and a pointer line in `022`'s decision 12.
+15. **Closed, with one gap.** The memo's walks are named as fixtures. The guards are labelled as passing before and after. "The last step's phrase" is defined. But *the memo* §2 quotes only the steps. "Got in" also reads the `open` window, so the fixtures need those windows too: finding 18.
+
+**New findings from the rewrite**
+
+16. **Medium: the overlay's name, or a text inside the trigger's name, can meet "got in"** (decision 1, step 1, and its texts paragraph).
+    The title is now an inside text, through `aria-labelledby`. The `open` window speaks it whenever O1 holds. Only a text *equal* to the trigger's name is left out. So "got in" holds for any reader that announced the title, wherever its cursor went. Substring matching makes this worse.
+    Failure: INFERRED, the sheet example. The trigger is "Open navigation" and the title is "Navigation". Take a reader that speaks the title on opening but whose walking cursor stays on the trigger, the shape `022` Q9 closed. `open` holds "Navigation, dialog", so got in passes. Each step's "Open navigation button" holds the overlay text "navigation", which is not the focused link's "Components", so moved passes. No sentinel is spoken. The last step holds "navigation", so the stall passes. The result is a **pass** with the walk never inside. The alert dialog is the same: the title is in `open`, and "Delete project button", repeated from the trigger, meets moved and the stall. Decision 1's "cannot reach the trigger from inside" argument holds only if the reader really got in.
+    Fix: in step 1, leave out the overlay's name and every text that the trigger's name holds, compared normalised. Then "got in" must come from a focused or walked element inside: "Components", "Cancel", "Name". Do the same for "moved" and the stall, except for trigger-named elements, which step 1 now guards. Add to criterion 1 a guard that returns X0: an `open` window that holds only the title, then ten copies of the trigger's phrase.
+
+17. **Medium: the chart test's 10-minute timeout does not fit the 40-minute deadline of shard 1** (decisions 6 and 9; `playwright.sr.config.ts:35`).
+    EXECUTED (the `--list` above): the chart test is in shard 1, with 18 others, three of them O2 walks. CI retries twice. Decision 9's 32 minutes uses 1.69 minutes for every test. The chart test alone can take three 10-minute attempts.
+    Failure: INFERRED. The chart test fails on all three attempts, either honestly or by timeout. Shard 1 then needs about 18 × 1.69 + 3 × 6 to 10 = 48 to 60 minutes. The 40-minute deadline stops it and leaves tests not run, as in run 4. Criterion 6's "every shard ends inside its limit" fails.
+    Fix: count the chart test in shard 1's estimate. Then bound it, for instance with a 7-minute timeout (25 × 14 s plus the open) and one retry for this test alone. State that exception to decision 10's "retries do not change". Or move the walk's start to the figure, so fewer steps are needed. Show shard 1's worst case inside 40 minutes.
+
+18. **Low: four write-ins.**
+    - Criterion 1: *the memo* gives no `open` windows. Take them from run 4's logs, where each failure prints its windows (READ, `fixtures.ts:222–225`). Or label the fixtures constructed.
+    - Decision 3: say how `open` records its X0, for example a fault pushed and judged at once. Say that it never fires in a dry run, whatever `SR_READER` is. Run criterion 3 in Chromium and Firefox, NVDA's two browsers.
+    - Decision 6: give S6's bound, longer than `026`'s 6 s minimum plus the exit, for example 10 s.
+    - Decision 5: add U1 to the rules that take a list.
+
+**Closing verdict.** Does not land yet: findings 1 to 15 are closed. New findings 16 (Medium: "got in" can be met by the title or by a text inside the trigger's name, which reopens `022` Q9's case) and 17 (Medium: the chart test's timeout and retries can push shard 1 past its 40-minute deadline) stand. Finding 18's write-ins should go in with them.
