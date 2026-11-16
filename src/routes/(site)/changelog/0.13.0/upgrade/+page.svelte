@@ -10,6 +10,7 @@
     SECTIONS,
     UNCHANGED,
     UNTIL,
+    VERSION,
     WHO,
   } from "#lib/site/upgrade/0.13.0";
   import type { Rename } from "#lib/site/upgrade/renames";
@@ -30,13 +31,21 @@
     { id: "unchanged", title: "What did not change" },
   ];
 
-  /** When the old name stops working. */
+  /** When the old name stops working: the twin's table column. */
   const until = (r: Rename) =>
     r.alias !== "none"
       ? r.alias
       : r.kind === "site page"
         ? "Redirects, always"
         : "Now";
+
+  /** The same, as the end of a rename's line on the page (020b). */
+  const line = (r: Rename) =>
+    r.alias !== "none"
+      ? `works until ${r.alias}`
+      : r.kind === "site page"
+        ? "redirects, always"
+        : `removed in ${VERSION}`;
 
   const commands = (id: string) =>
     data.sections.find((s) => s.id === id)?.steps ?? [];
@@ -95,32 +104,50 @@
     >
       <h2 id={section.id} class={h2}>{section.title}</h2>
       <p>{@render text(section.summary)}</p>
-      <Table.Root label="Renamed names">
-        <Table.Header>
-          <Table.Row>
-            <Table.Head>Old name</Table.Head>
-            <Table.Head>New name</Table.Head>
-            <Table.Head>Who sees it</Table.Head>
-            <Table.Head>What to do</Table.Head>
-            <Table.Head>Old name works until</Table.Head>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {#each section.renames as r (`${r.kind} ${r.old}`)}
+      <!--
+        020b: one block per rename, read in the column. The Markdown twin
+        keeps the table below, which the page never shows: a Markdown reader
+        scrolls freely.
+      -->
+      <dl data-md="skip" class="mt-2 grid gap-8">
+        {#each section.renames as r (`${r.kind} ${r.old}`)}
+          <div class="grid gap-2">
+            <dt class="wrap-anywhere">
+              <code class="inline-block max-w-full">{r.old}</code> →
+              <code class="inline-block max-w-full">{r.new}</code>
+              <span class="text-muted-foreground">{r.kind}, {line(r)}</span>
+            </dt>
+            <dd class="grid gap-2">
+              <p><strong>Who sees it.</strong> {@render text(r.seenBy)}</p>
+              <p><strong>What to do.</strong> {@render text(r.todo)}</p>
+            </dd>
+          </div>
+        {/each}
+      </dl>
+      <div hidden>
+        <Table.Root>
+          <Table.Header>
             <Table.Row>
-              <Table.Cell class="align-top"><code>{r.old}</code></Table.Cell>
-              <Table.Cell class="align-top"><code>{r.new}</code></Table.Cell>
-              <Table.Cell class="min-w-48 align-top whitespace-normal"
-                >{r.kind}. {@render text(r.seenBy)}</Table.Cell
-              >
-              <Table.Cell class="min-w-48 align-top whitespace-normal"
-                >{@render text(r.todo)}</Table.Cell
-              >
-              <Table.Cell class="align-top">{until(r)}</Table.Cell>
+              <Table.Head>Old name</Table.Head>
+              <Table.Head>New name</Table.Head>
+              <Table.Head>Who sees it</Table.Head>
+              <Table.Head>What to do</Table.Head>
+              <Table.Head>Old name works until</Table.Head>
             </Table.Row>
-          {/each}
-        </Table.Body>
-      </Table.Root>
+          </Table.Header>
+          <Table.Body>
+            {#each section.renames as r (`${r.kind} ${r.old}`)}
+              <Table.Row>
+                <Table.Cell><code>{r.old}</code></Table.Cell>
+                <Table.Cell><code>{r.new}</code></Table.Cell>
+                <Table.Cell>{r.kind}. {@render text(r.seenBy)}</Table.Cell>
+                <Table.Cell>{@render text(r.todo)}</Table.Cell>
+                <Table.Cell>{until(r)}</Table.Cell>
+              </Table.Row>
+            {/each}
+          </Table.Body>
+        </Table.Root>
+      </div>
       <h3 class="site-h3 mt-4">The steps, in order</h3>
       <ol class="grid list-decimal gap-6 ps-6">
         {#each section.steps as step, i (i)}

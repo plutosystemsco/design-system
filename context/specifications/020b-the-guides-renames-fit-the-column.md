@@ -1,6 +1,6 @@
 # 020b — The guide's renames fit the column
 
-- **Status:** Ready to build after `020a`.
+- **Status:** Built on its branch; awaiting the change review.
 - **Date:** 2026-11-15
 - **Author:** the design lead
 - **Kind:** small change (AGENTS.md: a fix with no interface change, no new token or dependency, on one page). No research memo and no spec review. Its check is seen failing first, and the built change is reviewed by someone who did not write it (constitution §5).
@@ -43,4 +43,58 @@ The axe scan of the page, its Markdown twin test and the perf budget must stay g
 
 ## Landing notes
 
-Not yet landed.
+Built on its branch from `release/0.13.0` at `082f65c`. The guide, its data and the test file are the same there as at `44cec73`.
+
+### Seen failing first
+
+The test went in first, with the page unchanged. All 6 cases failed: 1440, 390 and 320, in light and dark. Assertion 1 named the table's scroller, 1,053 px wide, at every width:
+
+```
+Error: in the 608 px column
++   "div[data-slot=table-container] \"Old name New name Who sees it Wh…\": 1053 > 608",
+Error: in the 358 px column
++   "div[data-slot=table-container] \"Old name New name Who sees it Wh…\": 1053 > 358",
+Error: in the 288 px column
++   "div[data-slot=table-container] \"Old name New name Who sees it Wh…\": 1053 > 288",
+```
+
+Assertion 2 failed too, at every width. Of the 76 parts it reads (19 renames, four parts each), it found 38 unread at 1440, 47 at 390 and 52 at 320. At 1440 these were every "who sees it" and every "what to do". At 390 and 320 some new names were cut as well, such as `kuiper:field-set`. The page itself never scrolled sideways: the table's own container did.
+
+### The fix
+
+In `src/routes/(site)/changelog/0.13.0/upgrade/+page.svelte`, the `{#each section.renames}` loop is now a `<dl>` with one `<div>` per rename, in the same order:
+
+- **`<dt>`:** `old` → `new`, both in code, then, muted, the kind and its end: "works until 0.14.0", "removed in 0.13.0", or, for the two site pages, "redirects, always". All on one line that wraps.
+- **`<dd>`:** two paragraphs, "**Who sees it.**" and "**What to do.**", each followed by the existing text. The lead-in is the page's own `<strong>` pattern ("What does not keep working.").
+- **Spacing:** `gap-8` between renames and `gap-2` inside one. These are the page's utilities. There are no rules between blocks.
+
+Nothing else on the page changed. `renames.ts` and `0.13.0.ts` are untouched.
+
+### Rulings during the build
+
+1. **The twin keeps its table through a hidden copy.** The twin is made from the built page's `<main>` (`scripts/site/markdown.ts`), so a `<dl>` alone would turn its table into `**term**: text` lines. To keep the table as the spec says, the old table stays on the page inside `<div hidden>`, with its styling classes removed. It is not drawn and not in the accessibility tree, and it renders from the same rows, so it cannot disagree with the list. The `<dl>` carries `data-md="skip"`. **The built twin is byte-identical** to the one before the change (`cmp`). A new case, "the Markdown twin keeps the table, and only the table", checks this. `markdown.ts` was not changed: that would touch every page.
+2. **What assertion 1 reads.** Read literally ("every element has `scrollWidth <= clientWidth + 1`"), it also fails, at 1440 only, on step 2's paragraph: 532 > 528. The code span `-o` breaks after its hyphen. The theme's `box-decoration-clone` padding on the broken span's first piece then overhangs the 33 rem measure by 4 px. It stays inside the 608 px column, and nothing is cut or scrolled. So the test checks the two things the spec is after. First, an element that clips or scrolls holds no more than its own width. Second, every other element stays inside the column. A code block's inside is not counted, since it keeps its own focusable, named scroller (015 criterion 26). The literal run's output is kept with the screenshots (see below).
+3. **The names on the `<dt>` line are `inline-block` and `max-w-full`, and the line has `wrap-anywhere`.** These are existing utilities, and `wrap-anywhere` is the site's precedent for code (`/start/install/`). As plain inline code, `kuiper-design-system` broke at its hyphen at 320 and overhung the column by 4 px. As a block, each name moves whole to the next line, and only a name longer than the column breaks.
+4. **020 test 2 now reads the list.** Its selector changed from `[data-section="020"] table code` to `[data-section="020"] dl dt code`. Otherwise it would read the hidden copy and pass whatever the reader sees. 020's test 17 is unchanged and passes.
+5. **The end of the line.** The spec gives "works until 0.14.0" or "removed in 0.13.0". The two site pages say "redirects, always", as the table said ("Redirects, always"). Their old addresses are not removed.
+
+### Checks
+
+- **`upgrade.spec.ts`** (light and dark): 28 passed: 020's 10 cases, 020b's 3 widths and its twin case, each in both projects (20 + 6 + 2).
+- **axe on the guide**, at every width the suite uses, light and dark: 6 passed.
+- **`build-output.spec.ts`**, the twins' tests among them: 27 passed. Its config runs this spec in the light project only.
+- **Perf** (`--project=perf --no-deps`): 5 passed. The guide has no budget of its own. Every budget page is as at `020a`: Button 373 kB of 382, home 300, components 348, code-block 347, Brand colour 295. The guide's HTML is 96,151 bytes (12,345 gzipped).
+- **Unit:** 1,256 pass, 2 skip, 4 fail, of 1,262, with the machine's load average between 70 and 140. All four failures are timing tests on code this change does not touch:
+  - two `thumbnails.test.ts` mutation cases, past bun's 5 s timeout. Run alone with `--timeout 60000`, that file passes 10 of 10.
+  - the highlighter's streaming and first-pass budgets. These still fail alone under the same load, as in `020a`'s notes.
+  - The stray-`pluto` test failed once, on scratch logs left in the tree. It passes once they are removed.
+- **check:** 0 errors, 0 warnings, 2,190 files. **lint:** clean.
+
+### Screenshots
+
+Light and dark at 1440, 390 and 320, before (`before-*`) and after (`after-*`), each as a viewport shot at the section's start (`*-view.png`) and as the whole section (`*-section.png`). They are in the build's scratch folder, `/private/tmp/claude-501/-Users-claygendron-Git-Repos-design-system/7b613866-3b2d-4829-bdd1-f2b35ebc0fd1/scratchpad/020b/`, with `after-dark-320-last-renames.png`, the failing-first output (`failing-first.scratch.txt`, and the literal reading's run, `failing-first-literal.txt`), and the twin before the change (`twin-before.md`). They are not kept in the repository.
+
+### Findings for later
+
+- **Inline code broken at a hyphen overhangs its line by about 4 px** in Chromium. The theme's `box-decoration-clone` pads every piece, and line breaking does not count that padding. It shows on this page at 1440 (`-o` in step 2) and could show on any page. It is a theme matter (`src/app.css` is generated), not this page's.
+- **For the design lead:** `020`'s Landing notes record this defect when it lands, as the spec's "Found by" line says.
