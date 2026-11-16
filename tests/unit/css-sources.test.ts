@@ -1,12 +1,18 @@
 /**
  * 020a: the site's CSS reads only code. Tailwind's automatic detection scans
- * every file git tracks, so class names written in `context/`'s prose and
- * exhibits, and in `tests/`' fixtures and assertions, became rules in the
- * site's built CSS. The site's root stylesheet excludes both folders.
+ * every file `.gitignore` does not exclude, tracked or not, so class names
+ * written in `context/`'s prose and exhibits, and in `tests/`' fixtures and
+ * assertions, became rules in the site's built CSS. The site's root
+ * stylesheet excludes both folders, and still reads all of `src/`.
  *
  * Tailwind's own scanner (`@tailwindcss/oxide`'s `Scanner`) reads the sources
- * the root layout's stylesheet declares, as `@tailwindcss/vite` does; then
- * `compile(css).build(candidates)` builds the CSS from them.
+ * the root layout's stylesheet declares, as `@tailwindcss/vite` 4.3.3 does.
+ * `__unstable__loadDesignSystem` says which candidates make a rule, so a
+ * failure names classes. Both packages come with `@tailwindcss/vite`, pinned
+ * by `bun.lock`. If a Tailwind update renames the unstable export, the import
+ * fails loudly; it never passes silently. `build-output.spec.ts` checks the
+ * real build for the fixtures' classes, so a change in Vite's source
+ * resolution that this model misses still shows.
  */
 import { beforeAll, describe, expect, test } from "bun:test";
 import { readFileSync } from "node:fs";
@@ -69,11 +75,17 @@ type Compiled = Awaited<ReturnType<typeof compiled>>;
 
 /**
  * The classes a stylesheet's sources yield that make a rule, and that appear
- * in `dir` but in no file outside `context/` and `tests/`.
+ * in `dir` but in no file outside the `excluded` folders. It defaults to
+ * `dir` alone, so a class also found in another excluded folder is not
+ * charged to this one (020a's change review, finding 2).
  */
-function onlyIn(sheet: Compiled, dir: string): string[] {
+function onlyIn(
+  sheet: Compiled,
+  dir: string,
+  excluded: readonly string[] = [dir],
+): string[] {
   const read = scan(sheet.sources);
-  const code = scan([...sheet.sources, ...EXCLUDED.map(not)]);
+  const code = scan([...sheet.sources, ...excluded.map(not)]);
   const candidates = [...scan(all(dir))]
     .filter((c) => read.has(c) && !code.has(c))
     .sort();
@@ -97,7 +109,7 @@ describe("020a: the site's CSS reads only code", () => {
   // test under tests/. Read through src/app.css alone, whose detection is
   // unbounded, the check names their classes; so it reads the right sources.
   test("the fixtures prove the check reads the right sources", () => {
-    expect(onlyIn(unexcluded, FIXTURES)).toEqual(
+    expect(onlyIn(unexcluded, FIXTURES, EXCLUDED)).toEqual(
       expect.arrayContaining([
         "bg-fuchsia-950",
         "inset-shadow-red-500",
@@ -115,13 +127,14 @@ describe("020a: the site's CSS reads only code", () => {
     },
   );
 
-  test("the site's CSS equals the CSS built from code alone", async () => {
-    const code = await compiled(file);
-    const codeCandidates = scan([...code.sources, ...EXCLUDED.map(not)]);
-    const built = site.compiler.build([...scan(site.sources)]);
-    // A boolean, not a diff of two whole stylesheets: the two tests above
-    // name the classes that differ.
-    expect(built === code.compiler.build([...codeCandidates])).toBe(true);
+  // A scan that reads too little fails here: every class a file under src/
+  // yields that makes a rule is among what the site's stylesheet reads
+  // (020a's change review, finding 1).
+  test("every class src/ yields that makes a rule is in the site's CSS", () => {
+    const read = scan(site.sources);
+    const wanted = [...scan(all("src"))].filter((c) => !read.has(c)).sort();
+    const css = site.design.candidatesToCss(wanted);
+    expect(wanted.filter((_, i) => css[i] !== null)).toEqual([]);
   });
 
   test('the root stylesheet holds @source not "../../context" and "../../tests"', () => {

@@ -1,6 +1,6 @@
 # 020a — The site's CSS reads only code
 
-- **Status:** Built on its branch; awaiting change review.
+- **Status:** Built on its branch; the change review's fixes applied (`reviews/020a-the-sites-css-reads-only-code-pr-2026-11-15.md`); awaiting the merge.
 - **Date:** 2026-11-15
 - **Author:** the design lead
 - **Kind:** small change (AGENTS.md: a fix with no interface change, no new token or dependency, in one place). No research memo and no spec review. Its check is seen failing first, and the built change is reviewed by someone who did not write it (constitution §5).
@@ -8,7 +8,7 @@
 
 ## The defect
 
-The site's root stylesheet, `src/app.css`, imports Tailwind with no `@source` rule, so Tailwind's automatic detection scans every file git tracks. That includes `context/` and `tests/`. Class names written in prose and research exhibits (specs, memos, the lockup and index-card exhibit pages), and in tests (the literal lint's bad samples, e2e fixtures), become rules in the site's built CSS. The change review found `.bg-fuchsia-950`, `.row-8` and `.row-15` in the built CSS, and in no file under `src/`. `031b`'s audit found about 46 unused translucent rules between the two folders.
+The site's root stylesheet, `src/app.css`, imports Tailwind with no `@source` rule, so Tailwind's automatic detection scans every file `.gitignore` does not exclude, tracked or not. That includes `context/` and `tests/`. Class names written in prose and research exhibits (specs, memos, the lockup and index-card exhibit pages), and in tests (the literal lint's bad samples, e2e fixtures), become rules in the site's built CSS. The change review found `.bg-fuchsia-950`, `.row-8` and `.row-15` in the built CSS, and in no file under `src/`. `031b`'s audit found about 46 unused translucent rules between the two folders.
 
 The effects:
 
@@ -38,11 +38,13 @@ The built site CSS loses the rules that came only from `context/` and `tests/`. 
 
 A unit test, `tests/unit/css-sources.test.ts`:
 
-1. It reads the stylesheet the root layout imports, runs Tailwind's own scanner (`@tailwindcss/oxide`'s `Scanner`, as `023`'s probe does) over the sources that stylesheet declares, as `@tailwindcss/vite` 4.3.3 does, then `compile(css).build(candidates)`.
-2. It asserts that no class in the result is found **only** in files under `context/`, and none only in files under `tests/`. Two fixtures prove the assertion reads the right sources: a copy of a line of a `context/` review holding `bg-fuchsia-950`, `row-8` and `row-15`, and a copy of four lines of `tests/unit/literals.test.ts` holding `inset-shadow-red-500` and `text-shadow-black`. Read through `src/app.css` alone, whose detection is unbounded, the check names all five.
-3. It asserts that the site's built CSS equals the CSS built from code alone.
+1. It reads the stylesheet the root layout imports. It runs Tailwind's own scanner (`@tailwindcss/oxide`'s `Scanner`, as `023`'s probe does) over the sources that stylesheet declares, as `@tailwindcss/vite` 4.3.3 does. `compile` gives the sources, and Tailwind's design system says which candidates make a rule.
+2. It asserts that no class the site reads is found **only** in files under `context/`, and none only in files under `tests/`. Each folder's case compares with a scan that excludes that folder alone, so a failure names the right folder. Two fixtures prove the assertion reads the right sources: a copy of a line of a `context/` review holding `bg-fuchsia-950`, `row-8` and `row-15`, and a copy of four lines of `tests/unit/literals.test.ts` holding `inset-shadow-red-500` and `text-shadow-black`. Read through `src/app.css` alone, whose detection is unbounded, the check names all five.
+3. It asserts that every class a file under `src/` yields, and that makes a rule, is among what the site reads. So a scan that reads too little fails too.
 4. It asserts that the root stylesheet holds the two `@source not` lines, so neither can be removed without the test saying why.
 5. It asserts that `src/app.css` is byte-equal to `build-tokens.ts`'s output, so it stays untouched.
+
+An e2e case in `tests/e2e/build-output.spec.ts` reads the real built CSS: it holds none of the fixtures' five classes. This ties the unit test's model of the scan to the build, across a Tailwind update.
 
 **Seen failing first:** on `020`'s tree, assertion 2 fails for both folders and names at least `bg-fuchsia-950`, `row-8` and `row-15`. The output goes in the Landing notes. After the fix, it passes.
 
@@ -72,7 +74,7 @@ On `020`'s tree, with the test and fixtures added and the root layout still impo
 
 - `no class in the site's CSS is found only under context/`: **510 classes** named, among them `bg-fuchsia-950`, `row-8` and `row-15`, the review's three. Most come from `context/research/` (311) and `context/specifications/` (216); some appear in several folders.
 - `no class in the site's CSS is found only under tests/`: **64 classes** named. Most come from `tests/unit` (the literal lint's bad samples, such as `inset-shadow-red-500`, `bg-input/30`, `hover:bg-primary/80` and `[color:red]`). 4 come from `tests/e2e` (`antialiased`, `bg-foreground/50`, `rotate-90`, `[data-slot="nav-group"]:visible`). 3 come only from the new context fixture (`bg-fuchsia-950`, `row-8`, `row-15`).
-- `the site's CSS equals the CSS built from code alone`: false.
+- `the site's CSS equals the CSS built from code alone`: false. (The change review found this case duplicated the one above. It was replaced; see "The change review's fixes".)
 - `the root stylesheet holds @source not …`: the root stylesheet, then `src/app.css`, holds no `@source` line.
 
 The fixtures test and the `app.css` byte-equality test passed on the old tree, as they must. The exhibits the brief named, `context/research/2026-11-15-index-cards/` and `context/research/2026-11-15-high-contrast/`, add 0 classes not also found elsewhere: each class they hold is in another `context/` file or in code.
@@ -109,7 +111,19 @@ Class selectors: 1,782 before, 1,231 after. None was added. Every removed select
 2. **The test imports two transitive packages,** `@tailwindcss/oxide` (as the spec says) and `@tailwindcss/node` (for `compile`, with the import resolution `@tailwindcss/vite` uses). Both come with `@tailwindcss/vite` 4.3.3 and are pinned by `bun.lock`. `package.json` and `bun.lock` are unchanged. It also calls `__unstable__loadDesignSystem` to ask which candidates make a rule, so the failure can name classes.
 3. **The fixtures are two short copies, not one file.** One copies line 77 of `020`'s change review (`bg-fuchsia-950`, `row-8`, `row-15`); one copies lines 104 to 107 of `tests/unit/literals.test.ts` (`inset-shadow-red-500`, `text-shadow-black`). No `context/` file holding `bg-fuchsia-950` is short.
 
+### The change review's fixes
+
+The review (`reviews/020a-the-sites-css-reads-only-code-pr-2026-11-15.md`) said land after fixes. Each fix was made in a second commit on the branch, and each was checked by a mutation, then put back.
+
+1. **(Medium) A scan that reads too little now fails** (review finding 1). Case 3 ("the site's CSS equals the CSS built from code alone") reduced to case 2 once the fix was in, so it was dropped. In its place: "every class src/ yields that makes a rule is in the site's CSS". **Mutation:** `@source not "../routes";` added to `layout.css` fails that case alone, naming 69 classes (5 pass, 1 fail). The review's scratch copy named 71; the count depends on the tree. The new `build-output.spec.ts` case reads the real built CSS for the fixtures' five classes. **Mutation:** with the root layout importing `../app.css` again, it fails and names all five. Put back, the whole spec passes, 27 of 27 (light).
+2. **(Low) A failure names the right folder** (review finding 2). `onlyIn` takes an `excluded` list, which defaults to the folder asked about. The fixtures case passes both folders, since it reads through the unexcluded `app.css`. **Mutation:** with only `@source not "../../context"` deleted, the `context/` case fails (naming 511 classes) and the `tests/` case passes. With only the `tests` line deleted, the `tests/` case fails (64 classes) and the `context/` case passes. Before the fix, each deletion also failed the other folder's case, with 54 classes (the review's figure). In both mutations the `@source` lines case fails too, as it should.
+3. **(Low) The thumbnail input is named** (review finding 3). `thumbnails.test.ts`'s input-list case now lists `src/routes/layout.css`. **Mutation:** with the line taken out of `thumbnail-hash.ts`, the case fails: `Expected to contain: "src/routes/layout.css"`.
+4. **(Nit) "Every file git tracks"** (review finding 7) now reads "every file `.gitignore` does not exclude, tracked or not", in the defect above and in the test's header. The header also records why the unstable import is acceptable (review finding 6).
+
+After the fixes: `css-sources.test.ts` 6 pass, 0 fail. `thumbnails.test.ts` 10 pass, 0 fail (with `--timeout 60000`, for the machine's load). `build-output.spec.ts` 27 passed. `bun run check` 0 errors, 0 warnings, 2,190 files. `bun run lint` clean. The full e2e suite was not re-run for the fixes; they change tests alone.
+
 ### Findings for later
 
-- **Other prose still feeds the site's CSS.** With `context/` and `tests/` excluded, Tailwind still reads the root Markdown (`README.md`, `CHANGELOG.md`, `AGENTS.md`), `scripts/`, and the released registry snapshots under `static/v*/r/`. The snapshots hold old items' classes; the site's CSS may carry rules for classes that only an old release used. Not measured here. A later change could name the folders the site reads, rather than list the ones it must not.
-- **The benchmark scorecard** was not re-run by this build. It runs at the landing commit.
+- **For `029a`: `--color-primary` is no longer on `:root`** (review finding 4). It used to be declared only because memos in `context/` name it. LayerChart reads `var(--color-primary, currentColor)` for `.lc-highlight-bar`, `.lc-highlight-point` and BarChart's default fill. Nothing changes on the page today: the site's chart examples give every mark a class. An installed app never had the variable, so the site now behaves like the app. `029a` should set `--color-primary` in the chart item, with the `--color-surface-*` variables it already covers.
+- **For the roadmap: other folders still feed the site's CSS** (review finding 5). With `context/` and `tests/` excluded, Tailwind still reads `static/v*/r/` (595 files), `static/r/` (77), `scripts/` (22), 15 root files (the Markdown among them) and `tokens/`. 19 classes that make a rule come only from those, such as `bg-red-500`, `text-white`, `duration-300`, `p-[13px]`, `border-x` and `data-open:hover:bg-sidebar-accent`. A later small change could scan only `src/` (and `static/r/` if wanted), with `source()` and `@source`. The new "every class src/ yields" case is the guard that change needs.
+- **The benchmark scorecard** was re-run by the change review at `081f9a6` and at `44cec73`. Every count is equal, so no row moves.
