@@ -150,8 +150,9 @@
       <code>color-scheme</code> is dark, so native controls draw dark too.
     </li>
     <li>
-      The ink surface example holds seven keyboard stops: the editor, the copy
-      button, the code, the tab strip and three triggers. Tab leaves the editor.
+      The ink surface example holds seven keyboard stops: the numbered code, the
+      copy button, the code, the tab strip and three triggers. Each code scrolls
+      sideways by the arrow keys.
     </li>
     <li>
       Under reduced motion every motion duration reads 0 ms, and <code

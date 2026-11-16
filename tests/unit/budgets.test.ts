@@ -44,7 +44,8 @@ const ALL_LAYOUTS = [
 ];
 
 describe("024 criterion 1: every page has one template", () => {
-  test("there are exactly decision 1's eight templates", () => {
+  // 024d: the theme page's template, the ninth (the design lead's ruling).
+  test("there are exactly decision 1's eight templates and 024d's kuiper-theme", () => {
     expect([...TEMPLATE_IDS].sort() as string[]).toEqual(
       [
         "brand",
@@ -54,6 +55,7 @@ describe("024 criterion 1: every page has one template", () => {
         "home",
         "index",
         "landing",
+        "kuiper-theme",
         "leaf",
       ].sort(),
     );
@@ -81,6 +83,9 @@ describe("024 criterion 1: every page has one template", () => {
     expect(t("/brand/")).toBe("landing");
     expect(t("/foundations/")).toBe("landing");
     expect(t("/components/button/")).toBe("component");
+    expect(t("/components/kuiper-theme/")).toBe("kuiper-theme");
+    // The `theme` item's page is a component page (024d's review, finding 1).
+    expect(t("/components/theme/")).toBe("component");
     expect(t("/changelog/")).toBe("leaf");
     expect(t("/changelog/0.13.0/upgrade/")).toBe("leaf");
     expect(t("/start/install/")).toBe("leaf");
