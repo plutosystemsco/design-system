@@ -1854,7 +1854,10 @@ describe("016: the brand yellow", () => {
       .split("\n")
       .filter(
         (f) => f && existsSync(f) && !/\.(png|jpe?g|webp|woff2?|ico)$/.test(f),
-      );
+      )
+      // 021 decision 10: the record of removed names keeps the name that
+      // shipped, --syntax-amber, so that it can say what replaces it.
+      .filter((f) => !f.endsWith("/kuiper.removed.json"));
     expect(files.length).toBeGreaterThan(300);
     const hits = files.filter((f) => /amber|#?f19e20|#?915b00/i.test(read(f)));
     expect(hits).toEqual([]);
@@ -2250,5 +2253,37 @@ describe("020 test 16: the 0.13.0 changelog", () => {
       for (const c of constants[head] ?? [])
         expect(b, `${head}: ${c}`).toContain(`\`${c}\``);
     }
+  });
+});
+
+describe("021 criterion 18: the 0.13.0 changelog's token bullets", () => {
+  const log = readFileSync("CHANGELOG.md", "utf8");
+  const entry = log.includes("## 0.13.0")
+    ? log.slice(log.indexOf("## 0.13.0"), log.indexOf("\n## 0.12.0"))
+    : "";
+  const bullets = entry.split("\n").filter((l) => l.startsWith("- "));
+
+  test("a kuiper-theme bullet says the source is DTCG and the CSS is unchanged", () => {
+    const b =
+      bullets.find(
+        (l) =>
+          l.startsWith("- `kuiper-theme`") &&
+          l.includes("not an interface change"),
+      ) ?? "";
+    expect(b).toContain("DTCG 2025.10");
+    expect(b).toContain("byte for byte");
+  });
+
+  test("a new-files bullet names the files, the folder, and the paths as an interface", () => {
+    const b = bullets.find((l) => l.startsWith("- **New:**")) ?? "";
+    for (const name of [
+      "kuiper.css",
+      "kuiper.resolver.json",
+      "kuiper.removed.json",
+      "/r/tokens/",
+    ])
+      expect(b, name).toContain(name);
+    expect(b).toContain("DTCG token paths");
+    expect(b).toContain("interface");
   });
 });

@@ -1,0 +1,199 @@
+{
+  "$description": "Every name Kuiper shipped and no longer ships, with what replaces it. A custom property's --color- form, and its utilities, go with it.",
+  "removed": [
+    {
+      "name": "--code-foreground",
+      "kind": "css-variable",
+      "since": "0.4.0",
+      "removed": "0.12.0",
+      "replacement": "--code-text",
+      "by": "013",
+      "note": "Code's body text is its own ink, no longer the page's foreground."
+    },
+    {
+      "name": "--color-code-foreground",
+      "kind": "css-variable",
+      "since": "0.4.0",
+      "removed": "0.12.0",
+      "replacement": "--color-code-text",
+      "by": "013",
+      "note": "The Tailwind colour of --code-foreground, and its utilities, gone with it."
+    },
+    {
+      "name": "--syntax-amber",
+      "kind": "css-variable",
+      "since": "0.7.0",
+      "removed": "0.12.0",
+      "by": "013",
+      "note": "The code palette is Meridian's roles; see --syntax-yellow and --syntax-orange."
+    },
+    {
+      "name": "--color-syntax-amber",
+      "kind": "css-variable",
+      "since": "0.7.0",
+      "removed": "0.12.0",
+      "by": "013",
+      "note": "The Tailwind colour of --syntax-amber, and its utilities, gone with it."
+    },
+    {
+      "name": "--syntax-purple",
+      "kind": "css-variable",
+      "since": "0.7.0",
+      "removed": "0.12.0",
+      "by": "013",
+      "note": "The code palette is Tombaugh's ten colours, and this hue is not among them; see the syntax-* roles."
+    },
+    {
+      "name": "--color-syntax-purple",
+      "kind": "css-variable",
+      "since": "0.7.0",
+      "removed": "0.12.0",
+      "by": "013",
+      "note": "The Tailwind colour of --syntax-purple, and its utilities, gone with it."
+    },
+    {
+      "name": "--syntax-teal",
+      "kind": "css-variable",
+      "since": "0.7.0",
+      "removed": "0.12.0",
+      "by": "013",
+      "note": "The code palette is Tombaugh's ten colours, and this hue is not among them; see the syntax-* roles."
+    },
+    {
+      "name": "--color-syntax-teal",
+      "kind": "css-variable",
+      "since": "0.7.0",
+      "removed": "0.12.0",
+      "by": "013",
+      "note": "The Tailwind colour of --syntax-teal, and its utilities, gone with it."
+    },
+    {
+      "name": "--syntax-cyan",
+      "kind": "css-variable",
+      "since": "0.7.0",
+      "removed": "0.12.0",
+      "by": "013",
+      "note": "The code palette is Tombaugh's ten colours, and this hue is not among them; see the syntax-* roles."
+    },
+    {
+      "name": "--color-syntax-cyan",
+      "kind": "css-variable",
+      "since": "0.7.0",
+      "removed": "0.12.0",
+      "by": "013",
+      "note": "The Tailwind colour of --syntax-cyan, and its utilities, gone with it."
+    },
+    {
+      "name": "--code-escape",
+      "kind": "css-variable",
+      "since": "0.7.0",
+      "removed": "0.12.0",
+      "by": "013",
+      "note": "The code map is Meridian's roles; this slot has none, and its code takes the colour of the role that covers it."
+    },
+    {
+      "name": "--color-code-escape",
+      "kind": "css-variable",
+      "since": "0.7.0",
+      "removed": "0.12.0",
+      "by": "013",
+      "note": "The Tailwind colour of --code-escape, and its utilities, gone with it."
+    },
+    {
+      "name": "--code-builtin",
+      "kind": "css-variable",
+      "since": "0.7.0",
+      "removed": "0.12.0",
+      "by": "013",
+      "note": "The code map is Meridian's roles; this slot has none, and its code takes the colour of the role that covers it."
+    },
+    {
+      "name": "--color-code-builtin",
+      "kind": "css-variable",
+      "since": "0.7.0",
+      "removed": "0.12.0",
+      "by": "013",
+      "note": "The Tailwind colour of --code-builtin, and its utilities, gone with it."
+    },
+    {
+      "name": "--code-tag",
+      "kind": "css-variable",
+      "since": "0.7.0",
+      "removed": "0.12.0",
+      "by": "013",
+      "note": "The code map is Meridian's roles; this slot has none, and its code takes the colour of the role that covers it."
+    },
+    {
+      "name": "--color-code-tag",
+      "kind": "css-variable",
+      "since": "0.7.0",
+      "removed": "0.12.0",
+      "by": "013",
+      "note": "The Tailwind colour of --code-tag, and its utilities, gone with it."
+    },
+    {
+      "name": "--code-property",
+      "kind": "css-variable",
+      "since": "0.7.0",
+      "removed": "0.12.0",
+      "by": "013",
+      "note": "The code map is Meridian's roles; this slot has none, and its code takes the colour of the role that covers it."
+    },
+    {
+      "name": "--color-code-property",
+      "kind": "css-variable",
+      "since": "0.7.0",
+      "removed": "0.12.0",
+      "by": "013",
+      "note": "The Tailwind colour of --code-property, and its utilities, gone with it."
+    },
+    {
+      "name": "--code-decorator",
+      "kind": "css-variable",
+      "since": "0.7.0",
+      "removed": "0.12.0",
+      "by": "013",
+      "note": "The code map is Meridian's roles; this slot has none, and its code takes the colour of the role that covers it."
+    },
+    {
+      "name": "--color-code-decorator",
+      "kind": "css-variable",
+      "since": "0.7.0",
+      "removed": "0.12.0",
+      "by": "013",
+      "note": "The Tailwind colour of --code-decorator, and its utilities, gone with it."
+    },
+    {
+      "name": "--code-self",
+      "kind": "css-variable",
+      "since": "0.7.0",
+      "removed": "0.12.0",
+      "by": "013",
+      "note": "The code map is Meridian's roles; this slot has none, and its code takes the colour of the role that covers it."
+    },
+    {
+      "name": "--color-code-self",
+      "kind": "css-variable",
+      "since": "0.7.0",
+      "removed": "0.12.0",
+      "by": "013",
+      "note": "The Tailwind colour of --code-self, and its utilities, gone with it."
+    },
+    {
+      "name": "--code-invalid",
+      "kind": "css-variable",
+      "since": "0.7.0",
+      "removed": "0.12.0",
+      "by": "013",
+      "note": "The code map is Meridian's roles; this slot has none, and its code takes the colour of the role that covers it."
+    },
+    {
+      "name": "--color-code-invalid",
+      "kind": "css-variable",
+      "since": "0.7.0",
+      "removed": "0.12.0",
+      "by": "013",
+      "note": "The Tailwind colour of --code-invalid, and its utilities, gone with it."
+    }
+  ]
+}

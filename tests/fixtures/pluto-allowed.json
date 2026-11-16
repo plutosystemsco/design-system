@@ -149,7 +149,7 @@
     {
       "files": "**",
       "pattern": "plutosystemsco",
-      "count": 249,
+      "count": 250,
       "class": "brand",
       "reason": "The company's GitHub organisation, in every source and install URL."
     },
@@ -159,6 +159,13 @@
       "count": 9,
       "class": "brand",
       "reason": "The worker's name and the site's address, by ruling (decision 2)."
+    },
+    {
+      "files": "**",
+      "pattern": "co\\.plutosystems\\.kuiper",
+      "count": 1152,
+      "class": "brand",
+      "reason": "021 decision 4: the DTCG vendor key, the company's domain reversed with the system's name. Permanent once 0.13.0 ships."
     },
     {
       "files": "**",
@@ -405,6 +412,13 @@
       "count": 1,
       "class": "record",
       "reason": "The living documents and the install guide state the rename and point to the upgrade guide (decision 14)."
+    },
+    {
+      "files": "tests/unit/tokens-lifecycle.test.ts",
+      "pattern": "pluto-theme\\.json",
+      "count": 1,
+      "class": "history",
+      "reason": "021 decision 10: the record's test reads every shipped theme item, under its old name before 0.13.0."
     }
   ]
 }
