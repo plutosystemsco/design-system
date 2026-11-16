@@ -275,7 +275,7 @@ test("on the four-dot page, Tab reaches the lockup link, with the same outline",
   await open(page, componentPath("four-dot"));
   const colour = await ring(page);
   let reached = false;
-  // From main's start: the left nav before it holds 76 stops (018).
+  // From main's start: the left nav before it holds 77 stops (018; 026 adds the toast).
   await page.locator("#main").focus();
   for (let i = 0; i < 40 && !reached; i++) {
     await page.keyboard.press("Tab");
@@ -348,6 +348,9 @@ const FIXTURES: [item: string, stops: string[]][] = [
       "button:Create project",
     ],
   ],
+  // 026 test 75: the one button that raises two toasts. The toasts are no
+  // stops of their own; F8 reaches their buttons (the behaviour below).
+  ["toast", ["button:Raise two"]],
   // 004 decision 8: the copy button in the header, then the pre, whose ring
   // the root draws. A stop written `tag:*` matches any name: the pre's text
   // is the whole example.
@@ -481,9 +484,10 @@ async function expectRingUnclipped(
 // 005 decision 17: 32 fixtures and 64 stops when 005 landed. 007 adds two:
 // the ink surface's fixture of 7 stops on the kuiper-theme page (007 decision 9)
 // and the code-languages page's fixture of 2 stops (007 decision 7). 019
-// decision 10 adds the error summary's radio question: one stop.
-const FIXTURE_COUNT = 34;
-const STOP_COUNT = 74;
+// decision 10 adds the error summary's radio question: one stop. 026 test 75
+// adds the toast's fixture of one stop.
+const FIXTURE_COUNT = 35;
+const STOP_COUNT = 75;
 test(`the ${FIXTURE_COUNT} fixtures hold ${STOP_COUNT} stops`, () => {
   expect(FIXTURES).toHaveLength(FIXTURE_COUNT);
   expect(FIXTURES.reduce((n, [, stops]) => n + stops.length, 0)).toBe(
@@ -957,7 +961,7 @@ test.describe("behaviours", () => {
       expect(
         await trigger.evaluate((el) => el.getBoundingClientRect().top),
       ).toBeGreaterThan(900);
-      // The left nav's filter and 76 links come first (018).
+      // The left nav's filter and 77 links come first (018; 026 adds one).
       for (let i = 0; i < 120; i++) {
         await page.keyboard.press("Tab");
         const inside = await page.evaluate(
@@ -1204,6 +1208,41 @@ test.describe("behaviours", () => {
     await expect(summary.getByRole("link").first()).toBeFocused();
     await page.keyboard.press("Enter");
     await expect(fixture(page).getByLabel("Project name")).toBeFocused();
+  });
+
+  // 026 test 75, decision 15's table: F8 to the list, Tab through each
+  // toast's action then its Dismiss, newest first, Enter on the action,
+  // Escape on a control, F8 back.
+  test("F8 reaches the toasts; Tab walks Undo then Dismiss, newest first; Enter on Undo and Escape close; F8 returns", async ({
+    page,
+  }) => {
+    await open(page, componentPath("toast"));
+    const raise = fixture(page).getByRole("button", { name: "Raise two" });
+    await raise.focus();
+    await page.keyboard.press("Enter");
+    const region = page.getByRole("region", { name: "Notifications" });
+    const toasts = region.locator("li[data-toast-id]:not([data-state=closed])");
+    await expect(toasts).toHaveCount(2);
+    await page.keyboard.press("F8");
+    await expect(region.locator('[data-slot="toaster-list"]')).toBeFocused();
+    const walk: (string | null)[] = [];
+    for (let i = 0; i < 3; i++) {
+      await page.keyboard.press("Tab");
+      walk.push(await signature(page));
+    }
+    expect(walk).toEqual(["button:Undo", "button:Dismiss", "button:Dismiss"]);
+    await page.keyboard.press("F8");
+    await expect(raise).toBeFocused();
+    await page.keyboard.press("F8");
+    await page.keyboard.press("Tab");
+    await page.keyboard.press("Enter");
+    await expect(toasts).toHaveCount(1);
+    await expect(
+      toasts.first().getByRole("button", { name: "Dismiss" }),
+    ).toBeFocused();
+    await page.keyboard.press("Escape");
+    await expect(toasts).toHaveCount(0);
+    await expect(raise).toBeFocused();
   });
 });
 
@@ -1508,4 +1547,74 @@ test.describe("017: the downloads by keyboard", () => {
     }
     expect(reached).toEqual(files);
   });
+});
+
+/**
+ * 027a test 53: decision 9's rows for link and button-group, each a test on
+ * its example view. progress has no keyboard behaviour.
+ */
+test.describe("027a test 53: the keyboard rows", () => {
+  test.use({ viewport: { width: 1440, height: 900 } });
+  const view = async (page: Page, item: string, id: string) => {
+    await page.goto(`/example/${item}/${id}/`);
+    await page.locator("body[data-view-ready]").waitFor();
+  };
+
+  test(
+    "button-group, Tab from before it: each button in order",
+    {
+      annotation: [
+        { type: "item", description: "button-group" },
+        { type: "check", description: "keyboard" },
+      ],
+    },
+    async ({ page }) => {
+      await view(page, "button-group", "attached");
+      const buttons = page
+        .getByRole("group", { name: "Clipboard" })
+        .getByRole("button");
+      for (const name of ["Cut", "Copy", "Paste"]) {
+        await page.keyboard.press("Tab");
+        await expect(page.getByRole("button", { name })).toBeFocused();
+      }
+      await expect(buttons).toHaveCount(3);
+    },
+  );
+
+  test(
+    "button-group, arrow keys on a button: nothing",
+    {
+      annotation: [
+        { type: "item", description: "button-group" },
+        { type: "check", description: "keyboard" },
+      ],
+    },
+    async ({ page }) => {
+      await view(page, "button-group", "attached");
+      const copy = page.getByRole("button", { name: "Copy" });
+      await copy.focus();
+      for (const key of ["ArrowRight", "ArrowLeft", "ArrowDown", "ArrowUp"]) {
+        await page.keyboard.press(key);
+        await expect(copy, key).toBeFocused();
+      }
+    },
+  );
+
+  test(
+    "link, Enter on the link: follows it",
+    {
+      annotation: [
+        { type: "item", description: "link" },
+        { type: "check", description: "keyboard" },
+      ],
+    },
+    async ({ page }) => {
+      await view(page, "link", "inline");
+      const link = page.locator('[data-slot="link"]').first();
+      const href = (await link.getAttribute("href"))!;
+      await link.focus();
+      await page.keyboard.press("Enter");
+      await page.waitForURL((u) => u.pathname === href);
+    },
+  );
 });

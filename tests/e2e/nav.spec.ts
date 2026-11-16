@@ -227,7 +227,7 @@ test.describe("018 criterion 5: the phone sheet", () => {
       .getByRole("dialog")
       .getByRole("navigation", { name: "Components pages" });
     await expect(nav).toBeVisible();
-    await expect(nav.locator("a")).toHaveCount(76);
+    await expect(nav.locator("a")).toHaveCount(80);
     const axe = await new AxeBuilder({ page }).analyze();
     expect(axe.violations.map((v) => v.id)).toEqual([]);
   });

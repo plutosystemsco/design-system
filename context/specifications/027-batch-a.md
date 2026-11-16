@@ -1,6 +1,6 @@
 # 027 — Batch A: pagination, search field, button group, tag, link and progress bar
 
-- **Status:** Ready to build after `020`: owner answers recorded, review approved with changes, all applied (2026-11-15). `027b` also waits on `022`, `025` and `026`. The review, [`../reviews/027-batch-a-spec-2026-11-15.md`](../reviews/027-batch-a-spec-2026-11-15.md), raised 22 findings (3 High, 8 Medium, 11 Low). Its re-review approved with changes R1 to R6 (1 Medium, 5 Low). Every one is answered under "Review". The owner answered Q1 to Q7 on 2026-11-15 (Landing notes). Not built.
+- **Status:** Ready to build after `020`: owner answers recorded, review approved with changes, all applied (2026-11-15). `027b` also waits on `022`, `025` and `026`. The review, [`../reviews/027-batch-a-spec-2026-11-15.md`](../reviews/027-batch-a-spec-2026-11-15.md), raised 22 findings (3 High, 8 Medium, 11 Low). Its re-review approved with changes R1 to R6 (1 Medium, 5 Low). Every one is answered under "Review". The owner answered Q1 to Q7 on 2026-11-15 (Landing notes). **`027a` built and committed on its build branch (2026-11-15), waiting on the design lead's checkpoint and its change review; see the Landing notes. `027b` not built.**
 - **Date:** 2026-11-15
 - **Author:** the spec author for `027`, for the design lead
 - **Kind:** six new registry items (lane N: each item's own folder, examples and page). Some edits fall outside the lane. Each lands after the spec that owns its lane (decision 14):
@@ -316,7 +316,7 @@ The classes are static strings in a `tv` map, so Tailwind sees them. Test 20a ho
 |---|---|---|---|
 | `variant` | `"attached" \| "spaced"` | `"attached"` | Attached joins the buttons edge to edge, for a few related actions of equal weight; give it secondary buttons. Spaced sets them in a row with a gap that wraps, and stacks them below 640 px, for a form's actions. |
 | `orientation` | `"horizontal" \| "vertical"` | `"horizontal"` | The direction the buttons run. |
-| `aria-label` | `string` | — | What the buttons are for, such as "Text alignment". Or name the group with `aria-labelledby`. Without a name, the grouping is only visual. |
+| `aria-label` | `string` | — | What the buttons are for, such as "Clipboard" (ruled at the landing; was "Text alignment"). Or name the group with `aria-labelledby`. Without a name, the grouping is only visual. |
 | `class` | `string` | — | Classes for the group. |
 | `ref` | `HTMLDivElement \| null`, bindable | `null` | The group. |
 
@@ -528,7 +528,7 @@ What each reader should say. This is INFERRED. `022`'s rules match phrases, neve
 | Typing "des", a pause, the count arrives | "3 results" | "3 results" |
 | Tab to Clear | "Clear search, button" | "Clear search, button" |
 | Clear pressed | "Search projects, search text field" | "Search projects, edit, search" |
-| Tab into a named button group | "Text alignment, group", then "Left, button" | "Text alignment, grouping, Left, button" |
+| Tab into a named button group (ruled at the landing) | "Clipboard, group", then "Cut, button" | "Clipboard, grouping, Cut, button" |
 | Tab to a remove button | "Remove Design, button" | "Remove Design, button" |
 | Design removed | "Remove Research, button" | "Remove Research, button" |
 | The last tag removed, no fallback | "Filters, list, 0 items" | "Filters, list" |
@@ -1017,7 +1017,7 @@ Each test is written and seen failing before the code it checks, and the landing
 **Browser, `tests/e2e/button-group.spec.ts` (a):**
 
 32. **"a named group, a stop per button".** On `attached`:
-    - there is one `group` named "Text alignment";
+    - there is one `group` named "Clipboard" (ruled at the landing; was "Text alignment"), holding Cut, Copy and Paste;
     - Tab from before it visits its three buttons in order;
     - ArrowRight on the first button leaves focus there.
 
@@ -1250,7 +1250,76 @@ The re-review approved with changes R1 to R6. All are taken:
 
 ## Landing notes
 
-Not landed.
+`027b` not built. `027a` built; its notes follow.
+
+### 027a: link, button group, progress
+
+- **Built** 2026-11-15 by a builder, in its own worktree, on `release/0.13.0` from `0372323`, and committed on the build branch (commit in the report). Not yet change-reviewed. The design lead's checkpoint (criterion 20 a) has not been walked: the owner and the design lead were away, and the builder went on under the owner's delegation. It is the first thing to do before the landing.
+- **What was built.**
+  - `src/lib/registry/ui/link/` (`link.svelte`, `index.ts`), `button-group/` (`button-group.svelte`, `index.ts`) and `progress/` (`progress.svelte`, `index.ts`): six files, as decision 1.
+  - `registry.json`: the three entries of decision 1, each at the end of its group.
+  - `src/lib/site/examples/<item>/`: twelve page examples in decision 12's order, and twelve pair files (`do-<pair>`, `dont-<pair>`).
+  - `src/routes/(site)/components/{link,button-group,progress}/+page.svelte`: three pages. Each renders its four pair files in its Do and Don't lists, each don't inside `inert`, with "What Kuiper provides" and "Your part" as bullets.
+  - The `meter` page: "use a native `<progress>`" became "use a progress bar", linked to `/components/progress/`, in its "when" and its don't.
+  - Ledgers: three changelog bullets (decision 16's words), `EXAMPLE_ORDER`'s three rows, the aliases `hyperlink` and `anchor`, `static/r/` and `static/v0.13.0/r/` regenerated by `bun run build:registry`, six thumbnails (and `meter`'s, regenerated because its route changed; its picture is byte-identical). The sitemap's entries come from `registry.json`, so it needed no edit.
+- **Tests first.** Every new check was written before the code it checks, and run red:
+  - Unit, tests 1 to 7 for part a: 28 tests across six files. 26 failed. The 2 that passed read only `REFERENCE_PARTS` (test 6's "the list holds 40 parts" and "link and button-group each match exactly one part"), which hold before any item exists; test 6's count, which needs the items, failed.
+  - Browser, tests 32 to 36, 42 to 53 and the page side of test 5: 93 tests a scheme, 186 runs in the `light` and `dark` projects, against a build of `0372323` served on its own port. 186 failed, 0 passed. By test: 32, 34, 35, 36 and 42 to 49 twice each (once a scheme); 33 six times (three examples); 50 and 51 twenty-four times (twelve examples); 52 ninety-six times (24 views at two widths); 53 six times; the pair check six times.
+  - A1's bare-`<progress>` run was folded into test 48, which ran on the item in all three engines (below), so no separate fixture was written.
+- **The checks, at the end** (figures in "The figures" below).
+- **Deviations, each with its reason.**
+  1. **Registry position.** Each entry ends its group: `button-group` after `toggle-group`, `progress` after `error-summary`, `link` after `is-mobile`. Every earlier item joined its group in place (`003`'s `status`, `004`'s `toggle`), and `registry.test.ts`, the sitemap and the Components index read the registry in group order. So the entries are not appended after `pluto-theme`.
+  2. **No `tailwind-variants`.** `linkVariants` is a plain function over static class strings, and the other two items use class maps. Importing `tv` would make `tailwind-variants` a built package of each item, and test 1 asks for none (or `phosphor-svelte` alone).
+  3. **`index.ts` exports the house set.** Beside decision 1's names (`Link`, `linkVariants`, `LinkStrings`), each `index.ts` exports `Root`, `Props` and its props and variant types, as `button` and `meter` do. `button-group` exports `ButtonGroup`; `progress` exports `Progress`.
+  4. **`progress` adds `border-0`.** Playwright's Firefox draws a 1 px border on a bare `<progress>` whose appearance is off (EXECUTED, on a blank page). In this site the theme's preflight already sets every border to 0, so the bar is 8 px in Firefox without the class, and test 48 cannot see it (the review's mutation M7 survives; corrected at the landing). The class stays: it guards an app that installs the item without that preflight.
+  5. **Pair files carry a `title`.** Each pair file also has its own example view, a document of its own, and axe needs it titled. `kind`, `pair`, `caption` and `breaks` are as decision 12 says.
+  6. **Test 50 leaves `card`'s own edge to `031b`.** The `in-a-card` example uses Kuiper's `card`, whose hairline border is translucent. That is an existing item's rule, which decision 13 leaves to `031b`, as it does the inherited disabled opacity. Test 50 skips an element whose slot is `card`, and checks everything inside it.
+  7. **Where two tests live.** Test 6 is `tests/unit/breadth.test.ts`, so `bun run test:unit` runs it; it imports `REFERENCE_PARTS` from `scripts/bench/targets.ts` and edits nothing there. Test 3 is in `registry-comments.test.ts`, as the spec directs while `023`'s test is absent.
+  8. **Example links point at this site's pages.** The prerender fails on a link to a page that does not exist, so every example and pair links to a real page here (or, for `new-tab`, to two outside addresses). The `inherit` example's footer is a solid `bg-muted` band, so nothing in it is translucent.
+  9. **The attached example, flagged for the checkpoint.** Test 32 and decision 10 name the group "Text alignment" with Left, Center and Right. Alignment reads as a choice of state, which decision 5 gives to `toggle-group` and the `state` pair says so. The example keeps the spec's names and makes each button a one-shot action that aligns a paragraph, with nothing pressed. The design lead may rename the example at the checkpoint; tests 32 and 53 move with it. **Settled at the landing:** the design lead renamed it (Rulings at landing, below).
+  10. **The cost fixtures moved to `027b`** (decision 15): `025` had not landed. Criterion 17's part a moves with them.
+  11. **Expectations changed outside the files this spec names** (criterion 18). Three new items move counts that earlier specs wrote as literals: 75 items to 78, 57 `registry:ui` items to 60, 81 and 103 sitemap entries to 84 and 106, 58 framed pages to 61, 72 lazy tiles to 75, 70 items naming the theme to 73, the allowed-name counts in `pluto-allowed.json`, and the lists in `tests/e2e/pages.ts` and `registry.test.ts`'s groups. `examples.test.ts` and `build-output.spec.ts` skip `do-*` and `dont-*` files, as `026` decision 22 allows. `expressive.spec.ts` exempts an attached group's children (above). No assertion was loosened beyond its count.
+- **Hooks for other lanes** (one landed with `027a` by ruling, below):
+  - `api.server.ts` is `023`'s file (lane I), not lane S's, as these notes first said. It mapped no `<progress>` element, so the progress page's API table ended "and the props of `HTMLProgressAttributes`". The one map row landed with `027a` by the design lead's ruling (below); `023` may meet a one-line conflict.
+  - Lane E (`022`): the four new spec files map to one item each and carry `item` and `check` annotations; the engine projects need no list of them. WebKit's forced-colours half of test 48 records a run-time annotation, "not emulated", until `022`'s engine list exists.
+  - Lane E (`025`): the three fixtures and their budgets, in `027b`'s B8.
+  - `031b`: remove `AUDITED_BY_031B` from `tests/e2e/batch-a.spec.ts` when `card`'s edge is solid, so test 50 checks the card again. The list's comment says so.
+  - `022`'s fault ledger: `expressive.spec.ts` fails in Firefox and WebKit on every component page, `meter` included, because those engines serialise `font-family` without quotes (`Geist Variable` against `"Geist Variable"`). It is a Chromium-born test's engine fault, not `027a`'s (the review's note 12).
+  - Lane S (`023a`, the design lead's small change): the API table's Type cell breaks words inside names at 768 px and wider (`wrap-anywhere`); the review's finding 2. Not `027a`'s.
+- **The checks** (2026-11-15, the machine at a load of 95 to 138 on 10 cores, from other agents' builds):
+  - `bun run check`: 0 errors, 0 warnings. `bun run lint`: clean. The literal lint: 0 violations, 1 allowance (L24, as before), 359 files.
+  - `bun run test:unit`: 1,276 pass and 6 fail on the full run. All 6 are timing. Five are the thumbnail-hash tests, which take 9 to 23 s under this load against a 5 s limit, and pass alone with time (10 of 10); one is `highlight-session.test.ts`'s 4 ms p95, flaky under load as the handoff records, which passes alone (10 of 10). One more failure, "each recomputed hash equals the manifest's", was real: every thumbnail's hash reads `registry.json` and `example-order.ts`, so any new item stales them all. The pictures do not change, so the manifest was rewritten with `thumbnails.ts --hash-only`, as that script provides, and the test passes.
+  - Browser, the four new spec files: 540 of 540 in `chromium`, `firefox` and `webkit`, both schemes, on a scratch config with Firefox and WebKit projects (`022`'s projects do not exist yet). Test 48's forced-colours half ran in Chromium and Firefox; WebKit recorded "not emulated".
+  - Browser, the full suite (`light`, `dark`): 3,178 passed, 117 skipped, 17 failed, 5 did not run. Of the 17: three were counts already corrected in the test files after the run had loaded them (the 72 lazy tiles, 58 framed pages, 76 nav links: now 75, 61, 79); one was `expressive.spec.ts`'s radius check on the button-group page (below); two were `blocks.spec.ts` A3, which forbids an all-digit build commit, and the base commit `0372323` is all digits (it passes at this build's commit, below); eleven were timeouts (the bar's glass and contrast screenshots, the editor's budget). Re-run alone on two workers, 197 passed, and the glass tests and one sentence check timed out again at 30 s; with a 240 s timeout those passed, 36 of 36.
+  - `expressive.spec.ts`, criterion 3, reads every button's top-left corner on each component page and expects the house radius, exempting a button that sets its own radius. An attached group squares its children's inner corners by design (test 33), so the exemption now covers a direct child of an attached `button-group`.
+  - `bun run test:smoke`: 137 pass, 2 fail on the full run; both are `dev-loop.test.ts`'s 10 s watchers under load, and pass alone (2 of 2).
+  - `scripts/site/release-check.ts`: exits 0.
+- **The figures.**
+  - **Every page grows by about 0.85 to 0.9 kB gzipped** (EXECUTED, every file a page references, the build of `0372323` against this build): CSS +0.14 kB (33.85 → 33.99 kB: the items' utilities), shared JS +0.67 kB (the chunk that carries `registry.json` for the sitemap, search and nav), HTML +0.05 to 0.1 kB (three nav links). The Components index +1.26 kB (three tiles); the changelog +1.82 kB (three bullets).
+  - **The Button page's budget, before and after the merge.** At `9395b46`, on `0372323`, it did not hold: the base was 391,684 B (382.50 kB), already over the 382 kB budget the owner ruled for `020`, and this build 392,599 B (383.40 kB). That build is superseded. **After merging `release/0.13.0` at `421cea7` (`3bc5185`)**, which brings `020a`'s CSS that reads only code (about 9 kB off every page), the budgets hold, measured by the perf project (`--no-deps`, three runs, medians): Button **374 kB of 382** (383,214 B, 374.23 kB exact; LCP 900 ms), home 301 kB of 355 (LCP 784 ms), the Components index 350 kB of 395 (LCP 2,432 ms). No budget was raised. `027a`'s own share is still about 0.9 kB on every component page, so the Button page has about 7.8 kB of headroom left; `026`'s toast will take another 0.9 kB or so. The cheapest lane-S remedy for that steady cost is to stop shipping all of `registry.json` in the shared chunk, since the client needs only names, titles, groups and descriptions.
+  - The new pages: `/components/link/`, `/components/button-group/` and `/components/progress/` each render their examples and pairs, and pass axe in both schemes at 360, 768 and 1280.
+- **The merge, `3bc5185`.** `release/0.13.0` at `421cea7` (`020a`, `020b`) merged in with a merge commit. The one conflict, `src/lib/site/thumbnails/manifest.json`, was regenerated by `scripts/site/thumbnails.ts` over the merged tree: all 156 pictures came out byte-identical, and only the hashes moved. Re-run after it: `bun run check` 0 errors; `bun run test:unit` 1,285 pass and 3 fail, all timing (a thumbnail-hash test, the 4 ms streaming budget, the specimen timings), each passing alone (`thumbnails.test.ts` and `css-sources.test.ts` 16 of 16 at `--timeout 60000`, `highlight-session.test.ts` 10 of 10, `highlight.test.ts` 43 of 43); the four new spec files in `light` and `dark` with `build-output.spec.ts`, 207 of 207; the perf project as above.
+- **A3 at the commit.** Rebuilt at `9395b46`, `blocks.spec.ts` A3 passes in both schemes (2 of 2).
+- **The scorecard** (criterion 21 a; run-log row of 2026-11-15 at `9395b46`). Row 1 reads **31 of 40, score 3, held**: `link` and `button group` hit, and `progress` matches the part `meter` holds. The criterion's 32 assumes `026`'s toast, which has not landed; with it, 32. Rows 1 to 14 total 32, unchanged. `site.ts` at `9395b46`: Button 383 kB (was 381), LCP 1,020 ms. **At the landing tree** (the review's fixes on the merge of `421cea7`, run-log row of 2026-11-15): Button 374 kB, LCP 912 ms, the part at 572 and 661, 79 nav links: rows 6, 7 and 8 hold. `kuiper.ts`: 79 entries, 60 `registry:ui`, nothing else moved. `depth.ts` was not run, since Button and Dialog did not change. Page-standard coverage rises by three pages born with described props and live pairs. Row 15 (cost) waits for `025` and `027b`'s B8.
+
+### Rulings at landing (2026-11-15)
+
+The change review ([`../reviews/027a-batch-a-quiet-items-pr-2026-11-15.md`](../reviews/027a-batch-a-quiet-items-pr-2026-11-15.md)) said "land after fixes". The design lead ruled at the checkpoint, and the builder applied the rest as written, in the commit "027a: the review's fixes".
+
+- **Finding 1 (the design lead).** `button-group`'s first example becomes "Clipboard": Cut, Copy and Paste, a group of related actions, which is the item's purpose. A choice of state belongs to `toggle-group`, as the page's own don't says. Tests 32 and 53, decision 10's row, test 32's text, the `aria-label` doc comment, the page's accessibility bullet and the two thumbnails moved with it.
+- **Finding 3 (the design lead).** `HTMLProgressAttributes: "progress"` lands in `api.server.ts` with `027a`: no build holds the file, and the edit is one map row. Test 3 asserts that the progress table ends "and every attribute of `<progress>`" (seen failing by mutation: without the row it reads "and the props of `HTMLProgressAttributes`"). The hook's lane is corrected above: it is `023`'s file, lane I.
+- **Finding 2 (the design lead).** Goes to lane S as small change `023a`, which the design lead writes. Not `027a`'s.
+- **Finding 4.** Each variant prop carries its union inline (`"default" | "inherit"`, `"attached" | "spaced"`, `"horizontal" | "vertical"`, `"default" | "destructive"`), as `button`'s tables show values; the exported aliases stay for apps. Test 3 asserts each table's types (seen failing first: the alias names).
+- **Finding 5.** `expressive.spec.ts`'s exemption covers only an attached group's child with a previous sibling, so the first child's house corner is still checked.
+- **Finding 6.** `site.ts --only kuiper` re-run on the landing tree, with a run-log row: Button 374 kB, LCP 912 ms, the part at 572 and 661; row 8 and the scorecard's prose now give that figure. Row 1's 31 of 40 stands.
+- **Finding 7.** Test 48's forced-colours half asserts the 10% pixel keeps `--primary` and the 90% pixel `--muted`, ± 2, in Chromium and Firefox. Deviation 4's text is corrected.
+- **Finding 8.** `linkVariants` takes `class`, last, as the `tv` functions do.
+- **Finding 9.** The `card` skip names `031b` in its comment, and the hooks list has the line.
+- **Finding 10.** A `target="_blank"` passed through `...rest` is treated as `newTab`: the icon, the spoken words and the merged `rel`. The safer default, with precedent in GOV.UK's and Primer's guidance. Test 45a holds it on a hidden fixture in the `new-tab` example, outside the shown source (seen failing by mutation: with `newTab` alone deciding, `rel` is empty and there is no icon). The `newTab` doc comment and the changelog bullet say so.
+- **Finding 11.** The Do captions no longer repeat their lead sentences; the `visited` bullet says the underline stays; the progress page links `meter` and `spinner`; the failed bar's `valuetext` is "Failed at 40%", as its visible words are.
+- **Finding 12.** Notes only: `expressive.spec.ts`'s unquoted font names in Firefox and WebKit are in the hooks list, for `022`'s fault ledger.
+
+**The checks after the fixes:** `bun run check` 0 errors; lint clean; the touched unit files (`registry`, `breadth`, `registry-comments`, `examples`, `literals`, `search`, `api`) 370 pass, 0 fail; in Chromium `light` and `dark`, the four new spec files with `build-output.spec.ts`, the 027a keyboard rows, `expressive.spec.ts` and axe on every page, 427 passed, 0 failed, among them axe on the three pages at 360, 768 and 1280 (18 of 18); the four new spec files in Firefox, both schemes, 182 of 182. Mutations, on a dev server: `opensTab` decided by `newTab` alone fails test 45a, and no `forced-color-adjust-none` fails test 48, each in Chromium and Firefox (4 of 4 killed; the review's M6 no longer survives in Firefox). `static/r` regenerated by `bun run build:registry` after the mutations were reverted; all 156 thumbnails regenerated by the script, of which only `button-group`'s two pictures changed.
 
 ### The owner's answers, 2026-11-15
 

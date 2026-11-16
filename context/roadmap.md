@@ -68,6 +68,8 @@ The new name in code. Evidence across three engines and two screen readers. Toke
 | `020` the Kuiper rename | `pluto` → `kuiper` in the registry name, the theme item, context keys, the token file, the storage key and the package; one "Upgrade to 0.13.0" guide page; a redirect for each moved URL | all | the `v0.12.0` tag | 11: 2 → 3 (migration page) |
 | `020a` the site's CSS reads only code | Small change: `@source not "../context"` in `src/app.css`, so prose and exhibits never add rules to the site's CSS | T (one line) | `020`; lands before `021`, whose CSS check is byte-identical | 8: held |
 | `020b` the guide's renames fit the column | Small change from `020`'s checkpoint: the upgrade guide's five-column rename table (1,053 px in a 608 px column) becomes one block per rename | S (one page) | `020a` | — |
+| `023a` API types break between words | Small change from `027a`'s change review: the API table's Type cell uses `break-words`, not `wrap-anywhere`, so type names never break mid-word once `023` widens every table | S (one component) | `027a`; lands before `023` | — |
+| `024b` the site stops shipping the whole registry | Found by `026`'s and `027a`'s builds: `sitemap.ts` and `items.ts` import `registry.json` whole, so every new item adds about 0.6–0.9 kB to every page. Import only the fields the site reads. Small change or spec, to be written | S | `024` | 8: held |
 | `021` tokens for everyone | The token file becomes DTCG with a `$description` per role (from `words.ts`), a record of renamed and removed names, and a plain CSS-variables file published beside the theme. Built CSS is byte-identical | T | `020` | 5: 1 → 4; 12: 0 → 1 |
 | `022` the test matrix | Firefox and WebKit projects for every browser suite; scripted VoiceOver and NVDA runs, built on `019`'s script, for items with a live region, a focus move or an overlay; a tag waits on a green run | E | `020` | 3: row (h) recorded |
 | `023` prop doc comments | A doc comment on every prop of every item; a unit test that the described list has no empty row; the undefined-`var()` test | I | `020`, `024` (Button's headroom) | 2: 2 → 3 |
@@ -94,7 +96,7 @@ Not a spec: **the Kuiper lockup mock-ups.** Drawn and put to the owner on 2026-1
 | `033` the pilot | Guidance for `button`, `dialog`, `field`, `dropdown-menu`, `error-summary` | site guidance and examples | `032` | 2: 3 → 4 |
 | `034` the part first | The frame's title and scheme switch on one row; the stage above y = 500 at 1440 | S (frames) | `032` | 7: 2 → 3 |
 | `035` states in axe | Hover, pressed, disabled, invalid and open states driven and scanned, in both schemes | E | `022` | 3: (b) |
-| `036` info, banner and count | An `info` tone; a page-level banner from `alert`; count and dot badges; `toast.info` | T, then I | `031` | 1: held |
+| `036` info, banner and count | An `info` tone (which `toast`'s `info` kind then takes; `toast.info` shipped with `026`); a page-level banner from `alert`; count and dot badges | T, then I | `031` | 1: held |
 | `037` batch B | Custom select, combobox, multi-select, slider, choice cards, toggletip, context menu. Combobox gets a 1,000-option cost case | N | `027b` (tag) | 1: 37 of 40; 15: (d) → 4 |
 | `038` the data palette | Eight categorical colours, sequential and diverging scales, each measured for contrast and colour-blind distance | T, then I (chart) | `036` | 4, 5: held |
 | `039` motion | Motion tokens by size of change; sheets, drawers and toasts slide; accordions open by height; nothing moves under reduced motion | T, then I | `038` | — |

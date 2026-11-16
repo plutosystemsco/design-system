@@ -1,0 +1,34 @@
+{
+	"$schema": "https://shadcn-svelte.com/schema/registry-item.json",
+	"name": "link",
+	"title": "Link",
+	"type": "registry:ui",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+	"description": "The inline link: always underlined, in the primary colour or the text's, with standalone, new-tab and visited forms.",
+	"devDependencies": [
+		"phosphor-svelte@^3.1.1"
+	],
+	"registryDependencies": [
+		"utils",
+		"kuiper-theme"
+	],
+	"meta": {
+		"since": "0.13.0",
+		"group": "navigation",
+		"modes": [
+			"productive"
+		]
+	},
+	"files": [
+		{
+			"content": "<script lang=\"ts\" module>\n  import type { Snippet } from \"svelte\";\n  import type { HTMLAnchorAttributes } from \"svelte/elements\";\n  import { cn } from \"$UTILS$\";\n\n  /** The link's colour: the primary colour, or the surrounding text's. */\n  export type LinkVariant = \"default\" | \"inherit\";\n\n  /** Every word the link says, for an app to translate. */\n  export type LinkStrings = {\n    /** What a screen reader hears after a new-tab link's text. It starts with a space. */\n    newTab: string;\n  };\n\n  const STRINGS: LinkStrings = { newTab: \" (opens in a new tab)\" };\n\n  const VARIANT: Record<LinkVariant, string> = {\n    default: \"text-primary\",\n    inherit: \"text-current\",\n  };\n\n  /**\n   * The link's classes, for a plain `<a>` that cannot be a `Link`, such as\n   * one rendered from Markdown: always underlined, thicker on hover. It\n   * takes `class` last, as the other variant functions do.\n   */\n  export function linkVariants({\n    variant = \"default\",\n    standalone = false,\n    visited = false,\n    class: className,\n  }: {\n    variant?: \"default\" | \"inherit\";\n    standalone?: boolean;\n    visited?: boolean;\n    class?: string;\n  } = {}): string {\n    return cn(\n      \"underline underline-offset-4 hover:decoration-2\",\n      VARIANT[variant],\n      standalone && \"inline-flex min-h-6 items-center\",\n      visited && \"visited:text-foreground\",\n      className,\n    );\n  }\n\n  export type LinkProps = Omit<\n    HTMLAnchorAttributes,\n    \"href\" | \"rel\" | \"class\" | \"children\"\n  > & {\n    /** Where it goes. A link always goes somewhere; for an action, use `Button`. */\n    href: string;\n    /** The primary colour, or the surrounding text's, for a link inside muted text or a footer. Both are underlined. */\n    variant?: \"default\" | \"inherit\";\n    /** A link alone on its line, such as in a list: it gets a 24 px tall target. A link inside a sentence does not need one. */\n    standalone?: boolean;\n    /** Opens in a new tab, with `rel=\"noopener noreferrer\"`, an icon, and \"(opens in a new tab)\" for screen readers. Use it rarely: it takes the Back button away. A `target=\"_blank\"` passed directly is treated the same. */\n    newTab?: boolean;\n    /** Shows visited links in the text colour, for long lists of documents a person works through. */\n    visited?: boolean;\n    /** Link types of your own, such as `\"external\"`. With a new tab, `noopener noreferrer` is merged in. */\n    rel?: string;\n    /** Every word it says: `newTab`, \" (opens in a new tab)\". */\n    strings?: Partial<LinkStrings>;\n    /** Classes for the link. */\n    class?: string;\n    /** The link, bound. */\n    ref?: HTMLAnchorElement | null;\n    /** The link's text: words that say where it goes, read alone. */\n    children?: Snippet;\n  };\n\n  /** Two lists of link types, merged, each once, in order. */\n  function mergeRel(\n    own: string | undefined,\n    add: string[],\n  ): string | undefined {\n    const tokens = [...(own ?? \"\").split(/\\s+/), ...add].filter(Boolean);\n    const merged = [...new Set(tokens)].join(\" \");\n    return merged || undefined;\n  }\n</script>\n\n<script lang=\"ts\">\n  import ArrowSquareOut from \"phosphor-svelte/lib/ArrowSquareOut\";\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    href,\n    variant = \"default\",\n    standalone = false,\n    newTab = false,\n    visited = false,\n    rel,\n    strings,\n    children,\n    ...restProps\n  }: LinkProps = $props();\n\n  const s = $derived({ ...STRINGS, ...strings });\n  // A new tab asked for by `target` is said and made safe, as `newTab` is.\n  const opensTab = $derived(newTab || restProps.target === \"_blank\");\n</script>\n\n<!--\n  The one inline link: an <a href>, always underlined, in the primary colour\n  or the text's. Focus is the theme's ring. A new tab is said in words a\n  screen reader hears and shown by an icon, and its rel holds noopener and\n  noreferrer beside the app's own link types.\n-->\n<a\n  {...restProps}\n  bind:this={ref}\n  data-slot=\"link\"\n  {href}\n  target={opensTab ? \"_blank\" : restProps.target}\n  rel={mergeRel(rel, opensTab ? [\"noopener\", \"noreferrer\"] : [])}\n  class={linkVariants({ variant, standalone, visited, class: className })}\n  >{@render children?.()}{#if opensTab}<ArrowSquareOut\n      data-slot=\"link-icon\"\n      aria-hidden=\"true\"\n      class=\"ms-1 inline size-4 align-text-bottom\"\n    /><span data-slot=\"link-new-tab\" class=\"sr-only\">{s.newTab}</span>{/if}</a\n>\n",
+			"type": "registry:ui",
+			"target": "link/link.svelte"
+		},
+		{
+			"content": "import Root, {\n  type LinkProps,\n  type LinkStrings,\n  type LinkVariant,\n  linkVariants,\n} from \"./link.svelte\";\n\nexport {\n  Root,\n  type LinkProps as Props,\n  //\n  Root as Link,\n  linkVariants,\n  type LinkProps,\n  type LinkStrings,\n  type LinkVariant,\n};\n",
+			"type": "registry:ui",
+			"target": "link/index.ts"
+		}
+	]
+}

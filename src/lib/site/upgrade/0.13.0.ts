@@ -88,6 +88,34 @@ export const SECTIONS: readonly UpgradeSection[] = [
       },
     ],
   },
+  // 026 decision 26: the toast. Nothing is renamed or deprecated; the
+  // section is for apps that installed shadcn-svelte's `sonner`.
+  {
+    spec: "026",
+    id: "026",
+    title: "026: a toast of Kuiper's own",
+    summary:
+      "Kuiper has a `toast` of its own, on `status`. Who sees it: an app that installed shadcn-svelte's `sonner`. Nothing is deprecated, and nothing you have changes.",
+    renames: [],
+    steps: [
+      {
+        text: "Add the toast. Mount `<Toaster />` where `sonner`'s toaster was, in your root layout, and remove that one, so two corners do not compete.",
+        command: addCommand("toast"),
+        language: "bash",
+      },
+      {
+        text: "Map the calls. `toast.warning` becomes `toast.caution`. `duration: Infinity` keeps the toast, as in `sonner`. A finite `duration` below 6000 is raised to 6000, and is ignored on errors, cautions, loading and action toasts. `toast.promise` takes the same three messages. Two `sonner` toasts with the same text and an action stay two toasts. `toast.custom`, rich colours, `position`, `expand` and swipe have no equivalent.",
+      },
+      {
+        text: 'To meet WCAG 2.2.1, bind the toaster\'s `timers` to a setting the person can reach before the first toast, `<Toaster timers={keep ? "off" : "on"} />`, or keep every timed message on the page too. Call `toast.navigating()` in `beforeNavigate` and `toast.navigated()` in `afterNavigate`, in your root layout.',
+      },
+      {
+        text: "Once nothing imports them, remove `svelte-sonner`, and `mode-watcher` if nothing else uses it.",
+        command: "bun remove svelte-sonner",
+        language: "bash",
+      },
+    ],
+  },
 ];
 
 /** 4. What keeps working until 0.14.0, and what does not. */
