@@ -7,7 +7,7 @@
  */
 import type { Locator, Page } from "@playwright/test";
 import { expect, test } from "../test.ts";
-import { adaptsIn, notIn, onlyIn } from "./engines.ts";
+import { adaptsIn, notIn } from "./engines.ts";
 import { contrastRatio } from "../../scripts/contrast.ts";
 import { settled } from "./pages.ts";
 import {
@@ -415,28 +415,32 @@ test.describe(
       },
     );
 
+    // 027 decision 3, the guard's negative case: a press that starts
+    // outside the nav moves no focus. 022o's change review, finding 1: a
+    // script click reaches the nav's click handler as a real click does,
+    // and focuses nothing in any engine, so the check runs in all six
+    // projects. macOS WebKit still checks the guard with real clicks, in
+    // 15a's adaptsIn(…, "darwin") branch.
     test(
-      "18. a WebKit click on Next onto the last page, from outside the nav, moves no focus",
+      "18. a press on Next onto the last page, from outside the nav, moves no focus",
       tag("focus"),
       async ({ page }, info) => {
-        // 022o: Linux WebKit focuses the clicked button, as Chromium does.
-        onlyIn(
-          "webkit",
-          "focus on click: only macOS WebKit leaves focus where it was when a button is clicked",
-          "darwin",
-        );
         await openExample(page, info, ITEM, "buttons");
         const n = nav(page);
-        await button(n, "Page 12").click();
-        await button(n, "Page 11").click();
+        await press(page, n, 12, "Enter");
+        await press(page, n, 11, "Enter");
         await page.evaluate(() =>
           (document.activeElement as HTMLElement | null)?.blur(),
         );
-        await button(n, "Next page").click();
+        expect(await focusedText(page)).toBe("body");
+        await button(n, "Next page").evaluate((el) =>
+          (el as HTMLElement).click(),
+        );
         await expect(button(n, "Page 12")).toHaveAttribute(
           "aria-current",
           "page",
         );
+        await frames(page);
         expect(await focusedText(page)).toBe("body");
       },
     );

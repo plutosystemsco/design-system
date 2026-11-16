@@ -3,7 +3,7 @@
 Reviews the small change [`022o`](../specifications/022o-the-webkit-tests-that-assumed-macos-or-a-moment.md). Its research is [WebKit on Linux](../research/2026-11-16-webkit-on-linux.md) (§1, §2.1, §3, §5, §6, §7). This reviewer wrote neither the specification nor the code (constitution §5).
 
 - **Date:** 2026-11-16
-- **Status:** in review
+- **Status:** dispositioned; lands
 - **Reviewer:** a reviewer; not the author
 - **Reviewed:** the uncommitted working tree of the worktree `lane-e-webkit`, on `0933f1b`. Ten files, +185 −37: `tests/e2e/{bar-glass,chat,compositions,pagination,primitives,toast}.spec.ts`, `tests/e2e/engines.ts`, `tests/e2e/engine-only.ts`, `tests/unit/engine-only-check.ts`, `tests/unit/engine-only.test.ts`. No file under `src/` changes.
 - **Re-ran:** Bun 1.4.4, Linux, 4 cores, load average 4 to 6 (another builder's WebKit runs beside these). Playwright 1.64.1, browsers from `/opt/pw-browsers`, `E2E_PREBUILT=1` on the worktree's `build/`, one worker.
@@ -86,3 +86,12 @@ Does not land yet: finding 1 (Medium), pagination 18 now runs in no CI configura
 
 ## Disposition
 
+By the design lead, 2026-11-16, with the builder's fixes. The design lead did not write `022o`, and re-checked the fixes.
+
+1. **Fixed** by the builder, as the finding recommends. Test 18 runs in every engine: Enter to page 11, focus blurred to `body`, a script click on Next; page 12 is current and focus stays on `body`. Its `onlyIn` and `ENGINE_ONLY` entry are gone (`onlyIn` 3 → 2), and it is retitled. The builder's mutation (027 decision 3's guard made always true, in a scratch copy) failed it in `chromium-light` and `webkit-light` ("Page 12" where `body`). The spec says macOS WebKit still checks the guard with real clicks through 15a. EXECUTED by the design lead: 18 passes in `chromium-light` and `webkit-light`.
+2. **Fixed.** The spec's landing notes tell `030`'s builder to subtract `ENGINE_ONLY` entries by engine and platform.
+3. **Fixed.** Chat L1 asserts, after `stillScroll()`, that the log is not at its end and the scroll button is visible. EXECUTED by the design lead: L1's three tests pass in both projects; the builder's `--repeat-each=8`, 16 of 16.
+
+After the fixes (the builder's figures): `pagination.spec.ts` and `chat.spec.ts` whole, both projects, 53 passed and 1 skipped (pagination 24, `notIn("webkit")`); the `ENGINE_ONLY` unit tests, 24 of 24; lint clean.
+
+Closing verdict: lands.

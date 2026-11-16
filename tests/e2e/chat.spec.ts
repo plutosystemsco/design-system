@@ -173,6 +173,9 @@ test.describe("L1. the message log", () => {
     // Released: a stream does not move it. 022o: Linux WebKit eases a
     // wheel scroll out over about 200 ms, so wait until it holds still.
     await stillScroll(region);
+    // Still released once it rests: the wheel's ease-out did not reach the end.
+    expect((await scrollState(region)).atEnd).toBe(false);
+    await expect(button).toBeVisible();
     const before = (await scrollState(region)).top;
     await page.getByTestId("log-stream").click();
     await page.waitForTimeout(700);

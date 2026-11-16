@@ -1,6 +1,6 @@
 # 022o — The WebKit tests that assumed macOS, or a moment
 
-- **Status:** built 2026-11-16; waits for its change review. Lane E (tests only).
+- **Status:** built 2026-11-16; reviewed (`reviews/022o-the-webkit-tests-that-assumed-macos-or-a-moment-pr-2026-11-16.md`, does not land yet), its three findings fixed; waits for the review's re-check. Lane E (tests only).
 - **Date:** 2026-11-16
 - **Author:** a lane-E builder
 - **Kind:** small change (`context/README.md`: a fix with no interface change, no new token or dependency). It changes tests only: six specs and the engine helpers, as the memo groups them, and no item. No spec review. Its checks are seen failing first where they fail here, and the built change is reviewed by someone who did not write it (constitution §5).
@@ -21,8 +21,8 @@ Terms. **Linux WebKit** is the GTK and WPE ports Playwright runs on Linux, as CI
 ## The fix
 
 1. **Toast:** a `raise()` helper presses the button by keyboard (`focus()`, then Enter, as 64g does) and waits for the toast. 64a, 64c and 64d use it in place of the click.
-2. **Pagination:** `onlyIn` and `adaptsIn` take an optional third argument, a platform (`"darwin"` or `"linux"`, matched against `process.platform`, which is the browser's system). An `ENGINE_ONLY` entry carries it as `platform`, and the unit check matches it as part of the call's arguments. No new helper: the two existing ones gain the argument, and an entry without it reads as before. 15a's click check is `adaptsIn("webkit", …, "darwin")`: macOS WebKit keeps today's expectation, and Linux WebKit takes Chromium's. 18 is `onlyIn("webkit", …, "darwin")`: it runs in macOS WebKit only, and skips in Linux WebKit as it does in Chromium. Both reasons now say "macOS WebKit".
-3. **Chat L1:** before reading `before`, the test polls until `scrollTop` holds still across two frames.
+2. **Pagination:** `onlyIn` and `adaptsIn` take an optional third argument, a platform (`"darwin"` or `"linux"`, matched against `process.platform`, which is the browser's system). An `ENGINE_ONLY` entry carries it as `platform`, and the unit check matches it as part of the call's arguments. No new helper: the two existing ones gain the argument, and an entry without it reads as before. 15a's click check is `adaptsIn("webkit", …, "darwin")`: macOS WebKit keeps today's expectation, and Linux WebKit takes Chromium's. Its reason now says "macOS WebKit". 18 is rewritten to run in every engine (the change review, finding 1): from page 11, with focus blurred to `body`, a script click on Next (`el.click()`) reaches the nav's click handler as a real click does and focuses nothing in any engine. The test asserts that page 12 is current and focus stays on `body`. Its `onlyIn` call and `ENGINE_ONLY` entry are gone, and it is retitled "18. a press on Next onto the last page, from outside the nav, moves no focus".
+3. **Chat L1:** before reading `before`, the test polls until `scrollTop` holds still across two frames. Then it asserts the log is still released where it rests: not at its end, and the scroll button visible (the change review, finding 3).
 4. **Bar glass:** the screenshot takes `scale: "css"`.
 5. **Compositions:** `focusProblem()` waits two animation frames before it reads the box.
 6. **Primitives:** the sweep's time-out grows with its pages: 30 s plus 1 s a page, 80 s for 50.
@@ -48,9 +48,9 @@ Run in this container on `0933f1b` (`release/0.13.0`), Playwright 1.64.1, 4 core
 
 **After (EXECUTED).**
 
-- The same five, `webkit-light`: 4 passed, 1 skipped (18, now macOS WebKit only).
+- The same five, `webkit-light`, as first built: 4 passed, 1 skipped (18, then macOS WebKit only). After the review's finding 1, 18 runs and passes in both projects (below).
 - Chat L1, `--repeat-each=8`, `webkit-light`: 8 of 8 passed.
-- The six specs in full (`toast`, `pagination`, `chat`, `bar-glass`, `compositions`, `primitives`), `webkit-light` and `chromium-light`, two workers: 448 tests, 436 passed, 12 skipped, 0 failed, in 8.7 minutes. The skips are each listed in `ENGINE_ONLY`: 18 in both projects, and in `webkit-light` the 8 bar-glass blur tests (`onlyIn("chromium")`), pagination 24 and toast 68 (`notIn("webkit")`). In that run: toast 64a 15.5 s in WebKit and 8.0 s in Chromium; the walk at 1440 6.2 and 2.0 s, at 320 4.0 and 1.8 s; chat L1 13.9 and 11.8 s.
+- The six specs in full (`toast`, `pagination`, `chat`, `bar-glass`, `compositions`, `primitives`), `webkit-light` and `chromium-light`, two workers, as first built: 448 tests, 436 passed, 12 skipped, 0 failed, in 8.7 minutes. The skips are each listed in `ENGINE_ONLY`: 18 in both projects, and in `webkit-light` the 8 bar-glass blur tests (`onlyIn("chromium")`), pagination 24 and toast 68 (`notIn("webkit")`). In that run: toast 64a 15.5 s in WebKit and 8.0 s in Chromium; the walk at 1440 6.2 and 2.0 s, at 320 4.0 and 1.8 s; chat L1 13.9 and 11.8 s.
 - Bar glass at 1440, the same four pages, two workers, the same load: 4 of 4 passed in `webkit-light`, 9.6 to 13.7 s, and in `chromium-light`, 5.6 to 7.3 s. WebKit's lowest readings are now 12.96, 12.46, 12.93 and 12.46, beside Chromium's 16.43, 13.46, 16.69 and 13.55. They moved because the boxes now sample the glass behind the text. All are far above 4.5.
 - Primitives sweep, the same run: 21.8 s in `webkit-light` and 10.5 s in `chromium-light`, against its new 80 s.
 - `bun test tests/unit/engine-only.test.ts`: 12 of 12 pass, two of them new fixtures: a platform call matches only an entry with the same platform, and only `onlyIn` and `adaptsIn` take one. `ENGINE_ONLY`: 3 `onlyIn`, 4 `notIn`, 4 `onlyProjects`, 12 `adaptsIn`, unchanged; two entries now carry `platform: "darwin"`.
@@ -60,7 +60,13 @@ Run in this container on `0933f1b` (`release/0.13.0`), Playwright 1.64.1, 4 core
 **Notes.**
 
 - The memo's fix for pagination needs a helper that can name a platform. The smallest that lists "the same way" is an optional argument on the two helpers that need it, carried as an optional field on the entry. An entry without it, and `030`'s reading of `engine`, are unchanged. INFERRED.
-- 18's title still says "a WebKit click". It runs only in macOS WebKit now, and its skip reason says so. Renaming it would move its `ENGINE_ONLY` title and any record that cites it, for no change in what it checks. INFERRED.
+- **The change review's fixes (EXECUTED).**
+  - Finding 1, 18 in every engine. `pagination.spec.ts` and `chat.spec.ts` in full, `webkit-light` and `chromium-light`, two workers: 54 tests, 53 passed, 1 skipped (24, `notIn("webkit")`). 18 passed in both. `ENGINE_ONLY` is now 2 `onlyIn`, 4 `notIn`, 4 `onlyProjects`, 12 `adaptsIn`. No unit test pins the per-helper count; `engine-only.test.ts` logs it and checks the sum. Only 15a's entry carries `platform` now.
+  - Finding 1, by mutation. In a scratch copy of the worktree (not its `src/`), 027 decision 3's guard in `pagination.svelte`'s `go()` was broken: `const inside = true;` in place of `ref.contains(document.activeElement)`. With that copy built and served, 18 failed in both `chromium-light` and `webkit-light`: expected "body", received "Page 12". 15a passed in both. The copy was then deleted; the worktree's build was never changed.
+  - Finding 1, macOS. macOS WebKit still checks the guard with real clicks, through 15a's `adaptsIn("webkit", …, "darwin")` branch: there a click focuses no button, and the item must move no focus either.
+  - Finding 3. Chat L1, `--repeat-each=8`, both projects: 16 of 16 passed with the two new assertions.
+  - `bun test tests/unit/engine-only.test.ts tests/unit/fault-ledger.test.ts tests/unit/macos-webkit.test.ts`: 24 of 24 pass. `bun run lint`: clean.
+- **For `030`'s builder (the change review, finding 2).** `ENGINE_ONLY` entries may carry `platform`. Such an entry applies only on that system, so on CI's Linux an `onlyIn` with `darwin` runs nowhere and an `adaptsIn` with `darwin` adapts nowhere. `030`'s coverage test must subtract `ENGINE_ONLY` entries by engine and platform, not by engine alone. The design lead carries this into `030` decision 3 before that build.
 - The macOS branches were not run here: this container has no macOS. They are today's WebKit branches, unchanged but for the platform. INFERRED.
 - **`bun run check` in a worktree.** The worktree shares the main checkout's `node_modules` through a symlink. `tsconfig.json` extends `$app/tsconfig`, which SvelteKit writes into `node_modules/$app` with `rootDirs` relative to that folder, so the worktree's `./$types` imports resolved against the main checkout. `bun run check` reported 110 errors there: missing `./$types` modules, and the implicit `any` types they leave in `src/routes`. The same `svelte-check` run with a temporary tsconfig whose `rootDirs` are the worktree's own (`[".", "./.svelte-kit/types"]`) checked 2430 files and found 0 errors. The temporary file was removed. EXECUTED.
 - **The scorecard:** no row moves; these are fixes to tests. INFERRED, to be confirmed at the change review.

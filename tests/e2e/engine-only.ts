@@ -196,17 +196,6 @@ export const ENGINE_ONLY: EngineOnly[] = [
   },
   {
     file: "pagination.spec.ts",
-    title:
-      "027b: pagination › 18. a WebKit click on Next onto the last page, from outside the nav, moves no focus",
-    helper: "onlyIn",
-    engine: "webkit",
-    // 022o: Linux WebKit focuses the button, as Chromium does.
-    platform: "darwin",
-    reason:
-      "focus on click: only macOS WebKit leaves focus where it was when a button is clicked",
-  },
-  {
-    file: "pagination.spec.ts",
     title: "027b: pagination › 24. forced colours keep the current page",
     helper: "notIn",
     engine: "webkit",
