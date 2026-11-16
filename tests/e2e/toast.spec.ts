@@ -813,6 +813,18 @@ test.describe("026: a toast never covers the keyboard focus", () => {
       el.before(b);
     }, label);
 
+  /**
+   * 022o: raises one toast by keyboard. In Linux WebKit a click on a
+   * button's text focuses it and leaves Shift+Tab's starting point inside
+   * it, so Shift+Tab then stays on the button; a click in macOS WebKit
+   * focuses nothing, and these tests assumed that.
+   */
+  const raise = async (page: Page, control: Locator) => {
+    await control.focus();
+    await page.keyboard.press("Enter");
+    await expect(toasts(page)).toHaveCount(1);
+  };
+
   test(
     "64a. a covering toast steps aside, and comes back",
     tag("focus"),
@@ -820,8 +832,7 @@ test.describe("026: a toast never covers the keyboard focus", () => {
       await page.setViewportSize({ width: 1440, height: 900 });
       await clocked(page);
       const save = button(page, "raise", "Save");
-      await save.click();
-      await expect(toasts(page)).toHaveCount(1);
+      await raise(page, save);
       await page.mouse.move(10, 600);
       await under(page, save);
       await save.focus();
@@ -934,8 +945,7 @@ test.describe("026: a toast never covers the keyboard focus", () => {
       await page.setViewportSize({ width: 1440, height: 900 });
       await open(page, PAGE);
       const save = button(page, "raise", "Check storage");
-      await save.click();
-      await expect(toasts(page)).toHaveCount(1);
+      await raise(page, save);
       await page.mouse.move(10, 600);
       await save.evaluate((el) => {
         const panel = document.createElement("div");
@@ -968,8 +978,7 @@ test.describe("026: a toast never covers the keyboard focus", () => {
       await page.setViewportSize({ width: 1440, height: 900 });
       await open(page, PAGE);
       const save = button(page, "raise", "Check storage");
-      await save.click();
-      await expect(toasts(page)).toHaveCount(1);
+      await raise(page, save);
       await page.mouse.move(10, 600);
       await save.evaluate((el) => {
         const box = document.createElement("div");

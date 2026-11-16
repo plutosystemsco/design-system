@@ -4,8 +4,8 @@
  * it at any commit without loading Playwright.
  *
  * Each call of `onlyIn`, `notIn` or `onlyProjects` (`engines.ts`) has
- * exactly one entry here, with the same helper and arguments, and each
- * entry has one call (`tests/unit/engine-only.test.ts`).
+ * exactly one entry here, with the same helper and arguments, a platform
+ * included, and each entry has one call (`tests/unit/engine-only.test.ts`).
  *
  * `title` is the title path, below the file, of the test the call skips:
  * its describes and its title, joined by " › ". A call made in a `describe`
@@ -15,6 +15,9 @@
 
 export type Engine = "chromium" | "firefox" | "webkit";
 
+/** `process.platform` where a call applies only on one system (`022o`). */
+export type Platform = "darwin" | "linux";
+
 export type EngineOnly = {
   file: string;
   title: string;
@@ -23,6 +26,10 @@ export type EngineOnly = {
   helper: "onlyIn" | "notIn" | "onlyProjects" | "adaptsIn";
   /** For `onlyIn`, `notIn` and `adaptsIn`: the engine the call names. */
   engine?: Engine;
+  /** For `onlyIn` and `adaptsIn` only (`022o`): the call applies in the
+   * engine on this platform alone. macOS WebKit and Linux WebKit keep
+   * different defaults, such as whether a click focuses a button. */
+  platform?: Platform;
   /** For `onlyProjects`: the projects the test runs in. */
   projects?: string[];
   /** What the skipped engines or projects lack, or do differently. */
@@ -181,9 +188,11 @@ export const ENGINE_ONLY: EngineOnly[] = [
       "027b: pagination › 15a. focus stays on a pressed page across range changes, by click",
     helper: "adaptsIn",
     engine: "webkit",
-    // 027's re-review, R2: WebKit, as macOS, focuses no button on click.
+    // 027's re-review, R2: macOS WebKit focuses no button on click. 022o:
+    // Linux WebKit does, as Chromium does, so it takes Chromium's check.
+    platform: "darwin",
     reason:
-      "focus on click: WebKit does not focus a button on click, so the item moves no focus",
+      "focus on click: macOS WebKit does not focus a button on click, so the item moves no focus",
   },
   {
     file: "pagination.spec.ts",
@@ -191,8 +200,10 @@ export const ENGINE_ONLY: EngineOnly[] = [
       "027b: pagination › 18. a WebKit click on Next onto the last page, from outside the nav, moves no focus",
     helper: "onlyIn",
     engine: "webkit",
+    // 022o: Linux WebKit focuses the button, as Chromium does.
+    platform: "darwin",
     reason:
-      "focus on click: only WebKit leaves focus where it was when a button is clicked",
+      "focus on click: only macOS WebKit leaves focus where it was when a button is clicked",
   },
   {
     file: "pagination.spec.ts",

@@ -237,19 +237,20 @@ test.describe(
           await openExample(page, info, ITEM, "buttons");
           const n = nav(page);
           await press(page, n, 1, by);
-          // By click, WebKit focuses no button, as macOS does not; the item
-          // then moves no focus either.
-          const webkitClick =
+          // By click, macOS WebKit focuses no button; the item then moves no
+          // focus either. Linux WebKit focuses it, as Chromium does (022o).
+          const macClick =
             by === "click" &&
             adaptsIn(
               "webkit",
-              "focus on click: WebKit does not focus a button on click, so the item moves no focus",
+              "focus on click: macOS WebKit does not focus a button on click, so the item moves no focus",
+              "darwin",
             );
           for (const n2 of [5, 12, 1, 4, 3]) {
             const before = await focusedText(page);
             await press(page, n, n2, by);
             await frames(page);
-            if (webkitClick)
+            if (macClick)
               expect(await focusedText(page), `after ${n2}`).toBe(before);
             else
               await expect(
@@ -418,9 +419,11 @@ test.describe(
       "18. a WebKit click on Next onto the last page, from outside the nav, moves no focus",
       tag("focus"),
       async ({ page }, info) => {
+        // 022o: Linux WebKit focuses the clicked button, as Chromium does.
         onlyIn(
           "webkit",
-          "focus on click: only WebKit leaves focus where it was when a button is clicked",
+          "focus on click: only macOS WebKit leaves focus where it was when a button is clicked",
+          "darwin",
         );
         await openExample(page, info, ITEM, "buttons");
         const n = nav(page);

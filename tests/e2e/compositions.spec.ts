@@ -563,9 +563,16 @@ async function signature(page: Page): Promise<string | null> {
  * The focused element shows a solid 2 px outline in the ring it sits in (a
  * code block's root draws it for its pre), and, outside the bar, it is not
  * fully hidden under the bar (WCAG 2.4.11).
+ *
+ * 022o: it reads two frames after the key press. WebKit scrolls a focused
+ * element into view on a zero-delay timer, after the focus has moved, so an
+ * earlier read can see the box before the scroll.
  */
 async function focusProblem(page: Page): Promise<string | null> {
-  return page.evaluate(() => {
+  return page.evaluate(async () => {
+    await new Promise((r) =>
+      requestAnimationFrame(() => requestAnimationFrame(r)),
+    );
     const focused = document.activeElement as HTMLElement;
     const ringed = (
       focused.getAttribute("data-slot") === "code-block-content"
