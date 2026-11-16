@@ -168,7 +168,8 @@ describe("022 test 3: matrix.yml", () => {
     const extract = r.findIndex(
       (x) =>
         x.includes("tar -xf site.tar") &&
-        x.includes("test -f build/index.html"),
+        x.includes("test -f build/index.html") &&
+        x.includes("test -f .svelte-kit/output/server/manifest.js"),
     );
     const smoke = r.findIndex((x) => x.includes("test:smoke"));
     expect(extract).toBeGreaterThanOrEqual(0);

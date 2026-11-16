@@ -1363,16 +1363,19 @@ test.describe("the editor agrees with the block", () => {
         await load(page, "full", specimen.language, specimen.code);
         await agree(page, "full", `${id} before`);
         await page.locator('[data-editor="full"] .cm-content').click();
-        // 022k: the click's own selection can land after the key, and leave
-        // the cursor where the click put it. Press until it is at the end.
-        await expect(async () => {
-          await page.keyboard.press("ControlOrMeta+End");
-          expect(
-            await page.evaluate(
-              `(() => { const v = ${view}; return v.state.selection.main.head === v.state.doc.length; })()`,
-            ),
-          ).toBe(true);
-        }).toPass({ timeout: 10_000 });
+        // 022k: this editor binds no Ctrl-End, so the browser moves the
+        // caret, and CodeMirror reads the move a few milliseconds later. Type
+        // only once the editor's own cursor is at the end.
+        await page.keyboard.press("ControlOrMeta+End");
+        await expect
+          .poll(
+            () =>
+              page.evaluate(
+                `(() => { const v = ${view}; return v.state.selection.main.head === v.state.doc.length; })()`,
+              ),
+            { message: `${id}: the cursor at the end`, timeout: 10_000 },
+          )
+          .toBe(true);
         await page.keyboard.type(
           id === "markdown" ? "\n\n```python\nprint(1)\n```" : "\nvalue = 1",
         );
