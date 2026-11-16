@@ -36,7 +36,7 @@ export const LEDGER: LedgerLine[] = [
         "the editor agrees with the block › E7. the budgets, timed in the page: Python's first colour, 200 keystrokes in 5,000 lines; Ruby and Markdown in 2,000",
       expect: { error: "toBeLessThanOrEqual" },
       finding:
-        "On CI's two-core runners the editor's keystroke times miss 013's budgets in every engine; the budgets were set on a quiet machine.",
+        "On CI's two-core runners the editor misses 013's budgets in every engine (keystroke times; in Firefox also the first colour); the budgets were set on a quiet machine.",
       change: "022f",
     },
     EVERY,

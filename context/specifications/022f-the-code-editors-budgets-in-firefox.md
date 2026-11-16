@@ -20,7 +20,7 @@ That evidence was taken at load average 50 to 90 on 10 cores, from other work on
 
 ## The check
 
-E7 in `firefox-light` and `firefox-dark`, failing today with `toBeLessThanOrEqual`. When the fix lands, its ledger lines (`change: "022f"`) are removed, or the run turns red.
+E7 in all six projects (in Firefox's two since 2026-11-15; in the other four since the owner's ruling of 2026-11-16), failing today with `toBeLessThanOrEqual`. When the fix lands, its ledger lines (`change: "022f"`) are removed, or the run turns red.
 
 ## Landing notes
 
@@ -30,6 +30,6 @@ The first `matrix` runs showed E7 missing its keystroke budget in Chromium and W
 
 - E7's ledger line now covers all six projects, not Firefox's two. The finding reads: "On CI's two-core runners the editor's keystroke times miss 013's budgets in every engine; the budgets were set on a quiet machine."
 - The budgets do not change. The measurement moves to the tag's quiet-machine run, beside `025`'s cost run (`handoff.md`, "Before the 0.13.0 tag"): E7 three times in every engine, at rest. If every engine meets the budgets there, the six lines go and this change closes on that record; if one misses, step 2 of "The fix" applies to that engine.
-- **A risk the ruling accepts:** Chromium's misses are close to the line (12.9 ms in one attempt). A ledgered test that passes turns the run red (`022` decision 16), and one that passes on retry is flaky, which CI also fails. A red run on E7 alone in `chromium-*` reads as this fault meeting its budget on a faster runner, not as a new fault.
-- Seen here, 2026-11-16: E7 in `chromium-light`, ledgered, failed as its line expects and counted as passed.
+- **A risk the ruling accepts:** Chromium's misses are close to the line (12.9 ms in one attempt). A ledgered test is retried only when its first attempt passes. So E7 turns the run red whenever its first attempt meets every budget: "Expected to fail, but passed" if the retry passes too, flaky if it fails, and CI fails both. A red run whose only failure is E7 in `chromium-*`, passing unexpectedly or flaky, reads as this fault meeting its budget on a faster runner. A `ledger-mismatch` on E7, such as a timeout, is not that reading; it is a new failure (the change review of `022l` and this ruling, finding 4).
+- EXECUTED here, 2026-11-16: E7 in `chromium-light`, ledgered, failed as its line expects and counted as passed.
 

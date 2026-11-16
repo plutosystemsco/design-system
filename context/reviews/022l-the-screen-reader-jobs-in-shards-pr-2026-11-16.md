@@ -8,7 +8,7 @@ Reviews two built changes, uncommitted in the working tree of `release/0.13.0` a
 This reviewer wrote neither change, nor either specification (constitution §5).
 
 - **Date:** 2026-11-16
-- **Status:** in review
+- **Status:** dispositioned; both land
 - **Reviewer:** a reviewer; not the author
 - **Reviewed:** `git diff` against `0933f1b`.
   - Change A: `.github/workflows/matrix.yml` (the `voiceover` and `nvda` jobs), `playwright.sr.config.ts` (the CI reporter), `tests/unit/workflow.test.ts` (three `022l:` tests and the job-count test), and the six files in `tests/fixtures/ci/`.
@@ -44,7 +44,7 @@ This reviewer wrote neither change, nor either specification (constitution §5).
 `022f` is a small change with one check: "E7 … failing today with `toBeLessThanOrEqual`. When the fix lands, its ledger lines … are removed, or the run turns red." This change widens the ledger, not the fix. So the checks are the ledger's.
 
 1. E7's line is in all six projects — **met.** READ: `tests/fault-ledger.ts` maps one line over `chromium-light` to `webkit-dark`. EXECUTED: `fault-ledger.test.ts` passes, so E7's title is listed in each of the six projects. `ledgerCheck` reports six open faults, one per project.
-2. E7's CI error matches the line's `expect` — **met.** EXECUTED: `mismatch` returns null for CI's WebKit text, 53 against 12, with Playwright's colour codes. Every E7 budget is a `toBeLessThanOrEqual` (`code.spec.ts:1543–1548`), so a miss in any of them matches. READ.
+2. E7's CI error matches the line's `expect` — **met.** EXECUTED: `mismatch` returns null for CI's WebKit text, 53 against 12, with Playwright's colour codes. Every E7 budget is a `toBeLessThanOrEqual` (`code.spec.ts:1544–1549`), so a miss in any of them matches. READ.
 3. The release check still reads the ledger — **met.** EXECUTED: `ledgerCheck` refuses and prints six lines. `release-check.test.ts` passes.
 4. The 022f notes state the risk — **partly met.** The conclusion is right: a ledgered E7 that meets its budgets turns the run red. The mechanism is not: a ledgered test whose first attempt fails is never retried (finding 4).
 
@@ -54,8 +54,8 @@ No High and no Medium finding. Every finding is a write-in.
 
 1. **Low (A): the TCC step reads only osascript's rows, which may not hold the cause** (`.github/workflows/matrix.yml:206–211`; decision 5).
    READ, `setup.js:53–70`: with `--ci`, a failed user-database write throws; a failed system-database write is swallowed. So when the set-up reaches the Do Not Disturb script and fails with -2700, the user rows are known to be written. The system rows may be missing. The step reads both, so it can show a missing system row. That holds.
-   But guidepup writes `kTCCServicePostEvent` and `kTCCServiceAccessibility` for twelve clients (`updateTccDb.js:56–68`): `sshd`, `bash`, `zsh`, `osascript`, Terminal, GitHub's provisioner and hosted-compute agent, and others. INFERRED: macOS checks the responsible process, which on a hosted runner is most likely the agent at the top of the process chain, not `/usr/bin/osascript`. So osascript's rows can read "allowed" while the refusal stands.
-   Also READ, `updateTccDb.js:146–149`: on Darwin 27 and later, guidepup finds the user database under `/private/var/containers/Data/ProtectedSystem/`, not under `$HOME`. `macos-26` is Darwin 25, so `$HOME` is right today.
+   But guidepup writes `kTCCServicePostEvent` and `kTCCServiceAccessibility` for eleven clients (`updateTccDb.js:56–68`): `sshd`, `bash`, `zsh`, `osascript`, Terminal, GitHub's provisioner and hosted-compute agent, and others. INFERRED: macOS checks the responsible process, which on a hosted runner is most likely the agent at the top of the process chain, not `/usr/bin/osascript`. So osascript's rows can read "allowed" while the refusal stands.
+   Also READ, `updateTccDb.js:141–157`: on Darwin 27 and later, guidepup finds the user database under `/private/var/containers/Data/ProtectedSystem/`, not under `$HOME`. `macos-26` is Darwin 25, so `$HOME` is right today.
    Failure: a runner that refuses keystrokes because the agent's row is missing → the step prints osascript's rows granted → the log names no cause.
    Fix: drop the client filter, and print every client for the two services: `SELECT client, service, auth_value, auth_reason, last_modified FROM access WHERE service IN ('kTCCServicePostEvent', 'kTCCServiceAccessibility') ORDER BY service, client;`. Use `sudo -n`, as guidepup does, so a password prompt fails at once. Add TCC's own record of the refusal, which names the responsible process: `log show --last 15m --style compact --predicate 'subsystem == "com.apple.TCC"' | tail -n 200 || true`. Add a comment that the `$HOME` path holds below Darwin 27. `workflow.test.ts:275` then asserts `TCC.db` and `kTCCServicePostEvent` in place of `/usr/bin/osascript`.
 
@@ -104,3 +104,16 @@ No High and no Medium finding. Every finding is a write-in.
 - **Change B, E7 in `022f`:** Lands, with findings 4 and 5 as write-ins to its notes and its ledger line.
 
 ## Disposition
+
+By the design lead, the author, 2026-11-16. Every finding is fixed.
+
+1. **Fixed.** The TCC step prints every client's rows for the two services with `sudo -n`, and TCC's own log for the last 15 minutes; its comment notes the `$HOME` path holds below Darwin 27. `workflow.test.ts` asserts `kTCCServicePostEvent` and the log predicate.
+2. **Fixed.** `022l`'s landing notes take the write-in on concurrency.
+3. **Fixed.** Criterion 4 reads "Running 32 tests using 1 worker, shard 1 of 3", as GitHub shows it.
+4. **Fixed.** `022f`'s risk note takes the fix text: a ledgered test is retried only when its first attempt passes, and a `ledger-mismatch` on E7 is a new failure.
+5. **Fixed.** The ledger's finding names Firefox's first-colour miss; `022f`'s "The check" names all six projects and when each joined; the "Seen here" note is labelled EXECUTED.
+- **The process note:** `022l` and the E7 change land as two commits.
+
+After the fixes: `workflow`, `release-check`, `gate` and `fault-ledger` unit tests, 64 pass; the workflow parses.
+
+Closing verdict: both land.

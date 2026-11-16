@@ -1,6 +1,6 @@
 # 022l — The screen-reader jobs in shards
 
-- **Status:** written 2026-11-16; reviewed (`reviews/022l-the-screen-reader-jobs-in-shards-spec-2026-11-16.md`), every finding fixed here (Review). Fit to build once the review's disposition is written.
+- **Status:** built 2026-11-16; spec review (`reviews/022l-the-screen-reader-jobs-in-shards-spec-2026-11-16.md`) and change review (`reviews/022l-the-screen-reader-jobs-in-shards-pr-2026-11-16.md`) both dispositioned. Lands when the owner says; criteria 4 to 6 are read from the next `matrix` run.
 - **Date:** 2026-11-16
 - **Author:** the design lead
 - **Kind:** a change to `022`'s workflow decisions (lane E): `.github/workflows/matrix.yml`, `playwright.sr.config.ts`'s CI reporter, and the tests and fixtures that read the workflow. No item, token or dependency changes. It is a specification, not a small change, because it replaces `022` decisions on the reader jobs, and the owner chose it from options.
@@ -22,7 +22,7 @@ Every screen-reader job in run 3 hit its 60-minute limit and was cancelled, so n
 5. **The macOS set-up, and what recovers it.** READ, run 3's `voiceover (webkit)` log: its set-up ran 3 min 23 s and ended "System Events got an error: osascript is not allowed to send keystrokes. (-2700)". READ, `@guidepup/setup` 0.29.2: that step already retries five times, each a 30-second loop (*the review*). So the runner lacked a permission; it was not a flaky script. `voiceover (chromium)`'s identical step passed on another runner.
    - **The recovery is a re-run.** "Re-run failed jobs" gets a fresh runner. The release check accepts an attempt above 1 and prints it (`022` decision 18).
    - **The step is not retried in the job.** A second try on the same runner meets the same permission.
-   - **A failed set-up names its cause.** A step after it, `if: failure()`, prints the user and system TCC rows for `/usr/bin/osascript` (`kTCCServicePostEvent`, `kTCCServiceAccessibility`). TCC is macOS's permission database.
+   - **A failed set-up names its cause.** A step after it, `if: failure()`, prints every client's rows in the user and system TCC databases for the two services guidepup sets (`kTCCServicePostEvent`, `kTCCServiceAccessibility`), with `sudo -n`, and the last 15 minutes of TCC's own log, which names the process refused. TCC is macOS's permission database. The `$HOME` database path holds below Darwin 27.
    - Sharding takes macOS set-ups from 2 to 6 a run, so a runner without the permission is met more often. *The review* offered the owner three ways (three shards with re-runs, two shards at a higher limit, or one VoiceOver run's timings first). The design lead takes the first, the owner's own choice; the landing notes record each set-up's outcome, and two runs with more than one set-up failure each reopen the choice.
    - NVDA's set-up is unchanged: it has not failed.
 6. **Names follow the matrix.** Each shard's blob is `report-<reader>-<browser>-<n>.zip`, and its artifact `sr-<reader>-<browser>-<n>`. `report` already downloads `sr-*` and copies every `blob-report/*.zip`, so it merges the shards with no change. Its speech logs group by reader and browser (`scripts/ci/report.ts`), so a pair's shards land in one folder.
@@ -36,10 +36,10 @@ In: the two reader jobs in `matrix.yml`; the CI reporter in `playwright.sr.confi
 
 ## Acceptance criteria
 
-1. `workflow.test.ts` holds, each assertion seen failing first on `0933f1b`'s workflow: both reader jobs' matrices are `browser` then `shard: [1, 2, 3]`; both have `timeout-minutes: 45`; both test steps pass `--shard=${{ matrix.shard }}/3` and `--global-timeout=2400000`; their blob and artifact names carry the shard; `voiceover` has an `if: failure()` step after its set-up that reads the TCC rows; `nvda`'s set-up step is exactly `bun run sr:setup`; `jobNames` gives 41 names, 6 `voiceover` and 6 `nvda`, `voiceover (webkit, 1)` among them; `readerPairs` still gives the four pairs. (unit)
+1. `workflow.test.ts` holds, each assertion seen failing first on `0933f1b`'s workflow: both reader jobs' matrices are `browser` then `shard: [1, 2, 3]`; both have `timeout-minutes: 45`; both test steps pass `--shard=${{ matrix.shard }}/3` and `--global-timeout=2400000`; their blob and artifact names carry the shard; `voiceover` has an `if: failure()` step after its set-up that reads the TCC rows for `kTCCServicePostEvent` and TCC's log; `nvda`'s set-up step is exactly `bun run sr:setup`; `jobNames` gives 41 names, 6 `voiceover` and 6 `nvda`, `voiceover (webkit, 1)` among them; `readerPairs` still gives the four pairs. (unit)
 2. `release-check.test.ts` passes with its fixtures at 41 names; its three green tests are seen failing first against the 33-name fixtures, and each refusal test still fails for its own reason alone. `fault-ledger.test.ts` and `gate.test.ts` pass. (unit)
 3. A unit test holds `playwright.sr.config.ts`'s CI reporters to `blob` and `list`. (unit)
-4. In the next `matrix` push run: all 12 reader jobs end inside 45 minutes, none cancelled; the merged `report.json` holds 87 screen-reader records for each of the four pairs, 348 in all; `matrix-report/sr-logs/` holds four folders of 28 files each (`022` criterion 13); each shard's log says "Running 32 tests", "Running 26 tests" and "Running 29 tests using 1 worker" for shards 1, 2 and 3. (CI)
+4. In the next `matrix` push run: all 12 reader jobs end inside 45 minutes, none cancelled; the merged `report.json` holds 87 screen-reader records for each of the four pairs, 348 in all; `matrix-report/sr-logs/` holds four folders of 28 files each (`022` criterion 13); each shard's log, as GitHub shows it, says "Running 32 tests using 1 worker, shard 1 of 3", and 26 and 29 for shards 2 and 3. (CI)
 5. The landing notes record, from each job's step times and its closing `list` lines: each shard's test time and its pass, fail and flaky counts, and each VoiceOver set-up's outcome and attempt.
 6. The scorecard is re-run and its run log has a row; no row is expected to move until speech verdicts exist.
 
@@ -50,3 +50,7 @@ The spec review, 2026-11-16, raised 9 findings (1 High, 3 Medium, 5 Low). Each i
 ## Landing notes
 
 - **The owner's ruling (2026-11-16):** shards, from three options (shards; a longer limit; fewer retries). Decision 2.
+- **The concurrency figures (decision 8; the change review's finding 2).** `gate.ts`'s comment and `022`'s concurrency notes say 30 jobs against 20 slots, and macOS using 2 of its 5. From `022l`, 38 jobs follow `build`, six of them on macOS's five slots, so one VoiceOver shard may wait for another. A push run can then near the 95 minutes `gate`'s mirror waits; a same-repository pull request's gate is re-run if it times out first.
+- **Built** in the main checkout's working tree, not a worktree (the change review's process note); it lands as its own commit, apart from the E7 ledger change, so each review stays tied to its diff.
+- **Seen failing first (EXECUTED):** on `0933f1b`'s workflow, the four new or changed `workflow.test.ts` tests (4 fail, 50 pass with `release-check` and `gate`); against the 33-name fixtures, `release-check.test.ts`'s three green tests (3 fail, 27 pass). After: 64 pass across `workflow`, `release-check`, `gate` and `fault-ledger`. `bun run check` 0 errors; lint clean.
+

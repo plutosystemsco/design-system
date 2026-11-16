@@ -264,7 +264,7 @@ describe("022 test 3: matrix.yml", () => {
     }
   });
 
-  test("022l: a failed VoiceOver set-up prints osascript's TCC rows; NVDA's set-up is unchanged", () => {
+  test("022l: a failed VoiceOver set-up prints the TCC rows and log; NVDA's set-up is unchanged", () => {
     const vo = steps(wf.jobs.voiceover!);
     const setup = vo.findIndex(
       (x) => x.run === "bun run sr:setup --macos-record",
@@ -273,7 +273,8 @@ describe("022 test 3: matrix.yml", () => {
     const tcc = vo[setup + 1]!;
     expect(tcc.if).toBe("${{ failure() }}");
     expect(tcc.run).toContain("TCC.db");
-    expect(tcc.run).toContain("/usr/bin/osascript");
+    expect(tcc.run).toContain("kTCCServicePostEvent");
+    expect(tcc.run).toContain('subsystem == "com.apple.TCC"');
     expect(runs(wf.jobs.nvda!)).toContain("bun run sr:setup");
     expect(runs(wf.jobs.nvda!).filter((x) => x.includes("sr:setup"))).toEqual([
       "bun run sr:setup",
