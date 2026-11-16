@@ -43,17 +43,6 @@ export const LEDGER: LedgerLine[] = [
   { ...SUB_MENU_ESCAPE, where: { reader: "voiceover", browser: "chromium" } },
   { ...SUB_MENU_ESCAPE, where: { reader: "nvda", browser: "chromium" } },
   { ...SUB_MENU_ESCAPE, where: { reader: "nvda", browser: "firefox" } },
-  // 022b: the pressed theme segment in Firefox's forced palette. The test
-  // runs in light projects only (onlyProjects).
-  {
-    file: "forced-colors.spec.ts",
-    title: "axe finds 0 violations on /components/button/",
-    where: { project: "firefox-light" },
-    expect: { error: "/components/button/: color-contrast" },
-    finding:
-      "The frame's theme switch paints its pressed segment SelectedItem on SelectedItemText: 2.94:1 in Firefox's forced palette.",
-    change: "022b",
-  },
   // 022c: the viewer's theme copy loses to the frame's own code in Firefox.
   ...BLOCKS.flatMap((block) =>
     inProjects(
