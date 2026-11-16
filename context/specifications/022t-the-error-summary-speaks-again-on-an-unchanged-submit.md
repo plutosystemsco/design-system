@@ -1,6 +1,6 @@
 # 022t — The error summary speaks again on an unchanged submit
 
-- **Status:** revised after its re-check; waits for a second re-check. The review: [`../reviews/022t-the-error-summary-speaks-again-on-an-unchanged-submit-spec-2026-11-16.md`](../reviews/022t-the-error-summary-speaks-again-on-an-unchanged-submit-spec-2026-11-16.md) (1 High, 3 Medium, 4 Low; its re-check closed those and raised 1 Medium and 3 Low), each finding answered under "Review". Once built, until criterion 14's run, the Status reads "built; awaits the speech run".
+- **Status:** fit to build (the spec review's second re-check, 2026-11-16; finding 13 written in by the design lead); the owner answered its three questions (2026-11-16); in build (lane I). The review: [`../reviews/022t-the-error-summary-speaks-again-on-an-unchanged-submit-spec-2026-11-16.md`](../reviews/022t-the-error-summary-speaks-again-on-an-unchanged-submit-spec-2026-11-16.md) (1 High, 3 Medium, 4 Low; its re-check closed those and raised 1 Medium and 3 Low), each finding answered under "Review". Once built, until criterion 14's run, the Status reads "built; awaits the speech run".
 - **Date:** 2026-11-16
 - **Author:** the design lead
 - **Kind:** specification, lane I. An additive interface change to one item, `error-summary`: a new optional prop. Five components in three blocks (`sign-in`, `sign-up`, `settings`) pass it, and so does the item's keyboard example. The item's page changes, and one test view is added. No token and no dependency changes. It is a specification, not a small change, because it adds a prop, and the owner chose that prop from options.
@@ -147,6 +147,7 @@ The accessibility list splits into "What Kuiper provides" and "Your part", as th
     - **A titled entry never names a patch's witness test, and never exempts the witness rule for its pair.** `mutations.test.ts` refuses both.
     - **It amends `022` decision 15, step 2** ("each naming the pair and the run id"): an entry may also name one test. The small change says so, and gets a roadmap row when it is raised.
     - **A titled test is allowed either outcome.** If 7b's second submit faults L3 on some runs and not on others, removing its entries alone would make every later `double-read` dispatch red when it does fault: `verdict()` reads a failing test with no expected entry as a difference (INFERRED). So, for a titled entry's test and pair, `verdict()` neither requires the fault nor counts it as a difference, and each dispatch's outcome for it is recorded in the landing notes. Every other test keeps today's rules.
+    - **Either outcome, and only those two** (the second re-check's finding 13). For a titled entry's test and pair, `verdict()` accepts a pass, or a failure that holds the patch's fault, and nothing else: a failure on another rule, an X0 alone, or a test that did not run stays a difference. Each dispatch writes that test's outcome to the run's job summary, since later dispatches come after `022t` lands.
   - Criterion 14's landing notes name the next `mutate` dispatch of each set, run apart from a push.
 
 ### 12. The changelog
@@ -231,6 +232,8 @@ Every check below is written before the code. A check marked **seen failing** is
 ## Open questions
 
 These are for the owner. None blocks the re-check: the specification takes the recommended option in each.
+
+**Answered by the owner, 2026-11-16:** 1 (a) `attempt`; 2 (a) no, not now; 3 (a) keep `022t` landed.
 
 1. **The prop's name.** The owner named `attempt` as a working name.
    - **(a) `attempt` (recommended).** It names what the app counts, and reads as the app's own word: `attempt={attempts}`.

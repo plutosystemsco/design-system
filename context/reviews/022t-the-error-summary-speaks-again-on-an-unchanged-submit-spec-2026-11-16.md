@@ -3,7 +3,7 @@
 Reviews [`specifications/022t-the-error-summary-speaks-again-on-an-unchanged-submit.md`](../specifications/022t-the-error-summary-speaks-again-on-an-unchanged-submit.md) before it is built. Its research is [the error summary's re-announcement](../research/2026-11-16-error-summary-re-announcement.md) (*the memo*) and the error-summary row of [the first speech verdicts](../research/2026-11-16-the-first-speech-verdicts.md) (*the speech memo*). This reviewer wrote neither the specification nor its research (constitution §5).
 
 - **Date:** 2026-11-16
-- **Status:** dispositioned; does not land yet (finding 9 stands; see the closing verdict)
+- **Status:** dispositioned; fit to build (see the second re-check's closing verdict)
 - **Reviewer:** a reviewer; not the author
 - **Reviewed:** the specification as drafted (204 lines, untracked), on `release/0.13.0` at `c5cdd65`. Checked against:
   - `src/lib/registry/ui/error-summary/error-summary.svelte`, the item's page, both examples;
@@ -147,4 +147,27 @@ The specification was revised on 2026-11-16 to answer all eight findings, with a
 12. **Low: one name for the dry fact** (criterion 8; decision 11).
     Fix: in criterion 8, write "the old content node is disconnected", as decision 11 records it.
 
-**Closing verdict.** Does not land yet: finding 9 (Medium) stands, since criterion 4's observer on the summary root cannot see the three server paths' new root; findings 1 to 8 are closed, and findings 10 to 12 are Low write-ins, each given with its fix.
+**Verdict after the first re-check** (superseded below). Does not land yet: finding 9 (Medium) stood, since criterion 4's observer on the summary root could not see the three server paths' new root; findings 1 to 8 were closed, and findings 10 to 12 were Low write-ins.
+
+**Second re-check (2026-11-16).** The specification was revised again for findings 9 to 12 (270 lines, untracked). Only those four were re-read, against the revision's decision 11, its criteria 4, 8 and 14, and the mutation code at `b01e754`. Nothing was run.
+
+9. **Closed.** Criterion 4 now watches the block's scope: the form for the four forms, `[data-slot="settings-delete"]` for the delete. A `childList` and `subtree` observer counts each added element that is, or holds, the content node. A `focusin` listener on the scope keeps only the root's events; `focusin` bubbles, so the new root's focus reaches it. After the span the root and the node are read fresh. INFERRED, checked against each shape in the EXECUTED logs above:
+   - a client path adds the content node inside the root that stays (`add,remove,focus`): one added element, before the `focusin`;
+   - a server path adds a new root that holds the content node (`remove,add,focus`): one added element, before the `focusin`;
+   - the named mutation adds a second element after the `focusin`, inside the 500 ms span: the count is two, or the one comes after the `focusin`, so it fails;
+   - `settings-form` and `settings-delete` each have their own summary on `/view/settings/failed/`, and each scope holds only its own. The delete's dialog is portalled outside its scope, which is right: only the summary is counted.
+   Criteria 1, 3 and 6 keep the root, where it stays.
+10. **Closed.** Criterion 14 defines "reaches": the test ran to its `judge`, with no X0 in its `faults.json`. A timeout, the shard deadline or X0 is not reaching it. A pair that does not reach it is not a pass: the landing notes name it, and the release check still needs both VoiceOver browsers (`022` criterion 13). So the clause is one outcome for the pairs that ran, and leaves the gap open on the release path, not closed. NVDA's two pairs must pass, which needs them to reach it.
+11. **Closed, with one narrowing** (finding 13). Rule 1, no titled entry names a witness or exempts the witness rule, and rule 2, the amendment of `022` decision 15 step 2 with its own roadmap row, are as asked.
+    Rule 3, "allowed either outcome", judged against ledgering as reader timing:
+    - **What decision 15 needs.** Each patch's witness proves its fault under each pair; the other expected entries show breadth. READ: rule 1 keeps 7b's witness, the insertion test, required under every pair. So L3's power to fail under each pair stays proven, and only one breadth entry is relaxed.
+    - **Ledgering as reader timing fits worse.** `022` decision 18's reader-timing record is for a flake on a release run of unpatched code. A mutation run's expected tests are already ledger lines that must fail with their fault (`derive.ts`, `mutationLines`). Ledgering an entry that may pass would mean a design lead's ruling on every dispatch, with no rule for when it is right. "Either outcome" is a rule, stated once, and checked by `mutations.test.ts`. It weakens decision 15 no more than that, and is easier to audit.
+    - **But as worded it is wider than needed.** "`verdict()` neither requires the fault nor counts it as a difference" also hides the titled test failing on another rule (L1, if 7b silenced it), on a set-up failure, or not running at all (`derive.ts:223–240`). Those are the differences decision 15 exists to show. That is finding 13.
+12. **Closed.** Criterion 8 now names the fact "the old content node is disconnected", as decision 11 records it. The two other "the content node is new" phrases (decision 2, criterion 14's risk 2) are prose, not the fact's name.
+
+**New finding from the revision**
+
+13. **Low: "either outcome" should mean pass, or fail with the patch's fault only** (decision 11, the third rule of the lane-E small change).
+    Fix: for a titled entry's test and pair, `verdict()` accepts a pass, or a failure whose faults hold the patch's fault. Any other failure, a failure with only X0, or the test not running stays a difference, as today. Record each dispatch's outcome for that test in the run's job summary, which `report.ts` already writes, not only in landing notes: later dispatches come after `022t` has landed. This binds the lane-E small change's own specification. That change is conditional on a dispatch, outside lane I, and reviewed as built, so it does not block this build.
+
+**Closing verdict.** Fit to build: findings 1 to 12 are closed, and finding 13 is a Low write-in for the conditional lane-E small change, given with its fix; nothing stands against this build.
