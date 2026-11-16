@@ -1,6 +1,11 @@
 <script lang="ts" module>
   /** One primary link: its visible label and its href. */
-  export type AppShellLink = { label: string; href: string };
+  export type AppShellLink = {
+    /** The link's text. */
+    label: string;
+    /** Where the link goes. */
+    href: string;
+  };
 </script>
 
 <script lang="ts">
@@ -16,6 +21,7 @@
     class: className,
     ...restProps
   }: HTMLAttributes<HTMLElement> & {
+    /** The links, in order. */
     links: AppShellLink[];
     /** The current page's href, from `page.url`: it gets `aria-current="page"` and the underline. */
     current?: string;

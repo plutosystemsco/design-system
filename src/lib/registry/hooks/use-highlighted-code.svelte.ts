@@ -13,9 +13,6 @@ import {
  * `settled` is true once nothing is loading: no highlighter, and no grammar
  * the code embeds (an HTML block's script, a Markdown fence).
  *
- * The code streams through one session: when the new text extends the old,
- * only the appended range is re-parsed and re-queried.
- *
  * ```svelte
  * <script lang="ts">
  *   const lines = useHighlightedCode(() => code, () => "json");
@@ -25,6 +22,9 @@ import {
  *   <CodeBlock.Line code={line} />
  * {/each}
  * ```
+ *
+ * The code streams through one session: when the new text extends the old,
+ * only the appended range is re-parsed and re-queried.
  */
 export function useHighlightedCode(
   value: () => string,

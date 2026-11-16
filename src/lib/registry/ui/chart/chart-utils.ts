@@ -16,6 +16,7 @@ export type ChartConfig = {
   };
 };
 
+/** One series' row in the tooltip, as layerchart gives it. */
 export type TooltipPayload = Tooltip.TooltipSeries;
 
 /** The config entry for a tooltip row: by its key, its label, or a string field of the datum. */
@@ -67,10 +68,17 @@ type ChartContextValue = {
 
 const chartContextKey = Symbol("chart-context");
 
+/**
+ * Shares the chart's config with the parts inside it. `ChartContainer` calls
+ * it.
+ */
 export function setChartContext(value: ChartContextValue) {
   return setContext(chartContextKey, value);
 }
 
+/**
+ * The nearest chart's config, for a part of your own inside a `ChartContainer`.
+ */
 export function useChart() {
   return getContext<ChartContextValue>(chartContextKey);
 }

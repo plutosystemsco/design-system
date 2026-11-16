@@ -15,6 +15,10 @@
   }: WithElementRef<HTMLAttributes<HTMLDivElement>> & {
     /** The desktop state. Pass the cookie's value from a server load so the first paint is right. */
     open?: boolean;
+    /**
+     * Called with the new state when the desktop sidebar opens or closes,
+     * before the provider writes its cookie.
+     */
     onOpenChange?: (open: boolean) => void;
   } = $props();
 

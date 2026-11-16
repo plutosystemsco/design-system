@@ -9,7 +9,16 @@
     class: className,
     ...restProps
   }: AvatarPrimitive.RootProps & {
+    /**
+     * `sm` and `lg` step down and up from the default, for a dense list or a
+     * profile header.
+     */
     size?: "default" | "sm" | "lg";
+    /**
+     * The image's load state. The fallback shows until it reads `"loaded"`.
+     * Bind it to follow the image.
+     */
+    loadingStatus?: AvatarPrimitive.RootProps["loadingStatus"];
   } = $props();
 </script>
 

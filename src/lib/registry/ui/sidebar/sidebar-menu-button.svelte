@@ -62,14 +62,35 @@
   }: WithElementRef<HTMLAttributes<HTMLButtonElement>, HTMLButtonElement> & {
     /** The current page: sets aria-current="page", the inset and the primary edge. */
     isActive?: boolean;
+    /**
+     * The default sits flush in the list. The other look draws a border round
+     * the row, for a row that stands apart from it.
+     */
     variant?: SidebarMenuButtonVariant;
+    /**
+     * `default` meets the touch target. `sm` is the compact height, for a dense
+     * list.
+     */
     size?: SidebarMenuButtonSize;
     /** The row's name as icons, shown by a tooltip on the right. */
     tooltipContent?: Snippet | string;
+    /**
+     * Props for the tooltip's `TooltipContent`, such as `side`, when the
+     * sidebar shows only icons.
+     */
     tooltipContentProps?: WithoutChildrenOrChild<
       ComponentProps<typeof Tooltip.Content>
     >;
+    /**
+     * Renders your own element in place of the `<button>`, such as an `<a>` for
+     * a row that links. Spread the `props` it is given on that element.
+     */
     child?: Snippet<[{ props: Record<string, unknown> }]>;
+    /**
+     * Classes for the `<button>`, or for the element `child` renders, added
+     * after Kuiper's by `cn`.
+     */
+    class?: HTMLAttributes<HTMLButtonElement>["class"];
   } = $props();
 
   const sidebar = useSidebar();

@@ -1,9 +1,13 @@
 <script lang="ts" module>
   /** One proof: a number, what wraps it, and what it counts. */
   export type ProofBandItem = {
+    /** The number, counted up from zero when the band scrolls into view. */
     value: number;
+    /** Text before the number, such as a currency sign. */
     prefix?: string;
+    /** Text after the number, such as a percent sign or a unit. */
     suffix?: string;
+    /** What the number counts. */
     label: string;
   };
 </script>
@@ -17,11 +21,16 @@
   type Props = WithElementRef<Omit<HTMLAttributes<HTMLElement>, "title">> & {
     /** Two to four. */
     items: ProofBandItem[];
+    /** The heading's level, so the band fits the page's outline. */
     headingLevel?: 2 | 3;
   } & (
       | {
           /** The band's heading, which names it. */
           title: string;
+          /**
+           * The band's name. With a `title`, the title names it, and this is
+           * not needed.
+           */
           label?: string;
         }
       | {

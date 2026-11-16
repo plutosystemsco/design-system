@@ -30,6 +30,10 @@
     links: AppShellLink[];
     /** The current page's href, from `page.url`. */
     current?: string;
+    /**
+     * The person signed in, shown in the account row at the foot. `null` shows
+     * no row.
+     */
     user?: AppShellUser | null;
     /** Off-canvas (the default) or to icons; the shell's choice. */
     collapsible?: "offcanvas" | "icon";
@@ -37,7 +41,9 @@
     heading?: string;
     /** The sub-items of the Preferences group; replace their hrefs with your routes. */
     preferences?: AppShellLink[];
+    /** Your settings route, for the account menu. */
     settingsHref?: string;
+    /** Your sign-out route, for the account menu. */
     signOutHref?: string;
   } = $props();
 

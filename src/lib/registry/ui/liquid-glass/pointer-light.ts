@@ -20,6 +20,11 @@ function share(offset: number, length: number): string {
   return `${((offset / length) * 100).toFixed(2)}%`;
 }
 
+/**
+ * Lights the glass's edge where the pointer moves, and lets it fade after the
+ * last move. Under reduced motion it does nothing. Attach it to an element with
+ * the `glass` class.
+ */
 export const pointerLight: Attachment<HTMLElement> = (element) => {
   const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
   let reduce = motion.matches;

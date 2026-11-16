@@ -48,6 +48,11 @@
     children,
     ...restProps
   }: WithElementRef<HTMLAttributes<HTMLDivElement>> & {
+    /**
+     * The alert's colour and role. `destructive` is announced when it appears;
+     * `success` and `caution` are status messages; `default` is neither. A
+     * `role` you pass wins.
+     */
     variant?: AlertVariant;
   } = $props();
 

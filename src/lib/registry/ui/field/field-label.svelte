@@ -10,7 +10,13 @@
     for: forProp,
     children,
     ...restProps
-  }: ComponentProps<typeof Label> = $props();
+  }: ComponentProps<typeof Label> & {
+    /**
+     * The control the label names. Inside a `Field` it defaults to the field's
+     * control, so set it only to point elsewhere.
+     */
+    for?: ComponentProps<typeof Label>["for"];
+  } = $props();
 
   // Points at the control of the nearest Field, unless the app names one.
   const target = getLabelTarget();

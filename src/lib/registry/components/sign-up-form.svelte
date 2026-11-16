@@ -1,11 +1,25 @@
 <script lang="ts" module>
   export type SignUpField = "email" | "password";
-  export type SignUpValues = { email: string; password: string };
+  export type SignUpValues = {
+    /** The email address, trimmed. */
+    email: string;
+    /** The password, as typed. */
+    password: string;
+  };
   export type SignUpResult =
-    | { ok: true }
     | {
+        /** The account was made; go on to the code step. */
+        ok: true;
+      }
+    | {
+        /** The account was not made; say why. */
         ok: false;
+        /** Each field's error, shown at the field and in the summary. */
         errors?: Partial<Record<SignUpField, string>>;
+        /**
+         * An error for the whole form, shown in the summary. It clears the
+         * password.
+         */
         formError?: string;
       };
 
@@ -54,11 +68,29 @@
     footer,
     class: className,
   }: {
+    /**
+     * Called with the trimmed email and the password once both pass the form's
+     * checks. It resolves to say whether the account was made, or why not.
+     */
     onsubmit: (values: SignUpValues) => Promise<SignUpResult>;
+    /** The email address. Bind it to read it, or set it to fill the field. */
     email?: string;
+    /** The password. Bind it to keep it across the code step and back. */
     password?: string;
+    /**
+     * Each field's error, set by the form's checks, a failed submit or you.
+     * Bind it to read or set them.
+     */
     errors?: Partial<Record<SignUpField, string>>;
+    /**
+     * An error for the whole form, shown in the summary. Bind it to read or set
+     * it.
+     */
     formError?: string;
+    /**
+     * True while `onsubmit` runs. The button shows a spinner and ignores
+     * presses.
+     */
     busy?: boolean;
     /** The fewest characters a password may have: 15 or more, never fewer. */
     passwordMinLength?: number;
@@ -68,9 +100,16 @@
     privacyHref?: string;
     /** Moves focus to the title on mount, for a return from the code step. */
     focusOnMount?: boolean;
+    /** The form's heading. */
     title?: string;
+    /** The line under the heading. */
     description?: string;
+    /**
+     * The title's heading level. On a sign-up page the title is its one
+     * first-level heading.
+     */
     level?: 1 | 2 | 3 | 4 | 5 | 6;
+    /** Starts every field's id, so two forms on a page never share one. */
     idPrefix?: string;
     /** The app's own links, such as "Sign in instead". */
     footer?: Snippet;

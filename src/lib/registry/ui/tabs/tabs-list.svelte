@@ -29,6 +29,10 @@
     class: className,
     ...restProps
   }: TabsPrimitive.ListProps & {
+    /**
+     * `default` sets the tabs on a muted track. `line` drops the track and
+     * underlines the open tab.
+     */
     variant?: TabsListVariant;
   } = $props();
 </script>

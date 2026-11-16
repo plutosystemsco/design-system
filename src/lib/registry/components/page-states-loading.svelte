@@ -11,6 +11,10 @@
     children,
     class: className,
   }: {
+    /**
+     * Shows the skeleton rows and the hidden status in place of `children`
+     * while it is true.
+     */
     loading: boolean;
     /** What the hidden status says while loading. */
     label?: string;

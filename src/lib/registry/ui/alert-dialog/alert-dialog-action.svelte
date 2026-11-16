@@ -14,7 +14,12 @@
     size = "default",
     ...restProps
   }: AlertDialogPrimitive.ActionProps & {
+    /**
+     * The button's look, as `Button`'s. Use `destructive` when the action
+     * deletes.
+     */
     variant?: ButtonVariant;
+    /** The button's size, as `Button`'s. */
     size?: ButtonSize;
   } = $props();
 </script>

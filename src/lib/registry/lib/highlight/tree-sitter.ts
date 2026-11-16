@@ -81,6 +81,9 @@ async function readPackageFile(packagePath: string): Promise<Uint8Array> {
 
 /** Warns once per language: what fell back, and why. */
 const warned = new Set<string>();
+/**
+ * Warns in the console, once per language, that it fell back to Shiki and why.
+ */
 export function warnFallback(language: string, cause: unknown): void {
   if (warned.has(language)) return;
   warned.add(language);
@@ -137,12 +140,21 @@ function loadGrammar(
 
 /** A language ready to paint: its parser, its highlight query and its locals query. */
 export type Compiled = {
+  /** The language's id. */
   id: string;
+  /** The tree-sitter runtime it was compiled with. */
   ts: Runtime;
+  /** The loaded grammar. */
   language: Language;
+  /** A parser set to the grammar. */
   parser: Parser;
+  /** The query that names each node's highlight role. */
   highlights: Query;
+  /**
+   * The query that tracks local names, or `null` when the language has none.
+   */
   locals: Query | null;
+  /** The languages it embeds, such as a script inside markup. */
   injections: Injection[];
   /**
    * True when no highlight pattern names the grammar's root node or `ERROR`,

@@ -18,6 +18,8 @@ export type ApiRow = {
   default: string;
   /** The member's doc comment; empty when it has none. */
   doc: string;
+  /** Only with `{ marks: true }`: the site wrote `doc` from the markup. */
+  generated?: boolean;
 };
 
 export type ApiTable = {
@@ -49,6 +51,24 @@ function resolveImport(spec: string, from: string): string | null {
 
 type Script = { source: ts.SourceFile; file: string };
 
+/** A node of `svelte/compiler`'s modern AST, as far as this file reads it. */
+type SvelteNode = {
+  type: string;
+  name?: string;
+  [key: string]: unknown;
+};
+
+type SvelteAst = {
+  module?: { content: { start: number; end: number } };
+  instance?: { content: { start: number; end: number } };
+  fragment: SvelteNode;
+};
+
+/** A component's modern AST. */
+function svelteAst(file: string): SvelteAst {
+  return parse(read(file), { modern: true }) as unknown as SvelteAst;
+}
+
 /** A Svelte file's two scripts, or a TypeScript file, as TypeScript sources. */
 function scripts(file: string): Script[] {
   const text = read(file);
@@ -59,10 +79,7 @@ function scripts(file: string): Script[] {
         file,
       },
     ];
-  const ast = parse(text, { modern: true }) as unknown as {
-    module?: { content: { start: number; end: number } };
-    instance?: { content: { start: number; end: number } };
-  };
+  const ast = svelteAst(file);
   const out: Script[] = [];
   for (const s of [ast.module, ast.instance])
     if (s)
@@ -174,13 +191,33 @@ function variantKeys(
   return null;
 }
 
-/** A type as a reader can use it: `VariantProps<typeof x>["k"]`, directly or by alias, as its keys. */
-function showType(node: ts.TypeNode, where: Script[], depth = 0): string {
+/**
+ * A type as a reader can use it: `VariantProps<typeof x>["k"]`, directly or
+ * by alias, as its keys. A member re-declared as `Base["name"]`, where
+ * `Base` is one of the props type's bases and `name` its own name, shows
+ * as inherited (`""`), as it did before it was re-declared.
+ */
+function showType(
+  node: ts.TypeNode,
+  where: Script[],
+  depth = 0,
+  own?: { name: string; bases: string[] },
+): string {
   const text = node.getText().replace(/\s+/g, " ");
   const vp = /^VariantProps<\s*typeof (\w+)\s*>\["(\w+)"\]$/.exec(text);
   if (vp) {
     const keys = variantKeys(vp[1], where);
     if (keys?.[vp[2]]) return keys[vp[2]];
+  }
+  if (own && ts.isIndexedAccessTypeNode(node)) {
+    const index = node.indexType;
+    if (
+      ts.isLiteralTypeNode(index) &&
+      ts.isStringLiteral(index.literal) &&
+      index.literal.text === own.name &&
+      own.bases.includes(node.objectType.getText().replace(/\s+/g, " "))
+    )
+      return "";
   }
   if (depth < 3 && ts.isTypeReferenceNode(node) && !node.typeArguments) {
     const found = findType(node.typeName.getText(), where);
@@ -247,7 +284,13 @@ const WRAPPERS = new Set([
   "Readonly",
 ]);
 
-type Shape = { members: ts.TypeElement[]; inherits: string[]; where: Script[] };
+type Shape = {
+  members: ts.TypeElement[];
+  inherits: string[];
+  where: Script[];
+  /** Members declared in a branch of a union: their comments, not their types. */
+  branches: ts.TypeElement[];
+};
 
 /** The item's own files: a props type found outside them is inherited, by name. */
 let OWN = new Set<string>();
@@ -258,10 +301,11 @@ function shape(
   where: Script[],
   depth = 0,
 ): Shape {
-  const out: Shape = { members: [], inherits: [], where };
+  const out: Shape = { members: [], inherits: [], where, branches: [] };
   const add = (s: Shape) => {
     out.members.push(...s.members);
     out.inherits.push(...s.inherits);
+    out.branches.push(...s.branches);
   };
   if (ts.isInterfaceDeclaration(node)) {
     out.members.push(...node.members);
@@ -276,6 +320,13 @@ function shape(
   }
   if (ts.isIntersectionTypeNode(node)) {
     for (const t of node.types) add(shape(t, where, depth));
+    return out;
+  }
+  if (ts.isUnionTypeNode(node)) {
+    for (const t of node.types) {
+      const b = shape(t, where, depth);
+      out.branches.push(...b.members, ...b.branches);
+    }
     return out;
   }
   if (ts.isTypeReferenceNode(node)) {
@@ -355,19 +406,50 @@ function inheritsText(names: string[], where: Script[]): string | undefined {
   return parts.length ? `and ${parts.join(", and ")}` : undefined;
 }
 
-const WELL_KNOWN: Record<string, string> = {
-  class: "string",
-  ref: "HTMLElement | null",
-  children: "Snippet",
-  child: "Snippet",
-};
+/**
+ * The types a props annotation joins, once `WRAPPERS` are removed and the
+ * item's own aliases are followed: Button's are `HTMLButtonAttributes` and
+ * `HTMLAnchorAttributes`. An own alias that names one other type, such as
+ * `ToggleVariants`, is a base by its own name.
+ */
+function bases(node: ts.TypeNode, where: Script[], depth = 0): string[] {
+  if (ts.isParenthesizedTypeNode(node)) return bases(node.type, where, depth);
+  if (ts.isIntersectionTypeNode(node))
+    return node.types.flatMap((t) => bases(t, where, depth));
+  if (ts.isTypeLiteralNode(node) || ts.isUnionTypeNode(node)) return [];
+  const text = node.getText().replace(/\s+/g, " ");
+  if (!ts.isTypeReferenceNode(node)) return [text];
+  const name = node.typeName.getText();
+  // `WithElementRef<X>` adds `ref`, so it is a base itself, beside X's.
+  const bare = name.split(".").pop()!;
+  if (WRAPPERS.has(bare) && node.typeArguments?.[0])
+    return [
+      ...(bare === "WithElementRef" ? [text] : []),
+      ...bases(node.typeArguments[0], where, depth),
+    ];
+  if (name.includes(".") || node.typeArguments || depth > 3) return [text];
+  const found = findType(name, where);
+  if (
+    !found ||
+    ts.isInterfaceDeclaration(found.node) ||
+    !found.where.some((w) => OWN.has(w.file))
+  )
+    return [text];
+  const t = found.node;
+  const structural =
+    ts.isIntersectionTypeNode(t) ||
+    ts.isParenthesizedTypeNode(t) ||
+    ts.isTypeLiteralNode(t) ||
+    (ts.isTypeReferenceNode(t) &&
+      WRAPPERS.has(t.typeName.getText().split(".").pop()!));
+  return structural ? bases(t, found.where, depth + 1) : [text];
+}
 
-/** One Svelte component's props table. */
-function componentTable(file: string, part: string): ApiTable {
-  const ss = scripts(file);
-  const instance = ss[ss.length - 1];
-  const table: ApiTable = { part, file, kind: "component", rows: [] };
-  if (!instance) return table;
+/** A component's `$props()` destructuring and its annotation. */
+function propsBinding(instance: Script): {
+  binding: ts.ObjectBindingPattern | null;
+  typeNode?: ts.TypeNode;
+} {
   let binding: ts.ObjectBindingPattern | null = null;
   let typeNode: ts.TypeNode | undefined;
   const visit = (n: ts.Node) => {
@@ -384,42 +466,264 @@ function componentTable(file: string, part: string): ApiTable {
     ts.forEachChild(n, visit);
   };
   visit(instance.source);
+  return { binding, typeNode };
+}
+
+/**
+ * A component's own props type: its bases, and the members its own files
+ * declare, by name. Pure but for reading files; the unit tests read it.
+ */
+export function propsType(file: string): {
+  bases: string[];
+  members: Map<string, ts.TypeElement>;
+} {
+  const members = new Map<string, ts.TypeElement>();
+  if (!file.endsWith(".svelte")) return { bases: [], members };
+  const ss = scripts(file);
+  const instance = ss[ss.length - 1];
+  if (!instance) return { bases: [], members };
+  const { typeNode } = propsBinding(instance);
+  if (!typeNode) return { bases: [], members };
+  const before = OWN;
+  OWN = new Set([...OWN, file]);
+  try {
+    for (const m of shape(typeNode, ss).members)
+      if (m.name) members.set(m.name.getText().replace(/["']/g, ""), m);
+    return { bases: bases(typeNode, ss), members };
+  } finally {
+    OWN = before;
+  }
+}
+
+/** Where a universal prop lands: an element, a bits-ui part, a Kuiper part. */
+type Target = { kind: "element" | "bits" | "kuiper"; name: string } | null;
+
+const TARGETS = ["RegularElement", "Component", "SvelteElement"];
+
+/**
+ * The universal three, `class`, `ref` and `children`, described from the
+ * component's markup: the element or component each reaches, by name. A
+ * target with no name (`<svelte:element>`, a third-party component), a
+ * render inside a snippet, or more than two names leaves the row empty,
+ * for the item's own comment.
+ */
+function universalDocs(
+  file: string,
+  locals: { ref?: string; class?: string; children?: string },
+  ss: Script[],
+): Partial<Record<"ref" | "class" | "children", string>> {
+  // Each import's local name: where it is from, and its original name.
+  const imports = new Map<string, { from: string; original: string }>();
+  for (const s of ss)
+    for (const st of s.source.statements) {
+      if (!ts.isImportDeclaration(st) || !st.importClause) continue;
+      const from = (st.moduleSpecifier as ts.StringLiteral).text;
+      const c = st.importClause;
+      if (c.name) imports.set(c.name.text, { from, original: c.name.text });
+      const b = c.namedBindings;
+      if (b && ts.isNamespaceImport(b))
+        imports.set(b.name.text, { from, original: b.name.text });
+      if (b && ts.isNamedImports(b))
+        for (const e of b.elements)
+          imports.set(e.name.text, {
+            from,
+            original: e.propertyName?.text ?? e.name.text,
+          });
+    }
+
+  const nameOf = (node: SvelteNode): Target => {
+    if (node.type === "RegularElement")
+      return { kind: "element", name: node.name! };
+    if (node.type !== "Component") return null;
+    const [head, ...rest] = node.name!.split(".");
+    const imp = imports.get(head);
+    if (!imp) return null;
+    if (imp.from === "bits-ui")
+      return { kind: "bits", name: [imp.original, ...rest].join(".") };
+    if (imp.from.startsWith("#lib/registry/") || imp.from.startsWith("."))
+      return { kind: "kuiper", name: head };
+    return null;
+  };
+
+  const isIdent = (e: unknown, name?: string): boolean =>
+    !!name &&
+    !!e &&
+    (e as SvelteNode).type === "Identifier" &&
+    (e as SvelteNode).name === name;
+
+  const found = {
+    ref: [] as Target[],
+    class: [] as Target[],
+    children: [] as Target[],
+  };
+  const forms = new Set<"merged" | "plain">();
+
+  const classForm = (a: SvelteNode): "merged" | "plain" | null => {
+    const v = a.value as SvelteNode | SvelteNode[] | true;
+    const tag = Array.isArray(v) ? (v.length === 1 ? v[0] : null) : v;
+    if (!tag || tag === true || tag.type !== "ExpressionTag") return null;
+    const e = tag.expression as SvelteNode;
+    if (isIdent(e, locals.class)) return "plain";
+    if (e.type !== "CallExpression" || !isIdent(e.callee, "cn")) return null;
+    const args = e.arguments as SvelteNode[];
+    if (!isIdent(args[args.length - 1], locals.class)) return null;
+    return args.length === 1 ? "plain" : "merged";
+  };
+
+  const visit = (node: SvelteNode, stack: SvelteNode[]) => {
+    if (TARGETS.includes(node.type))
+      for (const a of (node.attributes as SvelteNode[]) ?? []) {
+        if (
+          a.type === "BindDirective" &&
+          (a.name === "this" || a.name === "ref") &&
+          isIdent(a.expression, locals.ref)
+        )
+          found.ref.push(nameOf(node));
+        if (a.type === "Attribute" && a.name === "class" && locals.class) {
+          const form = classForm(a);
+          if (!form) continue;
+          found.class.push(nameOf(node));
+          forms.add(form);
+        }
+      }
+    if (node.type === "RenderTag" && locals.children) {
+      let e = node.expression as SvelteNode;
+      if (e.type === "ChainExpression") e = e.expression as SvelteNode;
+      if (e.type === "CallExpression" && isIdent(e.callee, locals.children)) {
+        // The nearest element or component around it; a snippet stops the walk.
+        let t: Target = null;
+        for (let k = stack.length - 1; k >= 0; k--) {
+          if (stack[k].type === "SnippetBlock") break;
+          if (TARGETS.includes(stack[k].type)) {
+            t = nameOf(stack[k]);
+            break;
+          }
+        }
+        found.children.push(t);
+      }
+    }
+    const next = [...stack, node];
+    for (const [k, v] of Object.entries(node))
+      if (
+        k !== "attributes" &&
+        v &&
+        typeof v === "object" &&
+        (v as SvelteNode).type === "Fragment"
+      )
+        for (const n of ((v as SvelteNode).nodes as SvelteNode[]) ?? [])
+          visit(n, next);
+  };
+  for (const n of (svelteAst(file).fragment.nodes as SvelteNode[]) ?? [])
+    visit(n, []);
+
+  /** "`<a>` or `<button>`" for elements; else "bits-ui's `Dialog.Content`", "the `Button`". */
+  const named = (
+    targets: Target[],
+  ): { text: string; elements: boolean } | null => {
+    if (!targets.length || targets.some((t) => !t)) return null;
+    const distinct = [
+      ...new Map(targets.map((t) => [`${t!.kind} ${t!.name}`, t!])).values(),
+    ];
+    if (distinct.length > 2) return null;
+    const elements = distinct.every((t) => t.kind === "element");
+    const one = (t: NonNullable<Target>) =>
+      t.kind === "element"
+        ? elements
+          ? `\`<${t.name}>\``
+          : `the \`<${t.name}>\``
+        : t.kind === "bits"
+          ? `bits-ui's \`${t.name}\``
+          : `the \`${t.name}\``;
+    return { text: distinct.map(one).join(" or "), elements };
+  };
+
+  const out: Partial<Record<"ref" | "class" | "children", string>> = {};
+  const ref = named(found.ref);
+  if (ref)
+    out.ref = ref.elements
+      ? `The rendered ${ref.text}. Bind it with \`bind:ref\`.`
+      : `The element ${ref.text} renders. Bind it with \`bind:ref\`.`;
+  const cls = named(found.class);
+  if (cls && forms.size === 1) {
+    const what = cls.elements ? `the ${cls.text}` : cls.text;
+    out.class = forms.has("merged")
+      ? `Classes for ${what}, added after Kuiper's by \`cn\`.`
+      : `Classes for ${what}.`;
+  }
+  const ch = named(found.children);
+  if (ch)
+    out.children = `The content of ${ch.elements ? `the ${ch.text}` : ch.text}.`;
+  return out;
+}
+
+const WELL_KNOWN: Record<string, string> = {
+  class: "string",
+  ref: "HTMLElement | null",
+  children: "Snippet",
+  child: "Snippet",
+};
+
+/** One Svelte component's props table. */
+function componentTable(file: string, part: string, marks: boolean): ApiTable {
+  const ss = scripts(file);
+  const instance = ss[ss.length - 1];
+  const table: ApiTable = { part, file, kind: "component", rows: [] };
+  if (!instance) return table;
+  const { binding, typeNode } = propsBinding(instance);
   if (!binding) return table;
   const s: Shape = typeNode
     ? shape(typeNode, ss)
-    : { members: [], inherits: [], where: ss };
+    : { members: [], inherits: [], where: ss, branches: [] };
   const own = new Map<string, ts.TypeElement>();
   for (const m of s.members)
     if (m.name) own.set(m.name.getText().replace(/["']/g, ""), m);
+  // A member declared only in a union's branches: the first comment found.
+  const branch = new Map<string, string>();
+  for (const m of s.branches) {
+    const name = m.name?.getText().replace(/["']/g, "");
+    if (name && !branch.get(name)) branch.set(name, JSDOC(m));
+  }
+  const base = typeNode ? bases(typeNode, ss) : [];
+  const typed = (name: string, m: ts.TypeElement) =>
+    ts.isPropertySignature(m) && m.type
+      ? showType(m.type, s.where, 0, { name, bases: base })
+      : ts.isMethodSignature(m)
+        ? m.getText().replace(/\s+/g, " ")
+        : "";
+  const locals: { ref?: string; class?: string; children?: string } = {};
 
   const listed = new Set<string>();
   for (const el of (binding as ts.ObjectBindingPattern).elements) {
     if (el.dotDotDotToken) continue;
     const name = (el.propertyName ?? el.name).getText();
     listed.add(name);
+    if (name === "ref" || name === "class" || name === "children")
+      locals[name] = el.name.getText();
     let def = el.initializer?.getText() ?? "";
     const bindable = /^\$bindable\((.*)\)$/s.exec(def);
     if (bindable) def = bindable[1];
-    const m = own.get(name);
-    const type =
-      m && ts.isPropertySignature(m) && m.type
-        ? showType(m.type, s.where)
-        : m && ts.isMethodSignature(m)
-          ? m.getText().replace(/\s+/g, " ")
-          : (WELL_KNOWN[name] ?? "");
+    const bare = name.replace(/["']/g, "");
+    const m = own.get(bare) ?? own.get(name);
+    // A re-declared `class`, `ref` or `children` keeps the type it showed.
+    const type = (m && typed(bare, m)) || (WELL_KNOWN[name] ?? "");
     table.rows.push({
       name,
       type,
       default: def.replace(/\s+/g, " "),
-      doc: m ? JSDOC(m) : "",
+      doc: m ? JSDOC(m) : (branch.get(bare) ?? ""),
     });
   }
   // Members the component declares but passes on without naming.
   for (const [name, m] of own) {
-    if (listed.has(name)) continue;
-    const type =
-      ts.isPropertySignature(m) && m.type ? showType(m.type, s.where) : "";
-    table.rows.push({ name, type, default: "", doc: JSDOC(m) });
+    if (listed.has(name) || listed.has(`"${name}"`)) continue;
+    table.rows.push({ name, type: typed(name, m), default: "", doc: JSDOC(m) });
+  }
+  // The universal three, where the item wrote nothing.
+  const universal = universalDocs(file, locals, ss);
+  for (const r of table.rows) {
+    const fill = !r.doc && universal[r.name as keyof typeof universal];
+    if (fill) r.doc = fill;
+    if (marks) r.generated = !!fill;
   }
   table.inherits = inheritsText(s.inherits, ss);
   return table;
@@ -544,7 +848,10 @@ const pascal = (file: string) =>
     .join("");
 
 /** One table per exported part, in the order of the item's index.ts; then its other files. */
-export function apiTables(item: Item): ApiTable[] {
+export function apiTables(
+  item: Item,
+  options: { marks?: boolean } = {},
+): ApiTable[] {
   const files = item.files
     .map((f) => f.path)
     .filter((f) => /\.(svelte|ts)$/.test(f));
@@ -558,8 +865,10 @@ export function apiTables(item: Item): ApiTable[] {
   for (const file of ordered) {
     const part = order.get(file) ?? pascal(file);
     const t = file.endsWith(".svelte")
-      ? componentTable(file, part)
+      ? componentTable(file, part, !!options.marks)
       : moduleTable(file, part);
+    if (options.marks && t.kind === "module")
+      for (const r of t.rows) r.generated = false;
     if (t.rows.length || t.inherits) tables.push(t);
   }
   return tables;

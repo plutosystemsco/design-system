@@ -34,6 +34,10 @@
     children,
     ...restProps
   }: WithElementRef<HTMLAttributes<HTMLSpanElement>> & {
+    /**
+     * The badge's colour. Name the state in the text too, since colour is never
+     * the only sign.
+     */
     variant?: BadgeVariant;
   } = $props();
 </script>

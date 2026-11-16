@@ -17,10 +17,23 @@
     onOpenAutoFocus,
     ...restProps
   }: WithoutChild<AlertDialogPrimitive.ContentProps> & {
+    /**
+     * `sm` keeps the narrow width at every screen size, for a short question
+     * with two answers.
+     */
     size?: "default" | "sm";
+    /**
+     * Props for the `AlertDialogPortal` that holds the dialog, such as `to`,
+     * the element it renders into.
+     */
     portalProps?: WithoutChildrenOrChild<
       ComponentProps<typeof AlertDialogPortal>
     >;
+    /**
+     * Called when the dialog opens, before Kuiper moves focus to Cancel, the
+     * safe choice. Prevent the default to place focus yourself.
+     */
+    onOpenAutoFocus?: AlertDialogPrimitive.ContentProps["onOpenAutoFocus"];
   } = $props();
 
   /**

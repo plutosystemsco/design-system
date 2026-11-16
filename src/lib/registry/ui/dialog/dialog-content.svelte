@@ -16,9 +16,17 @@
     children,
     ...restProps
   }: WithoutChildrenOrChild<DialogPrimitive.ContentProps> & {
+    /**
+     * Props for the `DialogPortal` that holds the dialog, such as `to`, the
+     * element it renders into.
+     */
     portalProps?: WithoutChildrenOrChild<ComponentProps<typeof DialogPortal>>;
     /** The dialog's name when it holds no `DialogTitle`. One of the two is required. */
     label?: string;
+    /**
+     * Shows the close button, the last tab stop, in the top end corner. Turn it
+     * off only when the dialog has its own close action.
+     */
     showCloseButton?: boolean;
     children: Snippet;
   } = $props();

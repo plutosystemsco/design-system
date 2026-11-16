@@ -39,7 +39,7 @@
 			"target": "collapsible/collapsible-trigger.svelte"
 		},
 		{
-			"content": "<script lang=\"ts\">\n  import { Collapsible as CollapsiblePrimitive } from \"bits-ui\";\n\n  let {\n    ref = $bindable(null),\n    open = $bindable(false),\n    ...restProps\n  }: CollapsiblePrimitive.RootProps = $props();\n</script>\n\n<CollapsiblePrimitive.Root\n  bind:ref\n  bind:open\n  data-slot=\"collapsible\"\n  {...restProps}\n/>\n",
+			"content": "<script lang=\"ts\">\n  import { Collapsible as CollapsiblePrimitive } from \"bits-ui\";\n\n  let {\n    ref = $bindable(null),\n    open = $bindable(false),\n    ...restProps\n  }: CollapsiblePrimitive.RootProps & {\n    /**\n     * Whether the content shows. Bind it to open or close it from your own\n     * code.\n     */\n    open?: CollapsiblePrimitive.RootProps[\"open\"];\n  } = $props();\n</script>\n\n<CollapsiblePrimitive.Root\n  bind:ref\n  bind:open\n  data-slot=\"collapsible\"\n  {...restProps}\n/>\n",
 			"type": "registry:ui",
 			"target": "collapsible/collapsible.svelte"
 		},

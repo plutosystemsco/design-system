@@ -5,7 +5,13 @@
     ref = $bindable(null),
     value = $bindable([]),
     ...restProps
-  }: DropdownMenuPrimitive.CheckboxGroupProps = $props();
+  }: DropdownMenuPrimitive.CheckboxGroupProps & {
+    /**
+     * The values of the checked items in the group. Bind it to read or set
+     * them.
+     */
+    value?: DropdownMenuPrimitive.CheckboxGroupProps["value"];
+  } = $props();
 </script>
 
 <DropdownMenuPrimitive.CheckboxGroup

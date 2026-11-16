@@ -372,6 +372,13 @@
       "reason": "The tests that read the changelog's entries before 0.13.0, which name the theme pluto-theme, as released."
     },
     {
+      "files": "tests/unit/api-described.test.ts",
+      "pattern": "pluto-theme",
+      "count": 1,
+      "class": "alias",
+      "reason": "023 test 2: the alias entry is one of the items with no table, until 0.14.0 removes it."
+    },
+    {
       "files": "tests/unit/rename.test.ts",
       "pattern": "pluto|Pluto",
       "count": 35,

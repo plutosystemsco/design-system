@@ -7,7 +7,10 @@
     value = $bindable(""),
     class: className,
     ...restProps
-  }: TabsPrimitive.RootProps = $props();
+  }: TabsPrimitive.RootProps & {
+    /** The value of the open tab. Bind it to read or set which tab shows. */
+    value?: TabsPrimitive.RootProps["value"];
+  } = $props();
 </script>
 
 <TabsPrimitive.Root

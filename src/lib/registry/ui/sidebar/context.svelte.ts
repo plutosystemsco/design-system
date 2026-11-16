@@ -4,6 +4,10 @@ import { SIDEBAR_KEYBOARD_SHORTCUT } from "./constants";
 
 type Getter<T> = () => T;
 
+/**
+ * What `SidebarProvider` hands the sidebar's state: a getter for whether it is
+ * open, the setter, and its nav's id.
+ */
 export type SidebarStateProps = {
   /** A getter for the open state, so `bind:open` on the provider stays the one source. */
   open: Getter<boolean>;

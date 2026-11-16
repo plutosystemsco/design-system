@@ -14,7 +14,12 @@
     size = "default",
     ...restProps
   }: AlertDialogPrimitive.CancelProps & {
+    /**
+     * The button's look, as `Button`'s. Kuiper's default is quieter than the
+     * action's.
+     */
     variant?: ButtonVariant;
+    /** The button's size, as `Button`'s. */
     size?: ButtonSize;
   } = $props();
 </script>

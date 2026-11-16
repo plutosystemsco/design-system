@@ -1,6 +1,6 @@
 # 023 — Prop doc comments
 
-- **Status:** Ready to build after `020` and `024`: review approved with changes, all applied; the owner answered Q1 to Q5 on 2026-11-15 (see Landing notes).
+- **Status:** Built on its branch (2026-11-16), on `release/0.13.0` at `506cfc1`; awaiting the change review and the merge. The owner answered Q1 to Q5 on 2026-11-15 (see Landing notes).
 - **Date:** 2026-11-15
 - **Author:** the spec author for `023`, for the design lead
 - **Kind:** doc comments and types in existing items' source, one generator in the site's API parser, and new tests. **No interface change:** no prop, default, export, class, slot or behaviour changes. Pass-throughs are re-declared with their source's own type (decision 3). Each props type stays **mutually assignable** with what it was: every value accepted before is accepted after, and nothing more. No token and no dependency is added. Each item whose source changes gets one changelog bullet (decision 12).
@@ -518,4 +518,176 @@ The specification review, [`../reviews/023-prop-doc-comments-spec-2026-11-15.md`
 - **Q4, option 1:** type members are not shown on the page until `032`. This is a sequencing choice, not a design one.
 - **Q5, option 1:** if `025` lands first, `023` does one full cost run at its landing.
 
-Not yet landed.
+### The build (2026-11-16)
+
+Built by a builder in its own worktree, from `release/0.13.0` at `4a0bdde`, fast-forwarded to `ec2460e` (`022`, the test matrix) before the tests were written and to `506cfc1` (`024`, budgets per template) before the gate. `020`, `020a`, `020b`, `021`, `023a`, `026` and `027a` had landed; `025` had not. The owner was asleep and had delegated decisions; the rulings below are the builder's, each with its precedent, and are for the design lead and the change review to confirm. The machine was heavily loaded. Browser runs served the worktree's `build/` with `vite preview` on ports 5761 to 5764; 5199 was not used.
+
+#### Step 1: the tree, re-pinned
+
+On `ec2460e` (EXECUTED, an instrumented copy of `api.server.ts`, scratch):
+
+| | Spec (before `020`) | This tree |
+|---|---:|---:|
+| Items in `registry.json` | 75 | 80 |
+| API tables | 262 | 271 |
+| API rows | 1,062 | 1,127 |
+| Described | 262 | 327 |
+| Empty | 800 | **800** |
+| … the universal three, undeclared / declared and bare | 504 / 20 | 504 / 20 |
+| … pass-throughs | 109 | 109 |
+| … own members | 143 | 143 |
+| … module exports | 24 | 24 |
+| Bare exported type members | 96 | **124** |
+
+- The four items added since the spec (`toast`, `link`, `button-group`, `progress`) were born with every API row described, as `026` and `027a` said. `toast`'s exported types were not: 28 bare members (`ToastAction`, `PromiseMessages`, `ToastView`, `Snapshot`, `Speech`, `TrapStyle`, `ToastQueueDeps`). This build wrote them; that is the 124's difference from 96.
+- `027a`'s review noted that variant unions are shown inline. They still are (`showType()`'s expansion); this build changes no Type cell.
+- **The pass-through fixture** (`tests/fixtures/023-pass-throughs.json`) holds 105 of the 109, each with its base. The other four were already declared, in a branch of a union inside the item's own type: `Input`'s `type` and `files`, `ProofBand`'s `title` and `label`. The parser read only intersections, so their rows were empty. They are listed under `declaredInUnion`, and their comments sit in the branches (deviation 3).
+- **The probe** (decision 10), `@tailwindcss/oxide`'s `Scanner` over a scratch `.ts` and `.svelte` file, then `compile().build(candidates)` over `tailwindcss` and the theme's `@theme inline` block. Its output lines:
+  - `candidates: ["--container-3xs","--text-sm--line-height","class","const","export","lh","max-h-(--container-3xs)"]`
+  - `--text-sm--line-height DECLARED: --text-sm--line-height: 1.6;`
+  - `--container-3xs DECLARED: --container-3xs: 16rem;`
+  - **Pass.** Rules 2 and 4 count emitted-on-use names as defined.
+
+#### Step 2: the tests, seen failing
+
+Written before the code, on `ec2460e`:
+
+- **Tests 1 to 4 and 8** (`api-described.test.ts`) first failed to load: `SyntaxError: Export named 'propsType' not found in module '…/api.server.ts'`. Run again with the generator built, over the item source of `ec2460e` (no comment written): **81 failed, 29 passed.** Test 1 failed for 59 items, test 3 for 18 items (124 members), test 4's V1, V3 and V5, and test 8's listed pass-throughs (105 "not declared"). V3's first failures were `useHighlightedCode` and `FieldContext.descriptionId` and `.errorId`; V5's were `Button.busy` and `CodeEditor.disabled`, as the spec foresaw. Test 2 passed on the tree and is proven by its mutation, which is now a test of its own: a fixture whose `$props` is renamed joins the set.
+- **Test 4's mutations** are a test of their own too, "each rule fails its mutation": lower case (V2), no full stop (V3), 41 words (V4, a component row and a type member; a module export may run longer), "Busy: …" (V5), "by 001 decision 7" (V6), and the draft's "Yours win a conflict." (V7).
+- **Test 5** (`api.test.ts`) failed 6 of its 8 cases: every expected sentence read `""`, and Button's `href` had no `doc`. The two that passed are the `generated`-key case (no option, no key) and the `cn` fact. `showType()`'s base rule is proven by mutation: with the rule applied to any indexed access, `AccordionTrigger.level` reads `""` and the case fails.
+- **Test 6** (`css-vars.test.ts`) passed on its first run. It is proven by the spec's own mutation: with the prefix table empty, it fails naming `shiki.ts:3 --code- (an undeclared prefix)` and `shiki.ts:42 --code- (an undeclared prefix)`, and source 6 counts 0. Its fixtures each fail as listed.
+- **Test 7** (`api-table.spec.ts`, deviation 6) was run on a build of `ec2460e` in light: **2 failed**. Button: 9 rows with an empty "What it does" (`Button.class`, `.variant`, `.size`, `.ref`, `.href`, `.type`, `.disabled`, `.onclick`, `.children`). Dialog: 8 tables with no "What it does" column at all (`Dialog`, `DialogTitle`, `DialogPortal`, `DialogHeader`, `DialogTrigger`, `DialogOverlay`, `DialogDescription`, `DialogClose`).
+
+#### What was built
+
+- **`api.server.ts`.** The generator (decision 4), on `svelte/compiler`'s modern AST; `apiTables(item, { marks: true })`, which adds `generated` to every row; `showType()`'s base rule (decision 7); `propsType(file)`, which returns a component's bases and own members, for test 8. Two more parser changes, each a deviation below: a member declared in a union's branch gives its row its comment (deviation 3), and a re-declared `class`, `ref` or `children` keeps the Type cell it showed (deviation 4).
+- **Doc comments in 134 item files of 64 items.** 303 API rows that the generator leaves, 124 exported type members, and 2 rows whose generated sentence the checkpoint replaced: 429 comments. The re-declared members, each typed exactly `Base["name"]`: **134**. The 105 listed pass-throughs; 28 of the 29 universal rows the generator leaves (the 29th, `DropdownMenuCheckboxItem.children`, was already declared); and `Sidebar.children`, for its own comment.
+- **Rewordings of existing comments** (decision 9 and test 4): `Button.busy` and `CodeEditor.disabled` lose their name and colon; `CodeEditor.readonly` loses "Read-only:" too, for the same reason; `useHighlightedCode`'s example moves before its last sentence, so the comment ends in a full stop; `FieldContext.descriptionId` and `.errorId`, which were only a code span, become sentences.
+- **The API table's layout** (below).
+- **Tests:** `api-described.test.ts` (new: tests 1 to 4 and 8, 110 cases on this tree), `api.test.ts` (test 5, 8 cases), `css-vars.test.ts` with `tests/helpers/css-vars.ts` (new: test 6, 7 cases), test 7 in `api-table.spec.ts`, and fixtures under `tests/unit/fixtures/api/` (10) and `tests/unit/fixtures/css-vars/` (5).
+
+#### The generator (criterion 5)
+
+- **495 rows filled, 29 left,** exactly the spec's counts. The 29 are the spec's list: 17 behind `<svelte:element>`, 9 `class` rows through a `child` snippet, 2 `children` rows behind a snippet boundary and `Spinner.class`. Each now has a hand comment.
+- **The five two-name sentences,** and the checkpoint's ruling on each:
+  - `Button`'s `ref`, `class` and `children`: "the `<a>` or `<button>`". Kept: true, and the reader's choice is `href`.
+  - `Sidebar.children`, "The content of the `<nav>` or `<div>`": replaced by its own comment, "The sidebar's header, groups and footer. On a phone they render in a sheet; elsewhere in the rail beside the page."
+  - The app shell layout's `children`, "The content of the `<div>` or `<main>`": replaced by "The page, rendered in the shell's main region."
+- 210 distinct generated sentences; the builder read each once (`generated.txt` in the scratchpad).
+
+#### Re-declarations over a union (decision 3)
+
+Probed with TypeScript over each listed base: only two index a base that is a union, so only their hover text changes. **`toggle-group`'s `ToggleGroup.value`** and **`accordion`'s `Accordion.value`** (both `string | string[] | undefined` across bits-ui's single and multiple forms). `tabs` and `radio-group`, which the spec named as likely, are not unions (`string | undefined`). Each of the two changelog bullets says so in one clause.
+
+#### The API table's layout (the brief's re-plan)
+
+Every table gains a "What it does" column, so the layout was re-planned for the 606 px text column at 1440.
+
+- **Measured with four columns** (Name, Type, Default, What it does), every row described: **14 of 271 tables scroll sideways at 1440, 8 at 1280, 2 at 1024**, none at 768 or 390. The prose column is also the narrowest of the four, often three or four words a line.
+- **The references.** Primer's props table keeps four columns at fixed widths (20/30/10/40%, `primer-design/src/components/props-table.jsx`); its text column is wider than Kuiper's. bits-ui's API reference, the library most Kuiper parts wrap, uses three columns, Property, Type and Description, and sets the default under the description, in the same cell (`huntabyte-bits-ui/docs/src/lib/components/api-ref/props/props-table.svelte`). Carbon's Storybook tables fold the type into the description cell instead. GOV.UK's macro options have no default column. MUI keeps four columns on a wider page and offers a stacked list.
+- **Ruled: three columns, with a row's default under its description,** as bits-ui does. The default is the sparsest column, so folding it costs the scan least. The phone layout already stacked the same way, and now reads the same at every width. The column shows when any row has a description or a default (`018` decision 7's rule, widened).
+- **Measured with three columns: 0 of 271 tables scroll, at 1440, 1280, 1024, 768 and 390.** **`WIDE_AT_1440` is now empty.** Check 2 also runs at 1024, so the mid width is held.
+- An element name in a description, such as `` `<button>` ``, no longer breaks after its `<`: `typePieces()`'s break after `<` is for generics, not tags.
+- The Markdown twins' API tables follow the page: three columns, and "Default `x`" after a row's description.
+- `site.spec.ts`'s column test now expects 3 columns, or 2 for a table with neither a description nor a default in any row (none on this tree).
+
+#### Deviations
+
+1. **The layout re-plan** above, by the brief, outside the spec's decision 7 ("No file of lane S changes"). It changes `api-table.svelte`, the twins' table shape, `site.spec.ts`'s column test (now 2 or 3, was 3 or 4) and `023a`'s accessible-name check (the description is now column 3).
+2. **Test 7 allows a table with no row.** `DialogPortal` only passes bits-ui's props on: no row of its own, so no column to fill. The test checks the column on every table with at least one row.
+3. **Members declared in a union's branch** (`Input.type` and `.files`, `ProofBand.title` and `.label`) are commented in their branches, not re-declared: re-declaring them would change their types. The parser now reads a row's comment from a union branch, and keeps its Type cell as it was. So 105 pass-throughs are re-declared, not 109; the fixture lists the four apart.
+4. **The 29 universal rows the generator leaves** are re-declared where the part did not declare them, as `HTMLAttributes<…>["class"]`, `WithElementRef<…>["ref"]` and the like. `WithElementRef<X>` now counts as a base itself, since it adds `ref`. Such a row keeps the Type cell `class`, `ref` and `children` always showed (`string`, `HTMLElement | null`, `Snippet`), not "inherited".
+5. **No bullet for `toast`.** It is new in 0.13.0; its "new" bullet already sets its Updated fact, and `026`'s test 38 holds one toast bullet. So 63 doc-comment bullets for the 64 items whose source changed.
+6. **Test 7 is in `tests/e2e/api-table.spec.ts`,** beside `023a`'s checks of the same table, not in a new `api-tables.spec.ts`: two spec files one letter apart would invite the wrong one.
+7. **Other specifications' expectations that this one changes,** each by decision 12's bullets or the layout: `component-data.test.ts`'s Updated cases (every item is now named at a bullet's head, so `kbd` 0.12.0 and `label` 0.2.0 stand in for `button` and `card`, and the fallback is checked with a name no bullet holds); `site.spec.ts`'s "five named items" (`kbd` and `label` for `button` and `card`, `name-strip` at 0.13.0); `pluto-allowed.json` gains one alias entry, for test 2's `pluto-theme`; the thumbnail manifest's hashes (`--hash-only`: no picture changed).
+8. **Wording held by the literal lint.** The lint reads every token in an item file, comments included, so a comment may not say the variant name `outline` or `backdrop-filter`. Four comments name the bordered look without the word.
+
+#### Faults found while writing (for small changes in lane I, after this)
+
+- **`FieldLegend`'s `variant` does nothing visible.** It sets only `data-variant`; no rule in the item reads it. Its comment says so.
+- `Spinner.class` reaches a third-party icon, so its row is a hand comment, as decided.
+
+#### The landing checks
+
+- **Criterion 9, nothing executable moved:** 134 changed item files; every template byte-identical; every script identical through `ts.transpileModule` (`removeComments`, `verbatimModuleSyntax`), compared after TypeScript's printer with white space removed. **0 differences.** (Before the white-space step, one: `chat-text.svelte`'s `let { text }` laid out on four lines by prettier, once a comment sat in its type.)
+- **Criterion 14, Type cells:** `apiTables()` on `ec2460e` and on this tree, all 1,127 rows: **0 Type cells changed,** every re-declared row included; 0 defaults, row orders or closing rows changed. The only changed `doc`s are the six rewordings above.
+- **Criterion 10:** the changelog's doc-comment bullets name exactly the items whose files `git diff --name-only` lists, less `toast` (deviation 5): 63 of 64.
+- **Test 6's census:** 84 references in 365 item files. By source: 2 (the theme) 73, 3 (a font) 1, 4 (Tailwind) 2, 5 (bits-ui) 6, 6 (the prefix) 2; source 1 by its fixture. 54 bits-ui names read.
+
+#### Weight (criterion 12)
+
+The perf suite's transfer test (`-g "024 transfer: component"`, unthrottled transfer as sent), on a build of `ec2460e` and of this tree:
+
+| Page | Before | After | Change |
+|---|---:|---:|---:|
+| Button | 375.2 kB | 376.1 kB | +0.9 kB |
+| Dialog | 343.5 kB | 344.3 kB | +0.8 kB |
+| `sidebar` | 405.0 kB | 406.6 kB | +1.6 kB |
+
+- Over all 79 component pages: +0.5 kB on average, +1.6 kB at most (`field`, `sidebar`), +0.1 kB at least.
+- `sidebar` is the `component` template's heaviest page. Its budget is 445 kB (403.8 kB plus 10%): **38.4 kB of headroom remain.** All three component templates pass.
+
+#### Cross-lane
+
+- **`022` landed first.** Its mutation patches still apply: `mutations.test.ts` passes, with no patch re-cut.
+- **`025` had not landed.** No cost run. Its size hashes will be stale for the 64 items whose JSON changed (and every item, through `utils`); `025`'s merge regenerates them.
+- **`026`'s deferred step D1** (the `<Toaster>` mount in `app-shell`) is not done here. The layout's `data` and `children` now carry comments in the same `$props()` type; D1's edit rebases onto them with no other conflict.
+
+#### The gate (on `506cfc1` with this change, before its commit)
+
+- **`bun run check`:** 0 errors, 0 warnings, 2,361 files.
+- **`bun run lint`:** clean. **The literal lint** (`literals.test.ts`): 208 pass, 0 violations, the one L24 allowance.
+- **`bun run test:unit`:** **1,752 pass, 0 fail** (1,754 run). `mutations.test.ts` among them, with no patch re-cut.
+- **e2e, `chromium-light` and `chromium-dark`** (Firefox and WebKit not run, by the brief): 3,345 passed, 121 skipped, 3 failed. Two were `site.spec.ts`'s "five named items" case, in each scheme: `button`, `card` and `name-strip` now read 0.13.0 (deviation 7); it names `kbd` and `label` in their place, and passes. The third was `code.spec.ts`'s E7 timing budget, in dark, under load; re-run alone, it passes. `api-table.spec.ts`: **32 passed** (per scheme: 10 for `023a`'s check 1, 1 accessible-name check over every page, 3 for check 2 at 1440, 1024 and 390, and 2 for test 7, Button and Dialog).
+- **Perf** (`--project=perf --no-deps`): **25 passed.** Button 376.1 kB, Dialog 344.3 kB, `sidebar` 406.7 kB.
+- **`bun run test:smoke`:** **139 pass, 0 fail.**
+- **The release check, `--before-ci`** (`022` has landed): exits 0; it skips the ledger, the matrix run and the CI runner's LCP figures, as it should before push B.
+
+#### The scorecard (criterion 16)
+
+Re-run on this tree (the run log's last row). **Row 2, guidance depth: 2 → 3,** as predicted. `depth.ts`: Button 6 of 10, Dialog 6 of 10; "props described" is met on both. Kuiper ties Carbon, Material 3, Spectrum 2 and Primer on the row. Total **35 → 36**. `kuiper.ts`: 100% of 1,127 prop rows described. Rows 6, 7 and 8 hold (`site.ts`: Button 376 kB, LCP 920 ms).
+
+- **Deviation 9, the instrument.** `kuiper.ts` read a twin's description from the fourth cell, so the three-column table read 0%. It now finds the column by its "What it does" header. `depth.ts` already did.
+
+#### For the change review
+
+- Read every hand comment against decision 5's review rules, and the generated sentences once (`generated.txt`, 495 lines, in the scratchpad: `/private/tmp/claude-501/-Users-claygendron-Git-Repos-design-system/7b613866-3b2d-4829-bdd1-f2b35ebc0fd1/scratchpad/023/`). Screenshots of Button's API at 1440 (light) and 390 (dark) are there too.
+- The layout ruling and deviations 1 to 9 are the builder's, made while the owner was asleep. Each names its precedent.
+
+### Rulings at landing (2026-11-16)
+
+The change review ([`../reviews/023-prop-doc-comments-pr-2026-11-16.md`](../reviews/023-prop-doc-comments-pr-2026-11-16.md)) said land after fixes, with twelve findings. The design lead ruled on each:
+
+1. **(High) `ProofBandItem.label`'s second comment block is deleted.** The applier's `union` entry for the props' `label` also matched the item type's `label`, so two blocks were stacked, and an editor showed the wrong one. **A new countable rule, V8 in test 4: a member has exactly one doc comment block,** over every script of every item file. Seen failing on `7ee3bcd`'s `proof-band.svelte`: `["src/lib/registry/ui/proof-band/proof-band.svelte label"]`. Its mutation is a test of its own (two stacked blocks fail; one passes).
+2. **`ToggleGroupItem`'s `size` and `variant` take the review's corrected texts** ("Has no effect: the group always sets its items' size, `default` unless you pass another. Set `size` on the `ToggleGroup`." and "Has no effect: the group always sets its items' look. Set `variant` on the `ToggleGroup`."). **Ruling: all three inert props, these two and `FieldLegend.variant`, go to `048` for deprecation,** which is an interface change; they are not small changes in lane I. They are added to "Faults found while writing" below.
+3. **The default's line is marked `data-slot="api-default"`,** and test 7, `kuiper.ts` and `depth.ts` leave it out when they read a description. A row with only a default now fails test 7. **Proven by mutation:** with `Button.variant`'s comment removed (it has the default `"default"`) and the site rebuilt, test 7 failed in light, naming `Button.variant`; with the comment restored, it passes. `kuiper.ts` drops a trailing "Default `…`" from a twin's cell; `depth.ts` removes the marked span before it reads a Kuiper cell.
+4. **`kuiper.ts`'s `interfaceChangeMarks` counts only the bold mark,** `**interface change.**`. The bare phrase also matched "no interface change". The run log carries the corrected figure: **14**, before `023` and after (the old count read 34 before, of which 20 were negations, and 97 after).
+5. **No lint change in `023`.** The four rewordings that avoid the word `outline` stay. The literal lint reading comment prose is roadmap item `050`'s job ("prose is never linted"), and the fix belongs there.
+6. **"Red" becomes the role:** the `aria-invalid` comments of `Input`, `Textarea`, `NativeSelect` and `Checkbox` say "draws its border in the destructive colour"; `InputOTP`'s says "draws every cell's border in the destructive colour".
+7. **`Composer.onsubmit`** now says that Enter sends without a submit, and to use `onsend` to see every message.
+8. **`Button.busy`** adds "It has no effect when `href` is set." (GOV.UK's precedent). **`Avatar.loadingStatus`** reads "The image's load state." **`TooltipContent.side`** says only what Kuiper adds: it sets `top` itself, so the side holds if bits-ui's default changes.
+9. **The `?` is dropped** on `ToggleGroupItem.value` and `InputOTPSlot.cell`, which their bases require. Test 8 holds both; `bun run check` passes.
+10. **Ruling: deviation 7's test-expectation changes are accepted** (`component-data.test.ts`'s Updated cases, `site.spec.ts`'s "five named items", `pluto-allowed.json`, the thumbnails' hashes). They follow from decision 12's bullets, which the specification did not foresee would rename every example.
+11. **Ruling: one bullet.** The 61 identical doc-comment bullets are now one bullet that names the 61 items; the two with a union clause (`toggle-group`, `accordion`) keep theirs. `updatedIn()` reads every name at a bullet's head, so every Updated fact is as before. No test counted the bullets; `component-data.test.ts`, `changelog-page.test.ts` and `toast-site.test.ts` pass.
+12. **`FieldLegend`:** confirmed inert; see ruling 2.
+
+The fixes are commit `1217f52`, "023: the review's fixes". After them: `bun run check` 0 errors; lint clean; `api-described.test.ts` 112 pass (V8's two cases added).
+
+### The merge of `release/0.13.0` (2026-11-16)
+
+`release/0.13.0` at `70336f4` (past `7e06317`: `025`, `024b`, `024d` and `023`'s change review) merged into the branch as its own commit, by the review's merge notes.
+
+- **Conflicts:** two, as the review foresaw. The scorecard: both sides' "In short" sentences joined, the total 36 kept beside `025`'s row 15, and the run log's rows kept from both sides, `025`'s and `024b`'s first. The thumbnails' manifest: taken from the release side, then `--hash-only` (no picture changed).
+- **Ledger files:** `bun install --frozen-lockfile` (no change); `build:registry`; `pluto-allowed.json` merged cleanly, and `rename.test.ts` passes with every count as it was (6 pass).
+- **`025`'s report, `bun run cost --sizes-only`: it did not match byte for byte at first.** Six items' CSS grew by 6 to 65 bytes: `separator`, `item`, `field`, `chart`, `sign-in`, `settings`, and the catalogue. **The cause: Tailwind's scanner reads every word of an installed item file, comments included, as a class candidate.** Four comment words are utilities: "hidden" (`separator`, so `item`, `field`, `sign-in` and `settings` through it), "grid" (`card`, already emitted), "container" and "fixed" (`chart`). Found with `@tailwindcss/oxide`'s `Scanner` over each changed file, base against now, and the new selectors a fresh compile emits. **Fixed in the merge commit by rewording the four:** "decorative, so assistive technology skips it"; "for many small cards side by side"; "Without it, the chart makes one"; "a set text". The scan then finds 0 new selectors in all 134 files.
+  - **The second run: every item's size equals the report's to the byte, but `chart`'s** (and the catalogue's, which holds it): JS +10 bytes, CSS +6. **That is the chart build's own variance, not the comments:** with `chart`'s files as at `506cfc1` and only `utils`' comment changed, two runs on the same input gave JS 137,413 and 137,426 bytes and CSS 5,341 and 5,345. The committed report is the second full run's; `cost --guard` says the registry matches a fresh build, and `cost.test.ts` passes (40). One runtime figure, `chart`'s, is stale by its output hash, which the release check's cost step re-measures at the tag.
+  - **A finding for the roadmap, beside `050`:** a doc comment can add CSS to an app, through Tailwind's scan of the item's source. No test holds it today; `025`'s byte-equal sizes caught it here. A check over item files' comment words, the same scan as above, belongs with `050`'s class lint.
+- **The gate on the merged tree:**
+  - `bun run check`: 0 errors, 0 warnings, 2,377 files. `bun run lint`: clean.
+  - `bun run test:unit` (120 s timeout): 1,799 pass, 2 fail, of 1,803 run. The two are timing budgets (`highlight-session.test.ts`'s streaming p95, `highlight.test.ts`'s fresh-process specimens) under load; re-run alone, both files pass (53). `cost.test.ts` 40 pass; `rename.test.ts` 6 pass.
+  - e2e, `chromium-light` and `chromium-dark`: 3,348 passed, 121 skipped, 3 failed: `bar-glass.spec.ts`'s blur measure at 1440 on three pages, in light. Re-run alone, `bar-glass.spec.ts` passes (31). `023` changes no bar.
+  - Perf (`--project=perf --no-deps`): **26 passed.** Button 364.7 kB, Dialog 332.9 kB, `sidebar` 395.3 kB, with `024b`'s cut.
+  - `release-check --before-ci`: exits 0, skipping the ledger, the matrix run, the runner's LCP and the cost run, as it should.
+- **The scorecard, re-run on the merged tree** (the run log's last row): `depth.ts`, with the marked default left out, reads Button 6 of 10 and Dialog 6 of 10; row 2 is 3. `kuiper.ts`: 100% of 1,127 rows described, 14 interface marks. `site.ts`: Button 365 kB, LCP 880 ms; rows 6, 7 and 8 hold. Rows 1 to 14 total **36**; with row 15, 38 of 60.
+
+**Faults found while writing, amended.** Three props have no effect: `FieldLegend.variant` (sets only `data-variant`), and `ToggleGroupItem`'s `size` and `variant` (the group always sets both). Each comment says so. All three go to `048` for deprecation.

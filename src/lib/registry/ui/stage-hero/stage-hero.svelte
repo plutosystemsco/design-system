@@ -3,8 +3,14 @@
 
   /** A call to action: a link styled as a button. The first is filled by default. */
   export type StageHeroAction = {
+    /** The link's text. */
     label: string;
+    /** Where the link goes. */
     href: string;
+    /**
+     * The link's look, as `Button`'s. Without it, the first is filled and the
+     * rest are secondary.
+     */
     variant?: ButtonVariant;
   };
 
@@ -48,7 +54,12 @@
   > & {
     /** A short line above the title, in mono. */
     eyebrow?: string;
+    /**
+     * The hero's heading, the page's one first-level heading unless
+     * `headingLevel` says otherwise.
+     */
     title: string;
+    /** A line or two under the title. */
     description: string;
     /** One or two. */
     actions: StageHeroAction[];

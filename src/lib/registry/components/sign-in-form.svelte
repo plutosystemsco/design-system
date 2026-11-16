@@ -1,11 +1,25 @@
 <script lang="ts" module>
   export type SignInField = "email" | "password";
-  export type SignInValues = { email: string; password: string };
+  export type SignInValues = {
+    /** The email address, trimmed. */
+    email: string;
+    /** The password, as typed. */
+    password: string;
+  };
   export type SignInResult =
-    | { ok: true }
     | {
+        /** The person is signed in. */
+        ok: true;
+      }
+    | {
+        /** The person is not signed in; say why. */
         ok: false;
+        /** Each field's error, shown at the field and in the summary. */
         errors?: Partial<Record<SignInField, string>>;
+        /**
+         * An error for the whole form, such as credentials that match no
+         * account. It clears the password.
+         */
         formError?: string;
       };
 
@@ -46,14 +60,38 @@
     footer,
     class: className,
   }: {
+    /**
+     * Called with the trimmed email and the password once both pass the form's
+     * checks. It resolves to say whether the person is signed in, or why not.
+     */
     onsubmit: (values: SignInValues) => Promise<SignInResult>;
+    /** The email address. Bind it to read it, or set it to fill the field. */
     email?: string;
+    /**
+     * Each field's error, set by the form's checks, a failed submit or you.
+     * Bind it to read or set them.
+     */
     errors?: Partial<Record<SignInField, string>>;
+    /**
+     * An error for the whole form, shown in the summary. Bind it to read or set
+     * it.
+     */
     formError?: string;
+    /**
+     * True while `onsubmit` runs. The button shows a spinner and ignores
+     * presses.
+     */
     busy?: boolean;
+    /** The form's heading. */
     title?: string;
+    /** The line under the heading. */
     description?: string;
+    /**
+     * The title's heading level. On a sign-in page the title is its one
+     * first-level heading.
+     */
     level?: 1 | 2 | 3 | 4 | 5 | 6;
+    /** Starts every field's id, so two forms on a page never share one. */
     idPrefix?: string;
     /** The app's own links, such as "Create an account" or "Forgot your password?". */
     footer?: Snippet;

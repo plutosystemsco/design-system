@@ -28,7 +28,9 @@
 
   /** One highlighted token, such as one returned by `useHighlightedCode` or `highlightCode`. */
   export type CodeBlockLineToken = {
+    /** The token's text. */
     content: string;
+    /** The classes that colour the token, such as a highlight role's. */
     class?: string;
   };
 </script>
@@ -45,6 +47,10 @@
     children,
     ...restProps
   }: WithElementRef<HTMLAttributes<HTMLSpanElement>> & {
+    /**
+     * `highlighted` marks a line to look at. `added` and `removed` mark a
+     * diff's lines, with a plus or a minus as well as the colour.
+     */
     variant?: CodeBlockLineVariant;
     /** The line as plain text, or as highlighted tokens. When it is set, `children` is ignored. */
     code?: string | CodeBlockLineToken[];
