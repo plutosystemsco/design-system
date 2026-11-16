@@ -57,7 +57,15 @@
   let {
     data,
     children,
-  }: { data: { sidebarOpen: boolean }; children: Snippet } = $props();
+  }: {
+    /**
+     * What `+layout.server.ts` loads: whether the sidebar was open, read from
+     * its cookie, so the first paint is right.
+     */
+    data: { sidebarOpen: boolean };
+    /** The page, rendered in the shell's main region. */
+    children: Snippet;
+  } = $props();
 
   // The current page, for aria-current: the shipped links are anchors.
   const current = $derived(page.url.hash);

@@ -47,6 +47,9 @@ export const queryFiles = {
   kotlin: () => import("./queries/kotlin.scm?raw"),
 } satisfies Record<string, () => Promise<{ default: string }>>;
 
+/**
+ * The name of one of the highlight query files, which a tree-sitter row loads.
+ */
 export type QueryFile = keyof typeof queryFiles;
 
 /** The runtime's own WASM. */
@@ -180,7 +183,12 @@ export const shikiLanguages = {
 } satisfies Record<string, () => Promise<unknown>>;
 
 /** A tree-sitter row: the grammar and the query files, in order (later files win). */
-export type TreeSitterRow = { grammar: TreeSitterGrammar; files: QueryFile[] };
+export type TreeSitterRow = {
+  /** The grammar's WASM file. */
+  grammar: TreeSitterGrammar;
+  /** The query files the language loads, in order. */
+  files: QueryFile[];
+};
 
 /**
  * The 21 tree-sitter rows. Delete a row (and its package) to keep a language
@@ -256,8 +264,11 @@ const NAMES: [id: string, aliases: string[]][] = [
 
 /** One language: its id, the names a block may also pass, and the engine its table row names. */
 export type HighlightLanguage = {
+  /** The language's id, as a block's `language` names it. */
   id: string;
+  /** The other names a block may pass, such as `py` for Python. */
   aliases: string[];
+  /** Which engine paints it: tree-sitter while its row stands, else Shiki. */
   engine: "tree-sitter" | "shiki";
 };
 

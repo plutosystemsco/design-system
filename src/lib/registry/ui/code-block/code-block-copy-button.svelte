@@ -17,7 +17,17 @@
   }: Omit<ButtonProps, "onclick"> & {
     /** The text copied: the block's code. */
     code: string;
+    /** Called when the button is pressed, before the code is copied. */
     onclick?: (e: MouseEvent) => void;
+    /**
+     * The button's look, as `Button`'s. Kuiper's default is quiet, so the code
+     * stays the focus.
+     */
+    variant?: ButtonProps["variant"];
+    /**
+     * The button's size, as `Button`'s. Kuiper's default is the small square.
+     */
+    size?: ButtonProps["size"];
   } = $props();
 
   let copied = $state(false);

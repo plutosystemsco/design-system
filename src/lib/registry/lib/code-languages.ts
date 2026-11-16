@@ -14,11 +14,19 @@ import { codeHighlighting } from "#lib/registry/ui/code-editor/code-editor-highl
 /** How a language is parsed: a Lezer grammar, the Svelte grammar, or a CodeMirror 5 mode. */
 export type CodeLanguageKind = "lezer" | "svelte" | "legacy";
 
+/**
+ * One language the editor can load: its id, its other names, how it is parsed
+ * and where its grammar comes from.
+ */
 export type CodeLanguage = {
   /** The id the highlighter knows. */
   id: string;
   /** The names a block or an app may also pass. */
   aliases: string[];
+  /**
+   * How it is parsed: a Lezer grammar, the Svelte grammar, or a CodeMirror 5
+   * mode.
+   */
   kind: CodeLanguageKind;
   /** The name `@codemirror/language-data` gives it. */
   dataName: string;

@@ -1,7 +1,17 @@
 <script lang="ts" module>
   export type SignUpCodeResult =
-    | { ok: true }
-    | { ok: false; errors?: { code?: string }; formError?: string };
+    | {
+        /** The code was right. */
+        ok: true;
+      }
+    | {
+        /** The code was not accepted; say why. */
+        ok: false;
+        /** The code's error, shown at the field and in the summary. */
+        errors?: { code?: string };
+        /** An error for the whole form, shown in the summary. */
+        formError?: string;
+      };
 
   /** The house wording, for the states the app's server reports too. */
   export const MESSAGES = {
@@ -43,17 +53,48 @@
   }: {
     /** Shown, never asked for again. */
     email: string;
+    /**
+     * Called with the code once all its digits are in. It resolves to say
+     * whether the code was right, or why not.
+     */
     onsubmit: (code: string) => Promise<SignUpCodeResult>;
+    /**
+     * Called when the person asks for a new code. The status says a code was
+     * sent once it resolves.
+     */
     onresend: () => Promise<void>;
+    /**
+     * Called when the person chooses a different email address. Go back to the
+     * details step.
+     */
     onchangeemail: () => void;
+    /** The code typed. Bind it to read or set it. */
     code?: string;
+    /**
+     * The code's error, set by the form's check, a failed submit or you. Bind
+     * it to read or set it.
+     */
     errors?: { code?: string };
+    /**
+     * An error for the whole form, shown in the summary. Bind it to read or set
+     * it.
+     */
     formError?: string;
+    /**
+     * True while `onsubmit` runs. The button shows a spinner and ignores
+     * presses.
+     */
     busy?: boolean;
     /** Moves focus to the title on mount, when the step changes. */
     focusOnMount?: boolean;
+    /**
+     * The title's heading level. On a sign-up page the title is its one
+     * first-level heading.
+     */
     level?: 1 | 2 | 3 | 4 | 5 | 6;
+    /** Starts every field's id, so two forms on a page never share one. */
     idPrefix?: string;
+    /** The step's heading. */
     title?: string;
     class?: string;
   } = $props();

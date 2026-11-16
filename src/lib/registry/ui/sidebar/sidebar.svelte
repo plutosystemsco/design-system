@@ -16,6 +16,11 @@
     label?: string;
     /** `offcanvas` leaves the page and goes inert; `icon` shrinks to a 48 px column; `none` never collapses. */
     collapsible?: "offcanvas" | "icon" | "none";
+    /**
+     * The sidebar's header, groups and footer. On a phone they render in a
+     * sheet; elsewhere in the rail beside the page.
+     */
+    children?: HTMLAttributes<HTMLElement>["children"];
   } = $props();
 
   const sidebar = useSidebar();

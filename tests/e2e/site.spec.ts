@@ -542,12 +542,14 @@ test.describe("018 criterion 7: Updated", () => {
     page,
   }) => {
     for (const [name, anchor] of [
-      // 020: the theme and tooltip changed in 0.13.0; card never changed.
+      // 020: the theme and tooltip changed in 0.13.0. 023's doc-comment
+      // bullets name button, card and name-strip in 0.13.0 too, so kbd and
+      // label stand for an older change and an item that never changed.
       ["kuiper-theme", "#v0-13-0"],
-      ["button", "#v0-11-0"],
+      ["kbd", "#v0-12-0"],
       ["tooltip", "#v0-13-0"],
-      ["card", "#v0-2-0"],
-      ["name-strip", "#v0-11-0"],
+      ["label", "#v0-2-0"],
+      ["name-strip", "#v0-13-0"],
     ]) {
       await open(page, `/components/${name}/`);
       await expect(page.locator('[data-slot="facts"] dd a')).toHaveAttribute(
@@ -673,7 +675,9 @@ test.describe("018 criterion 9: the details", () => {
       expect(hits).toEqual([]);
     });
 
-  test("an API table with no description in any row has 3 columns; every other has 4, and every row with one shows it", async ({
+  // 023: a row's default sits under its description, so the columns are
+  // Name, Type and What it does; a table with neither in any row has two.
+  test("an API table with no description or default in any row has 2 columns; every other has 3", async ({
     page,
   }) => {
     test.setTimeout(600_000);
@@ -693,7 +697,7 @@ test.describe("018 criterion 9: the details", () => {
           ts.map((t) => t.querySelectorAll("thead th").length),
         );
       const want = tables.map((t) =>
-        t.rows.some((r) => r.doc.trim()) ? 4 : 3,
+        t.rows.some((r) => r.doc.trim() || r.default) ? 3 : 2,
       );
       if (JSON.stringify(got) !== JSON.stringify(want))
         wrong.push(`${item.name}: ${got} vs ${want}`);

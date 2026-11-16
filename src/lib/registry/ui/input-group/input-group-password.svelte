@@ -22,6 +22,13 @@
   > & {
     /** Whether the password shows as text. */
     shown?: boolean;
+    /** The password typed. Bind it to read or set it. */
+    value?: HTMLInputAttributes["value"];
+    /**
+     * The input's id. Inside a `Field` it defaults to the field's; else one is
+     * made, so the toggle can point at it.
+     */
+    id?: HTMLInputAttributes["id"];
   } = $props();
 
   const uid = $props.id();

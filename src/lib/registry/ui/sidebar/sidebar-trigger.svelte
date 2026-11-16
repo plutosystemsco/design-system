@@ -13,6 +13,10 @@
     onclick,
     ...restProps
   }: Omit<ComponentProps<typeof Button>, "href"> & {
+    /**
+     * Called when the trigger is pressed, before Kuiper toggles the sidebar and
+     * closes the trigger's tooltip.
+     */
     onclick?: (e: MouseEvent) => void;
   } = $props();
 

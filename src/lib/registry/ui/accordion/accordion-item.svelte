@@ -7,7 +7,9 @@
    * `region` labelled by the trigger.
    */
   export type AccordionItemContext = {
+    /** The id of the item's trigger, which labels its content. */
     readonly triggerId: string;
+    /** The id of the item's content, which its trigger controls. */
     readonly contentId: string;
   };
 

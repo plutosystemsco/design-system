@@ -27,7 +27,12 @@ export type ToastCloseReason =
   | "unmount";
 
 /** A toast's one action, such as Undo. A toast with an action never times out. */
-export type ToastAction = { label: string; onclick: () => void };
+export type ToastAction = {
+  /** The button's text, such as "Undo". */
+  label: string;
+  /** Called when the button is pressed. The toast then closes. */
+  onclick: () => void;
+};
 
 /** What a toast may carry besides its title. */
 export type ToastOptions = {
@@ -45,8 +50,11 @@ export type ToastOptions = {
 
 /** `toast.promise`'s messages: a string, or a function of the value or the error. */
 export type PromiseMessages<T> = {
+  /** The title while the promise runs. */
   loading: string;
+  /** The title once it resolves: text, or made from its value. */
   success: string | ((value: T) => string);
+  /** The title once it rejects: text, or made from its error. */
   error: string | ((error: unknown) => string);
 };
 
@@ -55,10 +63,17 @@ export type PauseCause = "hover" | "focus" | "blur" | "hidden" | "modal";
 
 /** One toast as the toaster draws it. */
 export type ToastView = {
+  /** The toast's id. */
   id: string;
+  /**
+   * The toast's kind, which sets its icon, its colour and how long it stays.
+   */
   kind: ToastKind;
+  /** The toast's one line of text. */
   title: string;
+  /** The sentence under the title, if any. */
   description?: string;
+  /** The toast's one button, if any. */
   action?: ToastAction;
   /** Hidden from view, because its box would cover the keyboard focus. */
   aside: boolean;
@@ -66,6 +81,7 @@ export type ToastView = {
 
 /** What the toaster draws: the showing toasts, newest first, and two counts. */
 export type Snapshot = {
+  /** The toasts on screen, newest first. */
   showing: ToastView[];
   /** How many wait behind a full stack. */
   waiting: number;
@@ -74,7 +90,15 @@ export type Snapshot = {
 };
 
 /** One write to an announcer. An empty `text` clears it. */
-export type Speech = { channel: "polite" | "assertive"; text: string };
+export type Speech = {
+  /**
+   * `assertive` for an error, which interrupts; `polite` for the rest, which
+   * wait their turn.
+   */
+  channel: "polite" | "assertive";
+  /** What the announcer says. */
+  text: string;
+};
 
 /** The least time a timed toast shows, in ms. */
 export const TOAST_MIN_MS = 6000;
@@ -146,16 +170,27 @@ type Channel = {
 
 /** The computed styles that make `position: fixed` relative to an ancestor. */
 export type TrapStyle = {
+  /** The computed `transform`. */
   transform: string;
+  /** The computed `translate`. */
   translate: string;
+  /** The computed `rotate`. */
   rotate: string;
+  /** The computed `scale`. */
   scale: string;
+  /** The computed `filter`. */
   filter: string;
+  /** The computed backdrop filter. */
   backdropFilter: string;
+  /** The computed `perspective`. */
   perspective: string;
+  /** The computed `contain`. */
   contain: string;
+  /** The computed `container-type`. */
   containerType: string;
+  /** The computed `content-visibility`. */
   contentVisibility: string;
+  /** The computed `will-change`. */
   willChange: string;
 };
 
@@ -210,9 +245,15 @@ export function findTrap<T extends Partial<TrapStyle>>(chain: T[]): T | null {
 
 /** What the queue needs from its host: a clock, timers and a frame scheduler. */
 export type ToastQueueDeps = {
+  /** The time now, in milliseconds. */
   now(): number;
+  /**
+   * Calls `fn` after `ms` milliseconds. Returns a handle for `clearTimeout`.
+   */
   setTimeout(fn: () => void, ms: number): unknown;
+  /** Cancels a timer by its handle. */
   clearTimeout(handle: unknown): void;
+  /** Calls `fn` before the next paint. */
   frame(fn: () => void): void;
   /** A development warning. */
   warn?(message: string): void;

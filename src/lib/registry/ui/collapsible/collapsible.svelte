@@ -5,7 +5,13 @@
     ref = $bindable(null),
     open = $bindable(false),
     ...restProps
-  }: CollapsiblePrimitive.RootProps = $props();
+  }: CollapsiblePrimitive.RootProps & {
+    /**
+     * Whether the content shows. Bind it to open or close it from your own
+     * code.
+     */
+    open?: CollapsiblePrimitive.RootProps["open"];
+  } = $props();
 </script>
 
 <CollapsiblePrimitive.Root

@@ -362,12 +362,12 @@ describe("027a test 3: batch A has 0 empty API rows", () => {
 });
 
 /**
- * 027b test 3: batch A's interactive items have 0 empty API rows. Every
- * prop of `Pagination`, `SearchField`, `TagGroup` and `Tag` has a doc
- * comment, each variant prop shows its values, and every member of
- * `PaginationStrings`, `SearchFieldStrings` and `TagStrings` is described.
+ * 027b test 3: what each part inherits. `023`'s suite holds every prop and
+ * every `Strings` member to one doc comment, and the variant unions to
+ * their values; this keeps the one fact it does not check, each table's
+ * closing row.
  */
-describe("027b test 3: batch A's interactive items have 0 empty API rows", () => {
+describe("027b test 3: what batch A's interactive parts inherit", () => {
   type Item = { name: string; files: { path: string; type: string }[] };
   const registry = JSON.parse(
     readFileSync(path.join(ROOT, "registry.json"), "utf8"),
@@ -378,87 +378,12 @@ describe("027b test 3: batch A's interactive items have 0 empty API rows", () =>
     ["search-field", "SearchField", "every attribute of `<input>`"],
     ["tag", "TagGroup", "every attribute of `<ul>`"],
     ["tag", "Tag", "every attribute of an element"],
-  ] as const)(
-    "%s: every row of %s has a doc comment, and it inherits %s",
-    async (name, part, inherits) => {
-      const { apiTables } = await import("../../src/lib/site/api.server.ts");
-      const item = registry.items.find((i) => i.name === name);
-      expect(item, name).toBeDefined();
-      const table = apiTables(item!).find((t) => t.part === part);
-      expect(table, part).toBeDefined();
-      expect(table!.rows.length).toBeGreaterThan(0);
-      expect(table!.rows.filter((r) => !r.doc).map((r) => r.name)).toEqual([]);
-      expect(table!.inherits).toBe(`and ${inherits}`);
-    },
-  );
-
-  test.each([
-    [
-      "pagination",
-      "Pagination",
-      {
-        siblings: "0 | 1 | 2",
-        size: '"default" | "sm"',
-        page: "number",
-        pages: "number",
-      },
-    ],
-    [
-      "search-field",
-      "SearchField",
-      { value: "string", results: "string | undefined", resultsFor: "string" },
-    ],
-    ["tag", "Tag", { label: "string", pressed: "boolean" }],
-  ] as const)(
-    "%s: %s's types read as their values",
-    async (name, part, types) => {
-      const { apiTables } = await import("../../src/lib/site/api.server.ts");
-      const item = registry.items.find((i) => i.name === name)!;
-      const table = apiTables(item).find((t) => t.part === part)!;
-      for (const [prop, type] of Object.entries(types))
-        expect(table.rows.find((r) => r.name === prop)?.type, prop).toBe(type);
-    },
-  );
-
-  test.each([
-    [
-      "src/lib/registry/ui/pagination/pagination.svelte",
-      "PaginationStrings",
-      ["label", "previous", "next", "page", "endSuffix", "summary"],
-    ],
-    [
-      "src/lib/registry/ui/search-field/search-field.svelte",
-      "SearchFieldStrings",
-      ["clear"],
-    ],
-    ["src/lib/registry/ui/tag/tag.svelte", "TagStrings", ["remove"]],
-  ] as const)(
-    "every member of %s's %s has a doc comment",
-    async (file, name, want) => {
-      const ts = (await import("typescript")).default;
-      const text = readFileSync(path.join(ROOT, file), "utf8");
-      const module =
-        /<script[^>]*\bmodule\b[^>]*>([\s\S]*?)<\/script>/.exec(text)?.[1] ??
-        "";
-      const source = ts.createSourceFile(
-        "m.ts",
-        module,
-        ts.ScriptTarget.Latest,
-        true,
-      );
-      const alias = source.statements.find(
-        (s): s is import("typescript").TypeAliasDeclaration =>
-          ts.isTypeAliasDeclaration(s) && s.name.text === name,
-      );
-      expect(alias, name).toBeDefined();
-      const literal = alias!.type as import("typescript").TypeLiteralNode;
-      expect(ts.isTypeLiteralNode(literal)).toBe(true);
-      const members = literal.members.map((m) => ({
-        name: m.name?.getText(source) ?? "",
-        doc: ((m as unknown as { jsDoc?: unknown[] }).jsDoc ?? []).length,
-      }));
-      expect(members.map((m) => m.name)).toEqual([...want]);
-      expect(members.filter((m) => m.doc === 0)).toEqual([]);
-    },
-  );
+  ] as const)("%s: %s inherits %s", async (name, part, inherits) => {
+    const { apiTables } = await import("../../src/lib/site/api.server.ts");
+    const item = registry.items.find((i) => i.name === name);
+    expect(item, name).toBeDefined();
+    const table = apiTables(item!).find((t) => t.part === part);
+    expect(table, part).toBeDefined();
+    expect(table!.inherits).toBe(`and ${inherits}`);
+  });
 });

@@ -15,9 +15,24 @@
   }: DropdownMenuPrimitive.ContentProps & {
     /** The menu's name when no group heading names it; the trigger's text otherwise names it to a reader. */
     label?: string;
+    /**
+     * Props for the `DropdownMenuPortal`. The menu renders in place by default;
+     * pass `{ disabled: false }` to portal it out of an ancestor that would
+     * clip it.
+     */
     portalProps?: WithoutChildrenOrChild<
       ComponentProps<typeof DropdownMenuPortal>
     >;
+    /**
+     * The gap between the trigger and the menu. Kuiper's default is the small
+     * spacing step.
+     */
+    sideOffset?: DropdownMenuPrimitive.ContentProps["sideOffset"];
+    /**
+     * Kuiper lines the menu up with the trigger's start edge, where the
+     * reader's eye already is.
+     */
+    align?: DropdownMenuPrimitive.ContentProps["align"];
   } = $props();
 </script>
 

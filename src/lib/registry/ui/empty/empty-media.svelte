@@ -30,6 +30,10 @@
     variant = "default",
     ...restProps
   }: WithElementRef<HTMLAttributes<HTMLDivElement>> & {
+    /**
+     * `icon` sets an icon on a muted square. `default` shows the media as it
+     * is, such as an illustration.
+     */
     variant?: EmptyMediaVariant;
   } = $props();
 </script>

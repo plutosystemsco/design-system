@@ -25,29 +25,26 @@ describe("018 decision 4: Updated", () => {
       expect(updated[i.name], i.name).toMatch(/^\d+\.\d+\.\d+$/);
   });
 
-  test("80 are named at a bullet's head; name-strip and cta-band take their since, 0.11.0", () => {
+  // 023: its doc-comment bullets name name-strip and cta-band, the two
+  // that took their since; a name no bullet holds still does.
+  test("82 are named at a bullet's head; a name no bullet holds takes its since", () => {
     const named = registry.items.filter((i) => updatedIn(i.name, null, log));
-    expect(named).toHaveLength(80);
-    expect(
-      registry.items
-        .filter((i) => !named.includes(i))
-        .map((i) => i.name)
-        .sort(),
-    ).toEqual(["cta-band", "name-strip"]);
-    expect(updated["name-strip"]).toBe("0.11.0");
-    expect(updated["cta-band"]).toBe("0.11.0");
+    expect(named).toHaveLength(82);
+    expect(updatedIn("no-such-item", "0.11.0", log)).toBe("0.11.0");
+    expect(updatedIn("no-such-item", null, log)).toBeNull();
   });
 
-  // 020: kuiper-theme is named in the 0.13.0 entry, as renamed.
-  test("a changed item reads its newest release: kuiper-theme 0.13.0, button 0.11.0", () => {
+  // 020: kuiper-theme is named in the 0.13.0 entry, as renamed. 023 names
+  // button too (its doc comments), so kbd stands for an older change.
+  test("a changed item reads its newest release: kuiper-theme 0.13.0, kbd 0.12.0", () => {
     expect(updated["kuiper-theme"]).toBe("0.13.0");
-    expect(updated.button).toBe("0.11.0");
+    expect(updated.kbd).toBe("0.12.0");
   });
 
-  // 020: tooltip changed in 0.13.0 (its context key), so card stands for an
-  // item that never changed.
-  test("a never-changed item reads the release it arrived in: card 0.2.0; tooltip, changed in 0.13.0, reads 0.13.0", () => {
-    expect(updated.card).toBe("0.2.0");
+  // 020: tooltip changed in 0.13.0 (its context key). 023 changed card's
+  // source, so label stands for an item that never changed.
+  test("a never-changed item reads the release it arrived in: label 0.2.0; tooltip, changed in 0.13.0, reads 0.13.0", () => {
+    expect(updated.label).toBe("0.2.0");
     expect(updated.tooltip).toBe("0.13.0");
   });
 

@@ -31,6 +31,7 @@
     language?: string;
     /** Runs the code and resolves to its output lines; a rejection's message is shown. Without it, no Run button. */
     run?: () => Promise<string[]>;
+    /** The Run button's text, such as a translation. */
     runLabel?: string;
     /** Told each time the run's state changes, so a parent can answer it. */
     onstate?: (state: StageCardState) => void;

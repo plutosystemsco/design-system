@@ -7,7 +7,13 @@
     value = $bindable(),
     class: className,
     ...restProps
-  }: AccordionPrimitive.RootProps = $props();
+  }: AccordionPrimitive.RootProps & {
+    /**
+     * The open item's value, or with `type="multiple"`, every open item's. Bind
+     * it to read or set them.
+     */
+    value?: AccordionPrimitive.RootProps["value"];
+  } = $props();
 </script>
 
 <!--

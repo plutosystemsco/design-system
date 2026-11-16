@@ -29,9 +29,9 @@
     label: string;
     /** The id of visible text that describes the editor, set as `aria-describedby`. */
     describedby?: string;
-    /** Read-only: the editor keeps its stop and says `aria-readonly`; typing changes nothing. */
+    /** The editor keeps its tab stop and says `aria-readonly`, and typing changes nothing. */
     readonly?: boolean;
-    /** Disabled: `contenteditable="false"`, and the editor leaves the tab order. */
+    /** Sets `contenteditable="false"`, and the editor leaves the tab order. */
     disabled?: boolean;
     /** The language and keymaps, such as `pythonSetup()`. Reconfigured when it changes. */
     extensions?: Extension;

@@ -1,0 +1,767 @@
+{
+  "about": "023 test 8: the props each item names in its $props() but did not declare in its own type, on the tree before 023 (release/0.13.0 at 4a0bdde). Each is re-declared typed exactly base[\"name\"]. The four in `declaredInUnion` were already declared, in a branch of a union in the item's own type; their comments go there.",
+  "base": "4a0bdde",
+  "passThroughs": [
+    {
+      "item": "four-dot",
+      "file": "src/lib/registry/ui/four-dot/lockup.svelte",
+      "part": "Lockup",
+      "name": "href",
+      "base": "HTMLAnchorAttributes"
+    },
+    {
+      "item": "four-dot",
+      "file": "src/lib/registry/ui/four-dot/lockup.svelte",
+      "part": "Lockup",
+      "name": "target",
+      "base": "HTMLAnchorAttributes"
+    },
+    {
+      "item": "four-dot",
+      "file": "src/lib/registry/ui/four-dot/lockup.svelte",
+      "part": "Lockup",
+      "name": "rel",
+      "base": "HTMLAnchorAttributes"
+    },
+    {
+      "item": "button",
+      "file": "src/lib/registry/ui/button/button.svelte",
+      "part": "Button",
+      "name": "href",
+      "base": "HTMLAnchorAttributes"
+    },
+    {
+      "item": "button",
+      "file": "src/lib/registry/ui/button/button.svelte",
+      "part": "Button",
+      "name": "type",
+      "base": "HTMLButtonAttributes"
+    },
+    {
+      "item": "button",
+      "file": "src/lib/registry/ui/button/button.svelte",
+      "part": "Button",
+      "name": "disabled",
+      "base": "HTMLButtonAttributes"
+    },
+    {
+      "item": "button",
+      "file": "src/lib/registry/ui/button/button.svelte",
+      "part": "Button",
+      "name": "onclick",
+      "base": "HTMLButtonAttributes"
+    },
+    {
+      "item": "tooltip",
+      "file": "src/lib/registry/ui/tooltip/tooltip.svelte",
+      "part": "Tooltip",
+      "name": "open",
+      "base": "TooltipPrimitive.RootProps<T>"
+    },
+    {
+      "item": "tooltip",
+      "file": "src/lib/registry/ui/tooltip/tooltip.svelte",
+      "part": "Tooltip",
+      "name": "onOpenChange",
+      "base": "TooltipPrimitive.RootProps<T>"
+    },
+    {
+      "item": "tooltip",
+      "file": "src/lib/registry/ui/tooltip/tooltip-trigger.svelte",
+      "part": "TooltipTrigger",
+      "name": "onfocus",
+      "base": "TooltipPrimitive.TriggerProps<T>"
+    },
+    {
+      "item": "tooltip",
+      "file": "src/lib/registry/ui/tooltip/tooltip-trigger.svelte",
+      "part": "TooltipTrigger",
+      "name": "onkeydown",
+      "base": "TooltipPrimitive.TriggerProps<T>"
+    },
+    {
+      "item": "tooltip",
+      "file": "src/lib/registry/ui/tooltip/tooltip-trigger.svelte",
+      "part": "TooltipTrigger",
+      "name": "onpointerdown",
+      "base": "TooltipPrimitive.TriggerProps<T>"
+    },
+    {
+      "item": "tooltip",
+      "file": "src/lib/registry/ui/tooltip/tooltip-trigger.svelte",
+      "part": "TooltipTrigger",
+      "name": "onpointerleave",
+      "base": "TooltipPrimitive.TriggerProps<T>"
+    },
+    {
+      "item": "tooltip",
+      "file": "src/lib/registry/ui/tooltip/tooltip-content.svelte",
+      "part": "TooltipContent",
+      "name": "sideOffset",
+      "base": "TooltipPrimitive.ContentProps"
+    },
+    {
+      "item": "tooltip",
+      "file": "src/lib/registry/ui/tooltip/tooltip-content.svelte",
+      "part": "TooltipContent",
+      "name": "side",
+      "base": "TooltipPrimitive.ContentProps"
+    },
+    {
+      "item": "tooltip",
+      "file": "src/lib/registry/ui/tooltip/tooltip-provider.svelte",
+      "part": "TooltipProvider",
+      "name": "delayDuration",
+      "base": "TooltipPrimitive.ProviderProps"
+    },
+    {
+      "item": "toggle",
+      "file": "src/lib/registry/ui/toggle/toggle.svelte",
+      "part": "Toggle",
+      "name": "pressed",
+      "base": "TogglePrimitive.RootProps"
+    },
+    {
+      "item": "toggle-group",
+      "file": "src/lib/registry/ui/toggle-group/toggle-group.svelte",
+      "part": "ToggleGroup",
+      "name": "value",
+      "base": "ToggleGroupPrimitive.RootProps"
+    },
+    {
+      "item": "toggle-group",
+      "file": "src/lib/registry/ui/toggle-group/toggle-group.svelte",
+      "part": "ToggleGroup",
+      "name": "size",
+      "base": "ToggleVariants"
+    },
+    {
+      "item": "toggle-group",
+      "file": "src/lib/registry/ui/toggle-group/toggle-group.svelte",
+      "part": "ToggleGroup",
+      "name": "variant",
+      "base": "ToggleVariants"
+    },
+    {
+      "item": "toggle-group",
+      "file": "src/lib/registry/ui/toggle-group/toggle-group-item.svelte",
+      "part": "ToggleGroupItem",
+      "name": "value",
+      "base": "ToggleGroupPrimitive.ItemProps"
+    },
+    {
+      "item": "toggle-group",
+      "file": "src/lib/registry/ui/toggle-group/toggle-group-item.svelte",
+      "part": "ToggleGroupItem",
+      "name": "size",
+      "base": "ToggleVariants"
+    },
+    {
+      "item": "toggle-group",
+      "file": "src/lib/registry/ui/toggle-group/toggle-group-item.svelte",
+      "part": "ToggleGroupItem",
+      "name": "variant",
+      "base": "ToggleVariants"
+    },
+    {
+      "item": "separator",
+      "file": "src/lib/registry/ui/separator/separator.svelte",
+      "part": "Separator",
+      "name": "decorative",
+      "base": "SeparatorPrimitive.RootProps"
+    },
+    {
+      "item": "separator",
+      "file": "src/lib/registry/ui/separator/separator.svelte",
+      "part": "Separator",
+      "name": "data-slot",
+      "base": "SeparatorPrimitive.RootProps"
+    },
+    {
+      "item": "tabs",
+      "file": "src/lib/registry/ui/tabs/tabs.svelte",
+      "part": "Tabs",
+      "name": "value",
+      "base": "TabsPrimitive.RootProps"
+    },
+    {
+      "item": "collapsible",
+      "file": "src/lib/registry/ui/collapsible/collapsible.svelte",
+      "part": "Collapsible",
+      "name": "open",
+      "base": "CollapsiblePrimitive.RootProps"
+    },
+    {
+      "item": "avatar",
+      "file": "src/lib/registry/ui/avatar/avatar.svelte",
+      "part": "Avatar",
+      "name": "loadingStatus",
+      "base": "AvatarPrimitive.RootProps"
+    },
+    {
+      "item": "popover",
+      "file": "src/lib/registry/ui/popover/popover.svelte",
+      "part": "Popover",
+      "name": "open",
+      "base": "PopoverPrimitive.RootProps"
+    },
+    {
+      "item": "popover",
+      "file": "src/lib/registry/ui/popover/popover-content.svelte",
+      "part": "PopoverContent",
+      "name": "sideOffset",
+      "base": "PopoverPrimitive.ContentProps"
+    },
+    {
+      "item": "popover",
+      "file": "src/lib/registry/ui/popover/popover-content.svelte",
+      "part": "PopoverContent",
+      "name": "align",
+      "base": "PopoverPrimitive.ContentProps"
+    },
+    {
+      "item": "popover",
+      "file": "src/lib/registry/ui/popover/popover-title.svelte",
+      "part": "PopoverTitle",
+      "name": "id",
+      "base": "HTMLAttributes<HTMLHeadingElement>"
+    },
+    {
+      "item": "accordion",
+      "file": "src/lib/registry/ui/accordion/accordion.svelte",
+      "part": "Accordion",
+      "name": "value",
+      "base": "AccordionPrimitive.RootProps"
+    },
+    {
+      "item": "alert-dialog",
+      "file": "src/lib/registry/ui/alert-dialog/alert-dialog.svelte",
+      "part": "AlertDialog",
+      "name": "open",
+      "base": "AlertDialogPrimitive.RootProps"
+    },
+    {
+      "item": "alert-dialog",
+      "file": "src/lib/registry/ui/alert-dialog/alert-dialog-content.svelte",
+      "part": "AlertDialogContent",
+      "name": "onOpenAutoFocus",
+      "base": "AlertDialogPrimitive.ContentProps"
+    },
+    {
+      "item": "field",
+      "file": "src/lib/registry/ui/field/field-legend.svelte",
+      "part": "FieldLegend",
+      "name": "id",
+      "base": "HTMLAttributes<HTMLLegendElement>"
+    },
+    {
+      "item": "field",
+      "file": "src/lib/registry/ui/field/field-label.svelte",
+      "part": "FieldLabel",
+      "name": "for",
+      "base": "ComponentProps<typeof Label>"
+    },
+    {
+      "item": "input",
+      "file": "src/lib/registry/ui/input/input.svelte",
+      "part": "Input",
+      "name": "value",
+      "base": "HTMLInputAttributes"
+    },
+    {
+      "item": "input",
+      "file": "src/lib/registry/ui/input/input.svelte",
+      "part": "Input",
+      "name": "id",
+      "base": "HTMLInputAttributes"
+    },
+    {
+      "item": "input",
+      "file": "src/lib/registry/ui/input/input.svelte",
+      "part": "Input",
+      "name": "aria-describedby",
+      "base": "HTMLInputAttributes"
+    },
+    {
+      "item": "input",
+      "file": "src/lib/registry/ui/input/input.svelte",
+      "part": "Input",
+      "name": "aria-invalid",
+      "base": "HTMLInputAttributes"
+    },
+    {
+      "item": "input",
+      "file": "src/lib/registry/ui/input/input.svelte",
+      "part": "Input",
+      "name": "data-slot",
+      "base": "HTMLInputAttributes"
+    },
+    {
+      "item": "textarea",
+      "file": "src/lib/registry/ui/textarea/textarea.svelte",
+      "part": "Textarea",
+      "name": "value",
+      "base": "HTMLTextareaAttributes"
+    },
+    {
+      "item": "textarea",
+      "file": "src/lib/registry/ui/textarea/textarea.svelte",
+      "part": "Textarea",
+      "name": "id",
+      "base": "HTMLTextareaAttributes"
+    },
+    {
+      "item": "textarea",
+      "file": "src/lib/registry/ui/textarea/textarea.svelte",
+      "part": "Textarea",
+      "name": "aria-describedby",
+      "base": "HTMLTextareaAttributes"
+    },
+    {
+      "item": "textarea",
+      "file": "src/lib/registry/ui/textarea/textarea.svelte",
+      "part": "Textarea",
+      "name": "aria-invalid",
+      "base": "HTMLTextareaAttributes"
+    },
+    {
+      "item": "textarea",
+      "file": "src/lib/registry/ui/textarea/textarea.svelte",
+      "part": "Textarea",
+      "name": "data-slot",
+      "base": "HTMLTextareaAttributes"
+    },
+    {
+      "item": "input-group",
+      "file": "src/lib/registry/ui/input-group/input-group-button.svelte",
+      "part": "InputGroupButton",
+      "name": "type",
+      "base": "ComponentProps<typeof Button>"
+    },
+    {
+      "item": "input-group",
+      "file": "src/lib/registry/ui/input-group/input-group-button.svelte",
+      "part": "InputGroupButton",
+      "name": "variant",
+      "base": "ComponentProps<typeof Button>"
+    },
+    {
+      "item": "input-group",
+      "file": "src/lib/registry/ui/input-group/input-group-input.svelte",
+      "part": "InputGroupInput",
+      "name": "value",
+      "base": "ComponentProps<typeof Input>"
+    },
+    {
+      "item": "input-group",
+      "file": "src/lib/registry/ui/input-group/input-group-password.svelte",
+      "part": "InputGroupPassword",
+      "name": "value",
+      "base": "HTMLInputAttributes"
+    },
+    {
+      "item": "input-group",
+      "file": "src/lib/registry/ui/input-group/input-group-password.svelte",
+      "part": "InputGroupPassword",
+      "name": "id",
+      "base": "HTMLInputAttributes"
+    },
+    {
+      "item": "input-group",
+      "file": "src/lib/registry/ui/input-group/input-group-textarea.svelte",
+      "part": "InputGroupTextarea",
+      "name": "value",
+      "base": "ComponentProps<typeof Textarea>"
+    },
+    {
+      "item": "native-select",
+      "file": "src/lib/registry/ui/native-select/native-select.svelte",
+      "part": "NativeSelect",
+      "name": "value",
+      "base": "HTMLSelectAttributes"
+    },
+    {
+      "item": "native-select",
+      "file": "src/lib/registry/ui/native-select/native-select.svelte",
+      "part": "NativeSelect",
+      "name": "id",
+      "base": "HTMLSelectAttributes"
+    },
+    {
+      "item": "native-select",
+      "file": "src/lib/registry/ui/native-select/native-select.svelte",
+      "part": "NativeSelect",
+      "name": "aria-describedby",
+      "base": "HTMLSelectAttributes"
+    },
+    {
+      "item": "native-select",
+      "file": "src/lib/registry/ui/native-select/native-select.svelte",
+      "part": "NativeSelect",
+      "name": "aria-invalid",
+      "base": "HTMLSelectAttributes"
+    },
+    {
+      "item": "checkbox",
+      "file": "src/lib/registry/ui/checkbox/checkbox.svelte",
+      "part": "Checkbox",
+      "name": "checked",
+      "base": "CheckboxPrimitive.RootProps"
+    },
+    {
+      "item": "checkbox",
+      "file": "src/lib/registry/ui/checkbox/checkbox.svelte",
+      "part": "Checkbox",
+      "name": "indeterminate",
+      "base": "CheckboxPrimitive.RootProps"
+    },
+    {
+      "item": "checkbox",
+      "file": "src/lib/registry/ui/checkbox/checkbox.svelte",
+      "part": "Checkbox",
+      "name": "id",
+      "base": "CheckboxPrimitive.RootProps"
+    },
+    {
+      "item": "checkbox",
+      "file": "src/lib/registry/ui/checkbox/checkbox.svelte",
+      "part": "Checkbox",
+      "name": "aria-describedby",
+      "base": "CheckboxPrimitive.RootProps"
+    },
+    {
+      "item": "checkbox",
+      "file": "src/lib/registry/ui/checkbox/checkbox.svelte",
+      "part": "Checkbox",
+      "name": "aria-invalid",
+      "base": "CheckboxPrimitive.RootProps"
+    },
+    {
+      "item": "radio-group",
+      "file": "src/lib/registry/ui/radio-group/radio-group.svelte",
+      "part": "RadioGroup",
+      "name": "value",
+      "base": "RadioGroupPrimitive.RootProps"
+    },
+    {
+      "item": "radio-group",
+      "file": "src/lib/registry/ui/radio-group/radio-group.svelte",
+      "part": "RadioGroup",
+      "name": "id",
+      "base": "RadioGroupPrimitive.RootProps"
+    },
+    {
+      "item": "radio-group",
+      "file": "src/lib/registry/ui/radio-group/radio-group.svelte",
+      "part": "RadioGroup",
+      "name": "aria-describedby",
+      "base": "RadioGroupPrimitive.RootProps"
+    },
+    {
+      "item": "radio-group",
+      "file": "src/lib/registry/ui/radio-group/radio-group.svelte",
+      "part": "RadioGroup",
+      "name": "aria-invalid",
+      "base": "RadioGroupPrimitive.RootProps"
+    },
+    {
+      "item": "radio-group",
+      "file": "src/lib/registry/ui/radio-group/radio-group.svelte",
+      "part": "RadioGroup",
+      "name": "aria-labelledby",
+      "base": "RadioGroupPrimitive.RootProps"
+    },
+    {
+      "item": "switch",
+      "file": "src/lib/registry/ui/switch/switch.svelte",
+      "part": "Switch",
+      "name": "checked",
+      "base": "SwitchPrimitive.RootProps"
+    },
+    {
+      "item": "switch",
+      "file": "src/lib/registry/ui/switch/switch.svelte",
+      "part": "Switch",
+      "name": "id",
+      "base": "SwitchPrimitive.RootProps"
+    },
+    {
+      "item": "switch",
+      "file": "src/lib/registry/ui/switch/switch.svelte",
+      "part": "Switch",
+      "name": "aria-describedby",
+      "base": "SwitchPrimitive.RootProps"
+    },
+    {
+      "item": "switch",
+      "file": "src/lib/registry/ui/switch/switch.svelte",
+      "part": "Switch",
+      "name": "aria-invalid",
+      "base": "SwitchPrimitive.RootProps"
+    },
+    {
+      "item": "input-otp",
+      "file": "src/lib/registry/ui/input-otp/input-otp.svelte",
+      "part": "InputOTP",
+      "name": "value",
+      "base": "InputOTPPrimitive.RootProps"
+    },
+    {
+      "item": "input-otp",
+      "file": "src/lib/registry/ui/input-otp/input-otp.svelte",
+      "part": "InputOTP",
+      "name": "pattern",
+      "base": "InputOTPPrimitive.RootProps"
+    },
+    {
+      "item": "input-otp",
+      "file": "src/lib/registry/ui/input-otp/input-otp.svelte",
+      "part": "InputOTP",
+      "name": "pasteTransformer",
+      "base": "InputOTPPrimitive.RootProps"
+    },
+    {
+      "item": "input-otp",
+      "file": "src/lib/registry/ui/input-otp/input-otp.svelte",
+      "part": "InputOTP",
+      "name": "inputId",
+      "base": "InputOTPPrimitive.RootProps"
+    },
+    {
+      "item": "input-otp",
+      "file": "src/lib/registry/ui/input-otp/input-otp.svelte",
+      "part": "InputOTP",
+      "name": "aria-describedby",
+      "base": "InputOTPPrimitive.RootProps"
+    },
+    {
+      "item": "input-otp",
+      "file": "src/lib/registry/ui/input-otp/input-otp.svelte",
+      "part": "InputOTP",
+      "name": "aria-invalid",
+      "base": "InputOTPPrimitive.RootProps"
+    },
+    {
+      "item": "input-otp",
+      "file": "src/lib/registry/ui/input-otp/input-otp-slot.svelte",
+      "part": "InputOTPSlot",
+      "name": "cell",
+      "base": "InputOTPPrimitive.CellProps"
+    },
+    {
+      "item": "code-block",
+      "file": "src/lib/registry/ui/code-block/code-block-copy-button.svelte",
+      "part": "CodeBlockCopyButton",
+      "name": "variant",
+      "base": "ButtonProps"
+    },
+    {
+      "item": "code-block",
+      "file": "src/lib/registry/ui/code-block/code-block-copy-button.svelte",
+      "part": "CodeBlockCopyButton",
+      "name": "size",
+      "base": "ButtonProps"
+    },
+    {
+      "item": "chart",
+      "file": "src/lib/registry/ui/chart/chart-container.svelte",
+      "part": "Container",
+      "name": "id",
+      "base": "HTMLAttributes<HTMLElement>"
+    },
+    {
+      "item": "dropdown-menu",
+      "file": "src/lib/registry/ui/dropdown-menu/dropdown-menu.svelte",
+      "part": "DropdownMenu",
+      "name": "open",
+      "base": "DropdownMenuPrimitive.RootProps"
+    },
+    {
+      "item": "dropdown-menu",
+      "file": "src/lib/registry/ui/dropdown-menu/dropdown-menu-content.svelte",
+      "part": "DropdownMenuContent",
+      "name": "sideOffset",
+      "base": "DropdownMenuPrimitive.ContentProps"
+    },
+    {
+      "item": "dropdown-menu",
+      "file": "src/lib/registry/ui/dropdown-menu/dropdown-menu-content.svelte",
+      "part": "DropdownMenuContent",
+      "name": "align",
+      "base": "DropdownMenuPrimitive.ContentProps"
+    },
+    {
+      "item": "dropdown-menu",
+      "file": "src/lib/registry/ui/dropdown-menu/dropdown-menu-checkbox-group.svelte",
+      "part": "DropdownMenuCheckboxGroup",
+      "name": "value",
+      "base": "DropdownMenuPrimitive.CheckboxGroupProps"
+    },
+    {
+      "item": "dropdown-menu",
+      "file": "src/lib/registry/ui/dropdown-menu/dropdown-menu-checkbox-item.svelte",
+      "part": "DropdownMenuCheckboxItem",
+      "name": "checked",
+      "base": "DropdownMenuPrimitive.CheckboxItemProps"
+    },
+    {
+      "item": "dropdown-menu",
+      "file": "src/lib/registry/ui/dropdown-menu/dropdown-menu-checkbox-item.svelte",
+      "part": "DropdownMenuCheckboxItem",
+      "name": "indeterminate",
+      "base": "DropdownMenuPrimitive.CheckboxItemProps"
+    },
+    {
+      "item": "dropdown-menu",
+      "file": "src/lib/registry/ui/dropdown-menu/dropdown-menu-checkbox-item.svelte",
+      "part": "DropdownMenuCheckboxItem",
+      "name": "closeOnSelect",
+      "base": "DropdownMenuPrimitive.CheckboxItemProps"
+    },
+    {
+      "item": "dropdown-menu",
+      "file": "src/lib/registry/ui/dropdown-menu/dropdown-menu-radio-group.svelte",
+      "part": "DropdownMenuRadioGroup",
+      "name": "value",
+      "base": "DropdownMenuPrimitive.RadioGroupProps"
+    },
+    {
+      "item": "dropdown-menu",
+      "file": "src/lib/registry/ui/dropdown-menu/dropdown-menu-radio-item.svelte",
+      "part": "DropdownMenuRadioItem",
+      "name": "closeOnSelect",
+      "base": "DropdownMenuPrimitive.RadioItemProps"
+    },
+    {
+      "item": "dropdown-menu",
+      "file": "src/lib/registry/ui/dropdown-menu/dropdown-menu-sub.svelte",
+      "part": "DropdownMenuSub",
+      "name": "open",
+      "base": "DropdownMenuPrimitive.SubProps"
+    },
+    {
+      "item": "dropdown-menu",
+      "file": "src/lib/registry/ui/dropdown-menu/dropdown-menu-sub-content.svelte",
+      "part": "DropdownMenuSubContent",
+      "name": "align",
+      "base": "DropdownMenuPrimitive.SubContentProps"
+    },
+    {
+      "item": "dropdown-menu",
+      "file": "src/lib/registry/ui/dropdown-menu/dropdown-menu-sub-content.svelte",
+      "part": "DropdownMenuSubContent",
+      "name": "alignOffset",
+      "base": "DropdownMenuPrimitive.SubContentProps"
+    },
+    {
+      "item": "sheet",
+      "file": "src/lib/registry/ui/sheet/sheet.svelte",
+      "part": "Sheet",
+      "name": "open",
+      "base": "SheetPrimitive.RootProps"
+    },
+    {
+      "item": "sheet",
+      "file": "src/lib/registry/ui/sheet/sheet-title.svelte",
+      "part": "SheetTitle",
+      "name": "level",
+      "base": "SheetPrimitive.TitleProps"
+    },
+    {
+      "item": "dialog",
+      "file": "src/lib/registry/ui/dialog/dialog.svelte",
+      "part": "Dialog",
+      "name": "open",
+      "base": "DialogPrimitive.RootProps"
+    },
+    {
+      "item": "dialog",
+      "file": "src/lib/registry/ui/dialog/dialog-title.svelte",
+      "part": "DialogTitle",
+      "name": "level",
+      "base": "DialogPrimitive.TitleProps"
+    },
+    {
+      "item": "breadcrumb",
+      "file": "src/lib/registry/ui/breadcrumb/breadcrumb-link.svelte",
+      "part": "BreadcrumbLink",
+      "name": "href",
+      "base": "HTMLAnchorAttributes"
+    },
+    {
+      "item": "sidebar",
+      "file": "src/lib/registry/ui/sidebar/sidebar-input.svelte",
+      "part": "SidebarInput",
+      "name": "value",
+      "base": "ComponentProps<typeof Input>"
+    },
+    {
+      "item": "message-log",
+      "file": "src/lib/registry/ui/message-log/message-log.svelte",
+      "part": "Root",
+      "name": "onscroll",
+      "base": "HTMLAttributes<HTMLDivElement>"
+    },
+    {
+      "item": "message-log",
+      "file": "src/lib/registry/ui/message-log/message-log.svelte",
+      "part": "Root",
+      "name": "onwheel",
+      "base": "HTMLAttributes<HTMLDivElement>"
+    },
+    {
+      "item": "message-log",
+      "file": "src/lib/registry/ui/message-log/message-log.svelte",
+      "part": "Root",
+      "name": "ontouchmove",
+      "base": "HTMLAttributes<HTMLDivElement>"
+    },
+    {
+      "item": "message-log",
+      "file": "src/lib/registry/ui/message-log/message-log.svelte",
+      "part": "Root",
+      "name": "onkeydown",
+      "base": "HTMLAttributes<HTMLDivElement>"
+    },
+    {
+      "item": "composer",
+      "file": "src/lib/registry/ui/composer/composer.svelte",
+      "part": "Root",
+      "name": "onsubmit",
+      "base": "HTMLFormAttributes"
+    },
+    {
+      "item": "app-shell",
+      "file": "src/lib/registry/components/app-shell-skip-link.svelte",
+      "part": "AppShellSkipLink",
+      "name": "href",
+      "base": "HTMLAnchorAttributes"
+    }
+  ],
+  "declaredInUnion": [
+    {
+      "item": "input",
+      "file": "src/lib/registry/ui/input/input.svelte",
+      "part": "Input",
+      "name": "type"
+    },
+    {
+      "item": "input",
+      "file": "src/lib/registry/ui/input/input.svelte",
+      "part": "Input",
+      "name": "files"
+    },
+    {
+      "item": "proof-band",
+      "file": "src/lib/registry/ui/proof-band/proof-band.svelte",
+      "part": "ProofBand",
+      "name": "title"
+    },
+    {
+      "item": "proof-band",
+      "file": "src/lib/registry/ui/proof-band/proof-band.svelte",
+      "part": "ProofBand",
+      "name": "label"
+    }
+  ]
+}

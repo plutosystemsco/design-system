@@ -30,15 +30,25 @@
     appName: string;
     /** The product's logo, at most 36 px tall and 176 px wide, so it fits beside the controls at 320 px; it renders for "header" here and "footer" in the footer. Without it, the name is the wordmark. */
     logo?: Snippet<[place: "header" | "footer"]>;
+    /**
+     * The header's links, in order. Below md they move to the sheet the menu
+     * button opens.
+     */
     links?: AppShellLink[];
     /** The current page's href, from `page.url`. */
     current?: string;
     /** With a sidebar the header holds its trigger and nothing else of the navigation: the links and the account live in the sidebar. */
     sidebar?: boolean;
+    /**
+     * The person signed in, shown as the account menu's avatar. `null` shows no
+     * menu.
+     */
     user?: AppShellUser | null;
     /** Without a sidebar: sticks to the top, under every overlay. With a sidebar the header is always sticky. While sticky it carries `data-sticky-bar`, so the theme gives the page a `scroll-padding-top` that clears it. */
     sticky?: boolean;
+    /** Your settings route, for the account menu. */
     settingsHref?: string;
+    /** Your sign-out route, for the account menu. */
     signOutHref?: string;
     class?: string;
   } = $props();

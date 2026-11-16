@@ -23,7 +23,9 @@
     lines?: HighlightedLine[];
     /** The language `code` is highlighted in. Without it, `code` renders plain. */
     language?: string;
+    /** Wraps long lines in place of scrolling the block sideways. */
     wrap?: boolean;
+    /** Numbers each line. The numbers are neither copied nor read aloud. */
     lineNumbers?: boolean;
     /** 0 by default: the pre is a stop that scrolls by keyboard. Pass -1 to remove the stop. */
     tabindex?: number;

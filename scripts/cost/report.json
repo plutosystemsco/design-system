@@ -32,8 +32,8 @@
       "noisy": false,
       "seconds": 2546
     },
-    "2026-11-16T08:18:58.434Z": {
-      "commit": "467a0e8+dirty",
+    "2026-11-16T10:13:18.680Z": {
+      "commit": "ab15732+dirty",
       "full": false,
       "machine": {
         "model": "MacBookPro18,3 (Apple M1 Pro)",
@@ -54,14 +54,14 @@
         "warmups": 1,
         "gzipLevel": 9
       },
-      "load": { "median": 9.6, "max": 10.7 },
+      "load": { "median": 17.3, "max": 22.8 },
       "instrument": {
-        "floorHydrateMs": 117.6,
-        "noopMs": 44.2,
-        "calibrateMs": 78.6
+        "floorHydrateMs": 119.9,
+        "noopMs": 44.3,
+        "calibrateMs": 82.6
       },
       "noisy": false,
-      "seconds": 235
+      "seconds": 327
     }
   },
   "empty": { "js": 31383, "css": 1444 },
@@ -79,19 +79,19 @@
   "floor": {
     "js": 42840,
     "css": 7525,
-    "run": "2026-11-16T08:18:58.434Z",
-    "hydrateMs": 117.6,
-    "noopMs": 44.2,
+    "run": "2026-11-16T10:13:18.680Z",
+    "hydrateMs": 119.9,
+    "noopMs": 44.3,
     "outputHash": "67b6685c60a3cfc6a165e21ebdbabcdbfffdf61cd4008a2903e4f22b98e3ad55"
   },
   "catalogue": {
-    "js": 378560,
-    "css": 16752,
-    "sumOfAlone": { "js": 1125412, "css": 63971 }
+    "js": 379006,
+    "css": 16791,
+    "sumOfAlone": { "js": 1125739, "css": 64030 }
   },
   "items": {
     "utils": {
-      "hash": "e39961e3e867667728bc28b326c23d07da6d8295c8263e850659f74cebae01e8",
+      "hash": "8aeec90693dc06ab06731425b8b4f514b382cb07de36a340d6062946055c2e33",
       "runtimeHash": "bed7e2889542bb376689b211b337cc68a04cfde19ff34d8345db0912dfcd6c9a",
       "outputHash": "c26a5f812e00e7f58e8d360216cfc515b2ea46cc22f2cfda165fc734090ddd41",
       "run": "2026-11-16T06:27:03.737Z",
@@ -113,7 +113,7 @@
       "cases": {}
     },
     "four-dot": {
-      "hash": "00ec782628406d48b374075daafbca52fff09651327570ca5e8213031bdaf891",
+      "hash": "243f46eb064e9fb25c76b6781991d7c39f0e94069aee3cd4f2e8071cfb0e64e4",
       "runtimeHash": "a3328a00d6b2e519f72ddc7f83a7534691679018b1e07e93719cd6eb2f717655",
       "outputHash": "fdacdb426c48a9e77fa7e9476dcffaff2f8bee98bde9eb0e20299502b3d3e0ef",
       "run": "2026-11-16T06:27:03.737Z",
@@ -134,7 +134,7 @@
       "cases": {}
     },
     "theme": {
-      "hash": "bdc15a4f7673005e454dcbf19ebc373326f9ce2af5d3cca413c5b551ae316dcd",
+      "hash": "9d0a0e79de7ea253cec11c710ff741d83ae930e5e12a26b2750664031c863e85",
       "runtimeHash": "a16375636468b460e7aa01080d298504c2cc6b1b50b3b06b7d160a93a3ca9b22",
       "outputHash": "26692b7ac8331a2634458cbe633c9ce5e27b6251340c6f607d19c10a71ccb862",
       "run": "2026-11-16T06:27:03.737Z",
@@ -168,7 +168,7 @@
       "cases": {}
     },
     "read-token": {
-      "hash": "3d0bfc20c0960f705485de962369af792bda4df8aa633616c25d9037aa3e39de",
+      "hash": "0c7cbc93f272f3e646af0ed5f146695bdfb99d2b286a0de9dc8bf679a53c5287",
       "runtimeHash": "0465856e00e33418f59dafd20020422567dda5a8672df300cd04ac479965de7d",
       "outputHash": "1cd58f0f1450fa852f67eae52df3eb12a3abf02e2b2e50fc1802ccc07c7013ab",
       "run": "2026-11-16T06:27:03.737Z",
@@ -189,7 +189,7 @@
       "cases": {}
     },
     "liquid-glass": {
-      "hash": "8b41a4ae500cf5d2897cf2e289b238465de2a7c2c379472f4d62c7814038ac46",
+      "hash": "e2a7680d029a904bbe6fe4ed4aca516b060792325d984bb12af669ec7a67085a",
       "runtimeHash": "2e2cefc6b0eb8a4cf65ec1867efa5f3a88be37fea51fe0f921735fda5af47d33",
       "outputHash": "de58e566e614fc6784732362607feabe447761fbc51c66bad9c886e1cbde1fe7",
       "run": "2026-11-16T06:27:03.737Z",
@@ -211,7 +211,7 @@
       "cases": {}
     },
     "button": {
-      "hash": "1afdeece41ebb807f811b4e48e63c2a1681a16511c9cbce0c701e3bc72050bce",
+      "hash": "9aaa2db34696dfba25dd4510f211ce9d5e82a779a4b06bdd0480c9c6f9a6dbe0",
       "runtimeHash": "846bad8641985142622fd4fdb2e485a0fe45f7a4b572435fa871eeb14918eef1",
       "outputHash": "06ed1487880727b0bf7da2011519b58f5f50ce6a54d4f3754d9428af27c206ee",
       "run": "2026-11-16T06:27:03.737Z",
@@ -244,7 +244,7 @@
       "cases": {}
     },
     "tooltip": {
-      "hash": "69a328ccf88a21d6f6421c2d651a76b132a919a58ce4791c851abf6d3a6d582a",
+      "hash": "e5a61b7f4b81c85e2b26cffee9101ba6fffc6b8cdb38e4d2a95557745ca89bb2",
       "runtimeHash": "949ebcafd55e8aba3d789321e38220aeb857bf8f291b5a0d3431dfe713fc5451",
       "outputHash": "11009b6f867a7f4fe76993b938b3178993f94b51b46a70cf83aa6abc1df10b31",
       "run": "2026-11-16T06:27:03.737Z",
@@ -283,7 +283,7 @@
       "cases": {}
     },
     "kbd": {
-      "hash": "fd557f9fab64ed4646daba5657869705246f81415191cccbbd3b37313ab8831a",
+      "hash": "8fe6301126418101c1c347bfbc56abf2221a399b16c989786a583fb4769c148e",
       "runtimeHash": "ee48ec473d74b75f64f8339c81df57970a804456301dc646b3f22740fd292c63",
       "outputHash": "bec65104ae7d29f7ae3384904a404a1ef2fe0355e2815106c217ff4c884465f3",
       "run": "2026-11-16T06:27:03.737Z",
@@ -304,7 +304,7 @@
       "cases": {}
     },
     "toggle": {
-      "hash": "2e3f476bbcc6347b14eda5aa0f0eaaf54e90f578122c836520a494296280762d",
+      "hash": "9fbf17ef21b9ee055ea59ee9d8c28482236159c896828e5e85077fea59713c39",
       "runtimeHash": "534ff0eae6d6023f151bc3d9c45185907cc23dff2ff242ae45fb5416a08d70df",
       "outputHash": "928361cf527ece8417fcb3c010f3f7339c81a62e772248cd118bc1f39235e813",
       "run": "2026-11-16T06:27:03.737Z",
@@ -339,7 +339,7 @@
       "cases": {}
     },
     "toggle-group": {
-      "hash": "78e7963a5a61e0b94acc5145a0c56070cbccd245cb4cb2650ae653734082e9ed",
+      "hash": "5e135e6c96c32c1fb2fa2c0c64d680408398c3656895ecb77f48d60c05b7fa2f",
       "runtimeHash": "d7443e8fea70973cc48cad7103e6b768c84398ba7b913460bb8c1d8fe940e1a1",
       "outputHash": "f4b1be7df6662deb30e15a430b6d80b86c0d8f6347f26d483389e0e605085a3b",
       "run": "2026-11-16T06:27:03.737Z",
@@ -376,7 +376,7 @@
       "cases": {}
     },
     "card": {
-      "hash": "0a30a4bea8d68588336b41987823332972f0579a574b5566510eba1616d305f4",
+      "hash": "a3380f0c6131fa681e56237abb0ab36b0c2c73a02d4d40bc91df94ee9048acf4",
       "runtimeHash": "78448e2a7903e72218708a42b216f34a433e8b6d9ccf5f98e9740a5ce3fac917",
       "outputHash": "4b54a24bb55fbbf99eee545ae2e7022a0f396fb9b1e7f62746f307b1acbd39f1",
       "run": "2026-11-16T06:27:03.737Z",
@@ -397,7 +397,7 @@
       "cases": {}
     },
     "separator": {
-      "hash": "448ac6481768361a831fa0fe7438d1e9323c3cfe5fc9343a56620e6ea00484cf",
+      "hash": "fa7b87c667bb611777ec9d63f3e48dd3759c305e2fa790047a8afb9c45f6ba6d",
       "runtimeHash": "42a982c2ab66e7c710b78b40d94dea6631577b5533a046a5dbe7994b9c044e29",
       "outputHash": "daf6f10f1a4c82bfcf7c73574dff140f92ee1a4244945fee85fe5ccbd2173348",
       "run": "2026-11-16T06:27:03.737Z",
@@ -422,7 +422,7 @@
       "cases": {}
     },
     "item": {
-      "hash": "038c701c69b473deedccfe1f70f7bdcc055bd94ab582198b88422cac56baa24a",
+      "hash": "e80c21c5e6122ded3addc231e6d456bb428dbee35ee2a2b0cd469efe18b16551",
       "runtimeHash": "3748cbb0bf543d823e006767fd8909bb1560366ed0ce01796fb079ea7c639023",
       "outputHash": "aed7be91cdf22cadb6525c7f10ae26a98bdfda18f5bbf08b1f3468bc51ad883c",
       "run": "2026-11-16T06:27:03.737Z",
@@ -444,7 +444,7 @@
       "cases": {}
     },
     "table": {
-      "hash": "ba6ebbb028ca53d5e3f31f3352301e02d543ae04361b53d227bc6e649f748550",
+      "hash": "b05bf4879b88a2a0c804115d9f8df5861152f4d19af5324ad4bf6bbcb27a9d49",
       "runtimeHash": "8ded1123e622f5818369f17bf81ffb2a596601d8a1feac528ed7e63aa7336a20",
       "outputHash": "61df4f33aaa4e57daaee006299ef764b92b0b8805f113f90bab49738f6468678",
       "run": "2026-11-16T06:27:03.737Z",
@@ -464,7 +464,7 @@
       ],
       "cases": {
         "1000-rows": {
-          "hash": "c947d83f2b202a09170512126db91067b2035b5e565ad31a4544078e43291701",
+          "hash": "daa01653660371643e7d76456ef13551d8ebe64e53452497917585ff334bc007",
           "runtimeHash": "342774d2cb134d0d91e002f553ced0510d2579df719cdb74b81503de8ec63417",
           "outputHash": "e174827422ab79b096fa56aa794fc0af1bd7e503c1b6cd4ddd7d84088adc73dc",
           "run": "2026-11-16T06:27:03.737Z",
@@ -485,7 +485,7 @@
       }
     },
     "tabs": {
-      "hash": "78a5818de6ce145ec800c18a68a280bd29459826b73fec857dbc90e9be250ddb",
+      "hash": "f53ffb9865514275ff9313f8e71cbdf35fc466c5806393d9ab02b1f3fab0a5cd",
       "runtimeHash": "11e315678d0b20a8af05c99c77da4f47e81f67ed53dedd87309127e6d2a6bbc3",
       "outputHash": "edb157b64d76db874b52fa7b97197cc4a6d8aa960b8aaae4a845d2c2c072d575",
       "run": "2026-11-16T06:27:03.737Z",
@@ -521,7 +521,7 @@
       "cases": {}
     },
     "collapsible": {
-      "hash": "0075b80275f78a5678a0eadc41ca8fc1bffef78672b9e9e7bd84f4f0843e7304",
+      "hash": "f2a8323a51c3b22366145b5d1f8a4841399a8a6af273355669791ce77f5ea4a7",
       "runtimeHash": "a365d3bd5bd708762741fd3e61d45b28b12ac1388c4bf47df24e944024d189c9",
       "outputHash": "eeca6170847bcec53d9e26467904bf1a805747f3ca51365d80a4879abea456e5",
       "run": "2026-11-16T06:27:03.737Z",
@@ -556,7 +556,7 @@
       "cases": {}
     },
     "avatar": {
-      "hash": "835a32dbc76e9af02eb2f5b2c20df02c6d1eced13c146007a1283eb744947dde",
+      "hash": "ee8965b42daf690092728f051d7abdb590e931b6daa0f01202a7208eb99b833a",
       "runtimeHash": "af1aad16d40dd72ada64fba2d5e2c534b14555b9e03099cd3069bee01860f4ea",
       "outputHash": "7c9b57a8243d2d2f464a04d0671e23c7f1c6e94d2c41a0e443ebfef92a32f5a6",
       "run": "2026-11-16T06:27:03.737Z",
@@ -582,7 +582,7 @@
       "cases": {}
     },
     "popover": {
-      "hash": "17d193809b15d2c98964ab9dcfbb28a224ad0edb9f8182a7a3a9286ac79c535d",
+      "hash": "2e26bab7a99694d6e649eab30051220e5ea9b906693a03466008b3846b4875ef",
       "runtimeHash": "8d3165f2809ce54d87e9b1020155e24d57ace31463d7ce655170c31791ca2c67",
       "outputHash": "0010631e79013926cce73c19c85149a811a53667a4888c3f0d203d1fc778eb5e",
       "run": "2026-11-16T06:27:03.737Z",
@@ -621,7 +621,7 @@
       "cases": {}
     },
     "accordion": {
-      "hash": "1b63b4faf0a0cf19b7208f92e56387844e7322d5526702616c8e70ce22fcfad4",
+      "hash": "3c8adf64ac8b19f6e8ea78c50779ef0567a96a07f37d89dfbb38e5b5b20d6a63",
       "runtimeHash": "ddc6afc4763fdfd33883776f6bfc298249cf108fa4b37a5bf44cc7833223f921",
       "outputHash": "fca4f55e5e891a154200272b2eb9aa333ca7e225006261919651951c15461621",
       "run": "2026-11-16T06:27:03.737Z",
@@ -657,7 +657,7 @@
       "cases": {}
     },
     "alert": {
-      "hash": "7e71c56d118c24507f7724804af84b82dc39f1a4f0d1762baafdf0aa1ae119fb",
+      "hash": "1d5d95a51cfe2bcf77957b4c7247d20d0c2f237fdc7d4d274fb7982d9529b478",
       "runtimeHash": "7d49c2afd43b33b5ebd09685b9881e15fb2e7ca786004d3598f2a2570f0a0db8",
       "outputHash": "efb07af7620f0c657292fa36b77388d1a6982a466bb115e7db60f400fc71d23c",
       "run": "2026-11-16T06:27:03.737Z",
@@ -679,7 +679,7 @@
       "cases": {}
     },
     "alert-dialog": {
-      "hash": "dd6da8b99c39753843c81b246c7b0c52921c5b7d132f0ec6c851bb538e7e41c9",
+      "hash": "6baec72be95bd36821454772c7071eb6e6a57fb23a2b2564211c71e6db25b3ad",
       "runtimeHash": "d02d15a8651f47ef85dafcc2a0b53b97c3e1219050d5d66c98646c3b4b36d99a",
       "outputHash": "70b13a3cf051acd90ccba6c251b15e0b931cba64b95546537473cc09cc36e0ae",
       "run": "2026-11-16T06:27:03.737Z",
@@ -717,7 +717,7 @@
       "cases": {}
     },
     "badge": {
-      "hash": "e8be791b0f2486fc4ad33b5a88e1c0aba3441481f697d839c17c30e2aefb4065",
+      "hash": "a7597b4a8b6195b192f07a7c8fc9d425d76b2b7455c7829b2eadac6e21ba8195",
       "runtimeHash": "7b76e083cef707795a512d19d08afa3cbe853b7a431ba6e4f15c5c2a3b62f668",
       "outputHash": "243d4fc6a6641c215f684d947493002aa532362eeb8099c5d76d4f20f3cf4706",
       "run": "2026-11-16T06:27:03.737Z",
@@ -739,7 +739,7 @@
       "cases": {}
     },
     "empty": {
-      "hash": "725e5d01c2f24ebc5563bf216bbb03a6b7994f914a0257207490a99162d14f66",
+      "hash": "6c56d77c3cb387340a4b490ea96837e728685519c60a4db9e1131eefec7fa7d3",
       "runtimeHash": "0b0aee50f0c273f2f9a39b934a6cc006a7b0e2b538d8fca0e816e6123ad1835a",
       "outputHash": "5fabfe46bded475949b23d873877d52395eb5f1a0854e3bb80f7aa4064a2a682",
       "run": "2026-11-16T06:27:03.737Z",
@@ -761,7 +761,7 @@
       "cases": {}
     },
     "skeleton": {
-      "hash": "041f1113604021db1187d7fde3f2d79bfea5674f6c96096010900a4d0f46c88a",
+      "hash": "85ce9cfff41dbe89776dfec81296a1e61d7b9ae9f9c0aff2f8a950eaa7e82b8d",
       "runtimeHash": "7d2280076a9253dea3054b6f247fc00ea4cef9bf8425bb014af9ad8e47b52a60",
       "outputHash": "162af95b085c9d45a5d9eff73f718c75462382bc7b2f3e0f7ef99aa02041e142",
       "run": "2026-11-16T06:27:03.737Z",
@@ -782,7 +782,7 @@
       "cases": {}
     },
     "spinner": {
-      "hash": "e57bdbf97cfc6c1c2227358257ef00f547e040e64dcfd883ef293f90b86a9fe7",
+      "hash": "3182de2952b48d6412351040875c4ba3d9ce78cd88f637a22ffbbb62a48df307",
       "runtimeHash": "1c39289fce1431990263023218f7da80cf630e370190b48590739608b2deafb4",
       "outputHash": "530d1ef1b999696ff3076adf248a0b549259812f2219ff183346d54578475fd2",
       "run": "2026-11-16T06:27:03.737Z",
@@ -804,7 +804,7 @@
       "cases": {}
     },
     "status": {
-      "hash": "57ae19950901fe7e6c95448824214c86c8fdc52ae0687ae31645a8547f47c345",
+      "hash": "450c8271f84008fe6e3a7e7208a1899091cf913f956d30f812fb710917c0a5ed",
       "runtimeHash": "731facc7d891960fdea6fccd28a20ba264eec118a38f507e1c1f53e1b6fbf5a9",
       "outputHash": "506038433f420ffc16a03725195d5573500a6b6bc58e0a7ce6913d1a53e59843",
       "run": "2026-11-16T06:27:03.737Z",
@@ -825,7 +825,7 @@
       "cases": {}
     },
     "error-summary": {
-      "hash": "e452da6d6e3bd1dd7d353e84d602eb9ec775a66de75ae3e1fcf9ba8cac77ec5a",
+      "hash": "0d347bcdbe2db113fc7320864fc6565a72f5a3b374f854a39086865c4d6b7cb5",
       "runtimeHash": "3e52b2f7dbcf31b7dfe45de85af2b3f901d6fd88d176ca16d9302879251b13b6",
       "outputHash": "3d1928b2691840a7e2e6482919900ee2a3d8e12aa989655295dfde85cf9f00bb",
       "run": "2026-11-16T06:27:03.737Z",
@@ -858,7 +858,7 @@
       "cases": {}
     },
     "label": {
-      "hash": "cb3548e4027303ede944fc509d532165385de4a046760ced07192fd8e1cb13bd",
+      "hash": "36eea0c0f7b1f5744d94c2788c40a51bf15ddea22f8eb27ef091b871f47e7616",
       "runtimeHash": "96bfa86d6e5cfd9082ba2eaf61556a3393d2ec0879bf71b552cb7acf2efcde24",
       "outputHash": "4dfbac4be9ad4900e47c2fd4bb74d848dca27f77d4834e921df49e8fde224f18",
       "run": "2026-11-16T06:27:03.737Z",
@@ -883,7 +883,7 @@
       "cases": {}
     },
     "field": {
-      "hash": "da7d4b91002dbd5914ea52b8a4aff54dfe65cfd34208d4784dcad7207abc34ab",
+      "hash": "95da378d0519853f84741a8105dff24ba40b3bfb14d0c620105fb267a8d78c80",
       "runtimeHash": "30678c5ff6f74956b3433eb9056331059a05daf124d63438704cc1045ea3c265",
       "outputHash": "7d246b8e4e099d9a9b2dde9eb3bf9c4abb79ad8297b85b303a6e0c19fc948317",
       "run": "2026-11-16T06:27:03.737Z",
@@ -910,7 +910,7 @@
       "cases": {}
     },
     "input": {
-      "hash": "a5e574d5efb01c4d62dff23083a3bf7cb9a3daf1f0c361c47aafc59dc0e04914",
+      "hash": "a1912143569bd160990b132862138b22528d34a19d58ec57810beed973662e8d",
       "runtimeHash": "c5af8806178b469019151979e5b0ebd9f7bfee169be89fec01eeae72cfb00400",
       "outputHash": "4e0656da092c9319b3463b2947e304e918323944b95d541614192d30cd91eeeb",
       "run": "2026-11-16T06:27:03.737Z",
@@ -931,7 +931,7 @@
       "cases": {}
     },
     "textarea": {
-      "hash": "f20691b1809ef9a46fdcd7331d0ed380eea7dfd920b39beaaad75483ab2fd4ee",
+      "hash": "5a1c70e5d2eaef71475e9514fcae442a692ea7df7f7212c536756938dc12fc06",
       "runtimeHash": "c636fa5de7b253232a75d0f0d9d3592e56b5eda95e409e0f9e5ab9dcca875eaa",
       "outputHash": "d14146125d93c7faa85e9359145b4d2d5903ba663ca8f05248743652849a50e4",
       "run": "2026-11-16T06:27:03.737Z",
@@ -952,7 +952,7 @@
       "cases": {}
     },
     "input-group": {
-      "hash": "26027e17c6a26370374addf98ee919b7e8f5b8ad11cb68ac4055cdfb8c8a1406",
+      "hash": "d148bb21b11193e3e8f8e99cbe5b0a8a17d4914b51862d0ad378c2201cbd2d3b",
       "runtimeHash": "c438becfc3783451bb1ff8ca6d35eec2a6d6404f033c0a1eb6b631f541082136",
       "outputHash": "826e22531676bbdb57a44fa21f98e5406ba67191ca7833a443f830252c1c4f4d",
       "run": "2026-11-16T06:27:03.737Z",
@@ -987,7 +987,7 @@
       "cases": {}
     },
     "native-select": {
-      "hash": "49c66a1c7d0c1c7845e7fb85303011384ebb4a32be43cdc51aa5644553b2fe6a",
+      "hash": "5d6a5b04d875cc60a7bf9ca16a7042aea7118dbed2fbaa27220efa9570db4f85",
       "runtimeHash": "a511e606a5690c1391953a765d7fcb82dadab8cfcec515faecb50411b15b75b1",
       "outputHash": "9b9d1db6a6019b508d1af14f3609663d35f73717e45a0f26d7e395ce9e896941",
       "run": "2026-11-16T06:27:03.737Z",
@@ -1009,7 +1009,7 @@
       "cases": {}
     },
     "checkbox": {
-      "hash": "887c886e22a7c732d8c80e8a43c83ba1c6c14f43d3d6d32f195d83187c337371",
+      "hash": "825200139528fce9b65a5d940788a2bfb8c0d1994306e98e49df0659794a1e7a",
       "runtimeHash": "541a724fb7c1182d29cd845b8006a7dc51fd911f637e7fded60843b0928609bc",
       "outputHash": "6c2908658b97ab95e24a7d3dbce772fc5268e4ad514ea3eabf852dd17d2ebaa5",
       "run": "2026-11-16T06:27:03.737Z",
@@ -1045,7 +1045,7 @@
       "cases": {}
     },
     "radio-group": {
-      "hash": "bc33d7f2e30bb57892b4ce9b2af4d211cceecdaf3e999cac079f6e5bf10e1d83",
+      "hash": "3bdf55ed30ac72d2f872bd8f64689a61a7d1df3cc271ce0e293d94595e953f80",
       "runtimeHash": "0cfc00b7b6bc83639b19a3eb51bf1f34c037b826b738165af2d0160e2a3a9b0f",
       "outputHash": "030bde4921891ea77fd009e6a08525ced6533acc7e8379d529dd1fce17a65cb5",
       "run": "2026-11-16T06:27:03.737Z",
@@ -1080,7 +1080,7 @@
       "cases": {}
     },
     "switch": {
-      "hash": "499a13b19a970a9af3bb93da1610aac63d560354bcd9faa57e31ae62fc30916f",
+      "hash": "b8e13a29ac9fcf542c9cd5a0ac469b8bbe9403f5dc8dcd16babbec32e95f1e7e",
       "runtimeHash": "fd46b53ff5e65114102baf1b191df3afd20575d3b25d443ea3760e368881ace5",
       "outputHash": "88a44c7432ff5909c7721b1749195c85182e42ffe0ed9c4dd7ed2c44eaebaa91",
       "run": "2026-11-16T06:27:03.737Z",
@@ -1115,7 +1115,7 @@
       "cases": {}
     },
     "input-otp": {
-      "hash": "6f18bf2ad25a97431caa69264bc19f7f40964639dbd62edbc23312421ed751d5",
+      "hash": "fc5aa1937799e228818cd2b7dbc3fc725cb695d0dca782348a52ac330fd33697",
       "runtimeHash": "397a5bc25080e17f3bc6153f1e349a7f00e8818204877ee86bee6e57497cfed4",
       "outputHash": "63719ea5b0dc8cbdf45c58f2e7604221ac85f4dc0114fe70b8240f6dcfff7420",
       "run": "2026-11-16T06:27:03.737Z",
@@ -1150,7 +1150,7 @@
       "cases": {}
     },
     "code-block": {
-      "hash": "9cce17da09e71d11f15d6b426703c4e10e9a2b49f637cff6a302f082e257bf70",
+      "hash": "5dd812bfb22c0230c044def07711d9b99c34932ee1e050ec213cbb25c73f50d2",
       "runtimeHash": "67f605a7fc71e7b23d3a5cb4b31b523162266d812c1e5d450cc1f952f45c22f2",
       "outputHash": "b66ae80be883a8faa120c2c9d728bd26d50a5c4e85465869ab5a44980cf54706",
       "run": "2026-11-16T06:27:03.737Z",
@@ -1187,7 +1187,7 @@
       "cases": {}
     },
     "code-editor": {
-      "hash": "fc58605d1658d15d53c9b8276b3bd690e3da1ba7c6635a9094fe2c85331e64ff",
+      "hash": "40c2e0ce98cb07099dbd75c5434958bffc997eba12ca124c3174b65342818ab3",
       "runtimeHash": "3bbeba0799f8a4899d0d56998f8a7eb61254b29e0060080e4c307da36e14536d",
       "outputHash": "3d43c3c85878be92b699a6f08bcf0bffcdb3e154dfbc45483b6182a5acc3d334",
       "run": "2026-11-16T06:27:03.737Z",
@@ -1231,7 +1231,7 @@
       "cases": {}
     },
     "highlighter": {
-      "hash": "cfba62ca207dc27e1f483d581c0b1addedec6b5646255224905ba19ce0d5b157",
+      "hash": "84b8aa893d664245a9b6ce6bca784cf79399e73b3f39437447ab39f2e47ee8e3",
       "runtimeHash": "168bbea15914bd4798a0a64a1001f3339d0cbb74af550e6c9a1dcfd04f30ad6e",
       "outputHash": "f1289d2185ec6517d740dfffc0afc4b92eba1a53a914fb2dd67a8152749861be",
       "run": "2026-11-16T06:27:03.737Z",
@@ -1252,7 +1252,7 @@
       "cases": {}
     },
     "use-highlighted-code": {
-      "hash": "51b97bb54b2e1429f34b03386315eb7ca9fd8e49ecef3e023487096e374301c3",
+      "hash": "d01c4dee5e7aee18cd5be43195a98a5cc6be10915665c2062f00b1c8e786e5e2",
       "runtimeHash": "c41d94bf5055b0602e716f8eddfb427782011bbf4847473991a6d9806dd43ced",
       "outputHash": "241c3f03d88ac15c3afc78461d9cc4479c50141b94ff0c5bb38a5827bc635113",
       "run": "2026-11-16T06:27:03.737Z",
@@ -1274,7 +1274,7 @@
       "cases": {}
     },
     "code-languages": {
-      "hash": "6ccc653902b9428e2f296594b646d5bbf8fae277975b3f1f0d2b981d87e9a795",
+      "hash": "7cfbb4e64c18581274baa836284ad871e1bdc2e7f6be3cc0fe17f0d191ec07ce",
       "runtimeHash": "55c9e9018cc7d3dbe4d7974a2dee1c49e99e6089d185da15c464bec700a32f49",
       "outputHash": "8b5132f06f26738a608599f66cfd9a7612dcd00762db3d9224ae611db3ad2061",
       "run": "2026-11-16T06:27:03.737Z",
@@ -1302,16 +1302,16 @@
       "cases": {}
     },
     "chart": {
-      "hash": "4f05496b48ce5f9fc11d3b0fed407dbe3d813ae69a30902fd14d59afcdbcae8f",
+      "hash": "57d734d6c2ec3ce9cb234cada9018796192f460ecda08a92492f367bc0448c94",
       "runtimeHash": "27bf0a2610014200f37551eae9f6ac69de2dcf529e1f24a79468ddd6e42aa552",
-      "outputHash": "b9889a684db476a44e6316353207c7130ddfbb10cf037f7d02a3af8b431dec39",
+      "outputHash": "5e7c9817b7957ab58e0a54e225d8f4e4bfe7f7d2e80d19441f031f9e73561536",
       "run": "2026-11-16T06:27:03.737Z",
       "size": {
-        "js": 137407,
-        "css": 5341,
-        "lazy": 57815,
-        "assets": 416,
-        "brotli": { "js": 120475, "css": 4409 }
+        "js": 137417,
+        "css": 5347,
+        "lazy": 57817,
+        "assets": 419,
+        "brotli": { "js": 120259, "css": 4406 }
       },
       "hydrate": { "ms": 164.5, "spread": [146.5, 189.4], "settledMs": 294.4 },
       "interaction": {
@@ -1326,7 +1326,7 @@
       },
       "route": "/",
       "breakdown": [
-        { "source": "package:layerchart", "js": 88535 },
+        { "source": "package:layerchart", "js": 88542 },
         { "source": "runtime", "js": 10175 },
         { "source": "package:tailwind-merge", "js": 9501 },
         { "source": "package:@layerstack/utils", "js": 6736 },
@@ -1336,24 +1336,24 @@
         { "source": "package:d3-scale", "js": 1916 },
         { "source": "package:d3-time", "js": 1806 },
         { "source": "package:d3-shape", "js": 1757 },
-        { "source": "package:d3-color", "js": 1667 },
+        { "source": "package:d3-color", "js": 1668 },
         { "source": "package:d3-format", "js": 1657 },
         { "source": "package:runed", "js": 1641 },
         { "source": "package:d3-array", "js": 1139 },
         { "source": "package:d3-interpolate", "js": 943 },
         { "source": "package:phosphor-svelte", "js": 642 },
-        { "source": "package:@layerstack/svelte-state", "js": 584 },
+        { "source": "package:@layerstack/svelte-state", "js": 585 },
         { "source": "package:d3-path", "js": 520 },
         { "source": "package:memoize", "js": 377 },
         { "source": "package:mimic-function", "js": 333 },
-        { "source": "package:internmap", "js": 262 },
+        { "source": "package:internmap", "js": 263 },
         { "source": "package:@layerstack/svelte-actions", "js": 190 },
         { "source": "package:@layerstack/tailwind", "js": 102 }
       ],
       "cases": {}
     },
     "meter": {
-      "hash": "2a4dc8429a3b15d0674d520a0315f737b031000e25e789a290215b092913f35f",
+      "hash": "dc297aa737c512a20bcf9e20b06f2898cc2dd7a26cfbca422893092228887363",
       "runtimeHash": "37df136823a2f5409c1da4deb36e6fd514aa8ad9fa22375f537bf97483786268",
       "outputHash": "88308adcd72f5a77c6c42de79228bbab3ce695a68d0f13d1cbe2ae6f84b2be7f",
       "run": "2026-11-16T06:27:03.737Z",
@@ -1374,7 +1374,7 @@
       "cases": {}
     },
     "dropdown-menu": {
-      "hash": "ef29d8c62bd7aba15b1ba2abeb047bf65799f1e239f56bea3e5ba9a10e23421d",
+      "hash": "5c0599458c7705ebab7883d4074254fe5b5c6524a85c876c50f840f901866c86",
       "runtimeHash": "8c92980b46852d3a313d089ad6b3deff7d877394b35eb9b2de9c749f1805ef9d",
       "outputHash": "2f936beb33cff039d7f970f6dfdc8dce0fd8744de368477daf263b6cb95cb3ea",
       "run": "2026-11-16T06:27:03.737Z",
@@ -1413,7 +1413,7 @@
       "cases": {}
     },
     "sheet": {
-      "hash": "cb36d65bef9c678f3922dd63eaee2ad9e03f1edd99f64bd70edfd85b7986a8a4",
+      "hash": "cc892b58abb0d8790ade2913a2fc6a18afd07b4178ec41875737a30b44fd295f",
       "runtimeHash": "c3d86b5e6eb02fca4fc12f80e38f557ddcc1ff730accbce362ff2b80962dff3a",
       "outputHash": "18a5dd9eaa9238255eb8091de9bb043488ced573a71e703d160c4921f8304190",
       "run": "2026-11-16T06:27:03.737Z",
@@ -1453,7 +1453,7 @@
       "cases": {}
     },
     "dialog": {
-      "hash": "af35c08d5731a9bf578c6c287a442c793d8bb212454ee8a320dc78543a76b4ac",
+      "hash": "114762a6faf18983aa1ea475af0d81d6b47927ab80d2f0fcce7cc1c7c257a890",
       "runtimeHash": "8d9035ae5052a017754a14092277b5d0d618435b34aba2d250adbe07effd27f1",
       "outputHash": "9966d286975898e6bf8aae7854165e51d4ed39863afd4b490ee848b05cf4602c",
       "run": "2026-11-16T06:27:03.737Z",
@@ -1493,7 +1493,7 @@
       "cases": {}
     },
     "breadcrumb": {
-      "hash": "25f8b73d8e3da4993177bd48d54b392ff3c6fa836c01f2ffe5804129b726e4e5",
+      "hash": "2b37f66387fcb66a002e4ee82b31c73bef705e474ddb92f8b01408824b0c00ad",
       "runtimeHash": "008b5bd0a171d0c545c47660d4eb82b2cab162bed3ddde124333761f6c23d7c7",
       "outputHash": "548c245a13a8850e24614319fb646a5a36bfd8e2a4531f8064863b96f96280d1",
       "run": "2026-11-16T06:27:03.737Z",
@@ -1515,7 +1515,7 @@
       "cases": {}
     },
     "sidebar": {
-      "hash": "76e1a91e4b4270b0fce134bb33d3583f2ad706554bf4652b6661ce3b9ccdc05e",
+      "hash": "d3d5108ff29b5f1aa702b9b38b2ad97d736519a79bcbebefc30ef60f1e465211",
       "runtimeHash": "a7fbd59749c83900da496d4d38fb05e6fa760c315187c5838d150e0e02ac4fc5",
       "outputHash": "20136154fed0d8b9a23458d259cda0937e6dac6bca1845226d27104f05d51fbd",
       "run": "2026-11-16T06:27:03.737Z",
@@ -1562,7 +1562,7 @@
       "cases": {}
     },
     "is-mobile": {
-      "hash": "5b92a2a82ad04d02c18ab54fa021a0a07272c66b9a2ca8cb0f406f3bb2326265",
+      "hash": "19fe641748500caa603b8a2d7de8697fe22c8476f6e421d9f37bebc41571859e",
       "runtimeHash": "ad42e144f69d595ab00f21004cda8a21e972d24dc34449e0f2e0db74cd582dce",
       "outputHash": "0054e3af58e88df20210e6f8e08e61ebb9ed9cbd12c4204e205f267de0b432cf",
       "run": "2026-11-16T06:27:03.737Z",
@@ -1583,7 +1583,7 @@
       "cases": {}
     },
     "message-log": {
-      "hash": "da3c66898d878114d203153c51b990de646c2688ac5acea394539385b82073e1",
+      "hash": "6ca9f21b6dd12ba12cd7e63f83cd752a21fc53b07519ec48600705ae34caddff",
       "runtimeHash": "c04ed6f158f3cdffa02d1298969b549a510d94823651df55b986d159bbf29fa0",
       "outputHash": "43f4ec91a687d80876973836e6288c063c954e2ca3a1e948dd232dfe1183317c",
       "run": "2026-11-16T06:27:03.737Z",
@@ -1608,7 +1608,7 @@
       "cases": {}
     },
     "message": {
-      "hash": "29bb07dba739d7fca59f2ae0cdddefff55eedce1057b8a5773c3eec975180bc8",
+      "hash": "1b0a03c16f6504a307be567adc654cc8bfb0a6a99c5914e1256af765d7491077",
       "runtimeHash": "85f05ba0c365af9e287e3c143f8183fae6579df77998562bdb47dcd179c62db4",
       "outputHash": "1fbb30bd8be818350c0a40fd34e294a4a9689ac16ea87826542e4d43e75b4249",
       "run": "2026-11-16T06:27:03.737Z",
@@ -1630,7 +1630,7 @@
       "cases": {}
     },
     "marker": {
-      "hash": "d85cb0cc9efc19c18fba8d65899f492a5b347faa91107d283268cef6e597d0c0",
+      "hash": "76b901e34c2219dab87ff2d0248e4dcbbed77985fb94c3d1009458b1cfda6bb4",
       "runtimeHash": "17baf1b264de7ad90f2da0d339fa413bb3eba679285aef32d4bb167c31578980",
       "outputHash": "bc9da01a449a422c4c21136228114b1611986f01660897f0ce0c6008871e41d1",
       "run": "2026-11-16T06:27:03.737Z",
@@ -1652,7 +1652,7 @@
       "cases": {}
     },
     "composer": {
-      "hash": "4816d909c50ae07d237aa5721b040074cd383ebef87c494b86c52c60abceb333",
+      "hash": "6617dbc87ee52670b1adabd17613de648eacf3ff31a90c87c5bc7d43666eaa0b",
       "runtimeHash": "ba3efe6d6e81d13321bc6d4e7968e24646cea07b2aca7bcbd7b3556cb6ead442",
       "outputHash": "c6e57093302762f19d4d14126d4495234cf407b6dfb5257293d097463ff0218c",
       "run": "2026-11-16T06:27:03.737Z",
@@ -1696,7 +1696,7 @@
       "cases": {}
     },
     "stage": {
-      "hash": "a8c32051924deae0bc0487e3693dac4f6f6a9c5b6eacf9dca39969c7539a9dce",
+      "hash": "a84c7c1e400bd28c7f474d12e112268384183b280b0a6deec947e6e7a88de092",
       "runtimeHash": "bd453fddaeafe1153570ad26a23ebeaab84c723a378abc9a465147216d666b19",
       "outputHash": "ae554b3c06ed51498f9b154aaa836a1b349abe82722951adff645e21afddee22",
       "run": "2026-11-16T06:27:03.737Z",
@@ -1717,7 +1717,7 @@
       "cases": {}
     },
     "stage-card": {
-      "hash": "386061801666419d0f549eec3f0209dd052c39ff9100d7f05817642b24945f9a",
+      "hash": "344b0732d57f1633cfeb7062c5848da54e65dcdd9a314061a1ea051a9f0cc076",
       "runtimeHash": "c93e9483f5e8ee3aa15165f357de088c4ba5c7a92c49179b97fa9f6bd319dafb",
       "outputHash": "826db8ca0934d7992e3013907057a3efa429be16c6f5649c932a33ac0600a249",
       "run": "2026-11-16T06:27:03.737Z",
@@ -1755,7 +1755,7 @@
       "cases": {}
     },
     "marketing-bar": {
-      "hash": "36a499a03c3a2cf0d6a17fc6c483b1161994c0ecaca62f4d45908813329d0c8e",
+      "hash": "878e7cf1d663c7ec10dd282884a6d747eb99cda9022b8d4c009c799d5af2de1a",
       "runtimeHash": "13f83aa24249939795f479eefbe3683c408e2410be9718f605b945e6f6a6ef93",
       "outputHash": "1c633fe8543533ee424fc61986248e1b3650b87b5a5d8438ffe2dc188e28950e",
       "run": "2026-11-16T06:27:03.737Z",
@@ -1798,7 +1798,7 @@
       "cases": {}
     },
     "stage-hero": {
-      "hash": "33d0810ebe082991becd8ab9a854595da5ef4eb957958d1684c6a7ddaa7c9e69",
+      "hash": "d7e5d5a17b6dec5d0b44428b5a572ba7cb20345496d4cb655881b6c16783248d",
       "runtimeHash": "f1686cc838949a87fb01c10f032736ebb2118a44740c91e223a1a3c09e86a6e6",
       "outputHash": "d176609c30b0ed2591b3a847f45a1c41d1dbf144514d37156e25b9db83a7a400",
       "run": "2026-11-16T06:27:03.737Z",
@@ -1825,7 +1825,7 @@
       "cases": {}
     },
     "proof-band": {
-      "hash": "29c923e915f0ebb3be7daf3831de530d170410a947eaced156d5b3331ca849ae",
+      "hash": "0c94d34233a21008bceef9e21d4a789effcfbefc47d41496785cb8eb47b58713",
       "runtimeHash": "cf9127d719929a792fed2ed5c2f6b54bd126007050dfff191e71dd5deb2ea9fd",
       "outputHash": "25595fc888d1cda031df2c400803c5ecd581f97fad943c8aaee8b3c4265d707e",
       "run": "2026-11-16T06:27:03.737Z",
@@ -1847,7 +1847,7 @@
       "cases": {}
     },
     "live-console": {
-      "hash": "5865aab38225e19b7ec70349e6280976c4b83f62c18b77ec5f957009b745e39b",
+      "hash": "fe0dd173d68c5607286cbb0a78f7009e408fe6d0b4ed64dd7b3c412382eb6a33",
       "runtimeHash": "8dee81d3cd48522547dfba8dfd21c7f72638512ce46ef35f441db6f3734b16fb",
       "outputHash": "4bbe53f9e69ce0bc3988033ceb7004011c797ba3145554a8f3854cd400506717",
       "run": "2026-11-16T06:27:03.737Z",
@@ -1893,7 +1893,7 @@
       "cases": {}
     },
     "name-strip": {
-      "hash": "24668d98fe92217c8e009f3c8485e11696c3c6d26da12d78c378e355ad69dadf",
+      "hash": "f8f270e7ab5ed153f910314031fb297664f5aaf92d3d505602328635f1baa9c4",
       "runtimeHash": "7f9221b51a1e66eb9dac8176c9c58c922dd0bddbac9fa1935c433e3d46e6241a",
       "outputHash": "120b5fba942cb5468388c7c7d4c4abfd46a7a82ea30c3158595bb2e99515ea47",
       "run": "2026-11-16T06:27:03.737Z",
@@ -1914,7 +1914,7 @@
       "cases": {}
     },
     "cta-band": {
-      "hash": "362c9d594600ed299a5b75f7bcd7f8228f27266e9dd2b31ae535bfc641e7e157",
+      "hash": "5077c58065b3a4b2a3d61ff4e92f8c351014b7287c4f503b640bc5df2fda7413",
       "runtimeHash": "39b7a2e2d7b53a841ae4fad13a196415860ba93b6ed1f17d548bf3e4e3e607f3",
       "outputHash": "501c4d68f6c2467f9e7f71e4ce74f67acffa359e6bebe40eed44ccc867f9fce5",
       "run": "2026-11-16T06:27:03.737Z",
@@ -1939,7 +1939,7 @@
       "cases": {}
     },
     "marketing-footer": {
-      "hash": "25ccbd06a60bcbc688e53b76ad9a0176baf0f6e4d219b226b1879b186ed59bd3",
+      "hash": "2e0eca0ab7f1ae4c212eac95027d3ec8b89de2db6612f108ac1e012c7d9820a6",
       "runtimeHash": "6e9a5cf769ea14645141ae6ba548a64b41099c3a432681d1050456c2f1a7bd9f",
       "outputHash": "42d19bb86bac149db7eafcbd8096b0f866847efdc3db882b06ab58720ed8d750",
       "run": "2026-11-16T06:27:03.737Z",
@@ -1960,7 +1960,7 @@
       "cases": {}
     },
     "hero": {
-      "hash": "50b75c80e464896f9e979cb36cc73d05fc67a1b9d812c413e5d8f93c004c674e",
+      "hash": "93ebbae3e770faf3bc54a8b68d317044c29a98ec2c71c4b381478a4d38c05246",
       "runtimeHash": "5fe3bcb7e5f4221f533868f06035558677a82999425dede532c336692b04230a",
       "outputHash": "94ebd2959e832d088442f2301256a5722edfebe157bfb2b5cd12ee8f1762d739",
       "run": "2026-11-16T06:27:03.737Z",
@@ -1985,7 +1985,7 @@
       "cases": {}
     },
     "sign-in": {
-      "hash": "316e25a08f8eba04debe2c6b5fb1b883a8a401f9d7ba1c3d21bdce5788477c1c",
+      "hash": "96d5f382fe2a54c0f9c3146a375bf0c84f8baded8e3b89b7e0f84f55c2f1bafc",
       "runtimeHash": "ad89d2f52126bcd6dda906dfe6b54f723195c250ca3c276f350ca3770b762f16",
       "outputHash": "60cf94811be9ad87a091890c3a710ed8e037dcffd0b3bb363df06d8a34d1f117",
       "run": "2026-11-16T06:27:03.737Z",
@@ -2031,7 +2031,7 @@
       "cases": {}
     },
     "sign-up": {
-      "hash": "ccee0f5f6088073b560203386710abd167d67126e9d6edbe5103cae08c55ea18",
+      "hash": "287defbe11aaffffd00fb80e2371b8bdaa8e491b4a65154b41234f1ffb1adb2f",
       "runtimeHash": "0cb64080b94998901cf2420e882231a959c395abd75b5cc9121470977f4bdd1f",
       "outputHash": "67fe3ead2d3bf8e0b670ab654090b16bdb00a6320c7eb45b7fde028014e2a2c0",
       "run": "2026-11-16T06:27:03.737Z",
@@ -2079,7 +2079,7 @@
       "cases": {}
     },
     "page-states": {
-      "hash": "a284ad7442267df7d9586c80d36c22850f498459053c4cd48f6f93ccd4e038b0",
+      "hash": "c580a3ff3b1b2b9282d66cf29c02109160413898f2d8ab68a9d8b93b8b0715a6",
       "runtimeHash": "7f9dbc18c22f7a6452d5610153c073f18a1b09115631803d224fbc0f55d891be",
       "outputHash": "8a72c519cd8be298ebb3cc8513aa4e0882ba625c166f8d8f216a018f5c81f0d8",
       "run": "2026-11-16T06:27:03.737Z",
@@ -2105,7 +2105,7 @@
       "cases": {}
     },
     "settings": {
-      "hash": "948236166fb14f33f03a66245cbf1ee91a410565162b16e6dbe226a76c528ca8",
+      "hash": "a8db2937081191d0e41778209eb4747806490cc44e83c6382f3b30ab87f08f55",
       "runtimeHash": "5abfd70dc3e1af9ebb91edf514148c4998a4a0bd832248e69ccb5f8b66d51aa1",
       "outputHash": "08bd461da8877031dad58979621b45739bf869b57604a18d33ccfd90e0801195",
       "run": "2026-11-16T06:27:03.737Z",
@@ -2155,7 +2155,7 @@
       "cases": {}
     },
     "app-shell": {
-      "hash": "3c1dea50c065c530b199e8b739307adc4ee79b3933835ffe6989980ee3587664",
+      "hash": "66879aeb44e035324cb62be47f83a945dd5e770188ec97e25258c0c89ed41f4c",
       "runtimeHash": "e187b37e5ea884244cca77722644b37c7d179f5d417396264388fa945a4452c8",
       "outputHash": "0840679f14a05d72fa579c9f5b3fcdb5cbb3f4972d43d285f340672f651a8138",
       "run": "2026-11-16T06:27:03.737Z",
@@ -2209,7 +2209,7 @@
       "cases": {}
     },
     "chat": {
-      "hash": "80c62b7756431b3b2b596b613ff9409d16da70698cd69144b5f80e17ca14a804",
+      "hash": "493f5b4f21537711acd125234bae7881e6af25fac3b6b5ab530707f8c4be28b6",
       "runtimeHash": "465b34e0242ba4e1523a8b07bca8501f593ebeab0b649c600bc89981a15d0538",
       "outputHash": "1e061167acfaf189a0b7d4a08d088d66c1d9b414879ae8f5673bbf282b28649f",
       "run": "2026-11-16T06:27:03.737Z",
@@ -2262,7 +2262,7 @@
       "cases": {}
     },
     "product-home": {
-      "hash": "8adcaa0fa796df075d211f5765a72231daf56a270c6afc930616255d6a19d6b3",
+      "hash": "c57d281aca46c17891fc4f6babba63f5a0792629071d39ef328d0e58bccf7fff",
       "runtimeHash": "759bbdb71cd83d6dd90f202e64b1c11f5d73cebf44c9fd8efce7d6a244835bf4",
       "outputHash": "13ea751afa138ae8e71310d67bd3af8d098ec0eee4de3f8f2a52a644e3baeeec",
       "run": "2026-11-16T06:27:03.737Z",
@@ -2312,7 +2312,7 @@
       "cases": {}
     },
     "button-group": {
-      "hash": "074e7f6c8f06e5ea954e5d455ab2c970550a1a54c5f865371e44abd9b7aa9c75",
+      "hash": "cf1797dd8165143c5dab8a200bd74fec444445f7270950fcce8e816c2378b269",
       "runtimeHash": "61cf12097704f133a932df9712bbde051f234d572982f67d4f31b1580af28f28",
       "outputHash": "56cb8dbfc2bdf236556ef5c90d40127464c54e908d8e4cb73112744177836404",
       "run": "2026-11-16T06:27:03.737Z",
@@ -2333,7 +2333,7 @@
       "cases": {}
     },
     "progress": {
-      "hash": "cf7ab11c1905f8beb81d48c36f2a0180b261e9914f65738a6f36597b88120c55",
+      "hash": "7f7ca722227adb7053b6758e6ca101b5b20c230238ddf205709a9ae9da56b6cd",
       "runtimeHash": "936463e86e238dc63d19cdd77a0cf2ba60ad8245ffdbf3823a15c9404e61c6a3",
       "outputHash": "f8ab817021a10087400e2b2e47336dab5701f96795b1a974ccb6184eb41e0f7b",
       "run": "2026-11-16T06:27:03.737Z",
@@ -2354,7 +2354,7 @@
       "cases": {}
     },
     "toast": {
-      "hash": "8f0c20bedf9701f621566262b196d4870b87a88c0736854ec8c0ded12903faca",
+      "hash": "b9a72efd06e2bc7cf9012019663a7df516e96e0c02209e32a574dd4799033197",
       "runtimeHash": "6d4aca4dd8c7dd272fbc09e12509d1a5d52b53deea78fb22b5ac13315612232f",
       "outputHash": "84108114aa641b2b5750810a5674cbaf64ed3b1d1759a31deb71779e3e587b25",
       "run": "2026-11-16T06:27:03.737Z",
@@ -2388,7 +2388,7 @@
       ],
       "cases": {
         "burst": {
-          "hash": "e28c0f3e05d488d5ba6c2e9f8d11dc3280299c6bb7539f842e49c13da6f455e9",
+          "hash": "73e0d21d7fb960a25f676e4e2cc36d634e05b4c518cdd9918b28add182f39883",
           "runtimeHash": "91ae81349ab6a296f4a39c1d5528e0e00c267d8b9fc94c89a4913e34fb5ab63c",
           "outputHash": "dcc90ffcf9a73a3be45ccd1bfe9f7613aaf549df4ae7371b2ffc80fbeb472577",
           "run": "2026-11-16T06:27:03.737Z",
@@ -2412,7 +2412,7 @@
           }
         },
         "progress": {
-          "hash": "e08b1286bc518e88c8bdd10b0c96003dfb86a4a5b1edadaa804b95a8ebf207aa",
+          "hash": "ccf0cddcaed665b8e59fc4e80205dc8b0d166e3a80d9cf8df958025e2f113d0a",
           "runtimeHash": "ca761628bef5a0deafe8d96b66cda8c857ffdf65104be7a3c6228c82820e9bcd",
           "outputHash": "e1c8ec782c0631f63e18507ade61cdee3da51c11eedee848eeea66661a8e5542",
           "run": "2026-11-16T06:27:03.737Z",
@@ -2438,7 +2438,7 @@
       }
     },
     "link": {
-      "hash": "1405523c228257358dc866c19d7eecdd1ce5fc2083b66f2a1453779d556ec87d",
+      "hash": "a28c0c7b396560c2af6f89f670df3f864c9d7f0882484c5cd98f1303982d9473",
       "runtimeHash": "9e03fc63a01e12600b7805fd7e4c16080b727615c04941a0305cbdcbe128d0a9",
       "outputHash": "4ea2e5ef2b0854c5ee8b0320aaffac3ae98c6e74698a0a783fac544dadc44dd7",
       "run": "2026-11-16T06:27:03.737Z",
@@ -2460,68 +2460,68 @@
       "cases": {}
     },
     "tag": {
-      "hash": "a37023750052d452cfa27855f10ede4e3f51ce8b544c5eaaff3d702371ccd7f8",
-      "runtimeHash": "59d96922d5f13dcb539fe7bdc057d0320904a3d73d36ed6d5ec2896979ccaad8",
-      "outputHash": "bd4552b10c38085222eefaa95ef37a91ebfc661b6bfd6ef1036dd123452225da",
-      "run": "2026-11-16T08:18:58.434Z",
+      "hash": "22adc98fd3e243fb71c59605cf79c619bc6fac3a5a1d495b6392554d6d6ff5de",
+      "runtimeHash": "3d24a4b2fdd78d81ca2f46cfa954db7d5fe1af470306bccd8b3311b95c56de20",
+      "outputHash": "8bac7d157c7ff8708cccb067bd6e7e2cd8d2cc8c9c061a935571b96e79c269c2",
+      "run": "2026-11-16T10:13:18.680Z",
       "size": {
-        "js": 13758,
-        "css": 1078,
+        "js": 14076,
+        "css": 1093,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 12152, "css": 945 }
+        "brotli": { "js": 12405, "css": 962 }
       },
-      "hydrate": { "ms": 27, "spread": [22.6, 30.9], "settledMs": null },
+      "hydrate": { "ms": 28.3, "spread": [22.8, 31.8], "settledMs": null },
       "interaction": {
         "kind": "click",
         "start": "click",
         "says": "updates",
-        "ms": 43.7,
-        "spread": [38.4, 45.2],
-        "ownMs": -0.5,
+        "ms": 43.5,
+        "spread": [41.9, 44.4],
+        "ownMs": -0.8,
         "pressGapMs": 0,
         "eventTimingMs": 32
       },
       "route": "/",
       "breakdown": [
-        { "source": "runtime", "js": 5774 },
-        { "source": "package:tailwind-variants", "js": 4083 },
-        { "source": "package:phosphor-svelte", "js": 2156 },
-        { "source": "own", "js": 991 },
-        { "source": "item:button", "js": 551 },
-        { "source": "item:spinner", "js": 203 }
+        { "source": "runtime", "js": 5659 },
+        { "source": "package:tailwind-variants", "js": 4002 },
+        { "source": "package:phosphor-svelte", "js": 2676 },
+        { "source": "own", "js": 1001 },
+        { "source": "item:button", "js": 539 },
+        { "source": "item:spinner", "js": 199 }
       ],
       "cases": {}
     },
     "search-field": {
-      "hash": "003f28aae0e470260394a7445330789cf537948a3f022fb644672f69efea512b",
-      "runtimeHash": "61448d82295a9cde8e0221332f8844f1cb764330f8e8b2151d4d946592b1512f",
-      "outputHash": "cbf0ac96e8f0a191c1fe19bf83f7ad2eb6f5a99d09280c217406013757357d7e",
-      "run": "2026-11-16T08:18:58.434Z",
+      "hash": "6bf0bbcc883826f5706b09a89bd4f9bcaed46cbf06220f6377acc3fe135b13ee",
+      "runtimeHash": "4e8b59e329390f651f0aaaabda86e3e1b58f3cf5ae06af2607e9b7d91757655c",
+      "outputHash": "067260cfddf94142df2a4d3d9c1014c2821441f2c148d0cf8ed9291a1de51b37",
+      "run": "2026-11-16T10:13:18.680Z",
       "size": {
-        "js": 13418,
+        "js": 13411,
         "css": 1695,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 11852, "css": 1476 }
+        "brotli": { "js": 11902, "css": 1476 }
       },
-      "hydrate": { "ms": 29.5, "spread": [25.4, 46.5], "settledMs": null },
+      "hydrate": { "ms": 27, "spread": [25.9, 29.9], "settledMs": null },
       "interaction": {
         "kind": "key",
         "start": "keydown",
         "says": "updates",
-        "ms": 42.7,
-        "spread": [36.8, 49.1],
-        "ownMs": -1.5,
+        "ms": 47.4,
+        "spread": [39.8, 50.4],
+        "ownMs": 3.1,
         "pressGapMs": null,
         "eventTimingMs": 16
       },
       "route": "/",
       "breakdown": [
-        { "source": "package:tailwind-variants", "js": 4179 },
-        { "source": "runtime", "js": 4157 },
-        { "source": "package:phosphor-svelte", "js": 2223 },
-        { "source": "own", "js": 857 },
+        { "source": "package:tailwind-variants", "js": 4178 },
+        { "source": "runtime", "js": 4156 },
+        { "source": "package:phosphor-svelte", "js": 2222 },
+        { "source": "own", "js": 853 },
         { "source": "item:input-group", "js": 754 },
         { "source": "item:button", "js": 563 },
         { "source": "item:input", "js": 348 },
@@ -2531,35 +2531,35 @@
       "cases": {}
     },
     "pagination": {
-      "hash": "f00bfe3875a9ac98c64ec0e63d986916a00201646dc49d6a0a703b02c5628636",
-      "runtimeHash": "b796e952bd311c8f695bce082694b7ea51d7df6a0663795e45d170c1ac192add",
-      "outputHash": "372d12ec546ca1da1fa54f96783e169d5c73be05870399cc0eda6aac95344849",
-      "run": "2026-11-16T08:18:58.434Z",
+      "hash": "0684b6b23950dc256ef0e250fd1bb124684604e44e9a723241a66b5ff622fd45",
+      "runtimeHash": "0307e487095336f7753513f83cefc4c9c828be478d8bd5a7e2346dfa4bb2db01",
+      "outputHash": "43cff93823c9bda9e5714f7f980475eb7ddbf2a6de87e8c10284989be18f24d3",
+      "run": "2026-11-16T10:13:18.680Z",
       "size": {
-        "js": 12574,
-        "css": 1224,
+        "js": 12580,
+        "css": 1262,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 11277, "css": 1059 }
+        "brotli": { "js": 11251, "css": 1108 }
       },
-      "hydrate": { "ms": 39.8, "spread": [37.1, 46.5], "settledMs": null },
+      "hydrate": { "ms": 45.9, "spread": [39.6, 57.9], "settledMs": null },
       "interaction": {
         "kind": "click",
         "start": "click",
         "says": "selects",
         "ms": 44.2,
-        "spread": [43.3, 45.6],
-        "ownMs": 0,
+        "spread": [43.7, 44.8],
+        "ownMs": -0.1,
         "pressGapMs": 0,
         "eventTimingMs": 32
       },
       "route": "/",
       "breakdown": [
-        { "source": "runtime", "js": 5081 },
-        { "source": "package:tailwind-variants", "js": 4101 },
-        { "source": "own", "js": 1930 },
-        { "source": "package:phosphor-svelte", "js": 1132 },
-        { "source": "item:button", "js": 203 },
+        { "source": "runtime", "js": 5086 },
+        { "source": "package:tailwind-variants", "js": 4106 },
+        { "source": "own", "js": 1924 },
+        { "source": "package:phosphor-svelte", "js": 1133 },
+        { "source": "item:button", "js": 204 },
         { "source": "item:status", "js": 127 }
       ],
       "cases": {}

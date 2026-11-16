@@ -19,12 +19,16 @@ const OLD_FIELD_CONTEXT_KEY = "pluto:field";
 const OLD_FIELD_SET_CONTEXT_KEY = "pluto:field-set";
 const OLD_LABEL_TARGET_KEY = "pluto:field-label";
 
+/**
+ * What a `Field` gives its control: the ids to wire and whether it is invalid.
+ * Read it by the key, not by importing this file.
+ */
 export type FieldContext = {
   /** The control's id: the container's `id` prop, else an id from `$props.id()`. */
   readonly id: string;
-  /** `${id}-description` */
+  /** The description's id: `${id}-description`. */
   readonly descriptionId: string;
-  /** `${id}-error` */
+  /** The error's id: `${id}-error`. */
   readonly errorId: string;
   /** The `invalid` prop, else true exactly when `error` is given. */
   readonly invalid: boolean;
@@ -32,11 +36,16 @@ export type FieldContext = {
   readonly describedBy: string | undefined;
 };
 
+/**
+ * Sets the field context, under the key and the old key, for the children about
+ * to render. `Field` calls it; an app's own container may too.
+ */
 export function setFieldContext(context: FieldContext): FieldContext {
   setContext(OLD_FIELD_CONTEXT_KEY, context);
   return setContext(FIELD_CONTEXT_KEY, context);
 }
 
+/** The nearest `Field`'s context, or `undefined` outside one. */
 export function getFieldContext(): FieldContext | undefined {
   return getContext<FieldContext | undefined>(FIELD_CONTEXT_KEY);
 }
@@ -48,6 +57,10 @@ export function getFieldContext(): FieldContext | undefined {
  */
 const LABEL_TARGET_KEY = "kuiper:field-label";
 
+/**
+ * Sets the control that a `FieldLabel` inside points at. `undefined` clears it,
+ * as a `FieldSet` does for its own labels.
+ */
 export function setLabelTarget(
   target: { readonly id: string } | undefined,
 ): void {
@@ -55,6 +68,10 @@ export function setLabelTarget(
   setContext(LABEL_TARGET_KEY, target);
 }
 
+/**
+ * The control the nearest `Field` gives its labels, or `undefined` when there
+ * is none.
+ */
 export function getLabelTarget(): { readonly id: string } | undefined {
   return getContext<{ readonly id: string } | undefined>(LABEL_TARGET_KEY);
 }
@@ -98,6 +115,10 @@ export function fieldContext(props: {
  */
 export const FIELD_SET_CONTEXT_KEY = "kuiper:field-set";
 
+/**
+ * What a `FieldSet` gives a group control: the field context, plus its legend's
+ * id.
+ */
 export type FieldSetContext = FieldContext & {
   /** `${id}-legend`, the id a `FieldLegend` takes unless the app gives one. */
   readonly legendId: string;
@@ -107,11 +128,16 @@ export type FieldSetContext = FieldContext & {
   registerLegend(id: () => string | undefined): void;
 };
 
+/**
+ * Sets the set context, under the key and the old key, for the children about
+ * to render. `FieldSet` calls it.
+ */
 export function setFieldSetContext(context: FieldSetContext): FieldSetContext {
   setContext(OLD_FIELD_SET_CONTEXT_KEY, context);
   return setContext(FIELD_SET_CONTEXT_KEY, context);
 }
 
+/** The nearest `FieldSet`'s context, or `undefined` outside one. */
 export function getFieldSetContext(): FieldSetContext | undefined {
   return getContext<FieldSetContext | undefined>(FIELD_SET_CONTEXT_KEY);
 }

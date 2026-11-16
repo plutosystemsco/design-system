@@ -24,6 +24,33 @@
   }: Omit<InputOTPPrimitive.RootProps, "maxlength"> & {
     /** The number of cells. Default 6. */
     maxlength?: number;
+    /** The code typed so far. Bind it to read or set it. */
+    value?: InputOTPPrimitive.RootProps["value"];
+    /**
+     * The characters a cell accepts. Kuiper's default takes digits only. Pass
+     * bits-ui's letter-and-digit pattern for such a code.
+     */
+    pattern?: InputOTPPrimitive.RootProps["pattern"];
+    /**
+     * Cleans pasted text before it fills the cells. Kuiper's default drops
+     * every non-digit, so a code pasted with spaces still fits.
+     */
+    pasteTransformer?: InputOTPPrimitive.RootProps["pasteTransformer"];
+    /**
+     * The id of the one real input under the cells. Inside a `Field` it
+     * defaults to the field's, so the field's label points here.
+     */
+    inputId?: InputOTPPrimitive.RootProps["inputId"];
+    /**
+     * The ids of the text that describes the input. Inside a `Field` it
+     * defaults to the field's description and error.
+     */
+    "aria-describedby"?: InputOTPPrimitive.RootProps["aria-describedby"];
+    /**
+     * Marks the input invalid and draws every cell's border in the destructive
+     * colour. Inside a `Field` it follows the field's `error` or `invalid`.
+     */
+    "aria-invalid"?: InputOTPPrimitive.RootProps["aria-invalid"];
   } = $props();
 
   // A field from before 0.13.0 sets only its old key, read until 0.14.0.

@@ -28,21 +28,32 @@
     onretry,
     class: className,
   }: {
+    /** The conversation, oldest first. */
     messages: ChatMessage[];
+    /**
+     * The chat's state. `submitted` and `streaming` turn Send into Stop;
+     * `error` shows the alert with Retry.
+     */
     status?: ChatStatus;
     /** True once a reply has finished, until the next send: shows "Latest reply". */
     newReply?: boolean;
+    /** The pane's heading. */
     title?: string;
     /** The title's heading level; the turns are level 3, so 2 keeps the ranks in order. */
     level?: 1 | 2 | 3 | 4 | 5 | 6;
     /** `screen`: the viewport's height; `parent`: the height of a box the app sizes. */
     fill?: "screen" | "parent";
+    /** The headings over each turn, such as the agent's name. */
     names?: { user: string; assistant: string };
     /** The composer's draft. */
     value?: string;
+    /** Called with the trimmed text when the person sends a message. */
     onsend?: (text: string) => void;
+    /** Called when the person stops a reply. */
     onstop?: () => void;
+    /** Called when the person presses the button for a new conversation. */
     onnew?: () => void;
+    /** Called when the person presses Retry after an error. */
     onretry?: () => void;
     class?: string;
   } = $props();

@@ -9,7 +9,15 @@
     children: childrenProp,
     closeOnSelect = false,
     ...restProps
-  }: WithoutChild<DropdownMenuPrimitive.RadioItemProps> = $props();
+  }: WithoutChild<DropdownMenuPrimitive.RadioItemProps> & {
+    /** The item's text, after the check. */
+    children?: DropdownMenuPrimitive.RadioItemProps["children"];
+    /**
+     * Kuiper keeps the menu open when the item is chosen, so the choice shows.
+     * Set it to close the menu.
+     */
+    closeOnSelect?: DropdownMenuPrimitive.RadioItemProps["closeOnSelect"];
+  } = $props();
 </script>
 
 <!-- As the checkbox item, with the same check: a dot would be round. -->

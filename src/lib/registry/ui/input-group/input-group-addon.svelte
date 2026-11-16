@@ -33,6 +33,10 @@
     align = "inline-start",
     ...restProps
   }: WithElementRef<HTMLAttributes<HTMLDivElement>> & {
+    /**
+     * Where the addon sits: `inline-start` before the control, `inline-end`
+     * after it, `block-start` above it, `block-end` below it.
+     */
     align?: InputGroupAddonAlign;
   } = $props();
 </script>
