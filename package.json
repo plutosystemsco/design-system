@@ -25,6 +25,7 @@
     "preview": "bun --bun vite preview",
     "check": "bun --bun svelte-kit sync && bun --bun svelte-check --tsconfig ./tsconfig.json --config ./vite.config.ts",
     "lint": "bun --bun prettier --check .",
+    "cost": "bun scripts/cost/run.ts",
     "test:unit": "bun test ./tests/unit",
     "test:e2e": "bun --bun playwright test",
     "test:smoke": "SMOKE_BLOCKS= bun test ./tests/smoke --timeout 300000",

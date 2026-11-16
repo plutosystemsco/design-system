@@ -1,6 +1,6 @@
 # 025 — Component cost
 
-- **Status:** Ready to build after `020`: review approved with changes, all applied. The specification review, [`../reviews/025-component-cost-spec-2026-11-15.md`](../reviews/025-component-cost-spec-2026-11-15.md), found 2 High, 13 Medium and 5 Low; its re-review found R1 (High) to R8. Every finding is answered under "Review"; R7 is `026`'s to restate, and `026` has restated it. The owner answered Q1 to Q8 on 2026-11-15, each with the recommended option (see Landing notes). Ready to build after `020`.
+- **Status:** Built, awaiting its change review (landing notes below). Its specification review approved it with changes, all applied: [`../reviews/025-component-cost-spec-2026-11-15.md`](../reviews/025-component-cost-spec-2026-11-15.md) found 2 High, 13 Medium and 5 Low, and its re-review R1 (High) to R8, each answered under "Review". The owner answered Q1 to Q8 on 2026-11-15, each with the recommended option.
 - **Date:** 2026-11-15
 - **Author:** the spec author for `025`, for the design lead
 - **Kind:** test harness and published data. New files under `scripts/cost/`, new tests, one `package.json` script, one line in `scripts/site/release-check.ts`, and one `exclude` entry in `tsconfig.json`. **No interface change:** no item's source, props or files change. No new dependency: the harness uses Bun, the repository's locked `shadcn-svelte` CLI, Playwright and Prettier. The cost app's own lockfile pins only versions the repository's `bun.lock` already resolves (decision 2).
@@ -522,4 +522,170 @@ Budgets stay on the raw response time, as the re-review advises; `ownMs` (`ms` m
 - **Q7:** `cn` counts in the floor, not in every item.
 - **Q8:** runs are offline. The registry points at a closed port, and fetch retries are off.
 
-Not yet landed.
+**Built** by a builder on a worktree branch from `44cec73` (`020`'s merge), to land on `release/0.13.0` after its change review. The worktree was first checked out on `main` (`8cb06ba`); it was reset to `44cec73`, clean, before any work.
+
+**What was built.** Everything in Design, Files: the cost app (`scripts/cost/app/`), 63 item fixtures, the `table.1000-rows` case and the three harness pages; `interactions.ts` with 32 entries; `run.ts`, `build.ts`, `runtime.ts`, `stats.ts`, `settings.ts`, `hash.ts`, `report.ts`, `release.ts`; `budgets.json` and `report.json`; `tests/unit/cost.test.ts` and `tests/smoke/cost.test.ts`; `tsconfig.json`'s two excludes; `package.json`'s `cost` script; and the release check's one line. Two more files than Files names, both in lane E's folder: `items.ts` (the registry's kinds, closures, installed paths and lock versions, shared by the harness and the tests; in the size hash) and `budgets.ts` (first budgets, the gate, the budget-shape check and criterion 7's ruling walk).
+
+**Tests first.** Both test files were written before the code they check and seen failing:
+
+- `bun test tests/unit/cost.test.ts`, with `scripts/cost/` empty: `error: Cannot find module '../../scripts/cost/budgets.ts' from '…/tests/unit/cost.test.ts'`, 0 pass, 1 fail, 1 error.
+- `bun test tests/smoke/cost.test.ts`, before `build.ts` existed: `error: Cannot find module '../../scripts/cost/build.ts' from '…/tests/smoke/cost.test.ts'`, 0 pass, 1 fail, 1 error.
+- Two smoke checks then failed against the first harness and drove fixes: criterion 16 (the initial set lacked the root error node; see deviation 6) and criterion 19 (the cost app's `vite.config.ts` named `node:fs` and `process`, which the app has no types for; see deviation 13).
+
+**The checkpoint.** The owner is asleep and delegated decisions; the builder held it. The first `--sizes-only --full` table (every item's alone JS, CSS, lazy JS and assets) and a one-launch dry run of every interactive and settling item were read before budgets were written. Rulings: no fixture renders more than its plain form; `app-shell`'s and `chart`'s entries are corrected (below); `version.json` made deterministic (deviation 12). No margin or trial count changed.
+
+**Corrections to decision 9's table** (each `start` confirmed against `bits-ui` 2.20.2's handlers: every trigger in the table acts on `click`, `dropdown-menu` on `pointerdown`; popover's `pointerdown` is on its content):
+
+- `app-shell`: the block as the CLI installs it sets `USER` to null, so its header renders no user menu and `[data-shell=user-menu-trigger]` matches nothing. Its entry is the header's phone menu button (`[data-shell=menu-button]`, `md:hidden`), at 390 × 844, which opens the shell's navigation sheet: click, `click`, "opens", its block's floor trials at that viewport too.
+- `chart`: layerchart lays a hover band over each point, which intercepts the pointer. The target is the first point's band, `[data-slot=chart-box] rect.lc-tooltip-rect >> nth=0`; the state is the tooltip naming that point.
+- Key entries carry the key in a `key` field (a string, as every field is). Targets are Playwright selectors, role selectors among them, for blocks and items whose target is inside the item. States may call `__cost.inside(selector)`, defined by the runtime's init script, which the runtime hash covers.
+
+**Deviations, each with its reason** (where the specification is silent or a measured fact disagrees with it, the option with the best precedent was taken):
+
+1. **The counts.** `020` added the `pluto-theme` alias entry, so the registry holds 76 items: 5 floor items (the theme item, its three fonts, and the alias), 8 blocks and 63 fixture files; 71 measured, with 1 case. The harness knows the alias by its `meta.deprecated`, not its name. `020`'s own scorecard row counted the alias the same way.
+2. **An item app keeps the floor's page.** Decision 3.6 writes the fixture over `+page.svelte`. Eight items never import `cn` (`is-mobile`, `theme`, `code-languages`, `liquid-glass`, `collapsible`, `read-token`, `use-highlighted-code`, `highlighter`), so over a floor that holds `cn` their figure would be about −11 kB. The item app's page renders the floor's page and then the fixture, two components side by side; the floor's page renders the floor's page alone. So an item app is the floor plus one item, as decision 1's terms define it.
+3. **`utils`.** Its row is the floor minus the theme floor (decision 1), so its app is the theme floor plus `utils`' fixture (the floor's page) and its base, for sizes and for its block's floor trials, is the theme floor. Its breakdown names the `cn` package `own`: `utils.ts` is `cn`'s re-export.
+4. **The catalogue** leaves out `utils` as well as the blocks, on both sides, and is measured over the floor, so it and the summed alone figures compare like with like.
+5. **Hodges–Lehmann.** Criterion 9 gives 2.5 for `[1, 2, 3, 10]`. The estimator decision 11 names, the median of the Walsh averages (each pair once, each value with itself), is 2.75; 2.5 is their lower median. The test holds 2.75, the textbook figure; no figure is computed from it.
+6. **The initial set** adds the root error page's node (`nodes/1`) and its static imports. SvelteKit's client loads it beside the root layout at every start (`@sveltejs/kit`, `src/runtime/client/client.js`, `default_error_loader`), though the HTML names neither. Criterion 16 found it: Chromium fetched it before the hydration mark. The test reads the page's own resource timing, not request events, so the boundary is the mark itself.
+7. **A fixture may import its own item's packages.** `chart` is a container for `layerchart`, its own `devDependencies`; it cannot draw without it. Criterion 1's check allows an item's installed paths, `svelte`, and the packages that item names, and nothing else.
+8. **The breakdown names the package its code is in,** including one the cost app's lock pins beneath a listed package (`svelte-toolbelt`, `tabbable`, under `bits-ui`). Criterion 8's check reads the lock. Folding them into the listed package would hide the largest groups.
+9. **The add limit.** Criterion 22 holds one lone offline `add` under 10 s, and does. In a run, four builds at once on a machine at a load of 100 to 165 pushed single adds to 10 to 18 s, with `OFFLINE_ENV` set. The harness fails an item only when its add takes over 30 s twice: a missing `OFFLINE_ENV` costs about 72 s an add, so the line still catches it.
+10. **The template's install** runs without `OFFLINE_ENV`. Bun keys its cache by registry, so a closed registry address misses a warm cache and fails every tarball. A frozen install from a warm cache asks the network nothing. `OFFLINE_ENV` is on every CLI run, as decision 3.2 says.
+11. **Ports.** The harness serves the registry and the apps on the first free port from 5200 to 5899, not `freePort()`'s ephemeral range: the builder's brief keeps this build's servers there, and away from 5199.
+12. **A fixed version name.** The cost app's `vite.config.ts` sets SvelteKit's `version.name` to `"0"`. The default, the build's time, changed `version.json` in every build (2 bytes of assets per item). It is all digits because the app shell's footer shows a non-numeric version as a commit.
+13. **No types package.** The cost app's `vite.config.ts` declares `process` and imports `node:fs` dynamically, typed by hand, so `svelte-check` passes in an item app (criterion 19) with no `@types/node` added.
+14. **The cost app's `components.json`** points its `registry` at a closed local port. The harness always passes `REGISTRY_URL`; `kit3`'s GitHub address would carry an old name into the tree.
+15. **Hydration's first budget** takes its margin from zero for a figure measured below zero (an item within noise of the floor): a budget is never below 8 ms.
+16. **`costFacts`' "on demand"** appears at 50 bytes and over, where the figure reads 0.1 kB: lazy JS over the floor differs by a few bytes per build, and "+ 0.0 kB on demand" says nothing.
+17. **Fonts** count raw in `themeFloor.fonts`, as decision 4 counts fonts: woff2 is compressed already.
+18. **`--budget new`** writes a first budget for every measured item without one, beside `--budget <names>`; **`--sizes-only`** prints its table and writes only to `--out`, so the report never holds an item without runtime figures.
+19. **The release check's line** is the file's last. `022`'s matrix step does not exist on this branch; whichever lands second puts `022`'s step before this line (decision 16).
+20. **`proof-band`'s settle mark** is a frame after mount: in view at hydration, the band settles at mount and its observer never runs.
+21. **The release check under the test runner.** `tests/unit/headers.test.ts` runs `scripts/site/release-check.ts` and expects 0. With the cost step in it, every cached `bun run cost` (which leaves items pointing at two runs) would fail `bun run test` until a full run. The owner's Q3 answer keeps `bun run test` to the hash-and-budget check. So `costReleaseOk` steps aside when `NODE_ENV` is `test`, which `bun test` sets for its children, and says so; run by hand, as before a tag, it checks everything decision 16 names.
+22. **The thumbnails' manifest.** `package.json` is an input of every component thumbnail's hash (`scripts/site/thumbnail-hash.ts` follows the site's import of it), so the `cost` script line staled 58 thumbnail pairs; no picture changes. `bun scripts/site/thumbnails.ts --hash-only` rewrote `src/lib/site/thumbnails/manifest.json` (58 hashes), the script's own path for that case. Any later `package.json` edit does the same; see the merge notes.
+
+**The machine.** The release machine is this one, `MacBookPro18,3 (Apple M1 Pro)`, 10 cores, macOS 26.5.2 (Darwin 25.5.0), Bun 1.4.4, Playwright 1.64.1's Chromium 156.0.8078.4, zlib `12731092979c6d07f42da27da673a9f6c7b13586`. It was not quiet. Other builds shared it all evening: the one-minute load average read 48 at the start of the build, 100 to 172 through the size phases, and 47 to 82 through the runtime phases. Decision 12's three-minute wait ran out each time. So the first budgets and the instrument values stand on a busy machine, as the prototype's did (load 13 to 36). The tag's full run, on the quiet machine decision 12 asks for, will move the instrument values: that build runs `--budget instrument`, then `--tighten`, which lowers any runtime budget that a quiet run shows to have headroom over twice its margin.
+
+**Criterion 12: the two full runs.** Both `bun run cost --full`, at the landing tree (`44cec73` with this build's changes, uncommitted, so each run records `44cec73+dirty`), on the release machine, with nothing else of this build running beside them:
+
+| Run | Wall time | Load, median and max | Floor hydration | No-op click | Calibration | Noisy |
+|---|---|---|---|---|---|---|
+| 1, `2026-11-16T02:55:56.743Z` | 3,286 s (55 min) | 66.3, 81.7 | 128.0 ms | 41.9 ms | 90.6 ms | no (no committed values yet) |
+| 2, `2026-11-16T03:52:04.663Z` | 3,349 s (56 min) | 42.6, 50.4 | 126.6 ms (−1.1%) | 42.9 ms (+2.4%) | 90.6 ms | no |
+
+- After run 1, `bun run cost --budget new` wrote the first budgets of all 71 items and the one case. `bun run cost --budget instrument` wrote `machine` and `instrument` (`floorHydrateMs` 128, `noopMs` 41.9).
+- Run 2 held **one figure over the budgets set from run 1 before the re-measure** (`marketing-footer`'s hydration, 32.6 ms against 32), **and none after it**. That is the measured false-fail rate: one figure per full run, caught by the re-measure; none failing. It meets decision 11's bar, so no trial count or margin changed.
+- Sizes repeated exactly for 70 of 71 items. `chart`'s moved by 9 bytes of JS (137,410 → 137,419), and the catalogue's by 5, between two clean builds: a finding (below). Every size margin is at least 1,000 bytes.
+- Between the runs, hydration moved by a median 4.0 ms (most: `product-home` −28.2, `chart` −15.5, `tabs` −12.9) and response time by a median 1.6 ms (most: `popover` −12.2, `sign-up` −8.1).
+- The report holds run 2's figures for every item; run 1 stays in `runs`.
+
+**The figures.** Run 2's, alone (over the floor; `utils` over the theme floor), gzipped, with each first budget (JS, CSS, hydration, response). Lazy JS and assets are what loads on demand: the highlighter's grammars are most of the 2.1 MB.
+
+| Item | JS kB | CSS kB | Lazy kB | Assets kB | Hydration ms | Response ms | Budgets: JS, CSS, hydration, response |
+|---|---|---|---|---|---|---|---|
+| `chart` | 137.4 | 5.3 | 57.8 | 0.4 | 165 (settled 293.4) | 93.3 shows | 144.3, 6.4, 226, 117 |
+| `code-editor` | 130.8 | 0.6 | 382.3 | 2147.4 | 127.4 (settled 445.4) | 40.1 updates | 137.4, 1.6, 173, 61 |
+| `app-shell` | 75.3 | 5.4 | 0.3 | 0.0 | 77.5 | 91.3 opens | 79.1, 6.5, 95, 110 |
+| `code-languages` | 66.5 | 0.6 | 2.3 | 2147.4 | 34.7 | – | 69.9, 1.6, 39, – |
+| `product-home` | 53.9 | 5.7 | 382.6 | 2147.4 | 199 | – | 56.7, 6.7, 284, – |
+| `sidebar` | 45.5 | 3.5 | 0.0 | 0.0 | 66.5 | 109.8 toggles | 47.8, 4.5, 79, 145 |
+| `settings` | 40.6 | 4.0 | 0.2 | 0.0 | 121.6 | 107 opens | 42.7, 5.0, 146, 136 |
+| `chat` | 38.6 | 4.9 | 382.6 | 2147.4 | 102.2 | 40.8 sends | 40.6, 6.0, 129, 59 |
+| `dropdown-menu` | 35.2 | 1.3 | 0.0 | 0.0 | 28.3 | 113.7 opens | 37.0, 2.4, 39, 151 |
+| `live-console` | 33.1 | 3.1 | 382.3 | 2147.4 | 106.9 (settled 401.9) | 43.6 selects | 34.8, 4.2, 125, 61 |
+| `sign-up` | 29.6 | 3.8 | 0.2 | 0.0 | 68.4 | 60.1 shows | 31.2, 4.9, 101, 86 |
+| `tooltip` | 32.7 | 0.4 | 0.0 | 0.0 | 34.6 | 95.7 shows | 34.3, 1.4, 44, 119 |
+| `popover` | 31.7 | 0.6 | 0.0 | 0.0 | 28.7 | 111.9 opens | 33.3, 1.6, 44, 156 |
+| `marketing-bar` | 29.2 | 2.4 | 0.0 | 0.0 | 52.6 | 94.5 opens | 30.7, 3.5, 66, 119 |
+| `stage-card` | 27.0 | 2.6 | 382.3 | 2147.4 | 66.7 (settled 360.5) | 77.9 copies | 28.4, 3.7, 92, 96 |
+| `code-block` | 25.6 | 2.4 | 382.3 | 2147.4 | 64.8 (settled 358.8) | 77.1 copies | 26.9, 3.5, 75, 98 |
+| `sheet` | 25.3 | 1.7 | 0.0 | 0.0 | 23.5 | 94.4 opens | 26.6, 2.8, 41, 125 |
+| `dialog` | 25.5 | 1.6 | 0.0 | 0.0 | 26.3 | 99.9 opens | 26.8, 2.6, 36, 117 |
+| `sign-in` | 22.1 | 3.5 | 0.2 | 0.0 | 69.5 | 62.3 shows | 23.3, 4.6, 93, 77 |
+| `alert-dialog` | 23.0 | 2.0 | 0.0 | 0.0 | 26.1 | 110.1 opens | 24.2, 3.1, 42, 135 |
+| `composer` | 19.2 | 2.7 | 0.0 | 0.0 | 73.8 | 44.7 sends | 20.3, 3.7, 89, 55 |
+| `page-states` | 14.3 | 1.5 | 1.1 | 0.0 | 48.3 | – | 15.4, 2.5, 69, – |
+| `stage-hero` | 13.3 | 2.1 | 0.0 | 0.0 | 40.3 | – | 14.3, 3.2, 54, – |
+| `tabs` | 14.4 | 0.8 | 0.0 | 0.0 | 31.1 | 43.9 selects | 15.5, 1.9, 55, 58 |
+| `field` | 13.4 | 1.1 | 0.0 | 0.0 | 24.9 | – | 14.4, 2.2, 37, – |
+| `toggle-group` | 13.7 | 0.8 | 0.0 | 0.0 | 30.8 | 41.9 selects | 14.7, 1.9, 38, 59 |
+| `hero` | 13.0 | 1.4 | 0.2 | 0.0 | 58 | – | 14.1, 2.4, 77, – |
+| `input-otp` | 13.5 | 0.6 | 0.0 | 0.0 | 40.2 | 42.2 updates | 14.6, 1.7, 56, 58 |
+| `accordion` | 13.0 | 0.6 | 0.0 | 0.0 | 40.3 | 44.3 expands | 14.1, 1.7, 50, 64 |
+| `input-group` | 11.8 | 1.6 | 0.0 | 0.0 | 32.1 | 41.9 toggles | 12.8, 2.7, 39, 59 |
+| `cta-band` | 12.3 | 1.1 | 0.0 | 0.0 | 26.7 | – | 13.3, 2.2, 45, – |
+| `theme` | 12.4 | 0.9 | 0.0 | 0.0 | 22.7 | 40.9 toggles | 13.5, 2.0, 30, 61 |
+| `error-summary` | 11.8 | 0.9 | 0.0 | 0.0 | 31.9 | 43.8 focuses | 12.9, 1.9, 53, 59 |
+| `message-log` | 11.4 | 1.1 | 0.0 | 0.0 | 23.9 | – | 12.5, 2.1, 38, – |
+| `use-highlighted-code` | 11.2 | 0.4 | 382.3 | 2147.4 | 10.1 (settled 299.8) | – | 12.2, 1.5, 20, – |
+| `utils` | 11.4 | 0.0 | 0.0 | 0.0 | 14 | – | 12.5, 1.1, 23, – |
+| `checkbox` | 10.9 | 0.4 | 0.0 | 0.0 | 17.7 | 44.1 toggles | 12.0, 1.5, 24, 62 |
+| `highlighter` | 10.8 | 0.4 | 382.3 | 2147.4 | 9.1 (settled 283.1) | – | 11.9, 1.5, 24, – |
+| `toggle` | 10.7 | 0.5 | 0.0 | 0.0 | 18.8 | 43.4 toggles | 11.8, 1.6, 27, 59 |
+| `radio-group` | 10.5 | 0.4 | 0.0 | 0.0 | 15.2 | 43.9 selects | 11.6, 1.4, 29, 61 |
+| `button` | 10.0 | 0.9 | 0.0 | 0.0 | 14.7 | 42.1 updates | 11.0, 2.0, 31, 60 |
+| `collapsible` | 9.5 | 0.0 | 0.0 | 0.0 | 14.3 | 41.4 expands | 10.5, 1.0, 19, 58 |
+| `switch` | 8.7 | 0.5 | 0.0 | 0.0 | 11.3 | 43.1 toggles | 9.8, 1.5, 24, 58 |
+| `avatar` | 8.2 | 0.6 | 0.0 | 0.0 | 15.3 | – | 9.3, 1.6, 27, – |
+| `item` | 7.6 | 0.9 | 0.0 | 0.0 | 26.3 | – | 8.7, 2.0, 41, – |
+| `alert` | 7.4 | 0.8 | 0.0 | 0.0 | 27.4 | – | 8.5, 1.8, 28, – |
+| `empty` | 7.6 | 0.5 | 0.0 | 0.0 | 18.7 | – | 8.6, 1.5, 26, – |
+| `message` | 7.6 | 0.4 | 0.0 | 0.0 | 31.3 | – | 8.6, 1.4, 54, – |
+| `marker` | 7.2 | 0.5 | 0.0 | 0.0 | 18.1 | – | 8.3, 1.6, 23, – |
+| `badge` | 7.0 | 0.3 | 0.0 | 0.0 | 31.1 | – | 8.0, 1.4, 46, – |
+| `proof-band` | 6.9 | 0.4 | 0.0 | 0.0 | 48.6 (settled 182) | – | 7.9, 1.4, 65, – |
+| `label` | 6.9 | 0.2 | 0.0 | 0.0 | 19.5 | – | 8.0, 1.2, 26, – |
+| `separator` | 7.0 | 0.2 | 0.0 | 0.0 | 8.2 | – | 8.0, 1.2, 19, – |
+| `table.1000-rows` | 5.9 | 0.6 | 0.0 | 0.0 | 477.2 | – | –, –, 618, – |
+| `table` | 5.7 | 0.6 | 0.0 | 0.0 | 28.6 | – | 6.8, 1.7, 32, – |
+| `native-select` | 5.5 | 0.5 | 0.0 | 0.0 | 21.7 | – | 6.6, 1.6, 39, – |
+| `spinner` | 5.6 | 0.2 | 0.0 | 0.0 | 12.7 | – | 6.7, 1.2, 19, – |
+| `four-dot` | 5.1 | 0.6 | 0.0 | 0.0 | 11.7 | – | 6.2, 1.6, 23, – |
+| `breadcrumb` | 5.2 | 0.5 | 0.0 | 0.0 | 21.3 | – | 6.3, 1.5, 26, – |
+| `name-strip` | 5.1 | 0.1 | 0.0 | 0.0 | 22.8 | – | 6.1, 1.1, 35, – |
+| `card` | 4.3 | 0.6 | 0.0 | 0.0 | 37 | – | 5.3, 1.7, 38, – |
+| `input` | 4.2 | 0.4 | 0.0 | 0.0 | 10.4 | – | 5.3, 1.5, 29, – |
+| `textarea` | 4.0 | 0.3 | 0.0 | 0.0 | 9.2 | – | 5.1, 1.3, 23, – |
+| `stage` | 3.9 | 0.4 | 0.0 | 0.0 | 3.7 | – | 5.0, 1.4, 15, – |
+| `marketing-footer` | 3.3 | 0.5 | 0.0 | 0.0 | 23 | – | 4.4, 1.5, 32, – |
+| `kbd` | 3.5 | 0.2 | 0.0 | 0.0 | 26.8 | – | 4.6, 1.3, 29, – |
+| `status` | 3.4 | 0.1 | 0.0 | 0.0 | 9 | – | 4.5, 1.1, 16, – |
+| `meter` | 3.4 | 0.0 | 0.0 | 0.0 | 10 | – | 4.5, 1.1, 23, – |
+| `skeleton` | 3.3 | 0.0 | 0.0 | 0.0 | 0.9 | – | 4.4, 1.1, 14, – |
+| `liquid-glass` | 0.6 | 0.3 | 0.0 | 0.0 | 1.7 | – | 1.6, 1.4, 11, – |
+| `is-mobile` | 0.5 | 0.0 | 0.0 | 0.0 | 6.8 | – | 1.5, 1.0, 13, – |
+| `read-token` | 0.2 | 0.0 | 0.0 | 0.0 | 3.4 | – | 1.3, 1.1, 9, – |
+
+The floors. The empty app: 31.4 kB JS and 1.4 kB CSS. The theme floor: 31.4 kB and 7.5 kB, so the theme item adds 6.0 kB of CSS, and 323.1 kB of font files that a page fetches only for the subsets it uses (`font-geist` 76.4 kB, `font-heading-ibm-plex-sans` 162.4, `font-jetbrains-mono` 84.2, raw woff2). The floor: 42.8 kB JS and 7.5 kB CSS, so `cn` costs 11.4 kB, once, on `utils`' row. The catalogue, 62 non-block items on one page: 362.6 kB JS and 16.0 kB CSS over the floor, against 1,051.3 kB and 56.4 kB for the same items' alone figures summed. Shared code makes the whole 34% of the sum.
+
+**Findings for the roadmap.**
+
+- **The heaviest items:** `chart` 137.4 kB of JS and 165 ms to hydrate (layerchart and d3); `code-editor` 130.8 kB (CodeMirror); `app-shell` 75.3 kB; `code-languages` 66.5 kB; `product-home` 53.9 kB and 199 ms. The lightest: `read-token` 0.2 kB, `is-mobile` 0.5, `liquid-glass` 0.6.
+- **Every code item carries 382 kB of lazy JS and 2.1 MB of assets** on demand: the highlighter's runtime and grammars, loaded when a language is first highlighted.
+- **`table` at 1,000 rows hydrates in 477 ms,** against 29 ms at 5 rows: about 0.45 ms a row under 4×. Hydration has no ceiling, but a data table at 10,000 rows (`042`) would take seconds. It is the case for virtualised rows.
+- **No response time is near 200 ms.** The slowest are the overlays: `dropdown-menu` 113.7, `popover` 111.9, `alert-dialog` 110.1, `sidebar` 109.8, `settings` 107.0. A small item's time is mostly the measure's own floor, the no-op click's 42.9 ms.
+- **`chart`'s build is not quite deterministic:** two clean builds differed by 9 bytes. The likely cause is chunk order among layerchart's many modules. Worth a look before a budget is tightened to its figure.
+
+**Checks run** (on the landing tree):
+
+- `bun run check`: 2,199 files, 0 errors, 0 warnings, with `tsconfig.json`'s two new excludes.
+- `bun run lint`: clean, `report.json` and `budgets.json` among the files. The literal lint: 0 literals in item files, 1 allowance (L24), as before.
+- `tests/unit/cost.test.ts`: 33 pass, 0 fail (criteria 1 to 11, 13, 14).
+- `bun run test:unit`: 1,289 tests in 39 files. In each of two full runs, at a load of 20 to 40, 1,286 passed and one failed, a different timing-bound test each time: `thumbnails.test.ts`' "the component page template stales every example item" hit its 5 s timeout (it copies the tree), and passes alone, 10 of 10; `highlight.test.ts`' "the 18 specimens in a fresh process" took 2.7 s against its 1.5 s, and fails at `44cec73` too (3.6 s, the same machine, a clean export), so it is not this build's. The handoff names the timing tests as flaky under load.
+- `bun run test:e2e`, every Chromium project (light, dark, perf), through a scratch config on port 5273 (merge note 6). First full pass, at a load of 40 to 80: 2,970 passed, 6 failed, 114 skipped, 5 did not run (perf waits on the others). The 6 were timeouts (four of `bar-glass.spec.ts`' blur checks, `code.spec.ts` E7's timed budgets, `brand.spec.ts`'s pointer light). Second full pass, at 20 to 40: **2,981 passed, 0 failed, 114 skipped**, perf included.
+- `bun run test:smoke`: **150 pass, 0 fail**, 10 files, 401 s. `cost.test.ts`, at a load of 10: A/A hydration 0 ms (launches −5.1 to 5.3), the no-op click 44.8 ms, calibration 92.4 ms (bound 50 to 111.2), an offline `add` 2.2 s.
+- `scripts/site/release-check.ts`: exit 0, its cost step reading "one full, quiet run on the release machine".
+- `bun run cost`: exit 0 after each full run; `bun run cost --guard` passes; with `static/r/` one byte off, it exits 2 (criterion 19).
+
+**The scorecard.** Re-run as its §8 and roadmap §4 describe; see its run log's row of 2026-11-16. Rows 1 to 14 hold at 32 of 56: `025` adds no item, and changes no page and no token. Row 15 is new: Kuiper 0 → 2, for (b) size budgets enforced and (d) a large-data case held by a budget; every reference stays at 0. The total of 60 is 34. (a) and (c) wait for `030`.
+
+**For the merge.**
+
+1. **Ledger lines.** `package.json` gains `"cost": "bun scripts/cost/run.ts"`. Nothing in `registry.json`, `CHANGELOG.md`, the sitemap, the upgrade guide or `static/r/` changes: `025` changes no item.
+2. **The thumbnails' manifest.** A `package.json` edit stales the thumbnails' hashes, not their pictures. After every build's ledger lines are merged, run `bun scripts/site/thumbnails.ts --hash-only` once. This branch's `manifest.json` change is that command's output for its own `package.json`.
+3. **`scripts/site/release-check.ts`.** `025`'s line is the file's last. When `022` lands, its matrix step goes before it (decision 16).
+4. **`tsconfig.json`** gains two `exclude` entries: `scripts/cost/app` and `scripts/cost/fixtures`.
+5. **Every later landing measures its cost.** `tests/unit/cost.test.ts` fails as stale when an item's served JSON, a fixture, the cost app or the harness changes. So each later build runs `bun run cost` after `bun run build:registry`, and commits `report.json`. A change to the theme item, `utils`, a package or the harness stales every item: a full run, about 55 minutes on this machine as loaded tonight. `021` (the theme item's JSON) and `023` (every item's doc comments) are both of that kind. A new item writes its first budget with `bun run cost --budget <item>`; `026`'s `toast` and its two cases come next.
+6. **e2e on another port.** The e2e suite ran through a scratch config that imports `playwright.config.ts` and moves only its server from 4173 to 5273, since other worktrees held builds. `playwright.config.ts` is unchanged; it is `022`'s.
+7. **Bun.** The report's runs used Bun 1.4.4. Another Bun gives a warning in the unit gate, and a refusal in the release check (decision 13).

@@ -14,3 +14,4 @@ if (SITE_ORIGIN.includes("<account>")) {
   process.exit(1);
 }
 console.log(`release-check: SITE_ORIGIN is ${SITE_ORIGIN}.`);
+if (!(await import("../cost/release.ts")).costReleaseOk()) process.exit(1);

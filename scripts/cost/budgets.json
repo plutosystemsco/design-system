@@ -1,0 +1,536 @@
+{
+  "machine": "MacBookPro18,3 (Apple M1 Pro)",
+  "instrument": { "floorHydrateMs": 128, "noopMs": 41.9 },
+  "items": {
+    "utils": {
+      "js": 12500,
+      "css": 1100,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 23
+    },
+    "four-dot": {
+      "js": 6200,
+      "css": 1600,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 23
+    },
+    "theme": {
+      "js": 13500,
+      "css": 2000,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 30,
+      "interactionMs": 61
+    },
+    "read-token": {
+      "js": 1300,
+      "css": 1100,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 9
+    },
+    "liquid-glass": {
+      "js": 1600,
+      "css": 1400,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 11
+    },
+    "button": {
+      "js": 11000,
+      "css": 2000,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 31,
+      "interactionMs": 60
+    },
+    "tooltip": {
+      "js": 34300,
+      "css": 1400,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 44,
+      "interactionMs": 119
+    },
+    "kbd": {
+      "js": 4600,
+      "css": 1300,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 29
+    },
+    "toggle": {
+      "js": 11800,
+      "css": 1600,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 27,
+      "interactionMs": 59
+    },
+    "toggle-group": {
+      "js": 14700,
+      "css": 1900,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 38,
+      "interactionMs": 59
+    },
+    "card": {
+      "js": 5300,
+      "css": 1700,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 38
+    },
+    "separator": {
+      "js": 8000,
+      "css": 1200,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 19
+    },
+    "item": {
+      "js": 8700,
+      "css": 2000,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 41
+    },
+    "table": {
+      "js": 6800,
+      "css": 1700,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 32,
+      "cases": { "1000-rows": { "hydrateMs": 618 } }
+    },
+    "tabs": {
+      "js": 15500,
+      "css": 1900,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 55,
+      "interactionMs": 58
+    },
+    "collapsible": {
+      "js": 10500,
+      "css": 1000,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 19,
+      "interactionMs": 58
+    },
+    "avatar": {
+      "js": 9300,
+      "css": 1600,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 27
+    },
+    "popover": {
+      "js": 33300,
+      "css": 1600,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 44,
+      "interactionMs": 156
+    },
+    "accordion": {
+      "js": 14100,
+      "css": 1700,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 50,
+      "interactionMs": 64
+    },
+    "alert": {
+      "js": 8500,
+      "css": 1800,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 28
+    },
+    "alert-dialog": {
+      "js": 24200,
+      "css": 3100,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 42,
+      "interactionMs": 135
+    },
+    "badge": {
+      "js": 8000,
+      "css": 1400,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 46
+    },
+    "empty": {
+      "js": 8600,
+      "css": 1500,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 26
+    },
+    "skeleton": {
+      "js": 4400,
+      "css": 1100,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 14
+    },
+    "spinner": {
+      "js": 6700,
+      "css": 1200,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 19
+    },
+    "status": {
+      "js": 4500,
+      "css": 1100,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 16
+    },
+    "error-summary": {
+      "js": 12900,
+      "css": 1900,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 53,
+      "interactionMs": 59
+    },
+    "label": {
+      "js": 8000,
+      "css": 1200,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 26
+    },
+    "field": {
+      "js": 14400,
+      "css": 2200,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 37
+    },
+    "input": {
+      "js": 5300,
+      "css": 1500,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 29
+    },
+    "textarea": {
+      "js": 5100,
+      "css": 1300,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 23
+    },
+    "input-group": {
+      "js": 12800,
+      "css": 2700,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 39,
+      "interactionMs": 59
+    },
+    "native-select": {
+      "js": 6600,
+      "css": 1600,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 39
+    },
+    "checkbox": {
+      "js": 12000,
+      "css": 1500,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 24,
+      "interactionMs": 62
+    },
+    "radio-group": {
+      "js": 11600,
+      "css": 1400,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 29,
+      "interactionMs": 61
+    },
+    "switch": {
+      "js": 9800,
+      "css": 1500,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 24,
+      "interactionMs": 58
+    },
+    "input-otp": {
+      "js": 14600,
+      "css": 1700,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 56,
+      "interactionMs": 58
+    },
+    "code-block": {
+      "js": 26900,
+      "css": 3500,
+      "lazy": 401500,
+      "assets": 2254800,
+      "hydrateMs": 75,
+      "interactionMs": 98
+    },
+    "code-editor": {
+      "js": 137400,
+      "css": 1600,
+      "lazy": 401500,
+      "assets": 2254800,
+      "hydrateMs": 173,
+      "interactionMs": 61
+    },
+    "highlighter": {
+      "js": 11900,
+      "css": 1500,
+      "lazy": 401500,
+      "assets": 2254800,
+      "hydrateMs": 24
+    },
+    "use-highlighted-code": {
+      "js": 12200,
+      "css": 1500,
+      "lazy": 401500,
+      "assets": 2254800,
+      "hydrateMs": 20
+    },
+    "code-languages": {
+      "js": 69900,
+      "css": 1600,
+      "lazy": 3400,
+      "assets": 2254800,
+      "hydrateMs": 39
+    },
+    "chart": {
+      "js": 144300,
+      "css": 6400,
+      "lazy": 60800,
+      "assets": 1500,
+      "hydrateMs": 226,
+      "interactionMs": 117
+    },
+    "meter": {
+      "js": 4500,
+      "css": 1100,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 23
+    },
+    "dropdown-menu": {
+      "js": 37000,
+      "css": 2400,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 39,
+      "interactionMs": 151
+    },
+    "sheet": {
+      "js": 26600,
+      "css": 2800,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 41,
+      "interactionMs": 125
+    },
+    "dialog": {
+      "js": 26800,
+      "css": 2600,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 36,
+      "interactionMs": 117
+    },
+    "breadcrumb": {
+      "js": 6300,
+      "css": 1500,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 26
+    },
+    "sidebar": {
+      "js": 47800,
+      "css": 4500,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 79,
+      "interactionMs": 145
+    },
+    "is-mobile": {
+      "js": 1500,
+      "css": 1000,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 13
+    },
+    "message-log": {
+      "js": 12500,
+      "css": 2100,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 38
+    },
+    "message": {
+      "js": 8600,
+      "css": 1400,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 54
+    },
+    "marker": {
+      "js": 8300,
+      "css": 1600,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 23
+    },
+    "composer": {
+      "js": 20300,
+      "css": 3700,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 89,
+      "interactionMs": 55
+    },
+    "stage": {
+      "js": 5000,
+      "css": 1400,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 15
+    },
+    "stage-card": {
+      "js": 28400,
+      "css": 3700,
+      "lazy": 401500,
+      "assets": 2254800,
+      "hydrateMs": 92,
+      "interactionMs": 96
+    },
+    "marketing-bar": {
+      "js": 30700,
+      "css": 3500,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 66,
+      "interactionMs": 119
+    },
+    "stage-hero": {
+      "js": 14300,
+      "css": 3200,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 54
+    },
+    "proof-band": {
+      "js": 7900,
+      "css": 1400,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 65
+    },
+    "live-console": {
+      "js": 34800,
+      "css": 4200,
+      "lazy": 401500,
+      "assets": 2254800,
+      "hydrateMs": 125,
+      "interactionMs": 61
+    },
+    "name-strip": {
+      "js": 6100,
+      "css": 1100,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 35
+    },
+    "cta-band": {
+      "js": 13300,
+      "css": 2200,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 45
+    },
+    "marketing-footer": {
+      "js": 4400,
+      "css": 1500,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 32
+    },
+    "hero": {
+      "js": 14100,
+      "css": 2400,
+      "lazy": 1300,
+      "assets": 1000,
+      "hydrateMs": 77
+    },
+    "sign-in": {
+      "js": 23300,
+      "css": 4600,
+      "lazy": 1300,
+      "assets": 1000,
+      "hydrateMs": 93,
+      "interactionMs": 77
+    },
+    "sign-up": {
+      "js": 31200,
+      "css": 4900,
+      "lazy": 1300,
+      "assets": 1000,
+      "hydrateMs": 101,
+      "interactionMs": 86
+    },
+    "page-states": {
+      "js": 15400,
+      "css": 2500,
+      "lazy": 2200,
+      "assets": 1000,
+      "hydrateMs": 69
+    },
+    "settings": {
+      "js": 42700,
+      "css": 5000,
+      "lazy": 1300,
+      "assets": 1000,
+      "hydrateMs": 146,
+      "interactionMs": 136
+    },
+    "app-shell": {
+      "js": 79100,
+      "css": 6500,
+      "lazy": 1300,
+      "assets": 1000,
+      "hydrateMs": 95,
+      "interactionMs": 110
+    },
+    "chat": {
+      "js": 40600,
+      "css": 6000,
+      "lazy": 401700,
+      "assets": 2254800,
+      "hydrateMs": 129,
+      "interactionMs": 59
+    },
+    "product-home": {
+      "js": 56700,
+      "css": 6700,
+      "lazy": 401700,
+      "assets": 2254800,
+      "hydrateMs": 284
+    }
+  }
+}
