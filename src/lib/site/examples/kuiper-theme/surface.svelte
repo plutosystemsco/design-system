@@ -60,7 +60,7 @@
         <p class="text-sm text-muted-foreground" data-testid="inline-surface">
           The code ground is the surface, edged by the hairline, as inline <code
             >code</code
-          > is. The highlighted line is one step up: the ground an editor's active
+          > is. Line 3 is highlighted: one step up, the ground an editor's active
           line takes.
         </p>
       </div>

@@ -1,6 +1,6 @@
 # 024d — The theme page loads no editor until it is used
 
-- **Status:** built on `release/0.13.0` at `506cfc1` (fix 2, a static specimen), with the design lead's rulings of 2026-11-16 (a ninth template, `theme`); awaiting its change review. Lands before `030`, with `024b`, `024c`, `024e` and one re-base sweep (`roadmap.md` §3, "`024` before `030`").
+- **Status:** built on `release/0.13.0` at `506cfc1` (fix 2, a static specimen), with the design lead's rulings of 2026-11-16 (a ninth template, `kuiper-theme`); reviewed (`reviews/024d-the-theme-page-loads-no-editor-pr-2026-11-16.md`, land after fixes), with the review's fixes. Lands before `030`, with `024b`, `024c`, `024e` and one re-base sweep (`roadmap.md` §3, "`024` before `030`").
 - **Date:** 2026-11-16
 - **Author:** the design lead
 - **Kind:** small change (AGENTS.md: a fix with no interface change, no new token or dependency, in one place). No research memo and no spec review. Its check is seen failing first, and the built change is reviewed by someone who did not write it (constitution §5).
@@ -47,7 +47,7 @@ The "An ink surface" example shows no editor. Where the editor stood, a second c
 
 **Precedent.** The block beside the specimen: prerendered lines from `data.server.ts`, highlighted at build time. `code-block`'s server path (`code.spec.ts` C1: 0 tree-sitter and 0 `.wasm` on a page of prerendered blocks).
 
-**What the words say now.** The intro says that the code ground equals the surface, so a code block or an editor sits flush with it, and that a highlighted line takes the muted step, as an editor's active line does. The paragraph under the specimen says that the highlighted line is one step up, the ground an editor's active line takes. The page's keyboard note names "the numbered code" where it named "the editor". The page's "When to use" text (the surface moves "its ground, the code ground and the editor's ground together") is the contract and stays.
+**What the words say now.** The intro says that the code ground equals the surface, so a code block or an editor sits flush with it, and that a highlighted line takes the muted step, as an editor's active line does. The paragraph under the specimen names the line: "Line 3 is highlighted: one step up, the ground an editor's active line takes" (the change review's finding 3: colour alone did not say which). The page's keyboard note names "the numbered code" where it named "the editor". The page's "When to use" text (the surface moves "its ground, the code ground and the editor's ground together") is the contract and stays.
 
 **What the tests read now.**
 
@@ -68,16 +68,32 @@ After the fix both pass on the `.wasm` rule. The page measures **462.1 kB** unth
 
 #### The design lead's rulings (2026-11-16), which replace the builder's 1 and 2 below
 
-1. **The theme page has a template of its own, `theme`: a ninth template.** The builder's ruling 2 is **not confirmed**: raising `component-heavy`'s LCP from 1,010 to 1,490 ms would unguard `chart` by about 480 ms. `home` and `index` are already one-page templates, so a one-page `theme` has precedent. Its figures are the page's own, measured at this change (the builder's sweep run, ruling 2 below): transfer **462.1 kB** → budget **510 kB** (decision 4's 10%, rounded up to 5 kB); LCP **1,348 ms** (1,348, 1,332, 1,348; spread 1.2%) → **1,490 ms** (10%); CLS **0.004** → **0.02** (the floor). Its probe is the page itself; its layouts are the component layouts. `kuiper-theme` leaves `HEAVY`; the `component` rule leaves the page to `theme`. This amends `024` decision 1 (eight templates → nine); `024`'s landing notes record it.
+1. **The theme page has a template of its own, `kuiper-theme`: a ninth template.** (First named `theme`; renamed at the change review, finding 1, so a report line cannot be read as the `theme` item's. That item's page, `/components/theme/`, is a `component` page.) The builder's ruling 2 is **not confirmed**: raising `component-heavy`'s LCP from 1,010 to 1,490 ms would unguard `chart` by about 480 ms. `home` and `index` are already one-page templates, so a one-page template has precedent. It is named after its page, as `home` and `index` are. Its figures are the page's own, measured at this change (the builder's sweep run, ruling 2 below): transfer **462.1 kB** → budget **510 kB** (decision 4's 10%, rounded up to 5 kB); LCP **1,348 ms** (1,348, 1,332, 1,348; spread 1.2%) → **1,490 ms** (10%); CLS **0.004** → **0.02** (the floor). Its probe is the page itself; its layouts are the component layouts. `kuiper-theme` leaves `HEAVY`; the `component` rule leaves the page to `kuiper-theme`. This amends `024` decision 1 (eight templates → nine); `024`'s landing notes record it.
 2. **`component-heavy` is restored** to `chart`'s own figures from `024`'s sweep: 479.9 kB, 912 ms and 0. Budgets **530 kB, 1,010 ms, 0.02**, as before this change. Its probe is `chart` alone.
 3. **`component-live`'s fall is confirmed** (the builder's ruling 3 below): 725 kB, 1,260 ms, 0.02. A fall needs no ruling.
-4. **The unit test still holds every template's figures to its own pages.** `budgets.test.ts`'s own-pages, arithmetic, margin and `ci` tests run over `TEMPLATE_IDS`, so they cover `theme` with no change. The count test reads nine templates ("decision 1's eight templates and 024d's theme"), and decision 1's fixed pages now include `/components/kuiper-theme/` → `theme`. 60 pass (56 before: 4 per template).
+4. **The unit test still holds every template's figures to its own pages.** `budgets.test.ts`'s own-pages, arithmetic, margin and `ci` tests run over `TEMPLATE_IDS`, so they cover `kuiper-theme` with no change. The count test reads nine templates ("decision 1's eight templates and 024d's kuiper-theme"), and decision 1's fixed pages now include `/components/kuiper-theme/` → `kuiper-theme` and `/components/theme/` → `component`. 60 pass (56 before: 4 per template).
 
-#### A finding: the theme page's LCP is its first paint, set by its HTML (for the re-base sweep)
+#### A finding: the theme page's LCP is its first paint, held by its document's transfer (for the re-base sweep)
 
 The page's LCP did not move when the editor went (1,352 → 1,348 ms), so the editor never set it. One probe (`015` decision 23's profile, 3 cold loads, the build served by `vite preview`) reads the LCP element: the header's lead paragraph, `p.mt-3.max-w-(--site-measure).text-base.text-muted-foreground`, "Kuiper's tokens for light and dark: colour, radius, spacing, type, motion, focus…". It is a text paint of 22,145 px², the same element in all 3 loads, and **LCP equals first contentful paint** each time (1,312, 1,320, 1,328 ms). The response ended at about 1,090 ms. On `chart`, the same probe gives LCP = FCP = 920 ms and a response end of 304 ms.
 
-So nothing late is painted. The page's first paint is late because its document is large. `build/components/kuiper-theme/index.html` is **1,427,450 bytes raw, 87,523 gzipped**. `chart`'s is 347,289 (27,398), and Button's 321,788 (26,147). The prerendered page holds all 18 examples. The largest parts, by raw bytes between example anchors, are: the hydration data after `</main>` about 192 kB, `surface` 182 (its two blocks and its source), `contrast` 169, `measured` 128, `fields` 85, `expressive-motion` 86 and `code` 79. Under 4× CPU throttling, parsing that document holds the first paint. The fix would be the page's own, not an item's, and it is out of this change's scope: fewer examples prerendered in full, or the contrast and measured tables trimmed. The re-base sweep after `024b`–`024e` revisits it, with `theme`'s LCP figure.
+So nothing late is painted. The first paint waits for the document. `build/components/kuiper-theme/index.html` is **1,427,450 bytes raw, 87,523 gzipped**; `chart`'s is 347,289 (27,398), and Button's 321,788 (26,147).
+
+**Corrected at the change review (finding 2): the cost is the document's gzipped bytes through the throttled network, not its parsing.** These are the reviewer's probes (Chromium, 1280 × 900, the same profile, 3 loads each):
+
+- **Parsing costs about 40 ms.** With the document handed over at once (`route.fulfill`, so no network for it), the theme page paints at 972 to 1,000 ms, and `chart` at 916 to 956.
+- **First paint follows the document's gzipped size** (a proxy serving gzip through the throttled network):
+
+  | The theme page's document | gzip | Response end | FCP = LCP |
+  |---|---|---|---|
+  | as built | 91.5 kB | 1,072–1,078 ms | 1,308–1,344 ms |
+  | every line's class shortened to one word | 66.4 kB | 789–793 | 1,204–1,232 |
+  | the examples' source lines removed | 50.3 kB | 500–508 | 1,156–1,176 |
+  | `chart`, as built | – | 286–294 | 864–872 |
+
+- **What the gzipped document holds**, removing each part and re-compressing: the examples' source panels **38.1 kB** of 87.5 (**44%**); the hydration data and scripts after `</main>` 18.5 kB (21%); the 7 tables 7.6 kB (9%); the new specimen 0.1 kB.
+
+So the levers are not on this page alone. The larger is site-wide: the examples' highlighted source, in each frame's closed `<details>` and again in the hydration data. The second is `code-block`'s line classes (`codeBlockLineVariants`' base, 723 bytes on each of the page's 893 lines), an item's interface. The tables are worth under 9%. The design lead files these, from the review's point 4. This change does not need to fix the paint: its LCP is the 1,352 ms the page had with the editor. The re-base sweep after `024b`–`024e` revisits it, with `kuiper-theme`'s LCP figure.
 
 #### The builder's rulings (2026-11-16), as made before the design lead's
 
@@ -93,14 +109,14 @@ The owner and the design lead were not available at the time. Each ruling below 
 ### The checks after the design lead's rulings
 
 - `bun test tests/unit/budgets.test.ts --timeout 60000`: **60 pass, 0 fail** (253 expect calls).
-- **The perf project**, once, on the same build (`E2E_PREBUILT=1 E2E_PORT=5741 bun --bun playwright test --project=perf --no-deps`, 2026-11-16): **26 passed**, 0 failed, 5.9 minutes. That is 1 server check, 9 transfer tests (one per template, `024 transfer: theme` new) and 16 paint tests.
+- **The perf project**, once, on the same build (`E2E_PREBUILT=1 E2E_PORT=5741 bun --bun playwright test --project=perf --no-deps`, 2026-11-16): **26 passed**, 0 failed, 5.9 minutes. That is 1 server check, 9 transfer tests (one per template; the new one was then `024 transfer: theme`, now `024 transfer: kuiper-theme`) and 16 paint tests.
 
   | Template | Pages | Heaviest page | Measured | Budget | Probes' LCP medians (budget) | CLS (budget) |
   |---|---|---|---|---|---|---|
   | `component` | 73 | `sidebar` | 405.1 kB | 445 | 1,088 on `sidebar` (1,270) | 0.09 on `label` (0.108) |
   | `component-live` | 4 | `code-editor` | 657.0 | 725 | 928 to 1,144 (1,260) | 0.003 (0.02) |
   | `component-heavy` | 1 | `chart` | 481.0 | 530 | 900 (**1,010**) | 0 (0.02) |
-  | `theme` | 1 | `kuiper-theme` | 462.1 | **510** | 1,380 (1,356, 1,404, 1,380) (**1,490**) | 0.004 (0.02) |
+  | `kuiper-theme` | 1 | `kuiper-theme` | 462.1 | **510** | 1,380 (1,356, 1,404, 1,380) (**1,490**) | 0.004 (0.02) |
 
   `kuiper-theme`: 0 `.wasm` in all four loads, throttled transfer equal to unthrottled. Every other template passed as on the run below.
 
@@ -120,4 +136,4 @@ The owner and the design lead were not available at the time. Each ruling below 
 - `bun test tests/unit/budgets.test.ts tests/unit/thumbnails.test.ts --timeout 60000`: **66 pass, 0 fail**.
 - `code.spec.ts`, `keyboard.spec.ts` and `axe.spec.ts` whole, in `chromium-light` and `chromium-dark` (`E2E_PREBUILT=1 E2E_PORT=5741`, 4 workers): **1,208 passed**, 0 failed (8.1 minutes). After the page's keyboard note was reworded and the site rebuilt, the theme page's tests in those files and in `theme.spec.ts` and `tokens.spec.ts` (`-g "kuiper-theme|ink surface|024d|inline code"`): **38 passed**, light and dark. Those include S1, I3, the 7-stop fixture and axe on the page with the surface's popover and dialog open.
 - **Thumbnails.** The theme's hash changed (its route and its `surface` example are inputs). `bun scripts/site/thumbnails.ts --no-build kuiper-theme` wrote both pictures again, and they are **byte-identical** to the old ones: the picture is the first example, the colours, and it did not change. Only `manifest.json`'s `kuiper-theme` hash moved. Looked at: the light thumbnail shows the colours list as before. The surface itself was photographed at 1280 in both page themes (scratchpad): the specimen, numbered, its third line on the wash with the primary marker, flush on the ink, beside `darts.py`.
-- **The scorecard** is not re-run for a small change on a build branch. The change touches no item, no Button or Dialog page and no part. Its movement is this page's weight, 760.9 → 462.1 kB, outside rows 7 and 8, which read Button.
+- **The scorecard** is not re-run for this change alone. **The design lead's ruling (the change review, finding 7): the small changes in the `024b`–`024e` set re-run the scorecard with the re-base sweep, not one by one** (`roadmap.md` §3 and §4). The change touches no item, no Button or Dialog page and no part. Its movement is this page's weight, 760.9 → 462.1 kB, outside rows 7 and 8, which read Button.

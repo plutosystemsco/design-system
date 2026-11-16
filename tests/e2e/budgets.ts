@@ -29,7 +29,7 @@ export const TEMPLATE_IDS = [
   "component",
   "component-live",
   "component-heavy",
-  "theme",
+  "kuiper-theme",
   "leaf",
   "brand",
 ] as const;
@@ -119,6 +119,10 @@ export const HEAVY: readonly string[] = ["chart"];
  * `component`'s line at 462.1 kB, and at 1,348 ms too slow for
  * `component-heavy`'s LCP without unguarding `chart`.
  */
+/**
+ * Its template is named after the page, as `home` and `index` are, so a
+ * report line cannot be read as the `theme` item's (024d's review, finding 1).
+ */
 export const THEME_PAGE = componentPath("kuiper-theme");
 
 const live = new Set(LIVE_HIGHLIGHT.map(componentPath));
@@ -137,7 +141,7 @@ const RULES: Record<TemplateId, (p: SitePage) => boolean> = {
   component: (p) => isComponent(p) && !live.has(p.path) && !heavy.has(p.path),
   "component-live": (p) => isComponent(p) && live.has(p.path),
   "component-heavy": (p) => isComponent(p) && heavy.has(p.path),
-  theme: (p) => p.path === THEME_PAGE,
+  "kuiper-theme": (p) => p.path === THEME_PAGE,
   leaf: (p) =>
     (p.door === null && p.path !== "/") ||
     ((p.door === "start" || p.door === "foundations") &&
@@ -299,7 +303,7 @@ export const TEMPLATES: Record<TemplateId, Template> = {
     layouts: COMPONENT_LAYOUTS,
     ruling: SWEEP,
   },
-  theme: {
+  "kuiper-theme": {
     // One page, measured at `024d` without its editor (024d landing
     // notes): 462.1 kB unthrottled, LCP 1,348 ms (1,348, 1,332, 1,348),
     // CLS 0.004. Its LCP is not the editor's: it was 1,352 with it.

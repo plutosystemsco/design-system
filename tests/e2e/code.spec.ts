@@ -726,8 +726,13 @@ test.describe("the ink surface", () => {
     await expect(s).toHaveClass(/\bdark\b/);
     await expect(s).toHaveClass(/\bsurface-ink\b/);
     // 024d: the editor's place is a still specimen, a numbered block with
-    // one highlighted line. The editor reads the same two slots,
-    // --code-background and --code-active-line (G2, on its own page).
+    // one highlighted line. The editor reads the same two slots by name,
+    // --code-background and --code-active-line, and G2 proves it on its own
+    // page: there the code slots differ from --background and --muted in
+    // both schemes, so G2 fails if the editor reads the page's tokens. So
+    // the editor on ink follows the surface. The `.cm-gutters` reading is
+    // dropped, not replaced: a block has no gutter element to read, and the
+    // gutter's ground is the same --code-background (8 readings → 7).
     const specimen = s.getByTestId("surface-specimen");
     const block = s.getByTestId("surface-block");
     const ground = light ? INK : INK_RAISED;
