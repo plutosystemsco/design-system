@@ -608,3 +608,46 @@ test.describe("020a: the site's CSS reads only code", () => {
     expect(found).toEqual([]);
   });
 });
+
+test.describe("024b: the site stops shipping the whole registry", () => {
+  // registry.json holds file paths, not file contents. Item sources reach
+  // the browser legitimately, because the site renders its own components;
+  // a file list, a stock hash and a dependency key never do. The bare key
+  // `dependencies` is no sentinel, because SvelteKit's runtime uses it.
+  // `devDependencies` also catches a whole package.json.
+  test("024b: no browser chunk holds a registry-only value (a file path, a stock hash or a dependency key)", () => {
+    const registry = JSON.parse(readFileSync("registry.json", "utf8")) as {
+      items: {
+        files?: { path: string }[];
+        meta?: { stock?: { sha256?: string } };
+      }[];
+    };
+    const sentinels = new Set<string>();
+    for (const item of registry.items) {
+      for (const file of item.files ?? []) sentinels.add(file.path);
+      const hash = item.meta?.stock?.sha256;
+      if (hash) sentinels.add(hash);
+    }
+    for (const key of ["registryDependencies", "devDependencies", "cssVars"]) {
+      sentinels.add(`${key}:`);
+      sentinels.add(`"${key}"`);
+    }
+    const scripts = walkFiles(path.join(BUILD, "_app", "immutable")).filter(
+      (f) => f.endsWith(".js"),
+    );
+    expect(scripts.length).toBeGreaterThan(0);
+    const held: Record<string, string[]> = {};
+    for (const file of scripts) {
+      const text = readFileSync(file, "utf8");
+      const found = [...sentinels].filter((s) => text.includes(s));
+      if (found.length) held[path.relative(BUILD, file)] = found;
+    }
+    const summary = Object.entries(held).map(
+      ([file, found]) => `${file}: ${found.length} of ${sentinels.size}`,
+    );
+    expect(
+      held,
+      `${scripts.length} files read; ${summary.join("; ") || "none held"}`,
+    ).toEqual({});
+  });
+});

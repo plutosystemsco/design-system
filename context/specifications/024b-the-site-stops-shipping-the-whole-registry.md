@@ -1,6 +1,6 @@
 # 024b — The site stops shipping the whole registry
 
-- **Status:** written; ready to build once `024` lands.
+- **Status:** built on `release/0.13.0` at `467a0e8` (after `022`, `024` and `025`); awaiting its change review (Landing notes).
 - **Date:** 2026-11-16
 - **Author:** the design lead
 - **Kind:** small change (AGENTS.md: a fix with no interface change, no new token or dependency, in one place). Its check is seen failing first, and a reviewer who did not write it reviews the built change (constitution §5). It needs no research memo and no spec review. Its measurements are in one anyway: [`research/2026-11-16-registry-in-the-client.md`](../research/2026-11-16-registry-in-the-client.md). "Why a small change" below gives the reasons.
@@ -117,4 +117,91 @@ The reviewer may judge that the generator and the ledger file need a full specif
 
 ## Landing notes
 
-None yet.
+### The build
+
+- **Built** 2026-11-16 by a builder, in its own worktree, branched from `release/0.13.0` at `4a0bdde`. `022` (`ec2460e`), `024` (`506cfc1`) and `025` (`467a0e8`) landed during the build; each was taken in by a rebase before the gate, and the commit sits on `467a0e8`. Not yet change-reviewed. Ports 5741 and 5867 (`E2E_PORT`, `022`'s server); 5199 was not used. The machine's load average ran from 9 to 41.
+- **What was built.** Exactly the spec's files.
+  - `scripts/build-registry.ts`: `siteItemsModule(registry)` and `writeSiteItems(root)`, as specified. `writeSiteItems` returns whether it wrote. `buildRegistry()` calls it last, after the registry is swapped in, only when `options.out` is not given, and prints `build:registry wrote src/lib/site/listed-items.ts` when it writes and is not quiet. The prettier config and the `filepath` are the repository's own `src/lib/site/listed-items.ts`, so a temporary root formats the same way. `SITE_ITEMS_PATH` is exported for the message.
+  - `src/lib/site/listed-items.ts`: new, generated, committed. **79 entries** (registry.json's 80, without the `pluto-theme` alias), 565 lines. Its data is identical to the prototype's; its header comment is wrapped at 80 columns.
+  - `items.ts`, `sitemap.ts` and `site.ts` as specified. `sitemap.ts`'s local `RegistryItem` type is gone, and `const items = listedItems()`. `SITEMAP`, `doorPages` and the other exports are unchanged, so `022`'s `COMPONENT_PAGES = doorPages("components")` reads the same 79 pages.
+  - **Bootstrap.** The generator imports `isListed` from `items.ts`, which imports the generated file. The first `listed-items.ts` was written by `writeSiteItems(".")` while `items.ts` still read `registry.json`; then `items.ts` changed. From then on, the file exists, as the spec says.
+- **Beside the spec (deviation 1): `tests/fixtures/pluto-allowed.json`.** `rename.test.ts`'s "020 test 1" failed once the generated file existed: `listed-items.ts` holds one "Pluto Systems" (the `four-dot` item's description). The fixture's "Pluto Systems" entry gains `"src/lib/site/listed-items.ts": 1`, and its count goes from 328 to 329. Like `registry.json`'s own count, it moves when a description names the company. C's fixture entry uses "An author", not the company's name, so the test file adds nothing to the allowlist.
+- **Thumbnails.** `thumbnails.ts --hash-only`, after each rebase, on the release's side of the conflict: **62 of 79 hashes moved** (every example item). On the tree at `ec2460e`, with a fresh build, `bun scripts/site/thumbnails.ts --no-build` made **158 pictures in 174 s, and `git status` showed none changed**. Byte-identical, as the spec expected. The same again on `467a0e8`: 158 pictures, none changed.
+- **Not changed:** `registry.json`, `static/r/` and `static/v0.13.0/r/` (`bun run build:registry` leaves `git status` clean), every server module, every page, `tests/e2e/budgets.ts`, `perf.spec.ts` and `pages.ts`. No changelog line: nothing an app installs changes.
+
+### Seen failing first
+
+On the tree with the three cases added and the fix not made (and again on `022`'s merge, with the same result):
+
+- **A** (`024b: no browser chunk holds a registry-only value …`, chromium-light): **failed, naming one file, `_app/immutable/chunks/1jtC5dVS.js`, with 409 of 412 sentinels.** `756 files read`. The list ends `…product-home/+page.svelte`, `registryDependencies:`, `devDependencies:`, `cssVars:`. The three quoted key forms did not occur, as the memo found. The 412 are 365 file paths, 41 stock hashes and the 6 key forms.
+- **B** (`generated.test.ts`) and **C** (`build-registry.test.ts`): each file failed to load. `SyntaxError: Export named 'siteItemsModule' not found in module '…/scripts/build-registry.ts'`, and the same for `writeSiteItems`: 0 pass, 2 fail, 2 errors.
+
+After the fix: A passes (0 of 412, 756 files), B passes, C passes.
+
+### Mutations, each reverted after
+
+1. **`sitemap.ts` imports `registry.json` again** (`listedItems(registry.items)`), site rebuilt with `vite build`: A failed, `_app/immutable/chunks/C7-ednN9.js: 409 of 412`.
+2. **`site.ts` imports `package.json` whole** (`import pkg …; const { version } = pkg`), rebuilt: A failed, `_app/immutable/chunks/D2MplKOz.js: 1 of 412`, naming `devDependencies:` alone.
+3. **One entry hand-edited in `listed-items.ts`** (`"Kuiper theme"` to `"Kuiper theme!"`): B failed, its diff showing the one line. `bun run build:registry` then rewrote the file, and a second run left it alone (`git status` clean).
+
+### The bytes
+
+**The shared chunk.** Before: `chunks/1jtC5dVS.js`, **93,194 B raw, 16,918 B at gzip 6** (16,839 at gzip 9). It is 274 B larger than the memo's `D1b4t0hR.js` at `ba8694d` (92,920 B), which this tree also built before `022`'s merge. After: `chunks/FQEAJQDQ.js`, **15,613 B raw, 5,262 B at gzip 6** (5,244 at gzip 9), the prototype's figures to the byte. All six pages read (the five below and `/components/code-block/`) preload it, before and after.
+
+**The static measure** (the memo's method: the gzipped HTML and every JS and CSS file it names, gzip 6), at `506cfc1`, before and after:
+
+| Page | Before, B | After, B | Saved, B |
+|---|---:|---:|---:|
+| `/` | 179,327 | 167,642 | 11,685 |
+| `/components/button/` | 253,985 | 242,300 | 11,685 |
+| `/components/` | 201,620 | 189,934 | 11,686 |
+| `/brand/colour/` | 175,303 | 163,619 | 11,684 |
+| `/changelog/` | 214,634 | 202,952 | 11,682 |
+
+That is **11.68 kB on every page**. The spec's prototype measured 11,588 to 11,597 B at `ba8694d`; the chunk grew by 78 B gzipped since then.
+
+**The perf project** (`024`'s, `bun --bun playwright test --project=perf --no-deps`), at `506cfc1`: **25 passed** before, and 25 passed in each of two runs after. Transfer is the same on every run of a page. The medians:
+
+| Probe | Transfer before, kB | After | Change | LCP before, ms (3 runs) | After, first run | After, second run |
+|---|---:|---:|---:|---|---|---|
+| `/` | 301.6 | 290.2 | −11.4 | 772 (772, 772, 772) | 780 | 784 |
+| `/components/` | 350.6 | 339.2 | −11.4 | 2456 (2456, 2392, 2708) | 2464 | 2716 |
+| `/start/` | 301.5 | 290.0 | −11.5 | 820 (828, 820, 804) | 852 | 848 |
+| `/brand/` | 287.3 | 275.9 | −11.4 | 804 (804, 812, 796) | 928 | 860 |
+| `/components/sidebar/` | 405.1 | 393.7 | −11.4 | 1048 (1048, 1048, 1068) | 1116 | 1100 |
+| `/components/button/` | 375.2 | 363.8 | −11.4 | 880 (864, 884, 880) | 928 | 904 |
+| `/components/label/` | 334.7 | 323.3 | −11.4 | 856 (848, 856, 856) | 864 | 860 |
+| `/components/code-editor/` | 657.0 | 645.6 | −11.4 | 896 (888, 912, 896) | 904 | 928 |
+| `/components/code-languages/` | 654.7 | 643.3 | −11.4 | 880 (880, 900, 880) | 888 | 892 |
+| `/components/highlighter/` | 543.4 | 532.0 | −11.4 | 1144 (1144, 1136, 1156) | 1152 | 1164 |
+| `/components/use-highlighted-code/` | 440.5 | 429.1 | −11.4 | 896 (896, 892, 908) | 904 | 888 |
+| `/components/kuiper-theme/` | 760.9 | 749.5 | −11.4 | 1328 (1324, 1348, 1328) | 1344 | 1352 |
+| `/components/chart/` | 481.0 | 469.6 | −11.4 | 864 (872, 860, 864) | 916 | 896 |
+| `/changelog/` | 335.5 | 324.1 | −11.4 | 1012 (1024, 988, 1012) | 1008 | 1000 |
+| `/brand/downloads/` | 300.4 | 289.0 | −11.4 | 760 (760, 772, 756) | 756 | 736 |
+| `/brand/type/` | 298.2 | 286.8 | −11.4 | 752 (748, 752, 768) | 772 | 796 |
+
+- **Transfer falls 11.4 kB on every probe** (11.5 on `/start/`), as the spec expected. Button goes from 375.2 kB to 363.8 kB, against the spec's "about 375 to about 364".
+- **LCP does not improve, and reads slightly higher after.** The rise is 0 to 124 ms, and it differs between the two after runs: `/brand/` read 928 ms in one and 860 ms in the other. The load average was about 9 to 13 during the before run and 15 to 23 during the second after run. Other agents' builds were running. This is read as the machine's noise, not the change (INFERRED). Every LCP is inside its `024` budget. Under `024` decision 4, a fall needs no ruling, and the next re-base reads the new figures.
+- **On `467a0e8`** (after `025`), the perf project passed again, 25 of 25, under a load average of 20 to 32. Every probe's transfer reads as in the after column, but `/components/kuiper-theme/`, 596.5 kB: `025` took 153 kB off that page, not this change. LCP medians from 760 (`/brand/downloads/`) to 2,484 ms (`/components/`); Button 912 ms.
+
+### The gate
+
+On the final rebase onto `467a0e8`, with a fresh `bun run build`:
+
+- `bun run check`: 0 errors and 0 warnings over 2,358 files. `bun run lint`: clean.
+- `bun run test:unit`: 1,669 pass, 2 skip, 0 fail.
+- `build-output.spec.ts`, `nav.spec.ts`, `navigation.spec.ts`, `search.spec.ts`, `site.spec.ts` and `doors.spec.ts`, chromium-light and chromium-dark: 292 passed. The other four engine projects were not run; the change is in JS that every engine runs the same way.
+- The perf project, `--no-deps`: 25 passed.
+- `bun run test:smoke`: 151 pass, 0 fail, in 694 s (`025`'s cost suite among them).
+- `bun scripts/site/release-check.ts --before-ci`: exit 0. It skips the fault ledger and the matrix run, and names them.
+- The static measure and the chunk read as at `506cfc1`, within 4 B; A finds 0 of 412 sentinels over 756 files.
+
+### The scorecard
+
+`bun scripts/bench/site.ts --only kuiper --runs 3`, at `506cfc1` with the fix: Button **364 kB** (was 375 kB at `c5df65b`), LCP 892 ms (876, 892, 896), 87 requests, the part at 572 (1440) and 661 (390), 80 nav links, search and theme present. **Row 8 holds at 4** (transfer ≤ 500 kB and LCP ≤ 1.5 s); rows 6 and 7 hold. No other row reads the site's client chunks. A row is added to the scorecard's run log.
+
+### For the design lead, at landing
+
+- Add `src/lib/site/listed-items.ts` to `roadmap.md` §2's ledger list. A conflict in it takes either side, then `bun run build:registry`.
+- `tests/fixtures/pluto-allowed.json` moved by one (deviation 1).
