@@ -612,12 +612,20 @@ test.describe("020a: the site's CSS reads only code", () => {
 test.describe("024b: the site stops shipping the whole registry", () => {
   // registry.json holds file paths, not file contents. Item sources reach
   // the browser legitimately, because the site renders its own components;
-  // a file list, a stock hash and a dependency key never do. The bare key
-  // `dependencies` is no sentinel, because SvelteKit's runtime uses it.
-  // `devDependencies` also catches a whole package.json.
-  test("024b: no browser chunk holds a registry-only value (a file path, a stock hash or a dependency key)", () => {
+  // a file list, a stock hash, an author line and a dependency key never
+  // do. The keys are bare names, so they match however the bundler writes
+  // an object (`key:`, `"key"` or `\"key\"` inside a JSON.parse string;
+  // 024b's change review, finding 3). The key `dependencies` is no
+  // sentinel, because SvelteKit's runtime uses it. `devDependencies` also
+  // catches a whole package.json.
+  //
+  // The scan reads only `_app/immutable/**/*.js`. Data a server load sends
+  // in the HTML or `__data.json` is outside it (the components index's
+  // `meta.stock`: the spec's "For later").
+  test("024b: no browser chunk holds a registry-only value (a file path, a stock hash, an author or a dependency key)", () => {
     const registry = JSON.parse(readFileSync("registry.json", "utf8")) as {
       items: {
+        author?: string;
         files?: { path: string }[];
         meta?: { stock?: { sha256?: string } };
       }[];
@@ -627,11 +635,10 @@ test.describe("024b: the site stops shipping the whole registry", () => {
       for (const file of item.files ?? []) sentinels.add(file.path);
       const hash = item.meta?.stock?.sha256;
       if (hash) sentinels.add(hash);
+      if (item.author) sentinels.add(item.author);
     }
-    for (const key of ["registryDependencies", "devDependencies", "cssVars"]) {
-      sentinels.add(`${key}:`);
-      sentinels.add(`"${key}"`);
-    }
+    for (const key of ["registryDependencies", "devDependencies", "cssVars"])
+      sentinels.add(key);
     const scripts = walkFiles(path.join(BUILD, "_app", "immutable")).filter(
       (f) => f.endsWith(".js"),
     );
@@ -647,7 +654,9 @@ test.describe("024b: the site stops shipping the whole registry", () => {
     );
     expect(
       held,
-      `${scripts.length} files read; ${summary.join("; ") || "none held"}`,
+      `${scripts.length} files read; ${summary.join("; ") || "none held"}. ` +
+        "A browser module imports registry.json (or a copy of it), or a page's " +
+        "client source spells out a registry file path: either trips this check.",
     ).toEqual({});
   });
 });

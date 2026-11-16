@@ -9,9 +9,11 @@
  * removed or renamed item then leaves no stale file behind, and a failed build
  * leaves the last good registry in place for the dev server.
  *
- * Without `--out`, it also writes `src/lib/site/listed-items.ts` (024b): the
- * listed items with the four fields the site reads in the browser, so no
- * browser chunk holds `registry.json` whole.
+ * When `<out>` is `static`, it also writes `src/lib/site/listed-items.ts`
+ * (024b): the listed items with the four fields the site reads in the
+ * browser, so no browser chunk holds `registry.json` whole. It reads only
+ * `registry.json`, never the file it writes, so it can rebuild that file
+ * when it is missing or broken.
  */
 import {
   cpSync,
@@ -25,7 +27,8 @@ import {
 } from "node:fs";
 import path from "node:path";
 import * as prettier from "prettier";
-import { isListed } from "../src/lib/site/items.ts";
+// The leaf, not items.ts: items.ts imports the file this script writes.
+import { isListed } from "../src/lib/site/listed.ts";
 
 export const STYLE = "maia";
 
@@ -73,9 +76,10 @@ export async function buildRegistry(
   mkdirSync(path.dirname(versioned), { recursive: true });
   cpSync(latest, versioned, { recursive: true });
 
-  // 024b: a build into another folder (`--out`, the unit tests) never
-  // writes into src/.
-  if (options.out === undefined && (await writeSiteItems(root)))
+  // 024b: a build into the site's own `static` (the default, or an explicit
+  // `--out static`) writes the list too. A build into another folder (the
+  // unit tests' temporary ones) never writes into src/.
+  if (out === path.join(root, "static") && (await writeSiteItems(root)))
     if (!options.quiet) console.log(`build:registry wrote ${SITE_ITEMS_PATH}`);
   return { out };
 }

@@ -10,24 +10,24 @@
  * `registry.json`. A server caller passes its own parsed registry's items,
  * and keeps every field.
  */
+import { isListed } from "./listed.ts";
 import { LISTED_ITEMS, type ListedItem } from "./listed-items.ts";
 
-/** 020 decision 3: the shape `048` will extend for deprecations. */
-export type Deprecation = { replacement: string; removedIn: string };
-
-/** True for an entry without `meta.deprecated`. */
-export function isListed(item: object): boolean {
-  return !(item as { meta?: { deprecated?: unknown } }).meta?.deprecated;
-}
+export { isListed, type Deprecation } from "./listed.ts";
 
 /** A parsed `registry.json` with its listed items alone. */
 export function withListedItems<T extends { items: object[] }>(registry: T): T {
   return { ...registry, items: listedItems(registry.items) };
 }
 
-/** The registry's items without `meta.deprecated`, in its order. */
-export function listedItems<T extends object = ListedItem>(
-  items: readonly T[] = LISTED_ITEMS as unknown as readonly T[],
-): T[] {
+/**
+ * The registry's items without `meta.deprecated`, in its order. With no
+ * argument, the generated list and its four fields alone (024b's change
+ * review, finding 4: a caller cannot name a wider type for data that is not
+ * there). With an array, that array's own entries, every field kept.
+ */
+export function listedItems(): ListedItem[];
+export function listedItems<T extends object>(items: readonly T[]): T[];
+export function listedItems(items: readonly object[] = LISTED_ITEMS): object[] {
   return items.filter(isListed);
 }

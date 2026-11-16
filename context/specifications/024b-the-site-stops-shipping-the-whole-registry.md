@@ -1,6 +1,6 @@
 # 024b — The site stops shipping the whole registry
 
-- **Status:** built on `release/0.13.0` at `467a0e8` (after `022`, `024` and `025`); awaiting its change review (Landing notes).
+- **Status:** built on `release/0.13.0` at `467a0e8` (after `022`, `024` and `025`). Change-reviewed (`reviews/024b-the-site-stops-shipping-the-whole-registry-pr-2026-11-16.md`): land after fixes. The fixes are made and `release/0.13.0` at `1f9a1df` is merged in (Landing notes). Awaiting the landing.
 - **Date:** 2026-11-16
 - **Author:** the design lead
 - **Kind:** small change (AGENTS.md: a fix with no interface change, no new token or dependency, in one place). Its check is seen failing first, and a reviewer who did not write it reviews the built change (constitution §5). It needs no research memo and no spec review. Its measurements are in one anyway: [`research/2026-11-16-registry-in-the-client.md`](../research/2026-11-16-registry-in-the-client.md). "Why a small change" below gives the reasons.
@@ -124,7 +124,7 @@ The reviewer may judge that the generator and the ledger file need a full specif
   - `scripts/build-registry.ts`: `siteItemsModule(registry)` and `writeSiteItems(root)`, as specified. `writeSiteItems` returns whether it wrote. `buildRegistry()` calls it last, after the registry is swapped in, only when `options.out` is not given, and prints `build:registry wrote src/lib/site/listed-items.ts` when it writes and is not quiet. The prettier config and the `filepath` are the repository's own `src/lib/site/listed-items.ts`, so a temporary root formats the same way. `SITE_ITEMS_PATH` is exported for the message.
   - `src/lib/site/listed-items.ts`: new, generated, committed. **79 entries** (registry.json's 80, without the `pluto-theme` alias), 565 lines. Its data is identical to the prototype's; its header comment is wrapped at 80 columns.
   - `items.ts`, `sitemap.ts` and `site.ts` as specified. `sitemap.ts`'s local `RegistryItem` type is gone, and `const items = listedItems()`. `SITEMAP`, `doorPages` and the other exports are unchanged, so `022`'s `COMPONENT_PAGES = doorPages("components")` reads the same 79 pages.
-  - **Bootstrap.** The generator imports `isListed` from `items.ts`, which imports the generated file. The first `listed-items.ts` was written by `writeSiteItems(".")` while `items.ts` still read `registry.json`; then `items.ts` changed. From then on, the file exists, as the spec says.
+  - **Bootstrap.** The generator imports `isListed` from `items.ts`, which imports the generated file. The first `listed-items.ts` was written by `writeSiteItems(".")` while `items.ts` still read `registry.json`; then `items.ts` changed. From then on, the file exists, as the spec says. (The change review's finding 1 showed that this cycle breaks when the file is missing or broken. "The review's fixes" below breaks the cycle.)
 - **Beside the spec (deviation 1): `tests/fixtures/pluto-allowed.json`.** `rename.test.ts`'s "020 test 1" failed once the generated file existed: `listed-items.ts` holds one "Pluto Systems" (the `four-dot` item's description). The fixture's "Pluto Systems" entry gains `"src/lib/site/listed-items.ts": 1`, and its count goes from 328 to 329. Like `registry.json`'s own count, it moves when a description names the company. C's fixture entry uses "An author", not the company's name, so the test file adds nothing to the allowlist.
 - **Thumbnails.** `thumbnails.ts --hash-only`, after each rebase, on the release's side of the conflict: **62 of 79 hashes moved** (every example item). On the tree at `ec2460e`, with a fresh build, `bun scripts/site/thumbnails.ts --no-build` made **158 pictures in 174 s, and `git status` showed none changed**. Byte-identical, as the spec expected. The same again on `467a0e8`: 158 pictures, none changed.
 - **Not changed:** `registry.json`, `static/r/` and `static/v0.13.0/r/` (`bun run build:registry` leaves `git status` clean), every server module, every page, `tests/e2e/budgets.ts`, `perf.spec.ts` and `pages.ts`. No changelog line: nothing an app installs changes.
@@ -183,7 +183,8 @@ That is **11.68 kB on every page**. The spec's prototype measured 11,588 to 11,5
 
 - **Transfer falls 11.4 kB on every probe** (11.5 on `/start/`), as the spec expected. Button goes from 375.2 kB to 363.8 kB, against the spec's "about 375 to about 364".
 - **LCP does not improve, and reads slightly higher after.** The rise is 0 to 124 ms, and it differs between the two after runs: `/brand/` read 928 ms in one and 860 ms in the other. The load average was about 9 to 13 during the before run and 15 to 23 during the second after run. Other agents' builds were running. This is read as the machine's noise, not the change (INFERRED). Every LCP is inside its `024` budget. Under `024` decision 4, a fall needs no ruling, and the next re-base reads the new figures.
-- **On `467a0e8`** (after `025`), the perf project passed again, 25 of 25, under a load average of 20 to 32. Every probe's transfer reads as in the after column, but `/components/kuiper-theme/`, 596.5 kB: `025` took 153 kB off that page, not this change. LCP medians from 760 (`/brand/downloads/`) to 2,484 ms (`/components/`); Button 912 ms.
+- **Which figure each column is** (corrected after the change review, finding 2). Each probe is loaded three times under `015` decision 23's throttle, then once unthrottled; `024`'s transfer tests gate on the unthrottled load. The transfer columns above are the first throttled load's. In these three runs it equalled the unthrottled load on every probe (each `perf` line's "unthrottled" figure). The LCP columns are throttled medians.
+- **On `467a0e8`** (after `025`), the perf project passed again, 25 of 25, under a load average of 20 to 32. Every probe's transfer reads as in the after column. `/components/kuiper-theme/` reads 749.5 kB unthrottled with 2 `.wasm`, as after (the change review's run on the same tree). One throttled reading of 596.5 kB stopped before tree-sitter (0 `.wasm`; `024`'s review, finding 2). `025` changed no page. (The first version of these notes said `025` took 153 kB off that page. That was wrong.) LCP medians from 760 (`/brand/downloads/`) to 2,484 ms (`/components/`); Button 912 ms.
 
 ### The gate
 
@@ -201,7 +202,30 @@ On the final rebase onto `467a0e8`, with a fresh `bun run build`:
 
 `bun scripts/bench/site.ts --only kuiper --runs 3`, at `506cfc1` with the fix: Button **364 kB** (was 375 kB at `c5df65b`), LCP 892 ms (876, 892, 896), 87 requests, the part at 572 (1440) and 661 (390), 80 nav links, search and theme present. **Row 8 holds at 4** (transfer ≤ 500 kB and LCP ≤ 1.5 s); rows 6 and 7 hold. No other row reads the site's client chunks. A row is added to the scorecard's run log.
 
+### The review's fixes
+
+The change review (`reviews/024b-the-site-stops-shipping-the-whole-registry-pr-2026-11-16.md`) said "land after fixes". These were made on the branch, in the commit "024b: the review's fixes", before the merge of `release/0.13.0` at `1f9a1df`.
+
+- **Finding 1 (must): the bootstrap cycle is broken.**
+  - `isListed` and `Deprecation` move to `src/lib/site/listed.ts`, a module that imports nothing. `items.ts` re-exports both, so no reader changes. `scripts/build-registry.ts` imports `isListed` from the leaf. `lint-literals.ts` and `thumbnails.ts` keep importing from `items.ts`: they read `registry.json` themselves, and moving `thumbnails.ts`'s import would move every thumbnail hash.
+  - A new unit case, `024b: build:registry does not depend on what it writes` (`build-registry.test.ts`), walks the script's local imports with `thumbnail-hash.ts`'s `localGraph`. It expects `src/lib/site/listed-items.ts` to be absent and `src/lib/site/listed.ts` present. **Seen failing first**, on the tree before the move: `Expected to not contain: "src/lib/site/listed-items.ts"`, `Received: [ "scripts/build-registry.ts", "src/lib/site/items.ts", "src/lib/site/listed-items.ts" ]`. It passes after the move.
+  - **Recovery, proven in a scratch copy** of the fixed tree (`rsync` without `.git`, `build/` or `.svelte-kit/`, sharing the worktree's `node_modules`):
+    1. With `listed-items.ts` deleted, `bun scripts/build-registry.ts` exited 0, printed `build:registry wrote src/lib/site/listed-items.ts`, and the file was byte-identical to the committed one (`cmp`).
+    2. With the file written as an unresolved merge (both sides between `<<<<<<< HEAD`, `=======` and `>>>>>>> release/0.13.0`), the same command exited 0 and rewrote it, byte-identical.
+  - So the conflict rule is now sound as the spec wrote it: take either side, or leave the markers, then `bun run build:registry`.
+- **Finding 2 (must): the kuiper-theme figure is corrected** (the bullets above the gate). The perf table now says which load each column is.
+- **Finding 3: check A's sentinels.**
+  - The three keys are bare names (`registryDependencies`, `devDependencies`, `cssVars`), so they match however the bundler writes an object.
+  - The `author` value is a sentinel: one distinct value, `Pluto Systems <https://github.com/plutosystemsco/design-system>`.
+  - That makes **410 sentinels**: 365 paths, 41 hashes, 1 author and 3 keys.
+  - The test's comment says the scan reads only `_app/immutable/**/*.js`, so data a server load sends in the HTML or `__data.json` is outside it. The failure message says a page's client source that spells out a registry file path also trips the check.
+- **Finding 4: `listedItems` has two overloads.** `listedItems(): ListedItem[]` and `listedItems<T extends object>(items: readonly T[]): T[]`. No caller changed. A probe, `listedItems<{ files: { path: string }[] }>()`, failed `svelte-check` with "Expected 1 arguments, but got 0". The probe was removed, and `check` read 0 errors.
+- **Finding 6, notes.**
+  - **The alias test.** `registry.test.ts`'s "020 test 5" now passes the full registry: `listedItems(registryRaw.items)` returns 79 of the 80, without `pluto-theme`. It shows the drop again, rather than reading a list the generator had already filtered.
+  - **`--out static`.** `buildRegistry()` now writes the list whenever `<out>` resolves to the root's `static`, whether by default or by an explicit `--out static`. In the scratch copy, `--out static` with the file deleted wrote it again, byte-identical. `--out ../other` built the registry and wrote no list.
+- **Finding 5** (a note) needs no change. Finding 6's "for later", renaming `start/install.ts` to `install.server.ts`, is not done here.
+
 ### For the design lead, at landing
 
-- Add `src/lib/site/listed-items.ts` to `roadmap.md` §2's ledger list. A conflict in it takes either side, then `bun run build:registry`.
-- `tests/fixtures/pluto-allowed.json` moved by one (deviation 1).
+- Add `src/lib/site/listed-items.ts` to `roadmap.md` §2's ledger list. A conflict in it takes either side (or keeps the markers), then `bun run build:registry`.
+- `tests/fixtures/pluto-allowed.json` moved by one (deviation 1). It moves again whenever a listed description names the company.

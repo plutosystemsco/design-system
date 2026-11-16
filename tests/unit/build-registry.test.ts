@@ -15,6 +15,7 @@ import {
   packageName,
   writeSiteItems,
 } from "../../scripts/build-registry.ts";
+import { localGraph } from "../../scripts/site/thumbnail-hash.ts";
 
 /** 013 decision 5: the rule that keeps a dependency out of devDependencies. */
 describe("packageName", () => {
@@ -109,5 +110,18 @@ describe("024b: writeSiteItems", () => {
     } finally {
       rmSync(root, { recursive: true, force: true });
     }
+  });
+});
+
+// 024b's change review, finding 1: a generator that imports its own output
+// cannot rebuild it once it is missing or broken (a bad merge).
+describe("024b: build:registry does not depend on what it writes", () => {
+  test("scripts/build-registry.ts's local imports never reach src/lib/site/listed-items.ts", () => {
+    const graph = localGraph(process.cwd(), "scripts/build-registry.ts");
+    expect(graph).not.toContain(
+      path.join("src", "lib", "site", "listed-items.ts"),
+    );
+    // The leaf that holds `isListed`, so the walk is seen to reach src/.
+    expect(graph).toContain(path.join("src", "lib", "site", "listed.ts"));
   });
 });
