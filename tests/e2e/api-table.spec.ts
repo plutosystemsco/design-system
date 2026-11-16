@@ -1,9 +1,9 @@
 /**
- * 023a: the API table's Type cell breaks a type name only between words,
- * and no API table scrolls sideways on a phone for it.
+ * 023a: the API table's Type cell breaks a type only between words, at
+ * its punctuation, and no API table scrolls sideways for it, at 1440 or 390.
  */
 import { expect, test, type Page } from "@playwright/test";
-import { componentPath, open } from "./pages.ts";
+import { COMPONENT_PAGES, componentPath, open } from "./pages.ts";
 
 /** The three pages that showed the defect, and two that did not yet. */
 const PAGES = ["button-group", "link", "progress", "button", "meter"].map(
@@ -80,22 +80,63 @@ test.describe("023a: type names break only between words", () => {
         });
     });
 
-  test.describe("at 390", () => {
-    test.use({ viewport: { width: 390, height: 900 } });
-    for (const path of PAGES)
-      test(`on ${path}, no API table scrolls sideways`, async ({ page }) => {
-        await open(page, path);
-        const wide = await page
-          .locator('section[aria-labelledby="api"] [data-slot="site-scroll"]')
-          .evaluateAll((els) =>
-            els
-              .filter((e) => e.scrollWidth > e.clientWidth + 1)
-              .map(
-                (e) =>
-                  `${e.getAttribute("aria-label")}: ${e.scrollWidth} > ${e.clientWidth}`,
-              ),
+  /**
+   * The tables that still scroll sideways at 1440, by the landing's ruling:
+   * in each, every column's longest unbreakable word (a name, a type piece,
+   * a code span in "What it does") plus the cells' padding is wider than the
+   * 606 px column, so the table's own scroller is the designed fallback
+   * (015 criterion 26). Each is named; a new one fails.
+   */
+  const WIDE_AT_1440: Record<string, string> = {
+    "/components/button-group/ ButtonGroup":
+      "HTMLDivElement and DropdownMenu.Trigger",
+    "/components/popover/ PopoverContent": "WithoutChildrenOrChild<",
+    "/components/accordion/ AccordionTrigger":
+      'AccordionPrimitive.HeaderProps["level"], which has no break point',
+    "/components/highlighter/ Languages":
+      "findHighlightLanguage, HighlightLanguage[] and highlight/queries/",
+    "/components/highlighter/ Shiki":
+      "loadShikiLanguage, ThemeRegistrationRaw and GrammarState",
+    "/components/code-languages/ CodeLanguages":
+      "CodeLanguageKind, LanguageSupport and its description's code",
+    "/components/chart/ ChartUtils":
+      "getPayloadConfigFromPayload and ChartContextValue)",
+    "/components/sidebar/ SidebarMenuButton":
+      'tooltipContentProps, WithoutChildrenOrChild< and "default"',
+  };
+
+  // The landing's ruling: every component page's tables, at both widths.
+  for (const width of [1440, 390])
+    test.describe(`at ${width}`, () => {
+      test.use({ viewport: { width, height: 900 } });
+      test("on every component page, no API table scrolls sideways", async ({
+        page,
+      }) => {
+        test.setTimeout(600_000);
+        const wide: string[] = [];
+        let tables = 0;
+        for (const path of COMPONENT_PAGES) {
+          await open(page, path);
+          const scrollers = page.locator(
+            'section[aria-labelledby="api"] [data-slot="site-scroll"]',
           );
-        expect(wide).toEqual([]);
+          tables += await scrollers.count();
+          wide.push(
+            ...(await scrollers.evaluateAll(
+              (els, path) =>
+                els
+                  .filter((e) => e.scrollWidth > e.clientWidth + 1)
+                  .map(
+                    (e) =>
+                      `${path} ${e.getAttribute("aria-label")?.replace(/, API$/, "")}: ${e.scrollWidth} > ${e.clientWidth}`,
+                  ),
+              path,
+            )),
+          );
+        }
+        expect(tables).toBeGreaterThan(0);
+        const known = width === 1440 ? WIDE_AT_1440 : {};
+        expect(wide.filter((w) => !(w.split(":")[0] in known))).toEqual([]);
       });
-  });
+    });
 });

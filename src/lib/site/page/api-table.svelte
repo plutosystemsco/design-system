@@ -14,6 +14,11 @@
       .split(/(`[^`]+`|<[a-z][a-z0-9-]*>)/)
       .filter(Boolean)
       .map((p) => (p.startsWith("<") ? `\`${p}\`` : p));
+
+  // 023a: a type breaks only at its punctuation, after each `|`, `<`, `,`,
+  // `(`, `&` and `=>`, never inside a name. Each piece is text; a <wbr>
+  // between pieces adds no text, so the Markdown twin is unchanged.
+  const pieces = (type: string) => type.split(/(?<=[|<,(&]|=>)/);
 </script>
 
 {#snippet prose(
@@ -60,8 +65,10 @@
             <tr>
               <td><code>{row.name}</code></td>
               <td class="break-words"
-                >{#if row.type}<code>{row.type}</code>{:else}<span
-                    class="text-muted-foreground">inherited</span
+                >{#if row.type}<code
+                    >{#each pieces(row.type) as p, i (i)}{#if i}<wbr
+                        />{/if}{p}{/each}</code
+                  >{:else}<span class="text-muted-foreground">inherited</span
                   >{/if}</td
               >
               <td
