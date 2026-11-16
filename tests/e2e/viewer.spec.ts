@@ -160,9 +160,12 @@ for (const block of BLOCKS) {
             "aria-pressed",
             "false",
           );
+        // 022: to 0.01 px; Firefox lays the frame out in 1/60 px units.
         await expect
-          .poll(async () => (await frame(page).boundingBox())?.width)
-          .toBe(px);
+          .poll(async () =>
+            Math.round(((await frame(page).boundingBox())?.width ?? 0) * 100),
+          )
+          .toBe(px * 100);
       }
     });
 

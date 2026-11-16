@@ -67,7 +67,11 @@ function literals(text: string): unknown[] | undefined {
 /** Every call of the three helpers in `sources`, by file. */
 export function findCalls(sources: Record<string, string>): Call[] {
   const calls: Call[] = [];
-  for (const [file, src] of Object.entries(sources)) {
+  for (const [file, raw] of Object.entries(sources)) {
+    // Comments name the helpers too; only code calls them.
+    const src = raw
+      .replace(/\/\*[\s\S]*?\*\//g, (c) => c.replace(/[^\n]/g, " "))
+      .replace(/(^|[^:"'`])\/\/.*$/gm, "$1");
     const re = /\b(onlyIn|notIn|onlyProjects)\s*\(/g;
     for (const m of src.matchAll(re)) {
       // Skip the declarations and the imports.

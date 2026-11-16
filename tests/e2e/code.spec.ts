@@ -11,6 +11,7 @@ import type {
   Page,
 } from "@playwright/test";
 import { expect, test } from "../test.ts";
+import { notIn } from "./engines.ts";
 import { scheme } from "./scheme.ts";
 import {
   cssVar,
@@ -19,6 +20,9 @@ import {
   openView,
   settled,
   componentPath,
+  scrollbarWidth,
+  clipboard,
+  NO_CLIPBOARD_READ,
 } from "./pages.ts";
 
 /**
@@ -348,7 +352,7 @@ test.describe("the code block", () => {
       const block = python(page);
       const pre = block.locator('[data-slot="code-block-content"]');
       await expect(pre).toHaveAttribute("tabindex", "0");
-      expect(await computed(pre, "scrollbar-width")).toBe("thin");
+      expect(await scrollbarWidth(pre)).toBe("thin");
       // 014 decision 5: the track is the code ground.
       expect(await computed(pre, "scrollbar-color")).toBe(
         `${hexToRgb(await cssVar(page, "--input"))} ${hexToRgb(await cssVar(page, "--syntax-ground"))}`,
@@ -439,11 +443,12 @@ test.describe("the code block", () => {
   });
 
   test.describe("with the clipboard granted", () => {
-    test.use({ permissions: ["clipboard-read", "clipboard-write"] });
+    test.use({ permissions: clipboard });
 
     test("C4. the copy button: its name and size; Enter writes the code, says Copied, and resets after 2 s", async ({
       page,
     }) => {
+      notIn("firefox", NO_CLIPBOARD_READ);
       await open(page, PAGE);
       const block = python(page);
       // Located by its slot: its name changes on success.
@@ -905,7 +910,7 @@ test.describe("the code editor", () => {
     expect(await computed(scroller, "font-family")).toContain("JetBrains Mono");
     expect(await computed(scroller, "font-size")).toBe("13.5px");
     expect(await computed(scroller, "font-variant-ligatures")).toBe("none");
-    expect(await computed(scroller, "scrollbar-width")).toBe("thin");
+    expect(await scrollbarWidth(scroller)).toBe("thin");
     expect(await computed(scroller, "scrollbar-color")).toBe(
       `${hexToRgb(await cssVar(page, "--input"))} ${codeGround}`,
     );
@@ -1905,7 +1910,11 @@ test.describe("inline code (014)", () => {
     });
     expect(radius).toBe("8px");
     expect(await computed(chip, "border-top-left-radius")).toBe(radius);
-    expect(await computed(chip, "box-decoration-break")).toBe("clone");
+    // 022: WebKit knows only the prefixed property; the theme writes both.
+    expect(
+      (await computed(chip, "box-decoration-break")) ||
+        (await computed(chip, "-webkit-box-decoration-break")),
+    ).toBe("clone");
   });
 
   test("I2. rendered line heights: a one-line paragraph with a chip is as tall as its twin with a mono span, in text-xs, text-sm and text-base", async ({

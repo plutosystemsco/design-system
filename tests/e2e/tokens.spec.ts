@@ -9,6 +9,7 @@ import {
   settled,
   type ThemeName,
   componentPath,
+  scrollbarWidth,
 } from "./pages.ts";
 
 const PAGE = componentPath("kuiper-theme");
@@ -212,18 +213,19 @@ test.describe("tokens in the browser", () => {
   test("scrollbar computes scrollbar-color holding --input and --muted, thin", async ({
     page,
   }) => {
-    const [colour, width, input, muted] = await page
+    const [colour, input, muted] = await page
       .locator(token("scrollbar"))
       .evaluate((el) => {
         const root = getComputedStyle(document.documentElement);
         const s = getComputedStyle(el);
         return [
           s.getPropertyValue("scrollbar-color"),
-          s.getPropertyValue("scrollbar-width"),
           root.getPropertyValue("--input").trim(),
           root.getPropertyValue("--muted").trim(),
         ];
       });
+    // 022: Playwright's Firefox computes every scrollbar-width as none.
+    const width = await scrollbarWidth(page.locator(token("scrollbar")));
     expect(width).toBe("thin");
     expect(holdsColour(colour, input), `${colour} holds ${input}`).toBe(true);
     expect(holdsColour(colour, muted), `${colour} holds ${muted}`).toBe(true);

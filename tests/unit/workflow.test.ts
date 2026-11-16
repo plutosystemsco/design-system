@@ -37,6 +37,17 @@ describe("022 test 3: matrix.yml", () => {
     }
   });
 
+  test("every install is frozen and runs no dependency's install script", () => {
+    // The Linux rehearsal (022 Q9): a grammar's node-gyp build fails where
+    // no prebuild fits. No script is needed; the grammars load as WebAssembly.
+    const installs = all(wf).flatMap(([, j]) =>
+      runs(j).filter((r) => r.startsWith("bun install")),
+    );
+    expect(installs.length).toBeGreaterThan(0);
+    for (const r of installs)
+      expect(r).toBe("bun install --frozen-lockfile --ignore-scripts");
+  });
+
   test("every runs-on is one of the three exact labels", () => {
     for (const [, j] of all(wf)) expect(LABELS).toContain(j["runs-on"]);
   });

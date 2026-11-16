@@ -10,6 +10,7 @@
  */
 import type { Page } from "@playwright/test";
 import { expect, test } from "../test.ts";
+import { onlyIn } from "./engines.ts";
 import { contrastRatio } from "../../scripts/contrast.ts";
 import { open, settled } from "./pages.ts";
 
@@ -365,6 +366,16 @@ test.describe("the bar's glass blurs what lies under it", () => {
       test(`${path} at ${size.width}: the content under the bar is blurred, not only tinted`, async ({
         page,
       }) => {
+        // 022 decision 3: a screenshot is the only measure of the blur, and
+        // only Chromium's composites a backdrop filter into it. A plain
+        // `backdrop-filter: blur(16px)` over stripes keeps every edge in
+        // Playwright's Firefox and WebKit captures (the builder's probe,
+        // 2026-11-15). The filter itself computes blur(16px) in all three,
+        // and brand.spec.ts checks that in every engine.
+        onlyIn(
+          "chromium",
+          "screenshots: Playwright's Firefox and WebKit capture a page without compositing its backdrop filters",
+        );
         await page.setViewportSize(size);
         await open(page, path);
         await page.mouse.move(size.width / 2, size.height - 10);

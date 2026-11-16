@@ -166,6 +166,7 @@ export function O2(
   steps: string[],
   sentinel: string,
   overlayName: string,
+  inside: string[] = [],
 ): Fault[] {
   const distinct = new Set(steps.map(normalise).filter(Boolean));
   if (distinct.size < 3)
@@ -174,6 +175,14 @@ export function O2(
     );
   if (!spokenWhole(steps, overlayName))
     return x0(`O2: no step spoke the overlay's name "${overlayName}"`);
+  // A trigger often bears the overlay's name, so a reader that never left
+  // it would meet the precondition. Where the test knows texts found only
+  // inside the overlay (`Sr.steps()` reads them from the DOM), one of them
+  // must be spoken too. Found by the Orca rehearsal (022 Q9).
+  if (inside.length && !inside.some((t) => spokenWhole(steps, t)))
+    return x0(
+      `O2: no step reached inside the overlay (none of ${inside.map((t) => `"${t}"`).join(", ")} was spoken)`,
+    );
   return spokenWhole(steps, sentinel)
     ? fault(
         "O2",

@@ -1,5 +1,6 @@
 import type { Page } from "@playwright/test";
 import { expect, test } from "../test.ts";
+import { notIn } from "./engines.ts";
 import {
   BAR_STOPS,
   BLOCKS,
@@ -13,6 +14,9 @@ import {
   VIEWS,
   waitForHighlight,
   componentPath,
+  tabOut,
+  clipboard,
+  NO_CLIPBOARD_READ,
 } from "./pages.ts";
 import { BLOCK_VIEWS } from "../../src/lib/preview/blocks.ts";
 
@@ -186,14 +190,7 @@ async function walk(page: Page, expected: string[]): Promise<void> {
     await expectRingUnclipped(page, by);
   }
   // No further stop: the page has no other focusable element.
-  await page.keyboard.press("Tab");
-  expect(
-    await page.evaluate(() =>
-      document.activeElement === document.body
-        ? null
-        : document.activeElement?.outerHTML.slice(0, 120),
-    ),
-  ).toBeNull();
+  expect((await tabOut(page)).other).toBeNull();
 }
 
 test.describe("at 1280 × 900", () => {
@@ -1037,7 +1034,7 @@ test.describe("behaviours", () => {
 
   // 004 decision 8. The clipboard is granted, as the code spec grants it.
   test.describe("with the clipboard granted", () => {
-    test.use({ permissions: ["clipboard-read", "clipboard-write"] });
+    test.use({ permissions: clipboard });
 
     test("Enter on the copy button sets the status text to Copied and the button's name", async ({
       page,
@@ -1409,10 +1406,10 @@ test.describe("block views at 1280", () => {
         expect(await signature(page), `stop ${i + 1}`).toBe(expected[i]);
         await expectRingOutline(page, colour, await drawnByContainer(page));
       }
-      await page.keyboard.press("Tab");
-      expect(await signature(page), "the next Tab leaves the document").toBe(
-        null,
-      );
+      expect(
+        (await tabOut(page)).other,
+        "the next Tab leaves the document",
+      ).toBeNull();
     });
   }
 });
@@ -1461,11 +1458,12 @@ test("the 8 viewer toolbars hold 69 stops", () => {
 });
 
 test.describe("017: the token page by keyboard", () => {
-  test.use({ permissions: ["clipboard-read", "clipboard-write"] });
+  test.use({ permissions: clipboard });
 
   test("criterion 4: Tab reaches the first 3 copy buttons in order, and Enter on the first says Copied", async ({
     page,
   }) => {
+    notIn("firefox", NO_CLIPBOARD_READ);
     await open(page, "/foundations/tokens/");
     const buttons = page.locator('[data-slot="token-copy"]');
     const names = await buttons.evaluateAll((els) =>

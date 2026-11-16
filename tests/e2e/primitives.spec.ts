@@ -5,6 +5,7 @@
  */
 import type { Locator, Page } from "@playwright/test";
 import { expect, test } from "../test.ts";
+import { notIn } from "./engines.ts";
 import { scheme } from "./scheme.ts";
 import {
   compositeAlphaByte,
@@ -473,6 +474,10 @@ test.describe("the code input", () => {
 
   for (const text of ["123456", "123-456", "123456\n"]) {
     test(`pasting ${JSON.stringify(text)} fills 6 cells`, async ({ page }) => {
+      notIn(
+        "firefox",
+        "synthetic paste: Firefox keeps an untrusted paste event's DataTransfer empty, and Playwright's Firefox has no clipboard permission for a real one",
+      );
       await open(page, componentPath("input-otp"));
       const input = page.getByTestId("otp-paste").locator("input");
       await input.focus();

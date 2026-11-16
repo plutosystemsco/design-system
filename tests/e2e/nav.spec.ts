@@ -6,11 +6,19 @@
 import AxeBuilder from "@axe-core/playwright";
 import type { Page } from "@playwright/test";
 import { expect, test } from "../test.ts";
+import { notIn } from "./engines.ts";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { DOORS } from "../../src/lib/site/doors.ts";
 import { navOrder, type SitePage } from "../../src/lib/site/sitemap.ts";
-import { cssVar, hexToRgb, open, SITEMAP } from "./pages.ts";
+import {
+  clipboard,
+  cssVar,
+  hexToRgb,
+  NO_CLIPBOARD_READ,
+  open,
+  SITEMAP,
+} from "./pages.ts";
 
 const NOT_HOME = SITEMAP.filter((p) => p.path !== "/");
 const label = (p: SitePage) =>
@@ -243,7 +251,7 @@ test.describe("018 criterion 5: the phone sheet", () => {
 });
 
 test.describe("018 criterion 10: page tools, previous and next", () => {
-  test.use({ permissions: ["clipboard-read", "clipboard-write"] });
+  test.use({ permissions: clipboard });
 
   // The twins are written into build/ after vite's build, which the
   // preview server does not serve: each request is answered from build/.
@@ -264,6 +272,7 @@ test.describe("018 criterion 10: page tools, previous and next", () => {
   test("on Button, Copy page puts the twin's text on the clipboard and says Copied", async ({
     page,
   }) => {
+    notIn("firefox", NO_CLIPBOARD_READ);
     await serveTwins(page);
     await open(page, "/components/button/");
     const button = page.getByRole("button", { name: "Copy page" });
@@ -282,6 +291,7 @@ test.describe("018 criterion 10: page tools, previous and next", () => {
   test("with the twin's request delayed by 1 s, it copies through one ClipboardItem written inside the click", async ({
     page,
   }) => {
+    notIn("firefox", NO_CLIPBOARD_READ);
     await page.addInitScript(() => {
       const w = window as unknown as {
         writes: { items: number; at: number }[];

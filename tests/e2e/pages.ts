@@ -1,5 +1,5 @@
 import { readFileSync } from "node:fs";
-import type { Page } from "@playwright/test";
+import type { Locator, Page } from "@playwright/test";
 
 import {
   BLOCK_VIEWS,
@@ -526,6 +526,97 @@ export const GROUND = {
 } as const;
 
 export type ThemeName = keyof typeof GROUND;
+
+/**
+ * 022: the clipboard permissions each engine knows, for `test.use({
+ * permissions: clipboard })`. Chromium needs both to read and to write.
+ * WebKit knows only `clipboard-read`, and writes without a grant. Playwright's
+ * Firefox knows neither and refuses a context that asks; it writes without a
+ * grant and cannot read, so a test that reads the clipboard takes
+ * `notIn("firefox", …)`.
+ */
+const CLIPBOARD: Record<string, string[]> = {
+  chromium: ["clipboard-read", "clipboard-write"],
+  webkit: ["clipboard-read"],
+  firefox: [],
+};
+export const clipboard = [
+  async (
+    { browserName }: { browserName: string },
+    use: (permissions: string[]) => Promise<void>,
+  ) => use(CLIPBOARD[browserName] ?? []),
+  { scope: "test" },
+] as never;
+
+/** The reason a test that reads the clipboard gives for skipping Firefox. */
+export const NO_CLIPBOARD_READ =
+  "clipboard: Playwright's Firefox has no clipboard-read permission, so a page cannot read what it wrote";
+
+/**
+ * 022: an element's `scrollbar-width`. Playwright's Firefox computes `none`
+ * for every element, even one with an inline `scrollbar-width: thin`, since
+ * it hides scrollbars. Where the engine does that (a probe says so), the
+ * value is read from the author's rules that match the element instead.
+ */
+export function scrollbarWidth(locator: Locator): Promise<string> {
+  return locator.evaluate((el) => {
+    const probe = document.createElement("div");
+    probe.style.scrollbarWidth = "thin";
+    document.body.append(probe);
+    const honest = getComputedStyle(probe).scrollbarWidth === "thin";
+    probe.remove();
+    if (honest) return getComputedStyle(el).scrollbarWidth;
+    let found = "auto";
+    const walk = (rules: CSSRuleList) => {
+      for (const r of rules) {
+        if (r instanceof CSSStyleRule) {
+          try {
+            if (el.matches(r.selectorText) && r.style.scrollbarWidth)
+              found = r.style.scrollbarWidth;
+          } catch {
+            // a selector this engine cannot match
+          }
+        }
+        const inner = (r as CSSGroupingRule).cssRules;
+        if (inner?.length) walk(inner);
+      }
+    };
+    for (const s of document.styleSheets) {
+      try {
+        walk(s.cssRules);
+      } catch {
+        // a sheet from another origin
+      }
+    }
+    return (el as HTMLElement).style.scrollbarWidth || found;
+  });
+}
+
+/**
+ * 022: Tab from the last stop, and what took focus in the document, if
+ * anything. Chromium and WebKit move focus out to the body; Playwright's
+ * headless Firefox has no browser chrome to take it, so focus stays on the
+ * last stop. Either says no other element in the document is a stop: `other`
+ * is null. `stayed` says focus is still on the last stop, so a walk back
+ * starts there.
+ */
+export async function tabOut(
+  page: Page,
+): Promise<{ other: string | null; stayed: boolean }> {
+  await page.evaluate(() => {
+    (window as unknown as { __lastStop: Element | null }).__lastStop =
+      document.activeElement;
+  });
+  await page.keyboard.press("Tab");
+  return page.evaluate(() => {
+    const el = document.activeElement;
+    const last = (window as unknown as { __lastStop: Element | null })
+      .__lastStop;
+    const stayed = !!el && el === last && el !== document.body;
+    if (!el || el === document.body || stayed) return { other: null, stayed };
+    return { other: el.outerHTML.slice(0, 120), stayed };
+  });
+}
 
 /**
  * Opens a page and waits until it has hydrated (the theme toggle marks itself

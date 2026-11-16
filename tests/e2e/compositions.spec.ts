@@ -23,6 +23,7 @@ import {
   waitForHighlight,
   type ThemeName,
   componentPath,
+  tabOut,
 } from "./pages.ts";
 
 const HOME = "/view/product-home/";
@@ -613,10 +614,11 @@ test.describe("9. the keyboard walk", () => {
       }
       expect(forward).toEqual(stops);
       // DOM order: each stop follows the one before it.
-      await page.keyboard.press("Tab");
-      expect(await signature(page)).toBeNull();
+      const out = await tabOut(page);
+      expect(out.other).toBeNull();
       // Back up: focus moving upward is never hidden under the sticky bar.
-      await page.keyboard.press("Shift+Tab");
+      // (In Firefox focus stayed on the last stop: the walk starts there.)
+      if (!out.stayed) await page.keyboard.press("Shift+Tab");
       for (let i = stops.length - 1; i >= 0; i--) {
         expect(await signature(page), `back to stop ${i + 1}`).toBe(stops[i]);
         expect(await focusProblem(page), `back to stop ${i + 1}`).toBeNull();

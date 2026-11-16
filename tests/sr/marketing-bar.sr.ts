@@ -70,7 +70,7 @@ test(
     await sr.after(() => trigger(page).focus(), "focus");
     await sr.after(() => open(page), "open");
     const steps = await sr.steps(10);
-    await sr.judge(O2(steps, sentinel, TITLE));
+    await sr.judge(O2(steps, sentinel, TITLE, sr.inside));
   },
 );
 

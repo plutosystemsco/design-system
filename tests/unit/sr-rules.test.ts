@@ -145,6 +145,19 @@ describe("O1 to O3s: overlays", () => {
       "Edit profile, dialog",
     ];
     expect(ids(O2(steps, sentinel, "Edit profile"))).toEqual([]);
+    expect(ids(O2(steps, sentinel, "Edit profile", ["Save"]))).toEqual([]);
+  });
+  test("O2: a reader that never left the trigger, which bears the overlay's name, is X0", () => {
+    // The Orca rehearsal's log: the reader stayed on the trigger and ran out.
+    const steps = [
+      "Example. heading 2",
+      "Edit profile. expanded button. opens dialog",
+      "No next.",
+      "No next.",
+    ];
+    expect(ids(O2(steps, sentinel, "Edit profile", ["Save", "Name"]))).toEqual([
+      "X0",
+    ]);
   });
   test("O2: fewer than three distinct phrases is X0", () => {
     const steps = [

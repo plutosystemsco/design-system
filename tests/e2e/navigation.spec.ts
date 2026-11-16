@@ -19,6 +19,7 @@ import {
   TABBABLE,
   type ThemeName,
   componentPath,
+  scrollbarWidth,
 } from "./pages.ts";
 
 /**
@@ -474,7 +475,7 @@ test.describe("N3. the dialog", () => {
         ]);
         expect(scroll[0]).toBeGreaterThan(scroll[1]);
         expect(scroll[2]).toBe(868);
-        expect(await computed(long, "scrollbar-width")).toBe("thin");
+        expect(await scrollbarWidth(long)).toBe("thin");
         await page.keyboard.press("Escape");
         await expect(long).toHaveCount(0);
       });
@@ -645,7 +646,7 @@ test.describe("N5. the sidebar", () => {
     // The content box: a scroller with no stop of its own.
     const content = nav.locator('[data-slot="sidebar-content"]');
     expect(await computed(content, "overflow-y")).toBe("auto");
-    expect(await computed(content, "scrollbar-width")).toBe("thin");
+    expect(await scrollbarWidth(content)).toBe("thin");
     expect(await content.getAttribute("tabindex")).toBeNull();
 
     // The current row: aria-current, the accent inset and the primary start edge.

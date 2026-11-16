@@ -102,7 +102,7 @@ test(
     await openConfirm(page, sr);
     await sr.after(() => pressToOpen(page), "open");
     const steps = await sr.steps(10);
-    await sr.judge(O2(steps, sentinel, CONFIRM));
+    await sr.judge(O2(steps, sentinel, CONFIRM, sr.inside));
   },
 );
 

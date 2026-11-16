@@ -63,7 +63,7 @@ test(
     await sr.after(() => menu(page).focus(), "focus");
     await sr.after(() => pressToOpen(page), "open");
     const steps = await sr.steps(10);
-    await sr.judge(O2(steps, sentinel, NAME));
+    await sr.judge(O2(steps, sentinel, NAME, sr.inside));
   },
 );
 

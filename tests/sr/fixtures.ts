@@ -104,8 +104,58 @@ export class Sr {
     return this.listen(name, AFTER_MS, act);
   }
 
-  /** `n` of the reader's `next()` steps, and what they spoke. */
+  /**
+   * Texts found only inside the open overlay, read from the DOM before
+   * `steps()` walks: O2's proof that the reader was inside it.
+   */
+  inside: string[] = [];
+
+  /**
+   * `n` of the reader's `next()` steps, and what they spoke. With a sentinel
+   * set, a second copy goes at the end of `<body>` first, after the portal
+   * the overlay opened into: a reader leaving a non-modal overlay forward
+   * meets it there, as one leaving backward meets the first.
+   */
   async steps(n = 10, name = "steps"): Promise<string[]> {
+    this.inside = await this.page.evaluate((sentinel) => {
+      if (sentinel) {
+        const p = document.createElement("p");
+        p.setAttribute("data-sr-sentinel", "");
+        p.textContent = sentinel;
+        document.body.append(p);
+      }
+      const overlays = [
+        ...document.querySelectorAll(
+          '[role="dialog"], [role="alertdialog"], [aria-modal="true"]',
+        ),
+      ].filter((el) => el.getClientRects().length > 0);
+      // The visible text outside the overlays: what a reader could meet in
+      // the page behind (the wide nav's hidden copies of a menu's links
+      // do not count).
+      const outside = [...document.body.children]
+        .filter((c) => !overlays.some((o) => c.contains(o)))
+        .map((c) => (c as HTMLElement).innerText ?? "")
+        .join(" ")
+        .toLowerCase();
+      const texts = new Set<string>();
+      for (const o of overlays)
+        for (const el of o.querySelectorAll(
+          "h1, h2, h3, h4, p, label, button, a, li",
+        )) {
+          const t = (el.textContent ?? "").replace(/\s+/g, " ").trim();
+          if (
+            t.length >= 3 &&
+            t.length <= 60 &&
+            !outside.includes(t.toLowerCase())
+          )
+            texts.add(t);
+        }
+      return [...texts].slice(0, 12);
+    }, this.sentinelText);
+    // An overlay whose every text also shows in the page (app-shell's menu
+    // sheet repeats the page's own links) gives none, and O2 falls back to
+    // its name alone. The texts go in phrases.json beside the steps.
+    this.windows[`${name}: inside`] = this.inside;
     await this.reader.clearSpokenPhraseLog();
     for (let i = 0; i < n; i++) await this.reader.next();
     await this.page.waitForTimeout(DRY ? 100 : 1000);
@@ -118,10 +168,13 @@ export class Sr {
    * O2's sentinel: a visible paragraph with unique text, the first child of
    * `<main>`, outside the overlay. Test code, injected; no site file changes.
    */
+  private sentinelText: string | null = null;
+
   async sentinel(): Promise<string> {
     const text = `sentinel ${Math.floor(Math.random() * 0xffffffff)
       .toString(16)
       .padStart(8, "0")}`;
+    this.sentinelText = text;
     await this.page.evaluate((t) => {
       const p = document.createElement("p");
       p.setAttribute("data-sr-sentinel", "");

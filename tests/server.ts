@@ -11,10 +11,13 @@
  * machine holds that port. It is never set in CI.
  */
 export const PORT = Number(process.env.E2E_PORT ?? 4173);
-export const BASE_URL = `http://localhost:${PORT}`;
+// 127.0.0.1, not localhost: in a Linux container vite preview bound ::1
+// while the readiness check asked 127.0.0.1, and the server never "started"
+// (the Linux rehearsal, 022 Q9). One address on every system.
+export const BASE_URL = `http://127.0.0.1:${PORT}`;
 
 export function server() {
-  const serve = `bun --bun vite preview --port ${PORT} --strictPort`;
+  const serve = `bun --bun vite preview --host 127.0.0.1 --port ${PORT} --strictPort`;
   return {
     command: process.env.E2E_PREBUILT ? serve : `bun run build && ${serve}`,
     url: `${BASE_URL}/`,
