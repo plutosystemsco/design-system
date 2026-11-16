@@ -108,7 +108,10 @@
       <ul class="mt-2 grid list-disc gap-1 ps-5">
         <li>
           Name the group, with <code>aria-label</code> or
-          <code>aria-labelledby</code>.
+          <code>aria-labelledby</code>. Without a <code>fallback</code>, use
+          <code>aria-label</code>: an emptied list holds that name as hidden
+          text, so a screen reader has it to speak. A list named by
+          <code>aria-labelledby</code> is still blank to NVDA when it empties.
         </li>
         <li>
           Remove the tag from your list in <code>onremove</code>, at once. If a
