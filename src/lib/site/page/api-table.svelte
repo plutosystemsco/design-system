@@ -59,7 +59,7 @@
           {#each table.rows as row (row.name)}
             <tr>
               <td><code>{row.name}</code></td>
-              <td class="wrap-anywhere"
+              <td class="break-words"
                 >{#if row.type}<code>{row.type}</code>{:else}<span
                     class="text-muted-foreground">inherited</span
                   >{/if}</td
