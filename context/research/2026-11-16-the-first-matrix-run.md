@@ -1,6 +1,10 @@
 # The first matrix run: what failed, and why
 
+<<<<<<< HEAD
 - **Status:** complete for run 1. Run 2, on the lane-I merge, is compared in a later memo.
+=======
+- **Status:** complete for runs 1 and 2 (§4), but run 2's two NVDA jobs, still running when this was written.
+>>>>>>> release/0.13.0
 - **Date:** 2026-11-16
 - **Author:** the design lead
 - **Question:** `022`'s `matrix` workflow ran for the first time on GitHub (push B). What failed, and which failures are faults in Kuiper, which are faults in the tests, and which are faults in the workflow?
@@ -48,3 +52,18 @@ Most widespread first. "Kind" says where the fix goes: **test** (the test assume
 - **INFERRED:** groups 5, 7 and 9 need a probe each. EXECUTED: group 7 passes in this container's Chromium 153 at 320, 390 and 1440; it fails only on the CI runner, which may measure before the code font has loaded, then a ledger line and a small change if they are faults in Kuiper.
 - **INFERRED:** group 4 cannot be judged until VoiceOver runs too (group 11). If NVDA's speech is empty under one runner, the harness is the suspect, not 14 items.
 - **What this memo did not see:** the `report` job's log, where ledger mismatches are printed; 19 of the 21 NVDA error lines; anything of NVDA with Firefox but its progress line.
+<<<<<<< HEAD
+=======
+
+## 4. Run 2, on the lane-I merge
+
+Run [43894126297](https://github.com/plutosystemsco/design-system/actions/runs/43894126297), on `e24a04b`: `024e`, `022a` and `022e` merged, before `022i` to `022k`. READ from its failed jobs' logs, 2026-11-16, with both NVDA jobs still running.
+
+- **Lane I's fixes hold.** READ: the Firefox shards fail only on E4; the sidebar-icon walk, whose `022e` lines left the ledger, passes in both Firefox projects. No `dropdown-menu`, `highlighter` or API-table test fails, and no ledger mismatch is printed.
+- **Every run-1 group recurs where it was:** E4 (group 1) in all six projects; E6 (3) and E7 (2) in `chromium-*` and `webkit-*`; `upgrade.spec.ts` 020b at 320 (7) in `chromium-*`; `toast` 64a, 64c, 64d (5), `pagination` 15a and 18 and `search-field` 28 (6), and `chat` L1 (9), in `webkit-*`; perf's 3 (8); the smoke test (10); both `voiceover` setups on ENOENT (11). In run 2, L1 fails in both WebKit projects, not once flaky.
+- **New in run 2, all WebKit:**
+  - `primitives.spec.ts:426`, "0 infinitely looping animations outside a spinner", failed in `webkit-dark`. INFERRED: a page sweep that a loaded runner can catch mid-animation; it needs its error line, which the summary does not print.
+  - Flaky, so failing in CI: `compositions.spec.ts:604`, the keyboard walk at 1440 (`webkit-dark`) and at 320 (`webkit-light`); `bar-glass.spec.ts:279` at 1440 (`webkit-light`).
+- **INFERRED:** run 2 adds no fault in Kuiper's items to what run 1 showed. The WebKit shards take 6 to 10 minutes on two cores against Chromium's 4 to 6, and the new failures are timing-shaped. They are watched in run 3 before any is opened.
+
+>>>>>>> release/0.13.0
