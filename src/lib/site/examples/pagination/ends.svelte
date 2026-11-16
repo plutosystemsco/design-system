@@ -26,18 +26,8 @@
 </script>
 
 <div class="grid gap-6">
-  <Pagination
-    page={1}
-    pages={12}
-    {href}
-    strings={{ label: "Pagination at the start" }}
-  />
-  <Pagination
-    page={12}
-    pages={12}
-    {href}
-    strings={{ label: "Pagination at the end" }}
-  />
+  <Pagination page={1} pages={12} {href} aria-label="Pagination at the start" />
+  <Pagination page={12} pages={12} {href} aria-label="Pagination at the end" />
 </div>
 <!-- site:hide -->
 <div hidden data-testid="pagination-one-page">
@@ -45,6 +35,9 @@
 </div>
 {#if hooks}
   <div data-testid="pagination-hooks" class="mt-8 grid gap-4">
+    <div data-testid="pagination-named">
+      <Pagination page={3} pages={12} {href} aria-label="Article pages" />
+    </div>
     {#each [1, 2, 11, 12] as page (page)}
       {#each ["plain", "long"] as words (words)}
         <div data-testid="pagination-ends-{page}-{words}">

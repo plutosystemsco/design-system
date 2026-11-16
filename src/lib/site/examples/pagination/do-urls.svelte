@@ -16,5 +16,5 @@
   page={2}
   pages={8}
   href={(page) => `?page=${page}`}
-  strings={{ label: "Pages of articles" }}
+  aria-label="Pages of articles"
 />

@@ -102,6 +102,22 @@ test.describe(
           .locator('[data-slot="pagination-ellipsis"]')
           .all())
           await expect(e).toHaveAttribute("aria-hidden", "true");
+
+        // The review's finding 2: an app's own name wins over the
+        // translated default, so two pagers on a page can each be named.
+        await openExample(page, info, ITEM, "buttons");
+        const named = page.getByRole("navigation", {
+          name: "Invoice pages",
+          exact: true,
+        });
+        await expect(named).toHaveCount(1);
+        await expect(named).toHaveAttribute("data-slot", "pagination");
+        await openHooks(page, info, "ends");
+        await expect(
+          page
+            .getByTestId("pagination-named")
+            .getByRole("navigation", { name: "Article pages", exact: true }),
+        ).toHaveCount(1);
       },
     );
 
@@ -614,6 +630,26 @@ test.describe(
         expect(s.width).toBeGreaterThanOrEqual(1);
         expect(s.style).toBe("solid");
         expect(transparent(s.colour), s.colour).toBe(false);
+
+        // The review's finding 3: under forced colours every page draws a
+        // border, so the current page needs a mark the others lack, not a
+        // weight alone and not Highlight alone (028's note).
+        const mark = (l: Locator) =>
+          l.evaluate((el) => {
+            const c = getComputedStyle(el);
+            return {
+              underline: c.textDecorationLine.includes("underline"),
+              border: parseFloat(c.borderTopWidth),
+            };
+          });
+        const here = await mark(current);
+        const other = await mark(link(nav(page), "Page 4"));
+        expect(
+          here.underline !== other.underline || here.border !== other.border,
+          `current ${JSON.stringify(here)}, Page 4 ${JSON.stringify(other)}`,
+        ).toBe(true);
+        expect(here.underline).toBe(true);
+        expect(other.underline).toBe(false);
       },
     );
   },

@@ -15,4 +15,4 @@
   let page = $state(2);
 </script>
 
-<Pagination bind:page pages={8} strings={{ label: "Pages of results" }} />
+<Pagination bind:page pages={8} aria-label="Pages of results" />

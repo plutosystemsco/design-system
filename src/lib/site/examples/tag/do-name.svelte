@@ -3,7 +3,8 @@
     kind: "do",
     pair: "name",
     title: "Do: the tag's own remove button",
-    caption: "Its remove button is named for its tag: Remove Design.",
+    caption:
+      "Named for its tag, “Remove Design”; Delete and Backspace remove it too.",
   };
 </script>
 

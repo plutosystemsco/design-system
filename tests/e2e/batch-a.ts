@@ -3,6 +3,8 @@
  * opened in the project's scheme, colours as hex, and one pixel of a
  * screenshot, decoded in the page so it reads the same in every engine.
  */
+import { readFileSync } from "node:fs";
+import path from "node:path";
 import type { Locator, Page, TestInfo } from "@playwright/test";
 import { cssVar, hexToRgb } from "./pages.ts";
 import { scheme } from "./scheme.ts";
@@ -128,8 +130,6 @@ export const PART_B: {
   item: string;
   examples: string[];
   pairs: string[];
-  /** A don't's broken axe rule, by pair, where its `meta.axe` names one. */
-  axe?: Record<string, string>;
 }[] = [
   {
     item: "pagination",
@@ -152,7 +152,6 @@ export const PART_B: {
     item: "tag",
     examples: ["removable", "pressable", "mixed", "fallback", "static"],
     pairs: ["name", "role"],
-    axe: { name: "button-name" },
   },
 ];
 
@@ -192,6 +191,18 @@ export async function coloursOf(locator: Locator): Promise<{
     background: rgbToHex(raw.background),
     ground: rgbToHex(raw.ground),
   };
+}
+
+/**
+ * The axe rule a don't breaks, read from its own file's `meta.axe`, or
+ * undefined where its `breaks` is in words (027b's deviation 7).
+ */
+export function axeRuleOf(item: string, id: string): string | undefined {
+  const text = readFileSync(
+    path.join("src/lib/site/examples", item, `${id}.svelte`),
+    "utf8",
+  );
+  return /\baxe:\s*"([^"]+)"/.exec(text)?.[1];
 }
 
 /** Whether a computed colour is fully transparent. */

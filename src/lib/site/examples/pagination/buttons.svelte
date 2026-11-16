@@ -44,9 +44,5 @@
       {/each}
     </Table.Body>
   </Table.Root>
-  <Pagination
-    bind:page
-    pages={TOTAL / PER_PAGE}
-    strings={{ label: "Invoice pages" }}
-  />
+  <Pagination bind:page pages={TOTAL / PER_PAGE} aria-label="Invoice pages" />
 </div>

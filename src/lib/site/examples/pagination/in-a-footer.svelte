@@ -25,7 +25,7 @@
   <Pagination
     bind:page
     pages={TOTAL / PER_PAGE}
-    strings={{ label: "Order pages" }}
+    aria-label="Order pages"
     class="sm:flex-1 sm:justify-end"
   />
 </div>

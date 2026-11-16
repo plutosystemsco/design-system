@@ -351,6 +351,16 @@ test.describe(
         await clear(page).click();
         await run(page, 2000);
         expect((await said(page)).slice(before)).toEqual([]);
+
+        // The review's finding 5: Escape within the pause cancels the
+        // pending count, so nothing is written.
+        await box.focus();
+        await page.keyboard.type("x");
+        await run(page, 200);
+        await page.keyboard.press("Escape");
+        await expect(box).toHaveValue("");
+        await run(page, 2000);
+        expect((await said(page)).slice(before)).toEqual([]);
       },
     );
 

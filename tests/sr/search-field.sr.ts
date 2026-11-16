@@ -67,7 +67,14 @@ test(
   async ({ page, sr }) => {
     await sr.open("/example/search-field/from-a-server/");
     await box(page).focus();
-    const after = await sr.after(() => page.keyboard.type("des"));
+    // The review's finding 6: "de" is asked at its pause (750 ms) and
+    // answered at 1,150 ms, after "s" is typed at 900 ms. That late
+    // "12 results" belongs to "de", so it must stay unspoken.
+    const after = await sr.after(async () => {
+      await page.keyboard.type("de");
+      await page.waitForTimeout(900);
+      await page.keyboard.type("s");
+    });
     await sr.judge(L1(after, "3 results"), U1(after, "12 results"));
   },
 );

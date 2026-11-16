@@ -23,15 +23,17 @@ async function removeTag(page: Page, label: string): Promise<void> {
   await page.keyboard.press("Enter");
 }
 
+// The review's finding 1: the middle tag has neighbours on both sides, so
+// only "next, then previous" (the owner's Q7) lands on Writing.
 test(
-  "T1 the next: removing the first tag speaks the next tag's remove button",
+  "T1 the next: removing the middle tag speaks the next tag's remove button",
   declared("tag", ["F1"], ["tag:group"]),
   async ({ page, sr }) => {
     await sr.open(REMOVABLE);
-    await remove(page, "Design").focus();
+    await remove(page, "Research").focus();
     const after = await sr.after(() => page.keyboard.press("Enter"));
-    await sr.focused(remove(page, "Research"));
-    await sr.judge(F1(after, "Remove Research"));
+    await sr.focused(remove(page, "Writing"));
+    await sr.judge(F1(after, "Remove Writing"));
   },
 );
 

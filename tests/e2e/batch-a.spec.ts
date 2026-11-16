@@ -8,7 +8,7 @@ import AxeBuilder from "@axe-core/playwright";
 import type { Page } from "@playwright/test";
 import { expect, test } from "../test.ts";
 import { open, componentPath, settled } from "./pages.ts";
-import { openExample, PART_A, PART_B } from "./batch-a.ts";
+import { axeRuleOf, openExample, PART_A, PART_B } from "./batch-a.ts";
 
 const TAGS = [
   "wcag2a",
@@ -76,13 +76,9 @@ function translucent(page: Page): Promise<string[]> {
   }, AUDITED_BY_031B);
 }
 
-for (const { part, item, examples, pairs, axe } of [
-  ...PART_A.map((p) => ({
-    ...p,
-    part: "027a",
-    axe: {} as Record<string, string>,
-  })),
-  ...PART_B.map((p) => ({ ...p, part: "027b", axe: p.axe ?? {} })),
+for (const { part, item, examples, pairs } of [
+  ...PART_A.map((p) => ({ ...p, part: "027a" })),
+  ...PART_B.map((p) => ({ ...p, part: "027b" })),
 ])
   test.describe(
     `${part}: ${item}, across its examples`,
@@ -151,7 +147,7 @@ for (const { part, item, examples, pairs, axe } of [
           // A don't whose `meta.axe` names a rule reports exactly that rule;
           // every other view, and a don't broken in words, reports none.
           const breaks = id.startsWith("dont-")
-            ? axe[id.slice("dont-".length)]
+            ? axeRuleOf(item, id)
             : undefined;
           test(
             breaks

@@ -9,7 +9,7 @@
  */
 import type { Page } from "@playwright/test";
 import { declared, test } from "./fixtures.ts";
-import { F1, L1, L2, L3 } from "./rules.ts";
+import { F1, L1, L2, L3, normalise } from "./rules.ts";
 
 /** The pagination's parts a test may hear (027 decision 11). */
 export const PARTS = ["status", "pages"];
@@ -53,7 +53,14 @@ test(
     await button(page, "Next page").focus();
     const after = await sr.after(() => page.keyboard.press("Enter"));
     await sr.focused(button(page, "Page 12"));
-    await sr.judge(F1(after, "Page 12"));
+    // The review's finding 6: the status's "Page 12 of 12" also holds
+    // "Page 12", so the focus target is judged over the other phrases only.
+    await sr.judge(
+      F1(
+        after.filter((p) => !normalise(p).includes("of 12")),
+        "Page 12",
+      ),
+    );
   },
 );
 

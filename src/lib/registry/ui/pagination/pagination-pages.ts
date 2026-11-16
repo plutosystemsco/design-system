@@ -4,7 +4,18 @@
  * the two apart.
  */
 export type PaginationItem =
-  { type: "page"; page: number } | { type: "ellipsis"; key: "start" | "end" };
+  | {
+      /** The slot is a page. */
+      type: "page";
+      /** A page: its number, counted from 1. */
+      page: number;
+    }
+  | {
+      /** The slot is an ellipsis, standing for two or more pages. */
+      type: "ellipsis";
+      /** Which ellipsis: before the current page's run, or after it. */
+      key: "start" | "end";
+    };
 
 const pageItem = (page: number): PaginationItem => ({ type: "page", page });
 

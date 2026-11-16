@@ -74,6 +74,28 @@ describe("027b tests 8 to 12: paginationPages", () => {
     expect(paginationPages(1, 0, 1)).toEqual([{ type: "page", page: 1 }]);
   });
 
+  // The review's finding 9: a keyed `each` moves no surviving node when the
+  // keys two rows share come in the same order. So a pressed page keeps its
+  // node, and its focus, across every range change; the item restores none.
+  test("the keys two rows share keep one order, for every pair of pages", () => {
+    const key = (i: PaginationItem) =>
+      i.type === "page" ? String(i.page) : i.key;
+    for (const siblings of [0, 1, 2] as const)
+      for (let pages = 1; pages <= 30; pages++) {
+        const rows = Array.from({ length: pages }, (_, p) =>
+          paginationPages(p + 1, pages, siblings).map(key),
+        );
+        for (const a of rows)
+          for (const b of rows) {
+            const shared = a.filter((k) => b.includes(k));
+            expect(
+              b.filter((k) => shared.includes(k)),
+              `${pages} pages, siblings ${siblings}: ${a.join(" ")} / ${b.join(" ")}`,
+            ).toEqual(shared);
+          }
+      }
+  });
+
   test("each ellipsis has a key of its own, so a keyed each never repeats one", () => {
     const keys = paginationPages(5, 12, 1).flatMap((i) =>
       i.type === "ellipsis" ? [i.key] : [],

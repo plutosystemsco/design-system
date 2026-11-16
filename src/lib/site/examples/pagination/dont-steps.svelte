@@ -16,5 +16,5 @@
 
 <div class="grid gap-3 text-sm">
   <p class="font-medium">Your details</p>
-  <Pagination bind:page pages={3} strings={{ label: "Form steps" }} />
+  <Pagination bind:page pages={3} aria-label="Form steps" />
 </div>

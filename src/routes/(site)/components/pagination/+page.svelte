@@ -129,8 +129,8 @@
           longer words may need more room than the English row.
         </li>
         <li>
-          With more than one pager on a page, name each through
-          <code>strings.label</code>.
+          With more than one pager on a page, name each with
+          <code>aria-label</code>.
         </li>
         <li>
           If your app replaces the list or table with the new page, move focus

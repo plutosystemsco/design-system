@@ -88,7 +88,7 @@
     {
       "patch": "10-tag-focus.patch",
       "file": "tag.sr.ts",
-      "title": "T1 the next: removing the first tag speaks the next tag's remove button",
+      "title": "T1 the next: removing the middle tag speaks the next tag's remove button",
       "reader": "nvda",
       "browser": "chromium",
       "fault": "F1"
@@ -96,7 +96,7 @@
     {
       "patch": "10-tag-focus.patch",
       "file": "tag.sr.ts",
-      "title": "T1 the next: removing the first tag speaks the next tag's remove button",
+      "title": "T1 the next: removing the middle tag speaks the next tag's remove button",
       "reader": "nvda",
       "browser": "firefox",
       "fault": "F1"
@@ -104,7 +104,7 @@
     {
       "patch": "10-tag-focus.patch",
       "file": "tag.sr.ts",
-      "title": "T1 the next: removing the first tag speaks the next tag's remove button",
+      "title": "T1 the next: removing the middle tag speaks the next tag's remove button",
       "reader": "voiceover",
       "browser": "chromium",
       "fault": "F1"
@@ -112,7 +112,7 @@
     {
       "patch": "10-tag-focus.patch",
       "file": "tag.sr.ts",
-      "title": "T1 the next: removing the first tag speaks the next tag's remove button",
+      "title": "T1 the next: removing the middle tag speaks the next tag's remove button",
       "reader": "voiceover",
       "browser": "webkit",
       "fault": "F1"

@@ -21,6 +21,6 @@
     >
   </Card.Header>
   <Card.Content>
-    <Pagination bind:page pages={12} strings={{ label: "Run pages" }} />
+    <Pagination bind:page pages={12} aria-label="Run pages" />
   </Card.Content>
 </Card.Root>

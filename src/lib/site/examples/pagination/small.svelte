@@ -37,10 +37,5 @@
       {/each}
     </Table.Body>
   </Table.Root>
-  <Pagination
-    bind:page
-    pages={12}
-    size="sm"
-    strings={{ label: "Branch run pages" }}
-  />
+  <Pagination bind:page pages={12} size="sm" aria-label="Branch run pages" />
 </div>

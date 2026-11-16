@@ -129,7 +129,7 @@ export const PATCHES: Patch[] = [
     witness: {
       file: "tag.sr.ts",
       title:
-        "T1 the next: removing the first tag speaks the next tag's remove button",
+        "T1 the next: removing the middle tag speaks the next tag's remove button",
     },
   },
   {

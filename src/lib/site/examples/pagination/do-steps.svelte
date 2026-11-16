@@ -3,7 +3,7 @@
     kind: "do",
     pair: "steps",
     title: "Do: pages of results",
-    caption: "Pages of search results, any one of which a person may jump to.",
+    caption: "A person can jump to any page of them, or go page by page.",
   };
 </script>
 
@@ -17,6 +17,6 @@
     page={1}
     pages={9}
     href={(page) => `?page=${page}`}
-    strings={{ label: "Search result pages" }}
+    aria-label="Search result pages"
   />
 </div>

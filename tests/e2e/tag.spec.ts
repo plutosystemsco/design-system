@@ -60,6 +60,12 @@ test.describe(
         `38. focus goes to the next control, then the previous, then the list, by ${way}`,
         tag("focus"),
         async ({ page }, info) => {
+          // The owner's Q7: with neighbours on both sides, the next wins.
+          await openExample(page, info, ITEM, "removable");
+          await removeBy(page, remove(page, "Research"), way);
+          await expect(remove(page, "Research")).toHaveCount(0);
+          await expect(remove(page, "Writing")).toBeFocused();
+
           await openExample(page, info, ITEM, "removable");
           const list = page.getByRole("list", { name: "Filters", exact: true });
           await removeBy(page, remove(page, "Design"), way);
@@ -219,6 +225,60 @@ test.describe(
           getComputedStyle(el).backgroundColor,
         ]);
         expect(ink).not.toBe(ground);
+      },
+    );
+
+    // The design lead at the checkpoint (027b's rulings at landing).
+    test(
+      "39a. the remove button's focus ring sits inside the tag's outline",
+      tag("focus"),
+      async ({ page }, info) => {
+        await openExample(page, info, ITEM, "removable");
+        const first = page.locator('[data-slot="tag"]').first();
+        // The view's first Tab stop is the first tag's remove button.
+        await page.keyboard.press("Tab");
+        await expect(first.locator('[data-slot="tag-remove"]')).toBeFocused();
+        const r = await first.evaluate((tag) => {
+          const b = tag.querySelector<HTMLElement>('[data-slot="tag-remove"]')!;
+          const s = getComputedStyle(b);
+          const reach =
+            parseFloat(s.outlineWidth) + parseFloat(s.outlineOffset);
+          const bb = b.getBoundingClientRect();
+          const tb = tag.getBoundingClientRect();
+          const edge = parseFloat(getComputedStyle(tag).borderTopWidth);
+          return {
+            focused: b.matches(":focus-visible"),
+            outline: s.outlineStyle,
+            inside:
+              bb.top - reach >= tb.top + edge - 0.5 &&
+              bb.bottom + reach <= tb.bottom - edge + 0.5 &&
+              bb.right + reach <= tb.right - edge + 0.5,
+          };
+        });
+        expect(r.focused).toBe(true);
+        expect(r.outline).not.toBe("none");
+        expect(r.inside).toBe(true);
+      },
+    );
+
+    test(
+      "40a. pressing a tag never changes its width",
+      tag("layout"),
+      async ({ page }, info) => {
+        await openExample(page, info, ITEM, "pressable");
+        const first = page.getByRole("button", { name: "Archived" });
+        const next = page.getByRole("button", { name: "Starred" });
+        const before = (await first.boundingBox())!.width;
+        const nextX = (await next.boundingBox())!.x;
+        await first.focus();
+        await page.keyboard.press(" ");
+        await expect(first).toHaveAttribute("aria-pressed", "true");
+        expect(
+          Math.abs((await first.boundingBox())!.width - before),
+        ).toBeLessThanOrEqual(0.5);
+        expect(
+          Math.abs((await next.boundingBox())!.x - nextX),
+        ).toBeLessThanOrEqual(0.5);
       },
     );
 

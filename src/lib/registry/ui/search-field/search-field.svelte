@@ -18,7 +18,7 @@
   > & {
     /** What is typed. Clear and Escape set it to `""`. */
     value?: string;
-    /** The result count for what is typed now, such as "12 results" or "No results". The field speaks it once typing has paused and the count is a string, whichever comes later. `undefined` means the count is on its way: while a server answers a new query, set it to `undefined`, or the field will speak the old count at the pause. Leave it unset to say nothing. */
+    /** The count for what is typed now, such as "3 results". Spoken once typing pauses and it is a string. Set it to `undefined` while a server's count is on its way. Unset, nothing is spoken. */
     results?: string | undefined;
     /** The query that `results` answers. When given, a count is spoken only while `resultsFor` equals `value`. Use it when results come from a server, so a late answer to an older query is never spoken. */
     resultsFor?: string;
@@ -114,12 +114,13 @@
     onclear?.();
   }
 
-  // The app's own handlers run first; a preventDefault there stops the item.
+  // The app's own handler runs first. An input event cannot be cancelled,
+  // so nothing the app does there stops the field.
   function oninput(event: Event & { currentTarget: HTMLInputElement }) {
     (restProps.oninput as ((e: typeof event) => void) | null | undefined)?.(
       event,
     );
-    if (event.defaultPrevented || clearing) return;
+    if (clearing) return;
     restart();
   }
 

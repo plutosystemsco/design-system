@@ -3,7 +3,7 @@
 
   /** Every word pagination says or shows, for an app to translate. */
   export type PaginationStrings = {
-    /** The nav's name: "Pagination". */
+    /** The nav's name when it is given no `aria-label`: "Pagination". */
     label: string;
     /** The Previous control's word: "Previous". */
     previous: string;
@@ -30,14 +30,16 @@
     HTMLAttributes<HTMLElement>,
     "class" | "children"
   > & {
-    /** The current page, counted from 1. Clamped to 1 to `pages`. In button mode the item sets it when a page is pressed; in link mode your route sets it. */
+    /** The current page, counted from 1. Shown clamped to 1 to `pages`. In button mode the item sets it when a page is pressed; in link mode your route sets it. */
     page?: number;
     /** How many pages there are. With 1 or fewer, nothing renders. */
     pages: number;
-    /** Link mode: the URL of each page. With it, every page and end control is a link. Without it, they are buttons. Choose links whenever a page has a URL. */
+    /** Link mode: the URL of each page. With it, every page and end control is a link; without it, buttons. Read once, at the first render: render the pager when you know whether it has URLs. */
     href?: (page: number) => string;
-    /** Called after a page or end button is pressed, with the new page. Button mode only. */
+    /** Called when a press in button mode changes the page, with the new page. */
     onpagechange?: (page: number) => void;
+    /** This pager's name. Name each pager when a page holds more than one. Without it, the nav is named by `strings.label`. */
+    "aria-label"?: string;
     /** Pages shown either side of the current one. The first and last page always show. */
     siblings?: 0 | 1 | 2;
     /** Pages 48 px tall, or 32 px for a dense table. Both meet the 24 px target. */
@@ -135,9 +137,14 @@
     control(`[data-slot="pagination-page"] [data-pagination-to="${n}"]`);
 
   /**
-   * A press in button mode. Focus moves only when it was inside the nav as
-   * the press began: WebKit focuses no button on click, so a click there
-   * leaves focus where it was, as every other button does.
+   * A press in button mode. A pressed page or end control that stays keeps
+   * its node, and so its focus: the keys of `paginationPages` keep one order
+   * on every page, so the keyed each only inserts and removes (a unit test
+   * holds the order). Focus moves only when the pressed end control
+   * vanishes, and only when focus was inside the nav as the click is
+   * handled. WebKit focuses no button on click, and blurs the focused one
+   * at mousedown, so a WebKit click leaves focus where WebKit put it, as it
+   * does for every button.
    */
   async function go(to: number, kind: "page" | "previous" | "next") {
     const inside = !!ref && ref.contains(document.activeElement);
@@ -146,18 +153,8 @@
       onpagechange?.(to);
     }
     await tick();
-    if (!inside || !ref) return;
-    // A pressed page keeps focus; a keyed each may have moved its node.
-    if (kind === "page") {
-      const pressed = pageControl(to);
-      if (pressed && document.activeElement !== pressed) pressed.focus();
-      return;
-    }
-    const same = control(`[data-slot="pagination-${kind}-control"]`);
-    if (same) {
-      if (document.activeElement !== same) same.focus();
-      return;
-    }
+    if (!inside || !ref || kind === "page") return;
+    if (control(`[data-slot="pagination-${kind}-control"]`)) return;
     // The end control vanished: focus goes to the current page, or, while
     // the list is hidden, to the other end control.
     const list = control('[data-slot="pagination-list"]');
@@ -237,7 +234,10 @@
     buttonVariants({ variant: isCurrent ? "secondary" : "ghost", size }),
     PAGE[size],
     "tabular-nums",
-    isCurrent && "font-bold",
+    // Under forced colours every page draws a border, so the current page
+    // is underlined too: a mark the others lack, beside its weight.
+    isCurrent &&
+      "font-bold forced-colors:underline forced-colors:decoration-2 forced-colors:underline-offset-4",
   )}
   {#if !buttonMode && href}
     <a
@@ -259,7 +259,8 @@
 <!--
   A named nav of page links, or page buttons for a list paged in place.
   Tab reaches Previous, each page and Next; no arrow keys. The current page
-  has aria-current and a border. Previous is omitted on the first page and
+  has aria-current, a border and, under forced colours, an underline.
+  Previous is omitted on the first page and
   Next on the last, and each end's slot keeps its width. In button mode a
   hidden status says the new page, and focus stays on the pressed control,
   or moves to the current page (or, narrow, the other end) when it goes.
@@ -270,7 +271,9 @@
     {...restProps}
     bind:this={ref}
     data-slot="pagination"
-    aria-label={s.label}
+    aria-label={restProps["aria-labelledby"]
+      ? undefined
+      : (restProps["aria-label"] ?? s.label)}
     class={cn("@container flex w-full min-w-0 items-center gap-2", className)}
     {onclick}
   >

@@ -45,6 +45,7 @@
 
 <script lang="ts">
   import Check from "phosphor-svelte/lib/Check";
+  import Plus from "phosphor-svelte/lib/Plus";
   import X from "phosphor-svelte/lib/X";
   import { getContext } from "svelte";
   import { Button } from "#lib/registry/ui/button";
@@ -108,7 +109,9 @@
 <!--
   A short label to remove or press. A removable tag holds a remove button
   named for it; Delete and Backspace remove it too, and its group moves
-  focus. A pressable tag is a toggle button with a check while pressed. A
+  focus; its focus indicator stays inside the tag, at no offset. A pressable tag is a toggle button,
+  a plus that turns to a check while pressed, at one width. Other
+  attributes go on the tag's li (or span), not on its button. A
   static tag is text in a tag's shape.
 -->
 <svelte:element
@@ -134,8 +137,12 @@
     >
       {@render leading()}
       <span data-slot="tag-label">{label}</span>
+      <!-- One icon in one place: a plus to add, a check while pressed, so
+           pressing never changes the tag's width. -->
       {#if pressed}
         <Check data-slot="tag-check" aria-hidden="true" class="size-4" />
+      {:else}
+        <Plus data-slot="tag-add" aria-hidden="true" class="size-4" />
       {/if}
     </button>
   {:else}
@@ -148,7 +155,7 @@
         data-tag-control=""
         variant="ghost"
         size="icon-sm"
-        class="size-6"
+        class="size-6 [--focus-offset:0]"
         aria-label={s.remove(label)}
         onclick={remove}
         onkeydown={onRemoveKey}
