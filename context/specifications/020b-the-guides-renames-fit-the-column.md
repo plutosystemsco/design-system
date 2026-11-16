@@ -1,6 +1,6 @@
 # 020b — The guide's renames fit the column
 
-- **Status:** Built on its branch; awaiting the change review.
+- **Status:** Built on its branch; the change review's fixes applied (`reviews/020b-the-guides-renames-fit-the-column-pr-2026-11-15.md`); awaiting the merge.
 - **Date:** 2026-11-15
 - **Author:** the design lead
 - **Kind:** small change (AGENTS.md: a fix with no interface change, no new token or dependency, on one page). No research memo and no spec review. Its check is seen failing first, and the built change is reviewed by someone who did not write it (constitution §5).
@@ -64,7 +64,7 @@ Assertion 2 failed too, at every width. Of the 76 parts it reads (19 renames, fo
 
 In `src/routes/(site)/changelog/0.13.0/upgrade/+page.svelte`, the `{#each section.renames}` loop is now a `<dl>` with one `<div>` per rename, in the same order:
 
-- **`<dt>`:** `old` → `new`, both in code, then, muted, the kind and its end: "works until 0.14.0", "removed in 0.13.0", or, for the two site pages, "redirects, always". All on one line that wraps.
+- **`<dt>`:** `old` → `new`, both in code, then, muted, the kind and its end: "works until 0.14.0", "removed in 0.13.0", or, for the two site pages, "always redirects". All on one line that wraps at the paragraphs' measure.
 - **`<dd>`:** two paragraphs, "**Who sees it.**" and "**What to do.**", each followed by the existing text. The lead-in is the page's own `<strong>` pattern ("What does not keep working.").
 - **Spacing:** `gap-8` between renames and `gap-2` inside one. These are the page's utilities. There are no rules between blocks.
 
@@ -72,11 +72,11 @@ Nothing else on the page changed. `renames.ts` and `0.13.0.ts` are untouched.
 
 ### Rulings during the build
 
-1. **The twin keeps its table through a hidden copy.** The twin is made from the built page's `<main>` (`scripts/site/markdown.ts`), so a `<dl>` alone would turn its table into `**term**: text` lines. To keep the table as the spec says, the old table stays on the page inside `<div hidden>`, with its styling classes removed. It is not drawn and not in the accessibility tree, and it renders from the same rows, so it cannot disagree with the list. The `<dl>` carries `data-md="skip"`. **The built twin is byte-identical** to the one before the change (`cmp`). A new case, "the Markdown twin keeps the table, and only the table", checks this. `markdown.ts` was not changed: that would touch every page.
+1. **The twin keeps its table through a hidden copy.** The twin is made from the built page's `<main>` (`scripts/site/markdown.ts`), so a `<dl>` alone would turn its table into `**term**: text` lines. To keep the table as the spec says, the old table stays on the page as `<table hidden>`, a plain table with no classes (after the review; see below). It is not drawn and not in the accessibility tree, and it renders from the same rows, so it cannot disagree with the list. The `<dl>` carries `data-md="skip"`. **The built twin is byte-identical** to the one before the change (`cmp`). A new case, "the Markdown twin keeps the table, and only the table", checks this. `markdown.ts` was not changed: that would touch every page.
 2. **What assertion 1 reads.** Read literally ("every element has `scrollWidth <= clientWidth + 1`"), it also fails, at 1440 only, on step 2's paragraph: 532 > 528. The code span `-o` breaks after its hyphen. The theme's `box-decoration-clone` padding on the broken span's first piece then overhangs the 33 rem measure by 4 px. It stays inside the 608 px column, and nothing is cut or scrolled. So the test checks the two things the spec is after. First, an element that clips or scrolls holds no more than its own width. Second, every other element stays inside the column. A code block's inside is not counted, since it keeps its own focusable, named scroller (015 criterion 26). The literal run's output is kept with the screenshots (see below).
 3. **The names on the `<dt>` line are `inline-block` and `max-w-full`, and the line has `wrap-anywhere`.** These are existing utilities, and `wrap-anywhere` is the site's precedent for code (`/start/install/`). As plain inline code, `kuiper-design-system` broke at its hyphen at 320 and overhung the column by 4 px. As a block, each name moves whole to the next line, and only a name longer than the column breaks.
 4. **020 test 2 now reads the list.** Its selector changed from `[data-section="020"] table code` to `[data-section="020"] dl dt code`. Otherwise it would read the hidden copy and pass whatever the reader sees. 020's test 17 is unchanged and passes.
-5. **The end of the line.** The spec gives "works until 0.14.0" or "removed in 0.13.0". The two site pages say "redirects, always", as the table said ("Redirects, always"). Their old addresses are not removed.
+5. **The end of the line.** The spec gives "works until 0.14.0" or "removed in 0.13.0". The two site pages say "always redirects", after the table's "Redirects, always" (reworded by the review). Their old addresses are not removed.
 
 ### Checks
 
@@ -93,6 +93,30 @@ Nothing else on the page changed. `renames.ts` and `0.13.0.ts` are untouched.
 ### Screenshots
 
 Light and dark at 1440, 390 and 320, before (`before-*`) and after (`after-*`), each as a viewport shot at the section's start (`*-view.png`) and as the whole section (`*-section.png`). They are in the build's scratch folder, `/private/tmp/claude-501/-Users-claygendron-Git-Repos-design-system/7b613866-3b2d-4829-bdd1-f2b35ebc0fd1/scratchpad/020b/`, with `after-dark-320-last-renames.png`, the failing-first output (`failing-first.scratch.txt`, and the literal reading's run, `failing-first-literal.txt`), and the twin before the change (`twin-before.md`). They are not kept in the repository.
+
+### The change review's fixes
+
+The review (`reviews/020b-the-guides-renames-fit-the-column-pr-2026-11-15.md`) said land. Its two Low findings and its nit were made in a second commit on the branch.
+
+1. **(Low) The hidden copy is a plain `<table>`** (finding 1). It was the `Table` item, whose rows and cells render their own `data-slot` and default classes. It is now `<table hidden>` with `<thead>`, `<tbody>`, `<tr>`, `<th scope="col">` and `<td>`, as `api-table.svelte` writes one. The `Table` import is gone. **The twin is still byte-identical** to `twin-before.md` (`cmp`).
+
+   | The guide's HTML | Bytes | gzip -6 | gzip -9 |
+   | --- | ---: | ---: | ---: |
+   | Before the fix (`fc15211`) | 96,151 | 12,482 | 12,341 |
+   | After | 77,951 | 10,815 | 10,742 |
+   | Change | −18,200 (−18.9%) | −1,667 | −1,599 |
+
+   The hidden copy fell from 27,870 B (the review's figure) to 9,305 B. The `<dl>` is 13,981 B (13,558 B before), larger by finding 2's class on each `<dt>`.
+
+2. **(Low) The `<dt>` keeps the measure** (finding 2). It has `max-w-(--site-measure)`, the existing utility. At 1440 the line now wraps with the paragraphs below it, at 528 px. At 390 and 320 the column is narrower than the measure, so nothing changes there. Seen in `fixed-{light,dark}-{1440,390,320}-view.png` in the scratch folder.
+3. **(Nit) "always redirects"** (finding 3). The two site pages' line reads "site page, always redirects", like the other lines' kind and then a verb phrase. The twin's column keeps "Redirects, always", so the twin is unchanged.
+
+After the fixes:
+
+- `upgrade.spec.ts` and `build-output.spec.ts`, light and dark: **55 passed** (14 + 14 + 27).
+- axe on the guide, light and dark: **6 passed**.
+- `bun run check`: 0 errors, 0 warnings, 2,190 files.
+- No test changed.
 
 ### Findings for later
 

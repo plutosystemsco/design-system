@@ -1,5 +1,4 @@
 <script lang="ts">
-  import * as Table from "#lib/registry/ui/table";
   import { inlines, type Inline } from "#lib/site/changelog";
   import Leaf from "#lib/site/page/leaf.svelte";
   import Snippet from "#lib/site/page/snippet.svelte";
@@ -44,7 +43,7 @@
     r.alias !== "none"
       ? `works until ${r.alias}`
       : r.kind === "site page"
-        ? "redirects, always"
+        ? "always redirects"
         : `removed in ${VERSION}`;
 
   const commands = (id: string) =>
@@ -112,7 +111,7 @@
       <dl data-md="skip" class="mt-2 grid gap-8">
         {#each section.renames as r (`${r.kind} ${r.old}`)}
           <div class="grid gap-2">
-            <dt class="wrap-anywhere">
+            <dt class="max-w-(--site-measure) wrap-anywhere">
               <code class="inline-block max-w-full">{r.old}</code> →
               <code class="inline-block max-w-full">{r.new}</code>
               <span class="text-muted-foreground">{r.kind}, {line(r)}</span>
@@ -124,30 +123,29 @@
           </div>
         {/each}
       </dl>
-      <div hidden>
-        <Table.Root>
-          <Table.Header>
-            <Table.Row>
-              <Table.Head>Old name</Table.Head>
-              <Table.Head>New name</Table.Head>
-              <Table.Head>Who sees it</Table.Head>
-              <Table.Head>What to do</Table.Head>
-              <Table.Head>Old name works until</Table.Head>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {#each section.renames as r (`${r.kind} ${r.old}`)}
-              <Table.Row>
-                <Table.Cell><code>{r.old}</code></Table.Cell>
-                <Table.Cell><code>{r.new}</code></Table.Cell>
-                <Table.Cell>{r.kind}. {@render text(r.seenBy)}</Table.Cell>
-                <Table.Cell>{@render text(r.todo)}</Table.Cell>
-                <Table.Cell>{until(r)}</Table.Cell>
-              </Table.Row>
-            {/each}
-          </Table.Body>
-        </Table.Root>
-      </div>
+      <!-- Plain, as api-table.svelte writes one: no class the page never shows. -->
+      <table hidden>
+        <thead>
+          <tr>
+            <th scope="col">Old name</th>
+            <th scope="col">New name</th>
+            <th scope="col">Who sees it</th>
+            <th scope="col">What to do</th>
+            <th scope="col">Old name works until</th>
+          </tr>
+        </thead>
+        <tbody>
+          {#each section.renames as r (`${r.kind} ${r.old}`)}
+            <tr>
+              <td><code>{r.old}</code></td>
+              <td><code>{r.new}</code></td>
+              <td>{r.kind}. {@render text(r.seenBy)}</td>
+              <td>{@render text(r.todo)}</td>
+              <td>{until(r)}</td>
+            </tr>
+          {/each}
+        </tbody>
+      </table>
       <h3 class="site-h3 mt-4">The steps, in order</h3>
       <ol class="grid list-decimal gap-6 ps-6">
         {#each section.steps as step, i (i)}
