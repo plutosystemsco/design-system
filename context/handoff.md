@@ -5,7 +5,7 @@
 
 ## State
 
-**Overnight, 2026-11-15 to 16** (the owner delegated decisions to the design lead: "work autonomously and do not ask questions. Use sound judgment and precedence"). Everything is on `release/0.13.0`, local only; nothing is pushed. Each landing below had a change review by an agent that did not build it, its fixes, a merge commit, and its worktree removed.
+**Overnight, 2026-11-15 to 16** (the owner delegated decisions to the design lead: "work autonomously and do not ask questions. Use sound judgment and precedence"). Everything is on `release/0.13.0`, which the owner pushed to GitHub on 2026-11-16. Each landing below had a change review by an agent that did not build it, its fixes, a merge commit, and its worktree removed.
 
 Landed on `release/0.13.0`, in order (each spec's Landing notes hold its figures and rulings):
 
@@ -19,20 +19,17 @@ Landed on `release/0.13.0`, in order (each spec's Landing notes hold its figures
 8. `024c` component headers hold still (CLS 0.09 → 0). `022b`, `022c`, `022d` three Firefox faults (ledger 27 → 8).
 9. `027b` pagination, search field, tag. Row 1: 35 of 40, score 4.
 10. `026`'s D1: `app-shell` mounts the toaster (its A1 screen-reader file is written).
+11. **Lane I's three small changes, 2026-11-16, in a cloud session:** `024e` empty code loads no grammar, `022a` Escape closes only the sub-menu, `022e` the sidebar's content is not a Tab stop in Firefox. One change review (`reviews/022ae-024e-lane-i-small-changes-pr-2026-11-16.md`, land), one merge. The ledger falls 8 → 2 (`022f`). The merge found one more wide API table (`023b`).
 
 The scorecard's rows 1–14 read 37 (32 at `020`), row 15 reads 2. Button is about 366 kB under a 445 kB `component` budget. The last gates on the merged trees: `check` 0 errors; unit about 1,850 pass; Chromium e2e green bar load timeouts that pass alone; `release-check --before-ci` exits 0; the full release check refuses only on CI evidence and the 8 ledger lines.
 
-**Still building when the night ended** (worktrees in `.claude/worktrees/`, not merged):
-
-- `024e`, `022a`, `022e`, three lane-I small changes: built and committed on `worktree-agent-a3f878ca5d391520b` (`c93e994`, `a22da47`, `be7003d`, from `1a116a4`), each seen failing first, gate green. They wait for one change review, then a merge with the release (expect conflicts in the ledger, the thumbnails manifest, `budgets.ts` and the cost report). The reviewer checks the builder's four calls: `use-highlighted-code` also leaves the live template (component-live LCP falls to 1,010 ms); a text-only sidebar box gets `tabindex="0"`; N5 now expects `-1`; and runs `bun run cost --only sidebar`. With them the highlighter page falls 532 → 359 kB and the ledger to 2 lines (`022f`).
-
-**Specs ready to build next:** `028` forced colours (amended overnight: `code-block` joins it; text on state fills uses the inverted pair with `forced-color-adjust: none`, option A), `029` scoped schemes (then `029a`), `030` the accessibility status (after the re-base sweep), then lane T in order `031a`, `031b`, `031`. Queued small changes and specs: `022f` (Firefox editor budgets, needs a quiet machine), `024f` (example source off first paint, a spec), `024g` (theme font fallbacks, a spec), `024h` (landings' preload), and one re-base sweep after `024e` lands, before `030`.
+**Specs ready to build next:** `028` forced colours (amended overnight: `code-block` joins it; text on state fills uses the inverted pair with `forced-color-adjust: none`, option A), `029` scoped schemes (then `029a`), `030` the accessibility status (after the re-base sweep), then lane T in order `031a`, `031b`, `031`. Queued small changes and specs: `022f` (Firefox editor budgets, needs a quiet machine), `022h` (the sidebar's stop only when it scrolls), `023b` (API names break between words), `024f` (example source off first paint, a spec), `024g` (theme font fallbacks, a spec), `024h` (landings' preload), and one re-base sweep now that `024e` has landed, before `030`.
 
 ## Waiting on the owner
 
 - **`019`'s VoiceOver listen** passed by hand (`d8d658d`). Its script is retired by `022`: the scripted VoiceOver and NVDA runs are in every `matrix` run (`tests/sr/error-summary.sr.ts`).
 - **The release check, from `022`** (the design lead's ruling, 2026-11-15). The full check, `bun scripts/site/release-check.ts`, also needs an empty fault ledger and a green `matrix` push run of HEAD, so it exits 1 until push B's run and the small changes `022a` to `022f`. **A landing gate runs `bun scripts/site/release-check.ts --before-ci`**, which skips those two, names them, and exits 0 when the rest pass. The tag uses the full check.
-- **`022`, the test matrix,** is merged (`7edf047`). It waits for **push B**: the first `matrix` run on GitHub, then the owner's mutation dispatch. Agents never push. The ledger holds 8 lines (`022a` 4, `022e` 2, `022f` 2); `022a` and `022e` are built on a branch.
+- **`022`, the test matrix,** is merged (`7edf047`). It waits for **push B**: the first `matrix` run on GitHub, then the owner's mutation dispatch. Agents never push. The ledger holds 2 lines, both `022f`'s; `022a` and `022e` have landed.
 
 The order to the tag: `019`'s fixes, its commit, the owner's listen, then the local `v0.12.0` tag.
 
@@ -61,6 +58,7 @@ The order to the tag: `019`'s fixes, its commit, the owner's listen, then the lo
 - Every page is checked in Chromium, in both themes, by the browser suites, axe and the keyboard walk.
 - Firefox and WebKit are not yet run, and no screen reader has been run but `019`'s pending listen. From 0.13.0 these are no longer limits: constitution §4.4 requires all three engines and scripted screen-reader checks.
 - The glass's Firefox mask order is written to the standard, but it is not run in Firefox.
+- **The lane-I merge ran in a cloud session** (2026-11-16): Linux, 4 cores, Chromium only (153, through a scratch browsers path; the pinned Playwright wants 156). Firefox and WebKit come from push B's `matrix` run (the owner's ruling, 2026-11-16). Perf and runtime cost figures are machine-bound and were not re-measured there. `code.spec.ts`'s E4, E6 at full height and E7 fail on that machine before and after the merge; push B's Linux run decides whether they are faults (`024e`'s Landing notes, "The merge").
 
 ## Next
 
