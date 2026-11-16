@@ -57,7 +57,7 @@ A **lane** is a set of files that only one build may change at a time. Specs in 
 - **E, test harness:** `playwright.config.ts`, `scripts/a11y/`, CI, the bench and cost scripts.
 - **N, new items:** a new item's own folder, examples and page. Two new-item specs never share a lane.
 
-A **ledger file** is a file every spec appends to: `registry.json`, `CHANGELOG.md`, the sitemap's entries, the release's migration guide, and the generated `static/r/`. Builds may run at once. Their ledger edits land one at a time, in landing order, and `static/r/` is regenerated at each landing.
+A **ledger file** is a file every spec appends to: `registry.json`, `CHANGELOG.md`, the sitemap's entries, the release's migration guide, and the generated `static/r/`. Builds may run at once. Their ledger edits land one at a time, in landing order, and `static/r/` is regenerated at each landing. Since `025`, `scripts/cost/report.json` and `scripts/cost/budgets.json` are ledger files too: never hand-merged. A landing takes the base's copies and regenerates them, with `bun run cost --sizes-only` for changed items, and with `bun run cost --only <item>` then `bun run cost --budget <item>` for a new item (`025`'s rulings at landing).
 
 ### 0.13.0: Kuiper, proven
 

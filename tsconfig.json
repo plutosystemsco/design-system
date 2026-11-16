@@ -6,5 +6,9 @@
     "types": ["$app/types", "bun"]
   },
   "include": ["src", "scripts", "tests", "*.ts"],
-  "exclude": ["tests/smoke/fixtures"]
+  "exclude": [
+    "tests/smoke/fixtures",
+    "scripts/cost/app",
+    "scripts/cost/fixtures"
+  ]
 }

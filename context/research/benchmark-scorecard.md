@@ -9,7 +9,7 @@
 
 ## In short
 
-Kuiper 0.13 as built at `c5df65b`, `021`'s merge with `release/0.13.0` at `a30ffa7` (re-scored after `020`, `027a`, `026` and `021`; only `021` moved a score; the first run was Pluto 0.12 at `ea1f9bd`, in the run log). Each score is 0 to 4 (§2).
+Kuiper 0.13 as built at `025`'s merge with `release/0.13.0` at `506cfc1` (re-scored after `020`, `027a`, `026`, `021`, `022`, `024` and `025`; `021` moved row 5 and `025` added row 15; the first run was Pluto 0.12 at `ea1f9bd`, in the run log). Each score is 0 to 4 (§2).
 
 | # | Dimension | Pluto | Carbon | Material 3 | Spectrum 2 | Atlassian | Primer | Radix Themes | GOV.UK |
 |---|---|---|---|---|---|---|---|---|---|
@@ -28,8 +28,9 @@ Kuiper 0.13 as built at `c5df65b`, `021`'s merge with `release/0.13.0` at `a30ff
 | 13 | Reach | 1 | **3** | **3** | **3** | 0 | 1 | 0 | 2 |
 | 14 | Governance | 3 | **4** | 0 | 1 | 2 | **4** | 1 | 3 |
 | | **Total, of 56** | **35** | 37 | 28 | 32 | 30 | 41 | 25 | 31 |
+| 15 | Component cost (not in the total) | **2** | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 
-Bold marks the best score in a row. The total is a summary, not a target: the rows weigh differently for Pluto's apps.
+Bold marks the best score in a row. The total is a summary, not a target: the rows weigh differently for Pluto's apps. Row 15 joined with `025` and stays out of the headline total, so every run compares with the first; the run log gives the total of 60 beside it.
 
 **The biggest gaps** (Pluto against the best reference, §5). Tokens, the second, closed with `021`: DTCG 2025.10 with every role's job in the source, a removed-names record checked against every release, and two targets, CSS variables and DTCG JSON (4, tying Primer).
 
@@ -97,6 +98,8 @@ Each score is 0 to 4. A checklist row counts its criteria and maps the count to 
 **13. Reach.** (a) More than one framework or platform. (b) Right-to-left layout supported in the styles. (c) Internationalisation: guidance, or built-in strings an app can translate. (d) A published browser and assistive-technology support statement. *Anchors:* the count.
 
 **14. Governance.** (a) A written process for proposing and accepting changes. (b) A lifecycle status shown per component. (c) A deprecation path that names the replacement. (d) A written rule for what is a breaking change. (e) Public decision records. (f) A feedback channel on every page. *Anchors:* 0–1 → 0; 2 → 1; 3 → 2; 4–5 → 3; 6 → 4.
+
+**15. Component cost** (since `025`; outside the headline total). (a) Per-item size published: the documentation site shows, for the current release, a size figure for each component (or each entry point), on its page or on one size page. (b) Size budgets enforced: a per-component limit fails a build, a required check or a release when exceeded; a report without a limit, or an alert that does not fail, is not a budget. (c) Runtime cost published: the site shows a per-component runtime figure (render, hydration or interaction time) produced by a script, for the current release. (d) Large-data cases: at least one component is measured by script with 1,000 or more rows, options or items, and that figure is published on the site or held by a budget. *Anchors:* the count. The rubric and the references' scores are *cost* §7 and §9.5 (`2026-11-15-component-cost.md`).
 
 ## 3. Scores
 
@@ -341,6 +344,22 @@ READ: *enterprise* §3–4, *developer* §4–5, *product* §3–5, *Carbon* §3
 - **Pluto:** the pipeline in the constitution (§5) and `context/README.md`; 73 decisions, 36 reviews; "Suggest a change on GitHub" (EXECUTED). No status, by the owner's ruling (READ, `decisions.md`, 2026-11-15). After `020`: a deprecation path that names the replacement, `meta.deprecated.replacement` on the `pluto-theme` alias, with the guide and the changelog saying when it goes (READ, `registry.json`; EXECUTED, `kuiper.ts`, `deprecatedItems` 1). (c) is met; 3. "Interface change" is decided per specification, with no written rule (READ, *Carbon* §5.1).
 - **Carbon:** statuses, a deprecations page, a versioning table, ADRs, a feedback link (READ, *Carbon* §5; EXECUTED, fetched). **Material:** a status chip per platform (READ, *enterprise* §3.2). **Spectrum:** `replacedBy`, written semver criteria (READ, *Spectrum* §3). **Atlassian:** "Release phases", "Caution" and "Deprecated" lozenges in the tree (EXECUTED), "Was this page helpful?" (READ, *enterprise* §3.4). **Primer:** contribution guides, status page, deprecation pages, changesets, ADRs, "Give feedback" (READ, *Primer* §4, *product* §3). **Radix:** "Report an issue" on every page (EXECUTED, screenshot). **GOV.UK:** contribution criteria, lifecycle statuses, versioning and managing-change docs, a discussion per component (EXECUTED, its sitemap; READ, *GOV.UK* §4–5).
 
+### Row 15. Component cost (EXECUTED, `bun run cost`)
+
+| | a size published | b size budgets | c runtime published | d large data | Score |
+|---|---|---|---|---|---|
+| Kuiper | – | ✓ | – | ✓ | 2 |
+| Carbon | – | – | – | – | 0 |
+| Material 3 | – | – | – | – | 0 |
+| Spectrum 2 | – | – | – | – | 0 |
+| Atlassian | – | ? | – | ? | 0 |
+| Primer | – | – | – | – | 0 |
+| Radix Themes | – | – | – | – | 0 |
+| GOV.UK | – | – | – | – | 0 |
+
+- **Kuiper:** since `025`, every item is installed into a minimal SvelteKit app by the CLI and measured over a floor app: initial JS and CSS, lazy JS and assets, gzipped, with hydration and, for 32 interactive items, the main interaction under a 4× CPU slowdown. Each figure has a budget in `scripts/cost/budgets.json`; `tests/unit/cost.test.ts` fails `bun run test` when a figure is over its budget or was not measured, and the release check refuses a tag without one full, quiet run on the release machine (EXECUTED). (b) is met. `table` at 1,000 rows is measured and its hydration held by a budget (EXECUTED); (d) is met. No page shows a figure yet: (a) and (c) wait for `030`'s facts line.
+- **The references:** *cost* §9.5, re-scored on the scorecard's own sites. Material Web's size table is on material-web.dev, a per-platform site, and older than its release, so Material 3 scores (a) –. Primer's sizes go to job summaries with no limit; Spectrum's React Aria suite has 10,000-row and 10,000-option cases, run locally only; GOV.UK posts size changes on pull requests. None fails a build or publishes a figure on its documentation site. Atlassian's private monorepo leaves (b) and (d) unknown. References not re-checked since *cost*.
+
 ## 5. Gaps: Pluto against the best reference
 
 | # | Dimension | Pluto | Best | Who | Gap | What the best does |
@@ -395,8 +414,9 @@ Run after every specification lands, and before a tag. About 30 minutes, most of
 3. **Breadth:** `bun scripts/bench/breadth.ts --rev <commit> --json <out>/breadth.json`. Needs the network. Read each system's `miss` list before scoring: slug matching is by pattern. About 1 minute.
 4. **Weight, paint, positions, chrome:** `bun scripts/bench/site.ts --runs 3 --shots <out>/shots --json <out>/site.json`. About 15 minutes. `--only kuiper` re-measures Kuiper alone; `--layout-only` skips the throttled loads. Look at each `*-1440.png` and `*-390.png`: a cookie wall or a moved page shows there first.
 5. **Depth:** `bun scripts/bench/depth.ts --json <out>/depth.json`. About 8 minutes. A mark that surprises gets a look at the page (Radix's `Dialog.Content` is one).
-6. **Score.** Scripted rows (1, 2, 7, 8) follow their anchors. For the checklist rows, re-mark Kuiper from `kuiper.json` and the changed specification. Re-verify the references' marks when a newer memo covers them, or every fourth run; turn a `?` into ✓ or – only with a source.
-7. **Write it down.** Replace the table in "In short", §4's changed cells and §5–6. Add a row to §8's log. If a rubric criterion or anchor changes, say so in the log row, and re-score every system on that row.
+6. **Component cost** (row 15, since `025`): `bun run cost`. It rebuilds and re-measures only the items whose hashes changed; a change to the theme, `utils`, a package or the harness is a full run, about 30 to 35 minutes on a quiet M1 Pro. A full run (`--full`) before every tag. Score row 15 from `scripts/cost/report.json` and `budgets.json`, and from the component pages once `030` shows the figures.
+7. **Score.** Scripted rows (1, 2, 7, 8) follow their anchors. For the checklist rows, re-mark Kuiper from `kuiper.json` and the changed specification. Re-verify the references' marks when a newer memo covers them, or every fourth run; turn a `?` into ✓ or – only with a source.
+8. **Write it down.** Replace the table in "In short", §4's changed cells and §5–6. Add a row to §8's log. If a rubric criterion or anchor changes, say so in the log row, and re-score every system on that row.
 
 Use any `<out>` folder outside the repository, such as the session scratchpad. When a reference URL moves, fix it in `scripts/bench/targets.ts` and note it in the log.
 
@@ -423,6 +443,10 @@ Use any `<out>` folder outside the repository, such as the session scratchpad. W
 | 2026-11-15 | `b37dcf4` (`021`, committed on its build branch) | the same tree | a builder | 3 2 1 2 4 4 2 4 3 3 3 0 1 3 | 35 | After `021`. `kuiper.ts --rev b37dcf4`: tokens in the new shape: 48 primitives, light and dark, 61 roles, 61 described, `groups` 15 (was 13 top-level keys in the old file, a changed meaning), 317 `$value`, 317 `$type`, 286 descriptions, 129 contrast rows. Row 5 (c), (d), (f) and (g) are met: 3 → 7 criteria, 1 → 4. Row 12 holds at 0: decision 16 (c)'s Penpot import was not run in the build, so (b) has no evidence yet. `kuiper.ts --rev ea1f9bd` prints the first run's token counts unchanged. No page's layout changed but `/foundations/tokens/`, so `site.ts` was not re-run; rows 6, 7 and 8 hold. References not re-checked. |
 | 2026-11-16 | `c5df65b` (`021`'s merge of `release/0.13.0` at `a30ffa7`, after `027a` and `026`) | 2026-11-16 05:45 UTC, that tree | a builder | 3 2 1 2 4 4 2 4 3 3 3 0 1 3 | 35 | After `021` on `027a` and `026`. `kuiper.ts --rev c5df65b`: 80 registry entries (61 ui), 12 releases, 34 interface marks, 2 migration pages, 9 versioned registries; tokens in the DTCG shape as at `b37dcf4` (48 primitives, light and dark, 61 roles, 61 described, `groups` 15, 317 `$value`, 317 `$type`, 286 descriptions, 129 contrast rows). `site.ts --only kuiper`: Button 375 kB, LCP 868 ms (3 runs: 892, 868, 864), the part at 572 (1440) and 661 (390), 80 nav links, search and theme present; rows 6, 7 and 8 hold. Row 5 is 4 and row 12 0, as at `b37dcf4`; rows 1 and 2 as at `445d663` (`breadth.ts` and `depth.ts` not re-run: `021` adds no part and changes neither Button nor Dialog). This row replaces the `b37dcf4` row for the merged tree. References not re-checked. |
 | 2026-11-16 | `35c37e4` (`024`, committed on its build branch, on `release/0.13.0` at `874c5da`) | 2026-11-16, at that commit | a builder | 3 2 1 2 1 4 2 4 3 3 3 0 1 3 | 32 | After `024` (budgets per template; tests only). `kuiper.ts --rev 35c37e4`: every count as at `874c5da`. `site.ts --only kuiper`: Button 374 kB, LCP 888 ms, CLS 0, the part at 572 (1440) and 661 (390), 79 nav links, search and theme present; rows 6, 7 and 8 hold. Button's page budget is now `component`'s, 445 kB and 1,270 ms (`024`'s landing notes), inside row 8's band 4. `breadth.ts` and `depth.ts` not run: no item or page changed. References not re-checked. |
+| 2026-11-16 | `025`'s landing tree, on its build branch from `44cec73`, before its commit | none: `025` changes no page | a builder | 3 2 1 2 1 4 2 4 3 3 3 0 1 3; row 15: 2 | 32; 34 of 60 | After `025`. Row 15 joins, outside the headline total, with *cost* §7's rubric and §9.5's scores (every reference 0). Kuiper (b) ✓: 71 items and 1 case budgeted in `scripts/cost/budgets.json`, held by `tests/unit/cost.test.ts` and the release check; (d) ✓: `table.1000-rows`' hydration, 477 ms, under its 618 ms budget; (a) and (c) – until `030` shows them: 2. `bun run cost --full` twice at the landing tree: 3,286 s and 3,349 s; the second run held one figure over budget before its re-measure and none after. Rows 1 to 14: `025` adds no item and changes no page, token or rendered text, so `site.ts`, `depth.ts` and `breadth.ts` were not re-run (roadmap §4, step 1). `kuiper.ts` (working tree, `build/` of 2026-11-16 05:15): 76 items, `migrationPages` 2, `deprecatedItems` 1, 12 releases, 33 interface marks, 9 versioned registries; tokens 48 primitives, 61 roles, 61 described, 129 contrast rows; as at `6c00a12`, so rows 1 to 14 hold. References not re-checked. |
+| 2026-11-16 | `c213a0d` (`025`, committed on its build branch) | the same tree as the row above | a builder | 3 2 1 2 1 4 2 4 3 3 3 0 1 3; row 15: 2 | 32; 34 of 60 | `kuiper.ts --rev c213a0d`: 76 items, `migrationPages` 2, `deprecatedItems` 1, 12 releases, 33 interface marks, 9 versioned registries; tokens 48 primitives, 61 roles, 61 described, 129 contrast rows. At the commit, `tests/unit/cost.test.ts` passes 33 of 33 and the release check's cost step passes: the report's hashes equal the commit's. The scores of the row above stand. |
+| 2026-11-16 | `025`'s merge of `release/0.13.0` at `a6fc673`, after its fixes (`fbc996d`), before its commit | none: `025` changes no page | a builder | 3 2 1 2 4 4 2 4 3 3 3 0 1 3; row 15: 2 | 35; 37 of 60 | After `025` on `027a`, `026` and `021`. Row 15 holds at 2: (b) 75 items and 3 cases budgeted, held by `tests/unit/cost.test.ts` (sizes) and the release check (runtime), as ruled at landing; (d) `table.1000-rows` hydrates in 448.8 ms under its 618 ms budget. `bun run cost --full`: 2,546 s, load median 20.7; one figure over before the re-measure, none after. The four new items: `link` 5.5 kB, `button-group` 3.6 kB, `progress` 3.6 kB, `toast` 21.7 kB (shows in 111.1 ms). Rows 1 to 14 as at `c5df65b`. References not re-checked. |
+| 2026-11-16 | `025`'s second merge, of `release/0.13.0` at `506cfc1` (`022`, `023a`, `024`), before its commit | none: `025` changes no page | a builder | 3 2 1 2 4 4 2 4 3 3 3 0 1 3; row 15: 2 | 35; 37 of 60 | `022` and `024` stale no cost figure; the first merge's full run stands, and the release check's cost step passes. Row 15 holds at 2; rows 1 to 14 as the base's, `022`'s and `024`'s rows give them. References not re-checked. |
 
 ## 9. Limits
 
