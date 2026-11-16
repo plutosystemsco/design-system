@@ -113,9 +113,9 @@ Not a spec: **the Kuiper lockup mock-ups.** Drawn and put to the owner on 2026-1
 | `041` density, type and section grounds | A compact control density; a 20 px title step; named section grounds for headers and toolbars | T | `039` | 4: (d) |
 | `042` batch C | Data table (TanStack Table, named), toolbar, page header, description list, tab nav, copy button, relative time. Data table gets a 10,000-row cost case | N | `041`, `027a`, `027b` | 1: held |
 | `043`–`047` the rollout | The page standard, one spec per group: forms; overlays and navigation; surfaces and feedback; actions, data and code; the reduced set for blocks, fonts and libraries. Each also completes its items' keyboard data | site guidance, one group each | `033` | 3: (c) → 4; coverage → about 90% |
-| `048` governance | A written interface-change rule; `meta.deprecated` naming the replacement; a built-token diff in every change review | registry meta, scripts | `021` | 14: 2 → 3 |
+| `048` governance | A written interface-change rule; `meta.deprecated` naming the replacement; a built-token diff in every change review. First deprecations, found inert by `023`: `FieldLegend.variant`, `ToggleGroupItem.size` and `ToggleGroupItem.variant` | registry meta, scripts | `021` | 14: 2 → 3 |
 | `049` notes and upcoming | Release notes grouped by kind; a feed; an "Upcoming" page generated from this file | S, `CHANGELOG.md` | `048` | 11: 3 → 4 |
-| `050` the lint reads classes | Svelte's parser finds classes; prose is never linted; lint exceptions declared in item `meta` | lint scripts | — | — |
+| `050` the lint reads classes | Svelte's parser finds classes; prose is never linted; lint exceptions declared in item `meta`. Also from `023`: Tailwind's scan reads an installed item's comments, so a doc comment's word ("hidden", "grid") can add CSS to an app; a test holds item comments to add no selector | lint scripts | — | — |
 
 The five rollout specs touch disjoint guidance modules and pages. They run at once.
 

@@ -673,6 +673,8 @@ The change review ([`../reviews/023-prop-doc-comments-pr-2026-11-16.md`](../revi
 
 The fixes are commit `1217f52`, "023: the review's fixes". After them: `bun run check` 0 errors; lint clean; `api-described.test.ts` 112 pass (V8's two cases added).
 
+- **The design lead, at the merge: the cost report with `chart`'s variance is accepted.** `chart`'s build differs by a few bytes between clean builds on identical input (025's own finding: JS 137,413 vs 137,426 bytes, CSS 5,341 vs 5,345). The committed report is a full regeneration; `cost --guard` and `cost.test.ts` pass. `chart`'s runtime figure is re-measured at the tag, as 025's rule says. Making `chart`'s build deterministic is a finding for 025's follow-ups.
+
 ### The merge of `release/0.13.0` (2026-11-16)
 
 `release/0.13.0` at `70336f4` (past `7e06317`: `025`, `024b`, `024d` and `023`'s change review) merged into the branch as its own commit, by the review's merge notes.
