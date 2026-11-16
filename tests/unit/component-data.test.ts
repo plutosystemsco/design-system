@@ -5,9 +5,12 @@
  */
 import { describe, expect, test } from "bun:test";
 import { readFileSync } from "node:fs";
+import { withListedItems } from "../../src/lib/site/items.ts";
 import { parseChangelog, updatedIn } from "../../src/lib/site/changelog.ts";
 
-const registry = JSON.parse(readFileSync("registry.json", "utf8")) as {
+const registry = withListedItems(
+  JSON.parse(readFileSync("registry.json", "utf8")),
+) as {
   items: { name: string; meta: { since: string } }[];
 };
 const log = parseChangelog(readFileSync("CHANGELOG.md", "utf8"));
@@ -35,13 +38,17 @@ describe("018 decision 4: Updated", () => {
     expect(updated["cta-band"]).toBe("0.11.0");
   });
 
-  test("a changed item reads its newest release: pluto-theme 0.12.0, button 0.11.0", () => {
-    expect(updated["pluto-theme"]).toBe("0.12.0");
+  // 020: kuiper-theme is named in the 0.13.0 entry, as renamed.
+  test("a changed item reads its newest release: kuiper-theme 0.13.0, button 0.11.0", () => {
+    expect(updated["kuiper-theme"]).toBe("0.13.0");
     expect(updated.button).toBe("0.11.0");
   });
 
-  test("a never-changed item reads the release it arrived in: tooltip 0.2.0", () => {
-    expect(updated.tooltip).toBe("0.2.0");
+  // 020: tooltip changed in 0.13.0 (its context key), so card stands for an
+  // item that never changed.
+  test("a never-changed item reads the release it arrived in: card 0.2.0; tooltip, changed in 0.13.0, reads 0.13.0", () => {
+    expect(updated.card).toBe("0.2.0");
+    expect(updated.tooltip).toBe("0.13.0");
   });
 
   test("it is never older than since", () => {

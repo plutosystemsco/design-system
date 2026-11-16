@@ -1,6 +1,6 @@
 ; Ruby, for tree-sitter-ruby 0.23.1 (node types read from its
-; src/node-types.json at that version). Captures are Pluto code roles.
-; written for the Pluto design system; not derived from the grammar's own queries.
+; src/node-types.json at that version). Captures are Kuiper code roles.
+; written for the Kuiper Design System; not derived from the grammar's own queries.
 ;
 ; Later patterns win, so the file runs from the general to the particular.
 ; `ruby.locals.scm` tells a local variable from a bare method call.

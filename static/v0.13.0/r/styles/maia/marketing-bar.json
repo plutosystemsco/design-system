@@ -1,0 +1,37 @@
+{
+	"$schema": "https://shadcn-svelte.com/schema/registry-item.json",
+	"name": "marketing-bar",
+	"title": "Marketing bar",
+	"type": "registry:ui",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+	"description": "A product site's sticky top bar, a floating glass panel: a skip link, the logo, named links and actions, folding into a sheet on a phone.",
+	"devDependencies": [
+		"phosphor-svelte@^3.1.1"
+	],
+	"registryDependencies": [
+		"utils",
+		"kuiper-theme",
+		"button",
+		"sheet",
+		"liquid-glass"
+	],
+	"meta": {
+		"since": "0.11.0",
+		"group": "compositions",
+		"modes": [
+			"expressive"
+		]
+	},
+	"files": [
+		{
+			"content": "<script lang=\"ts\" module>\n  /** A link or a link-styled action: its visible label and its href. */\n  export type MarketingLink = { label: string; href: string };\n</script>\n\n<script lang=\"ts\">\n  import type { Snippet } from \"svelte\";\n  import List from \"phosphor-svelte/lib/List\";\n  import { Button } from \"$UI$/button\";\n  import { pointerLight } from \"$UI$/liquid-glass\";\n  import * as Sheet from \"$UI$/sheet\";\n  import { cn } from \"$UTILS$\";\n\n  let {\n    logo,\n    homeLabel,\n    links = [],\n    secondary,\n    primary,\n    label = \"Main\",\n    overlay = false,\n    class: className,\n  }: {\n    /** The product's logo; it renders here for \"header\", as the app shell's logo snippet does. */\n    logo: Snippet<[place: \"header\" | \"footer\"]>;\n    /** The home link's accessible name. It contains any words the logo shows. */\n    homeLabel: string;\n    links?: MarketingLink[];\n    /** The quieter action, beside the primary from md; in the sheet below it. */\n    secondary?: MarketingLink;\n    /** The one filled action, at every width. */\n    primary?: MarketingLink;\n    /** The navigation landmark's name. */\n    label?: string;\n    /** Floats the bar over the section below it, a stage whose hero sets `underBar`. */\n    overlay?: boolean;\n    class?: string;\n  } = $props();\n\n  let menuOpen = $state(false);\n  // Its text is the foreground and the primary only: the bar floats over the\n  // whole page, images included, where muted text would not hold.\n  const link =\n    \"inline-flex min-h-12 items-center text-sm font-medium text-foreground hover:text-primary\";\n</script>\n\n<!--\n  The banner, at the page's top level so it stays stuck for the whole page:\n  a floating glass panel, capped at the wide measure, lit\n  where the pointer moves. It follows the page's theme and\n  never carries `.dark`. Its actions keep the case radius. It marks itself\n  with data-sticky-bar, so the page keeps a focused element clear of it. The\n  skip link comes first and shows on focus. Below md the links and the\n  secondary action fold into a sheet opened by \"Menu\". With `overlay`, its\n  own height is taken back below it, so the first stage runs under it from\n  the top of the page.\n-->\n<header\n  data-slot=\"marketing-bar\"\n  data-sticky-bar\n  data-mode=\"expressive\"\n  class={cn(\n    \"sticky top-0 z-10 h-(--size-bar)\",\n    overlay && \"-mb-(--size-bar)\",\n    className,\n  )}\n>\n  <a\n    href=\"#main\"\n    data-slot=\"marketing-bar-skip-link\"\n    class=\"sr-only focus:not-sr-only focus:fixed focus:top-2 focus:start-2 focus:z-50 focus:rounded focus:bg-card focus:px-4 focus:py-2 focus:text-sm\"\n  >\n    Skip to content\n  </a>\n  <div class=\"mx-auto h-full max-w-7xl px-(--gutter-stage) py-2\">\n    <div\n      data-slot=\"marketing-bar-panel\"\n      class=\"glass flex h-full items-center gap-6 px-4\"\n      {@attach pointerLight}\n    >\n      <a\n        href=\"/\"\n        aria-label={homeLabel}\n        class=\"inline-flex min-h-12 shrink-0 items-center\"\n      >\n        {@render logo(\"header\")}\n      </a>\n      {#if links.length}\n        <nav aria-label={label} class=\"hidden md:block\">\n          <ul class=\"flex items-center gap-6\">\n            {#each links as item, index (index)}\n              <li><a href={item.href} class={link}>{item.label}</a></li>\n            {/each}\n          </ul>\n        </nav>\n      {/if}\n      <div class=\"ms-auto flex items-center gap-2\">\n        {#if secondary}\n          <Button\n            href={secondary.href}\n            variant=\"secondary\"\n            size=\"sm\"\n            class=\"hidden h-(--size-action-small) px-4 md:inline-flex\"\n            >{secondary.label}</Button\n          >\n        {/if}\n        {#if primary}\n          <Button\n            href={primary.href}\n            size=\"sm\"\n            class=\"h-(--size-action-small) px-4\">{primary.label}</Button\n          >\n        {/if}\n        {#if links.length || secondary}\n          <Sheet.Root bind:open={menuOpen}>\n            <Sheet.Trigger>\n              {#snippet child({ props })}\n                <Button\n                  {...props}\n                  variant=\"ghost\"\n                  size=\"icon-sm\"\n                  aria-label=\"Menu\"\n                  class=\"md:hidden\"\n                >\n                  <List aria-hidden=\"true\" />\n                </Button>\n              {/snippet}\n            </Sheet.Trigger>\n            <Sheet.Content side=\"end\">\n              <Sheet.Header class=\"sr-only\">\n                <Sheet.Title>{homeLabel}</Sheet.Title>\n              </Sheet.Header>\n              {#if links.length}\n                <nav aria-label={label}>\n                  <ul class=\"flex flex-col items-start\">\n                    {#each links as item, index (index)}\n                      <li>\n                        <a\n                          href={item.href}\n                          class=\"inline-flex min-h-12 items-center text-foreground\"\n                          onclick={() => (menuOpen = false)}>{item.label}</a\n                        >\n                      </li>\n                    {/each}\n                  </ul>\n                </nav>\n              {/if}\n              {#if secondary}\n                <Button\n                  href={secondary.href}\n                  variant=\"secondary\"\n                  class=\"self-start\"\n                  onclick={() => (menuOpen = false)}>{secondary.label}</Button\n                >\n              {/if}\n            </Sheet.Content>\n          </Sheet.Root>\n        {/if}\n      </div>\n    </div>\n  </div>\n</header>\n",
+			"type": "registry:ui",
+			"target": "marketing-bar/marketing-bar.svelte"
+		},
+		{
+			"content": "import Root, { type MarketingLink } from \"./marketing-bar.svelte\";\n\nexport {\n  Root,\n  type MarketingLink,\n  //\n  Root as MarketingBar,\n};\n",
+			"type": "registry:ui",
+			"target": "marketing-bar/index.ts"
+		}
+	]
+}

@@ -1,5 +1,5 @@
 {
-  "name": "pluto-smoke-kit3-node",
+  "name": "kuiper-smoke-kit3-node",
   "private": true,
   "type": "module",
   "imports": {

@@ -7,7 +7,7 @@
 	"description": "An empty polite live region, present from the first render, whose text the app sets.",
 	"registryDependencies": [
 		"utils",
-		"pluto-theme"
+		"kuiper-theme"
 	],
 	"meta": {
 		"since": "0.3.0",

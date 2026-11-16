@@ -7,7 +7,7 @@
 	"description": "A product's home page: the glass bar, a stage hero with two code cards on a colour field and a strip, a proof band, a live console on a stage, a call to action and the footer.",
 	"registryDependencies": [
 		"utils",
-		"pluto-theme",
+		"kuiper-theme",
 		"stage",
 		"stage-card",
 		"marketing-bar",

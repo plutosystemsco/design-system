@@ -7,7 +7,7 @@
 	"description": "The Pluto Systems four-dot mark and the wordmark lockup, sized by the text around them.",
 	"registryDependencies": [
 		"utils",
-		"pluto-theme"
+		"kuiper-theme"
 	],
 	"meta": {
 		"since": "0.1.0",

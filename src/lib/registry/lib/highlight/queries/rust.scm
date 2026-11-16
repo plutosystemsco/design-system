@@ -1,6 +1,6 @@
 ; Rust, for tree-sitter-rust 0.24.0 (node types read from its
-; src/node-types.json at that version). Captures are Pluto code roles.
-; written for the Pluto design system; not derived from the grammar's own queries.
+; src/node-types.json at that version). Captures are Kuiper code roles.
+; written for the Kuiper Design System; not derived from the grammar's own queries.
 
 ; Comments, doc comments with their markers, and a shebang line.
 [(line_comment) (block_comment) (shebang)] @comment

@@ -7,7 +7,7 @@
 	"description": "A keyboard key, or a group of keys, set in the mono face on an inset.",
 	"registryDependencies": [
 		"utils",
-		"pluto-theme"
+		"kuiper-theme"
 	],
 	"meta": {
 		"since": "0.2.0",

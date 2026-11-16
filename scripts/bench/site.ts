@@ -3,7 +3,7 @@
  * the same way. Feeds the scorecard's rows "first example", "page weight"
  * and "navigation" (context/research/benchmark-scorecard.md).
  *
- *   bun scripts/bench/site.ts [--runs 3] [--only pluto,carbon] [--build build]
+ *   bun scripts/bench/site.ts [--runs 3] [--only kuiper,carbon] [--build build]
  *                             [--layout-only] [--shots <dir>] [--json <file>]
  *
  * Desktop: 1440 × 900, a cold cache, the perf suite's profile (1.6 Mbps
@@ -288,7 +288,7 @@ server.stop();
 const report = {
   script: "scripts/bench/site.ts",
   at: new Date().toISOString(),
-  plutoBuild: server.built,
+  kuiperBuild: server.built,
   runs,
   rows,
 };

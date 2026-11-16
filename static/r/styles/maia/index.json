@@ -1,10 +1,10 @@
 [
 	{
-		"name": "pluto-theme",
-		"title": "Pluto theme",
+		"name": "kuiper-theme",
+		"title": "Kuiper theme",
 		"type": "registry:theme",
 		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-		"description": "The Pluto Systems tokens for light and dark: colour, radius, spacing, type, motion, focus and the groove.",
+		"description": "Kuiper's tokens for light and dark: colour, radius, spacing, type, motion, focus and the groove.",
 		"devDependencies": [
 			"shadcn-svelte@^1.7.1"
 		],
@@ -21,7 +21,7 @@
 				"expressive"
 			]
 		},
-		"relativeUrl": "pluto-theme.json"
+		"relativeUrl": "kuiper-theme.json"
 	},
 	{
 		"name": "font-geist",
@@ -99,7 +99,7 @@
 		"description": "The Pluto Systems four-dot mark and the wordmark lockup, sized by the text around them.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme"
+			"kuiper-theme"
 		],
 		"meta": {
 			"since": "0.1.0",
@@ -118,7 +118,7 @@
 		"description": "The light and dark switch: a head script that sets the theme before paint, a store that follows the system until a choice is made, and a toggle button.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme",
+			"kuiper-theme",
 			"button"
 		],
 		"meta": {
@@ -138,7 +138,7 @@
 		"description": "Reads the theme's runtime variables from script: a token's value, a duration in milliseconds, an easing curve, and a tween that animates a number over them.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme"
+			"kuiper-theme"
 		],
 		"meta": {
 			"since": "0.11.0",
@@ -157,7 +157,7 @@
 		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 		"description": "A frosted panel for expressive pages: an edge lit where the pointer moves, and an opaque ground under reduced transparency or forced colours. Needs Svelte 5.29 or later, for attachments.",
 		"registryDependencies": [
-			"pluto-theme",
+			"kuiper-theme",
 			"read-token"
 		],
 		"meta": {
@@ -177,7 +177,7 @@
 		"description": "An action: the surface's one blue primary, a bordered secondary, ghost, destructive or link, at 48 or 32 px, with a busy state that keeps focus.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme",
+			"kuiper-theme",
 			"spinner"
 		],
 		"meta": {
@@ -205,7 +205,7 @@
 		"description": "A short inverted label that opens on hover and focus, closes on Escape, and repeats an icon button's name.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme"
+			"kuiper-theme"
 		],
 		"meta": {
 			"since": "0.2.0",
@@ -231,7 +231,7 @@
 		"description": "A keyboard key, or a group of keys, set in the mono face on an inset.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme"
+			"kuiper-theme"
 		],
 		"meta": {
 			"since": "0.2.0",
@@ -257,7 +257,7 @@
 		"description": "A two-state button that says whether it is pressed, inverted when it is.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme"
+			"kuiper-theme"
 		],
 		"meta": {
 			"since": "0.4.0",
@@ -283,7 +283,7 @@
 		"description": "A row of toggles, one stop for the row, moved by the arrow keys, for one choice or several.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme",
+			"kuiper-theme",
 			"toggle"
 		],
 		"meta": {
@@ -310,7 +310,7 @@
 		"description": "A raised surface with a header, content, footer and an action, whose title is a real heading.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme"
+			"kuiper-theme"
 		],
 		"meta": {
 			"since": "0.2.0",
@@ -336,7 +336,7 @@
 		"description": "The groove between sections, decorative by default, or a plain vertical hairline.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme"
+			"kuiper-theme"
 		],
 		"meta": {
 			"since": "0.2.0",
@@ -362,7 +362,7 @@
 		"description": "A row of media, content and actions, plain or outlined, that can be one link.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme",
+			"kuiper-theme",
 			"separator"
 		],
 		"meta": {
@@ -389,7 +389,7 @@
 		"description": "A data table with a caption, header, selectable rows and a footer, scrolling inside itself when it must.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme"
+			"kuiper-theme"
 		],
 		"meta": {
 			"since": "0.2.0",
@@ -415,7 +415,7 @@
 		"description": "Tabbed panels as a pill strip on an inset or as underlined triggers, moved by the arrow keys.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme"
+			"kuiper-theme"
 		],
 		"meta": {
 			"since": "0.2.0",
@@ -441,7 +441,7 @@
 		"description": "A button that shows and hides a region, with its state in aria-expanded.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme"
+			"kuiper-theme"
 		],
 		"meta": {
 			"since": "0.2.0",
@@ -467,7 +467,7 @@
 		"description": "A person's image or initials at the case radius, alone or in an overlapping group.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme"
+			"kuiper-theme"
 		],
 		"meta": {
 			"since": "0.2.0",
@@ -493,7 +493,7 @@
 		"description": "A small dialog anchored to its button, raised by the elevation shadow, that returns focus when it closes.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme"
+			"kuiper-theme"
 		],
 		"meta": {
 			"since": "0.4.0",
@@ -519,7 +519,7 @@
 		"description": "Headings that each open a section, divided by grooves, moved by the arrow keys.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme"
+			"kuiper-theme"
 		],
 		"meta": {
 			"since": "0.4.0",
@@ -545,7 +545,7 @@
 		"description": "A message in default, destructive, success or caution, whose role matches how urgent it is.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme"
+			"kuiper-theme"
 		],
 		"meta": {
 			"since": "0.2.0",
@@ -571,7 +571,7 @@
 		"description": "A modal confirm on the scrim that traps focus, starts on Cancel and closes on Escape.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme",
+			"kuiper-theme",
 			"button"
 		],
 		"meta": {
@@ -598,7 +598,7 @@
 		"description": "A small mono label that names a state in words, outlined in its state colour.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme"
+			"kuiper-theme"
 		],
 		"meta": {
 			"since": "0.2.0",
@@ -624,7 +624,7 @@
 		"description": "An empty state: an icon tile, a heading, a sentence and the next action.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme"
+			"kuiper-theme"
 		],
 		"meta": {
 			"since": "0.2.0",
@@ -650,7 +650,7 @@
 		"description": "A static, hidden placeholder on an inset where content is loading.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme"
+			"kuiper-theme"
 		],
 		"meta": {
 			"since": "0.2.0",
@@ -676,7 +676,7 @@
 		"description": "A turning icon for the one control that is busy, decorative by default or announced with a label.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme"
+			"kuiper-theme"
 		],
 		"meta": {
 			"since": "0.2.0",
@@ -702,7 +702,7 @@
 		"description": "An empty polite live region, present from the first render, whose text the app sets.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme"
+			"kuiper-theme"
 		],
 		"meta": {
 			"since": "0.3.0",
@@ -721,7 +721,7 @@
 		"description": "The box a failed submit puts at the top of a form: a heading, the form's message and a link to each invalid field, focused when it appears.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme",
+			"kuiper-theme",
 			"alert"
 		],
 		"meta": {
@@ -741,7 +741,7 @@
 		"description": "A form label in sentence case, dimmed with its disabled control.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme"
+			"kuiper-theme"
 		],
 		"meta": {
 			"since": "0.2.0",
@@ -767,7 +767,7 @@
 		"description": "A label, control, description and error, wired to the control by id, aria-describedby and aria-invalid.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme",
+			"kuiper-theme",
 			"label",
 			"separator"
 		],
@@ -795,7 +795,7 @@
 		"description": "A 48 px text input on the raised ground with a visible border and a red one when invalid.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme"
+			"kuiper-theme"
 		],
 		"meta": {
 			"since": "0.2.0",
@@ -821,7 +821,7 @@
 		"description": "A multi-line text input that grows with its text where the browser can.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme"
+			"kuiper-theme"
 		],
 		"meta": {
 			"since": "0.2.0",
@@ -847,7 +847,7 @@
 		"description": "An input or textarea with text or button addons, one focus ring around the group, and a password toggle.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme",
+			"kuiper-theme",
 			"button",
 			"input",
 			"textarea"
@@ -876,7 +876,7 @@
 		"description": "The browser's own select, styled as an input, with a caret.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme"
+			"kuiper-theme"
 		],
 		"meta": {
 			"since": "0.2.0",
@@ -902,7 +902,7 @@
 		"description": "A 24 px checkbox that tells checked and mixed by shape as well as colour.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme"
+			"kuiper-theme"
 		],
 		"meta": {
 			"since": "0.2.0",
@@ -928,7 +928,7 @@
 		"description": "Round radios in a group with one stop, moved and chosen by the arrow keys.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme"
+			"kuiper-theme"
 		],
 		"meta": {
 			"since": "0.2.0",
@@ -954,7 +954,7 @@
 		"description": "An on and off setting: a blue track with a thumb that moves to the end.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme"
+			"kuiper-theme"
 		],
 		"meta": {
 			"since": "0.2.0",
@@ -980,7 +980,7 @@
 		"description": "A six-digit code in 48 px cells over one real input that accepts a pasted code.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme"
+			"kuiper-theme"
 		],
 		"meta": {
 			"since": "0.2.0",
@@ -1006,7 +1006,7 @@
 		"description": "Code, output or a diff on the code ground, edged by the hairline, highlighted from the code tokens, with line numbers, a copy button and a header divided by the groove.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme",
+			"kuiper-theme",
 			"use-highlighted-code",
 			"button",
 			"status"
@@ -1035,7 +1035,7 @@
 		"description": "A CodeMirror 6 editor themed from the tokens and coloured by the highlighter, with line numbers and Python, that prerenders as plain code and leaves Tab unbound.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme",
+			"kuiper-theme",
 			"highlighter"
 		],
 		"meta": {
@@ -1078,7 +1078,7 @@
 		],
 		"registryDependencies": [
 			"utils",
-			"pluto-theme"
+			"kuiper-theme"
 		],
 		"meta": {
 			"since": "0.4.0",
@@ -1098,7 +1098,7 @@
 		"description": "A hook that highlights a changing string line by line as it grows.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme",
+			"kuiper-theme",
 			"highlighter"
 		],
 		"meta": {
@@ -1131,7 +1131,7 @@
 		],
 		"registryDependencies": [
 			"utils",
-			"pluto-theme",
+			"kuiper-theme",
 			"code-editor"
 		],
 		"meta": {
@@ -1152,7 +1152,7 @@
 		"description": "A figure for layerchart with a name and a table of its data, series coloured by token classes, and a tooltip on the elevation shadow.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme"
+			"kuiper-theme"
 		],
 		"meta": {
 			"since": "0.4.0",
@@ -1178,7 +1178,7 @@
 		"description": "A measurement within a known range, as the native meter on the muted track with a primary fill, its numbers written beside it.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme"
+			"kuiper-theme"
 		],
 		"meta": {
 			"since": "0.4.0",
@@ -1197,7 +1197,7 @@
 		"description": "A menu opened from a button, on the elevation shadow, moved by the arrow keys, with check and radio items and a shortcut written in words.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme"
+			"kuiper-theme"
 		],
 		"meta": {
 			"since": "0.5.0",
@@ -1223,7 +1223,7 @@
 		"description": "A modal panel fixed to one edge of the screen, named by its title, behind the scrim, that returns focus when it closes.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme",
+			"kuiper-theme",
 			"button"
 		],
 		"meta": {
@@ -1250,7 +1250,7 @@
 		"description": "A modal window named by its title, behind the scrim, for a task that must finish before the page goes on.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme",
+			"kuiper-theme",
 			"button"
 		],
 		"meta": {
@@ -1277,7 +1277,7 @@
 		"description": "The path to the current page as a list of links, the current page marked and not a link.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme"
+			"kuiper-theme"
 		],
 		"meta": {
 			"since": "0.5.0",
@@ -1303,7 +1303,7 @@
 		"description": "A navigation landmark on the paper ground, set apart by a vertical groove, that collapses off-canvas or to icons and becomes a sheet on a phone.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme",
+			"kuiper-theme",
 			"is-mobile",
 			"sheet",
 			"input",
@@ -1337,7 +1337,7 @@
 		"description": "A media-query store that is true below 768 px and false on the server.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme"
+			"kuiper-theme"
 		],
 		"meta": {
 			"since": "0.5.0",
@@ -1364,7 +1364,7 @@
 		"description": "A scroll box named \"Messages\" holding a named log, that follows new content until the reader scrolls away, with a button back to the end.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme",
+			"kuiper-theme",
 			"button"
 		],
 		"meta": {
@@ -1384,7 +1384,7 @@
 		"description": "One turn of a conversation: a heading that says who, the content as full-width prose or a bubble on the muted inset, and a footer.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme"
+			"kuiper-theme"
 		],
 		"meta": {
 			"since": "0.5.0",
@@ -1410,7 +1410,7 @@
 		"description": "A line in a conversation that is not a turn: a status, a divider, a note.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme"
+			"kuiper-theme"
 		],
 		"meta": {
 			"since": "0.5.0",
@@ -1436,7 +1436,7 @@
 		"description": "The form a person writes a message in: a textarea that grows, Enter to send, a send button that becomes Stop while a reply runs, and never a disabled control.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme",
+			"kuiper-theme",
 			"field",
 			"input-group",
 			"button",
@@ -1461,7 +1461,7 @@
 		"description": "A full-bleed expressive section on the canvas or one of the four colour fields, following the page's theme.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme"
+			"kuiper-theme"
 		],
 		"meta": {
 			"since": "0.11.0",
@@ -1480,7 +1480,7 @@
 		"description": "Code on a flat card for a stage, with a copy button and, given a run function, a Run button whose output and outcome the card shows and says.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme",
+			"kuiper-theme",
 			"code-block",
 			"button",
 			"status"
@@ -1502,7 +1502,7 @@
 		"description": "A product site's sticky top bar, a floating glass panel: a skip link, the logo, named links and actions, folding into a sheet on a phone.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme",
+			"kuiper-theme",
 			"button",
 			"sheet",
 			"liquid-glass"
@@ -1524,7 +1524,7 @@
 		"description": "A page's first screen on a stage: an eyebrow, the display heading, a sentence and actions on glass, an object on a colour field, and a strip along the bottom.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme",
+			"kuiper-theme",
 			"button",
 			"liquid-glass"
 		],
@@ -1545,7 +1545,7 @@
 		"description": "Two to four numbers in the proof step, each with what it counts, that count up once when they first come into view.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme",
+			"kuiper-theme",
 			"read-token"
 		],
 		"meta": {
@@ -1565,7 +1565,7 @@
 		"description": "A working console shown on a stage: example commands in tabs, a Run button, meters that fill to the result, and its lines.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme",
+			"kuiper-theme",
 			"tabs",
 			"code-block",
 			"button",
@@ -1590,7 +1590,7 @@
 		"description": "A named list of names in mono that wraps, for the bottom of a hero.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme"
+			"kuiper-theme"
 		],
 		"meta": {
 			"since": "0.11.0",
@@ -1609,7 +1609,7 @@
 		"description": "A closing section: a heading in the section step, an optional sentence and one or two actions.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme",
+			"kuiper-theme",
 			"button"
 		],
 		"meta": {
@@ -1629,7 +1629,7 @@
 		"description": "A product site's footer: the logo, groups of links each a named nav, and the build facts the app shell's footer shows.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme"
+			"kuiper-theme"
 		],
 		"meta": {
 			"since": "0.11.0",
@@ -1648,7 +1648,7 @@
 		"description": "A page's opening: an optional eyebrow, the one heading, a sentence, one call to action, and a feature grid divided by grooves.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme",
+			"kuiper-theme",
 			"button"
 		],
 		"meta": {
@@ -1668,7 +1668,7 @@
 		"description": "Email and password in one step, with an error summary that takes focus, a password you can show, and a button that goes busy.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme",
+			"kuiper-theme",
 			"card",
 			"field",
 			"input",
@@ -1694,7 +1694,7 @@
 		"description": "Email and a password with its rules written first, then a six-digit code on its own step, with resend.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme",
+			"kuiper-theme",
 			"card",
 			"field",
 			"input",
@@ -1721,7 +1721,7 @@
 		"description": "Empty, loading, error and not found as one family, with an error page for SvelteKit's error route.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme",
+			"kuiper-theme",
 			"empty",
 			"button",
 			"skeleton",
@@ -1744,7 +1744,7 @@
 		"description": "One column of sections divided by grooves, saved by one button, with an inline Saved message and a confirmed delete.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme",
+			"kuiper-theme",
 			"field",
 			"input",
 			"native-select",
@@ -1772,7 +1772,7 @@
 		"description": "The frame every page sits in: a skip link, a header with the product's logo or name and a theme toggle, an optional sidebar, the main area, and a footer that states the build.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme",
+			"kuiper-theme",
 			"four-dot",
 			"theme",
 			"button",
@@ -1800,7 +1800,7 @@
 		"description": "A conversation: a log that follows new replies, turns with code, a composer that sends and stops, and the words a screen reader hears.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme",
+			"kuiper-theme",
 			"message-log",
 			"message",
 			"marker",
@@ -1827,7 +1827,7 @@
 		"description": "A product's home page: the glass bar, a stage hero with two code cards on a colour field and a strip, a proof band, a live console on a stage, a call to action and the footer.",
 		"registryDependencies": [
 			"utils",
-			"pluto-theme",
+			"kuiper-theme",
 			"stage",
 			"stage-card",
 			"marketing-bar",
@@ -1848,5 +1848,24 @@
 			]
 		},
 		"relativeUrl": "product-home.json"
+	},
+	{
+		"name": "pluto-theme",
+		"title": "Pluto theme (renamed)",
+		"type": "registry:theme",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+		"description": "Renamed kuiper-theme in 0.13.0. Installs kuiper-theme. This alias is removed in 0.14.0.",
+		"registryDependencies": [
+			"kuiper-theme"
+		],
+		"meta": {
+			"since": "0.1.0",
+			"group": "foundation",
+			"deprecated": {
+				"replacement": "kuiper-theme",
+				"removedIn": "0.14.0"
+			}
+		},
+		"relativeUrl": "pluto-theme.json"
 	}
 ]

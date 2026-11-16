@@ -9,7 +9,7 @@
 
 ## In short
 
-Pluto 0.12 as built at `ea1f9bd`. Each score is 0 to 4 (§2).
+Kuiper 0.13 as built from `020`'s landing tree (re-scored after `020`; the first run was Pluto 0.12 at `ea1f9bd`, in the run log). Each score is 0 to 4 (§2).
 
 | # | Dimension | Pluto | Carbon | Material 3 | Spectrum 2 | Atlassian | Primer | Radix Themes | GOV.UK |
 |---|---|---|---|---|---|---|---|---|---|
@@ -23,11 +23,11 @@ Pluto 0.12 as built at `ea1f9bd`. Each score is 0 to 4 (§2).
 | 8 | Page weight and paint | **4** | 0 | 0 | 2 | 2 | 1 | 2 | **4** |
 | 9 | Code examples | **3** | **3** | 0 | **3** | **3** | **3** | **3** | 2 |
 | 10 | Install and adoption | 3 | **4** | **4** | 3 | **4** | **4** | 3 | **4** |
-| 11 | Change communication | 2 | **3** | 1 | 1 | 2 | **3** | 2 | **3** |
+| 11 | Change communication | **3** | **3** | 1 | 1 | 2 | **3** | 2 | **3** |
 | 12 | Design tooling | 0 | 2 | 2 | 2 | 2 | **4** | 1 | 1 |
 | 13 | Reach | 1 | **3** | **3** | **3** | 0 | 1 | 0 | 2 |
-| 14 | Governance | 2 | **4** | 0 | 1 | 2 | **4** | 1 | 3 |
-| | **Total, of 56** | **30** | 37 | 28 | 32 | 30 | 41 | 25 | 31 |
+| 14 | Governance | 3 | **4** | 0 | 1 | 2 | **4** | 1 | 3 |
+| | **Total, of 56** | **32** | 37 | 28 | 32 | 30 | 41 | 25 | 31 |
 
 Bold marks the best score in a row. The total is a summary, not a target: the rows weigh differently for Pluto's apps.
 
@@ -39,7 +39,7 @@ Bold marks the best score in a row. The total is a summary, not a target: the ro
 4. **Theming, 2 against 4 (Material, Primer, Radix).** Light and dark and the expressive mode, but a light island cannot sit in a dark page, and there is no contrast scheme.
 5. **The part first, 2 against 4 (Material, Radix, GOV.UK).** The first frame starts at y = 419, but the part's own pixels start at y = 572 at 1440 and y = 661 at 390. The frame's header takes 150 px.
 
-Two more rows sit two steps behind: reach (1 against 3) and governance (2 against 4). **Pluto leads** on navigation and search (the 018 work: tree, phone tree, grouped and highlighted search, aliases, previous and next) and ties GOV.UK on page weight: 380 kB and a 1.0 s paint on Button, against 1.9 to 6.0 MB for five of the seven.
+One more row sits two steps behind: reach (1 against 3). Governance is one step behind (3 against 4) since `020`, and change communication ties the best (3) since `020`'s upgrade guide. **Pluto leads** on navigation and search (the 018 work: tree, phone tree, grouped and highlighted search, aliases, previous and next) and ties GOV.UK on page weight: 380 kB and a 1.0 s paint on Button, against 1.9 to 6.0 MB for five of the seven.
 
 ## How to read this
 
@@ -281,7 +281,7 @@ READ: *enterprise* §3–4, *developer* §4–5, *product* §3–5, *Carbon* §3
 
 | | a dated | b breaking marked | c per page | d migration | e generated or feed | f roadmap | Score |
 |---|---|---|---|---|---|---|---|
-| Pluto | ✓ | ✓ | ✓ | – | – | – | 2 |
+| Pluto | ✓ | ✓ | ✓ | ✓ | – | – | 3 |
 | Carbon | ✓ | ✓ | ✓ | ✓ | ✓ | ? | 3 |
 | Material 3 | ✓ | ? | – | ✓ | – | – | 1 |
 | Spectrum 2 | ? | ✓ | – | ? | ✓ | – | 1 |
@@ -290,7 +290,7 @@ READ: *enterprise* §3–4, *developer* §4–5, *product* §3–5, *Carbon* §3
 | Radix Themes | ✓ | ✓ | – | ✓ | – | – | 2 |
 | GOV.UK | ✓ | ✓ | ✓ | ✓ | – | ✓ | 3 |
 
-- **Pluto:** dated releases, "interface change" marked 26 times, an "Updated" fact on 75 of 75 pages (EXECUTED). The 0.12.0 entry's "delete these lines" list is written by hand (READ, *Primer* §4). No migration page yet; 0.13.0's rename promises one (READ, `CHANGELOG.md`).
+- **Pluto:** dated releases, "interface change" marked 26 times, an "Updated" fact on 75 of 75 pages (EXECUTED). The 0.12.0 entry's "delete these lines" list is written by hand (READ, *Primer* §4). After `020`: a migration page, "Upgrade to 0.13.0" at `/changelog/0.13.0/upgrade/`, built from the rename table; `kuiper.ts` counts 2 route files (EXECUTED). (d) is met; 3.
 - **Carbon:** "Last updated" per page (EXECUTED, `depth.ts`); a deprecations page with "What to use instead" and "Migration" (EXECUTED, fetched); notes generated from commits (READ, *Carbon* §5.1). **Material:** "Differences from M2" on Button (EXECUTED, screenshot); dated "What's new" on Colour (READ, *enterprise* §3.2). **Spectrum:** semver criteria, a diff and a changeset generator (READ, *Spectrum* §3); its "What's new" returns 404 today (EXECUTED). **Atlassian:** a Changelog tab per component (EXECUTED). **Primer:** changesets, a token diff in CI, deprecation pages (READ, *Primer* §4). **Radix:** a releases page with upgrade guides (READ, *developer* §9). **GOV.UK:** a history page per component, notes grouped breaking, recommended, new, fixes, a roadmap and an "upcoming" page (EXECUTED, its sitemap; READ, *GOV.UK* §5).
 
 ### Row 12. Design tooling
@@ -329,7 +329,7 @@ READ: *enterprise* §3–4, *developer* §4–5, *product* §3–5, *Carbon* §3
 
 | | a process | b status | c deprecation | d breaking rule | e decisions | f feedback | Score |
 |---|---|---|---|---|---|---|---|
-| Pluto | ✓ | – | – | – | ✓ | ✓ | 2 |
+| Pluto | ✓ | – | ✓ | – | ✓ | ✓ | 3 |
 | Carbon | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | 4 |
 | Material 3 | – | ✓ | ? | – | – | ? | 0 |
 | Spectrum 2 | ? | – | ✓ | ✓ | ? | – | 1 |
@@ -338,7 +338,7 @@ READ: *enterprise* §3–4, *developer* §4–5, *product* §3–5, *Carbon* §3
 | Radix Themes | ✓ | – | ? | ? | – | ✓ | 1 |
 | GOV.UK | ✓ | ✓ | ✓ | ✓ | ? | ✓ | 3 |
 
-- **Pluto:** the pipeline in the constitution (§5) and `context/README.md`; 73 decisions, 36 reviews; "Suggest a change on GitHub" (EXECUTED). No status, by the owner's ruling (READ, `decisions.md`, 2026-11-15). No deprecation path (READ, *Carbon* §5.2). "Interface change" is decided per specification, with no written rule (READ, *Carbon* §5.1).
+- **Pluto:** the pipeline in the constitution (§5) and `context/README.md`; 73 decisions, 36 reviews; "Suggest a change on GitHub" (EXECUTED). No status, by the owner's ruling (READ, `decisions.md`, 2026-11-15). After `020`: a deprecation path that names the replacement, `meta.deprecated.replacement` on the `pluto-theme` alias, with the guide and the changelog saying when it goes (READ, `registry.json`; EXECUTED, `kuiper.ts`, `deprecatedItems` 1). (c) is met; 3. "Interface change" is decided per specification, with no written rule (READ, *Carbon* §5.1).
 - **Carbon:** statuses, a deprecations page, a versioning table, ADRs, a feedback link (READ, *Carbon* §5; EXECUTED, fetched). **Material:** a status chip per platform (READ, *enterprise* §3.2). **Spectrum:** `replacedBy`, written semver criteria (READ, *Spectrum* §3). **Atlassian:** "Release phases", "Caution" and "Deprecated" lozenges in the tree (EXECUTED), "Was this page helpful?" (READ, *enterprise* §3.4). **Primer:** contribution guides, status page, deprecation pages, changesets, ADRs, "Give feedback" (READ, *Primer* §4, *product* §3). **Radix:** "Report an issue" on every page (EXECUTED, screenshot). **GOV.UK:** contribution criteria, lifecycle statuses, versioning and managing-change docs, a discussion per component (EXECUTED, its sitemap; READ, *GOV.UK* §4–5).
 
 ## 5. Gaps: Pluto against the best reference
@@ -351,11 +351,11 @@ READ: *enterprise* §3–4, *developer* §4–5, *product* §3–5, *Carbon* §3
 | 4 | Theming | 2 | 4 | Material, Primer, Radix | −2 | Either scheme on any subtree; a contrast scheme or a scale. |
 | 7 | The part first | 2 | 4 | Material, Radix, GOV.UK | −2 | The specimen at y ≈ 290–330, inside the first phone screen. |
 | 13 | Reach | 1 | 3 | Carbon, Material, Spectrum | −2 | Several platforms, RTL styles, translatable strings. |
-| 14 | Governance | 2 | 4 | Carbon, Primer | −2 | Statuses, deprecation naming the replacement, a written breaking-change rule. |
 | 1 | Breadth | 3 | 4 | Spectrum | −1 | 37 of the 40 parts. |
 | 2 | Guidance depth | 2 | 3 | Carbon, Material, Spectrum, Primer | −1 | Anatomy, keyboard, described props on the same pages. |
 | 10 | Install and adoption | 3 | 4 | five systems | −1 | A designer's way in. |
-| 11 | Change communication | 2 | 3 | Carbon, Primer, GOV.UK | −1 | Migration guides; generated notes; a history per component. |
+| 14 | Governance | 3 | 4 | Carbon, Primer | −1 | Statuses and a written breaking-change rule; Kuiper names the replacement since `020`. |
+| 11 | Change communication | 3 | 3 | Carbon, Primer, GOV.UK | 0 | Kuiper has a migration guide since `020`; the best also generate notes or a feed. |
 | 8 | Page weight and paint | 4 | 4 | GOV.UK | 0 | |
 | 9 | Code examples | 3 | 3 | six systems | 0 | Nobody has all six; Pluto lacks a sandbox and controls. |
 | 6 | Navigation and search | 4 | 3 | five systems | **+1** | Pluto leads. |
@@ -374,10 +374,10 @@ Each line names the smallest change that moves the row by one, and what is alrea
 8. **Weight 4:** hold under `perf.spec.ts`'s budgets.
 9. **Code examples 3 → 4:** both missing criteria: an "Open in StackBlitz" SvelteKit link (d) and generated controls for items whose props are unions and booleans (e) (*enterprise* gap 11, *Radix* idea 1).
 10. **Install 3 → 4:** a designer path: a design start page, or a design-tool library (row 12 moves with it).
-11. **Change communication 2 → 3:** a migration page. 0.13.0's rename guide is that page, if it is a page and not only a changelog paragraph.
+11. **Change communication 3 → 4:** met 3 with `020`'s guide. Two more criteria make 4: generated notes or a feed (e), and a public "upcoming" list (f); both are planned in `049`.
 12. **Design tooling 0 → 1:** tokens exported as design-tool variables (b) gives 1; an official component library gives 2. Both are the owner's call (§7).
 13. **Reach 1 → 2:** right-to-left: convert the 21 physical-side classes in item files to logical ones and add one RTL test (b). Translatable built-in strings (c) make 3.
-14. **Governance 2 → 3:** a written interface-change rule (*Carbon* idea 1). `meta.deprecated` naming the replacement (*Primer* idea 2) keeps it at 3; 4 needs a status per item (b), which the owner ruled out on 2026-11-15.
+14. **Governance, held at 3:** met 3 with `020`'s `meta.deprecated` naming the replacement (c). A written interface-change rule (d, `048`) makes five criteria, still 3; 4 needs a status per item (b), which the owner ruled out on 2026-11-15. The row is at its 1.0 target.
 
 ## 7. Questions this raises for the owner
 
@@ -391,11 +391,11 @@ These are not decisions. They are recorded here so the design lead can ask them,
 Run after every specification lands, and before a tag. About 30 minutes, most of it the throttled loads. Nothing here is part of `bun run test`, and no script writes to the repository.
 
 1. **Build the site at the commit to score.** `bun run build`. The scripts serve `build/` and read its twins; each prints the build's time, so check it is after the commit.
-2. **Pluto's evidence:** `bun scripts/bench/pluto.ts --rev <commit> --json <out>/pluto.json`. Reads source with `git show`, so it scores the commit even with a dirty tree. About 5 s.
+2. **Kuiper's evidence:** `bun scripts/bench/kuiper.ts --rev <commit> --json <out>/kuiper.json`. Reads source with `git show`, so it scores the commit even with a dirty tree; at a commit before `020` it reads `tokens/pluto.tokens.json`. About 5 s. (Before `020`, this script was `pluto.ts`.)
 3. **Breadth:** `bun scripts/bench/breadth.ts --rev <commit> --json <out>/breadth.json`. Needs the network. Read each system's `miss` list before scoring: slug matching is by pattern. About 1 minute.
-4. **Weight, paint, positions, chrome:** `bun scripts/bench/site.ts --runs 3 --shots <out>/shots --json <out>/site.json`. About 15 minutes. `--only pluto` re-measures Pluto alone; `--layout-only` skips the throttled loads. Look at each `*-1440.png` and `*-390.png`: a cookie wall or a moved page shows there first.
+4. **Weight, paint, positions, chrome:** `bun scripts/bench/site.ts --runs 3 --shots <out>/shots --json <out>/site.json`. About 15 minutes. `--only kuiper` re-measures Kuiper alone; `--layout-only` skips the throttled loads. Look at each `*-1440.png` and `*-390.png`: a cookie wall or a moved page shows there first.
 5. **Depth:** `bun scripts/bench/depth.ts --json <out>/depth.json`. About 8 minutes. A mark that surprises gets a look at the page (Radix's `Dialog.Content` is one).
-6. **Score.** Scripted rows (1, 2, 7, 8) follow their anchors. For the checklist rows, re-mark Pluto from `pluto.json` and the changed specification. Re-verify the references' marks when a newer memo covers them, or every fourth run; turn a `?` into ✓ or – only with a source.
+6. **Score.** Scripted rows (1, 2, 7, 8) follow their anchors. For the checklist rows, re-mark Kuiper from `kuiper.json` and the changed specification. Re-verify the references' marks when a newer memo covers them, or every fourth run; turn a `?` into ✓ or – only with a source.
 7. **Write it down.** Replace the table in "In short", §4's changed cells and §5–6. Add a row to §8's log. If a rubric criterion or anchor changes, say so in the log row, and re-score every system on that row.
 
 Use any `<out>` folder outside the repository, such as the session scratchpad. When a reference URL moves, fix it in `scripts/bench/targets.ts` and note it in the log.
@@ -407,13 +407,14 @@ Use any `<out>` folder outside the repository, such as the session scratchpad. W
 - `scripts/bench/site.ts`: rows 6 (tree links), 7 and 8.
 - `scripts/bench/depth.ts`: row 2.
 - `scripts/bench/breadth.ts`: row 1.
-- `scripts/bench/pluto.ts`: Pluto's marks for rows 3, 4, 5, 10, 11, 12, 13 and 14.
+- `scripts/bench/kuiper.ts`: Kuiper's marks for rows 3, 4, 5, 10, 11, 12, 13 and 14 (`pluto.ts` before `020`).
 
 ### Run log
 
 | Date | Pluto at | Build | By | Pluto scores, rows 1–14 | Total | Notes |
 |---|---|---|---|---|---|---|
 | 2026-11-15 | `ea1f9bd` (0.12.0, after `018`) | 2026-11-15 13:53, working tree with `019` in progress | a researcher | 3 2 1 2 1 4 2 4 3 3 2 0 1 2 | 30 | First run. References live on 2026-11-15. Carbon's URLs now sit under `/building-blocks/core/components/`; Spectrum 2's under `/web/rsp/components/`. |
+| 2026-11-15 | `020`'s landing tree, on `release/0.13.0` from `f9e1c1a`, before its commit | 2026-11-15, the same tree | a builder | 3 2 1 2 1 4 2 4 3 3 3 0 1 3 | 32 | After `020`. `kuiper.ts` (working tree): `migrationPages` 0 → 2 (the guide's two route files), so row 11 (d) is met, 2 → 3; `deprecatedItems` 0 → 1 (`pluto-theme`, naming `kuiper-theme`), so row 14 (c) is met, 2 → 3. `breadth.items` reads 76: the count includes the alias entry; row 1 reads `breadth.ts`, which matches parts, and holds. `site.ts --only kuiper`: Button 381 kB, LCP 992 ms, the part at 572 (1440) and 661 (390), 76 nav links, search and theme present; rows 6, 7 and 8 hold. Tokens and every other count as at `ea1f9bd`. References not re-checked. |
 
 ## 9. Limits
 

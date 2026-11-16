@@ -1,6 +1,6 @@
 # /context
 
-The durable memory of the Kuiper Design System, Pluto Systems' design system: what we are building, why, and how. Kuiper is a public product. It is built for Pluto Systems' applications and for any team that adopts it, so this record is written for a stranger to follow. Code names stay `pluto` (the `pluto` registry, `pluto-theme`, the `pluto:` context keys, `tokens/pluto.tokens.json`) until 0.13.0 renames them.
+The durable memory of the Kuiper Design System, Pluto Systems' design system: what we are building, why, and how. Kuiper is a public product. It is built for Pluto Systems' applications and for any team that adopts it, so this record is written for a stranger to follow. Its code names say Kuiper since 0.13.0 (`020`): the `kuiper` registry, `kuiper-theme`, the `kuiper:` context keys, `tokens/kuiper.tokens.json`. The old `pluto` names work as aliases until 0.14.0, which removes them. Pluto Systems, the company, and its brand keep their name.
 
 `constitution.md` sets the direction and the hard constraints; every other document here obeys it. Code is a build artifact of this context. When the two disagree, fix the code, unless the context is wrong, in which case fix the context first.
 

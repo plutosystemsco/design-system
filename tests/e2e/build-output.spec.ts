@@ -7,6 +7,7 @@
 import { expect, test } from "@playwright/test";
 import { execFileSync } from "node:child_process";
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
+import { withListedItems } from "../../src/lib/site/items.ts";
 import path from "node:path";
 import { apiTables } from "../../src/lib/site/api.server.ts";
 import { CITATION_PATTERNS } from "../../src/lib/site/citations.ts";
@@ -52,8 +53,11 @@ test.describe("015: the pages in build/", () => {
     expect(SITEMAP.map((p) => p.path).filter((p) => !built.has(p))).toEqual([]);
   });
 
-  test("criterion 3: 75 of 75 components/<name>/index.html; nothing under items/, identity/ or workbench/; no _redirects", () => {
-    const registry = JSON.parse(readFileSync("registry.json", "utf8")) as {
+  // 020 decision 10: the one _redirects is static/_redirects, copied whole.
+  test("criterion 3: 75 of 75 components/<name>/index.html; nothing under items/, identity/ or workbench/; _redirects is static/_redirects", () => {
+    const registry = withListedItems(
+      JSON.parse(readFileSync("registry.json", "utf8")),
+    ) as {
       items: { name: string }[];
     };
     expect(
@@ -63,7 +67,9 @@ test.describe("015: the pages in build/", () => {
     ).toHaveLength(75);
     for (const gone of ["items", "identity", "workbench"])
       expect(existsSync(path.join(BUILD, gone)), gone).toBe(false);
-    expect(existsSync(path.join(BUILD, "_redirects"))).toBe(false);
+    expect(readFileSync(path.join(BUILD, "_redirects"), "utf8")).toBe(
+      readFileSync("static/_redirects", "utf8"),
+    );
   });
 });
 
@@ -199,7 +205,9 @@ test.describe("015: the Markdown twins", () => {
   });
 
   test("criterion 19: 75 of 75 component twins hold the shown source of each of their examples, fenced as svelte", () => {
-    const registry = JSON.parse(readFileSync("registry.json", "utf8")) as {
+    const registry = withListedItems(
+      JSON.parse(readFileSync("registry.json", "utf8")),
+    ) as {
       items: { name: string; type: string; meta: { group: string } }[];
     };
     let checked = 0;
@@ -368,7 +376,9 @@ test.describe("015: public", () => {
       );
       for (const h of hits(twin, changelog)) wrong.push(`${p.path} twin: ${h}`);
     }
-    const registry = JSON.parse(readFileSync("registry.json", "utf8")) as {
+    const registry = withListedItems(
+      JSON.parse(readFileSync("registry.json", "utf8")),
+    ) as {
       items: { name: string; files: { path: string; type: string }[] }[];
     };
     for (const item of registry.items) {
@@ -535,7 +545,9 @@ test.describe("018: the footer link and the twins", () => {
 test.describe("018 criterion 18: the first stage is exampleOrder's first", () => {
   test("on 75 of 75 pages, the first frame's data-example (or the viewer's first view) is the one exampleOrder names", async () => {
     const { firstStage } = await import("../../src/lib/site/example-order.ts");
-    const registry = JSON.parse(readFileSync("registry.json", "utf8")) as {
+    const registry = withListedItems(
+      JSON.parse(readFileSync("registry.json", "utf8")),
+    ) as {
       items: { name: string }[];
     };
     const wrong: string[] = [];

@@ -5,7 +5,7 @@ import type { PageServerLoad } from "./$types";
 /** Three facts generated from the token file. */
 export const load: PageServerLoad = () => {
   const tokens = JSON.parse(
-    readFileSync(path.resolve("tokens/pluto.tokens.json"), "utf8"),
+    readFileSync(path.resolve("tokens/kuiper.tokens.json"), "utf8"),
   ) as {
     primitives: Record<string, unknown>;
     themes: { light: Record<string, unknown> };

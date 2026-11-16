@@ -20,7 +20,7 @@ beforeAll(async () => {
   );
   const script = /<script lang="ts" module>([\s\S]*?)<\/script>/.exec(source);
   expect(script).not.toBeNull();
-  const dir = path.resolve(".svelte-kit", "pluto-tests");
+  const dir = path.resolve(".svelte-kit", "kuiper-tests");
   mkdirSync(dir, { recursive: true });
   const file = path.join(dir, "chat-text.module.ts");
   writeFileSync(file, script![1]!);

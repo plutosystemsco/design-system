@@ -1,6 +1,6 @@
 ; Java, for tree-sitter-java 0.23.5 (node types read from its
-; src/node-types.json at that version). Captures are Pluto code roles.
-; written for the Pluto design system; not derived from the grammar's own queries.
+; src/node-types.json at that version). Captures are Kuiper code roles.
+; written for the Kuiper Design System; not derived from the grammar's own queries.
 
 ; ALL_CAPS names read as constants where they stand as a value or the name
 ; being assigned (`static final double DELTA_V_LIMIT`, `x = MAX_N`). This

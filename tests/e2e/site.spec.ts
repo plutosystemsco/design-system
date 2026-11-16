@@ -7,6 +7,7 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
+import { withListedItems } from "../../src/lib/site/items.ts";
 import path from "node:path";
 import { DOORS } from "../../src/lib/site/doors.ts";
 import {
@@ -106,7 +107,9 @@ test.describe("015 criterion 13: nothing required is lost", () => {
   test("58 of 58 item pages render at least 1 frame, the first with its code open; the 17 blocks and compositions render their viewer", async ({
     request,
   }) => {
-    const registry = JSON.parse(readFileSync("registry.json", "utf8")) as {
+    const registry = withListedItems(
+      JSON.parse(readFileSync("registry.json", "utf8")),
+    ) as {
       items: { name: string; type: string; meta: { group: string } }[];
     };
     const framed: string[] = [];
@@ -161,7 +164,7 @@ test.describe("015 criterion 13: nothing required is lost", () => {
  */
 test.describe("015 criterion 26: overflow regions", () => {
   const PAGES_7 = [
-    "pluto-theme",
+    "kuiper-theme",
     "theme",
     "code-block",
     "code-editor",
@@ -496,7 +499,9 @@ test.describe("018 criterion 7: Updated", () => {
     test.setTimeout(600_000);
     const { parseChangelog, updatedIn } =
       await import("../../src/lib/site/changelog.ts");
-    const registry = JSON.parse(readFileSync("registry.json", "utf8")) as {
+    const registry = withListedItems(
+      JSON.parse(readFileSync("registry.json", "utf8")),
+    ) as {
       items: { name: string; meta: { since: string } }[];
     };
     const log = parseChangelog(readFileSync("CHANGELOG.md", "utf8"));
@@ -531,13 +536,15 @@ test.describe("018 criterion 7: Updated", () => {
     expect(wrong).toEqual([]);
   });
 
-  test("the four named items link their releases, and each target exists", async ({
+  test("the five named items link their releases, and each target exists", async ({
     page,
   }) => {
     for (const [name, anchor] of [
-      ["pluto-theme", "#v0-12-0"],
+      // 020: the theme and tooltip changed in 0.13.0; card never changed.
+      ["kuiper-theme", "#v0-13-0"],
       ["button", "#v0-11-0"],
-      ["tooltip", "#v0-2-0"],
+      ["tooltip", "#v0-13-0"],
+      ["card", "#v0-2-0"],
       ["name-strip", "#v0-11-0"],
     ]) {
       await open(page, `/components/${name}/`);
@@ -547,7 +554,7 @@ test.describe("018 criterion 7: Updated", () => {
       );
     }
     await open(page, "/changelog/");
-    for (const a of ["v0-12-0", "v0-11-0", "v0-2-0"])
+    for (const a of ["v0-13-0", "v0-12-0", "v0-11-0", "v0-2-0"])
       await expect(page.locator(`#${a}`)).toHaveCount(1);
   });
 });
@@ -669,7 +676,9 @@ test.describe("018 criterion 9: the details", () => {
   }) => {
     test.setTimeout(600_000);
     const { apiTables } = await import("../../src/lib/site/api.server.ts");
-    const registry = JSON.parse(readFileSync("registry.json", "utf8")) as {
+    const registry = withListedItems(
+      JSON.parse(readFileSync("registry.json", "utf8")),
+    ) as {
       items: { name: string }[];
     };
     const wrong: string[] = [];

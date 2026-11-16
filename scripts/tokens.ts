@@ -8,7 +8,7 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
 
-export const TOKENS_PATH = "tokens/pluto.tokens.json";
+export const TOKENS_PATH = "tokens/kuiper.tokens.json";
 export const THEMES = ["light", "dark"] as const;
 export type Theme = (typeof THEMES)[number];
 

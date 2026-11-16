@@ -201,7 +201,7 @@ describe("the queries (013 decision 6)", () => {
       expect(head, file).toMatch(/^;/);
       expect(head, file).toMatch(/\d+\.\d+\.\d+/);
       expect(head, file).toContain(
-        "written for the Pluto design system; not derived from the grammar's own queries",
+        "written for the Kuiper Design System; not derived from the grammar's own queries",
       );
     }
   });

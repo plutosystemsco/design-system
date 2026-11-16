@@ -142,7 +142,7 @@ test.describe("at 1280", () => {
   }
 });
 
-// 007 decision 10: the ink surface on the pluto-theme page at 1280, with its
+// 007 decision 10: the ink surface on the kuiper-theme page at 1280, with its
 // popover open (inside the surface) and with its dialog open (under body).
 test.describe("at 1280", () => {
   test.use({ viewport: { width: 1280, height: 900 } });
@@ -150,10 +150,10 @@ test.describe("at 1280", () => {
     ["surface-popover", "popover-content"],
     ["surface-dialog", "dialog-content"],
   ] as const) {
-    test(`axe finds 0 violations on /components/pluto-theme/ with ${id} open`, async ({
+    test(`axe finds 0 violations on /components/kuiper-theme/ with ${id} open`, async ({
       page,
     }) => {
-      await open(page, componentPath("pluto-theme"));
+      await open(page, componentPath("kuiper-theme"));
       await page.getByTestId(id).click();
       await page.locator(`[data-slot="${slot}"]`).waitFor();
       await settled(page);

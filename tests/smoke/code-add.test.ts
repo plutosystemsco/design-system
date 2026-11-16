@@ -4,7 +4,7 @@
  * 001's two scratch apps, against this repository's `vite dev`, with the
  * locked CLI under Bun. Together the eight pull use-highlighted-code,
  * highlighter (29 files, 21 dependencies), status, button, spinner, toggle,
- * utils and pluto-theme. Then, with the dev server STOPPED, the app's
+ * utils and kuiper-theme. Then, with the dev server STOPPED, the app's
  * prerendered build and its svelte-check, so nothing reaches back to this
  * repository; our lint; the theme's by-product; the client build's 21 WASM
  * files; and the built page's requests, which fetch the runtime and Python's
@@ -40,7 +40,7 @@ import {
 } from "./process.ts";
 
 const REPO = process.cwd();
-const scratch = mkdtempSync(path.join(tmpdir(), "pluto-smoke-code-"));
+const scratch = mkdtempSync(path.join(tmpdir(), "kuiper-smoke-code-"));
 const port = freePort();
 const REGISTRY = `http://localhost:${port}/r`;
 let server: ReturnType<typeof startDevServer> | undefined;
@@ -212,7 +212,7 @@ describe.each([
     );
     const css = () => readFileSync(path.join(app, "src", "app.css"), "utf8");
     const cssAfterFirst = css();
-    const theme = await add(app, REGISTRY, "pluto-theme");
+    const theme = await add(app, REGISTRY, "kuiper-theme");
     const cssAfterSecond = css();
     // From here on the app is on its own: nothing reaches this repository.
     await stopRegistry();
@@ -442,7 +442,7 @@ export const load = async () => ({
     expect(lintFiles(FILES, loadRules(REPO), r.app)).toEqual([]);
   });
 
-  test("8. app.css holds --color-code-keyword: var(--code-keyword) once, and a second add pluto-theme leaves it byte-identical", () => {
+  test("8. app.css holds --color-code-keyword: var(--code-keyword) once, and a second add kuiper-theme leaves it byte-identical", () => {
     const occurrences =
       r.cssAfterFirst.split("--color-code-keyword: var(--code-keyword)")
         .length - 1;
@@ -555,6 +555,7 @@ describe("the upgrade from v0.11.0", () => {
     const old = await add(
       app,
       `http://localhost:${port}/v0.11.0/r`,
+      // v0.11.0's name for the theme (020: history).
       "pluto-theme",
       "code-block",
       "code-editor",
@@ -563,7 +564,7 @@ describe("the upgrade from v0.11.0", () => {
     added = await add(
       app,
       REGISTRY,
-      "pluto-theme",
+      "kuiper-theme",
       "highlighter",
       "use-highlighted-code",
       "code-block",

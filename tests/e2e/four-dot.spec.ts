@@ -308,7 +308,7 @@ test.describe("accessible names", () => {
 });
 
 /**
- * 006 decision 5: the entrance. Four animations named pluto-mark-dock on the
+ * 006 decision 5: the entrance. Four animations named kuiper-mark-dock on the
  * shell's lockup (008: on the lockup view, whose logo is the lockup; the
  * document's count of four proves the footer's copy plays none), 495 ms each, delayed 135 to 405 ms, the last ending at
  * 900 ms, every dot composed after `finished`; none under reduce, with the
@@ -329,7 +329,7 @@ type Timing = {
  * the spring) and the fade (the opacity, on the entrance curve).
  */
 const ANIMATIONS = `document.getAnimations()
-  .filter((a) => "animationName" in a && ["pluto-mark-dock", "pluto-mark-fade"].includes(a.animationName))
+  .filter((a) => "animationName" in a && ["kuiper-mark-dock", "kuiper-mark-fade"].includes(a.animationName))
   .map((a) => {
     const t = a.effect.getComputedTiming();
     const dot = a.effect.target;
@@ -350,14 +350,14 @@ const DOTS = `[...document.querySelectorAll('header [data-slot="four-dot-dot"]')
 
 test.describe("the entrance", () => {
   // 008 criterion 2: the shipped shell shows a wordmark, so nothing docks.
-  test("the shipped shell runs 0 pluto-mark-dock animations", async ({
+  test("the shipped shell runs 0 kuiper-mark-dock animations", async ({
     page,
   }) => {
     await openView(page, "/view/app-shell/");
     expect(await page.evaluate(ANIMATIONS)).toEqual([]);
   });
 
-  test("4 of 4 dots run pluto-mark-dock on the spring and pluto-mark-fade on the entrance curve, each 495 ms, delayed 135 to 405 ms, ending by 900 ms, and land composed", async ({
+  test("4 of 4 dots run kuiper-mark-dock on the spring and kuiper-mark-fade on the entrance curve, each 495 ms, delayed 135 to 405 ms, ending by 900 ms, and land composed", async ({
     page,
   }) => {
     await openView(page, "/view/app-shell/lockup/");
@@ -367,7 +367,7 @@ test.describe("the entrance", () => {
       expect(t.duration).toBeCloseTo(495, 6);
       expect(t.end).toBeLessThanOrEqual(900.001);
     }
-    for (const name of ["pluto-mark-dock", "pluto-mark-fade"]) {
+    for (const name of ["kuiper-mark-dock", "kuiper-mark-fade"]) {
       const own = timings.filter((t) => t.name === name);
       expect(own.map((t) => t.dot).sort()).toEqual([0, 1, 2, 3]);
       expect(
@@ -375,9 +375,9 @@ test.describe("the entrance", () => {
       ).toEqual([135, 225, 315, 405]);
     }
     // 011 criterion 6: the dock on linear(…), the fade on the entrance curve.
-    for (const t of timings.filter((t) => t.name === "pluto-mark-dock"))
+    for (const t of timings.filter((t) => t.name === "kuiper-mark-dock"))
       expect(t.easing).toMatch(/^linear\(/);
-    for (const t of timings.filter((t) => t.name === "pluto-mark-fade"))
+    for (const t of timings.filter((t) => t.name === "kuiper-mark-fade"))
       expect(t.easing).toBe(ENTRANCE_CURVE);
     expect(Math.round(Math.max(...timings.map((t) => t.end)))).toBe(900);
     // 008 criterion 5: all four in the banner, none in the footer's lockup.
@@ -386,7 +386,7 @@ test.describe("the entrance", () => {
         document
           .getAnimations()
           .filter((a) =>
-            ["pluto-mark-dock", "pluto-mark-fade"].includes(
+            ["kuiper-mark-dock", "kuiper-mark-fade"].includes(
               (a as CSSAnimation).animationName,
             ),
           )
@@ -408,7 +408,7 @@ test.describe("the entrance", () => {
 
   test.describe("under reduced motion", () => {
     test.use({ reducedMotion: "reduce" });
-    test("0 animations named pluto-mark-dock or pluto-mark-fade, and 4 of 4 dots at opacity 1 at load", async ({
+    test("0 animations named kuiper-mark-dock or kuiper-mark-fade, and 4 of 4 dots at opacity 1 at load", async ({
       page,
     }) => {
       await page.addInitScript(() => {
@@ -417,7 +417,7 @@ test.describe("the entrance", () => {
             animations: document
               .getAnimations()
               .filter((a) =>
-                ["pluto-mark-dock", "pluto-mark-fade"].includes(
+                ["kuiper-mark-dock", "kuiper-mark-fade"].includes(
                   (a as CSSAnimation).animationName,
                 ),
               ).length,
@@ -455,7 +455,7 @@ test.describe("the entrance", () => {
         "animationstart",
         (e) => {
           if (
-            ["pluto-mark-dock", "pluto-mark-fade"].includes(
+            ["kuiper-mark-dock", "kuiper-mark-fade"].includes(
               (e as AnimationEvent).animationName,
             )
           )

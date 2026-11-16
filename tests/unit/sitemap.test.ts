@@ -4,11 +4,14 @@
  */
 import { describe, expect, test } from "bun:test";
 import { readdirSync, readFileSync, statSync } from "node:fs";
+import { withListedItems } from "../../src/lib/site/items.ts";
 import path from "node:path";
 import { DOORS } from "../../src/lib/site/doors.ts";
 import { componentPath, GROUPS, SITEMAP } from "../../src/lib/site/sitemap.ts";
 
-const registry = JSON.parse(readFileSync("registry.json", "utf8")) as {
+const registry = withListedItems(
+  JSON.parse(readFileSync("registry.json", "utf8")),
+) as {
   items: { name: string; title: string; meta: { group: string } }[];
 };
 
@@ -118,9 +121,9 @@ describe("017: the page list", () => {
     ]);
   });
 
-  test("21 entries tagged 017, 102 in all, each under its door's landing", () => {
+  test("21 entries tagged 017, 103 in all with 020's guide, each under its door's landing", () => {
     expect(added).toHaveLength(21);
-    expect(SITEMAP).toHaveLength(102);
+    expect(SITEMAP).toHaveLength(103);
     for (const p of added) expect(p.parent).toBe(`/${p.door}/`);
   });
 });
@@ -162,11 +165,13 @@ describe("018 decision 1: navOrder", () => {
       );
   });
 
-  test("the changelog's list is the four landings, then the changelog", async () => {
+  // 020 decision 12: the upgrade guide sits under the changelog.
+  test("the changelog's list is the four landings, then the changelog, then the 0.13.0 upgrade guide", async () => {
     const { navOrder } = await import("../../src/lib/site/sitemap.ts");
     expect(navOrder(null).map((p) => p.path)).toEqual([
       ...DOORS.map((d) => d.path),
       "/changelog/",
+      "/changelog/0.13.0/upgrade/",
     ]);
   });
 });

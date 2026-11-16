@@ -7,7 +7,7 @@
 	"description": "A static, hidden placeholder on an inset where content is loading.",
 	"registryDependencies": [
 		"utils",
-		"pluto-theme"
+		"kuiper-theme"
 	],
 	"meta": {
 		"since": "0.2.0",

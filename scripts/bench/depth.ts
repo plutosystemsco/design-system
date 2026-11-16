@@ -3,7 +3,7 @@
  * Button and one overlay (Dialog; GOV.UK's error summary), across every tab.
  * Feeds the scorecard's "guidance depth" row.
  *
- *   bun scripts/bench/depth.ts [--only pluto,primer] [--build build] [--json <file>]
+ *   bun scripts/bench/depth.ts [--only kuiper,primer] [--build build] [--json <file>]
  *
  * For each page it reads the headings, the tab labels, the tables and the
  * main text, and marks ten elements present or absent:
@@ -225,7 +225,7 @@ if (typeof opt.json === "string")
       {
         script: "scripts/bench/depth.ts",
         at: new Date().toISOString(),
-        plutoBuild: server.built,
+        kuiperBuild: server.built,
         rows,
       },
       null,

@@ -1,9 +1,9 @@
 /**
- * Benchmark, Pluto's own evidence: counts read from this repository at a
+ * Benchmark, Kuiper's own evidence: counts read from this repository at a
  * commit, and from the built site's Markdown twins. Feeds every scorecard
- * row that rests on what Pluto has, not on how a page loads.
+ * row that rests on what Kuiper has, not on how a page loads.
  *
- *   bun scripts/bench/pluto.ts [--rev ea1f9bd] [--build build] [--json <file>]
+ *   bun scripts/bench/kuiper.ts [--rev ea1f9bd] [--build build] [--json <file>]
  *
  * `--rev` reads source files with `git show <rev>:<path>` (default: the
  * working tree). The twins come from `--build` (default `build/`), so build
@@ -47,7 +47,11 @@ const grepFiles = (files: string[], re: RegExp) =>
   files.reduce((n, f) => n + count(read(f), re), 0);
 
 // Tokens
-const tokens = JSON.parse(read("tokens/pluto.tokens.json") || "{}");
+// 020 decision 13: a commit before the rename holds the old path, so it
+// still scores the same.
+const tokens = JSON.parse(
+  read("tokens/kuiper.tokens.json") || read("tokens/pluto.tokens.json") || "{}",
+);
 const roles = Object.keys(tokens.themes?.light ?? {});
 const words = read("src/lib/site/foundations/words.ts");
 const described = roles.filter(
@@ -142,7 +146,7 @@ const med = (xs: number[]) =>
   xs.length ? sorted(xs)[Math.floor(xs.length / 2)] : 0;
 
 const report = {
-  script: "scripts/bench/pluto.ts",
+  script: "scripts/bench/kuiper.ts",
   at: new Date().toISOString(),
   rev: rev ?? "working tree",
   build: existsSync(path.join(build, "index.html"))

@@ -4,6 +4,7 @@ import { sveltekit } from "@sveltejs/kit/vite";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "vite";
 import { registryWatch } from "./scripts/registry-watch.ts";
+import { redirects } from "./scripts/site/redirects-plugin.ts";
 
 /**
  * 006 decision 8: a git value, or undefined when git or the repository is
@@ -37,6 +38,8 @@ if (builtAt) process.env.VITE_BUILT_AT = builtAt;
 export default defineConfig({
   plugins: [
     registryWatch(),
+    // 020 decision 10: the host's _redirects, answered in dev and preview.
+    redirects(),
     tailwindcss(),
     sveltekit({
       adapter: adapter(),

@@ -1,0 +1,31 @@
+{
+	"$schema": "https://shadcn-svelte.com/schema/registry-item.json",
+	"name": "name-strip",
+	"title": "Name strip",
+	"type": "registry:ui",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+	"description": "A named list of names in mono that wraps, for the bottom of a hero.",
+	"registryDependencies": [
+		"utils",
+		"kuiper-theme"
+	],
+	"meta": {
+		"since": "0.11.0",
+		"group": "compositions",
+		"modes": [
+			"expressive"
+		]
+	},
+	"files": [
+		{
+			"content": "<script lang=\"ts\">\n  import { cn, type WithElementRef } from \"$UTILS$\";\n  import type { HTMLAttributes } from \"svelte/elements\";\n\n  let {\n    ref = $bindable(null),\n    label,\n    names,\n    class: className,\n    ...restProps\n  }: WithElementRef<HTMLAttributes<HTMLUListElement>> & {\n    /** The list's accessible name: what the names are. */\n    label: string;\n    names: string[];\n  } = $props();\n</script>\n\n<!-- A named list of names in mono furniture, muted, wrapping on a phone. -->\n<ul\n  bind:this={ref}\n  data-slot=\"name-strip\"\n  aria-label={label}\n  class={cn(\n    \"flex flex-wrap gap-x-8 gap-y-2 font-mono text-sm text-muted-foreground\",\n    className,\n  )}\n  {...restProps}\n>\n  {#each names as name, index (index)}\n    <li>{name}</li>\n  {/each}\n</ul>\n",
+			"type": "registry:ui",
+			"target": "name-strip/name-strip.svelte"
+		},
+		{
+			"content": "import Root from \"./name-strip.svelte\";\n\nexport {\n  Root,\n  //\n  Root as NameStrip,\n};\n",
+			"type": "registry:ui",
+			"target": "name-strip/index.ts"
+		}
+	]
+}

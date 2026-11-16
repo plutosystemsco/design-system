@@ -4,7 +4,7 @@
  * repository's `vite dev`, with the locked CLI under Bun. Together the six
  * pull sheet, is-mobile, input, tooltip, skeleton, separator, button, kbd,
  * field, label, input-group, textarea, status, spinner, utils and
- * pluto-theme. Then the files, no style attribute, the groove utility once,
+ * kuiper-theme. Then the files, no style attribute, the groove utility once,
  * the app's prerendered build composing the provider, the sidebar, a menu and
  * the composer, its svelte-check, our lint, and a second add byte-identical.
  */
@@ -32,7 +32,7 @@ import {
 } from "./process.ts";
 
 const REPO = process.cwd();
-const scratch = mkdtempSync(path.join(tmpdir(), "pluto-smoke-navigation-"));
+const scratch = mkdtempSync(path.join(tmpdir(), "kuiper-smoke-navigation-"));
 const port = freePort();
 let server: ReturnType<typeof startDevServer> | undefined;
 
@@ -68,7 +68,8 @@ const EXPECTED: [item: string, count: number][] = [
   ["dialog", 11],
   ["composer", 2],
   ["message-log", 3],
-  ["theme", 4],
+  // 020 decision 5: stored.ts joins the theme item.
+  ["theme", 5],
   ["input", 2],
   ["tooltip", 6],
   ["skeleton", 2],
@@ -294,9 +295,9 @@ describe.each([
     expect(r.html).toContain('data-slot="composer"');
     expect(r.html).toContain('data-slot="message-log"');
     expect(r.html).toContain('data-slot="dropdown-menu-trigger"');
-    expect(r.html.split('localStorage.getItem("pluto-theme")').length - 1).toBe(
-      1,
-    );
+    expect(
+      r.html.split('localStorage.getItem("kuiper-theme")').length - 1,
+    ).toBe(1);
   });
 
   test("6. the app's svelte-check reports 0 errors", () => {

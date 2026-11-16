@@ -24,7 +24,7 @@
 
 <!--
   The native meter: a measurement within a known range, not
-  progress. Its track is muted and its fill primary through pluto-theme's
+  progress. Its track is muted and its fill primary through kuiper-theme's
   rules, with square ends. The app names it with a <label for> or aria-label
   and writes its numbers beside it; the fill is never the only sign.
 -->

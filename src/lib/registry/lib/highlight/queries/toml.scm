@@ -1,6 +1,6 @@
 ; TOML, for @tree-sitter-grammars/tree-sitter-toml 0.7.0 (node types read from its
-; src/node-types.json at that version). Captures are Pluto code roles.
-; written for the Pluto design system; not derived from the grammar's own queries.
+; src/node-types.json at that version). Captures are Kuiper code roles.
+; written for the Kuiper Design System; not derived from the grammar's own queries.
 
 ; A comment, wherever it stands.
 (_ (comment) @comment)

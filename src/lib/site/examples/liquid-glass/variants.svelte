@@ -22,7 +22,7 @@
         Move the pointer over this panel: its edge lights where you are.
       </p>
       <a
-        href="/components/pluto-theme/"
+        href="/components/kuiper-theme/"
         class="w-fit text-sm text-primary underline">The theme's tokens</a
       >
     </div>
@@ -49,7 +49,7 @@
           The field's legend stops at the glass: its text is the theme's.
         </p>
         <a
-          href="/components/pluto-theme/#fields"
+          href="/components/kuiper-theme/#fields"
           class="w-fit text-sm text-primary underline">The colour fields</a
         >
       </div>

@@ -1,6 +1,6 @@
 # 020 — The Kuiper rename
 
-- **Status:** **Ready to build: owner answers recorded, review approved with changes, all applied** (2026-11-15). Revised after review: every finding of [`../reviews/020-the-kuiper-rename-spec-2026-11-15.md`](../reviews/020-the-kuiper-rename-spec-2026-11-15.md), and the re-review's R1 to R3, are answered under "Review". The owner's answers to Q1 to Q5 are decision 19 and the Landing notes.
+- **Status:** **Built, change-reviewed ("land with changes", every finding applied) and committed on the build branch** (2026-11-15). The owner ruled the Button page's budget at 382 kB. Waiting on the design lead's checkpoint and, after the first deploy, the host check; see the Landing notes. Revised before the build after review: every finding of [`../reviews/020-the-kuiper-rename-spec-2026-11-15.md`](../reviews/020-the-kuiper-rename-spec-2026-11-15.md), and the re-review's R1 to R3, are answered under "Review". The owner's answers to Q1 to Q5 are decision 19 and the Landing notes.
 - **Date:** 2026-11-15
 - **Author:** the design lead
 - **Kind:** a rename across the whole tree. Every lane (`roadmap.md` §2, "Lanes"). **Interface changes:** the theme item's name; the `theme` item's storage key; the context keys; the four keyframes in `kuiper-theme`; and the values of five exported constants: `THEME_KEY`, `THEME_SCRIPT`, `FIELD_CONTEXT_KEY`, `FIELD_SET_CONTEXT_KEY` and `shikiTheme.name` (decision 18). Each has a changelog bullet and a section in the new upgrade guide (decision 12). One registry entry is added, the `pluto-theme` alias (decision 3), and one file joins the `theme` item (decision 5). No token, no dependency, no prop, no class, no CSS variable and no export *name* changes.
@@ -574,4 +574,103 @@ Recorded before the build, as the rules require. They shape decisions 4, 6, 8, 1
 
 ### The build
 
-Not yet built.
+- **Built by:** a builder, on the worktree branch `worktree-agent-a9fdabf43afb5246c`, from `release/0.13.0` at `f9e1c1a` (`v0.12.0` and 0.13.0's context files only; `git diff --name-only v0.12.0 f9e1c1a` lists context files alone). The branch was first cut at `8cb06ba` by mistake and was fast-forwarded to `f9e1c1a` before any change.
+- **The version.** `package.json` reads 0.13.0 from this landing, as 0.12.0 was set by 0.12.0's first landing (`014`), so `build:registry` writes `static/v0.13.0/` and `static/v0.12.0/` stays as tagged. The changelog's 0.13.0 entry reads "unreleased" until the tag. `registry.test.ts`'s release test and the changelog tests that named 0.12.0 as the newest read 0.13.0 now.
+
+#### Step 1: the inventory and the readers
+
+- `/pluto/i` over the source, as decision 1's table: 833 occurrences in 191 files outside `static/`, `context/` and `node_modules`, the inventory's figure (EXECUTED, this build).
+- **The readers of `registry.json`'s items**, beyond decision 3's list: `src/routes/(site)/start/modes/+page.server.ts` (lists items by mode) now reads `listedItems()`. Three of decision 3's list find one named item and enumerate nothing, so they need no filter and have none: the home page's loader (`button`), the `(example)` loader (`params.item`) and `thumbnail-hash.ts` (walks one item's dependencies). `search/sources/pages.ts` and `files.ts`'s `related` read through `SITEMAP` and `component-data.server.ts`, which list. The lint's three readers (`itemFiles`, `itemOwners`, `itemProfiles`) and the thumbnails script take `isListed`. The e2e specs that walk items (`build-output.spec.ts`, `site.spec.ts`) and the unit tests that count them read `withListedItems()`.
+
+#### Step 2: tests first
+
+Every test of "Tests written first" was written before any source change, with the field-keys view and its fixtures. On the tagged tree (with the tests only):
+
+- **Unit:** 22 failed and 3 files did not load (`rename.test.ts`, tests 1, 2 and 8's popover check; `theme-stored.test.ts`, test 10; `redirects.test.ts`, test 14: each imports a module 020 adds). By test: 3, 3 of 3; 4, 3 of 3; 5, 2 of 2; 6, 4 of 6 (the other two passed vacuously, on an absent `kuiper-theme`); 16, 4 of 4; 18, 2 of 2; and the v0.8.0 comparison with `MOVED_020_INLINE`, 1. 281 passed.
+- **e2e** (light and dark): 48 failed, 32 passed. Test 9, 14 (5 of 7 cases per project, and the two head-script checks); 15, 14; 14's build half, 2; 17, 14; 2's page half, 2; and axe on `/view/field-keys/`, 2, for a missing `<title>` in the fixture, fixed before step 3. Tests 7 and 8 passed, 26 of 26, as criterion 23 says they must on the tagged tree.
+- **Smoke:** tests 11 (4 of 5; the first, that both v0.11.0 apps build with `@keyframes pluto-enter`, is its precondition and passed) and 13 failed. Test 12 first failed for a fault in the test (its label pattern stopped at a `>` inside a class attribute); fixed, it passed on the tagged tree, as a guard must.
+- **Test 19** passed at `ea1f9bd` with `pluto.ts`: 48 primitives, 61 roles, 61 described, 129 contrast rows, 11 releases, 26 interface marks, 0 migration pages, the run log's figures.
+
+#### Step 3: the script
+
+- `bun scripts/rename-kuiper.ts` (dry) matched the inventory. The first `--write`: 6 moves and 129 files, by rule: token file 24 and its bare form 1; `pluto-theme` (the item and the key) 257; `pluto:field` 15, `pluto:field-set` 3, `pluto:field-label` 1, `pluto:tooltip` 2, `pluto:item-group` 2, `pluto:popover` 1, `pluto:accordion-item` 1; `pluto-enter` 8, `pluto-exit` 8, `pluto-mark-dock` 23, `pluto-mark-fade` 21; Shiki 2; registry name 1; package name 2 and description 1; scratch names 24; query captures 21 and authorship 26; the theme's title 1; the Start door 3; the bench 20.
+- **A second pass, found by the suite.** The first `--write` also renamed `pluto-theme` in tests that read the changelog's entries before 0.13.0 (`registry.test.ts`'s `CHANGELOG.md` block, and its 016, letter-spacing and 019 changelog tests), which are history. Decision 2's guard list missed them. `registry.test.ts` was restored from the base with 020's tests kept, the guard list gained those blocks and lines, and a second `--write` changed that one file (`pluto-theme` 23, scratch 1). The guard list also holds every alias line written after the script, so the dry run stays at 0 (criterion 19).
+- **Hand edits:** `brand-sources.test.ts:24` (the escaped token path); `search.spec.ts:336` (`(kuiper-)?theme`); `generated.test.ts`'s `MOVED_020_INLINE` (written with the tests); the bench's fallback line; `README.md`'s install commands, at `v0.13.0`, with `kuiper-theme` first and a line pointing to the guide. No further `pluto\\`, `pluto\)`, `pluto)?` or `pluto\.` was left (test 1).
+- **The guards after the script, before the aliases:** test 7 and 8 failed, 13 of 13 (light); test 12 failed (the new `input`'s id is not the old label's `for`).
+
+#### Step 4: the aliases
+
+The alias entry (at the end of `registry.json`, so the listed order is unchanged; it carries the `author` every entry has), `listedItems()`, the field's three old keys and the eight readers' fallback, the four other setters, `stored.ts` with `readStoredTheme`, `THEME_KEY` and `OLD_THEME_KEY` (`theme.svelte.ts` reads and re-exports `THEME_KEY` from it, since a rune module cannot be imported by a unit test), and the head script's carry-over. Then: tests 7 and 8 passed, 13 of 13; test 12 passed.
+
+#### Steps 5 to 7
+
+`build:tokens`, `build:registry`; the redirects, the plugin (`scripts/site/redirects-plugin.ts`, registered in `vite.config.ts`) and the search alias; the guide, its data (`src/lib/site/upgrade/0.13.0.ts`), its sitemap entry (spec `020`, under `/changelog/`, in `navOrder(null)` after the changelog and in `llms.txt`'s Optional list), the changelog entry and the link from `/start/install/`. The changelog's parser learned a prose link, `[text](href)`, which the page renders as a link (the 0.13.0 entry is the first to need one).
+
+#### Step 9: thumbnails, suites, lints
+
+- **Thumbnails:** all 75 hashes moved (the manifest hashes `src/app.css`, whose keyframe names changed). 150 images regenerated; **0 differ in bytes** from the tag's (the theme's two compared under their new names).
+- **Suites** (final figures below, under "Figures").
+
+#### Step 10: check 20
+
+`bun scripts/rename-kuiper.ts --verify <base build> build`, against a build of the base tree (see the deviation on the base): **passed**. 746 files before, 752 after; 707 identical once normalised and mapped back; `src/app.css`, mapped back, identical to the tag's byte for byte. Every other difference is one of the allowed: the 6 added files (`_redirects`, the guide's page, data and twin, the alias's JSON, the field-keys view); the alias entry and `stored.ts` in `index.json`; the 14 items whose shipped source holds an old key or the carry-over; the theme item's page (it shows the head script); the changelog page and its data; the "Updated" fact in the page data of the 15 items the 0.13.0 entry names; `search.json`, `sitemap.xml` and `llms.txt`; `/start/install/`. The version, the head script's carry-over and the "Updated" facts are rewritten before comparing, so a page differs only by something else; one CSS rule is new, `whitespace-normal`, on the guide's table.
+
+#### Step 11: the living documents
+
+`AGENTS.md` and `context/README.md` state the rename and the aliases' end; `README.md` as above; `roadmap.md` gains `032a`, 0.14.0's alias removal (decision 15); the scorecard's §8 names `kuiper.ts` (its run log keeps `pluto.ts`).
+
+### Rulings at landing (2026-11-15)
+
+- **The owner: the Button page's transfer budget is 382 kB.** The rename grows `/components/button/` by about 0.75 kB gzipped (754 B, the review's figures, per resource against the base build): the page's HTML about 150 B (the head script's carry-over, and the new names and version in its links), the shared chunks 471 B (`registry.json`'s chunk grows by the alias entry; the sitemap's guide entry; renamed strings), `entry/app.js` 122 B (the two new routes) and the CSS 14 B (the guide's one utility). The base measured 379.78 kB, so the page had 0.22 kB of headroom, not 0; it measured 381 kB after 020, against 380. `perf.spec.ts` reads 382 kB, with this ruling in its comment, as 018's raise was recorded. `024`'s per-template budgets replace it in the next wave.
+- **The design lead, per the owner's Q2 answer: `kuiper-theme`'s description is system prose.** It reads "Kuiper's tokens for light and dark: colour, radius, spacing, type, motion, focus and the groove." Test 1 now counts "Pluto Systems" file by file (`byFile` in the allowlist), so system prose cannot hide in a blanket total again.
+- **Decision 12 part 2's wording is corrected.** It said "Point the CLI at `v0.13.0` (the install commands, with the registry URL)". An install command there came before step 1, the rename of the keyframe uses, and so handed over the one command that loses them (the review's finding 1). Part 2 shows the registry's address alone; no command that adds anything appears before step 1, in the page or its Markdown twin.
+
+### The change review
+
+[`../reviews/020-the-kuiper-rename-pr-2026-11-15.md`](../reviews/020-the-kuiper-rename-pr-2026-11-15.md): land with changes. Each finding, as applied:
+
+1. **(High) An `add` before step 1.** Test 17 gained a check over the whole of `main`, in document order, and over the Markdown twin: no command containing `add` before step 1. **Seen failing first** on the guide as it was: 5 commands before step 1 (part 2's snippet, in its two copies, and three code spans in the rename table's theme row: `add pluto-theme`, `add kuiper-theme`, `add pluto-theme`). Fixed: part 2 shows `SITE_REGISTRY` only, labelled "This release's registry"; the theme row of the table says "install the theme by its new name in step 2"; the README's pointer to the guide moved above its install commands, in bold, as an absolute link.
+2. **The byte figures,** corrected under "Rulings".
+3. **The scorecard:** the caption names the landing tree; §4 marks row 11's (d) and row 14's (c), each 3; §5's gaps read 0 and −1; §6 re-reads both rows (row 14 is at its 1.0 target, 3). The run log row for the commit is appended after it.
+4. **Step 2** updates `kuiper-theme` with `-o`, then only the parts the app has: the example names `field input`, the sentence says how to list your parts (`ls src/lib/components/ui`), and that `-o` replaces your own edits, so the parts' line goes without it.
+5. **Step 1** says that matches inside the theme's block in `app.css` (its four `@keyframes pluto-…`, `--animate-enter`, `--animate-exit` and the lockup's `animation`) are the theme's own: step 2 rewrites them, and step 4 deletes what is left.
+6. **The changelog's link** is the site's absolute address, so it works on GitHub; the page renders it site-relative. The `[text](href)` parser accepts a site path, an anchor or an `https:` URL, and leaves anything else as text. A unit case rejects `javascript:`, `http:`, `data:` and `//` hrefs; it was seen failing first (3 of 4 new cases).
+7. **The theme's description,** under "Rulings". 58 thumbnail hashes moved with it; 0 images changed in bytes.
+8. **The site's CSS scans `context/`:** recorded, not fixed here (below, "Findings").
+
+### Figures
+
+- **Unit:** 1,254 pass, 2 skip (`registry-comments.test.ts`'s two base comparisons, which run at 0.12.0 only), 0 fail, of 1,256 (1,212 at the base).
+- **e2e:** 2,981 passed, 114 skipped, 0 failed (14.0 min). Perf, three runs each: Button 381 kB of 382 (LCP 992 to 1,008 ms, under 1,157; CLS 0), home 307 of 355, components index 355 of 395, code-block 354 of 360, Brand colour 302 of 347. An earlier full run met one timing failure (`code.spec.ts` E7, dark) under load; it passed alone and in this run.
+- **Smoke:** 139 pass, 0 fail (132 at the base; 7 new in `upgrade.test.ts`).
+- **check:** 0 errors, 0 warnings, 2,186 files. **lint:** clean. **Literal lint:** 0 violations, 1 allowance (L24). **Release check:** exits 0.
+- **The script:** dry after landing reports 0 changes; every guard matches (criterion 19).
+- **The allowlist:** 39 entries; 1,068 allowed occurrences: brand 642, history 69, alias 208, record 149. "Pluto Systems" is 312, counted in 115 files.
+- **Lockfiles:** `bun.lock` differs from the base in its root name alone; each smoke fixture's lockfile likewise; `bun install --frozen-lockfile` succeeds in the repository and in every fixture (the smoke suite's installs).
+- **Thumbnails:** every hash moved (75 for the keyframe names, then 58 again for the description); 0 of 150 images changed in bytes.
+- **Check 20:** passes against the base build: 746 files before, 752 after; 707 identical once normalised and mapped back; 45 allowed differences, each named; `src/app.css`, mapped back, identical to the tag's byte for byte.
+- **Test 19:** `kuiper.ts --rev ea1f9bd` prints the same tokens, change, governance, breadth, theming, accessibility and reach blocks as `pluto.ts --rev ea1f9bd` (compared as JSON, EXECUTED).
+- **The scorecard** (criterion 25): rows 11, 2 → 3, and 14, 2 → 3, as predicted; rows 1–14 total 30 → 32. Two run log rows: the landing tree before the commit, and `kuiper.ts --rev` at the commit.
+
+### Deviations, and why
+
+1. **The version moves to 0.13.0 here.** The spec's scope names `static/v0.13.0/r/` but no step sets the version. Left at 0.12.0, every build would rewrite `static/v0.12.0/`, which the "released snapshots" test holds to its tag. Done as `014` did for 0.12.0.
+2. **`registry-comments.test.ts`'s base comparison is not mapped (decision 8).** That block runs at 0.12.0 only, by its own version check, so at 0.13.0 it skips and a mapping would be dead code. Check 20 makes the same comparison against the base build, with the rename table. The amendments fixture's item keys read the new name, by the script.
+3. **The script's never-read list and guard list are longer than decision 9's.** The tests and records written by hand in step 2 (the allowlist, `rename.test.ts`, `theme-stored.test.ts`, `redirects.test.ts`, the three new e2e specs, `upgrade.test.ts`, the field-keys view, the upgrade data and page, `redirects.ts`, `static/_redirects`, `stored.ts`, `AGENTS.md`) are never read. Guard blocks keep 020's own tests inside `registry.test.ts`, `theme.spec.ts`, `generated.test.ts` and `search.test.ts`. History the spec did not list was found by the suite and guarded: `registry.test.ts`'s tests of changelog entries before 0.13.0, and `code-add.test.ts`'s install from `/v0.11.0/r` (which must name `pluto-theme`). The alias lines are guarded so the dry run stays at 0.
+4. **Check 20 compares against a build of `f9e1c1a`, not of `v0.12.0` alone.** The two differ only in `context/`, but Tailwind's source scan reads `context/` (see "Findings"), so 0.13.0's new specifications already put three utilities into the site's CSS on the release branch, before 020. Built from the base commit, with a commit and date in the environment so both footers carry the stamp, the comparison isolates 020.
+5. **Check 20 rewrites known differences before comparing,** not only the spec's normalisers: the version (0.13.0 outside the changelog), the head script's carry-over, the "Updated" fact of the 15 items the 0.13.0 entry names, and the theme's description. HTML whitespace runs are collapsed: the formatter re-wrapped one paragraph whose line grew by a character. What remains must be identical, or appear in the allowed list, which names files, not patterns.
+6. **Halves of tests 2, 5 and 14 that read built output are in e2e** (`upgrade.spec.ts`, `redirects.spec.ts`): no unit test reads `build/`. The Markdown twins are checked on disk, since `vite preview` serves pages, not the twins `markdown.ts` writes into `build/`.
+7. **`THEME_KEY` lives in `stored.ts`**, re-exported from `theme.svelte.ts`, so the unit test reads it without the rune module. `tooltip` and `item-group` set their old key inline, as they set the new one; `popover` and `accordion` name `OLD_KEY` beside `KEY`.
+8. **The 0.13.0 entry needed a prose link.** The changelog parser gained `[text](href)`, limited as finding 6 asks; the two changelog-page text tests remove link syntax as they remove other Markdown.
+9. **Counts the spec did not list moved with `stored.ts` and the guide:** the item file count 352 → 353 (`literals.test.ts`), theme's files 4 → 5 (`registry.test.ts`, the blocks and navigation smoke tests), the blocks smoke's 259 → 260 files, the sitemap 102 → 103, `navOrder(null)` gains the guide, `llms.txt` lists it under Optional, `build-output.spec.ts` now expects `build/_redirects` equal to `static/_redirects`. The "Updated" examples change: `kuiper-theme` and `tooltip` read 0.13.0; `card` stands for a never-changed item. The query lock records the 24 header-comment changes, figures unchanged.
+10. **The roadmap row is `032a`**, a provisional number for 0.14.0's first landing.
+
+### Findings
+
+- **The site's CSS follows prose in `context/`** (the builder's finding, confirmed by the review). `src/app.css` imports Tailwind with no `@source` line, so its source scan reads `context/`: any utility a specification names in backticks joins every page's CSS. Not fixed in 020. It becomes a small change, **`020a`**, after 020 lands: `@source not` for `context/` beside the site's Tailwind import (through `build-tokens.ts`, since `src/app.css` is generated), and a test that a utility named only in `context/` is absent from the built CSS.
+
+### Waiting
+
+- **The checkpoint** (criterion 24) is the design lead's. Screenshots of the guide (both schemes, 1440 and 390), the theme page reached from `/components/pluto-theme/#fields` (it lands on the section), and a reload with `pluto-theme = dark` (dark at first paint; the key carried over) are with the builder's report. The search for `pluto-theme` is held by test 18. One thing to look at: the rename table is wider than the prose measure, so at 1440 its last three columns scroll inside the table's region.
+- **The host check** (criterion 26) waits for the first deploy of 0.13.0.
+- **F1** stands: tests 9, 15 and 17 run in Chromium only, until `022`.

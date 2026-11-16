@@ -37,7 +37,7 @@ import {
 } from "./tree-sitter";
 
 /** The theme's name, as Shiki registers it. */
-const THEME = "pluto-code";
+const THEME = "kuiper-code";
 
 const role = (name: CodeRole) => "var(--code-" + name + ")";
 const rule = (scope: string[], name: CodeRole) => ({

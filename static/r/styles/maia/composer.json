@@ -10,7 +10,7 @@
 	],
 	"registryDependencies": [
 		"utils",
-		"pluto-theme",
+		"kuiper-theme",
 		"field",
 		"input-group",
 		"button",

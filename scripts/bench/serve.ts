@@ -1,11 +1,11 @@
 /**
  * Serve `build/` statically, gzipping text, the way the perf suite does
- * (015 decision 23), so the benchmark measures Pluto as it ships rather than
+ * (015 decision 23), so the benchmark measures Kuiper as it ships rather than
  * the dev server. Our own code; nothing is copied.
  */
 import { existsSync, readFileSync, statSync } from "node:fs";
 import path from "node:path";
-import { PLUTO } from "./targets.ts";
+import { KUIPER } from "./targets.ts";
 
 const TYPES: Record<string, string> = {
   ".html": "text/html; charset=utf-8",
@@ -53,7 +53,7 @@ export function serveBuild(dir = "build") {
   return {
     origin,
     resolve: (url: string) =>
-      url.startsWith(PLUTO) ? origin + url.slice(PLUTO.length) : url,
+      url.startsWith(KUIPER) ? origin + url.slice(KUIPER.length) : url,
     stop: () => server.stop(true),
     built: statSync(path.join(root, "index.html")).mtime.toISOString(),
   };

@@ -333,7 +333,7 @@ test.describe("018 review: Enter opens the best match", () => {
     ["type", /\/(brand|foundations)\/type\/$/],
     ["motion", /\/(brand|foundations)\/motion\/$/],
     ["token", /\/foundations\/tokens\/$/],
-    ["theme", /\/(components\/(pluto-)?theme|start\/theme)\/$/],
+    ["theme", /\/(components\/(kuiper-)?theme|start\/theme)\/$/],
   ] as const)
     test(`"${q}": Enter opens a best match`, async ({ page }) => {
       await open(page, "/components/");

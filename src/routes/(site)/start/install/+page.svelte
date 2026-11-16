@@ -38,7 +38,7 @@
       own it from then on: change it, keep it, or delete it. Nothing in your app
       reaches back to this site when it runs.
     </p>
-    <p>Five steps take an empty app to a first Pluto button.</p>
+    <p>Five steps take an empty app to a first Kuiper button.</p>
   </div>
 
   <section
@@ -212,8 +212,12 @@
       Read the <a href="/changelog/" class={link}>changelog</a> first. A part
       whose entry says <strong>interface change</strong> may need your code to
       change with it. Then point <code>components.json</code> at the new release
-      and run its <code>add</code> again, with <code>-o</code> to overwrite. Your
-      own edits to that part are replaced, so keep them in version control.
+      and run its <code>add</code> again, with <code>-o</code> to overwrite.
+      Your own edits to that part are replaced, so keep them in version control.
+      An app that installed before 0.13.0 reads
+      <a href="/changelog/0.13.0/upgrade/" class={link}>Upgrade to 0.13.0</a>
+      first: the theme is now <code>kuiper-theme</code>, and a few names in your
+      own code change before you update.
     </p>
   </section>
 

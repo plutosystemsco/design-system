@@ -28,15 +28,15 @@
   },
   "heldout": {
     "overall": 97.7,
-    "python": 100.0,
-    "javascript": 100.0,
-    "typescript": 98.0,
+    "python": 100,
+    "javascript": 100,
+    "typescript": 98,
     "bash": 97.1,
     "sql": 88.5,
     "go": 98.4,
     "rust": 98.5,
     "java": 97.9,
-    "csharp": 98.0,
+    "csharp": 98,
     "ruby": 98.5
   },
   "workbench": {
@@ -48,6 +48,174 @@
       "file": "php.scm",
       "sha256": "70152a4561a2f92de579c06719fd6cb9937a610e6b68f53ec42dbee46dbc78f8",
       "reason": "015 decision 14: a comment line reworded to drop an internal reference; no pattern changed, so the figures stand.",
+      "workbench": 98.6,
+      "heldout": 97.7
+    },
+    {
+      "file": "bash.scm",
+      "sha256": "150fbcec575478e5b42fbf227a5f626855a5bd6a70c82d85051476d257d2c6d9",
+      "reason": "020 decision 11: the header comment names the Kuiper Design System; no pattern changed, so the figures stand.",
+      "workbench": 98.6,
+      "heldout": 97.7
+    },
+    {
+      "file": "c-sharp.scm",
+      "sha256": "d25d27a674d6c098840e11a69e79c4f15fb56a9cbf3b407fb9a78ca961a39feb",
+      "reason": "020 decision 11: the header comment names the Kuiper Design System; no pattern changed, so the figures stand.",
+      "workbench": 98.6,
+      "heldout": 97.7
+    },
+    {
+      "file": "c.scm",
+      "sha256": "dd2eebc6535936bf714a4cd7b892ed8e1adf01cef2eb636a5a63dfc20aacbd52",
+      "reason": "020 decision 11: the header comment names the Kuiper Design System; no pattern changed, so the figures stand.",
+      "workbench": 98.6,
+      "heldout": 97.7
+    },
+    {
+      "file": "cpp.scm",
+      "sha256": "e68019c5989dbb342ff0ebca4203051ab50607724d673e90b896dd630d0b12f6",
+      "reason": "020 decision 11: the header comment names the Kuiper Design System; no pattern changed, so the figures stand.",
+      "workbench": 98.6,
+      "heldout": 97.7
+    },
+    {
+      "file": "css.scm",
+      "sha256": "247f08e912b8d36e925d17da43b72eff8737db303dc928f1a26528cb87c46042",
+      "reason": "020 decision 11: the header comment names the Kuiper Design System; no pattern changed, so the figures stand.",
+      "workbench": 98.6,
+      "heldout": 97.7
+    },
+    {
+      "file": "go.scm",
+      "sha256": "6db090e7427117d43f4775c7730492d2c4b1e5f54d01d0187cd6d84cf63b3e88",
+      "reason": "020 decision 11: the header comment names the Kuiper Design System; no pattern changed, so the figures stand.",
+      "workbench": 98.6,
+      "heldout": 97.7
+    },
+    {
+      "file": "html.scm",
+      "sha256": "72be43d1a3ad217998a889cbc3580d839942831ad3e5ab614430b80caba35f1b",
+      "reason": "020 decision 11: the header comment names the Kuiper Design System; no pattern changed, so the figures stand.",
+      "workbench": 98.6,
+      "heldout": 97.7
+    },
+    {
+      "file": "java.scm",
+      "sha256": "e44b374125ceaf6cf90dbdd9ddc5d8be6e23438ea9473042f4050f1fe0e707b9",
+      "reason": "020 decision 11: the header comment names the Kuiper Design System; no pattern changed, so the figures stand.",
+      "workbench": 98.6,
+      "heldout": 97.7
+    },
+    {
+      "file": "javascript.locals.scm",
+      "sha256": "8a933984b691fdabda60776537942867bcf92752ebd89031a76edf3eead2d13b",
+      "reason": "020 decision 11: the header comment names the Kuiper Design System; no pattern changed, so the figures stand.",
+      "workbench": 98.6,
+      "heldout": 97.7
+    },
+    {
+      "file": "javascript.scm",
+      "sha256": "4a520718dd21f87ef58664467c0fc992c2f6dde536336d3afc4120cba0d3e2d4",
+      "reason": "020 decision 11: the header comment names the Kuiper Design System; no pattern changed, so the figures stand.",
+      "workbench": 98.6,
+      "heldout": 97.7
+    },
+    {
+      "file": "json.scm",
+      "sha256": "04db7178c39b8d8fae4db2ff81b3629db4b32e3b79e1d25f7604f73451c259c1",
+      "reason": "020 decision 11: the header comment names the Kuiper Design System; no pattern changed, so the figures stand.",
+      "workbench": 98.6,
+      "heldout": 97.7
+    },
+    {
+      "file": "jsx.scm",
+      "sha256": "6a9144ff2ea7df57c852471ca7d627fd7d7a45a69fde602e1eaa41ed4c3709d3",
+      "reason": "020 decision 11: the header comment names the Kuiper Design System; no pattern changed, so the figures stand.",
+      "workbench": 98.6,
+      "heldout": 97.7
+    },
+    {
+      "file": "kotlin.scm",
+      "sha256": "2572dec29726483f75745844fcc58a44cca3b077ab2bf42c76b9328829f71eef",
+      "reason": "020 decision 11: the header comment names the Kuiper Design System; no pattern changed, so the figures stand.",
+      "workbench": 98.6,
+      "heldout": 97.7
+    },
+    {
+      "file": "php.scm",
+      "sha256": "b95606bdb1e97b3e4ccefbb31453cf0bf73f1e87a22b83a1439e9728174e90ae",
+      "reason": "020 decision 11: the header comment names the Kuiper Design System; no pattern changed, so the figures stand.",
+      "workbench": 98.6,
+      "heldout": 97.7
+    },
+    {
+      "file": "python.scm",
+      "sha256": "e67bd345bb6d6f797413e58c6823011caa00e00cc285b5edc7ea5cc17d32fef3",
+      "reason": "020 decision 11: the header comment names the Kuiper Design System; no pattern changed, so the figures stand.",
+      "workbench": 98.6,
+      "heldout": 97.7
+    },
+    {
+      "file": "ruby.locals.scm",
+      "sha256": "8209752a281d341ea750ce787ad87fd3908260377413425f3eeade4f536aed17",
+      "reason": "020 decision 11: the header comment names the Kuiper Design System; no pattern changed, so the figures stand.",
+      "workbench": 98.6,
+      "heldout": 97.7
+    },
+    {
+      "file": "ruby.scm",
+      "sha256": "b507c9023428ab462d4233740cb4e70477afef2de38d01bfafd1208fa657de67",
+      "reason": "020 decision 11: the header comment names the Kuiper Design System; no pattern changed, so the figures stand.",
+      "workbench": 98.6,
+      "heldout": 97.7
+    },
+    {
+      "file": "rust.scm",
+      "sha256": "8ce16faed24b659743d7188eaf4520b4ef7a5e4a070145aeb41d894253b439ad",
+      "reason": "020 decision 11: the header comment names the Kuiper Design System; no pattern changed, so the figures stand.",
+      "workbench": 98.6,
+      "heldout": 97.7
+    },
+    {
+      "file": "svelte.scm",
+      "sha256": "c366caf6dff0ac0e2c4b0ae43e6fabb6ef5da7557c456d443ba07406c5f56152",
+      "reason": "020 decision 11: the header comment names the Kuiper Design System; no pattern changed, so the figures stand.",
+      "workbench": 98.6,
+      "heldout": 97.7
+    },
+    {
+      "file": "toml.scm",
+      "sha256": "bdc71b995df66ba0e0b252027c423aa247b7854fe7029d606fecdd7e301a8e31",
+      "reason": "020 decision 11: the header comment names the Kuiper Design System; no pattern changed, so the figures stand.",
+      "workbench": 98.6,
+      "heldout": 97.7
+    },
+    {
+      "file": "typescript-assertion.scm",
+      "sha256": "822582df3cedbf6630fc6bc1ef166246c6d1454f7af66ff0fdeafb21aec4767e",
+      "reason": "020 decision 11: the header comment names the Kuiper Design System; no pattern changed, so the figures stand.",
+      "workbench": 98.6,
+      "heldout": 97.7
+    },
+    {
+      "file": "typescript.locals.scm",
+      "sha256": "9802899f1dec3a0e5ea1b8f83f402928460387a35165904c4e40bda3b4a0090d",
+      "reason": "020 decision 11: the header comment names the Kuiper Design System; no pattern changed, so the figures stand.",
+      "workbench": 98.6,
+      "heldout": 97.7
+    },
+    {
+      "file": "typescript.scm",
+      "sha256": "8e3f3dc0e2ee25e3f17fd04a8e901a39d4dbe5368b4379212409bf1498ca2822",
+      "reason": "020 decision 11: the header comment names the Kuiper Design System; no pattern changed, so the figures stand.",
+      "workbench": 98.6,
+      "heldout": 97.7
+    },
+    {
+      "file": "yaml.scm",
+      "sha256": "69d3bf1a85a5698ec174f4d1b5a804bbc3dbd398d36f12311d3acda5f4d0eb91",
+      "reason": "020 decision 11: the header comment names the Kuiper Design System; no pattern changed, so the figures stand.",
       "workbench": 98.6,
       "heldout": 97.7
     }

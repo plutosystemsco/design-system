@@ -27,7 +27,11 @@ export const BUDGETS: Record<
   // Button page's transfer budget is 365 kB", "Raised again to 370 kB").
   // 380 kB from 018: the left nav and the page's new parts, every
   // component page's cost (decisions.md, "018 checkpoint 1").
-  "/components/button/": { transfer: 380, lcp: 1157, cls: 0.02 },
+  // 382 kB from 020 (the owner, 2026-11-15): the rename grows the page by
+  // about 0.75 kB (the head script's carry-over and the names in the HTML,
+  // two routes, the alias and guide entries) over a base of 379.8 kB. 024's
+  // per-template budgets replace this one (020's Landing notes).
+  "/components/button/": { transfer: 382, lcp: 1157, cls: 0.02 },
   "/components/code-block/": { transfer: 360, lcp: 1186, cls: 0.02 },
 };
 

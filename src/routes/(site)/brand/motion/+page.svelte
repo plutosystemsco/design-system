@@ -49,7 +49,7 @@
   </Section>
 
   <Section id="reduced" title="When a reader asks for less">
-    <!-- source: 011 decision 10; tokens/pluto.tokens.json, motion -->
+    <!-- source: 011 decision 10; tokens/kuiper.tokens.json, motion -->
     <p data-claim="settled">
       Under reduced motion, nothing moves. The mark is composed from the first
       frame, and Replay shows the end state at once.

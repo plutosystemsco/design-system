@@ -18,5 +18,10 @@
     "alias": "drawer",
     "path": "/components/sheet/",
     "title": "Sheet"
+  },
+  {
+    "alias": "pluto-theme",
+    "path": "/components/kuiper-theme/",
+    "title": "Kuiper theme"
   }
 ]

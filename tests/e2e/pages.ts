@@ -32,7 +32,7 @@ const REGISTRY_ITEMS = (
 /** The items in 005 decision 4's order: one site page each, plus the catalogue. */
 export const ITEMS = [
   // foundation
-  "pluto-theme",
+  "kuiper-theme",
   "font-geist",
   "font-heading-ibm-plex-sans",
   "font-jetbrains-mono",
@@ -258,7 +258,11 @@ export const VIEWS = BLOCKS.flatMap((block) =>
  * 013 decision 21: test views that are not blocks. axe (at 1280) and the
  * theme check scan them; the keyboard walk does not.
  */
-export const TEST_VIEWS = ["/view/code-agreement/"] as const;
+export const TEST_VIEWS = [
+  "/view/code-agreement/",
+  // 020 tests 7 and 8: the old and new context keys; goes in 0.14.0.
+  "/view/field-keys/",
+] as const;
 
 /** 010 decision 10: each composition's views, under /view/compositions/. */
 export const COMPOSITION_VIEW_LIST = COMPOSITIONS.flatMap((item) =>
@@ -641,7 +645,7 @@ export const HOME_STOPS = [
   ...DOORS.map((d) => `a:${d.name} ${d.line}`),
   ...CODE_BLOCK,
   "a:utils",
-  "a:pluto-theme",
+  "a:kuiper-theme",
   "a:spinner",
   ...DOORS.flatMap((d) => [
     `a:${d.name}`,

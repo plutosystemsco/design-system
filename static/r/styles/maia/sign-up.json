@@ -7,7 +7,7 @@
 	"description": "Email and a password with its rules written first, then a six-digit code on its own step, with resend.",
 	"registryDependencies": [
 		"utils",
-		"pluto-theme",
+		"kuiper-theme",
 		"card",
 		"field",
 		"input",

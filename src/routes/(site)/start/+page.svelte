@@ -11,7 +11,7 @@
 
 <Landing door={door("start")}>
   {#snippet sentence()}
-    <p>From an empty SvelteKit app to a first Pluto screen.</p>
+    <p>From an empty SvelteKit app to a first Kuiper screen.</p>
   {/snippet}
   {#snippet glass()}
     <div class="grid grid-cols-[minmax(0,1fr)] gap-4">

@@ -7,7 +7,7 @@
 	"description": "A page's opening: an optional eyebrow, the one heading, a sentence, one call to action, and a feature grid divided by grooves.",
 	"registryDependencies": [
 		"utils",
-		"pluto-theme",
+		"kuiper-theme",
 		"button"
 	],
 	"meta": {

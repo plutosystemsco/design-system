@@ -1,6 +1,6 @@
 ; JavaScript locals, for tree-sitter-javascript 0.25.0 (node types read from
 ; its src/node-types.json at that version). Captures are local.* only.
-; written for the Pluto design system; not derived from the grammar's own queries.
+; written for the Kuiper Design System; not derived from the grammar's own queries.
 ;
 ; Only values are locals: variables, parameters, destructured names and a
 ; caught error. A function or class name is not, so `Base` stays a class

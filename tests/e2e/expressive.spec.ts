@@ -118,7 +118,7 @@ test.describe("criterion 7: the action radius follows the nearest mode", () => {
   });
 });
 
-const THEME = componentPath("pluto-theme");
+const THEME = componentPath("kuiper-theme");
 const READ_TOKEN = componentPath("read-token");
 
 const computed = (page: Page, testid: string, property: string) =>

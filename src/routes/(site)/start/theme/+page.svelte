@@ -21,9 +21,10 @@
   ]}
 >
   <p>
-    <code>add pluto-theme</code> writes into one file, <code>src/app.css</code>,
-    and installs three font packages. It adds no component and no script. Every
-    value it writes comes from this system's one token file, so
+    <code>add kuiper-theme</code> writes into one file,
+    <code>src/app.css</code>, and installs three font packages. It adds no
+    component and no script. Every value it writes comes from this system's one
+    token file, so
     <a href="/foundations/tokens/" class={link}>Tokens</a> lists them all.
   </p>
 

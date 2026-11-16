@@ -41,7 +41,7 @@
     size?: ItemSize;
   } = $props();
 
-  const inGroup = getContext<boolean | undefined>("pluto:item-group") ?? false;
+  const inGroup = getContext<boolean | undefined>("kuiper:item-group") ?? false;
 
   const mergedProps = $derived({
     role: inGroup ? "listitem" : undefined,

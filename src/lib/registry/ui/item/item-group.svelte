@@ -11,6 +11,8 @@
   }: WithElementRef<HTMLAttributes<HTMLDivElement>> = $props();
 
   // The group is a list, so each Item inside it renders role="listitem".
+  setContext("kuiper:item-group", true);
+  // Its key before 0.13.0 too, for an app's own code that reads it, until 0.14.0.
   setContext("pluto:item-group", true);
 </script>
 

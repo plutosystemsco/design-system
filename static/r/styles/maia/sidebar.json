@@ -13,7 +13,7 @@
 	],
 	"registryDependencies": [
 		"utils",
-		"pluto-theme",
+		"kuiper-theme",
 		"is-mobile",
 		"sheet",
 		"input",

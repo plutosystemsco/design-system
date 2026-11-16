@@ -49,7 +49,7 @@ const BLOCKS = process.env.SMOKE_BLOCKS?.trim()
   : ALL;
 const FULL = BLOCKS.join() === ALL.join();
 
-const scratch = mkdtempSync(path.join(tmpdir(), "pluto-smoke-blocks-"));
+const scratch = mkdtempSync(path.join(tmpdir(), "kuiper-smoke-blocks-"));
 const port = freePort();
 let server: ReturnType<typeof startDevServer> | undefined;
 
@@ -146,7 +146,7 @@ const EXPECTED_DEPS: Record<string, number> = {
   "alert-dialog": 13,
   // 006: the shell's and the chat's.
   "four-dot": 3,
-  theme: 4,
+  theme: 5, // 020 decision 5: stored.ts
   sheet: 11,
   sidebar: 25,
   "is-mobile": 1,
@@ -262,7 +262,7 @@ describe.each([
     );
   });
 
-  test(`2. ${FULL ? 259 : FILES.length} files land: the block files at their app paths and every dependency's`, () => {
+  test(`2. ${FULL ? 260 : FILES.length} files land: the block files at their app paths and every dependency's`, () => {
     if (FULL) {
       expect(BLOCK_FILES).toHaveLength(30);
       expect(
@@ -275,8 +275,8 @@ describe.each([
           number
         >,
       );
-      expect(DEP_FILES).toHaveLength(229);
-      expect(FILES).toHaveLength(259);
+      expect(DEP_FILES).toHaveLength(230);
+      expect(FILES).toHaveLength(260);
     }
     const missing = FILES.filter((f) => !existsSync(path.join(r.app, f)));
     expect(missing).toEqual([]);
@@ -400,7 +400,7 @@ describe.each([
     expect(Number(completed![1])).toBe(0);
   });
 
-  test(`8. our lint finds 0 violations in the ${FULL ? 259 : FILES.length} installed files`, () => {
+  test(`8. our lint finds 0 violations in the ${FULL ? 260 : FILES.length} installed files`, () => {
     expect(lintFiles(FILES, loadRules(REPO), r.app)).toEqual([]);
   });
 
@@ -419,7 +419,7 @@ describe.each([
     expect(
       blocks(css).filter((b) => b.prelude === "@utility groove-b"),
     ).toHaveLength(1);
-    expect(css).toContain("@keyframes pluto-mark-dock");
+    expect(css).toContain("@keyframes kuiper-mark-dock");
     expect(
       childPreludes(css, "@media (prefers-reduced-motion: reduce)"),
     ).toEqual([

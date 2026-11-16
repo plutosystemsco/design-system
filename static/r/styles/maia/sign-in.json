@@ -7,7 +7,7 @@
 	"description": "Email and password in one step, with an error summary that takes focus, a password you can show, and a button that goes busy.",
 	"registryDependencies": [
 		"utils",
-		"pluto-theme",
+		"kuiper-theme",
 		"card",
 		"field",
 		"input",

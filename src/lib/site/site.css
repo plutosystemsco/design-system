@@ -82,9 +82,9 @@
     font-size: var(--disc);
     transition: scale var(--motion-micro) var(--ease-spring);
     animation:
-      pluto-mark-dock calc(var(--motion-entrance) * var(--motion-entrance-dot))
+      kuiper-mark-dock calc(var(--motion-entrance) * var(--motion-entrance-dot))
         backwards,
-      pluto-mark-fade calc(var(--motion-entrance) * var(--motion-entrance-dot))
+      kuiper-mark-fade calc(var(--motion-entrance) * var(--motion-entrance-dot))
         backwards;
     animation-timing-function: var(--ease-spring), var(--ease-entrance);
   }

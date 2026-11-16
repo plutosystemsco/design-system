@@ -1,7 +1,10 @@
 import { expect, test } from "bun:test";
 import { existsSync, readFileSync } from "node:fs";
+import { withListedItems } from "../../src/lib/site/items.ts";
 
-const registry = JSON.parse(readFileSync("registry.json", "utf8"));
+const registry = withListedItems(
+  JSON.parse(readFileSync("registry.json", "utf8")),
+);
 const names: string[] = registry.items.map((i: { name: string }) => i.name);
 const page = (name: string) =>
   `src/routes/(site)/components/${name}/+page.svelte`;

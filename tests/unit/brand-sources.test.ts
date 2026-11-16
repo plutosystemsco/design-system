@@ -21,7 +21,7 @@ const FILES = [...PAGES.map((p) => pageFile(p.path)), ...COMPONENTS];
 
 /** A source comment: "source:", then a decision, a specification or decisions.md. */
 const SOURCE =
-  /^\s*source:.*(decisions\.md|\b0\d\d\b|\bconstitution\b|\btokens\/pluto\.tokens\.json\b)/;
+  /^\s*source:.*(decisions\.md|\b0\d\d\b|\bconstitution\b|\btokens\/kuiper\.tokens\.json\b)/;
 
 type Node = {
   type: string;

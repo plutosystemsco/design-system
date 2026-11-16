@@ -35,7 +35,7 @@
  * 011 decisions 6, 8 and 9 add seven names to L22's list: `type-poster`,
  * `field-1` to `field-4`, `surface-plain` and `glass`. 011 decision 10 adds
  * L23, a text rule: `ease-spring` in any file of an item other than
- * `four-dot` and `pluto-theme`, since springs are for the mark's dots. 011
+ * `four-dot` and `kuiper-theme`, since springs are for the mark's dots. 011
  * decision 8 adds L24, one counted allowance: `.style.setProperty("--glass-`
  * in `liquid-glass`'s `pointer-light.ts` passes the style rule; every other
  * `.style` still fails. Each allowance is reported, so it stays counted.
@@ -45,6 +45,7 @@
  */
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
+import { isListed } from "../src/lib/site/items.ts";
 import { readTokens, TOKENS_PATH } from "./tokens.ts";
 
 export type Violation = {
@@ -110,7 +111,7 @@ const EXPRESSIVE_CLASSES = new Set([
 /** 011 decision 10, L23: the spring, in any form. */
 const SPRING = /ease-spring\b/g;
 /** L23: the items whose files may name the spring: the mark's dots and the theme. */
-const SPRING_ITEMS = new Set(["four-dot", "pluto-theme"]);
+const SPRING_ITEMS = new Set(["four-dot", "kuiper-theme"]);
 /**
  * 011 decision 8, L24: the one style write, the pointer light's custom
  * properties on the glass. Matched where STYLE_PROPERTY matched `.style`.
@@ -335,9 +336,11 @@ export function itemFiles(root: string = process.cwd()): string[] {
   const registry = JSON.parse(
     readFileSync(path.join(root, "registry.json"), "utf8"),
   );
-  return registry.items.flatMap((item: { files?: { path: string }[] }) =>
-    (item.files ?? []).map((f) => f.path),
-  );
+  return registry.items
+    .filter(isListed)
+    .flatMap((item: { files?: { path: string }[] }) =>
+      (item.files ?? []).map((f) => f.path),
+    );
 }
 
 /** 011 decision 10: the items that list each file, for L23 and L24. */
@@ -350,7 +353,7 @@ export function itemOwners(
     items: { name: string; files?: { path: string }[] }[];
   };
   const owners = new Map<string, string[]>();
-  for (const item of registry.items)
+  for (const item of registry.items.filter(isListed))
     for (const { path: f } of item.files ?? [])
       owners.set(f, [...(owners.get(f) ?? []), item.name]);
   return owners;
@@ -372,7 +375,7 @@ export function itemProfiles(
     items: { files?: { path: string }[]; meta?: { modes?: Mode[] } }[];
   };
   const profiles = new Map<string, readonly Mode[]>();
-  for (const item of registry.items) {
+  for (const item of registry.items.filter(isListed)) {
     const modes = item.meta?.modes ?? ["productive"];
     for (const { path: file } of item.files ?? []) {
       const known = profiles.get(file);

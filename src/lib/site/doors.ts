@@ -2,7 +2,7 @@
  * The four doors: the mark's four dots, in N1's order, as the site's four
  * sections. Each door is a colour field, a name, a path and one line.
  */
-import registry from "../../../registry.json";
+import { listedItems } from "./items.ts";
 
 export type DoorId = "start" | "components" | "brand" | "foundations";
 
@@ -25,14 +25,14 @@ export const DOORS: readonly Door[] = [
     name: "Start",
     path: "/start/",
     line: "Install, theme, modes",
-    summary: "From an empty SvelteKit app to a first Pluto screen.",
+    summary: "From an empty SvelteKit app to a first Kuiper screen.",
   },
   {
     id: "components",
     n: 2,
     name: "Components",
     path: "/components/",
-    line: `${registry.items.length} parts`,
+    line: `${listedItems().length} parts`,
     summary: "Every part you can add, each on a page of its own.",
   },
   {

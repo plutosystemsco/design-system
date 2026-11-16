@@ -30,7 +30,7 @@
     </li>
     <li>Render the head script in a page as well as in the layout.</li>
     <li>
-      Read <code>pluto-theme</code> from storage yourself. Read the store.
+      Read <code>kuiper-theme</code> from storage yourself. Read the store.
     </li>
   {/snippet}
   {#snippet accessibility()}

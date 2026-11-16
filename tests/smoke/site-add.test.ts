@@ -22,7 +22,7 @@ import { bin, run, type Result } from "./process.ts";
 const REPO = process.cwd();
 const BUILD = path.join(REPO, "build");
 const VERSION = JSON.parse(readFileSync("package.json", "utf8")).version;
-const scratch = mkdtempSync(path.join(tmpdir(), "pluto-site-add-"));
+const scratch = mkdtempSync(path.join(tmpdir(), "kuiper-site-add-"));
 let server: ReturnType<typeof Bun.serve> | undefined;
 let origin = "";
 
@@ -91,7 +91,7 @@ beforeAll(async () => {
   await run(bin(app, "svelte-kit", "sync"), app);
   // Criterion 18's one command, then product-home, each from the site's
   // versioned registry path. The CLI installs the packages they name.
-  for (const names of ["pluto-theme button dialog", "product-home"]) {
+  for (const names of ["kuiper-theme button dialog", "product-home"]) {
     const before = new Set(files(app));
     const result = await run(
       bin(REPO, "shadcn-svelte", "add", ...names.split(" "), "-y", "-o"),

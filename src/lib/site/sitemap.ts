@@ -9,6 +9,7 @@
  */
 import registry from "../../../registry.json";
 import { DOORS, type DoorId } from "./doors.ts";
+import { listedItems } from "./items.ts";
 
 export type SitePage = {
   path: string;
@@ -19,7 +20,7 @@ export type SitePage = {
   summary: string;
   /** The page above it: a door's landing, or the home page. */
   parent: string | null;
-  spec: "015" | "017";
+  spec: "015" | "017" | "020";
   /** A component page's registry group. */
   group?: string;
 };
@@ -51,7 +52,8 @@ export function componentPath(name: string): string {
   return `/components/${name}/`;
 }
 
-const items = registry.items as RegistryItem[];
+// 020 decision 3: a deprecated entry (an alias) has no page.
+const items = listedItems(registry.items as RegistryItem[]);
 
 export const SITEMAP: SitePage[] = [
   {
@@ -255,16 +257,32 @@ SITEMAP.push(
   })),
 );
 
+// 020 decision 12: a release's upgrade guide sits under the changelog, at
+// /changelog/<version>/upgrade/. 0.13.0's is the first.
+SITEMAP.push({
+  path: "/changelog/0.13.0/upgrade/",
+  title: "Upgrade to 0.13.0",
+  door: null,
+  summary:
+    "What an app that installed an earlier release changes for 0.13.0, in order: the Kuiper rename first.",
+  parent: "/changelog/",
+  spec: "020",
+});
+
 /**
  * 018 decision 1: a door's pages in the one order every consumer reads (the
  * left nav, the phone sheet, previous and next): the landing, then its
  * pages; Components' under the registry's groups, in `GROUPS` order, each
- * group in registry order. With no door (the changelog), the four landings
- * and the changelog.
+ * group in registry order. With no door (the changelog), the four landings,
+ * the changelog and the pages under it (020 decision 12).
  */
 export function navOrder(door: DoorId | null): SitePage[] {
   if (!door)
-    return [...DOORS.map((d) => sitePage(d.path)!), sitePage("/changelog/")!];
+    return [
+      ...DOORS.map((d) => sitePage(d.path)!),
+      sitePage("/changelog/")!,
+      ...SITEMAP.filter((p) => p.parent === "/changelog/"),
+    ];
   const landing = sitePage(DOORS.find((d) => d.id === door)!.path)!;
   const pages = doorPages(door);
   if (door !== "components") return [landing, ...pages];

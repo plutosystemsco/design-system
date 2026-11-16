@@ -13,6 +13,7 @@ import {
   rmSync,
   writeFileSync,
 } from "node:fs";
+import { withListedItems } from "../../src/lib/site/items.ts";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import {
@@ -25,7 +26,9 @@ import {
 } from "../../scripts/site/thumbnail-hash.ts";
 import { exampleOrder } from "../../src/lib/site/example-order.ts";
 
-const registry = JSON.parse(readFileSync("registry.json", "utf8")) as {
+const registry = withListedItems(
+  JSON.parse(readFileSync("registry.json", "utf8")),
+) as {
   items: { name: string }[];
 };
 const NAMES = registry.items.map((i) => i.name);
@@ -116,7 +119,7 @@ describe("018 decision 13: the thumbnails", () => {
   });
 
   test("mutation: a byte changed in code-editor's example.ts, in a copy of the tree, stales its pair, and the message names both files", () => {
-    const root = mkdtempSync(path.join(tmpdir(), "pluto-thumbs-"));
+    const root = mkdtempSync(path.join(tmpdir(), "kuiper-thumbs-"));
     try {
       for (const f of [
         ...thumbnailInputs(".", "code-editor"),
@@ -162,7 +165,9 @@ describe("018 decision 13: the thumbnails", () => {
 
 // 018 change review, finding 2: the page the pictures are taken from.
 describe("018 review: the photographed page is in the hash", () => {
-  const registry = JSON.parse(readFileSync("registry.json", "utf8")) as {
+  const registry = withListedItems(
+    JSON.parse(readFileSync("registry.json", "utf8")),
+  ) as {
     items: { name: string }[];
   };
   const names = registry.items.map((i) => i.name);
@@ -170,7 +175,7 @@ describe("018 review: the photographed page is in the hash", () => {
 
   /** The items whose hash changes when `file` gains a line, in a copy of the tree. */
   function staledBy(file: string): string[] {
-    const root = mkdtempSync(path.join(tmpdir(), "pluto-thumbs-page-"));
+    const root = mkdtempSync(path.join(tmpdir(), "kuiper-thumbs-page-"));
     try {
       const all = new Set<string>([
         "registry.json",

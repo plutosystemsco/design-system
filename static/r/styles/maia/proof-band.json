@@ -7,7 +7,7 @@
 	"description": "Two to four numbers in the proof step, each with what it counts, that count up once when they first come into view.",
 	"registryDependencies": [
 		"utils",
-		"pluto-theme",
+		"kuiper-theme",
 		"read-token"
 	],
 	"meta": {

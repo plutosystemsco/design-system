@@ -2,30 +2,31 @@
  * The theme store. `preference` is what the person chose:
  * `light`, `dark`, or `system` (no choice made; the operating system's
  * preference is followed and can change under the page). `resolved` is the
- * theme in force. The key is `pluto-theme`: written on a choice, removed for
+ * theme in force. The key is `kuiper-theme`: written on a choice, removed for
  * `system`. `theme-script.svelte` reads the same key before first paint and
- * must agree with `read` below.
+ * must agree with `readStoredTheme` in `stored.ts`.
  */
 import { MediaQuery } from "svelte/reactivity";
+import { readStoredTheme, THEME_KEY } from "./stored.js";
+
+export { THEME_KEY };
 
 export type ThemePreference = "light" | "dark" | "system";
 export type ResolvedTheme = "light" | "dark";
-
-/** The `localStorage` key the store writes and the head script reads. */
-export const THEME_KEY = "pluto-theme";
 
 const browser = typeof document !== "undefined";
 
 /** The stored choice, else `system`. Storage may be unavailable. */
 function read(): ThemePreference {
   if (!browser) return "system";
+  let storage: Storage;
   try {
-    const stored = localStorage.getItem(THEME_KEY);
-    if (stored === "light" || stored === "dark") return stored;
+    storage = localStorage;
   } catch {
     // No storage: follow the system.
+    return "system";
   }
-  return "system";
+  return readStoredTheme(storage) ?? "system";
 }
 
 class Theme {

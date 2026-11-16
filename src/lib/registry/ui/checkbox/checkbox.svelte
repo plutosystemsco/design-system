@@ -5,7 +5,7 @@
   import { getContext } from "svelte";
   import { cn, type WithoutChildrenOrChild } from "#lib/utils";
 
-  /** The contract a `Field` sets under the key "pluto:field". */
+  /** The contract a `Field` sets under the key "kuiper:field". */
   type FieldContext = {
     readonly id: string;
     readonly invalid: boolean;
@@ -23,7 +23,10 @@
     ...restProps
   }: WithoutChildrenOrChild<CheckboxPrimitive.RootProps> = $props();
 
-  const field = getContext<FieldContext | undefined>("pluto:field");
+  // A field from before 0.13.0 sets only its old key, read until 0.14.0.
+  const field =
+    getContext<FieldContext | undefined>("kuiper:field") ??
+    getContext<FieldContext | undefined>("pluto:field");
 </script>
 
 <!-- 24 px, so the 8 px case radius draws a rounded square, not a circle. -->

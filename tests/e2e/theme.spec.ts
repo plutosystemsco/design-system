@@ -61,15 +61,15 @@ test.describe("the head script", () => {
         .matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g),
     ].map((m) => m[1]);
 
-  test("the home page's raw <head> holds the theme script exactly once, reading pluto-theme and toggling the dark class", async ({
+  test("the home page's raw <head> holds the theme script exactly once, reading kuiper-theme and toggling the dark class", async ({
     request,
   }) => {
     const html = await (await request.get("/")).text();
     const scripts = inlineScripts(html).filter((s) =>
-      s.includes("pluto-theme"),
+      s.includes("kuiper-theme"),
     );
     expect(scripts).toHaveLength(1);
-    expect(scripts[0]).toContain('localStorage.getItem("pluto-theme")');
+    expect(scripts[0]).toContain('localStorage.getItem("kuiper-theme")');
     expect(scripts[0]).toContain("(prefers-color-scheme: dark)");
     expect(scripts[0]).toContain('classList.toggle("dark"');
   });
@@ -89,7 +89,7 @@ test.describe("the head script", () => {
     for (const path of ALL) {
       const html = await (await request.get(path)).text();
       counts[path] = inlineScripts(html).filter((s) =>
-        s.includes('localStorage.getItem("pluto-theme")'),
+        s.includes('localStorage.getItem("kuiper-theme")'),
       ).length;
     }
     expect(Object.values(counts).filter((n) => n !== 1)).toEqual([]);
@@ -124,7 +124,7 @@ test.describe("the head script", () => {
       ).toHaveLength(1);
       expect(
         scripts.filter((s) =>
-          s.includes('localStorage.getItem("pluto-theme")'),
+          s.includes('localStorage.getItem("kuiper-theme")'),
         ),
       ).toHaveLength(0);
     });
@@ -149,7 +149,7 @@ test.describe("the head script", () => {
       generate: "server",
       filename: "theme-script.svelte",
     });
-    const dir = path.resolve(".svelte-kit", "pluto-tests");
+    const dir = path.resolve(".svelte-kit", "kuiper-tests");
     mkdirSync(dir, { recursive: true });
     const file = path.join(dir, "theme-script.svelte.js");
     writeFileSync(file, js.code);
@@ -158,8 +158,133 @@ test.describe("the head script", () => {
     const { head } = render(component, { props: { nonce: "n0nce" } });
     expect(head.match(/<script/g)).toHaveLength(1);
     expect(head.match(/nonce="n0nce"/g)).toHaveLength(1);
-    expect(head).toContain('localStorage.getItem("pluto-theme")');
+    expect(head).toContain('localStorage.getItem("kuiper-theme")');
     const bare = render(component, { props: {} });
     expect(bare.head).not.toContain("nonce");
+  });
+});
+
+/**
+ * 020 test 9, decision 5: the head script carries an old choice over, before
+ * first paint. Every module is stopped, so only the inline head script runs.
+ */
+test.describe("020: the head script carries an old choice over", () => {
+  type Stored = Record<string, string>;
+  const CASES: [
+    label: string,
+    before: Stored,
+    system: ThemeName | null,
+    dark: boolean | "system",
+    after: Stored,
+  ][] = [
+    [
+      "an old dark, no new key",
+      { "pluto-theme": "dark" },
+      null,
+      true,
+      { "kuiper-theme": "dark" },
+    ],
+    [
+      "an old light, under a dark system",
+      { "pluto-theme": "light" },
+      "dark",
+      false,
+      { "kuiper-theme": "light" },
+    ],
+    ["an old blue", { "pluto-theme": "blue" }, null, "system", {}],
+    [
+      "a new light beside an old dark",
+      { "kuiper-theme": "light", "pluto-theme": "dark" },
+      null,
+      false,
+      { "kuiper-theme": "light" },
+    ],
+    [
+      "a new blue, no old key",
+      { "kuiper-theme": "blue" },
+      null,
+      "system",
+      { "kuiper-theme": "blue" },
+    ],
+    [
+      "a new blue beside an old dark",
+      { "kuiper-theme": "blue", "pluto-theme": "dark" },
+      null,
+      true,
+      { "kuiper-theme": "dark" },
+    ],
+    ["neither", {}, null, "system", {}],
+  ];
+
+  for (const [label, before, system, dark, after] of CASES) {
+    test(`${label}`, async ({ page }, info) => {
+      if (system) await page.emulateMedia({ colorScheme: system });
+      await page.route("**/_app/**", (r) => r.abort());
+      await page.goto("/");
+      await page.evaluate((stored) => {
+        localStorage.clear();
+        for (const [k, v] of Object.entries(stored)) localStorage.setItem(k, v);
+      }, before);
+      await page.reload();
+      const want =
+        dark === "system"
+          ? (system ?? (info.project.name as ThemeName)) === "dark"
+          : dark;
+      expect(
+        await page.evaluate(() =>
+          document.documentElement.classList.contains("dark"),
+        ),
+      ).toBe(want);
+      const stored = await page.evaluate(() =>
+        Object.fromEntries(
+          ["kuiper-theme", "pluto-theme"]
+            .filter((k) => localStorage.getItem(k) !== null)
+            .map((k) => [k, localStorage.getItem(k)]),
+        ),
+      );
+      expect(stored).toEqual(after);
+    });
+  }
+
+  test("with modules allowed, the switch after a carry-over writes kuiper-theme only", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    await page.evaluate(() => {
+      localStorage.clear();
+      localStorage.setItem("pluto-theme", "dark");
+    });
+    await open(page, "/components/theme/");
+    const read = () =>
+      page.evaluate(() => [
+        localStorage.getItem("kuiper-theme"),
+        localStorage.getItem("pluto-theme"),
+      ]);
+    expect(await read()).toEqual(["dark", null]);
+    await page
+      .getByTestId("keyboard-fixture")
+      .getByRole("button", { name: "Dark theme" })
+      .click();
+    expect(await read()).toEqual(["light", null]);
+  });
+
+  test("the prerendered head holds one inline script that reads kuiper-theme; its only pluto is the old key, read and removed", async ({
+    request,
+  }) => {
+    const html = await (await request.get("/")).text();
+    const head = html.slice(0, html.indexOf("</head>"));
+    const scripts = [
+      ...head.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g),
+    ]
+      .map((m) => m[1]!)
+      .filter((s) => s.includes("kuiper-theme"));
+    expect(scripts).toHaveLength(1);
+    const script = scripts[0]!;
+    expect(script).toContain('localStorage.getItem("kuiper-theme")');
+    expect(script).toContain('localStorage.getItem("pluto-theme")');
+    expect(script).toContain('localStorage.removeItem("pluto-theme")');
+    expect(script.match(/pluto/gi)?.length).toBe(
+      script.match(/"pluto-theme"/g)?.length,
+    );
   });
 });

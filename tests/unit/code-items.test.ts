@@ -41,12 +41,12 @@ describe("the body reads --code-text (criterion 16)", () => {
     expect(source.match(/var\(--code-text\)/g)).toHaveLength(2);
   });
 
-  test("the dropped name, code-foreground, in any form: 0 in every item file, in pluto-theme's css and cssVars, and in src/app.css", () => {
+  test("the dropped name, code-foreground, in any form: 0 in every item file, in kuiper-theme's css and cssVars, and in src/app.css", () => {
     const pattern = /code-foreground/;
     for (const i of registry.items)
       for (const file of (i.files ?? []).map((f) => f.path))
         expect(read(file), file).not.toMatch(pattern);
-    const theme = item("pluto-theme");
+    const theme = item("kuiper-theme");
     expect(JSON.stringify(theme.css)).not.toMatch(pattern);
     expect(JSON.stringify(theme.cssVars)).not.toMatch(pattern);
     expect(read("src/app.css")).not.toMatch(pattern);
@@ -54,7 +54,7 @@ describe("the body reads --code-text (criterion 16)", () => {
 
   test("the inline-code rule takes text-code-text; its link rule text-code-link", () => {
     const base = (
-      item("pluto-theme").css as Record<string, Record<string, unknown>>
+      item("kuiper-theme").css as Record<string, Record<string, unknown>>
     )["@layer base"]!;
     expect(
       base["code:not(pre code, :is(h1, h2, h3, h4, h5, h6) code)"],

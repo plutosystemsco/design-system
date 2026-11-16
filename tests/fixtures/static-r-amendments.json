@@ -2,7 +2,7 @@
   "why": "Changes to static/r made after 015 by the owner's later decisions, each applied to the base as a text replacement before the comparison. Each entry must be used.",
   "amended": [
     {
-      "item": "pluto-theme",
+      "item": "kuiper-theme",
       "before": "\"syntax-navy\":\"#9FB1DD\"",
       "after": "\"syntax-navy\":\"#A8C0D8\"",
       "why": "decisions.md, \"Dark type is #A8C0D8, and the site's temporary address\" (2026-11-15)"
@@ -74,25 +74,25 @@
       "why": "decisions.md, \"Four calls from the site-polish synthesis\" (2026-11-15); 019 decision 7: the sticky header declares itself"
     },
     {
-      "item": "pluto-theme",
+      "item": "kuiper-theme",
       "before": "\"html:has([data-sticky-bar])\":{\"scroll-padding-top\":\"var(--size-bar)\"},",
       "after": "",
       "why": "decisions.md, \"Four calls from the site-polish synthesis\" (2026-11-15); 019 decision 5: the sticky-bar rule is a default in @layer base"
     },
     {
-      "item": "pluto-theme",
+      "item": "kuiper-theme",
       "before": "\"a code:not(pre code, :is(h1, h2, h3, h4, h5, h6) code)\":{\"@apply text-code-link\":{}}},",
       "after": "\"a code:not(pre code, :is(h1, h2, h3, h4, h5, h6) code)\":{\"@apply text-code-link\":{}},\":where(html:has([data-sticky-bar]))\":{\"scroll-padding-top\":\"var(--size-bar)\"}},",
       "why": "decisions.md, \"Four calls from the site-polish synthesis\" (2026-11-15); 019 decision 5: the sticky-bar rule is a default in @layer base"
     },
     {
-      "item": "pluto-theme",
+      "item": "kuiper-theme",
       "before": "\"--type-display-tracking\":\"-0.045em\",\"--type-section-size\":\"clamp(2.25rem, 4vw, 3.5rem)\",\"--type-section-leading\":\"1.05\",\"--type-section-tracking\":\"-0.035em\",\"--type-proof-size\":\"clamp(3.5rem, 6vw, 6rem)\",\"--type-proof-leading\":\"1\",\"--type-proof-tracking\":\"-0.04em\",\"--type-poster-size\":\"clamp(3.5rem, 12vw, 10rem)\",\"--type-poster-leading\":\"0.9\",\"--type-poster-tracking\":\"-0.05em\",",
       "after": "\"--type-display-tracking\":\"0em\",\"--type-section-size\":\"clamp(2.25rem, 4vw, 3.5rem)\",\"--type-section-leading\":\"1.05\",\"--type-section-tracking\":\"0em\",\"--type-proof-size\":\"clamp(3.5rem, 6vw, 6rem)\",\"--type-proof-leading\":\"1\",\"--type-proof-tracking\":\"0em\",\"--type-poster-size\":\"clamp(3.5rem, 12vw, 10rem)\",\"--type-poster-leading\":\"0.9\",\"--type-poster-tracking\":\"0em\",",
       "why": "019a decision 1 (the owner, 2026-11-15): every letter spacing is the font's default"
     },
     {
-      "item": "pluto-theme",
+      "item": "kuiper-theme",
       "before": "\"tracking-display\":\"-0.03em\",\"tracking-section\":\"-0.02em\",\"tracking-eyebrow\":\"0.08em\",\"tracking-mark\":\"-0.04em\",",
       "after": "\"tracking-display\":\"0em\",\"tracking-section\":\"0em\",\"tracking-eyebrow\":\"0em\",\"tracking-mark\":\"0em\",",
       "why": "019a decision 1 (the owner, 2026-11-15): every letter spacing is the font's default"

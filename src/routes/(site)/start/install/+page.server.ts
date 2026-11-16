@@ -22,5 +22,5 @@ export const load: PageServerLoad = async () => ({
   init: await block(INIT, "bash"),
   theme: await block(ADD_THEME, "bash"),
   button: await block(ADD_BUTTON, "bash"),
-  buttonFiles: filesWritten("button", ["pluto-theme"]),
+  buttonFiles: filesWritten("button", ["kuiper-theme"]),
 });

@@ -261,7 +261,7 @@ test.describe("the code block", () => {
     expect(runtime).toBeLessThanOrEqual(125);
     const queries = chunks.filter((f) =>
       readFileSync(`${dir}/chunks/${f}`, "utf8").includes(
-        "written for the Pluto design system",
+        "written for the Kuiper Design System",
       ),
     );
     expect(queries).toHaveLength(24);
@@ -683,9 +683,9 @@ test.describe("the languages", () => {
   });
 });
 
-/** 007 decision 10: S1, the ink surface on the pluto-theme page. */
+/** 007 decision 10: S1, the ink surface on the kuiper-theme page. */
 test.describe("the ink surface", () => {
-  const PAGE = componentPath("pluto-theme");
+  const PAGE = componentPath("kuiper-theme");
   const surface = (page: Page) => page.getByTestId("keyboard-fixture");
   // 011 decisions 2 and 3: the dark ground is graphite, the raised step and
   // the wash are warm.
@@ -1872,7 +1872,7 @@ test.describe("the code ground and its edge (014)", () => {
  * block's own code are unchanged by the chip.
  */
 test.describe("inline code (014)", () => {
-  const THEME_PAGE = componentPath("pluto-theme");
+  const THEME_PAGE = componentPath("kuiper-theme");
   const own = (locator: Locator, name: string) =>
     locator.evaluate(
       (el, n) => getComputedStyle(el).getPropertyValue(n).trim(),
