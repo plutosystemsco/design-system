@@ -642,6 +642,16 @@ Run 2026-11-15 in the scratchpad, outside `bun.lock` and `package.json`; nothing
 - **`kuiper.css`:** `:root` holds `src/app.css`'s `:root` plus 24 declarations; `.dark` its `.dark` plus 1.
 - **The bench** (criterion 17), working tree: `primitives` 48, `themes` light and dark, `rolesPerTheme` 61, `rolesWithWords` 61, `groups` 15, `contrastPairs` 129, `dtcgValueKeys` 317, `dtcgTypeKeys` 317, `descriptionsInFile` 286. At `ea1f9bd` (`020`'s test 19): 48, light and dark, 61, 61, 13, 0, 0, 0, 129, as logged. At a commit with neither shape: exits 1, naming the commit.
 
+### The change review's fixes (2026-11-16)
+
+The change review ([`../reviews/021-tokens-for-everyone-pr-2026-11-15.md`](../reviews/021-tokens-for-everyone-pr-2026-11-15.md)) says land; its five findings are Low. Findings 1 to 3 are applied in "021: the review's fixes". Finding 4 is recorded in `031`, by the coordinator. Finding 5 stays as deviation 12: the Penpot import is the owner's and the design lead's.
+
+1. **"Use the tokens anywhere"** gives each file as a list item with its own words: `:root` and `.dark` are in code, and the resolver's item names and links the three files it needs, in the same folder. The three addresses of `kuiper.css` are a list, each address on its own line. Seen at 1440 and 390 in both themes: no sideways scroll, every address wraps inside the column.
+2. (a) **The 016 amber scan drops only the names `--syntax-amber` and `--color-syntax-amber`** from `kuiper.removed.json`'s text and scans the rest. Proven by mutation: `#F19E20` written into a note fails the test. (b) **The changelog reads `/v0.13.0/r/tokens/<name>`** (`/r/tokens/<name>` for the latest release).
+3. **The validator rejects `alpha: 1`:** "its alpha must be below 1; leave it out for an opaque colour". A new T15 case, seen failing first (the lowering returned `#0B0F17FF`), then passing.
+
+Re-run after the fixes: `bun run check` 0 errors; lint clean; the token unit files with `registry`, `rename`, `search` and `tokens-pages`, 226 pass, 0 fail (one 5 s timeout in T9 at load average 98, passing alone); `tokens.spec.ts` and `tokens-files.spec.ts` in light and dark, 96 passed, 4 skipped; `build:tokens` reports no changes.
+
 ### The suites
 
 On the final tree, 2026-11-15, on a machine shared with other builds (load average 35 to 70):

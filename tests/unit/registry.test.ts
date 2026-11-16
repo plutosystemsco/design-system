@@ -1854,12 +1854,16 @@ describe("016: the brand yellow", () => {
       .split("\n")
       .filter(
         (f) => f && existsSync(f) && !/\.(png|jpe?g|webp|woff2?|ico)$/.test(f),
-      )
-      // 021 decision 10: the record of removed names keeps the name that
-      // shipped, --syntax-amber, so that it can say what replaces it.
-      .filter((f) => !f.endsWith("/kuiper.removed.json"));
+      );
     expect(files.length).toBeGreaterThan(300);
-    const hits = files.filter((f) => /amber|#?f19e20|#?915b00/i.test(read(f)));
+    // 021 decision 10: the record of removed names keeps the two names that
+    // shipped, --syntax-amber and its --color- form, so that it can say what
+    // replaces them. Only those two names are dropped; the rest is scanned.
+    const text = (f: string) =>
+      f.endsWith("/kuiper.removed.json")
+        ? read(f).replace(/--(color-)?syntax-amber(?![\w-])/g, "")
+        : read(f);
+    const hits = files.filter((f) => /amber|#?f19e20|#?915b00/i.test(text(f)));
     expect(hits).toEqual([]);
   });
 

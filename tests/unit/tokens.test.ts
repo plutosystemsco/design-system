@@ -281,6 +281,15 @@ describe("the token file", () => {
     expect(message).toContain("0.9529, 0.9412, 0.9098");
   });
 
+  // 021 review, finding 3: an alpha of 1 would lower to an `FF` suffix and
+  // change the CSS with no change of colour. An opaque colour has no alpha.
+  test("rejects an alpha of 1 on an opaque colour", () => {
+    const message = rejects((f) => {
+      f[BASE].primitive.ink.$value.alpha = 1;
+    }, "kuiper.tokens.json: primitive.ink");
+    expect(message).toContain("below 1");
+  });
+
   test("rejects a light expressive mark that aliases another primitive than its role", () => {
     rejects((f) => {
       f[LIGHT]["expressive-mark"]["mark-1"].$value = "{primitive.red}";

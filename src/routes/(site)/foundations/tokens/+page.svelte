@@ -13,33 +13,8 @@
   const roles = $derived(data.rows.filter((r) => r.kind === "role"));
   const primitives = $derived(data.rows.filter((r) => r.kind === "primitive"));
   const link = "text-primary underline underline-offset-4";
-  /** 021 decision 13: the published token files, at this release. */
-  const files = [
-    {
-      name: "kuiper.css",
-      words:
-        "Every token as a CSS custom property, light on :root and dark on .dark, for a stack without Tailwind.",
-    },
-    {
-      name: "kuiper.resolver.json",
-      words:
-        "The DTCG resolver: which token files make the light scheme and which the dark, for a tool that reads resolvers.",
-    },
-    {
-      name: "kuiper.flat-light.tokens.json",
-      words:
-        "The light scheme in one DTCG file, for a tool that cannot read a resolver.",
-    },
-    {
-      name: "kuiper.flat-dark.tokens.json",
-      words: "The dark scheme in one DTCG file.",
-    },
-    {
-      name: "kuiper.removed.json",
-      words:
-        "Every name the system shipped and no longer ships, with what replaces it.",
-    },
-  ];
+  /** 021 decision 13: a published token file's address, at this release. */
+  const at = (file: string) => `${SITE_REGISTRY}/tokens/${file}`;
 </script>
 
 <Leaf
@@ -120,22 +95,65 @@
         app; never link to it from your app at run time.
       </p>
       <ul class="grid list-disc gap-2 ps-6">
-        {#each files as f (f.name)}
-          <li>
-            <a href={`${SITE_REGISTRY}/tokens/${f.name}`} class={link}
-              ><code class="wrap-anywhere">{f.name}</code></a
-            >: {f.words}
-          </li>
-        {/each}
+        <li>
+          <a href={at("kuiper.css")} class={link}
+            ><code class="wrap-anywhere">kuiper.css</code></a
+          >: every token as a CSS custom property, light on <code>:root</code>
+          and dark on <code>.dark</code>, for a stack without Tailwind.
+        </li>
+        <li>
+          <a href={at("kuiper.resolver.json")} class={link}
+            ><code class="wrap-anywhere">kuiper.resolver.json</code></a
+          >: the DTCG resolver, which says which token files make the light
+          scheme and which the dark, for a tool that reads resolvers. Take it
+          with the three files it names, in the same folder:
+          <a href={at("kuiper.tokens.json")} class={link}
+            ><code class="wrap-anywhere">kuiper.tokens.json</code></a
+          >,
+          <a href={at("kuiper.light.tokens.json")} class={link}
+            ><code class="wrap-anywhere">kuiper.light.tokens.json</code></a
+          >
+          and
+          <a href={at("kuiper.dark.tokens.json")} class={link}
+            ><code class="wrap-anywhere">kuiper.dark.tokens.json</code></a
+          >.
+        </li>
+        <li>
+          <a href={at("kuiper.flat-light.tokens.json")} class={link}
+            ><code class="wrap-anywhere">kuiper.flat-light.tokens.json</code></a
+          >: the light scheme in one DTCG file, for a tool that cannot read a
+          resolver.
+        </li>
+        <li>
+          <a href={at("kuiper.flat-dark.tokens.json")} class={link}
+            ><code class="wrap-anywhere">kuiper.flat-dark.tokens.json</code></a
+          >: the dark scheme in one DTCG file.
+        </li>
+        <li>
+          <a href={at("kuiper.removed.json")} class={link}
+            ><code class="wrap-anywhere">kuiper.removed.json</code></a
+          >: every name the system shipped and no longer ships, with what
+          replaces it.
+        </li>
       </ul>
       <p>
-        Each file has three addresses. This release's,
-        <code class="wrap-anywhere">{SITE_REGISTRY}/tokens/kuiper.css</code>,
-        stays the same. The latest release's is
-        <code class="wrap-anywhere">{SITE_ORIGIN}/r/tokens/kuiper.css</code>.
-        GitHub serves the same file from the release's tag, at
-        <code class="wrap-anywhere">{GITHUB_REGISTRY}/tokens/kuiper.css</code>.
+        Each file has three addresses. Here they are for <code>kuiper.css</code
+        >:
       </p>
+      <ul class="grid list-disc gap-2 ps-6">
+        <li>
+          This release's, which stays the same:<br />
+          <code class="wrap-anywhere">{at("kuiper.css")}</code>
+        </li>
+        <li>
+          The latest release's:<br />
+          <code class="wrap-anywhere">{SITE_ORIGIN}/r/tokens/kuiper.css</code>
+        </li>
+        <li>
+          GitHub's, from the release's tag:<br />
+          <code class="wrap-anywhere">{GITHUB_REGISTRY}/tokens/kuiper.css</code>
+        </li>
+      </ul>
       <p>
         <code>kuiper.css</code> loads no font. Its font variables name Geist, IBM
         Plex Sans and JetBrains Mono; load them yourself. Each token in the DTCG files

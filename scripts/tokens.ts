@@ -286,6 +286,10 @@ function colourFault(value: Json): string | null {
     (typeof value.alpha !== "number" || value.alpha < 0 || value.alpha > 1)
   )
     return "its alpha must be a number from 0 to 1";
+  // Decision 5: alpha is written only when the colour is translucent. An
+  // alpha of 1 would lower to an `FF` suffix and change the CSS.
+  if ("alpha" in value && value.alpha === 1)
+    return "its alpha must be below 1; leave it out for an opaque colour";
   if (typeof value.hex !== "string" || !HEX6.test(value.hex))
     return `its hex ${JSON.stringify(value.hex)} must be #RRGGBB, six digits in upper case`;
   const want = [0, 1, 2].map((i) => round4(byte(value.hex as string, i) / 255));
