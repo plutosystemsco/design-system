@@ -572,4 +572,4 @@ Ruled by the builder under the owner's delegation (2026-11-16), in the spec's or
 
 ### The scorecard (criterion 11)
 
-SCORE_PENDING
+Re-run per `roadmap.md` §4 on this build (run-log row of 2026-11-16 at `35c37e4`). `kuiper.ts --rev 35c37e4`: every count equals the base `874c5da`'s (`024` changes tests only). `site.ts --only kuiper`, 3 runs: Button **374 kB** (main frame 374), 87 requests, **LCP 888 ms**, CLS 0; the part at 572 (1440) and 661 (390), 79 nav links, search and theme present. **Row 8 holds at 4** (≤ 500 kB and ≤ 1.5 s), as decision 3's cap and `component`'s 1,270 ms LCP budget keep it. Rows 1 to 14 hold: 3 2 1 2 1 4 2 4 3 3 3 0 1 3, total 32. `breadth.ts` and `depth.ts` not run: no item and no page changed.
