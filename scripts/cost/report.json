@@ -1,0 +1,2432 @@
+{
+  "schema": 1,
+  "runs": {
+    "2026-11-16T06:27:03.737Z": {
+      "commit": "fbc996d+dirty",
+      "full": true,
+      "machine": {
+        "model": "MacBookPro18,3 (Apple M1 Pro)",
+        "cores": 10,
+        "os": "darwin 25.5.0"
+      },
+      "tools": {
+        "bun": "1.4.4",
+        "chromium": "156.0.8078.4",
+        "playwright": "1.64.1",
+        "cli": "1.7.1",
+        "zlib": "12731092979c6d07f42da27da673a9f6c7b13586"
+      },
+      "settings": {
+        "cpu": 4,
+        "launches": 6,
+        "block": "FIFIFIF",
+        "warmups": 1,
+        "gzipLevel": 9
+      },
+      "load": { "median": 20.7, "max": 33 },
+      "instrument": {
+        "floorHydrateMs": 121.9,
+        "noopMs": 43.8,
+        "calibrateMs": 91.8
+      },
+      "noisy": false,
+      "seconds": 2546
+    }
+  },
+  "empty": { "js": 31383, "css": 1444 },
+  "themeFloor": {
+    "js": 31382,
+    "css": 7477,
+    "assets": 323087,
+    "fonts": {
+      "font-geist": 76420,
+      "font-heading-ibm-plex-sans": 162416,
+      "font-jetbrains-mono": 84216
+    },
+    "outputHash": "6303416dc26317c740b6990898cb35af2ae9b286dcfdd26eb8023d36cbfa126b"
+  },
+  "floor": {
+    "js": 42840,
+    "css": 7525,
+    "run": "2026-11-16T06:27:03.737Z",
+    "hydrateMs": 121.9,
+    "noopMs": 43.8,
+    "outputHash": "67b6685c60a3cfc6a165e21ebdbabcdbfffdf61cd4008a2903e4f22b98e3ad55"
+  },
+  "catalogue": {
+    "js": 373779,
+    "css": 16578,
+    "sumOfAlone": { "js": 1085662, "css": 59974 }
+  },
+  "items": {
+    "utils": {
+      "hash": "e39961e3e867667728bc28b326c23d07da6d8295c8263e850659f74cebae01e8",
+      "runtimeHash": "bed7e2889542bb376689b211b337cc68a04cfde19ff34d8345db0912dfcd6c9a",
+      "outputHash": "c26a5f812e00e7f58e8d360216cfc515b2ea46cc22f2cfda165fc734090ddd41",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 11436,
+        "css": 48,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 10062, "css": 56 }
+      },
+      "hydrate": { "ms": 17, "spread": [12.2, 20.4], "settledMs": null },
+      "interaction": null,
+      "route": "/",
+      "breakdown": [
+        { "source": "own", "js": 10340 },
+        { "source": "runtime", "js": 974 },
+        { "source": "package:clsx", "js": 122 }
+      ],
+      "cases": {}
+    },
+    "four-dot": {
+      "hash": "00ec782628406d48b374075daafbca52fff09651327570ca5e8213031bdaf891",
+      "runtimeHash": "a3328a00d6b2e519f72ddc7f83a7534691679018b1e07e93719cd6eb2f717655",
+      "outputHash": "fdacdb426c48a9e77fa7e9476dcffaff2f8bee98bde9eb0e20299502b3d3e0ef",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 5131,
+        "css": 582,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 4682, "css": 507 }
+      },
+      "hydrate": { "ms": 8.3, "spread": [4.6, 11.2], "settledMs": null },
+      "interaction": null,
+      "route": "/",
+      "breakdown": [
+        { "source": "runtime", "js": 4906 },
+        { "source": "own", "js": 225 }
+      ],
+      "cases": {}
+    },
+    "theme": {
+      "hash": "bdc15a4f7673005e454dcbf19ebc373326f9ce2af5d3cca413c5b551ae316dcd",
+      "runtimeHash": "a16375636468b460e7aa01080d298504c2cc6b1b50b3b06b7d160a93a3ca9b22",
+      "outputHash": "26692b7ac8331a2634458cbe633c9ce5e27b6251340c6f607d19c10a71ccb862",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 12449,
+        "css": 911,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 10943, "css": 787 }
+      },
+      "hydrate": { "ms": 22.5, "spread": [-15.7, 32.4], "settledMs": null },
+      "interaction": {
+        "kind": "click",
+        "start": "click",
+        "says": "toggles",
+        "ms": 45.1,
+        "spread": [42.8, 50.2],
+        "ownMs": 1.3,
+        "pressGapMs": 0,
+        "eventTimingMs": 32
+      },
+      "route": "/",
+      "breakdown": [
+        { "source": "package:tailwind-variants", "js": 4285 },
+        { "source": "runtime", "js": 3916 },
+        { "source": "package:phosphor-svelte", "js": 2777 },
+        { "source": "own", "js": 681 },
+        { "source": "item:button", "js": 577 },
+        { "source": "item:spinner", "js": 213 }
+      ],
+      "cases": {}
+    },
+    "read-token": {
+      "hash": "3d0bfc20c0960f705485de962369af792bda4df8aa633616c25d9037aa3e39de",
+      "runtimeHash": "0465856e00e33418f59dafd20020422567dda5a8672df300cd04ac479965de7d",
+      "outputHash": "1cd58f0f1450fa852f67eae52df3eb12a3abf02e2b2e50fc1802ccc07c7013ab",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 211,
+        "css": 10,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 195, "css": 19 }
+      },
+      "hydrate": { "ms": 1.9, "spread": [0, 4.5], "settledMs": null },
+      "interaction": null,
+      "route": "/",
+      "breakdown": [
+        { "source": "own", "js": 210 },
+        { "source": "runtime", "js": 1 }
+      ],
+      "cases": {}
+    },
+    "liquid-glass": {
+      "hash": "8b41a4ae500cf5d2897cf2e289b238465de2a7c2c379472f4d62c7814038ac46",
+      "runtimeHash": "2e2cefc6b0eb8a4cf65ec1867efa5f3a88be37fea51fe0f921735fda5af47d33",
+      "outputHash": "de58e566e614fc6784732362607feabe447761fbc51c66bad9c886e1cbde1fe7",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 584,
+        "css": 344,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 547, "css": 285 }
+      },
+      "hydrate": { "ms": 1.8, "spread": [-1, 3.9], "settledMs": null },
+      "interaction": null,
+      "route": "/",
+      "breakdown": [
+        { "source": "own", "js": 359 },
+        { "source": "runtime", "js": 115 },
+        { "source": "item:read-token", "js": 110 }
+      ],
+      "cases": {}
+    },
+    "button": {
+      "hash": "1afdeece41ebb807f811b4e48e63c2a1681a16511c9cbce0c701e3bc72050bce",
+      "runtimeHash": "846bad8641985142622fd4fdb2e485a0fe45f7a4b572435fa871eeb14918eef1",
+      "outputHash": "06ed1487880727b0bf7da2011519b58f5f50ce6a54d4f3754d9428af27c206ee",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 9960,
+        "css": 911,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 8971, "css": 787 }
+      },
+      "hydrate": { "ms": 15.8, "spread": [11.3, 48], "settledMs": null },
+      "interaction": {
+        "kind": "click",
+        "start": "click",
+        "says": "updates",
+        "ms": 44.5,
+        "spread": [43.1, 46.5],
+        "ownMs": 0.7,
+        "pressGapMs": 0,
+        "eventTimingMs": 32
+      },
+      "route": "/",
+      "breakdown": [
+        { "source": "package:tailwind-variants", "js": 4287 },
+        { "source": "runtime", "js": 3770 },
+        { "source": "package:phosphor-svelte", "js": 995 },
+        { "source": "own", "js": 695 },
+        { "source": "item:spinner", "js": 213 }
+      ],
+      "cases": {}
+    },
+    "tooltip": {
+      "hash": "69a328ccf88a21d6f6421c2d651a76b132a919a58ce4791c851abf6d3a6d582a",
+      "runtimeHash": "949ebcafd55e8aba3d789321e38220aeb857bf8f291b5a0d3431dfe713fc5451",
+      "outputHash": "11009b6f867a7f4fe76993b938b3178993f94b51b46a70cf83aa6abc1df10b31",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 32652,
+        "css": 362,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 29038, "css": 299 }
+      },
+      "hydrate": { "ms": 31.4, "spread": [17.1, 48.7], "settledMs": null },
+      "interaction": {
+        "kind": "hover",
+        "start": "pointerover",
+        "says": "shows",
+        "ms": 94.4,
+        "spread": [91.6, 98.8],
+        "ownMs": 50.6,
+        "pressGapMs": null,
+        "eventTimingMs": null
+      },
+      "route": "/",
+      "breakdown": [
+        { "source": "package:bits-ui", "js": 15947 },
+        { "source": "runtime", "js": 3975 },
+        { "source": "package:@floating-ui/core", "js": 2711 },
+        { "source": "package:@floating-ui/dom", "js": 2544 },
+        { "source": "package:svelte-toolbelt", "js": 1806 },
+        { "source": "package:tabbable", "js": 1697 },
+        { "source": "package:runed", "js": 1346 },
+        { "source": "package:@floating-ui/utils", "js": 1174 },
+        { "source": "own", "js": 919 },
+        { "source": "package:inline-style-parser", "js": 451 },
+        { "source": "package:style-to-object", "js": 82 }
+      ],
+      "cases": {}
+    },
+    "kbd": {
+      "hash": "fd557f9fab64ed4646daba5657869705246f81415191cccbbd3b37313ab8831a",
+      "runtimeHash": "ee48ec473d74b75f64f8339c81df57970a804456301dc646b3f22740fd292c63",
+      "outputHash": "bec65104ae7d29f7ae3384904a404a1ef2fe0355e2815106c217ff4c884465f3",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 3507,
+        "css": 232,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 3204, "css": 215 }
+      },
+      "hydrate": { "ms": 23.8, "spread": [15.3, 33.6], "settledMs": null },
+      "interaction": null,
+      "route": "/",
+      "breakdown": [
+        { "source": "runtime", "js": 3308 },
+        { "source": "own", "js": 199 }
+      ],
+      "cases": {}
+    },
+    "toggle": {
+      "hash": "2e3f476bbcc6347b14eda5aa0f0eaaf54e90f578122c836520a494296280762d",
+      "runtimeHash": "534ff0eae6d6023f151bc3d9c45185907cc23dff2ff242ae45fb5416a08d70df",
+      "outputHash": "928361cf527ece8417fcb3c010f3f7339c81a62e772248cd118bc1f39235e813",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 10714,
+        "css": 503,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 9654, "css": 437 }
+      },
+      "hydrate": { "ms": 19.6, "spread": [14.1, 40.5], "settledMs": null },
+      "interaction": {
+        "kind": "click",
+        "start": "click",
+        "says": "toggles",
+        "ms": 44.4,
+        "spread": [43.2, 45.8],
+        "ownMs": 0.6,
+        "pressGapMs": 0,
+        "eventTimingMs": 16
+      },
+      "route": "/",
+      "breakdown": [
+        { "source": "package:tailwind-variants", "js": 4205 },
+        { "source": "runtime", "js": 3487 },
+        { "source": "package:svelte-toolbelt", "js": 1413 },
+        { "source": "package:bits-ui", "js": 689 },
+        { "source": "package:inline-style-parser", "js": 492 },
+        { "source": "own", "js": 339 },
+        { "source": "package:style-to-object", "js": 89 }
+      ],
+      "cases": {}
+    },
+    "toggle-group": {
+      "hash": "78e7963a5a61e0b94acc5145a0c56070cbccd245cb4cb2650ae653734082e9ed",
+      "runtimeHash": "d7443e8fea70973cc48cad7103e6b768c84398ba7b913460bb8c1d8fe940e1a1",
+      "outputHash": "f4b1be7df6662deb30e15a430b6d80b86c0d8f6347f26d483389e0e605085a3b",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 13655,
+        "css": 839,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 12312, "css": 739 }
+      },
+      "hydrate": { "ms": 30.6, "spread": [26.8, 45.7], "settledMs": null },
+      "interaction": {
+        "kind": "click",
+        "start": "click",
+        "says": "selects",
+        "ms": 42.8,
+        "spread": [38.9, 44],
+        "ownMs": -1,
+        "pressGapMs": 0,
+        "eventTimingMs": 16
+      },
+      "route": "/",
+      "breakdown": [
+        { "source": "package:tailwind-variants", "js": 4010 },
+        { "source": "runtime", "js": 3554 },
+        { "source": "package:bits-ui", "js": 2224 },
+        { "source": "package:svelte-toolbelt", "js": 1565 },
+        { "source": "package:runed", "js": 1001 },
+        { "source": "own", "js": 641 },
+        { "source": "package:inline-style-parser", "js": 469 },
+        { "source": "item:toggle", "js": 106 },
+        { "source": "package:style-to-object", "js": 85 }
+      ],
+      "cases": {}
+    },
+    "card": {
+      "hash": "0a30a4bea8d68588336b41987823332972f0579a574b5566510eba1616d305f4",
+      "runtimeHash": "78448e2a7903e72218708a42b216f34a433e8b6d9ccf5f98e9740a5ce3fac917",
+      "outputHash": "4b54a24bb55fbbf99eee545ae2e7022a0f396fb9b1e7f62746f307b1acbd39f1",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 4284,
+        "css": 633,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 3804, "css": 543 }
+      },
+      "hydrate": { "ms": 24.7, "spread": [16.5, 35.2], "settledMs": null },
+      "interaction": null,
+      "route": "/",
+      "breakdown": [
+        { "source": "runtime", "js": 3446 },
+        { "source": "own", "js": 838 }
+      ],
+      "cases": {}
+    },
+    "separator": {
+      "hash": "448ac6481768361a831fa0fe7438d1e9323c3cfe5fc9343a56620e6ea00484cf",
+      "runtimeHash": "42a982c2ab66e7c710b78b40d94dea6631577b5533a046a5dbe7994b9c044e29",
+      "outputHash": "daf6f10f1a4c82bfcf7c73574dff140f92ee1a4244945fee85fe5ccbd2173348",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 6953,
+        "css": 169,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 6246, "css": 140 }
+      },
+      "hydrate": { "ms": 9.8, "spread": [5.9, 13.7], "settledMs": null },
+      "interaction": null,
+      "route": "/",
+      "breakdown": [
+        { "source": "runtime", "js": 3886 },
+        { "source": "package:svelte-toolbelt", "js": 1575 },
+        { "source": "package:bits-ui", "js": 601 },
+        { "source": "package:inline-style-parser", "js": 548 },
+        { "source": "own", "js": 244 },
+        { "source": "package:style-to-object", "js": 99 }
+      ],
+      "cases": {}
+    },
+    "item": {
+      "hash": "038c701c69b473deedccfe1f70f7bdcc055bd94ab582198b88422cac56baa24a",
+      "runtimeHash": "3748cbb0bf543d823e006767fd8909bb1560366ed0ce01796fb079ea7c639023",
+      "outputHash": "aed7be91cdf22cadb6525c7f10ae26a98bdfda18f5bbf08b1f3468bc51ad883c",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 7607,
+        "css": 930,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 6822, "css": 815 }
+      },
+      "hydrate": { "ms": 23.7, "spread": [12.4, 31.9], "settledMs": null },
+      "interaction": null,
+      "route": "/",
+      "breakdown": [
+        { "source": "package:tailwind-variants", "js": 3838 },
+        { "source": "runtime", "js": 2980 },
+        { "source": "own", "js": 789 }
+      ],
+      "cases": {}
+    },
+    "table": {
+      "hash": "ba6ebbb028ca53d5e3f31f3352301e02d543ae04361b53d227bc6e649f748550",
+      "runtimeHash": "8ded1123e622f5818369f17bf81ffb2a596601d8a1feac528ed7e63aa7336a20",
+      "outputHash": "61df4f33aaa4e57daaee006299ef764b92b0b8805f113f90bab49738f6468678",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 5738,
+        "css": 616,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 5218, "css": 539 }
+      },
+      "hydrate": { "ms": 26.2, "spread": [21.6, 32.3], "settledMs": null },
+      "interaction": null,
+      "route": "/",
+      "breakdown": [
+        { "source": "runtime", "js": 4587 },
+        { "source": "own", "js": 1151 }
+      ],
+      "cases": {
+        "1000-rows": {
+          "hash": "c947d83f2b202a09170512126db91067b2035b5e565ad31a4544078e43291701",
+          "runtimeHash": "342774d2cb134d0d91e002f553ced0510d2579df719cdb74b81503de8ec63417",
+          "outputHash": "e174827422ab79b096fa56aa794fc0af1bd7e503c1b6cd4ddd7d84088adc73dc",
+          "run": "2026-11-16T06:27:03.737Z",
+          "size": {
+            "js": 5853,
+            "css": 616,
+            "lazy": 0,
+            "assets": 0,
+            "brotli": { "js": 5305, "css": 539 }
+          },
+          "hydrate": {
+            "ms": 448.8,
+            "spread": [411.8, 482.7],
+            "settledMs": null
+          },
+          "interaction": null
+        }
+      }
+    },
+    "tabs": {
+      "hash": "78a5818de6ce145ec800c18a68a280bd29459826b73fec857dbc90e9be250ddb",
+      "runtimeHash": "11e315678d0b20a8af05c99c77da4f47e81f67ed53dedd87309127e6d2a6bbc3",
+      "outputHash": "edb157b64d76db874b52fa7b97197cc4a6d8aa960b8aaae4a845d2c2c072d575",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 14406,
+        "css": 849,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 12911, "css": 726 }
+      },
+      "hydrate": { "ms": 32.4, "spread": [25.6, 56.6], "settledMs": null },
+      "interaction": {
+        "kind": "click",
+        "start": "click",
+        "says": "selects",
+        "ms": 43.6,
+        "spread": [39.6, 45.2],
+        "ownMs": -0.2,
+        "pressGapMs": 0,
+        "eventTimingMs": 32
+      },
+      "route": "/",
+      "breakdown": [
+        { "source": "runtime", "js": 3948 },
+        { "source": "package:tailwind-variants", "js": 3898 },
+        { "source": "package:bits-ui", "js": 2593 },
+        { "source": "package:svelte-toolbelt", "js": 1521 },
+        { "source": "package:runed", "js": 973 },
+        { "source": "own", "js": 934 },
+        { "source": "package:inline-style-parser", "js": 456 },
+        { "source": "package:style-to-object", "js": 83 }
+      ],
+      "cases": {}
+    },
+    "collapsible": {
+      "hash": "0075b80275f78a5678a0eadc41ca8fc1bffef78672b9e9e7bd84f4f0843e7304",
+      "runtimeHash": "a365d3bd5bd708762741fd3e61d45b28b12ac1388c4bf47df24e944024d189c9",
+      "outputHash": "eeca6170847bcec53d9e26467904bf1a805747f3ca51365d80a4879abea456e5",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 9469,
+        "css": 0,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 8569, "css": 0 }
+      },
+      "hydrate": { "ms": 15.8, "spread": [6.8, 26], "settledMs": null },
+      "interaction": {
+        "kind": "click",
+        "start": "click",
+        "says": "expands",
+        "ms": 44.6,
+        "spread": [43.6, 44.8],
+        "ownMs": 0.8,
+        "pressGapMs": 0,
+        "eventTimingMs": 32
+      },
+      "route": "/",
+      "breakdown": [
+        { "source": "runtime", "js": 3536 },
+        { "source": "package:bits-ui", "js": 2542 },
+        { "source": "package:svelte-toolbelt", "js": 1381 },
+        { "source": "package:runed", "js": 995 },
+        { "source": "package:inline-style-parser", "js": 467 },
+        { "source": "own", "js": 463 },
+        { "source": "package:style-to-object", "js": 85 }
+      ],
+      "cases": {}
+    },
+    "avatar": {
+      "hash": "835a32dbc76e9af02eb2f5b2c20df02c6d1eced13c146007a1283eb744947dde",
+      "runtimeHash": "af1aad16d40dd72ada64fba2d5e2c534b14555b9e03099cd3069bee01860f4ea",
+      "outputHash": "7c9b57a8243d2d2f464a04d0671e23c7f1c6e94d2c41a0e443ebfef92a32f5a6",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 8226,
+        "css": 591,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 7425, "css": 528 }
+      },
+      "hydrate": { "ms": 16.8, "spread": [-3.7, 24.1], "settledMs": null },
+      "interaction": null,
+      "route": "/",
+      "breakdown": [
+        { "source": "runtime", "js": 3624 },
+        { "source": "package:svelte-toolbelt", "js": 1656 },
+        { "source": "package:runed", "js": 1021 },
+        { "source": "package:bits-ui", "js": 953 },
+        { "source": "package:inline-style-parser", "js": 478 },
+        { "source": "own", "js": 407 },
+        { "source": "package:style-to-object", "js": 87 }
+      ],
+      "cases": {}
+    },
+    "popover": {
+      "hash": "17d193809b15d2c98964ab9dcfbb28a224ad0edb9f8182a7a3a9286ac79c535d",
+      "runtimeHash": "8d3165f2809ce54d87e9b1020155e24d57ace31463d7ce655170c31791ca2c67",
+      "outputHash": "0010631e79013926cce73c19c85149a811a53667a4888c3f0d203d1fc778eb5e",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 31696,
+        "css": 590,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 28201, "css": 499 }
+      },
+      "hydrate": { "ms": 27.3, "spread": [24, 43.9], "settledMs": null },
+      "interaction": {
+        "kind": "click",
+        "start": "click",
+        "says": "opens",
+        "ms": 109.3,
+        "spread": [95.9, 125.6],
+        "ownMs": 65.5,
+        "pressGapMs": 0,
+        "eventTimingMs": 80
+      },
+      "route": "/",
+      "breakdown": [
+        { "source": "package:bits-ui", "js": 14595 },
+        { "source": "runtime", "js": 4275 },
+        { "source": "package:@floating-ui/core", "js": 2674 },
+        { "source": "package:@floating-ui/dom", "js": 2510 },
+        { "source": "package:svelte-toolbelt", "js": 1786 },
+        { "source": "package:tabbable", "js": 1709 },
+        { "source": "package:runed", "js": 1328 },
+        { "source": "package:@floating-ui/utils", "js": 1158 },
+        { "source": "own", "js": 1135 },
+        { "source": "package:inline-style-parser", "js": 445 },
+        { "source": "package:style-to-object", "js": 81 }
+      ],
+      "cases": {}
+    },
+    "accordion": {
+      "hash": "1b63b4faf0a0cf19b7208f92e56387844e7322d5526702616c8e70ce22fcfad4",
+      "runtimeHash": "ddc6afc4763fdfd33883776f6bfc298249cf108fa4b37a5bf44cc7833223f921",
+      "outputHash": "fca4f55e5e891a154200272b2eb9aa333ca7e225006261919651951c15461621",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 13009,
+        "css": 627,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 11663, "css": 555 }
+      },
+      "hydrate": { "ms": 40.5, "spread": [36.6, 75.2], "settledMs": null },
+      "interaction": {
+        "kind": "click",
+        "start": "click",
+        "says": "expands",
+        "ms": 47.3,
+        "spread": [45.1, 58.9],
+        "ownMs": 3.5,
+        "pressGapMs": 0,
+        "eventTimingMs": 40
+      },
+      "route": "/",
+      "breakdown": [
+        { "source": "package:bits-ui", "js": 4310 },
+        { "source": "runtime", "js": 3752 },
+        { "source": "package:svelte-toolbelt", "js": 1624 },
+        { "source": "own", "js": 1173 },
+        { "source": "package:runed", "js": 1012 },
+        { "source": "package:phosphor-svelte", "js": 577 },
+        { "source": "package:inline-style-parser", "js": 475 },
+        { "source": "package:style-to-object", "js": 86 }
+      ],
+      "cases": {}
+    },
+    "alert": {
+      "hash": "7e71c56d118c24507f7724804af84b82dc39f1a4f0d1762baafdf0aa1ae119fb",
+      "runtimeHash": "7d49c2afd43b33b5ebd09685b9881e15fb2e7ca786004d3598f2a2570f0a0db8",
+      "outputHash": "efb07af7620f0c657292fa36b77388d1a6982a466bb115e7db60f400fc71d23c",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 7412,
+        "css": 779,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 6679, "css": 690 }
+      },
+      "hydrate": { "ms": 18.4, "spread": [8.6, 23.6], "settledMs": null },
+      "interaction": null,
+      "route": "/",
+      "breakdown": [
+        { "source": "package:tailwind-variants", "js": 3867 },
+        { "source": "runtime", "js": 2933 },
+        { "source": "own", "js": 612 }
+      ],
+      "cases": {}
+    },
+    "alert-dialog": {
+      "hash": "dd6da8b99c39753843c81b246c7b0c52921c5b7d132f0ec6c851bb538e7e41c9",
+      "runtimeHash": "d02d15a8651f47ef85dafcc2a0b53b97c3e1219050d5d66c98646c3b4b36d99a",
+      "outputHash": "70b13a3cf051acd90ccba6c251b15e0b931cba64b95546537473cc09cc36e0ae",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 22988,
+        "css": 2023,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 20422, "css": 1759 }
+      },
+      "hydrate": { "ms": 25.5, "spread": [17.9, 27.1], "settledMs": null },
+      "interaction": {
+        "kind": "click",
+        "start": "click",
+        "says": "opens",
+        "ms": 108.6,
+        "spread": [93.1, 110.5],
+        "ownMs": 64.8,
+        "pressGapMs": 0,
+        "eventTimingMs": 64
+      },
+      "route": "/",
+      "breakdown": [
+        { "source": "package:bits-ui", "js": 8713 },
+        { "source": "runtime", "js": 3874 },
+        { "source": "package:tailwind-variants", "js": 3757 },
+        { "source": "package:svelte-toolbelt", "js": 1721 },
+        { "source": "package:tabbable", "js": 1655 },
+        { "source": "own", "js": 1624 },
+        { "source": "package:runed", "js": 939 },
+        { "source": "package:inline-style-parser", "js": 439 },
+        { "source": "item:button", "js": 186 },
+        { "source": "package:style-to-object", "js": 80 }
+      ],
+      "cases": {}
+    },
+    "badge": {
+      "hash": "e8be791b0f2486fc4ad33b5a88e1c0aba3441481f697d839c17c30e2aefb4065",
+      "runtimeHash": "7b76e083cef707795a512d19d08afa3cbe853b7a431ba6e4f15c5c2a3b62f668",
+      "outputHash": "243d4fc6a6641c215f684d947493002aa532362eeb8099c5d76d4f20f3cf4706",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 6966,
+        "css": 310,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 6343, "css": 262 }
+      },
+      "hydrate": { "ms": 29, "spread": [24.3, 32.7], "settledMs": null },
+      "interaction": null,
+      "route": "/",
+      "breakdown": [
+        { "source": "package:tailwind-variants", "js": 3829 },
+        { "source": "runtime", "js": 2903 },
+        { "source": "own", "js": 234 }
+      ],
+      "cases": {}
+    },
+    "empty": {
+      "hash": "725e5d01c2f24ebc5563bf216bbb03a6b7994f914a0257207490a99162d14f66",
+      "runtimeHash": "0b0aee50f0c273f2f9a39b934a6cc006a7b0e2b538d8fca0e816e6123ad1835a",
+      "outputHash": "5fabfe46bded475949b23d873877d52395eb5f1a0854e3bb80f7aa4064a2a682",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 7591,
+        "css": 470,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 6765, "css": 422 }
+      },
+      "hydrate": { "ms": 21.5, "spread": [16.9, 23.5], "settledMs": null },
+      "interaction": null,
+      "route": "/",
+      "breakdown": [
+        { "source": "package:tailwind-variants", "js": 3751 },
+        { "source": "runtime", "js": 3193 },
+        { "source": "own", "js": 647 }
+      ],
+      "cases": {}
+    },
+    "skeleton": {
+      "hash": "041f1113604021db1187d7fde3f2d79bfea5674f6c96096010900a4d0f46c88a",
+      "runtimeHash": "7d2280076a9253dea3054b6f247fc00ea4cef9bf8425bb014af9ad8e47b52a60",
+      "outputHash": "162af95b085c9d45a5d9eff73f718c75462382bc7b2f3e0f7ef99aa02041e142",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 3349,
+        "css": 41,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 3083, "css": 43 }
+      },
+      "hydrate": { "ms": 6.3, "spread": [-6.2, 27.6], "settledMs": null },
+      "interaction": null,
+      "route": "/",
+      "breakdown": [
+        { "source": "runtime", "js": 3212 },
+        { "source": "own", "js": 137 }
+      ],
+      "cases": {}
+    },
+    "spinner": {
+      "hash": "e57bdbf97cfc6c1c2227358257ef00f547e040e64dcfd883ef293f90b86a9fe7",
+      "runtimeHash": "1c39289fce1431990263023218f7da80cf630e370190b48590739608b2deafb4",
+      "outputHash": "530d1ef1b999696ff3076adf248a0b549259812f2219ff183346d54578475fd2",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 5631,
+        "css": 172,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 5034, "css": 139 }
+      },
+      "hydrate": { "ms": 9.4, "spread": [1.5, 16.4], "settledMs": null },
+      "interaction": null,
+      "route": "/",
+      "breakdown": [
+        { "source": "runtime", "js": 4225 },
+        { "source": "package:phosphor-svelte", "js": 1121 },
+        { "source": "own", "js": 285 }
+      ],
+      "cases": {}
+    },
+    "status": {
+      "hash": "57ae19950901fe7e6c95448824214c86c8fdc52ae0687ae31645a8547f47c345",
+      "runtimeHash": "731facc7d891960fdea6fccd28a20ba264eec118a38f507e1c1f53e1b6fbf5a9",
+      "outputHash": "506038433f420ffc16a03725195d5573500a6b6bc58e0a7ce6913d1a53e59843",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 3419,
+        "css": 83,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 3154, "css": 78 }
+      },
+      "hydrate": { "ms": 5.6, "spread": [-6.8, 14.4], "settledMs": null },
+      "interaction": null,
+      "route": "/",
+      "breakdown": [
+        { "source": "runtime", "js": 3242 },
+        { "source": "own", "js": 177 }
+      ],
+      "cases": {}
+    },
+    "error-summary": {
+      "hash": "e452da6d6e3bd1dd7d353e84d602eb9ec775a66de75ae3e1fcf9ba8cac77ec5a",
+      "runtimeHash": "3e52b2f7dbcf31b7dfe45de85af2b3f901d6fd88d176ca16d9302879251b13b6",
+      "outputHash": "3d1928b2691840a7e2e6482919900ee2a3d8e12aa989655295dfde85cf9f00bb",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 11816,
+        "css": 891,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 10507, "css": 786 }
+      },
+      "hydrate": { "ms": 35.3, "spread": [27.6, 46.6], "settledMs": null },
+      "interaction": {
+        "kind": "click",
+        "start": "click",
+        "says": "focuses",
+        "ms": 43.9,
+        "spread": [40, 45.7],
+        "ownMs": 0.1,
+        "pressGapMs": 0,
+        "eventTimingMs": 16
+      },
+      "route": "/",
+      "breakdown": [
+        { "source": "runtime", "js": 5791 },
+        { "source": "package:tailwind-variants", "js": 4173 },
+        { "source": "own", "js": 913 },
+        { "source": "package:phosphor-svelte", "js": 666 },
+        { "source": "item:alert", "js": 273 }
+      ],
+      "cases": {}
+    },
+    "label": {
+      "hash": "cb3548e4027303ede944fc509d532165385de4a046760ced07192fd8e1cb13bd",
+      "runtimeHash": "96bfa86d6e5cfd9082ba2eaf61556a3393d2ec0879bf71b552cb7acf2efcde24",
+      "outputHash": "4dfbac4be9ad4900e47c2fd4bb74d848dca27f77d4834e921df49e8fde224f18",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 6945,
+        "css": 192,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 6221, "css": 160 }
+      },
+      "hydrate": { "ms": 14.5, "spread": [11.2, 26.9], "settledMs": null },
+      "interaction": null,
+      "route": "/",
+      "breakdown": [
+        { "source": "runtime", "js": 3908 },
+        { "source": "package:svelte-toolbelt", "js": 1583 },
+        { "source": "package:inline-style-parser", "js": 551 },
+        { "source": "package:bits-ui", "js": 540 },
+        { "source": "own", "js": 263 },
+        { "source": "package:style-to-object", "js": 100 }
+      ],
+      "cases": {}
+    },
+    "field": {
+      "hash": "da7d4b91002dbd5914ea52b8a4aff54dfe65cfd34208d4784dcad7207abc34ab",
+      "runtimeHash": "30678c5ff6f74956b3433eb9056331059a05daf124d63438704cc1045ea3c265",
+      "outputHash": "7d246b8e4e099d9a9b2dde9eb3bf9c4abb79ad8297b85b303a6e0c19fc948317",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 13393,
+        "css": 1133,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 12079, "css": 962 }
+      },
+      "hydrate": { "ms": 27.2, "spread": [22.3, 36], "settledMs": null },
+      "interaction": null,
+      "route": "/",
+      "breakdown": [
+        { "source": "runtime", "js": 5243 },
+        { "source": "package:tailwind-variants", "js": 4048 },
+        { "source": "own", "js": 1576 },
+        { "source": "package:svelte-toolbelt", "js": 1360 },
+        { "source": "package:inline-style-parser", "js": 473 },
+        { "source": "package:bits-ui", "js": 464 },
+        { "source": "item:label", "js": 143 },
+        { "source": "package:style-to-object", "js": 86 }
+      ],
+      "cases": {}
+    },
+    "input": {
+      "hash": "a5e574d5efb01c4d62dff23083a3bf7cb9a3daf1f0c361c47aafc59dc0e04914",
+      "runtimeHash": "c5af8806178b469019151979e5b0ebd9f7bfee169be89fec01eeae72cfb00400",
+      "outputHash": "4e0656da092c9319b3463b2947e304e918323944b95d541614192d30cd91eeeb",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 4208,
+        "css": 410,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 3874, "css": 346 }
+      },
+      "hydrate": { "ms": 9.2, "spread": [6.5, 26.8], "settledMs": null },
+      "interaction": null,
+      "route": "/",
+      "breakdown": [
+        { "source": "runtime", "js": 3806 },
+        { "source": "own", "js": 402 }
+      ],
+      "cases": {}
+    },
+    "textarea": {
+      "hash": "f20691b1809ef9a46fdcd7331d0ed380eea7dfd920b39beaaad75483ab2fd4ee",
+      "runtimeHash": "c636fa5de7b253232a75d0f0d9d3592e56b5eda95e409e0f9e5ab9dcca875eaa",
+      "outputHash": "d14146125d93c7faa85e9359145b4d2d5903ba663ca8f05248743652849a50e4",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 4042,
+        "css": 297,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 3679, "css": 279 }
+      },
+      "hydrate": { "ms": 10.6, "spread": [6.5, 18], "settledMs": null },
+      "interaction": null,
+      "route": "/",
+      "breakdown": [
+        { "source": "runtime", "js": 3785 },
+        { "source": "own", "js": 257 }
+      ],
+      "cases": {}
+    },
+    "input-group": {
+      "hash": "26027e17c6a26370374addf98ee919b7e8f5b8ad11cb68ac4055cdfb8c8a1406",
+      "runtimeHash": "c438becfc3783451bb1ff8ca6d35eec2a6d6404f033c0a1eb6b631f541082136",
+      "outputHash": "826e22531676bbdb57a44fa21f98e5406ba67191ca7833a443f830252c1c4f4d",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 11752,
+        "css": 1649,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 10421, "css": 1448 }
+      },
+      "hydrate": { "ms": 31.2, "spread": [7.9, 49.3], "settledMs": null },
+      "interaction": {
+        "kind": "click",
+        "start": "click",
+        "says": "toggles",
+        "ms": 44.5,
+        "spread": [42.7, 45.8],
+        "ownMs": 0.7,
+        "pressGapMs": 0,
+        "eventTimingMs": 32
+      },
+      "route": "/",
+      "breakdown": [
+        { "source": "package:tailwind-variants", "js": 4249 },
+        { "source": "runtime", "js": 4205 },
+        { "source": "own", "js": 1174 },
+        { "source": "package:phosphor-svelte", "js": 986 },
+        { "source": "item:button", "js": 572 },
+        { "source": "item:input", "js": 354 },
+        { "source": "item:spinner", "js": 212 }
+      ],
+      "cases": {}
+    },
+    "native-select": {
+      "hash": "49c66a1c7d0c1c7845e7fb85303011384ebb4a32be43cdc51aa5644553b2fe6a",
+      "runtimeHash": "a511e606a5690c1391953a765d7fcb82dadab8cfcec515faecb50411b15b75b1",
+      "outputHash": "9b9d1db6a6019b508d1af14f3609663d35f73717e45a0f26d7e395ce9e896941",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 5538,
+        "css": 535,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 4962, "css": 467 }
+      },
+      "hydrate": { "ms": 17.4, "spread": [15.5, 28.3], "settledMs": null },
+      "interaction": null,
+      "route": "/",
+      "breakdown": [
+        { "source": "runtime", "js": 4223 },
+        { "source": "package:phosphor-svelte", "js": 664 },
+        { "source": "own", "js": 651 }
+      ],
+      "cases": {}
+    },
+    "checkbox": {
+      "hash": "887c886e22a7c732d8c80e8a43c83ba1c6c14f43d3d6d32f195d83187c337371",
+      "runtimeHash": "541a724fb7c1182d29cd845b8006a7dc51fd911f637e7fded60843b0928609bc",
+      "outputHash": "6c2908658b97ab95e24a7d3dbce772fc5268e4ad514ea3eabf852dd17d2ebaa5",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 10920,
+        "css": 446,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 9721, "css": 385 }
+      },
+      "hydrate": { "ms": 14.4, "spread": [12.6, 19.8], "settledMs": null },
+      "interaction": {
+        "kind": "click",
+        "start": "click",
+        "says": "toggles",
+        "ms": 43.7,
+        "spread": [41, 45.3],
+        "ownMs": -0.1,
+        "pressGapMs": 0,
+        "eventTimingMs": 32
+      },
+      "route": "/",
+      "breakdown": [
+        { "source": "runtime", "js": 4318 },
+        { "source": "package:bits-ui", "js": 1838 },
+        { "source": "package:svelte-toolbelt", "js": 1469 },
+        { "source": "package:phosphor-svelte", "js": 1171 },
+        { "source": "package:runed", "js": 1050 },
+        { "source": "package:inline-style-parser", "js": 493 },
+        { "source": "own", "js": 492 },
+        { "source": "package:style-to-object", "js": 89 }
+      ],
+      "cases": {}
+    },
+    "radio-group": {
+      "hash": "bc33d7f2e30bb57892b4ce9b2af4d211cceecdaf3e999cac079f6e5bf10e1d83",
+      "runtimeHash": "0cfc00b7b6bc83639b19a3eb51bf1f34c037b826b738165af2d0160e2a3a9b0f",
+      "outputHash": "030bde4921891ea77fd009e6a08525ced6533acc7e8379d529dd1fce17a65cb5",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 10537,
+        "css": 387,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 9454, "css": 345 }
+      },
+      "hydrate": { "ms": 19.7, "spread": [16.7, 24.9], "settledMs": null },
+      "interaction": {
+        "kind": "click",
+        "start": "click",
+        "says": "selects",
+        "ms": 43.5,
+        "spread": [41.2, 46.7],
+        "ownMs": -0.3,
+        "pressGapMs": 0,
+        "eventTimingMs": 32
+      },
+      "route": "/",
+      "breakdown": [
+        { "source": "runtime", "js": 3787 },
+        { "source": "package:bits-ui", "js": 2743 },
+        { "source": "package:svelte-toolbelt", "js": 1722 },
+        { "source": "package:runed", "js": 1066 },
+        { "source": "own", "js": 628 },
+        { "source": "package:inline-style-parser", "js": 500 },
+        { "source": "package:style-to-object", "js": 91 }
+      ],
+      "cases": {}
+    },
+    "switch": {
+      "hash": "499a13b19a970a9af3bb93da1610aac63d560354bcd9faa57e31ae62fc30916f",
+      "runtimeHash": "fd46b53ff5e65114102baf1b191df3afd20575d3b25d443ea3760e368881ace5",
+      "outputHash": "88a44c7432ff5909c7721b1749195c85182e42ffe0ed9c4dd7ed2c44eaebaa91",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 8703,
+        "css": 487,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 7815, "css": 427 }
+      },
+      "hydrate": { "ms": 13.7, "spread": [12.1, 24.2], "settledMs": null },
+      "interaction": {
+        "kind": "click",
+        "start": "click",
+        "says": "toggles",
+        "ms": 44.8,
+        "spread": [42.8, 46],
+        "ownMs": 1,
+        "pressGapMs": 0,
+        "eventTimingMs": 16
+      },
+      "route": "/",
+      "breakdown": [
+        { "source": "runtime", "js": 3682 },
+        { "source": "package:bits-ui", "js": 1579 },
+        { "source": "package:svelte-toolbelt", "js": 1450 },
+        { "source": "package:runed", "js": 1037 },
+        { "source": "package:inline-style-parser", "js": 486 },
+        { "source": "own", "js": 381 },
+        { "source": "package:style-to-object", "js": 88 }
+      ],
+      "cases": {}
+    },
+    "input-otp": {
+      "hash": "6f18bf2ad25a97431caa69264bc19f7f40964639dbd62edbc23312421ed751d5",
+      "runtimeHash": "397a5bc25080e17f3bc6153f1e349a7f00e8818204877ee86bee6e57497cfed4",
+      "outputHash": "63719ea5b0dc8cbdf45c58f2e7604221ac85f4dc0114fe70b8240f6dcfff7420",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 13509,
+        "css": 627,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 12227, "css": 561 }
+      },
+      "hydrate": { "ms": 32.4, "spread": [29.1, 42.7], "settledMs": null },
+      "interaction": {
+        "kind": "key",
+        "start": "keydown",
+        "says": "updates",
+        "ms": 36.3,
+        "spread": [32.5, 41.5],
+        "ownMs": -7.5,
+        "pressGapMs": null,
+        "eventTimingMs": 24
+      },
+      "route": "/",
+      "breakdown": [
+        { "source": "runtime", "js": 5584 },
+        { "source": "package:bits-ui", "js": 3445 },
+        { "source": "package:svelte-toolbelt", "js": 1903 },
+        { "source": "package:runed", "js": 1077 },
+        { "source": "own", "js": 896 },
+        { "source": "package:inline-style-parser", "js": 511 },
+        { "source": "package:style-to-object", "js": 93 }
+      ],
+      "cases": {}
+    },
+    "code-block": {
+      "hash": "9cce17da09e71d11f15d6b426703c4e10e9a2b49f637cff6a302f082e257bf70",
+      "runtimeHash": "67f605a7fc71e7b23d3a5cb4b31b523162266d812c1e5d450cc1f952f45c22f2",
+      "outputHash": "b66ae80be883a8faa120c2c9d728bd26d50a5c4e85465869ab5a44980cf54706",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 25566,
+        "css": 2444,
+        "lazy": 382311,
+        "assets": 2147405,
+        "brotli": { "js": 22401, "css": 2134 }
+      },
+      "hydrate": { "ms": 59.3, "spread": [50.6, 75.2], "settledMs": 347.3 },
+      "interaction": {
+        "kind": "click",
+        "start": "click",
+        "says": "copies",
+        "ms": 77,
+        "spread": [73.2, 79.4],
+        "ownMs": 33.2,
+        "pressGapMs": 0,
+        "eventTimingMs": 32
+      },
+      "route": "/",
+      "breakdown": [
+        { "source": "item:highlighter", "js": 8613 },
+        { "source": "runtime", "js": 6228 },
+        { "source": "package:tailwind-variants", "js": 4630 },
+        { "source": "package:phosphor-svelte", "js": 2422 },
+        { "source": "own", "js": 2374 },
+        { "source": "item:button", "js": 623 },
+        { "source": "item:use-highlighted-code", "js": 302 },
+        { "source": "item:spinner", "js": 231 },
+        { "source": "item:status", "js": 143 }
+      ],
+      "cases": {}
+    },
+    "code-editor": {
+      "hash": "fc58605d1658d15d53c9b8276b3bd690e3da1ba7c6635a9094fe2c85331e64ff",
+      "runtimeHash": "3bbeba0799f8a4899d0d56998f8a7eb61254b29e0060080e4c307da36e14536d",
+      "outputHash": "3d43c3c85878be92b699a6f08bcf0bffcdb3e154dfbc45483b6182a5acc3d334",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 130841,
+        "css": 587,
+        "lazy": 382311,
+        "assets": 2147405,
+        "brotli": { "js": 111729, "css": 468 }
+      },
+      "hydrate": { "ms": 118.3, "spread": [109.7, 129.9], "settledMs": 403.6 },
+      "interaction": {
+        "kind": "key",
+        "start": "keydown",
+        "says": "updates",
+        "ms": 41.5,
+        "spread": [39.4, 43.1],
+        "ownMs": -2.3,
+        "pressGapMs": null,
+        "eventTimingMs": 24
+      },
+      "route": "/",
+      "breakdown": [
+        { "source": "package:@codemirror/view", "js": 52900 },
+        { "source": "package:@codemirror/state", "js": 16424 },
+        { "source": "item:highlighter", "js": 10116 },
+        { "source": "package:@codemirror/commands", "js": 8978 },
+        { "source": "package:@lezer/lr", "js": 8574 },
+        { "source": "package:@lezer/python", "js": 8494 },
+        { "source": "package:@lezer/common", "js": 7297 },
+        { "source": "package:@codemirror/language", "js": 6243 },
+        { "source": "runtime", "js": 4336 },
+        { "source": "package:@lezer/highlight", "js": 1694 },
+        { "source": "package:@codemirror/autocomplete", "js": 1684 },
+        { "source": "own", "js": 1559 },
+        { "source": "package:style-mod", "js": 738 },
+        { "source": "package:@marijn/find-cluster-break", "js": 697 },
+        { "source": "package:@codemirror/lang-python", "js": 694 },
+        { "source": "package:w3c-keyname", "js": 413 }
+      ],
+      "cases": {}
+    },
+    "highlighter": {
+      "hash": "cfba62ca207dc27e1f483d581c0b1addedec6b5646255224905ba19ce0d5b157",
+      "runtimeHash": "168bbea15914bd4798a0a64a1001f3339d0cbb74af550e6c9a1dcfd04f30ad6e",
+      "outputHash": "f1289d2185ec6517d740dfffc0afc4b92eba1a53a914fb2dd67a8152749861be",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 10839,
+        "css": 418,
+        "lazy": 382311,
+        "assets": 2147405,
+        "brotli": { "js": 9609, "css": 336 }
+      },
+      "hydrate": { "ms": 9.8, "spread": [6.4, 12.8], "settledMs": 272.7 },
+      "interaction": null,
+      "route": "/",
+      "breakdown": [
+        { "source": "own", "js": 10618 },
+        { "source": "runtime", "js": 221 }
+      ],
+      "cases": {}
+    },
+    "use-highlighted-code": {
+      "hash": "51b97bb54b2e1429f34b03386315eb7ca9fd8e49ecef3e023487096e374301c3",
+      "runtimeHash": "c41d94bf5055b0602e716f8eddfb427782011bbf4847473991a6d9806dd43ced",
+      "outputHash": "241c3f03d88ac15c3afc78461d9cc4479c50141b94ff0c5bb38a5827bc635113",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 11171,
+        "css": 418,
+        "lazy": 382311,
+        "assets": 2147405,
+        "brotli": { "js": 9963, "css": 336 }
+      },
+      "hydrate": { "ms": 11.5, "spread": [4.4, 28.9], "settledMs": 284.7 },
+      "interaction": null,
+      "route": "/",
+      "breakdown": [
+        { "source": "item:highlighter", "js": 10433 },
+        { "source": "own", "js": 489 },
+        { "source": "runtime", "js": 249 }
+      ],
+      "cases": {}
+    },
+    "code-languages": {
+      "hash": "6ccc653902b9428e2f296594b646d5bbf8fae277975b3f1f0d2b981d87e9a795",
+      "runtimeHash": "55c9e9018cc7d3dbe4d7974a2dee1c49e99e6089d185da15c464bec700a32f49",
+      "outputHash": "8b5132f06f26738a608599f66cfd9a7612dcd00762db3d9224ae611db3ad2061",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 66538,
+        "css": 587,
+        "lazy": 2316,
+        "assets": 2147405,
+        "brotli": { "js": 57925, "css": 468 }
+      },
+      "hydrate": { "ms": 30.8, "spread": [24.8, 34.2], "settledMs": null },
+      "interaction": null,
+      "route": "/",
+      "breakdown": [
+        { "source": "package:@codemirror/view", "js": 46854 },
+        { "source": "package:@codemirror/state", "js": 15412 },
+        { "source": "item:highlighter", "js": 2087 },
+        { "source": "package:style-mod", "js": 706 },
+        { "source": "package:@marijn/find-cluster-break", "js": 661 },
+        { "source": "own", "js": 487 },
+        { "source": "package:w3c-keyname", "js": 290 },
+        { "source": "item:code-editor", "js": 40 },
+        { "source": "runtime", "js": 1 }
+      ],
+      "cases": {}
+    },
+    "chart": {
+      "hash": "4f05496b48ce5f9fc11d3b0fed407dbe3d813ae69a30902fd14d59afcdbcae8f",
+      "runtimeHash": "27bf0a2610014200f37551eae9f6ac69de2dcf529e1f24a79468ddd6e42aa552",
+      "outputHash": "b9889a684db476a44e6316353207c7130ddfbb10cf037f7d02a3af8b431dec39",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 137407,
+        "css": 5341,
+        "lazy": 57815,
+        "assets": 416,
+        "brotli": { "js": 120475, "css": 4409 }
+      },
+      "hydrate": { "ms": 164.5, "spread": [146.5, 189.4], "settledMs": 294.4 },
+      "interaction": {
+        "kind": "hover",
+        "start": "pointerover",
+        "says": "shows",
+        "ms": 94.3,
+        "spread": [77.4, 102.7],
+        "ownMs": 50.5,
+        "pressGapMs": null,
+        "eventTimingMs": null
+      },
+      "route": "/",
+      "breakdown": [
+        { "source": "package:layerchart", "js": 88535 },
+        { "source": "runtime", "js": 10175 },
+        { "source": "package:tailwind-merge", "js": 9501 },
+        { "source": "package:@layerstack/utils", "js": 6736 },
+        { "source": "package:d3-time-format", "js": 2863 },
+        { "source": "package:d3-interpolate-path", "js": 2117 },
+        { "source": "own", "js": 1944 },
+        { "source": "package:d3-scale", "js": 1916 },
+        { "source": "package:d3-time", "js": 1806 },
+        { "source": "package:d3-shape", "js": 1757 },
+        { "source": "package:d3-color", "js": 1667 },
+        { "source": "package:d3-format", "js": 1657 },
+        { "source": "package:runed", "js": 1641 },
+        { "source": "package:d3-array", "js": 1139 },
+        { "source": "package:d3-interpolate", "js": 943 },
+        { "source": "package:phosphor-svelte", "js": 642 },
+        { "source": "package:@layerstack/svelte-state", "js": 584 },
+        { "source": "package:d3-path", "js": 520 },
+        { "source": "package:memoize", "js": 377 },
+        { "source": "package:mimic-function", "js": 333 },
+        { "source": "package:internmap", "js": 262 },
+        { "source": "package:@layerstack/svelte-actions", "js": 190 },
+        { "source": "package:@layerstack/tailwind", "js": 102 }
+      ],
+      "cases": {}
+    },
+    "meter": {
+      "hash": "2a4dc8429a3b15d0674d520a0315f737b031000e25e789a290215b092913f35f",
+      "runtimeHash": "37df136823a2f5409c1da4deb36e6fd514aa8ad9fa22375f537bf97483786268",
+      "outputHash": "88308adcd72f5a77c6c42de79228bbab3ce695a68d0f13d1cbe2ae6f84b2be7f",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 3408,
+        "css": 37,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 3152, "css": 18 }
+      },
+      "hydrate": { "ms": 7.2, "spread": [-12.3, 9.6], "settledMs": null },
+      "interaction": null,
+      "route": "/",
+      "breakdown": [
+        { "source": "runtime", "js": 3237 },
+        { "source": "own", "js": 171 }
+      ],
+      "cases": {}
+    },
+    "dropdown-menu": {
+      "hash": "ef29d8c62bd7aba15b1ba2abeb047bf65799f1e239f56bea3e5ba9a10e23421d",
+      "runtimeHash": "8c92980b46852d3a313d089ad6b3deff7d877394b35eb9b2de9c749f1805ef9d",
+      "outputHash": "2f936beb33cff039d7f970f6dfdc8dce0fd8744de368477daf263b6cb95cb3ea",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 35176,
+        "css": 1346,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 31110, "css": 1167 }
+      },
+      "hydrate": { "ms": 31.5, "spread": [27.2, 68.4], "settledMs": null },
+      "interaction": {
+        "kind": "click",
+        "start": "pointerdown",
+        "says": "opens",
+        "ms": 115.3,
+        "spread": [94.9, 136.8],
+        "ownMs": 71.5,
+        "pressGapMs": 0,
+        "eventTimingMs": 84
+      },
+      "route": "/",
+      "breakdown": [
+        { "source": "package:bits-ui", "js": 18104 },
+        { "source": "runtime", "js": 4020 },
+        { "source": "package:@floating-ui/core", "js": 2741 },
+        { "source": "package:@floating-ui/dom", "js": 2573 },
+        { "source": "package:svelte-toolbelt", "js": 1981 },
+        { "source": "package:tabbable", "js": 1752 },
+        { "source": "package:runed", "js": 1361 },
+        { "source": "package:@floating-ui/utils", "js": 1188 },
+        { "source": "own", "js": 917 },
+        { "source": "package:inline-style-parser", "js": 456 },
+        { "source": "package:style-to-object", "js": 83 }
+      ],
+      "cases": {}
+    },
+    "sheet": {
+      "hash": "cb36d65bef9c678f3922dd63eaee2ad9e03f1edd99f64bd70edfd85b7986a8a4",
+      "runtimeHash": "c3d86b5e6eb02fca4fc12f80e38f557ddcc1ff730accbce362ff2b80962dff3a",
+      "outputHash": "18a5dd9eaa9238255eb8091de9bb043488ced573a71e703d160c4921f8304190",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 25313,
+        "css": 1744,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 22427, "css": 1492 }
+      },
+      "hydrate": { "ms": 25.8, "spread": [23.5, 31.9], "settledMs": null },
+      "interaction": {
+        "kind": "click",
+        "start": "click",
+        "says": "opens",
+        "ms": 94.7,
+        "spread": [91.4, 106.6],
+        "ownMs": 50.9,
+        "pressGapMs": 0,
+        "eventTimingMs": 64
+      },
+      "route": "/",
+      "breakdown": [
+        { "source": "package:bits-ui", "js": 8728 },
+        { "source": "runtime", "js": 4179 },
+        { "source": "package:tailwind-variants", "js": 3908 },
+        { "source": "package:svelte-toolbelt", "js": 1772 },
+        { "source": "package:tabbable", "js": 1721 },
+        { "source": "package:phosphor-svelte", "js": 1512 },
+        { "source": "own", "js": 1255 },
+        { "source": "package:runed", "js": 977 },
+        { "source": "item:button", "js": 527 },
+        { "source": "package:inline-style-parser", "js": 457 },
+        { "source": "item:spinner", "js": 194 },
+        { "source": "package:style-to-object", "js": 83 }
+      ],
+      "cases": {}
+    },
+    "dialog": {
+      "hash": "af35c08d5731a9bf578c6c287a442c793d8bb212454ee8a320dc78543a76b4ac",
+      "runtimeHash": "8d9035ae5052a017754a14092277b5d0d618435b34aba2d250adbe07effd27f1",
+      "outputHash": "9966d286975898e6bf8aae7854165e51d4ed39863afd4b490ee848b05cf4602c",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 25457,
+        "css": 1589,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 22552, "css": 1350 }
+      },
+      "hydrate": { "ms": 26.9, "spread": [21.6, 47.5], "settledMs": null },
+      "interaction": {
+        "kind": "click",
+        "start": "click",
+        "says": "opens",
+        "ms": 94.8,
+        "spread": [93.8, 105.7],
+        "ownMs": 51,
+        "pressGapMs": 0,
+        "eventTimingMs": 64
+      },
+      "route": "/",
+      "breakdown": [
+        { "source": "package:bits-ui", "js": 8655 },
+        { "source": "runtime", "js": 4143 },
+        { "source": "package:tailwind-variants", "js": 3874 },
+        { "source": "package:svelte-toolbelt", "js": 1757 },
+        { "source": "package:tabbable", "js": 1706 },
+        { "source": "own", "js": 1602 },
+        { "source": "package:phosphor-svelte", "js": 1500 },
+        { "source": "package:runed", "js": 969 },
+        { "source": "item:button", "js": 523 },
+        { "source": "package:inline-style-parser", "js": 453 },
+        { "source": "item:spinner", "js": 193 },
+        { "source": "package:style-to-object", "js": 82 }
+      ],
+      "cases": {}
+    },
+    "breadcrumb": {
+      "hash": "25f8b73d8e3da4993177bd48d54b392ff3c6fa836c01f2ffe5804129b726e4e5",
+      "runtimeHash": "008b5bd0a171d0c545c47660d4eb82b2cab162bed3ddde124333761f6c23d7c7",
+      "outputHash": "548c245a13a8850e24614319fb646a5a36bfd8e2a4531f8064863b96f96280d1",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 5205,
+        "css": 466,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 4655, "css": 393 }
+      },
+      "hydrate": { "ms": 19.9, "spread": [18.3, 23.4], "settledMs": null },
+      "interaction": null,
+      "route": "/",
+      "breakdown": [
+        { "source": "runtime", "js": 3515 },
+        { "source": "own", "js": 1079 },
+        { "source": "package:phosphor-svelte", "js": 611 }
+      ],
+      "cases": {}
+    },
+    "sidebar": {
+      "hash": "76e1a91e4b4270b0fce134bb33d3583f2ad706554bf4652b6661ce3b9ccdc05e",
+      "runtimeHash": "a7fbd59749c83900da496d4d38fb05e6fa760c315187c5838d150e0e02ac4fc5",
+      "outputHash": "20136154fed0d8b9a23458d259cda0937e6dac6bca1845226d27104f05d51fbd",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 45467,
+        "css": 3491,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 39709, "css": 3004 }
+      },
+      "hydrate": { "ms": 66.4, "spread": [55.2, 75.6], "settledMs": null },
+      "interaction": {
+        "kind": "click",
+        "start": "click",
+        "says": "toggles",
+        "ms": 110.7,
+        "spread": [94.5, 125.9],
+        "ownMs": 66.9,
+        "pressGapMs": 0,
+        "eventTimingMs": 104
+      },
+      "route": "/",
+      "breakdown": [
+        { "source": "package:bits-ui", "js": 18130 },
+        { "source": "runtime", "js": 4457 },
+        { "source": "package:tailwind-variants", "js": 3688 },
+        { "source": "own", "js": 3294 },
+        { "source": "package:@floating-ui/core", "js": 2595 },
+        { "source": "package:@floating-ui/dom", "js": 2435 },
+        { "source": "package:phosphor-svelte", "js": 1979 },
+        { "source": "package:svelte-toolbelt", "js": 1728 },
+        { "source": "package:tabbable", "js": 1625 },
+        { "source": "package:runed", "js": 1289 },
+        { "source": "package:@floating-ui/utils", "js": 1124 },
+        { "source": "item:sheet", "js": 1051 },
+        { "source": "item:tooltip", "js": 736 },
+        { "source": "item:button", "js": 498 },
+        { "source": "package:inline-style-parser", "js": 431 },
+        { "source": "item:spinner", "js": 184 },
+        { "source": "item:kbd", "js": 116 },
+        { "source": "package:style-to-object", "js": 78 },
+        { "source": "item:is-mobile", "js": 29 }
+      ],
+      "cases": {}
+    },
+    "is-mobile": {
+      "hash": "5b92a2a82ad04d02c18ab54fa021a0a07272c66b9a2ca8cb0f406f3bb2326265",
+      "runtimeHash": "ad42e144f69d595ab00f21004cda8a21e972d24dc34449e0f2e0db74cd582dce",
+      "outputHash": "0054e3af58e88df20210e6f8e08e61ebb9ed9cbd12c4204e205f267de0b432cf",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 486,
+        "css": 0,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 482, "css": 0 }
+      },
+      "hydrate": { "ms": 2.3, "spread": [-12.3, 18.5], "settledMs": null },
+      "interaction": null,
+      "route": "/",
+      "breakdown": [
+        { "source": "runtime", "js": 344 },
+        { "source": "own", "js": 142 }
+      ],
+      "cases": {}
+    },
+    "message-log": {
+      "hash": "da3c66898d878114d203153c51b990de646c2688ac5acea394539385b82073e1",
+      "runtimeHash": "c04ed6f158f3cdffa02d1298969b549a510d94823651df55b986d159bbf29fa0",
+      "outputHash": "43f4ec91a687d80876973836e6288c063c954e2ca3a1e948dd232dfe1183317c",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 11409,
+        "css": 1064,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 10165, "css": 934 }
+      },
+      "hydrate": { "ms": 21, "spread": [17, 27.9], "settledMs": null },
+      "interaction": null,
+      "route": "/",
+      "breakdown": [
+        { "source": "package:tailwind-variants", "js": 4339 },
+        { "source": "runtime", "js": 3794 },
+        { "source": "package:phosphor-svelte", "js": 1616 },
+        { "source": "own", "js": 860 },
+        { "source": "item:button", "js": 584 },
+        { "source": "item:spinner", "js": 216 }
+      ],
+      "cases": {}
+    },
+    "message": {
+      "hash": "29bb07dba739d7fca59f2ae0cdddefff55eedce1057b8a5773c3eec975180bc8",
+      "runtimeHash": "85f05ba0c365af9e287e3c143f8183fae6579df77998562bdb47dcd179c62db4",
+      "outputHash": "1fbb30bd8be818350c0a40fd34e294a4a9689ac16ea87826542e4d43e75b4249",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 7592,
+        "css": 369,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 6743, "css": 335 }
+      },
+      "hydrate": { "ms": 32.9, "spread": [26.2, 40.9], "settledMs": null },
+      "interaction": null,
+      "route": "/",
+      "breakdown": [
+        { "source": "package:tailwind-variants", "js": 3751 },
+        { "source": "runtime", "js": 3194 },
+        { "source": "own", "js": 647 }
+      ],
+      "cases": {}
+    },
+    "marker": {
+      "hash": "d85cb0cc9efc19c18fba8d65899f492a5b347faa91107d283268cef6e597d0c0",
+      "runtimeHash": "17baf1b264de7ad90f2da0d339fa413bb3eba679285aef32d4bb167c31578980",
+      "outputHash": "bc9da01a449a422c4c21136228114b1611986f01660897f0ce0c6008871e41d1",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 7235,
+        "css": 504,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 6557, "css": 423 }
+      },
+      "hydrate": { "ms": 17.2, "spread": [12.5, 33.8], "settledMs": null },
+      "interaction": null,
+      "route": "/",
+      "breakdown": [
+        { "source": "package:tailwind-variants", "js": 3860 },
+        { "source": "runtime", "js": 2927 },
+        { "source": "own", "js": 448 }
+      ],
+      "cases": {}
+    },
+    "composer": {
+      "hash": "4816d909c50ae07d237aa5721b040074cd383ebef87c494b86c52c60abceb333",
+      "runtimeHash": "ba3efe6d6e81d13321bc6d4e7968e24646cea07b2aca7bcbd7b3556cb6ead442",
+      "outputHash": "c6e57093302762f19d4d14126d4495234cf407b6dfb5257293d097463ff0218c",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 19203,
+        "css": 2672,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 17080, "css": 2317 }
+      },
+      "hydrate": { "ms": 67.5, "spread": [59.3, 85.6], "settledMs": null },
+      "interaction": {
+        "kind": "key",
+        "start": "keydown",
+        "says": "sends",
+        "ms": 43.5,
+        "spread": [30.9, 47.2],
+        "ownMs": -0.3,
+        "pressGapMs": null,
+        "eventTimingMs": 16
+      },
+      "route": "/",
+      "breakdown": [
+        { "source": "runtime", "js": 5952 },
+        { "source": "package:tailwind-variants", "js": 4123 },
+        { "source": "package:phosphor-svelte", "js": 2131 },
+        { "source": "item:field", "js": 1468 },
+        { "source": "package:svelte-toolbelt", "js": 1385 },
+        { "source": "own", "js": 1164 },
+        { "source": "item:input-group", "js": 569 },
+        { "source": "item:button", "js": 556 },
+        { "source": "package:inline-style-parser", "js": 482 },
+        { "source": "package:bits-ui", "js": 473 },
+        { "source": "item:spinner", "js": 206 },
+        { "source": "item:textarea", "js": 205 },
+        { "source": "item:label", "js": 145 },
+        { "source": "item:kbd", "js": 129 },
+        { "source": "item:status", "js": 128 },
+        { "source": "package:style-to-object", "js": 87 }
+      ],
+      "cases": {}
+    },
+    "stage": {
+      "hash": "a8c32051924deae0bc0487e3693dac4f6f6a9c5b6eacf9dca39969c7539a9dce",
+      "runtimeHash": "bd453fddaeafe1153570ad26a23ebeaab84c723a378abc9a465147216d666b19",
+      "outputHash": "ae554b3c06ed51498f9b154aaa836a1b349abe82722951adff645e21afddee22",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 3934,
+        "css": 391,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 3491, "css": 291 }
+      },
+      "hydrate": { "ms": 8, "spread": [5, 34.1], "settledMs": null },
+      "interaction": null,
+      "route": "/",
+      "breakdown": [
+        { "source": "runtime", "js": 3653 },
+        { "source": "own", "js": 281 }
+      ],
+      "cases": {}
+    },
+    "stage-card": {
+      "hash": "386061801666419d0f549eec3f0209dd052c39ff9100d7f05817642b24945f9a",
+      "runtimeHash": "c93e9483f5e8ee3aa15165f357de088c4ba5c7a92c49179b97fa9f6bd319dafb",
+      "outputHash": "826db8ca0934d7992e3013907057a3efa429be16c6f5649c932a33ac0600a249",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 26966,
+        "css": 2629,
+        "lazy": 382311,
+        "assets": 2147405,
+        "brotli": { "js": 23083, "css": 2292 }
+      },
+      "hydrate": { "ms": 60.5, "spread": [55.5, 96.1], "settledMs": 335.9 },
+      "interaction": {
+        "kind": "click",
+        "start": "click",
+        "says": "copies",
+        "ms": 77.8,
+        "spread": [74.7, 82.1],
+        "ownMs": 34,
+        "pressGapMs": 0,
+        "eventTimingMs": 32
+      },
+      "route": "/",
+      "breakdown": [
+        { "source": "item:highlighter", "js": 8799 },
+        { "source": "runtime", "js": 6363 },
+        { "source": "package:tailwind-variants", "js": 4732 },
+        { "source": "package:phosphor-svelte", "js": 2477 },
+        { "source": "item:code-block", "js": 2157 },
+        { "source": "own", "js": 1110 },
+        { "source": "item:button", "js": 638 },
+        { "source": "item:use-highlighted-code", "js": 308 },
+        { "source": "item:spinner", "js": 236 },
+        { "source": "item:status", "js": 146 }
+      ],
+      "cases": {}
+    },
+    "marketing-bar": {
+      "hash": "36a499a03c3a2cf0d6a17fc6c483b1161994c0ecaca62f4d45908813329d0c8e",
+      "runtimeHash": "13f83aa24249939795f479eefbe3683c408e2410be9718f605b945e6f6a6ef93",
+      "outputHash": "1c633fe8543533ee424fc61986248e1b3650b87b5a5d8438ffe2dc188e28950e",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 29175,
+        "css": 2402,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 25486, "css": 2075 }
+      },
+      "hydrate": { "ms": 45.4, "spread": [39.4, 55.4], "settledMs": null },
+      "interaction": {
+        "kind": "click",
+        "start": "click",
+        "says": "opens",
+        "ms": 87.3,
+        "spread": [79.4, 96.9],
+        "ownMs": 43.5,
+        "pressGapMs": 0,
+        "eventTimingMs": 68
+      },
+      "route": "/",
+      "breakdown": [
+        { "source": "package:bits-ui", "js": 8849 },
+        { "source": "runtime", "js": 5903 },
+        { "source": "package:tailwind-variants", "js": 3958 },
+        { "source": "package:phosphor-svelte", "js": 2117 },
+        { "source": "package:svelte-toolbelt", "js": 1795 },
+        { "source": "package:tabbable", "js": 1743 },
+        { "source": "own", "js": 1217 },
+        { "source": "item:sheet", "js": 1099 },
+        { "source": "package:runed", "js": 992 },
+        { "source": "item:button", "js": 535 },
+        { "source": "package:inline-style-parser", "js": 463 },
+        { "source": "item:spinner", "js": 197 },
+        { "source": "item:liquid-glass", "js": 158 },
+        { "source": "package:style-to-object", "js": 84 },
+        { "source": "item:read-token", "js": 65 }
+      ],
+      "cases": {}
+    },
+    "stage-hero": {
+      "hash": "33d0810ebe082991becd8ab9a854595da5ef4eb957958d1684c6a7ddaa7c9e69",
+      "runtimeHash": "f1686cc838949a87fb01c10f032736ebb2118a44740c91e223a1a3c09e86a6e6",
+      "outputHash": "d176609c30b0ed2591b3a847f45a1c41d1dbf144514d37156e25b9db83a7a400",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 13252,
+        "css": 2115,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 11738, "css": 1772 }
+      },
+      "hydrate": { "ms": 30.5, "spread": [26.3, 68.7], "settledMs": null },
+      "interaction": null,
+      "route": "/",
+      "breakdown": [
+        { "source": "runtime", "js": 6014 },
+        { "source": "package:tailwind-variants", "js": 4330 },
+        { "source": "package:phosphor-svelte", "js": 1008 },
+        { "source": "own", "js": 857 },
+        { "source": "item:button", "js": 584 },
+        { "source": "item:spinner", "js": 215 },
+        { "source": "item:liquid-glass", "js": 173 },
+        { "source": "item:read-token", "js": 71 }
+      ],
+      "cases": {}
+    },
+    "proof-band": {
+      "hash": "29c923e915f0ebb3be7daf3831de530d170410a947eaced156d5b3331ca849ae",
+      "runtimeHash": "cf9127d719929a792fed2ed5c2f6b54bd126007050dfff191e71dd5deb2ea9fd",
+      "outputHash": "25595fc888d1cda031df2c400803c5ecd581f97fad943c8aaee8b3c4265d707e",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 6881,
+        "css": 358,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 6216, "css": 299 }
+      },
+      "hydrate": { "ms": 52.8, "spread": [46.1, 67.3], "settledMs": 189.2 },
+      "interaction": null,
+      "route": "/",
+      "breakdown": [
+        { "source": "runtime", "js": 5757 },
+        { "source": "own", "js": 776 },
+        { "source": "item:read-token", "js": 348 }
+      ],
+      "cases": {}
+    },
+    "live-console": {
+      "hash": "5865aab38225e19b7ec70349e6280976c4b83f62c18b77ec5f957009b745e39b",
+      "runtimeHash": "8dee81d3cd48522547dfba8dfd21c7f72638512ce46ef35f441db6f3734b16fb",
+      "outputHash": "4bbe53f9e69ce0bc3988033ceb7004011c797ba3145554a8f3854cd400506717",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 33138,
+        "css": 3104,
+        "lazy": 382311,
+        "assets": 2147405,
+        "brotli": { "js": 29088, "css": 2707 }
+      },
+      "hydrate": { "ms": 79.6, "spread": [75.1, 98.9], "settledMs": 344.8 },
+      "interaction": {
+        "kind": "click",
+        "start": "click",
+        "says": "selects",
+        "ms": 45.3,
+        "spread": [42, 46.3],
+        "ownMs": 1.5,
+        "pressGapMs": 0,
+        "eventTimingMs": 32
+      },
+      "route": "/",
+      "breakdown": [
+        { "source": "item:highlighter", "js": 8510 },
+        { "source": "runtime", "js": 6939 },
+        { "source": "package:tailwind-variants", "js": 4576 },
+        { "source": "package:bits-ui", "js": 3043 },
+        { "source": "package:svelte-toolbelt", "js": 1785 },
+        { "source": "own", "js": 1602 },
+        { "source": "item:code-block", "js": 1266 },
+        { "source": "package:runed", "js": 1143 },
+        { "source": "package:phosphor-svelte", "js": 1065 },
+        { "source": "item:tabs", "js": 801 },
+        { "source": "item:button", "js": 618 },
+        { "source": "package:inline-style-parser", "js": 535 },
+        { "source": "item:read-token", "js": 355 },
+        { "source": "item:use-highlighted-code", "js": 298 },
+        { "source": "item:spinner", "js": 228 },
+        { "source": "item:status", "js": 142 },
+        { "source": "item:meter", "js": 135 },
+        { "source": "package:style-to-object", "js": 97 }
+      ],
+      "cases": {}
+    },
+    "name-strip": {
+      "hash": "24668d98fe92217c8e009f3c8485e11696c3c6d26da12d78c378e355ad69dadf",
+      "runtimeHash": "7f9221b51a1e66eb9dac8176c9c58c922dd0bddbac9fa1935c433e3d46e6241a",
+      "outputHash": "120b5fba942cb5468388c7c7d4c4abfd46a7a82ea30c3158595bb2e99515ea47",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 5093,
+        "css": 84,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 4640, "css": 85 }
+      },
+      "hydrate": { "ms": 24.3, "spread": [-2.8, 82.6], "settledMs": null },
+      "interaction": null,
+      "route": "/",
+      "breakdown": [
+        { "source": "runtime", "js": 4900 },
+        { "source": "own", "js": 193 }
+      ],
+      "cases": {}
+    },
+    "cta-band": {
+      "hash": "362c9d594600ed299a5b75f7bcd7f8228f27266e9dd2b31ae535bfc641e7e157",
+      "runtimeHash": "39b7a2e2d7b53a841ae4fad13a196415860ba93b6ed1f17d548bf3e4e3e607f3",
+      "outputHash": "501c4d68f6c2467f9e7f71e4ce74f67acffa359e6bebe40eed44ccc867f9fce5",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 12262,
+        "css": 1111,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 10983, "css": 986 }
+      },
+      "hydrate": { "ms": 36.7, "spread": [26.1, 41.3], "settledMs": null },
+      "interaction": null,
+      "route": "/",
+      "breakdown": [
+        { "source": "runtime", "js": 5888 },
+        { "source": "package:tailwind-variants", "js": 4207 },
+        { "source": "package:phosphor-svelte", "js": 977 },
+        { "source": "item:button", "js": 567 },
+        { "source": "own", "js": 414 },
+        { "source": "item:spinner", "js": 209 }
+      ],
+      "cases": {}
+    },
+    "marketing-footer": {
+      "hash": "25ccbd06a60bcbc688e53b76ad9a0176baf0f6e4d219b226b1879b186ed59bd3",
+      "runtimeHash": "6e9a5cf769ea14645141ae6ba548a64b41099c3a432681d1050456c2f1a7bd9f",
+      "outputHash": "42d19bb86bac149db7eafcbd8096b0f866847efdc3db882b06ab58720ed8d750",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 3311,
+        "css": 453,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 3077, "css": 395 }
+      },
+      "hydrate": { "ms": 31.6, "spread": [21.3, 35.3], "settledMs": null },
+      "interaction": null,
+      "route": "/",
+      "breakdown": [
+        { "source": "runtime", "js": 2299 },
+        { "source": "own", "js": 1012 }
+      ],
+      "cases": {}
+    },
+    "hero": {
+      "hash": "50b75c80e464896f9e979cb36cc73d05fc67a1b9d812c413e5d8f93c004c674e",
+      "runtimeHash": "5fe3bcb7e5f4221f533868f06035558677a82999425dede532c336692b04230a",
+      "outputHash": "94ebd2959e832d088442f2301256a5722edfebe157bfb2b5cd12ee8f1762d739",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 13008,
+        "css": 1395,
+        "lazy": 240,
+        "assets": 0,
+        "brotli": { "js": 11718, "css": 1216 }
+      },
+      "hydrate": { "ms": 62, "spread": [28.1, 89.4], "settledMs": null },
+      "interaction": null,
+      "route": "/hero",
+      "breakdown": [
+        { "source": "runtime", "js": 5846 },
+        { "source": "package:tailwind-variants", "js": 4403 },
+        { "source": "package:phosphor-svelte", "js": 1023 },
+        { "source": "own", "js": 923 },
+        { "source": "item:button", "js": 594 },
+        { "source": "item:spinner", "js": 219 }
+      ],
+      "cases": {}
+    },
+    "sign-in": {
+      "hash": "316e25a08f8eba04debe2c6b5fb1b883a8a401f9d7ba1c3d21bdce5788477c1c",
+      "runtimeHash": "ad89d2f52126bcd6dda906dfe6b54f723195c250ca3c276f350ca3770b762f16",
+      "outputHash": "60cf94811be9ad87a091890c3a710ed8e037dcffd0b3bb363df06d8a34d1f117",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 22114,
+        "css": 3518,
+        "lazy": 247,
+        "assets": 0,
+        "brotli": { "js": 19629, "css": 3041 }
+      },
+      "hydrate": { "ms": 60.9, "spread": [54.1, 98.4], "settledMs": null },
+      "interaction": {
+        "kind": "click",
+        "start": "click",
+        "says": "shows",
+        "ms": 61.3,
+        "spread": [58.4, 72.4],
+        "ownMs": 17.5,
+        "pressGapMs": 0,
+        "eventTimingMs": 52
+      },
+      "route": "/sign-in",
+      "breakdown": [
+        { "source": "runtime", "js": 6583 },
+        { "source": "package:tailwind-variants", "js": 4151 },
+        { "source": "package:phosphor-svelte", "js": 1598 },
+        { "source": "own", "js": 1496 },
+        { "source": "item:field", "js": 1477 },
+        { "source": "package:svelte-toolbelt", "js": 1394 },
+        { "source": "item:input-group", "js": 1088 },
+        { "source": "item:error-summary", "js": 841 },
+        { "source": "item:card", "js": 777 },
+        { "source": "item:button", "js": 560 },
+        { "source": "package:inline-style-parser", "js": 486 },
+        { "source": "package:bits-ui", "js": 476 },
+        { "source": "item:input", "js": 346 },
+        { "source": "item:alert", "js": 272 },
+        { "source": "item:spinner", "js": 207 },
+        { "source": "item:label", "js": 146 },
+        { "source": "item:status", "js": 128 },
+        { "source": "package:style-to-object", "js": 88 }
+      ],
+      "cases": {}
+    },
+    "sign-up": {
+      "hash": "ccee0f5f6088073b560203386710abd167d67126e9d6edbe5103cae08c55ea18",
+      "runtimeHash": "0cb64080b94998901cf2420e882231a959c395abd75b5cc9121470977f4bdd1f",
+      "outputHash": "67fe3ead2d3bf8e0b670ab654090b16bdb00a6320c7eb45b7fde028014e2a2c0",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 29636,
+        "css": 3808,
+        "lazy": 246,
+        "assets": 0,
+        "brotli": { "js": 25722, "css": 3272 }
+      },
+      "hydrate": { "ms": 64, "spread": [56.8, 81.7], "settledMs": null },
+      "interaction": {
+        "kind": "click",
+        "start": "click",
+        "says": "shows",
+        "ms": 60.4,
+        "spread": [59.9, 74.6],
+        "ownMs": 16.6,
+        "pressGapMs": 0,
+        "eventTimingMs": 56
+      },
+      "route": "/sign-up",
+      "breakdown": [
+        { "source": "runtime", "js": 6430 },
+        { "source": "package:tailwind-variants", "js": 4019 },
+        { "source": "own", "js": 3804 },
+        { "source": "package:bits-ui", "js": 3478 },
+        { "source": "package:phosphor-svelte", "js": 2072 },
+        { "source": "package:svelte-toolbelt", "js": 1750 },
+        { "source": "item:field", "js": 1433 },
+        { "source": "item:input-group", "js": 1055 },
+        { "source": "package:runed", "js": 991 },
+        { "source": "item:input-otp", "js": 871 },
+        { "source": "item:error-summary", "js": 815 },
+        { "source": "item:card", "js": 754 },
+        { "source": "item:button", "js": 543 },
+        { "source": "package:inline-style-parser", "js": 470 },
+        { "source": "item:input", "js": 335 },
+        { "source": "item:alert", "js": 264 },
+        { "source": "item:spinner", "js": 201 },
+        { "source": "item:label", "js": 142 },
+        { "source": "item:status", "js": 124 },
+        { "source": "package:style-to-object", "js": 85 }
+      ],
+      "cases": {}
+    },
+    "page-states": {
+      "hash": "a284ad7442267df7d9586c80d36c22850f498459053c4cd48f6f93ccd4e038b0",
+      "runtimeHash": "7f9dbc18c22f7a6452d5610153c073f18a1b09115631803d224fbc0f55d891be",
+      "outputHash": "8a72c519cd8be298ebb3cc8513aa4e0882ba625c166f8d8f216a018f5c81f0d8",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 14344,
+        "css": 1478,
+        "lazy": 1122,
+        "assets": 0,
+        "brotli": { "js": 12744, "css": 1293 }
+      },
+      "hydrate": { "ms": 48.8, "spread": [38.7, 76.8], "settledMs": null },
+      "interaction": null,
+      "route": "/page-states",
+      "breakdown": [
+        { "source": "runtime", "js": 4415 },
+        { "source": "package:tailwind-variants", "js": 4289 },
+        { "source": "package:phosphor-svelte", "js": 2852 },
+        { "source": "own", "js": 1184 },
+        { "source": "item:empty", "js": 813 },
+        { "source": "item:button", "js": 578 },
+        { "source": "item:spinner", "js": 213 }
+      ],
+      "cases": {}
+    },
+    "settings": {
+      "hash": "948236166fb14f33f03a66245cbf1ee91a410565162b16e6dbe226a76c528ca8",
+      "runtimeHash": "5abfd70dc3e1af9ebb91edf514148c4998a4a0bd832248e69ccb5f8b66d51aa1",
+      "outputHash": "08bd461da8877031dad58979621b45739bf869b57604a18d33ccfd90e0801195",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 40631,
+        "css": 3985,
+        "lazy": 240,
+        "assets": 0,
+        "brotli": { "js": 35548, "css": 3429 }
+      },
+      "hydrate": { "ms": 121.6, "spread": [99.9, 139.1], "settledMs": null },
+      "interaction": {
+        "kind": "click",
+        "start": "click",
+        "says": "opens",
+        "ms": 109.2,
+        "spread": [95.7, 120.8],
+        "ownMs": 65.4,
+        "pressGapMs": 0.1,
+        "eventTimingMs": 72
+      },
+      "route": "/settings",
+      "breakdown": [
+        { "source": "package:bits-ui", "js": 12283 },
+        { "source": "runtime", "js": 7005 },
+        { "source": "package:tailwind-variants", "js": 3642 },
+        { "source": "own", "js": 3132 },
+        { "source": "package:phosphor-svelte", "js": 2885 },
+        { "source": "item:field", "js": 1954 },
+        { "source": "package:svelte-toolbelt", "js": 1881 },
+        { "source": "package:tabbable", "js": 1605 },
+        { "source": "item:alert-dialog", "js": 1430 },
+        { "source": "package:runed", "js": 911 },
+        { "source": "item:error-summary", "js": 739 },
+        { "source": "item:button", "js": 492 },
+        { "source": "item:radio-group", "js": 438 },
+        { "source": "package:inline-style-parser", "js": 426 },
+        { "source": "item:checkbox", "js": 385 },
+        { "source": "item:native-select", "js": 380 },
+        { "source": "item:input", "js": 303 },
+        { "source": "item:alert", "js": 239 },
+        { "source": "item:spinner", "js": 182 },
+        { "source": "item:label", "js": 129 },
+        { "source": "item:status", "js": 113 },
+        { "source": "package:style-to-object", "js": 77 }
+      ],
+      "cases": {}
+    },
+    "app-shell": {
+      "hash": "3c1dea50c065c530b199e8b739307adc4ee79b3933835ffe6989980ee3587664",
+      "runtimeHash": "e187b37e5ea884244cca77722644b37c7d179f5d417396264388fa945a4452c8",
+      "outputHash": "0840679f14a05d72fa579c9f5b3fcdb5cbb3f4972d43d285f340672f651a8138",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 75267,
+        "css": 5443,
+        "lazy": 253,
+        "assets": 0,
+        "brotli": { "js": 63546, "css": 4619 }
+      },
+      "hydrate": { "ms": 71.3, "spread": [61.6, 101.4], "settledMs": null },
+      "interaction": {
+        "kind": "click",
+        "start": "click",
+        "says": "opens",
+        "ms": 92.6,
+        "spread": [78.5, 94],
+        "ownMs": 48.8,
+        "pressGapMs": 0,
+        "eventTimingMs": 60
+      },
+      "route": "/app-shell",
+      "breakdown": [
+        { "source": "package:bits-ui", "js": 28104 },
+        { "source": "package:phosphor-svelte", "js": 8479 },
+        { "source": "runtime", "js": 7645 },
+        { "source": "own", "js": 6329 },
+        { "source": "package:tailwind-variants", "js": 3685 },
+        { "source": "item:sidebar", "js": 3599 },
+        { "source": "package:@floating-ui/core", "js": 2592 },
+        { "source": "package:@floating-ui/dom", "js": 2433 },
+        { "source": "package:svelte-toolbelt", "js": 1895 },
+        { "source": "package:tabbable", "js": 1657 },
+        { "source": "package:runed", "js": 1287 },
+        { "source": "item:sheet", "js": 1143 },
+        { "source": "package:@floating-ui/utils", "js": 1123 },
+        { "source": "item:dropdown-menu", "js": 921 },
+        { "source": "item:breadcrumb", "js": 736 },
+        { "source": "item:tooltip", "js": 652 },
+        { "source": "item:theme", "js": 610 },
+        { "source": "item:button", "js": 495 },
+        { "source": "package:inline-style-parser", "js": 431 },
+        { "source": "item:input", "js": 308 },
+        { "source": "item:collapsible", "js": 303 },
+        { "source": "item:avatar", "js": 298 },
+        { "source": "item:spinner", "js": 183 },
+        { "source": "item:four-dot", "js": 165 },
+        { "source": "item:kbd", "js": 116 },
+        { "source": "package:style-to-object", "js": 78 }
+      ],
+      "cases": {}
+    },
+    "chat": {
+      "hash": "80c62b7756431b3b2b596b613ff9409d16da70698cd69144b5f80e17ca14a804",
+      "runtimeHash": "465b34e0242ba4e1523a8b07bca8501f593ebeab0b649c600bc89981a15d0538",
+      "outputHash": "1e061167acfaf189a0b7d4a08d088d66c1d9b414879ae8f5673bbf282b28649f",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 38613,
+        "css": 4906,
+        "lazy": 382558,
+        "assets": 2147405,
+        "brotli": { "js": 33422, "css": 4193 }
+      },
+      "hydrate": { "ms": 106.9, "spread": [89.7, 123], "settledMs": null },
+      "interaction": {
+        "kind": "key",
+        "start": "keydown",
+        "says": "sends",
+        "ms": 41.1,
+        "spread": [39.8, 47.1],
+        "ownMs": -2.7,
+        "pressGapMs": null,
+        "eventTimingMs": 24
+      },
+      "route": "/chat",
+      "breakdown": [
+        { "source": "item:highlighter", "js": 7903 },
+        { "source": "runtime", "js": 6843 },
+        { "source": "package:phosphor-svelte", "js": 4632 },
+        { "source": "package:tailwind-variants", "js": 4249 },
+        { "source": "own", "js": 2796 },
+        { "source": "item:code-block", "js": 1942 },
+        { "source": "item:field", "js": 1513 },
+        { "source": "package:svelte-toolbelt", "js": 1428 },
+        { "source": "item:composer", "js": 1112 },
+        { "source": "item:message-log", "js": 759 },
+        { "source": "item:input-group", "js": 587 },
+        { "source": "item:button", "js": 573 },
+        { "source": "item:message", "js": 571 },
+        { "source": "item:empty", "js": 568 },
+        { "source": "item:alert", "js": 536 },
+        { "source": "package:inline-style-parser", "js": 497 },
+        { "source": "package:bits-ui", "js": 487 },
+        { "source": "item:marker", "js": 412 },
+        { "source": "item:use-highlighted-code", "js": 277 },
+        { "source": "item:spinner", "js": 212 },
+        { "source": "item:textarea", "js": 211 },
+        { "source": "item:label", "js": 150 },
+        { "source": "item:kbd", "js": 133 },
+        { "source": "item:status", "js": 132 },
+        { "source": "package:style-to-object", "js": 90 }
+      ],
+      "cases": {}
+    },
+    "product-home": {
+      "hash": "8adcaa0fa796df075d211f5765a72231daf56a270c6afc930616255d6a19d6b3",
+      "runtimeHash": "759bbdb71cd83d6dd90f202e64b1c11f5d73cebf44c9fd8efce7d6a244835bf4",
+      "outputHash": "13ea751afa138ae8e71310d67bd3af8d098ec0eee4de3f8f2a52a644e3baeeec",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 53931,
+        "css": 5673,
+        "lazy": 382551,
+        "assets": 2147405,
+        "brotli": { "js": 45686, "css": 4712 }
+      },
+      "hydrate": { "ms": 190.5, "spread": [178.4, 220.1], "settledMs": null },
+      "interaction": null,
+      "route": "/product-home",
+      "breakdown": [
+        { "source": "package:bits-ui", "js": 12005 },
+        { "source": "item:highlighter", "js": 7871 },
+        { "source": "runtime", "js": 7055 },
+        { "source": "package:tailwind-variants", "js": 4233 },
+        { "source": "package:phosphor-svelte", "js": 3498 },
+        { "source": "package:svelte-toolbelt", "js": 2113 },
+        { "source": "item:code-block", "js": 1937 },
+        { "source": "package:tabbable", "js": 1864 },
+        { "source": "item:live-console", "js": 1366 },
+        { "source": "item:marketing-bar", "js": 1198 },
+        { "source": "item:sheet", "js": 1177 },
+        { "source": "package:runed", "js": 1060 },
+        { "source": "item:marketing-footer", "js": 953 },
+        { "source": "own", "js": 918 },
+        { "source": "item:stage-card", "js": 907 },
+        { "source": "item:stage-hero", "js": 778 },
+        { "source": "item:tabs", "js": 742 },
+        { "source": "item:proof-band", "js": 656 },
+        { "source": "item:button", "js": 572 },
+        { "source": "package:inline-style-parser", "js": 495 },
+        { "source": "item:four-dot", "js": 477 },
+        { "source": "item:cta-band", "js": 369 },
+        { "source": "item:read-token", "js": 329 },
+        { "source": "item:use-highlighted-code", "js": 276 },
+        { "source": "item:spinner", "js": 211 },
+        { "source": "item:stage", "js": 209 },
+        { "source": "item:liquid-glass", "js": 169 },
+        { "source": "item:name-strip", "js": 147 },
+        { "source": "item:status", "js": 131 },
+        { "source": "item:meter", "js": 125 },
+        { "source": "package:style-to-object", "js": 90 }
+      ],
+      "cases": {}
+    },
+    "button-group": {
+      "hash": "074e7f6c8f06e5ea954e5d455ab2c970550a1a54c5f865371e44abd9b7aa9c75",
+      "runtimeHash": "61cf12097704f133a932df9712bbde051f234d572982f67d4f31b1580af28f28",
+      "outputHash": "56cb8dbfc2bdf236556ef5c90d40127464c54e908d8e4cb73112744177836404",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 3647,
+        "css": 1150,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 3318, "css": 990 }
+      },
+      "hydrate": { "ms": 7.9, "spread": [-0.2, 31.4], "settledMs": null },
+      "interaction": null,
+      "route": "/",
+      "breakdown": [
+        { "source": "runtime", "js": 3335 },
+        { "source": "own", "js": 312 }
+      ],
+      "cases": {}
+    },
+    "progress": {
+      "hash": "cf7ab11c1905f8beb81d48c36f2a0180b261e9914f65738a6f36597b88120c55",
+      "runtimeHash": "936463e86e238dc63d19cdd77a0cf2ba60ad8245ffdbf3823a15c9404e61c6a3",
+      "outputHash": "f8ab817021a10087400e2b2e47336dab5701f96795b1a974ccb6184eb41e0f7b",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 3562,
+        "css": 157,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 3292, "css": 122 }
+      },
+      "hydrate": { "ms": 7.1, "spread": [1, 13.3], "settledMs": null },
+      "interaction": null,
+      "route": "/",
+      "breakdown": [
+        { "source": "runtime", "js": 3307 },
+        { "source": "own", "js": 255 }
+      ],
+      "cases": {}
+    },
+    "toast": {
+      "hash": "8f0c20bedf9701f621566262b196d4870b87a88c0736854ec8c0ded12903faca",
+      "runtimeHash": "6d4aca4dd8c7dd272fbc09e12509d1a5d52b53deea78fb22b5ac13315612232f",
+      "outputHash": "84108114aa641b2b5750810a5674cbaf64ed3b1d1759a31deb71779e3e587b25",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 21704,
+        "css": 2075,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 19110, "css": 1824 }
+      },
+      "hydrate": { "ms": 15.4, "spread": [7.2, 26.3], "settledMs": null },
+      "interaction": {
+        "kind": "click",
+        "start": "click",
+        "says": "shows",
+        "ms": 111.1,
+        "spread": [96.8, 122.4],
+        "ownMs": 67.3,
+        "pressGapMs": 0,
+        "eventTimingMs": 80
+      },
+      "route": "/",
+      "breakdown": [
+        { "source": "runtime", "js": 6345 },
+        { "source": "own", "js": 5367 },
+        { "source": "package:phosphor-svelte", "js": 4680 },
+        { "source": "package:tailwind-variants", "js": 4370 },
+        { "source": "item:button", "js": 589 },
+        { "source": "item:spinner", "js": 217 },
+        { "source": "item:status", "js": 136 }
+      ],
+      "cases": {
+        "burst": {
+          "hash": "e28c0f3e05d488d5ba6c2e9f8d11dc3280299c6bb7539f842e49c13da6f455e9",
+          "runtimeHash": "91ae81349ab6a296f4a39c1d5528e0e00c267d8b9fc94c89a4913e34fb5ab63c",
+          "outputHash": "dcc90ffcf9a73a3be45ccd1bfe9f7613aaf549df4ae7371b2ffc80fbeb472577",
+          "run": "2026-11-16T06:27:03.737Z",
+          "size": {
+            "js": 21726,
+            "css": 2075,
+            "lazy": 0,
+            "assets": 0,
+            "brotli": { "js": 19099, "css": 1824 }
+          },
+          "hydrate": { "ms": 18.4, "spread": [1.2, 44.8], "settledMs": null },
+          "interaction": {
+            "kind": "click",
+            "start": "click",
+            "says": "shows",
+            "ms": 116.8,
+            "spread": [105.2, 131.3],
+            "ownMs": 73,
+            "pressGapMs": 0,
+            "eventTimingMs": 104
+          }
+        },
+        "progress": {
+          "hash": "e08b1286bc518e88c8bdd10b0c96003dfb86a4a5b1edadaa804b95a8ebf207aa",
+          "runtimeHash": "ca761628bef5a0deafe8d96b66cda8c857ffdf65104be7a3c6228c82820e9bcd",
+          "outputHash": "e1c8ec782c0631f63e18507ade61cdee3da51c11eedee848eeea66661a8e5542",
+          "run": "2026-11-16T06:27:03.737Z",
+          "size": {
+            "js": 21736,
+            "css": 2075,
+            "lazy": 0,
+            "assets": 0,
+            "brotli": { "js": 19140, "css": 1824 }
+          },
+          "hydrate": { "ms": 19.3, "spread": [17.8, 24], "settledMs": null },
+          "interaction": {
+            "kind": "click",
+            "start": "click",
+            "says": "updates",
+            "ms": 74.8,
+            "spread": [61.2, 77.7],
+            "ownMs": 31,
+            "pressGapMs": 0,
+            "eventTimingMs": 64
+          }
+        }
+      }
+    },
+    "link": {
+      "hash": "1405523c228257358dc866c19d7eecdd1ce5fc2083b66f2a1453779d556ec87d",
+      "runtimeHash": "9e03fc63a01e12600b7805fd7e4c16080b727615c04941a0305cbdcbe128d0a9",
+      "outputHash": "4ea2e5ef2b0854c5ee8b0320aaffac3ae98c6e74698a0a783fac544dadc44dd7",
+      "run": "2026-11-16T06:27:03.737Z",
+      "size": {
+        "js": 5454,
+        "css": 237,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 4911, "css": 206 }
+      },
+      "hydrate": { "ms": 4.9, "spread": [-6.2, 12.5], "settledMs": null },
+      "interaction": null,
+      "route": "/",
+      "breakdown": [
+        { "source": "runtime", "js": 4038 },
+        { "source": "package:phosphor-svelte", "js": 874 },
+        { "source": "own", "js": 542 }
+      ],
+      "cases": {}
+    }
+  }
+}

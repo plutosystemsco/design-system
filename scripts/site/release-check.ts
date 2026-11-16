@@ -14,10 +14,12 @@
  *    (`tests/e2e/budgets.ts`, `ci`). Until 024 build step 7 re-bases LCP on
  *    022's first three green runs, LCP is reported on CI and not gated, so
  *    the tag waits for that re-base.
+ * 5. (025 decision 16) The cost step: one full, quiet run of every item on
+ *    the release machine, fresh and within budget (`scripts/cost/release.ts`).
  *
  * `--before-ci` (the design lead's ruling at 022's landing, 2026-11-15)
- * runs every check but those only CI's evidence can satisfy, the ledger,
- * the matrix run and the runner's LCP figures, names what it skipped, and
+ * runs every check but those only CI's or the tag's evidence can satisfy, the
+ * ledger, the matrix run, the runner's LCP figures and the cost run, names what it skipped, and
  * exits 0 if the rest pass. Landing gates use it until push B; the tag uses
  * the full check.
  *
@@ -34,6 +36,7 @@ import {
   type TemplateId,
 } from "../../tests/e2e/budgets.ts";
 import { matrixCheck } from "../ci/qualify.ts";
+import { costCheck, SKIPPED_COST } from "../cost/release.ts";
 import { jobNames, readWorkflow } from "../ci/workflow.ts";
 
 export type Check = { ok: boolean; lines: string[] };
@@ -89,6 +92,7 @@ export const SKIPPED_BEFORE_CI = [
   "release-check: skipped (--before-ci): the fault ledger, which waits on the small changes and push B's run (022 Q3).",
   "release-check: skipped (--before-ci): a green matrix push run of HEAD, which only CI can give (022 decision 19).",
   "release-check: skipped (--before-ci): the CI runner's LCP figures for every page template, which only 022's green runs can give (024 build step 7).",
+  SKIPPED_COST,
 ];
 
 function print(c: Check): void {
@@ -120,8 +124,11 @@ if (import.meta.main) {
     print(ci);
     ok &&= ci.ok;
 
-    // 025's cost step goes here, after 024's runner-figure step, when 025
-    // lands; 030's status step follows it (030's release-check ordering).
+    // 025's cost step, after 024's runner-figure step; 030's status step
+    // follows it (030's release-check ordering).
+    const cost = costCheck();
+    print(cost);
+    ok &&= cost.ok;
   }
 
   process.exit(ok ? 0 : 1);

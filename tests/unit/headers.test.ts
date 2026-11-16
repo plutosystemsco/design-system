@@ -105,7 +105,8 @@ describe("the site's address", () => {
   // matrix run of HEAD, read through `gh`, so it exits 1 before push B by
   // design. The address step is checked as a pure function, and the script
   // only with `--before-ci`, which makes no network call (022's review,
-  // finding 9).
+  // finding 9). 025's cost step is skipped by name too, never by an ambient
+  // variable (025's change review, finding 3).
   test("the release check's address step passes", async () => {
     const { addressCheck } =
       await import("../../scripts/site/release-check.ts");
@@ -125,5 +126,6 @@ describe("the site's address", () => {
     expect(out).toContain("release-check: SITE_ORIGIN is https://");
     expect(out).toContain("skipped (--before-ci): the fault ledger");
     expect(out).toContain("skipped (--before-ci): a green matrix push run");
+    expect(out).toContain("skipped (--before-ci): the cost run");
   });
 });
