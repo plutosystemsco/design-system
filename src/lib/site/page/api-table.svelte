@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { ApiTable } from "../api.server.ts";
+  import { typePieces } from "../type-pieces.ts";
 
   let { tables }: { tables: ApiTable[] } = $props();
 
@@ -14,19 +15,22 @@
       .split(/(`[^`]+`|<[a-z][a-z0-9-]*>)/)
       .filter(Boolean)
       .map((p) => (p.startsWith("<") ? `\`${p}\`` : p));
-
-  // 023a: a type breaks only at its punctuation, after each `|`, `<`, `,`,
-  // `(`, `&`, `=>` and `.`, and before each `[`, never inside a name.
-  // Each piece is text; a <wbr>
-  // between pieces adds no text, so the Markdown twin is unchanged.
-  const pieces = (type: string) => type.split(/(?<=[|<,(&.]|=>)|(?=\[)/);
 </script>
+
+<!-- 023a: code that may break only at its punctuation (type-pieces.ts).
+     Each piece is text, so the Markdown twin and a copy are unchanged. The
+     <wbr> is hidden, so Chromium's accessible name gains no space at it. -->
+{#snippet code(text: string)}<code
+    >{#each typePieces(text) as p, i (i)}{#if i}<wbr
+          aria-hidden="true"
+        />{/if}{p}{/each}</code
+  >{/snippet}
 
 {#snippet prose(
   text: string,
-)}{#each parts(text) as p, i (i)}{#if p.startsWith("`")}<code
-        >{p.slice(1, -1)}</code
-      >{:else}{p}{/if}{/each}{/snippet}
+)}{#each parts(text) as p, i (i)}{#if p.startsWith("`")}{@render code(
+        p.slice(1, -1),
+      )}{:else}{p}{/if}{/each}{/snippet}
 
 {#if tables.length === 0}
   <p class="max-w-(--site-measure) text-muted-foreground">
@@ -66,10 +70,8 @@
             <tr>
               <td><code>{row.name}</code></td>
               <td class="break-words"
-                >{#if row.type}<code
-                    >{#each pieces(row.type) as p, i (i)}{#if i}<wbr
-                        />{/if}{p}{/each}</code
-                  >{:else}<span class="text-muted-foreground">inherited</span
+                >{#if row.type}{@render code(row.type)}{:else}<span
+                    class="text-muted-foreground">inherited</span
                   >{/if}</td
               >
               <td

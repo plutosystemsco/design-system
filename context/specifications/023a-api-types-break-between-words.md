@@ -1,6 +1,6 @@
 # 023a — API types break between words
 
-- **Status:** Built on its branch, with the design lead's ruling at landing (2026-11-16) applied; awaiting the change review.
+- **Status:** Built on its branch, with the design lead's rulings at landing (2026-11-16) and the change review's fixes applied (`reviews/023a-api-types-break-between-words-pr-2026-11-16.md`); `release/0.13.0` merged in at `a6fc673`; awaiting the merge.
 - **Date:** 2026-11-15
 - **Author:** the design lead
 - **Kind:** small change (AGENTS.md: a fix with no interface change, no new token or dependency, in one site file). No research memo and no spec review. Its check is seen failing first, and the built change is reviewed by someone who did not write it (constitution §5).
@@ -16,7 +16,15 @@ Button and Meter don't show it today only because their other columns happen to 
 
 Replace `wrap-anywhere` on the Type cell with `break-words` (`overflow-wrap: break-word`), so a word never splits. The column is then sized to its longest unbreakable piece.
 
-So that a long type can still wrap, the API table gives the browser break opportunities at type punctuation. It renders `row.type` as pieces split after each `|`, `<`, `,`, `(`, `&`, `=>` and `.`, and before each `[`, with a `<wbr>` between pieces (before `>` runs too, if that proves needed; it did not). The pieces are text, never `{@html}`. A `<wbr>` adds no text, so the Markdown twin does not change. This is how MUI's and Radix's prop tables let a long union wrap at its tokens, never inside a name. (The rulings at landing, 2026-11-16: the first gave the first six marks, the second added `.` and `[`.)
+So that a long type can still wrap, the API table gives the browser break opportunities at type punctuation. `typePieces()` (`src/lib/site/type-pieces.ts`) splits the type:
+
+- after each `|`, `<`, `,`, `&` and `=>`;
+- after `(`, unless `)` follows, so `()` stays whole;
+- after a `.` that starts a name, but not in a number (`0.5`) or a spread (`...rest`);
+- before `[`, unless `]` follows or white space precedes it, so `[]` stays whole;
+- never inside a string literal (`"a.b"`).
+
+The table renders the pieces with a `<wbr aria-hidden="true" />` between them, in the Type cell and in the code spans of "What it does". The pieces are text, never `{@html}`. A `<wbr>` adds no text to the DOM, so the Markdown twin and a copy do not change. Chromium's computed accessible name would gain a space at each one, so the `<wbr>` is hidden from it. This is how MUI's and Radix's prop tables let a long union wrap at its tokens, never inside a name. (The rulings at landing, 2026-11-16, and the change review's fixes.)
 
 No item changes. No token is added.
 
@@ -24,8 +32,9 @@ No item changes. No token is added.
 
 An e2e test in the API table's existing spec (or `tests/e2e/api-table.spec.ts` if none holds it), "type names break only between words":
 
-1. On `/components/button-group/`, `/components/link/`, `/components/progress/`, `/components/button/` and `/components/meter/`, at 1440 and 390, light and dark: for every Type cell's `<code>`, each line box (read with `Range.getClientRects()` over its text) starts at a word boundary. Concretely, no rect boundary falls between two letters of `[A-Za-z0-9]`.
-2. On every component page, at 1440 and 390, light and dark, no API table scrolls sideways (`scrollWidth <= clientWidth + 1` on its scroller), so the fix does not trade breaking for overflow. A table that still overflows at 1440 is recorded with its reason in the Landing notes and named in the test; any other fails. (Extended from 390 and the five pages by the ruling at landing.)
+1. On `/components/button-group/`, `/components/link/`, `/components/progress/`, `/components/button/` and `/components/meter/`, at 1440 and 390, light and dark: for every Type cell's `<code>`, each line box (read with `Range.getClientRects()` over its text) starts at a word boundary. Concretely, no rect boundary falls between two characters of `[\w$]`.
+2. On every component page in the sitemap, at 1440 and 390, light and dark, no API table scrolls sideways (`scrollWidth <= clientWidth + 1` on its scroller), so the fix does not trade breaking for overflow. A table that still overflows at 1440 is recorded with its reason in the Landing notes and named in the test with its width. Any other fails. So does a named one that no longer overflows, or grows by more than 8 px. (Extended from 390 and the five pages by the ruling at landing; made strict by the change review.)
+3. In Chromium, at 1440, on every component page, each Type and "What it does" cell's computed accessible name (read through CDP) equals its text, white space collapsed. (The change review, finding 3.)
 
 **Seen failing first:** on the tree with `027a` landed, assertion 1 fails at 1440 on the three new pages, naming at least `ButtonGroupVariant`. The output goes in the Landing notes.
 
@@ -104,6 +113,52 @@ After this ruling:
 
 - `api-table.spec.ts`, light and dark: **24 passed**.
 - `bun run check`: 0 errors, 0 warnings, 2,231 files. lint: clean.
+
+### The change review's fixes
+
+The review (`reviews/023a-api-types-break-between-words-pr-2026-11-16.md`) said land after fixes. First, `release/0.13.0` at `a6fc673` (with `021` and `026`) was merged into the branch as its own commit. Then the fixes went into one commit, on the design lead's instructions:
+
+1. **Module tables' labels** (finding 1). `026` names a module's table region "{part}, exports". Check 2 now strips both suffixes, `/, (API|exports)$/`.
+2. **The sitemap's pages** (finding 2). Check 2 walks the sitemap's component pages (79 on the merge), not `pages.ts`'s `ITEMS`, which lacks `toast`. `pages.ts` is not edited here: that is fixed in `022`'s merge. The toast's ToastQueue is named in `WIDE_AT_1440`.
+3. **The hidden `<wbr>`** (finding 3). Each `<wbr>` is `aria-hidden="true"`. The break before `[` now needs no white space before it, `(?<!\s)`. A new test reads Chromium's computed name of every Type and "What it does" cell through CDP, on every component page at 1440, and checks that it equals the cell's text with white space collapsed.
+   - One cell differs, and the test names it as known: Highlighter's `GrammarState` description. Its name is `the @internalgetInternalStack()`, without the space between two code spans. That was already so on `1238f18`'s build, whose "What it does" cells had no `<wbr>`. So it is Chromium's, not this change's.
+   - The specification's "a `<wbr>` adds no text" now says what is true: no text in the DOM, but a space in Chromium's name unless the `<wbr>` is hidden.
+4. **A strict allow-list** (finding 4). Each `WIDE_AT_1440` entry holds its measured width. Check 2 fails on a table not listed, on a listed one that no longer overflows, and on one that grows past its width + 8 px. **Seen failing**, each as a scratch copy of the spec, in light:
+   - a stale key (Button's Button) → "no longer overflows: remove it";
+   - the toast's key misspelt → ToastQueue, 634, unlisted;
+   - PopoverContent's width set to 590 → "grew".
+5. **`()` and `[]` stay whole** (finding 5), with the review's regex. Combined with fixes 3 and 6, the split is `/(?<=[|<,&]|=>|\((?!\)))|(?<=(?<!\.)\.)(?=[A-Za-z_$])|(?<!\s)(?=\[(?!\]))/`.
+6. **No break at a `.` in a number, a spread or a string** (finding 6). The `.` rule is `(?<=(?<!\.)\.)(?=[A-Za-z_$])`, and string literals are cut out before splitting. The splitting moved to `src/lib/site/type-pieces.ts`, so a unit test can reach it.
+   - `tests/unit/type-pieces.test.ts`, 10 cases: `0.5`, `...rest` and `"a.b"` stay whole, among others.
+   - Every one of the API data's typed rows re-joins exactly from its pieces, and no piece is only white space.
+7. **The comment and the word class** (finding 7). The comment is now one block, above the snippet. Check 1's word class is `[\w$]`.
+8. **`typePieces()` in "What it does" too** (the review's optional item, taken by the design lead). A code span in a description gets the same hidden `<wbr>`s. ButtonGroup's `DropdownMenu.Trigger` now wraps at its `.`, and that table no longer scrolls.
+
+**`WIDE_AT_1440` after the fixes: 7 tables.** Each column's narrowest width is its longest unbreakable piece, measured as a copy of the cell at `width: min-content`, with the headers counted:
+
+| Page | Table | Width | The longest pieces: Name, Type, Default, What it does |
+| --- | --- | ---: | --- |
+| Highlighter | Languages | 677 | `findHighlightLanguage` 180, `HighlightLanguage[]` 164, header 46, `highlight/queries/` 159 |
+| Sidebar | SidebarMenuButton | 665 | `tooltipContentProps` 164, `WithoutChildrenOrChild<` 196, `"default"` 83, 94 |
+| Highlighter | Shiki | 653 | `loadShikiLanguage` 148, `ThemeRegistrationRaw` 172, header 46, 159 |
+| Toast | ToastQueue | 634 | `TOAST_PROMISE_GRACE_MS` 188, `(deps: ToastQueueDeps)` 132, header 46, `createToastQueue` 140 |
+| Chart | ChartUtils | 626 | `getPayloadConfigFromPayload` 229, `ChartContextValue)` 156, header 46, 67 |
+| Code languages | CodeLanguages | 609 | `CodeLanguageKind` 140, `LanguageSupport` 132, header 46, 164 |
+| Popover | PopoverContent | 608 | `portalProps` 99, `WithoutChildrenOrChild<` 196, `"center"` 75, 110 |
+
+- **ButtonGroup left the list** (fix 8).
+- **Languages is back to 677 px from 661**, because `HighlightLanguage[]` now holds whole (fix 5), as the review foresaw.
+- **ToastQueue joined it** (fix 2). It is the same kind as the others, and is carried to `023` with them, by the second ruling.
+
+**Checks after the fixes, on the merged tree:**
+
+- **`api-table.spec.ts`**, light and dark: **26 passed**. Per scheme: 10 for check 1, 1 for the accessible names, and 2 for check 2 (79 pages each).
+- **axe** on Button group, Link, Progress, Button, Meter, Popover and Sidebar, at 360, 768 and 1280, light and dark: **42 passed**, 0 violations.
+- **Unit:** `type-pieces.test.ts` and `api.test.ts`, **15 pass**, 0 fail.
+- **`bun run check`:** 0 errors, 0 warnings, 2,270 files (the merge added files). **lint:** clean.
+- **The twins:** no `index.md` in the build holds `wbr`. The converter reads a `<wbr>` as an element with no text, as the earlier `cmp` runs showed for the Type cell.
+
+**A note on the review's scratch merge.** The review's merged build failed to hydrate on three pages, with "multiple instances of `@codemirror/state`". That came from its scratch tree's `node_modules`, linked to the main tree's copy. It is not `023a`'s. Built in this worktree with its own `node_modules` (the same `bun.lock`), every page hydrated, and check 2 walked all 79.
 
 The notes below are from the first build, at `1238f18`, before the ruling.
 
