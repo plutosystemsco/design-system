@@ -1,16 +1,92 @@
 /**
  * `bun scripts/site/release-check.ts`: run by the design lead before the
- * release is tagged. It exits 1 while the site's address still holds the
- * `<account>` placeholder, which the owner fills in when the worker's
- * address is known. A script, not a test, so a clean clone's test run never
- * depends on that answer.
+ * release is tagged. It exits 1 if any check fails:
+ *
+ * 1. The site's address no longer holds the `<account>` placeholder.
+ * 2. (022 decision 19, Q3) The fault ledger, `tests/fault-ledger.ts`, is
+ *    empty: no tag while a fault waits for its small change.
+ * 3. (022 decision 19) A `matrix` push run qualifies for HEAD
+ *    (`scripts/ci/qualify.ts`), read through `gh`, with the job names that
+ *    `matrix.yml` declares at HEAD. Without `gh`, or signed out, it refuses:
+ *    it never passes on missing evidence.
+ *
+ * `--before-ci` (the design lead's ruling at 022's landing, 2026-11-15)
+ * runs every check but the two that only CI's evidence can satisfy, the
+ * ledger and the matrix run, names what it skipped, and exits 0 if the rest
+ * pass. Landing gates use it until push B; the tag uses the full check.
+ *
+ * A script, not a test, so a clean clone's test run never depends on these.
+ * Every check runs, so one refusal names every reason.
  */
+import { LEDGER } from "../../tests/fault-ledger.ts";
+import type { LedgerLine } from "../../tests/ledger.ts";
 import { SITE_ORIGIN } from "../../src/lib/site/site.ts";
+import { matrixCheck } from "../ci/qualify.ts";
+import { jobNames, readWorkflow } from "../ci/workflow.ts";
 
-if (SITE_ORIGIN.includes("<account>")) {
-  console.error(
-    `release-check: SITE_ORIGIN is still ${SITE_ORIGIN}. Set the account in src/lib/site/site.ts before tagging.`,
-  );
-  process.exit(1);
+type Check = { ok: boolean; lines: string[] };
+
+/** 1. The site's address holds no placeholder. Pure, so a unit test calls it. */
+export function addressCheck(origin: string): Check {
+  return origin.includes("<account>")
+    ? {
+        ok: false,
+        lines: [
+          `release-check: SITE_ORIGIN is still ${origin}. Set the account in src/lib/site/site.ts before tagging.`,
+        ],
+      }
+    : { ok: true, lines: [`release-check: SITE_ORIGIN is ${origin}.`] };
 }
-console.log(`release-check: SITE_ORIGIN is ${SITE_ORIGIN}.`);
+
+export function ledgerCheck(ledger: LedgerLine[]): Check {
+  if (!ledger.length)
+    return { ok: true, lines: ["release-check: the fault ledger is empty."] };
+  return {
+    ok: false,
+    lines: [
+      `release-check: the fault ledger holds ${ledger.length} open fault${ledger.length === 1 ? "" : "s"} (022 Q3: no tag until it is empty):`,
+      ...ledger.map(
+        (l) =>
+          `  - ${l.change}: ${l.file} › ${l.title} (${"project" in l.where ? l.where.project : `${l.where.reader}-${l.where.browser}`})`,
+      ),
+    ],
+  };
+}
+
+/** What `--before-ci` leaves out, named in its output. */
+export const SKIPPED_BEFORE_CI = [
+  "release-check: skipped (--before-ci): the fault ledger, which waits on the small changes and push B's run (022 Q3).",
+  "release-check: skipped (--before-ci): a green matrix push run of HEAD, which only CI can give (022 decision 19).",
+];
+
+function print(c: Check): void {
+  (c.ok ? console.log : console.error)(c.lines.join("\n"));
+}
+
+if (import.meta.main) {
+  const beforeCi = process.argv.includes("--before-ci");
+  const address = addressCheck(SITE_ORIGIN);
+  print(address);
+  let ok = address.ok;
+
+  if (beforeCi) {
+    for (const l of SKIPPED_BEFORE_CI) console.log(l);
+  } else {
+    const ledger = ledgerCheck(LEDGER);
+    print(ledger);
+    ok &&= ledger.ok;
+
+    const head = Bun.spawnSync(["git", "rev-parse", "HEAD"])
+      .stdout.toString()
+      .trim();
+    const expected = jobNames(readWorkflow(".github/workflows/matrix.yml"));
+    const matrix = await matrixCheck(head, expected);
+    print(matrix);
+    ok &&= matrix.ok;
+
+    // 025's cost step goes here, after the matrix step, when 025 lands;
+    // 030's status step follows it (030's release-check ordering).
+  }
+
+  process.exit(ok ? 0 : 1);
+}

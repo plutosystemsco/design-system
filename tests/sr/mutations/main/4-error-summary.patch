@@ -1,0 +1,13 @@
+diff --git a/src/lib/registry/ui/error-summary/error-summary.svelte b/src/lib/registry/ui/error-summary/error-summary.svelte
+index 7cb1928..c2a1262 100644
+--- a/src/lib/registry/ui/error-summary/error-summary.svelte
++++ b/src/lib/registry/ui/error-summary/error-summary.svelte
+@@ -141,7 +141,7 @@
+     <WarningCircle aria-hidden="true" />
+     <div
+       data-slot="error-summary-content"
+-      role={announce ? "alert" : null}
++      role={null}
+       class="col-start-2 row-span-2 grid gap-1"
+     >
+       <svelte:element

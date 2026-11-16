@@ -3,15 +3,17 @@
  * (N3), the breadcrumb (N4), the sidebar (N5) and the theme (N6). Runs in
  * both projects, light and dark.
  */
-import {
-  expect,
-  test,
-  type APIRequestContext,
-  type Browser,
-  type Locator,
-  type Page,
+import type {
+  APIRequestContext,
+  Browser,
+  Locator,
+  Page,
 } from "@playwright/test";
+import { expect, test } from "../test.ts";
+import { adaptsIn } from "./engines.ts";
+import { scheme } from "./scheme.ts";
 import {
+  activate,
   cssVar,
   hexToRgb,
   open,
@@ -19,6 +21,7 @@ import {
   TABBABLE,
   type ThemeName,
   componentPath,
+  scrollbarWidth,
 } from "./pages.ts";
 
 /**
@@ -229,7 +232,7 @@ test.describe("N1. the menu", () => {
     expect(await computed(menu, "min-width")).toBe("256px");
     expect(await computed(menu, "border-top-left-radius")).toBe("8px");
     expect(await computed(menu, "overflow-y")).toBe("auto");
-    await expectElevation(page, menu, info.project.name as ThemeName);
+    await expectElevation(page, menu, scheme(info));
 
     // 0 style attributes of ours: bits-ui's inline style sits on the content
     // (its floating variables) and nowhere else.
@@ -319,7 +322,7 @@ test.describe("N2. the sheet", () => {
     await open(page, PAGE);
     const trigger = page.getByTestId("sheet-end");
     await expect(trigger).toHaveAttribute("aria-haspopup", "dialog");
-    await trigger.click();
+    await activate(trigger);
     const content = page.locator('[data-slot="sheet-content"]');
     await expect(content).toBeVisible();
     await settled(page);
@@ -336,7 +339,7 @@ test.describe("N2. the sheet", () => {
     expect(box.x + box.width).toBe(viewport.width);
     expect(await computed(content, "overflow-y")).toBe("auto");
     await expectScrim(page, page.locator('[data-slot="sheet-overlay"]'));
-    await expectElevation(page, content, info.project.name as ThemeName);
+    await expectElevation(page, content, scheme(info));
     expect(await computed(content, "border-left-width")).toBe("0px");
     await expectCloseLast(content);
     await expect(content.locator("nav")).toHaveAttribute("aria-label", /\S/);
@@ -429,7 +432,7 @@ test.describe("N3. the dialog", () => {
       }, info) => {
         await open(page, PAGE);
         const trigger = page.getByTestId("dialog-rename");
-        await trigger.click();
+        await activate(trigger);
         const content = page.locator('[data-slot="dialog-content"]');
         await expect(content).toBeVisible();
         await settled(page);
@@ -456,7 +459,7 @@ test.describe("N3. the dialog", () => {
         expect(await computed(content, "overflow-y")).toBe("auto");
         expect(await computed(content, "border-top-left-radius")).toBe("8px");
         await expectScrim(page, page.locator('[data-slot="dialog-overlay"]'));
-        await expectElevation(page, content, info.project.name as ThemeName);
+        await expectElevation(page, content, scheme(info));
         await expectCloseLast(content);
         await page.keyboard.press("Escape");
         await expect(content).toHaveCount(0);
@@ -474,7 +477,11 @@ test.describe("N3. the dialog", () => {
         ]);
         expect(scroll[0]).toBeGreaterThan(scroll[1]);
         expect(scroll[2]).toBe(868);
-        expect(await computed(long, "scrollbar-width")).toBe("thin");
+        adaptsIn(
+          "firefox",
+          "scrollbar-width: Playwright's Firefox computes none for every element, so the value is read from the author's rules",
+        );
+        expect(await scrollbarWidth(long)).toBe("thin");
         await page.keyboard.press("Escape");
         await expect(long).toHaveCount(0);
       });
@@ -645,7 +652,11 @@ test.describe("N5. the sidebar", () => {
     // The content box: a scroller with no stop of its own.
     const content = nav.locator('[data-slot="sidebar-content"]');
     expect(await computed(content, "overflow-y")).toBe("auto");
-    expect(await computed(content, "scrollbar-width")).toBe("thin");
+    adaptsIn(
+      "firefox",
+      "scrollbar-width: Playwright's Firefox computes none for every element, so the value is read from the author's rules",
+    );
+    expect(await scrollbarWidth(content)).toBe("thin");
     expect(await content.getAttribute("tabindex")).toBeNull();
 
     // The current row: aria-current, the accent inset and the primary start edge.
@@ -844,7 +855,7 @@ test.describe("N6. the theme", () => {
     page,
   }, info) => {
     await open(page, PAGE);
-    const theme = info.project.name as ThemeName;
+    const theme = scheme(info);
     expect(await storedTheme(page)).toBeNull();
     expect(await isDark(page)).toBe(theme === "dark");
     const toggle = page.getByTestId("keyboard-fixture").getByRole("button", {
@@ -861,7 +872,7 @@ test.describe("N6. the theme", () => {
     page,
   }, info) => {
     await open(page, PAGE);
-    const dark = info.project.name === "dark";
+    const dark = scheme(info) === "dark";
     const toggle = page.getByTestId("keyboard-fixture").getByRole("button", {
       name: "Dark theme",
     });
@@ -894,7 +905,7 @@ test.describe("N6. the theme", () => {
     page,
   }, info) => {
     await open(page, PAGE);
-    const dark = info.project.name === "dark";
+    const dark = scheme(info) === "dark";
     const toggle = page.getByTestId("keyboard-fixture").getByRole("button", {
       name: "Dark theme",
     });

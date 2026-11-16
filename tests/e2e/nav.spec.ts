@@ -4,12 +4,20 @@
  * 10 and 22).
  */
 import AxeBuilder from "@axe-core/playwright";
-import { expect, test, type Page } from "@playwright/test";
+import type { Page } from "@playwright/test";
+import { expect, test } from "../test.ts";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { DOORS } from "../../src/lib/site/doors.ts";
 import { navOrder, type SitePage } from "../../src/lib/site/sitemap.ts";
-import { cssVar, hexToRgb, open, SITEMAP } from "./pages.ts";
+import {
+  clipboard,
+  cssVar,
+  hexToRgb,
+  readClipboard,
+  open,
+  SITEMAP,
+} from "./pages.ts";
 
 const NOT_HOME = SITEMAP.filter((p) => p.path !== "/");
 const label = (p: SitePage) =>
@@ -242,7 +250,7 @@ test.describe("018 criterion 5: the phone sheet", () => {
 });
 
 test.describe("018 criterion 10: page tools, previous and next", () => {
-  test.use({ permissions: ["clipboard-read", "clipboard-write"] });
+  test.use({ permissions: clipboard });
 
   // The twins are written into build/ after vite's build, which the
   // preview server does not serve: each request is answered from build/.
@@ -270,7 +278,7 @@ test.describe("018 criterion 10: page tools, previous and next", () => {
     await expect(
       page.locator('[data-slot="page-tools"] [role="status"]'),
     ).toHaveText("Copied");
-    expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(
+    expect(await readClipboard(page)).toBe(
       await twin(page, "/components/button/"),
     );
   });
@@ -320,7 +328,7 @@ test.describe("018 criterion 10: page tools, previous and next", () => {
     expect(spied.writes[0].items).toBe(1);
     // Called before the delayed twin could have arrived.
     expect(spied.writes[0].at - clicked).toBeLessThan(900);
-    expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(
+    expect(await readClipboard(page)).toBe(
       await twin(page, "/components/button/"),
     );
   });

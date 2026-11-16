@@ -1,0 +1,173 @@
+{
+  "set": "double-read",
+  "patches": [
+    {
+      "patch": "7b-error-summary.patch",
+      "target": "error-summary",
+      "fault": "L3"
+    }
+  ],
+  "expected": [
+    {
+      "patch": "7b-error-summary.patch",
+      "file": "error-summary.sr.ts",
+      "title": "the insertion: the title and every message spoken whole, none twice in a row, none before",
+      "reader": "nvda",
+      "browser": "chromium",
+      "fault": "L3"
+    },
+    {
+      "patch": "7b-error-summary.patch",
+      "file": "error-summary.sr.ts",
+      "title": "the insertion: the title and every message spoken whole, none twice in a row, none before",
+      "reader": "nvda",
+      "browser": "firefox",
+      "fault": "L3"
+    },
+    {
+      "patch": "7b-error-summary.patch",
+      "file": "error-summary.sr.ts",
+      "title": "the insertion: the title and every message spoken whole, none twice in a row, none before",
+      "reader": "voiceover",
+      "browser": "chromium",
+      "fault": "L3"
+    },
+    {
+      "patch": "7b-error-summary.patch",
+      "file": "error-summary.sr.ts",
+      "title": "the insertion: the title and every message spoken whole, none twice in a row, none before",
+      "reader": "voiceover",
+      "browser": "webkit",
+      "fault": "L3"
+    },
+    {
+      "patch": "7b-error-summary.patch",
+      "file": "error-summary.sr.ts",
+      "title": "the second submit, unchanged: spoken whole again, none twice in a row",
+      "reader": "nvda",
+      "browser": "chromium",
+      "fault": "L3"
+    },
+    {
+      "patch": "7b-error-summary.patch",
+      "file": "error-summary.sr.ts",
+      "title": "the second submit, unchanged: spoken whole again, none twice in a row",
+      "reader": "nvda",
+      "browser": "firefox",
+      "fault": "L3"
+    },
+    {
+      "patch": "7b-error-summary.patch",
+      "file": "error-summary.sr.ts",
+      "title": "the second submit, unchanged: spoken whole again, none twice in a row",
+      "reader": "voiceover",
+      "browser": "chromium",
+      "fault": "L3"
+    },
+    {
+      "patch": "7b-error-summary.patch",
+      "file": "error-summary.sr.ts",
+      "title": "the second submit, unchanged: spoken whole again, none twice in a row",
+      "reader": "voiceover",
+      "browser": "webkit",
+      "fault": "L3"
+    },
+    {
+      "patch": "7b-error-summary.patch",
+      "file": "settings.sr.ts",
+      "title": "a save with an empty name: the summary's title and message spoken whole, none twice in a row",
+      "reader": "nvda",
+      "browser": "chromium",
+      "fault": "L3"
+    },
+    {
+      "patch": "7b-error-summary.patch",
+      "file": "settings.sr.ts",
+      "title": "a save with an empty name: the summary's title and message spoken whole, none twice in a row",
+      "reader": "nvda",
+      "browser": "firefox",
+      "fault": "L3"
+    },
+    {
+      "patch": "7b-error-summary.patch",
+      "file": "settings.sr.ts",
+      "title": "a save with an empty name: the summary's title and message spoken whole, none twice in a row",
+      "reader": "voiceover",
+      "browser": "chromium",
+      "fault": "L3"
+    },
+    {
+      "patch": "7b-error-summary.patch",
+      "file": "settings.sr.ts",
+      "title": "a save with an empty name: the summary's title and message spoken whole, none twice in a row",
+      "reader": "voiceover",
+      "browser": "webkit",
+      "fault": "L3"
+    },
+    {
+      "patch": "7b-error-summary.patch",
+      "file": "sign-in.sr.ts",
+      "title": "an empty submit: the summary's title and messages spoken whole, none twice in a row",
+      "reader": "nvda",
+      "browser": "chromium",
+      "fault": "L3"
+    },
+    {
+      "patch": "7b-error-summary.patch",
+      "file": "sign-in.sr.ts",
+      "title": "an empty submit: the summary's title and messages spoken whole, none twice in a row",
+      "reader": "nvda",
+      "browser": "firefox",
+      "fault": "L3"
+    },
+    {
+      "patch": "7b-error-summary.patch",
+      "file": "sign-in.sr.ts",
+      "title": "an empty submit: the summary's title and messages spoken whole, none twice in a row",
+      "reader": "voiceover",
+      "browser": "chromium",
+      "fault": "L3"
+    },
+    {
+      "patch": "7b-error-summary.patch",
+      "file": "sign-in.sr.ts",
+      "title": "an empty submit: the summary's title and messages spoken whole, none twice in a row",
+      "reader": "voiceover",
+      "browser": "webkit",
+      "fault": "L3"
+    },
+    {
+      "patch": "7b-error-summary.patch",
+      "file": "sign-up.sr.ts",
+      "title": "an empty submit: the summary's title and messages spoken whole, none twice in a row",
+      "reader": "nvda",
+      "browser": "chromium",
+      "fault": "L3"
+    },
+    {
+      "patch": "7b-error-summary.patch",
+      "file": "sign-up.sr.ts",
+      "title": "an empty submit: the summary's title and messages spoken whole, none twice in a row",
+      "reader": "nvda",
+      "browser": "firefox",
+      "fault": "L3"
+    },
+    {
+      "patch": "7b-error-summary.patch",
+      "file": "sign-up.sr.ts",
+      "title": "an empty submit: the summary's title and messages spoken whole, none twice in a row",
+      "reader": "voiceover",
+      "browser": "chromium",
+      "fault": "L3"
+    },
+    {
+      "patch": "7b-error-summary.patch",
+      "file": "sign-up.sr.ts",
+      "title": "an empty submit: the summary's title and messages spoken whole, none twice in a row",
+      "reader": "voiceover",
+      "browser": "webkit",
+      "fault": "L3"
+    }
+  ],
+  "notProvable": []
+}

@@ -1,0 +1,26 @@
+diff --git a/src/lib/registry/components/sign-up-form.svelte b/src/lib/registry/components/sign-up-form.svelte
+index a903d36..8ec42bb 100644
+--- a/src/lib/registry/components/sign-up-form.svelte
++++ b/src/lib/registry/components/sign-up-form.svelte
+@@ -98,7 +98,7 @@
+   );
+ 
+   onMount(() => {
+-    if (focusOnMount) heading?.focus();
++    if (focusOnMount) void heading;
+   });
+ 
+   function validate(): Partial<Record<SignUpField, string>> {
+diff --git a/src/lib/registry/components/sign-up-verify.svelte b/src/lib/registry/components/sign-up-verify.svelte
+index 377dc8c..21bd31a 100644
+--- a/src/lib/registry/components/sign-up-verify.svelte
++++ b/src/lib/registry/components/sign-up-verify.svelte
+@@ -69,7 +69,7 @@
+   const links = $derived(errors.code ? [{ id, message: errors.code }] : []);
+ 
+   onMount(() => {
+-    if (focusOnMount) heading?.focus();
++    if (focusOnMount) void heading;
+   });
+ 
+   async function failed() {

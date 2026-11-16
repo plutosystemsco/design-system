@@ -4,7 +4,8 @@
  * still serves a reader of an old key. Read from the prerendered HTML of
  * `/view/field-keys/`, with scripts off, so only the server render counts.
  */
-import { expect, test, type Browser, type Page } from "@playwright/test";
+import type { Browser, Page } from "@playwright/test";
+import { expect, test } from "../test.ts";
 
 const VIEW = "/view/field-keys/";
 

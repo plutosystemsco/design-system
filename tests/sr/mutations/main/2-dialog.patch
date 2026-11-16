@@ -1,0 +1,20 @@
+diff --git a/src/lib/registry/ui/dialog/dialog-title.svelte b/src/lib/registry/ui/dialog/dialog-title.svelte
+index fe5922b..36256a2 100644
+--- a/src/lib/registry/ui/dialog/dialog-title.svelte
++++ b/src/lib/registry/ui/dialog/dialog-title.svelte
+@@ -11,10 +11,10 @@
+ </script>
+ 
+ <!-- A heading in the heading face; bits-ui renders role="heading" aria-level and names the dialog by it. -->
+-<DialogPrimitive.Title
+-  bind:ref
++<h2
++  bind:this={ref}
+   data-slot="dialog-title"
+-  {level}
+   class={cn("font-heading text-base font-bold", className)}
+-  {...restProps}
+-/>
++>
++  {@render restProps.children?.()}
++</h2>

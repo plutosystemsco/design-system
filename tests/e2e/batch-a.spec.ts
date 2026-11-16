@@ -5,7 +5,8 @@
  * 027a's items are link, button-group and progress; 027b adds its three.
  */
 import AxeBuilder from "@axe-core/playwright";
-import { expect, test, type Page } from "@playwright/test";
+import type { Page } from "@playwright/test";
+import { expect, test } from "../test.ts";
 import { open, componentPath, settled } from "./pages.ts";
 import { openExample, PART_A } from "./batch-a.ts";
 

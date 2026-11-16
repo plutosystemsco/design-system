@@ -1,14 +1,17 @@
 /**
  * 018 decision 15, criterion 21: the site's new surfaces keep their meaning
- * when the system repaints the page. Light project only.
+ * when the system repaints the page. Each engine's light project only
+ * (022 decision 2).
  */
 import AxeBuilder from "@axe-core/playwright";
-import { expect, test } from "@playwright/test";
+import { expect, test } from "../test.ts";
+import { onlyProjects } from "./engines.ts";
 import { open } from "./pages.ts";
 
 test.use({ forcedColors: "active" });
-test.beforeEach(({}, info) =>
-  test.skip(info.project.name !== "light", "light project only"),
+onlyProjects(
+  ["chromium-light", "firefox-light", "webkit-light"],
+  "light schemes only",
 );
 
 const canvas = (page: import("@playwright/test").Page) =>
@@ -155,16 +158,11 @@ test("the changelog's badge has a visible border", async ({ page }) => {
   expect(b).not.toBe("0px");
 });
 
-test("axe finds 0 violations on Button, Colour and the changelog", async ({
-  page,
-}) => {
-  for (const p of [
-    "/components/button/",
-    "/foundations/colour/",
-    "/changelog/",
-  ]) {
+// 022's review, finding 3: one test per page, so a ledger line names one
+// page and the others are still scanned.
+for (const p of ["/components/button/", "/foundations/colour/", "/changelog/"])
+  test(`axe finds 0 violations on ${p}`, async ({ page }) => {
     await open(page, p);
     const r = await new AxeBuilder({ page }).analyze();
     expect(r.violations.map((v) => `${p}: ${v.id}`)).toEqual([]);
-  }
-});
+  });

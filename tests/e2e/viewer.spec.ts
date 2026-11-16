@@ -2,7 +2,8 @@
  * 003 decision 20, browser file 7: the viewer on each block's item page, in
  * both projects.
  */
-import { expect, test, type Page } from "@playwright/test";
+import type { Page } from "@playwright/test";
+import { expect, test } from "../test.ts";
 import { BLOCK_VIEWS, viewPath } from "../../src/lib/preview/blocks.ts";
 import { readFileSync } from "node:fs";
 
@@ -159,9 +160,12 @@ for (const block of BLOCKS) {
             "aria-pressed",
             "false",
           );
+        // 022: to 0.01 px; Firefox lays the frame out in 1/60 px units.
         await expect
-          .poll(async () => (await frame(page).boundingBox())?.width)
-          .toBe(px);
+          .poll(async () =>
+            Math.round(((await frame(page).boundingBox())?.width ?? 0) * 100),
+          )
+          .toBe(px * 100);
       }
     });
 
@@ -199,15 +203,18 @@ for (const block of BLOCKS) {
       await page.addInitScript(() => {
         if (window === window.top) return;
         const query = "(prefers-color-scheme: dark)";
-        const dark = !window.matchMedia(query).matches;
         // The real list, with `matches` inverted: a spread copy would drop
         // the prototype's addEventListener, which the shell view's theme
-        // store needs (006).
+        // store needs (006). 022: inverted when asked, not when this script
+        // starts: WebKit applies the emulated scheme to a frame after its
+        // init scripts begin, so a reading taken here was always light.
         const real = window.matchMedia.bind(window);
         window.matchMedia = (q: string) => {
           const list = real(q);
-          if (q === query)
-            Object.defineProperty(list, "matches", { get: () => dark });
+          if (q === query) {
+            const actual = list.matches;
+            Object.defineProperty(list, "matches", { get: () => !actual });
+          }
           return list;
         };
         Object.defineProperty(window, "localStorage", {
@@ -218,7 +225,15 @@ for (const block of BLOCKS) {
       });
       await openBlock(page, block);
       const states: boolean[] = [];
-      await expect.poll(() => frameIsDark(page)).toBe(await parentIsDark(page));
+      // 022's review, finding 3: the frame checks carry their own messages,
+      // so 022c's ledger line names them ("the frame's theme is the
+      // page's") and no other toBe can pass for them. In Firefox the copy
+      // loses at load or after a toggle, by turns.
+      await expect
+        .poll(() => frameIsDark(page), {
+          message: "at load, the frame's theme is the page's",
+        })
+        .toBe(await parentIsDark(page));
       // The frame's own choice was the other theme: the copy did this.
       const own = await frame(page).evaluate(
         (f) =>
@@ -233,7 +248,11 @@ for (const block of BLOCKS) {
         await toggle.click();
         const dark = await parentIsDark(page);
         states.push(dark);
-        await expect.poll(() => frameIsDark(page)).toBe(dark);
+        await expect
+          .poll(() => frameIsDark(page), {
+            message: `after toggle ${i + 1}, the frame's theme is the page's`,
+          })
+          .toBe(dark);
       }
       expect(states).toHaveLength(3);
       expect(states[1]).toBe(!states[0]);

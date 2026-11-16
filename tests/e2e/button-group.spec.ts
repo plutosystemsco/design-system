@@ -2,7 +2,8 @@
  * 027a: the button group, tests 32 to 36, on its example views in the
  * project's scheme.
  */
-import { expect, test, type Locator, type Page } from "@playwright/test";
+import type { Locator, Page } from "@playwright/test";
+import { expect, test } from "../test.ts";
 import { near, openExample, pixelAt, token } from "./batch-a.ts";
 
 const ITEM = "button-group";

@@ -1,4 +1,6 @@
-import { expect, test, type Page } from "@playwright/test";
+import type { Page } from "@playwright/test";
+import { expect, test } from "../test.ts";
+import { scheme } from "./scheme.ts";
 import { open, openView, type ThemeName, componentPath } from "./pages.ts";
 
 type Rect = {
@@ -116,7 +118,7 @@ test.describe("the lockup at 100 px", () => {
   });
 
   test("the dots keep their order and colours", ({}, info) => {
-    const theme = info.project.name as ThemeName;
+    const theme = scheme(info);
     expect(g.colours).toEqual(
       theme === "dark" ? [PAPER, PAPER, PAPER, PAPER] : BRAND,
     );
@@ -264,7 +266,7 @@ test.describe("criterion 12: the mark's colours by theme and mode", () => {
     // On the page itself: the dark project's html carries .dark, so an
     // expressive subtree takes the lifted four; the light project shows the
     // brand four, expressive or not.
-    expect(dots).toEqual(info.project.name === "dark" ? LIFTED : BRAND);
+    expect(dots).toEqual(scheme(info) === "dark" ? LIFTED : BRAND);
   });
 });
 

@@ -2,7 +2,7 @@
  * 027a: the link, tests 42 to 46. Each runs on an example view in the
  * project's scheme (`?theme=` from the project's name), at 1440 × 900.
  */
-import { expect, test } from "@playwright/test";
+import { expect, test } from "../test.ts";
 import { contrastRatio } from "../../scripts/contrast.ts";
 import { openExample, rgbToHex, token } from "./batch-a.ts";
 

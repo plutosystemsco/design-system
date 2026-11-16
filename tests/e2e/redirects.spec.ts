@@ -4,7 +4,7 @@
  * 301 with its rule's Location. And test 14's half that reads `build/`:
  * nothing is built at an old address.
  */
-import { expect, test } from "@playwright/test";
+import { expect, test } from "../test.ts";
 import { existsSync } from "node:fs";
 import path from "node:path";
 import { EXAMPLE_ORDER } from "../../src/lib/site/example-order.ts";

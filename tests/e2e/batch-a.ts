@@ -5,6 +5,7 @@
  */
 import type { Locator, Page, TestInfo } from "@playwright/test";
 import { cssVar, hexToRgb } from "./pages.ts";
+import { scheme } from "./scheme.ts";
 
 /** 027a's items, with their page examples and pair files, in page order. */
 export const PART_A: { item: string; examples: string[]; pairs: string[] }[] = [
@@ -25,9 +26,8 @@ export const PART_A: { item: string; examples: string[]; pairs: string[] }[] = [
   },
 ];
 
-/** The project's scheme: a dark project (`dark`, or `<engine>-dark`) shows the dark theme. */
-export const schemeOf = (info: TestInfo): "light" | "dark" =>
-  /(^|-)dark$/.test(info.project.name) ? "dark" : "light";
+/** The project's scheme, from its `use` (022 decision 2). */
+export const schemeOf = (info: TestInfo): "light" | "dark" => scheme(info);
 
 /** Opens one example view in the project's scheme, hydrated. */
 export async function openExample(

@@ -6,7 +6,8 @@
  * median is checked and every run recorded. Transfer excludes iframes and
  * the search index.
  */
-import { expect, test, type Browser } from "@playwright/test";
+import type { Browser } from "@playwright/test";
+import { expect, test } from "../test.ts";
 import { existsSync, readFileSync, statSync } from "node:fs";
 import path from "node:path";
 
@@ -147,6 +148,22 @@ export async function measure(browser: Browser, url: string) {
 const median = (xs: number[]) =>
   [...xs].sort((a, b) => a - b)[Math.floor(xs.length / 2)];
 
+/**
+ * 022 Q1 (the owner, 2026-11-15): in CI, LCP is reported, not gated, until
+ * 024 re-bases the per-template budgets on the runner. The figure goes in
+ * an `lcp` annotation. Transfer and CLS gate everywhere; locally LCP gates.
+ */
+function expectLcp(page: string, lcp: number, budget: number): void {
+  if (!process.env.CI) {
+    expect(lcp).toBeLessThanOrEqual(budget);
+    return;
+  }
+  test.info().annotations.push({
+    type: "lcp",
+    description: `${page}: ${lcp} ms against ${budget} ms (${lcp <= budget ? "within" : "over"}; reported, not gated, 022 Q1)`,
+  });
+}
+
 test.describe("015: the budgets", () => {
   for (const [page, budget] of Object.entries(BUDGETS)) {
     test(`${page}: transfer ≤ ${budget.transfer} kB, LCP ≤ ${budget.lcp} ms, CLS ≤ ${budget.cls}, 0 .wasm`, async ({
@@ -160,7 +177,7 @@ test.describe("015: the budgets", () => {
       expect(median(runs.map((r) => r.transfer))).toBeLessThanOrEqual(
         budget.transfer,
       );
-      expect(median(runs.map((r) => r.lcp))).toBeLessThanOrEqual(budget.lcp);
+      expectLcp(page, median(runs.map((r) => r.lcp))!, budget.lcp);
       expect(median(runs.map((r) => r.cls))).toBeLessThanOrEqual(budget.cls);
       for (const r of runs) expect(r.wasm).toBe(0);
     });
@@ -185,7 +202,9 @@ test.describe("017: the Colour page's budget", () => {
     expect(median(runs.map((r) => r.transfer))).toBeLessThanOrEqual(
       COLOUR_BUDGET.transfer,
     );
-    expect(median(runs.map((r) => r.lcp))).toBeLessThanOrEqual(
+    expectLcp(
+      "/brand/colour/",
+      median(runs.map((r) => r.lcp))!,
       COLOUR_BUDGET.lcp,
     );
     expect(median(runs.map((r) => r.cls))).toBeLessThanOrEqual(

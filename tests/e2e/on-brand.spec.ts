@@ -4,7 +4,9 @@
  * 6: the stage on its ground, the hero's glass and field, the floating glass
  * bar, and the ground check.
  */
-import { expect, test, type Locator, type Page } from "@playwright/test";
+import type { Locator, Page } from "@playwright/test";
+import { expect, test } from "../test.ts";
+import { scheme } from "./scheme.ts";
 import {
   COMPOSITION_VIEW_LIST,
   hexToRgb,
@@ -208,7 +210,7 @@ test.describe("4. the bar", () => {
     page,
   }, info) => {
     await openView(page, HOME);
-    const want = MARKS[info.project.name as "light" | "dark"].map(hexToRgb);
+    const want = MARKS[scheme(info)].map(hexToRgb);
     for (const place of ['[data-slot="marketing-bar"]', "footer"]) {
       const dots = await page
         .locator(`${place} [data-slot="four-dot-dot"]`)
@@ -547,7 +549,7 @@ test.describe("016: the brand yellow", () => {
   test("the field-3 stage is the yellow, and its heading the legend", async ({
     page,
   }, info) => {
-    const theme = info.project.name as "light" | "dark";
+    const theme = scheme(info);
     await openView(page, GROUNDS);
     const stage = page.locator('[data-ground="field-3"]');
     await expect(stage).toHaveCount(1);
@@ -558,7 +560,7 @@ test.describe("016: the brand yellow", () => {
   test("the caution badge is the --caution fill with ink text; the caution alert's bar is --caution", async ({
     page,
   }, info) => {
-    const theme = info.project.name as "light" | "dark";
+    const theme = scheme(info);
     await page.goto(componentPath("badge"));
     const badge = page
       .locator('[data-slot="badge"]', { hasText: "Flaky" })
@@ -579,7 +581,7 @@ test.describe("016: the brand yellow", () => {
   });
 
   test("the chart page's series 3 is --chart-3", async ({ page }, info) => {
-    const theme = info.project.name as "light" | "dark";
+    const theme = scheme(info);
     await page.goto(componentPath("chart"));
     const swatch = page.getByTestId("series-3");
     expect(await style(swatch, "background-color")).toBe(YELLOW[theme]);
