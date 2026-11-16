@@ -266,22 +266,26 @@ export const TEMPLATES: Record<TemplateId, Template> = {
       // `label` (0.09) and `native-select` (0.087) shifted as the text face
       // arrived, and set 0.108, above Core Web Vitals' 0.1 "good" line.
       // `024c` held them still; the figure is now the same sweep's next
-      // worst page, as `024c`'s check sets it. A fall, so no ruling. The
-      // re-base sweep after `024b` to `024e` re-measures.
+      // worst page, `empty`, as `024c`'s check sets it. A fall, so no
+      // ruling. `empty`'s 0.018 is pre-fix (the same swap; it reads 0 after
+      // `024c`); it stands until the re-base sweep after `024b` to `024e`,
+      // which takes the budget to the floor.
       cls: { page: "/components/empty/", median: 0.018 },
     },
     ci: null,
     probes: [
       "/components/sidebar/",
       "/components/button/",
-      // `024c`: the two pages that shifted stay probed, so a header that
-      // moves again fails on the next run.
+      // `024c`: the two pages that shifted stay probed after the re-base, as
+      // canaries, so a header that moves again fails on the next run.
       "/components/label/",
       "/components/native-select/",
+      // Probed while its figure sets the budget above the floor; it leaves
+      // at the re-base.
       "/components/empty/",
     ],
     layouts: COMPONENT_LAYOUTS,
-    ruling: `${SWEEP}; label's CLS fall at 024c (024c landing notes)`,
+    ruling: `${SWEEP}; component's CLS fall at 024c (024c landing notes)`,
   },
   "component-live": {
     // `kuiper-theme` (760 kB, 1,352 ms, 0.004) set all three until it left

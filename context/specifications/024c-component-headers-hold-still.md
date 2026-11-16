@@ -1,6 +1,6 @@
 # 024c — Two component page headers hold still
 
-- **Status:** built (Landing notes); awaiting its change review. Written to be built after `024` lands. Lands before `030`, with `024b`, `024d`, `024e` and one re-base sweep (`roadmap.md` §3, "`024` before `030`").
+- **Status:** built; change-reviewed (`reviews/024c-component-headers-hold-still-pr-2026-11-16.md`, land after fixes); the design lead's ruling and the review's fixes applied; `release/0.13.0` merged in (Landing notes). Awaiting the landing. Written to be built after `024` lands. Lands before `030`, with `024b`, `024d`, `024e` and one re-base sweep (`roadmap.md` §3, "`024` before `030`").
 - **Date:** 2026-11-16
 - **Author:** the design lead
 - **Kind:** small change (AGENTS.md: a fix with no interface change, no new token or dependency, in one place). No research memo and no spec review. Its check is seen failing first, and the built change is reviewed by someone who did not write it (constitution §5).
@@ -61,11 +61,28 @@ The shift is a **font swap**. Nothing re-renders on hydration.
 - **What a reader sees.** The face is in before the first paint, so the header paints once, in Geist. Now the font is requested at 171 ms and done by 661 to 770 ms (EXECUTED), before the first paint.
 - **Out of lane, and why.** The stub put the fix in `src/lib/site/page/`. The logic is there (`text-face.ts`). The hook file is outside it, because only `resolve` can place a link ahead of the module preloads. `hooks.server.ts` did not exist, and no other build touches it. It changes only component pages. `sitemap.ts`, `items.ts`, `listed-items.ts`, `build-registry`, item source and the `027b` items are untouched.
 - **The thumbnails' manifest.** `component.svelte` is an input of each example thumbnail's hash (`018` change review), so 62 hashes went stale. `bun scripts/site/thumbnails.ts --no-build label native-select button` re-took six pictures **byte for byte the same** (`git status` showed only the manifest), so the pictures stand. `bun scripts/site/thumbnails.ts --hash-only` rewrote the manifest: 62 lines.
-- **Not chosen.** A metric-matched fallback face (`size-adjust` on a local font) would need a new face in the token stack, and its numbers depend on each system's fallback. `font-display: optional` would leave a slow reader in the fallback for the whole visit. Re-flowing the facts line or the frame header would hide the two cases and leave the swap on every page.
+- **Not chosen: a metric-matched fallback face alone.** A fallback face on a local face, with `size-adjust` and the ascent, descent and line-gap overrides, takes Geist's room, so the swap moves nothing. The change review measured it (`reviews/024c-component-headers-hold-still-pr-2026-11-16.md` §1, EXECUTED: five variants of this build, 3 interleaved cold loads each under the profile, and Arial tuned to 103%, the best case). Where its face exists it fixes the shift at a lower LCP: `label` 0.0001 at 816 ms, `native-select` 0.0001 at 844 ms, with no preload. **Where its local face is missing, it does nothing:** `label` 0.0901, `native-select` 0.0869, the full shift. `local("Arial")` matches on macOS and Windows, not on stock Linux or Android (INFERRED). The perf job runs on `ubuntu-24.04`, and CLS gates on every machine (`024` decision 8). The preload does not depend on the reader's fonts. The fallback would also change `--font-sans`, a token, and the `kuiper-theme` CSS every app installs, so it is not a small change. With the preload, adding the fallback too gains the site nothing, since the fallback never shows.
+- **Not chosen, either.** `font-display: optional` would leave a slow reader in the fallback for the whole visit. Re-flowing the facts line or the frame header would hide the two cases and leave the swap on every page.
+- **The harness serves HTTP/1.1.** `perf.spec.ts` serves through `Bun.serve`: plain HTTP/1.1, six connections a host. The 2.6 s queue is that protocol's queue. The host serves HTTP/2 and HTTP/3, which do not queue on connections (INFERRED), so a real reader's swap under `018`'s placement was likely earlier and smaller, and so is this change's benefit. The LCP cost is bandwidth, so it stays. SvelteKit's order is right on every protocol. Read the 2.6 s as the harness's figure, not production's. `text-face.ts` says so too.
+
+### The change review, and the design lead's ruling (2026-11-16)
+
+The change review (`reviews/024c-component-headers-hold-still-pr-2026-11-16.md`): **land after fixes**. It re-ran check, the budgets unit test, build-output and site in `chromium-light` (68 passed) and the perf project (28 passed, CLS 0 on all five `component` probes).
+
+**The design lead's ruling: keep the preload.** 024c lands as built, with the fixes below. The fallback face is not this change.
+
+Applied on the branch, in "024c: the review's fixes":
+
+- **Finding 2.** The build-output test imports `TEXT_FACE` and builds its regex from the file's base name, so the name has one source. A new test, "the text face's source file is on disk", fails with "the text face's source file is gone" if fontsource renames it.
+- **Finding 3.** The CLS ruling text reads "component's CLS fall at 024c". The figure's page is `empty`. Its 0.018 was the same swap and reads 0 after this change. It stands, and the budget stays 0.022, until the re-base. At the re-base the budget falls to the floor, `empty` leaves the probes, and `label` and `native-select` stay as canary probes. The comments in `budgets.ts` say so.
+- **Finding 4.** `PreloadInput` is `Parameters<NonNullable<ResolveOptions["preload"]>>[0]`, from `@sveltejs/kit/hooks` (where kit 3 declares it), so a change in the kit's type shows in `bun run check`. The hook's comment says that a second `handle` composes with this one through `sequence`.
+- **Finding 6.** The HTTP/1.1 note above.
+
+Findings 1 (metric-matched fallback faces in the theme, a specification in lane T) and 5 (the Plex preload on the home page and the four landings, a small change in lane S) are the design lead's to file.
 
 ### The check, seen failing first
 
-`tests/e2e/budgets.ts`: `component`'s CLS figure is `/components/empty/`, 0.018, so the budget is **0.022** (0.018 × 1.2, rounded up). `native-select` joins the probes beside `label`. `empty` joins them too: `budgets.test.ts` requires a template's CLS page to be probed when it sets the budget above the 0.02 floor (`024` deviation 3). The ruling names this note. Five probes in `component` now: `sidebar`, `button`, `label`, `native-select`, `empty`.
+`tests/e2e/budgets.ts`: `component`'s CLS figure is `/components/empty/`, 0.018, so the budget is **0.022** (0.018 × 1.2, rounded up). `native-select` joins the probes beside `label`. `empty` joins them too: `budgets.test.ts` requires a template's CLS page to be probed when it sets the budget above the 0.02 floor (`024` deviation 3). `empty`'s 0.018 is a pre-fix figure, the same swap (it reads 0 after the fix). The ruling, "component's CLS fall at 024c", names this note. Five probes in `component` now: `sidebar`, `button`, `label`, `native-select`, `empty`.
 
 `tests/e2e/build-output.spec.ts`, new: **"024c: component headers hold still › every component page preloads Geist's latin file once, before its first script; no other page preloads it"**. It reads every built page in `SITEMAP`.
 
@@ -99,7 +116,7 @@ No other page was found.
 
 ### What the component figure becomes
 
-At the re-base sweep after `024b`, `024c`, `024d` and `024e`: `component`'s worst CLS would be about **0.005** (`font-heading-ibm-plex-sans`), so its budget falls to **the floor, 0.02**, as `024` ruling 5 said. Then no CLS page needs a probe, and `native-select` and `empty` may leave the probes, at that sweep's choice. Until then the figure is 0.022, from the sweep of 2026-11-16, under Core Web Vitals' 0.1 and set by no shifting page.
+At the re-base sweep after `024b`, `024c`, `024d` and `024e`: `component`'s worst CLS would be about **0.005** (`font-heading-ibm-plex-sans`), so its budget falls to **the floor, 0.02**, as `024` ruling 5 said. Then no CLS page needs a probe. `empty` leaves the probes. `label` and `native-select` stay, as canaries for this defect: they are the two pages with a line within a few pixels of wrapping (the change review, finding 3). Until then the figure is `empty`'s pre-fix 0.018 and the budget 0.022, from the sweep of 2026-11-16, under Core Web Vitals' 0.1.
 
 ### The gate
 

@@ -12,7 +12,13 @@
  * about 2.9 s, long after the first paint. SvelteKit's own font preload is
  * written before the module preloads, so the face arrives before the first
  * paint and nothing re-wraps.
+ *
+ * The 2.9 s is the perf harness's: `Bun.serve` speaks HTTP/1.1, six
+ * connections a host, and the font queued for one. The host serves HTTP/2
+ * and HTTP/3, which do not queue so, so a real reader's swap was likely
+ * earlier and smaller. SvelteKit's order is right on every protocol.
  */
+import type { ResolveOptions } from "@sveltejs/kit/hooks";
 
 /** Geist's latin file, as SvelteKit names a font: its source path from the root. */
 export const TEXT_FACE =
@@ -21,9 +27,10 @@ export const TEXT_FACE =
 /** A component page's route: `/(site)/components/<name>`, not the index. */
 const COMPONENT_ROUTE = /^\/\(site\)\/components\/[^/]+$/;
 
-export type PreloadInput =
-  | { type: "css" | "js" | "asset"; path: string }
-  | { type: "font"; path: string; filename: string };
+/** What SvelteKit passes `preload`: taken from its type, so a change shows in `check`. */
+export type PreloadInput = Parameters<
+  NonNullable<ResolveOptions["preload"]>
+>[0];
 
 /**
  * `resolve`'s `preload` for a route: SvelteKit's default (scripts and
