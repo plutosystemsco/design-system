@@ -116,9 +116,9 @@
     "outputHash": "67b6685c60a3cfc6a165e21ebdbabcdbfffdf61cd4008a2903e4f22b98e3ad55"
   },
   "catalogue": {
-    "js": 379344,
-    "css": 16795,
-    "sumOfAlone": { "js": 1126346, "css": 64035 }
+    "js": 379382,
+    "css": 16841,
+    "sumOfAlone": { "js": 1126376, "css": 64128 }
   },
   "items": {
     "utils": {
@@ -2493,16 +2493,16 @@
       "cases": {}
     },
     "tag": {
-      "hash": "22adc98fd3e243fb71c59605cf79c619bc6fac3a5a1d495b6392554d6d6ff5de",
+      "hash": "3658ccf0f728fe95babb2c7ecbfb20b3b1dbe1e7f361dd325c7f2c901655699c",
       "runtimeHash": "3d24a4b2fdd78d81ca2f46cfa954db7d5fe1af470306bccd8b3311b95c56de20",
-      "outputHash": "8bac7d157c7ff8708cccb067bd6e7e2cd8d2cc8c9c061a935571b96e79c269c2",
+      "outputHash": "e2ba8d5435702f6a844103341aedcf84f23bd82718f8b9b63edad7ac36c9065a",
       "run": "2026-11-16T10:13:18.680Z",
       "size": {
-        "js": 14076,
-        "css": 1093,
+        "js": 14107,
+        "css": 1186,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 12405, "css": 962 }
+        "brotli": { "js": 12489, "css": 1053 }
       },
       "hydrate": { "ms": 28.3, "spread": [22.8, 31.8], "settledMs": null },
       "interaction": {
@@ -2517,26 +2517,26 @@
       },
       "route": "/",
       "breakdown": [
-        { "source": "runtime", "js": 5659 },
-        { "source": "package:tailwind-variants", "js": 4002 },
-        { "source": "package:phosphor-svelte", "js": 2676 },
-        { "source": "own", "js": 1001 },
-        { "source": "item:button", "js": 539 },
-        { "source": "item:spinner", "js": 199 }
+        { "source": "runtime", "js": 5667 },
+        { "source": "package:tailwind-variants", "js": 4007 },
+        { "source": "package:phosphor-svelte", "js": 2680 },
+        { "source": "own", "js": 1013 },
+        { "source": "item:button", "js": 540 },
+        { "source": "item:spinner", "js": 200 }
       ],
       "cases": {}
     },
     "search-field": {
-      "hash": "707079e0e0afe96f9ce1ab35c0de5c0b046337788fc71431b6459e4adae3a1f5",
+      "hash": "63b6afa4da3e7a2112436aea8dd59322930bab98717ec8057bd9617db0e4ad66",
       "runtimeHash": "4e8b59e329390f651f0aaaabda86e3e1b58f3cf5ae06af2607e9b7d91757655c",
-      "outputHash": "da3bc75a0a6c404675ec7dcc7a7767e222c4311d1c1b6f5e80801683c6d18af7",
+      "outputHash": "a776e6e54169d3a7e8ad4657aab6fa8da8101cdef1fa94fba8d2ba2056de2c2d",
       "run": "2026-11-16T10:13:18.680Z",
       "size": {
-        "js": 13417,
+        "js": 13416,
         "css": 1700,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 11912, "css": 1478 }
+        "brotli": { "js": 11844, "css": 1478 }
       },
       "hydrate": { "ms": 27, "spread": [25.9, 29.9], "settledMs": null },
       "interaction": {
@@ -2551,12 +2551,12 @@
       },
       "route": "/",
       "breakdown": [
-        { "source": "package:tailwind-variants", "js": 4181 },
-        { "source": "runtime", "js": 4158 },
-        { "source": "package:phosphor-svelte", "js": 2223 },
-        { "source": "own", "js": 853 },
+        { "source": "package:tailwind-variants", "js": 4176 },
+        { "source": "runtime", "js": 4154 },
+        { "source": "package:phosphor-svelte", "js": 2221 },
+        { "source": "own", "js": 864 },
         { "source": "item:input-group", "js": 754 },
-        { "source": "item:button", "js": 563 },
+        { "source": "item:button", "js": 562 },
         { "source": "item:input", "js": 348 },
         { "source": "item:spinner", "js": 208 },
         { "source": "item:status", "js": 129 }

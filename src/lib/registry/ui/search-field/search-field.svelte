@@ -67,12 +67,22 @@
   let paused = $state(false);
   let said = $state("");
   let timer: ReturnType<typeof setTimeout> | undefined;
+  let hush: ReturnType<typeof setTimeout> | undefined;
   let pause = 0;
   let spoken = true;
   let clearing = false;
 
+  /** How long a count stays in the status, in ms: the toast's time. */
+  const SPEECH_MS = 1000;
+
+  // One text written twice is not spoken twice. So the status is emptied a
+  // second after its count, as the toast empties its announcer, or at the
+  // next keystroke if that comes first. It is then empty for the whole
+  // pause before the next count, so the same count is a change (022r).
   function restart() {
     clearTimeout(timer);
+    clearTimeout(hush);
+    said = "";
     pause += 1;
     paused = false;
     spoken = false;
@@ -85,16 +95,15 @@
     if (typeof count !== "string") return;
     if (resultsFor !== undefined && resultsFor !== value) return;
     spoken = true;
-    // Empty, then the count a frame later: one text written twice is not
-    // spoken twice, so the empty frame lets an unchanged count be heard.
-    const mine = pause;
-    said = "";
-    requestAnimationFrame(() => {
-      if (mine === pause) said = count;
-    });
+    said = count;
+    clearTimeout(hush);
+    hush = setTimeout(() => (said = ""), SPEECH_MS);
   });
 
-  onDestroy(() => clearTimeout(timer));
+  onDestroy(() => {
+    clearTimeout(timer);
+    clearTimeout(hush);
+  });
 
   /** Empties the field: the DOM first, then `value`, then the app hears it. */
   function clear(input: HTMLInputElement | null) {
@@ -150,9 +159,10 @@
   is text, is a Tab stop, and returns focus to the input. Escape clears a
   filled, editable field and stops there; otherwise it passes on. A hidden
   status, present from the first render, speaks the result count once
-  typing pauses, for what is typed now. WebKit's own cancel button is hidden
-  with display: none: Linux WebKit draws it as a mask that appearance: none
-  leaves in place (022n).
+  typing pauses, for what is typed now. It is emptied a second later, or at
+  the next keystroke, so the same count is heard again (022r). WebKit's own
+  cancel button is hidden with display: none: Linux WebKit draws it as a
+  mask that appearance: none leaves in place (022n).
 -->
 <InputGroup.Root data-search-field="" class={className}>
   <InputGroup.Addon align="inline-start">

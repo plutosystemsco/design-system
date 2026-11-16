@@ -106,6 +106,84 @@ test.describe(
       );
 
     test(
+      "38a. the emptied list that takes focus renders its name (022s)",
+      tag("focus"),
+      async ({ page, browserName }, info) => {
+        // NVDA's browse buffer renders nothing for an empty list, so focus
+        // there is spoken "blank". The list must hold a line to speak.
+        await openExample(page, info, ITEM, "removable");
+        const list = page.getByRole("list", { name: "Filters", exact: true });
+        for (const label of ["Design", "Research", "Writing"])
+          await remove(page, label).click();
+        await expect(list.getByRole("listitem")).toHaveCount(0);
+        await expect(list).toBeFocused();
+        await expect(list).toHaveAccessibleName("Filters");
+        // Still a list of no items: the content is not an item. (A
+        // snapshot cannot show it: Playwright drops a lone text child that
+        // repeats its node's name.)
+        await expect(list).toMatchAriaSnapshot('- list "Filters"');
+        // In every engine, the emptied list renders text: its name.
+        const shown = await list.evaluate((el) => {
+          const s = getComputedStyle(el, "::before");
+          return {
+            content: s.content,
+            display: s.display,
+            hidden: s.visibility,
+          };
+        });
+        expect(shown.content, "the emptied list's generated text").toBe(
+          '"Filters"',
+        );
+        expect(shown.display).not.toBe("none");
+        expect(shown.hidden).not.toBe("hidden");
+        // The review's finding 1: two blocks in a list compile to a space
+        // between their anchors, and a list holding only that space has
+        // no item either. It must still render its name.
+        const spaced = await list.evaluate((el) => {
+          el.append(" ");
+          const content = getComputedStyle(el, "::before").content;
+          el.lastChild?.remove();
+          return content;
+        });
+        expect(spaced, "an emptied list holding a space").toBe('"Filters"');
+        // The engine's own tree, which a reader reads: in Chromium, the
+        // focused list holds text that says its name.
+        if (browserName === "chromium") {
+          const cdp = await page.context().newCDPSession(page);
+          const { nodes } = (await cdp.send("Accessibility.getFullAXTree")) as {
+            nodes: {
+              nodeId: string;
+              role?: { value: string };
+              name?: { value: string };
+              childIds?: string[];
+              properties?: { name: string; value: { value: unknown } }[];
+            }[];
+          };
+          const byId = new Map(nodes.map((n) => [n.nodeId, n]));
+          const listNode = nodes.find(
+            (n) => n.role?.value === "list" && n.name?.value === "Filters",
+          );
+          expect(
+            listNode?.properties?.some(
+              (p) => p.name === "focused" && p.value.value,
+            ),
+            "the engine's list is the focused node",
+          ).toBe(true);
+          const text: string[] = [];
+          const walk = (id: string) => {
+            const node = byId.get(id);
+            if (!node) return;
+            if (node.role?.value === "StaticText")
+              text.push(node.name?.value ?? "");
+            else node.childIds?.forEach(walk);
+          };
+          listNode?.childIds?.forEach(walk);
+          expect(text.join(""), "the focused list's own text").toBe("Filters");
+        }
+      },
+    );
+
+    test(
       "39. tags reach 4.5:1 and their marks 3:1",
       tag("contrast"),
       async ({ page }, info) => {

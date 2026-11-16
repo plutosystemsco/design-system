@@ -6,7 +6,7 @@
     HTMLAttributes<HTMLUListElement>,
     "class" | "children"
   > & {
-    /** What the tags are, such as "Filters". Or use `aria-labelledby`. Required: a list of tags needs a name. */
+    /** What the tags are, such as "Filters". Or use `aria-labelledby`. Required: a list of tags needs a name. Without a `fallback`, use `aria-label`: an emptied list shows that name to a screen reader as hidden text. */
     "aria-label"?: string;
     /** Where focus goes when no tag control is left, such as the input that adds tags. Without it, the list itself takes focus, and its name is spoken. */
     fallback?: () => HTMLElement | null;
@@ -63,6 +63,9 @@
   A named list of tags that keeps focus when a tag goes. The explicit list
   role keeps its semantics in WebKit, which drops them from an unstyled
   list outside a nav. It takes focus, by script only, when it empties.
+  With no element in it, it says its aria-label as hidden generated text,
+  not an item: NVDA's browse buffer renders nothing for an empty list, and
+  says "blank" (022s). A space between two blocks does not count.
 -->
 <!-- svelte-ignore a11y_no_redundant_roles -->
 <ul
@@ -70,7 +73,10 @@
   data-slot="tag-group"
   role="list"
   tabindex="-1"
-  class={cn("flex flex-wrap items-center gap-2", className)}
+  class={cn(
+    "flex flex-wrap items-center gap-2 not-has-[>*]:before:sr-only not-has-[>*]:before:content-[attr(aria-label)]",
+    className,
+  )}
   {...restProps}
 >
   {@render children?.()}
