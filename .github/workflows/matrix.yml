@@ -64,6 +64,7 @@ jobs:
           retention-days: 1
 
   checks:
+    needs: build
     if: ${{ (github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork) && !inputs.mutate }}
     runs-on: ubuntu-24.04
     timeout-minutes: 45
@@ -88,6 +89,14 @@ jobs:
       - run: bun run check
       - run: bun run lint
       - run: bun scripts/lint-literals.ts
+      # 022i: the smoke test reads build/, which the build job made.
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: site
+      - run: |
+          tar -xf site.tar
+          test -f build/index.html
+          test -f .svelte-kit/output/server/manifest.js
       - run: bun run test:smoke
 
   browsers:
@@ -181,6 +190,9 @@ jobs:
         with:
           bun-version: 1.4.4
       - run: bun install --frozen-lockfile --ignore-scripts
+      # 022i: the recording needs ffmpeg-static's binary, which its own
+      # install script fetches. Every other package's scripts stay off.
+      - run: cd node_modules/ffmpeg-static && bun install.js
       - run: bun run sr:setup --macos-record
       - run: bun run sr:install
       - run: bun --bun playwright install ${{ matrix.browser }}

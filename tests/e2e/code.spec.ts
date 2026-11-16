@@ -1082,7 +1082,8 @@ test.describe("the code editor", () => {
     await expect(runs).toHaveText(/Ran 0 times/);
     await page.keyboard.press("Control+Enter");
     await expect(runs).toHaveText(/Ran 1 time\b/);
-    await page.keyboard.press("Meta+Enter");
+    // 022j: Mod-Enter, which is Cmd on macOS and Ctrl elsewhere.
+    await page.keyboard.press("ControlOrMeta+Enter");
     await expect(runs).toHaveText(/Ran 2 times/);
     expect(await lines()).toBe(before);
     await page.getByRole("button", { name: "Run" }).click();
