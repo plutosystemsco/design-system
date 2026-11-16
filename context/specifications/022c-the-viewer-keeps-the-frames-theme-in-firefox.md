@@ -1,6 +1,6 @@
 # 022c — The viewer keeps the frame's theme in Firefox
 
-- **Status:** Built on its branch, awaiting the change review. Its 16 ledger lines are removed. Lane S.
+- **Status:** Built on its branch. The change review (`reviews/022bcd-firefox-faults-pr-2026-11-16.md`) said land. Awaiting the merge. Its 16 ledger lines are removed. Lane S.
 - **Date:** 2026-11-15
 - **Author:** `022`'s builder, for the design lead to open
 - **Kind:** small change (AGENTS.md: a fix with no interface change, no new token or dependency, in one site component). No research memo and no spec review. Its check is already seen failing; the built change is reviewed by someone who did not write it (constitution §5).
@@ -46,7 +46,7 @@ In `src/lib/preview/block-viewer.svelte`, `watchFrame()` runs on the frame's `lo
 ### Rulings during the build
 
 1. **No separate copy at view-ready.** The stub asks for a copy when the frame's view is ready, and for the observer. The observer already catches any change after `load`, including the one at hydration, so a second hook would add nothing. The stub's `body[data-view-ready]` is also set only by the shell views' layout; the other views mark their `<main>`.
-2. **The frame's own toggle.** In the shell views a person can press the theme toggle inside the frame. The observer puts the page's theme back at once, and the stored choice then reaches the page by its `storage` event, which copies it in (read from the code; no test presses the frame's own toggle inside the viewer). The page's choice is the only one the frame shows, as the stub says.
+2. **The frame's own toggle.** In the shell views a person can press the theme toggle inside the frame. The observer puts the page's theme back at once, and the stored choice then reaches the page by its `storage` event, which copies it in. The page's choice is the only one the frame shows, as the stub says. **With storage blocked, the frame's own toggle does nothing**: the page never hears of the choice, so the frame stays in the page's theme, while the toggle reads pressed (the change review, `reviews/022bcd-firefox-faults-pr-2026-11-16.md`, 022c item 3, in all three engines). This arises only inside the site's demo viewer with storage blocked. It is accepted as intended: the page's choice governs the frame.
 
 ### Checks
 

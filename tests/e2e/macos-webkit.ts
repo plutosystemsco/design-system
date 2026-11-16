@@ -10,8 +10,14 @@
  * - `click-focus`: a click does not focus a button. Each test now presses
  *   the control by keyboard (`activate()` in pages.ts) where focus is the
  *   point, or checks focus before the clicks.
+ * - `key-after-focus` (022b-d's change review, 2026-11-16): a scroll key
+ *   pressed just after a script's `focus()` does not scroll. On a plain
+ *   focusable `overflow: auto` box with no Kuiper code, `focus()` then
+ *   ArrowUp scrolled 0 of 10 times in macOS WebKit, 10 of 10 in Chromium
+ *   and Firefox, and 10 of 10 in WebKit after a 400 ms pause. The harness
+ *   has no answer to it: a fixed pause did not make the tests reliable.
  *
- * None is ledgered: CI runs Linux WebKit, which keeps neither default. After
+ * None is ledgered: CI runs Linux WebKit, which keeps none of these defaults. After
  * push B, every test here must have passed on Linux; one that did not is a
  * fault, with a ledger line and a small change.
  */
@@ -19,7 +25,7 @@
 export type MacosWebkit = {
   file: string;
   title: string;
-  cause: "tab-to-links" | "click-focus";
+  cause: "tab-to-links" | "click-focus" | "key-after-focus";
 };
 
 export const MACOS_WEBKIT: MacosWebkit[] = [
@@ -176,6 +182,18 @@ export const MACOS_WEBKIT: MacosWebkit[] = [
     title:
       "behaviours › Enter on the sheet trigger opens it with focus on its first link; Tab loops through the close button back to the first link",
     cause: "tab-to-links",
+  },
+  {
+    file: "keyboard.spec.ts",
+    title:
+      "behaviours › End scrolls the log's region to its end; ArrowUp releases the follow, a streamed reply does not move it, and the button appears inside the region",
+    cause: "key-after-focus",
+  },
+  {
+    file: "keyboard.spec.ts",
+    title:
+      "behaviours › Enter on the log's button returns to the end and hides it",
+    cause: "key-after-focus",
   },
   {
     file: "keyboard.spec.ts",

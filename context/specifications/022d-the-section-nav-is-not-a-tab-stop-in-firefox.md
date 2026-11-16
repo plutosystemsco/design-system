@@ -1,6 +1,6 @@
 # 022d — The section nav is not a Tab stop in Firefox
 
-- **Status:** Built on its branch, awaiting the change review. Its 2 ledger lines are removed. Lane S.
+- **Status:** Built on its branch. The change review (`reviews/022bcd-firefox-faults-pr-2026-11-16.md`) said land. Awaiting the merge. Its 2 ledger lines are removed. Lane S.
 - **Date:** 2026-11-15
 - **Author:** `022`'s builder, for the design lead to open
 - **Kind:** small change (AGENTS.md: a fix with no interface change, no new token or dependency, in the site's layout). No research memo and no spec review. Its check is already seen failing; the built change is reviewed by someone who did not write it (constitution §5).
@@ -61,4 +61,5 @@ On the tree with all three changes, the machine's load average between 35 and 99
 
 ### Findings for later
 
-- **macOS WebKit's message-log tests.** `keyboard.spec.ts`'s two message-log tests fail in local macOS WebKit before and after this change: after ArrowUp the region is still at its end, and the "Scroll to end" button is not visible. `tests/e2e/macos-webkit.ts` does not list them. Linux WebKit in push B's run will show whether they are a platform default (and join that list) or a fault (and get a ledger line).
+- **macOS WebKit's message-log tests.** `keyboard.spec.ts`'s two message-log tests fail in local macOS WebKit before and after this change: after ArrowUp the region is still at its end, and the "Scroll to end" button is not visible. The change review traced it to the platform: macOS WebKit drops a scroll key pressed just after a script's `focus()`, even on a plain box with no Kuiper code. Both tests are now in `tests/e2e/macos-webkit.ts`, under a third cause, `key-after-focus`. Linux WebKit in push B's run decides: if it fails them too, they are a fault, with a ledger line and a small change (lane E's).
+- **In Firefox, at a 500 px-tall viewport, the section nav clips the first link of a group** when Tab reaches it (the change review, 022d item 6). The first link of 8 groups is scrolled 12 to 13 px past the nav's bottom edge, so 12 of its 34 px are hidden. This is older than this change: it is the same on `70336f4`. Chromium and WebKit show every link whole, and the 900 px walk passes. The review suggests a `scroll-margin` on the nav's links, as a lane-S small change if the design lead wants one.
