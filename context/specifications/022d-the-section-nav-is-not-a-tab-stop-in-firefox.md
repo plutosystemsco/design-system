@@ -63,3 +63,13 @@ On the tree with all three changes, the machine's load average between 35 and 99
 
 - **macOS WebKit's message-log tests.** `keyboard.spec.ts`'s two message-log tests fail in local macOS WebKit before and after this change: after ArrowUp the region is still at its end, and the "Scroll to end" button is not visible. The change review traced it to the platform: macOS WebKit drops a scroll key pressed just after a script's `focus()`, even on a plain box with no Kuiper code. Both tests are now in `tests/e2e/macos-webkit.ts`, under a third cause, `key-after-focus`. Linux WebKit in push B's run decides: if it fails them too, they are a fault, with a ledger line and a small change (lane E's).
 - **In Firefox, at a 500 px-tall viewport, the section nav clips the first link of a group** when Tab reaches it (the change review, 022d item 6). The first link of 8 groups is scrolled 12 to 13 px past the nav's bottom edge, so 12 of its 34 px are hidden. This is older than this change: it is the same on `70336f4`. Chromium and WebKit show every link whole, and the 900 px walk passes. The review suggests a `scroll-margin` on the nav's links, as a lane-S small change if the design lead wants one.
+
+### The merge, for `022b`, `022c` and `022d`
+
+After the change review's fix (`9ee7321`) and its notes (`5fbd808`), the branch merged `release/0.13.0` at `62eda90` (`a779224`). That release holds `023`, `024b`, `024c` and `024d`, and the review itself. The one conflict was the thumbnail manifest. It took the release's side, and then `thumbnails.ts --hash-only` regenerated it. `bun install --frozen-lockfile` changed nothing. On the merged tree:
+
+- **`bun run check`:** 0 errors, 0 warnings, 2,379 files. **lint:** clean.
+- **Unit:** `thumbnails`, `fault-ledger`, `macos-webkit` and `engine-only`: **32 pass, 0 fail**.
+- **`forced-colors.spec.ts` and `viewer.spec.ts`**, `chromium-light`, `chromium-dark`, `firefox-light` and `firefox-dark`: **178 passed, 22 skipped** (forced colours runs in the light projects only), 0 failed. The new pixel check passed in Chromium and Firefox, with both the light and the dark palette.
+- **The Components landing's walk**, all six projects: **6 passed** (201 stops).
+- **`release-check --before-ci`:** exit 0. The ledger holds 8 lines (`022a` 4, `022e` 2, `022f` 2).
