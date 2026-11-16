@@ -1165,3 +1165,12 @@ Committed as "022: the review's fixes". By finding:
 - **The screen-reader suite dry** (`SR_DRY=1`), toast's ten tests in the three browsers: 30 of 30.
 - The release check `--before-ci` exits 0, naming its two skips.
 - **New ledger lines: none.** The ledger still holds its 27 lines; no new engine fault reproduced, so no `022g` stub was opened.
+
+**Found by `023a`'s change review (2026-11-16): `toast` was missing from the browser suites' item list.** `tests/e2e/pages.ts`'s `ITEMS`, a hand list, lacked `toast`, so `COMPONENT_PAGES` had 78 pages while the sitemap had 79, and the specs that walk them (`doors`, `site`, `expressive`; `primitives` through `ITEMS_002`) left the toast page out.
+
+- `toast` joins `ITEMS` (feedback, `026`) and a new `ITEMS_026`/`PAGES_026`, kept out of `ITEMS_002` and `PAGES_002`, which are 002's own.
+- `COMPONENT_PAGES` is now derived from the sitemap (`doorPages("components")`), so a new item cannot be missed again. `ITEMS` stays a hand list because it carries 005's order.
+- `tests/unit/pages-lists.test.ts` holds `ITEMS` and `COMPONENT_PAGES` equal to the sitemap's component pages, and keeps `toast` out of 002's pages. It was seen failing on the old list (two of three tests), then passing.
+- The four files in all six projects: 1,160 passed, 4 failed. Two were load timeouts in `primitives.spec.ts` (`firefox-light`), which pass on rerun. The other two were **018 criterion 14** ("the body is antialiased on every page") in both Firefox projects, which had failed in the first engine triage too and had slipped through it. Every page read `grayscale`.
+- **Criterion 14, triaged: harness, not item.** Firefox keeps `-webkit-font-smoothing` as an alias of its own `-moz-osx-font-smoothing`. Tailwind's `antialiased` sets both, the moz one last, so Firefox reports `grayscale`, its form of the same request. The test now reads `-moz-osx-font-smoothing` in Firefox and expects `grayscale`, through `adaptsIn("firefox", …)` with an `ENGINE_ONLY` entry. Where Firefox does not support the property (`CSS.supports` false, as on Linux), there is nothing to check. Seen failing in both Firefox projects first; it now passes in `firefox-light`, `firefox-dark`, `chromium-light` and `webkit-dark`. No ledger line.
+- **Counts after it:** the browser suite lists **10,262** (`chromium-light` 1,732, the other five 1,705 each, `perf` 5); Chromium's `test:e2e` is 3,442. `ENGINE_ONLY`: onlyIn 2, notIn 1, onlyProjects 4, adaptsIn 11.

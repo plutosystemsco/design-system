@@ -10,6 +10,7 @@ import {
 import { DOORS } from "../../src/lib/site/doors.ts";
 import {
   componentPath,
+  doorPages,
   GROUPS,
   navOrder,
   SITEMAP,
@@ -72,6 +73,8 @@ export const ITEMS = [
   "error-summary",
   // feedback (027a)
   "progress",
+  // feedback (026)
+  "toast",
   // forms
   "label",
   "field",
@@ -166,6 +169,8 @@ export const ITEMS_009 = ["read-token"];
 export const ITEMS_011 = ["liquid-glass"];
 /** 027a decision 1: batch A's quiet items. */
 export const ITEMS_027A = ["button-group", "progress", "link"];
+/** 026's one item. */
+export const ITEMS_026 = ["toast"];
 /** 010 decision 1: the nine compositions, in registry order. */
 export const COMPOSITIONS = [
   "stage",
@@ -198,7 +203,8 @@ export const ITEMS_002 = ITEMS.slice(8).filter(
     !ITEMS_007.includes(name) &&
     !ITEMS_010.includes(name) &&
     !ITEMS_011.includes(name) &&
-    !ITEMS_027A.includes(name),
+    !ITEMS_027A.includes(name) &&
+    !ITEMS_026.includes(name),
 );
 /** The 7 items 003 adds. */
 export const ITEMS_003 = [
@@ -238,10 +244,17 @@ export const PAGES_010 = ITEMS_010.map(componentPath);
 export const PAGES_011 = ITEMS_011.map(componentPath);
 /** 027a's 3 item pages. */
 export const PAGES_027A = ITEMS_027A.map(componentPath);
+/** 026's item page. */
+export const PAGES_026 = ITEMS_026.map(componentPath);
 /** Every page of the site, from the one list (015 decision 1). */
 export const PAGES = SITEMAP.map((p) => p.path);
-/** The 79 component pages. */
-export const COMPONENT_PAGES = ITEMS.map(componentPath);
+/**
+ * Every component page, from the sitemap (023a's change review: a hand list
+ * missed `toast`), so a new item cannot be left out. `ITEMS` keeps 005's
+ * order for the specs that walk it; `pages-lists.test.ts` holds the two
+ * equal as sets.
+ */
+export const COMPONENT_PAGES = doorPages("components").map((p) => p.path);
 /** 002's 32 component pages. */
 export const PAGES_002 = COMPONENT_PAGES.filter(
   (p) =>
@@ -253,7 +266,8 @@ export const PAGES_002 = COMPONENT_PAGES.filter(
     !PAGES_009.includes(p) &&
     !PAGES_010.includes(p) &&
     !PAGES_011.includes(p) &&
-    !PAGES_027A.includes(p),
+    !PAGES_027A.includes(p) &&
+    !PAGES_026.includes(p),
 );
 
 /** The views (003 decision 16; 006 decision 12), each with its block and label. */

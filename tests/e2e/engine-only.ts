@@ -141,6 +141,16 @@ export const ENGINE_ONLY: EngineOnly[] = [
     reason: "forced colours: Playwright's WebKit does not emulate forcedColors",
   },
   {
+    file: "site.spec.ts",
+    title:
+      "018 criteria 12 to 14: the measure, one h3, smoothing › criterion 14: the body is antialiased on every page",
+    helper: "adaptsIn",
+    engine: "firefox",
+    // Firefox reads the moz property, and expects its value, grayscale.
+    reason:
+      "font smoothing: Firefox reads -webkit-font-smoothing as its -moz-osx-font-smoothing alias",
+  },
+  {
     file: "tokens-files.spec.ts",
     title: "021 T17: an app without Tailwind gets the colours",
     helper: "onlyProjects",

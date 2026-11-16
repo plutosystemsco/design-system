@@ -7,6 +7,7 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "../test.ts";
 import { projectLabel, scheme } from "./scheme.ts";
+import { adaptsIn } from "./engines.ts";
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { withListedItems } from "../../src/lib/site/items.ts";
 import path from "node:path";
@@ -788,15 +789,29 @@ test.describe("018 criteria 12 to 14: the measure, one h3, smoothing", () => {
     page,
   }) => {
     test.setTimeout(600_000);
+    // 022's merge (found when 023a's review put toast in the page lists):
+    // Firefox stores -webkit-font-smoothing as an alias of its own
+    // -moz-osx-font-smoothing, so Tailwind's `antialiased` (both, the moz
+    // one last) reads `grayscale` there: Firefox's form of the same thing.
+    // Where Firefox does not support the property (Linux), nothing to check.
+    const firefox = adaptsIn(
+      "firefox",
+      "font smoothing: Firefox reads -webkit-font-smoothing as its -moz-osx-font-smoothing alias",
+    );
+    const want = firefox ? "grayscale" : "antialiased";
     const wrong: string[] = [];
     for (const p of PAGES) {
       await open(page, p);
-      const v = await page.evaluate(() =>
-        getComputedStyle(document.body).getPropertyValue(
-          "-webkit-font-smoothing",
-        ),
+      const v = await page.evaluate(
+        (firefox) =>
+          firefox && !CSS.supports("-moz-osx-font-smoothing", "grayscale")
+            ? null
+            : getComputedStyle(document.body).getPropertyValue(
+                firefox ? "-moz-osx-font-smoothing" : "-webkit-font-smoothing",
+              ),
+        firefox,
       );
-      if (v !== "antialiased") wrong.push(`${p}: ${v}`);
+      if (v !== null && v !== want) wrong.push(`${p}: ${v}`);
     }
     expect(wrong).toEqual([]);
   });
