@@ -1,11 +1,21 @@
 import { describe, expect, test } from "bun:test";
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import {
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  statSync,
+  utimesSync,
+  writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import {
   dropShadowedDevDependencies,
   packageName,
+  writeSiteItems,
 } from "../../scripts/build-registry.ts";
+import { localGraph } from "../../scripts/site/thumbnail-hash.ts";
 
 /** 013 decision 5: the rule that keeps a dependency out of devDependencies. */
 describe("packageName", () => {
@@ -44,5 +54,74 @@ describe("dropShadowedDevDependencies", () => {
     } finally {
       rmSync(dir, { recursive: true, force: true });
     }
+  });
+});
+
+describe("024b: writeSiteItems", () => {
+  test("writes the listed entries with exactly name, title, description and meta.group, and leaves an unchanged file alone", async () => {
+    const root = mkdtempSync(path.join(tmpdir(), "kuiper-site-items-"));
+    try {
+      const entry = (name: string, meta: object) => ({
+        name,
+        type: "registry:ui",
+        title: `The ${name}`,
+        description: `What ${name} is.`,
+        author: "An author",
+        registryDependencies: ["utils"],
+        dependencies: ["bits-ui"],
+        files: [{ path: `src/lib/registry/ui/${name}/${name}.svelte` }],
+        meta,
+      });
+      writeFileSync(
+        path.join(root, "registry.json"),
+        JSON.stringify({
+          name: "kuiper",
+          items: [
+            entry("kept", {
+              group: "actions",
+              since: "0.1.0",
+              stock: { sha256: "0".repeat(64) },
+            }),
+            entry("alias", {
+              group: "foundation",
+              deprecated: { replacement: "kept", removedIn: "0.14.0" },
+            }),
+          ],
+        }),
+      );
+      mkdirSync(path.join(root, "src", "lib", "site"), { recursive: true });
+      const file = path.join(root, "src", "lib", "site", "listed-items.ts");
+
+      expect(await writeSiteItems(root)).toBe(true);
+      const { LISTED_ITEMS } = await import(file);
+      expect(LISTED_ITEMS).toStrictEqual([
+        {
+          name: "kept",
+          title: "The kept",
+          description: "What kept is.",
+          meta: { group: "actions" },
+        },
+      ]);
+
+      const past = new Date("2026-01-01T00:00:00Z");
+      utimesSync(file, past, past);
+      expect(await writeSiteItems(root)).toBe(false);
+      expect(statSync(file).mtimeMs).toBe(past.getTime());
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+});
+
+// 024b's change review, finding 1: a generator that imports its own output
+// cannot rebuild it once it is missing or broken (a bad merge).
+describe("024b: build:registry does not depend on what it writes", () => {
+  test("scripts/build-registry.ts's local imports never reach src/lib/site/listed-items.ts", () => {
+    const graph = localGraph(process.cwd(), "scripts/build-registry.ts");
+    expect(graph).not.toContain(
+      path.join("src", "lib", "site", "listed-items.ts"),
+    );
+    // The leaf that holds `isListed`, so the walk is seen to reach src/.
+    expect(graph).toContain(path.join("src", "lib", "site", "listed.ts"));
   });
 });

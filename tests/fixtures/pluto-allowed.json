@@ -25,7 +25,7 @@
     {
       "files": "**",
       "pattern": "Pluto Systems",
-      "count": 337,
+      "count": 338,
       "class": "brand",
       "reason": "The company's name (decision 2).",
       "byFile": {
@@ -43,6 +43,7 @@
         "src/lib/site/chrome/footer.svelte": 1,
         "src/lib/site/examples/four-dot/lockup.svelte": 2,
         "src/lib/site/examples/kuiper-theme/type.svelte": 1,
+        "src/lib/site/listed-items.ts": 1,
         "src/lib/site/sitemap.ts": 1,
         "src/lib/site/upgrade/0.13.0.ts": 1,
         "src/routes/(shell)/view/app-shell/lockup/+page.svelte": 2,

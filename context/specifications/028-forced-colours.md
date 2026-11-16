@@ -419,6 +419,10 @@ The review, [`../reviews/028-forced-colours-spec-2026-11-15.md`](../reviews/028-
 
 ## Landing notes
 
+### From `024d`'s change review (2026-11-16): code blocks under forced colours
+
+[`../reviews/024d-the-theme-page-loads-no-editor-pr-2026-11-16.md`](../reviews/024d-the-theme-page-loads-no-editor-pr-2026-11-16.md), finding 4, measured: under `forced-colors: active`, every `code-block` line's transparent marker paints as `CanvasText` (all 893 lines on the theme page, all 217 on the code-block page). A highlighted line then looks like any other, and no forced-colours test covers code blocks. The design lead adds `code-block` to this build's scope, as one more item in its per-item table though it is not interactive: under forced colours, `forced-color-adjust: none` on the line marker, `Canvas` on default lines and `Highlight` on emphasised ones, with a `forced-colors.spec.ts` case that a highlighted line differs from its neighbours. Constitution §4.4 ("every item … under forced colours") is the reason it belongs here rather than waiting.
+
 Not yet landed.
 
 ### The owner's answers (2026-11-15)

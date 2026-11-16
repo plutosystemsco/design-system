@@ -29,6 +29,7 @@ export const TEMPLATE_IDS = [
   "component",
   "component-live",
   "component-heavy",
+  "kuiper-theme",
   "leaf",
   "brand",
 ] as const;
@@ -79,15 +80,15 @@ export const MARGIN = {
  * Decision 5, split at the landing (024 landing notes, "Rulings at landing",
  * finding 1): the component pages whose **main frame** loads tree-sitter on
  * load. The template rule reads this list; `component-live`'s budget counts
- * the runtime and a grammar. `kuiper-theme` and `highlighter` are here
- * pending `024d` and `024e`, whose re-bases are falls.
+ * the runtime and a grammar. `highlighter` is here pending `024e`, whose
+ * re-base is a fall. `kuiper-theme` left at `024d`: its ink surface shows a
+ * static specimen, so the page loads no editor and no tree-sitter.
  */
 export const LIVE_HIGHLIGHT: readonly string[] = [
   "code-editor",
   "code-languages",
   "highlighter",
   "use-highlighted-code",
-  "kuiper-theme",
 ];
 
 /**
@@ -112,10 +113,24 @@ export const WASM_ALLOWED: readonly string[] = [
  */
 export const HEAVY: readonly string[] = ["chart"];
 
+/**
+ * The design lead's ruling at `024d` (024d landing notes): the theme item's
+ * page has a template of its own, as `/` and `/components/` have. Over
+ * `component`'s line at 462.1 kB, and at 1,348 ms too slow for
+ * `component-heavy`'s LCP without unguarding `chart`.
+ */
+/**
+ * Its template is named after the page, as `home` and `index` are, so a
+ * report line cannot be read as the `theme` item's (024d's review, finding 1).
+ */
+export const THEME_PAGE = componentPath("kuiper-theme");
+
 const live = new Set(LIVE_HIGHLIGHT.map(componentPath));
 const heavy = new Set(HEAVY.map(componentPath));
 const isComponent = (p: SitePage) =>
-  p.door === "components" && p.parent === "/components/";
+  p.door === "components" &&
+  p.parent === "/components/" &&
+  p.path !== THEME_PAGE;
 
 /** Decision 1's mapping, one rule per template. */
 const RULES: Record<TemplateId, (p: SitePage) => boolean> = {
@@ -126,6 +141,7 @@ const RULES: Record<TemplateId, (p: SitePage) => boolean> = {
   component: (p) => isComponent(p) && !live.has(p.path) && !heavy.has(p.path),
   "component-live": (p) => isComponent(p) && live.has(p.path),
   "component-heavy": (p) => isComponent(p) && heavy.has(p.path),
+  "kuiper-theme": (p) => p.path === THEME_PAGE,
   leaf: (p) =>
     (p.door === null && p.path !== "/") ||
     ((p.door === "start" || p.door === "foundations") &&
@@ -263,15 +279,18 @@ export const TEMPLATES: Record<TemplateId, Template> = {
     ruling: SWEEP,
   },
   "component-live": {
+    // `kuiper-theme` (760 kB, 1,352 ms, 0.004) set all three until it left
+    // at `024d`. A fall, so no ruling: the next pages of the same sweep,
+    // not a re-base. The re-base sweep after `024b` to `024e` re-measures.
     figures: {
-      transfer: { page: "/components/kuiper-theme/", median: 760 },
-      lcp: { page: "/components/kuiper-theme/", median: 1352, margin: 0.1 },
-      cls: { page: "/components/kuiper-theme/", median: 0.004 },
+      transfer: { page: "/components/code-editor/", median: 655.8 },
+      lcp: { page: "/components/highlighter/", median: 1140, margin: 0.1 },
+      cls: { page: "/components/code-editor/", median: 0.003 },
     },
     ci: null,
     probes: LIVE_HIGHLIGHT.map(componentPath),
     layouts: COMPONENT_LAYOUTS,
-    ruling: SWEEP,
+    ruling: `${SWEEP}; kuiper-theme's fall at 024d (024d landing notes)`,
   },
   "component-heavy": {
     figures: {
@@ -283,6 +302,21 @@ export const TEMPLATES: Record<TemplateId, Template> = {
     probes: ["/components/chart/"],
     layouts: COMPONENT_LAYOUTS,
     ruling: SWEEP,
+  },
+  "kuiper-theme": {
+    // One page, measured at `024d` without its editor (024d landing
+    // notes): 462.1 kB unthrottled, LCP 1,348 ms (1,348, 1,332, 1,348),
+    // CLS 0.004. Its LCP is not the editor's: it was 1,352 with it.
+    figures: {
+      transfer: { page: THEME_PAGE, median: 462.1 },
+      lcp: { page: THEME_PAGE, median: 1348, margin: 0.1 },
+      cls: { page: THEME_PAGE, median: 0.004 },
+    },
+    ci: null,
+    probes: [THEME_PAGE],
+    layouts: COMPONENT_LAYOUTS,
+    ruling:
+      "024d landing notes, the design lead's ruling of 2026-11-16 (a ninth template)",
   },
   leaf: {
     figures: {

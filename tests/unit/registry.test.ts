@@ -2170,9 +2170,11 @@ describe("020 test 4: the pluto-theme alias", () => {
 });
 
 describe("020 test 5: a deprecated item is not listed", () => {
-  test("listedItems() returns the 82 items, without pluto-theme", async () => {
-    const { listedItems } = await import("../../src/lib/site/items.ts");
-    const listed = listedItems();
+  // 024b: listedItems() with no argument reads the generated list, which
+  // build:registry has already filtered; the full registry shows the drop.
+  test("listedItems(registry.items) returns the 82 items, without pluto-theme", () => {
+    const listed = listedItems(registryRaw.items as { name: string }[]);
+    expect(registryRaw.items).toHaveLength(83);
     expect(listed).toHaveLength(82);
     expect(listed.map((i) => i.name)).not.toContain("pluto-theme");
     expect(listed.map((i) => i.name)).toContain("kuiper-theme");
