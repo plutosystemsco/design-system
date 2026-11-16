@@ -27,7 +27,7 @@
     /** The chart's data as a table, shown behind "Show as table": the keyboard and screen-reader path, and the only content a prerender holds. */
     table?: Snippet;
     /**
-     * Seeds the ids of the chart and its caption. Without it, the container
+     * Seeds the ids of the chart and its caption. Without it, the chart
      * makes one, so two charts on a page never clash.
      */
     id?: HTMLAttributes<HTMLElement>["id"];

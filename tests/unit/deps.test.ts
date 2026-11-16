@@ -136,12 +136,15 @@ describe("package.json and bun.lock", () => {
     },
   );
 
-  test("packageManager is bun@1.3.14", () => {
-    expect(pkg.packageManager).toBe("bun@1.3.14");
+  // 025's QB (the design lead, 2026-11-16, under the owner's delegation): one
+  // Bun everywhere, the release machine's, since gzip's bytes follow the Bun
+  // build. CI's setup-bun names the same version.
+  test("packageManager is bun@1.4.4", () => {
+    expect(pkg.packageManager).toBe("bun@1.4.4");
   });
 
-  test('engines is { bun: ">=1.3.14" }, with no node key', () => {
-    expect(pkg.engines).toEqual({ bun: ">=1.3.14" });
+  test('engines is { bun: "1.4.4" }, with no node key', () => {
+    expect(pkg.engines).toEqual({ bun: "1.4.4" });
     expect("node" in pkg.engines).toBe(false);
   });
 

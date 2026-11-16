@@ -96,9 +96,11 @@ Short, because the question is narrow.
 
 ## Decisions
 
-### 1. Eight templates
+### 1. Eight templates (nine from `024d`)
 
 Every page in `SITEMAP` belongs to exactly one template.
+
+_Amended at `024d`: nine templates. The ninth, `kuiper-theme`, holds `/components/kuiper-theme/` alone; see the landing notes, "After `024d`"._
 
 | Template | Pages | Mapping |
 |---|---|---|
@@ -259,7 +261,7 @@ What this gives, if the sweep confirms the estimate:
 
 Each check is written first and seen failing. The landing notes say how each failed.
 
-1. **Every page has one template.** `tests/unit/budgets.test.ts`: every `SITEMAP` page maps to exactly one of the eight; each route imports its template's layout, and `home`'s route is `(site)/+page.svelte` with none (decision 2); `HEAVY` and `LIVE_HIGHLIGHT` name only component pages in `SITEMAP`, and no page is in both. Fails today: no module. (unit)
+1. **Every page has one template.** `tests/unit/budgets.test.ts`: every `SITEMAP` page maps to exactly one of the eight (nine from `024d`); each route imports its template's layout, and `home`'s route is `(site)/+page.svelte` with none (decision 2); `HEAVY` and `LIVE_HIGHLIGHT` name only component pages in `SITEMAP`, and no page is in both. Fails today: no module. (unit)
 2. **Budgets are derived and ruled.** The same file: each template's budgets equal decision 4's arithmetic on its recorded figures; each has a non-empty `ruling`, for a rise or a fall; `component`'s transfer budget is at most 500 kB; `ci` is `null` or a figure with a CI margin of at least 20%. A hand-typed budget that disagrees with its figures fails. (unit)
 3. **Transfer, every page.** `perf.spec.ts`, `024 transfer: <template>`, one per template. Seen failing two ways. (a) Today's defect: with `component` set to Button's 380 kB, it fails and names every heavier page (INFERRED: at least six). (b) Mutations, sized from the recorded budgets. An incompressible string whose gzipped size is the largest headroom of `component`, `component-live` and `component-heavy`, plus 10 kB, added to `component.svelte`, fails all three, naming their pages. A string of that page's headroom plus 10 kB, added to one ordinary page, fails `component`, naming that page alone. The landing notes print each size. Each mutation is reverted. (e2e, perf)
 4. **Bytes and the throttle.** On every probe page, every `LIVE_HIGHLIGHT` page included, the throttled transfer median is compared with the unthrottled figure. On a page without `.wasm`, they agree within 2 kB; if they do not, the transfer sweep is throttled instead, and the landing notes give the new run time. On a live page the throttled figure may be lower, if `networkidle` fires before the grammar is asked for; the unthrottled figure is then the budget's, and the landing notes record both. (e2e, perf)
@@ -633,3 +635,13 @@ The four live-console pages, now in `component`, measure 328.4 to 332.4 kB. Ever
 `bun install --frozen-lockfile` installed `022`'s pinned packages. Then: `bun run check` 0 errors, 0 warnings (2,343 files); lint clean; `budgets.test.ts` 56 pass, `matrix.test.ts` 13, `headers.test.ts` 8, `release-check.test.ts` 13, all 0 fail. `release-check.ts` exits **1**: the fault ledger's 27 open faults, no qualifying matrix run (GitHub has no `matrix.yml` run yet), and the eight templates with no runner LCP figure. `--before-ci` exits **0** and names its three skips.
 
 The perf project once, Chromium (`E2E_PORT=5284 bun --bun playwright test --project=perf --no-deps`): **25 passed**, 6.1 minutes with the build, load 6 to 19. Heaviest pages: `/` 301.6 kB (budget 335), `/components/` 350.6 (385), `/start/` 301.5 (335), `sidebar` 405.1 (445; Button 375.2, toast 383.6), `kuiper-theme` 760.9 (840), `chart` 481.0 (530), `/changelog/` 335.5 (370), `/brand/downloads/` 300.4 (330).
+
+### After `024d` (2026-11-16)
+
+[`024d`](./024d-the-theme-page-loads-no-editor.md) replaced the theme page's live ink-surface editor with a still specimen. `/components/kuiper-theme/` measures **462.1 kB** with 0 `.wasm` (760.9 kB and 2 before; −298.8 kB). Its LCP is **1,348 ms** (1,348, 1,332, 1,348), the 1,352 it had with the editor, so the editor never set it. Its CLS is 0.004. Where each figure went (`024d`'s landing notes give the measurements and the ruling):
+
+- **The page leaves `LIVE_HIGHLIGHT` and `WASM_ALLOWED` and gets a template of its own, `kuiper-theme`** (the design lead's ruling, 2026-11-16; `024d`'s landing notes; first named `theme`, renamed at `024d`'s change review, finding 1, since `theme` is an item's name). **Decision 1 is amended: nine templates.** `kuiper-theme` is one page, as `home` and `index` are, and is named after it. Its figures are its own: 462.1 kB, 1,348 ms, 0.004. Its budgets are **510 kB, 1,490 ms, 0.02**. The page cannot sit in `component` (over 455 kB, decision 3). In `component-heavy` its LCP would have raised `chart`'s budget from 1,010 to 1,490 ms, unguarding `chart` by about 480 ms. The builder had first put it in `HEAVY` with that rise; the design lead did not confirm it.
+- **`component-live` falls, with no ruling** (decision 4). Its new heaviest page is `code-editor`, its slowest `highlighter` and its worst CLS `code-editor`, at the medians of the same build sweep: 655.8 kB, 1,140 ms and 0.003. Budgets: 840 → **725 kB**, 1,490 → **1,260 ms**, CLS 0.02 (the floor). This is not the re-base: no page was re-measured for it. The unit test that a template's figures are its own pages forced it. The re-base sweep after `024b`, `024c`, `024d` and `024e` re-measures every template.
+- **`component-heavy` is unchanged**: `chart`'s 479.9 kB, 912 ms and 0, so 530 kB, 1,010 ms and 0.02. Its probe is `chart` alone.
+- **A finding for the re-base sweep:** the theme page's LCP is its first paint, the header's lead paragraph. Its HTML is 1.43 MB raw, 87.5 kB gzipped, about 3 times `chart`'s gzipped. **The paint waits for the document's gzipped bytes through the throttled network, not for parsing** (corrected at `024d`'s change review, finding 2): parsing costs about 40 ms; the gzipped document as built (91.5 kB) ends its response at about 1,075 ms and paints at 1,308 to 1,344, and without the examples' source lines (50.3 kB) at about 505 and 1,156 to 1,176. The examples' source panels are 44% of the gzipped document, the data after `</main>` 21%, the tables 9%. The figures and the levers are in `024d`'s landing notes.
+- **`030`'s per-page cost must fit `kuiper-theme`'s headroom too:** 510 − 462.1 = **47.9 kB**, as well as `component`'s. The theme page is a component page, so the status line and the cost figure land on it.

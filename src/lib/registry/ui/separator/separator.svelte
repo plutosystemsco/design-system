@@ -11,8 +11,8 @@
     ...restProps
   }: SeparatorPrimitive.RootProps & {
     /**
-     * Kuiper's separator is decorative and hidden from assistive technology.
-     * Set it to `false` when the line divides content a reader should know
+     * Kuiper's separator is decorative, so assistive technology skips it. Set
+     * it to `false` when the line divides content a reader should know
      * about.
      */
     decorative?: SeparatorPrimitive.RootProps["decorative"];

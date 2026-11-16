@@ -108,7 +108,7 @@ function* matches(
 
 /**
  * A glob whose outer `{a,b,…}` is split into one glob per alternative.
- * 022 (build step 1): Bun 1.3.14, the version CI pins, matches no `**`
+ * 022 (build step 1): Bun 1.3.14, the version CI pinned until 025's QB, matches no `**`
  * inside braces (`{src/lib/registry/ui/**,…}`); Bun 1.4.4 does.
  */
 function braced(pattern: string): Bun.Glob {

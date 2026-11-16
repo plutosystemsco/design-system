@@ -30,7 +30,7 @@
     /** Hides the tooltip's first line, the hovered value's label. */
     hideLabel?: boolean;
     /**
-     * A config key or a fixed text for the tooltip's first line, used when
+     * A config key or a set text for the tooltip's first line, used when
      * `labelKey` is not set.
      */
     label?: string;

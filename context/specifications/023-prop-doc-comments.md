@@ -671,4 +671,23 @@ The change review ([`../reviews/023-prop-doc-comments-pr-2026-11-16.md`](../revi
 11. **Ruling: one bullet.** The 61 identical doc-comment bullets are now one bullet that names the 61 items; the two with a union clause (`toggle-group`, `accordion`) keep theirs. `updatedIn()` reads every name at a bullet's head, so every Updated fact is as before. No test counted the bullets; `component-data.test.ts`, `changelog-page.test.ts` and `toast-site.test.ts` pass.
 12. **`FieldLegend`:** confirmed inert; see ruling 2.
 
+The fixes are commit `1217f52`, "023: the review's fixes". After them: `bun run check` 0 errors; lint clean; `api-described.test.ts` 112 pass (V8's two cases added).
+
+### The merge of `release/0.13.0` (2026-11-16)
+
+`release/0.13.0` at `70336f4` (past `7e06317`: `025`, `024b`, `024d` and `023`'s change review) merged into the branch as its own commit, by the review's merge notes.
+
+- **Conflicts:** two, as the review foresaw. The scorecard: both sides' "In short" sentences joined, the total 36 kept beside `025`'s row 15, and the run log's rows kept from both sides, `025`'s and `024b`'s first. The thumbnails' manifest: taken from the release side, then `--hash-only` (no picture changed).
+- **Ledger files:** `bun install --frozen-lockfile` (no change); `build:registry`; `pluto-allowed.json` merged cleanly, and `rename.test.ts` passes with every count as it was (6 pass).
+- **`025`'s report, `bun run cost --sizes-only`: it did not match byte for byte at first.** Six items' CSS grew by 6 to 65 bytes: `separator`, `item`, `field`, `chart`, `sign-in`, `settings`, and the catalogue. **The cause: Tailwind's scanner reads every word of an installed item file, comments included, as a class candidate.** Four comment words are utilities: "hidden" (`separator`, so `item`, `field`, `sign-in` and `settings` through it), "grid" (`card`, already emitted), "container" and "fixed" (`chart`). Found with `@tailwindcss/oxide`'s `Scanner` over each changed file, base against now, and the new selectors a fresh compile emits. **Fixed in the merge commit by rewording the four:** "decorative, so assistive technology skips it"; "for many small cards side by side"; "Without it, the chart makes one"; "a set text". The scan then finds 0 new selectors in all 134 files.
+  - **The second run: every item's size equals the report's to the byte, but `chart`'s** (and the catalogue's, which holds it): JS +10 bytes, CSS +6. **That is the chart build's own variance, not the comments:** with `chart`'s files as at `506cfc1` and only `utils`' comment changed, two runs on the same input gave JS 137,413 and 137,426 bytes and CSS 5,341 and 5,345. The committed report is the second full run's; `cost --guard` says the registry matches a fresh build, and `cost.test.ts` passes (40). One runtime figure, `chart`'s, is stale by its output hash, which the release check's cost step re-measures at the tag.
+  - **A finding for the roadmap, beside `050`:** a doc comment can add CSS to an app, through Tailwind's scan of the item's source. No test holds it today; `025`'s byte-equal sizes caught it here. A check over item files' comment words, the same scan as above, belongs with `050`'s class lint.
+- **The gate on the merged tree:**
+  - `bun run check`: 0 errors, 0 warnings, 2,377 files. `bun run lint`: clean.
+  - `bun run test:unit` (120 s timeout): 1,799 pass, 2 fail, of 1,803 run. The two are timing budgets (`highlight-session.test.ts`'s streaming p95, `highlight.test.ts`'s fresh-process specimens) under load; re-run alone, both files pass (53). `cost.test.ts` 40 pass; `rename.test.ts` 6 pass.
+  - e2e, `chromium-light` and `chromium-dark`: 3,348 passed, 121 skipped, 3 failed: `bar-glass.spec.ts`'s blur measure at 1440 on three pages, in light. Re-run alone, `bar-glass.spec.ts` passes (31). `023` changes no bar.
+  - Perf (`--project=perf --no-deps`): **26 passed.** Button 364.7 kB, Dialog 332.9 kB, `sidebar` 395.3 kB, with `024b`'s cut.
+  - `release-check --before-ci`: exits 0, skipping the ledger, the matrix run, the runner's LCP and the cost run, as it should.
+- **The scorecard, re-run on the merged tree** (the run log's last row): `depth.ts`, with the marked default left out, reads Button 6 of 10 and Dialog 6 of 10; row 2 is 3. `kuiper.ts`: 100% of 1,127 rows described, 14 interface marks. `site.ts`: Button 365 kB, LCP 880 ms; rows 6, 7 and 8 hold. Rows 1 to 14 total **36**; with row 15, 38 of 60.
+
 **Faults found while writing, amended.** Three props have no effect: `FieldLegend.variant` (sets only `data-variant`), and `ToggleGroupItem`'s `size` and `variant` (the group always sets both). Each comment says so. All three go to `048` for deprecation.
