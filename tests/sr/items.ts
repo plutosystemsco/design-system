@@ -43,7 +43,8 @@ export const SR_ITEMS: Record<string, Kind[]> = {
   "sign-up": ["live", "focus"],
   settings: ["live", "focus", "overlay"],
   "page-states": ["live"],
-  "app-shell": ["focus", "overlay"],
+  // 026 D1: the shell mounts the toaster, so it brings toast's live region.
+  "app-shell": ["live", "focus", "overlay"],
   chat: ["live", "focus"],
   "product-home": ["live", "overlay"],
   // 026 decision 20 (D2, built at 022's merge): two announcers and F8.

@@ -2,12 +2,14 @@
   import type { Snippet } from "svelte";
   import { version } from "$app/env";
   import { page } from "$app/state";
+  import { afterNavigate, beforeNavigate } from "$app/navigation";
   import AppShellFooter from "#lib/registry/components/app-shell-footer.svelte";
   import AppShellHeader from "#lib/registry/components/app-shell-header.svelte";
   import AppShellSidebar from "#lib/registry/components/app-shell-sidebar.svelte";
   import AppShellSkipLink from "#lib/registry/components/app-shell-skip-link.svelte";
   import * as Breadcrumb from "#lib/registry/ui/breadcrumb";
   import * as Sidebar from "#lib/registry/ui/sidebar";
+  import { toast, Toaster } from "#lib/registry/ui/toast";
   import { ThemeScript } from "#lib/registry/ui/theme";
 
   // Your app's values. Move this file and +layout.server.ts to src/routes/,
@@ -69,6 +71,17 @@
 
   // The current page, for aria-current: the shipped links are anchors.
   const current = $derived(page.url.hash);
+
+  // Toasts: one toaster per app, here, right after the skip link. Raise
+  // them with toast() from anywhere. To meet WCAG 2.2.1, bind `timers` to a
+  // setting the person can reach before the first toast, such as "Keep
+  // notifications until I dismiss them":
+  //   <Toaster timers={keepNotifications ? "off" : "on"} />
+  // or keep every timed toast's message on the page too. These two lines
+  // hold toasts' speech for each new page's title, and close a success or
+  // info toast on the second navigation after it.
+  beforeNavigate(() => toast.navigating());
+  afterNavigate(() => toast.navigated());
 </script>
 
 <!-- The theme's head script, once, so the theme is right before paint on every page. -->
@@ -76,6 +89,7 @@
 
 {#snippet shell()}
   <AppShellSkipLink />
+  <Toaster />
   <AppShellHeader
     appName={APP_NAME}
     logo={LOGO}

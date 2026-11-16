@@ -7,7 +7,7 @@
  *
  * `hears` names the part each test judges, so the `toast-alert` mutation
  * expects exactly the tests that hear the assertive announcer (S2, S10).
- * A1, in `app-shell.sr.ts`, waits for 026's app-shell mount (D1).
+ * A1, in `app-shell.sr.ts`, hears the shell's toaster (026 D1).
  */
 import type { Page } from "@playwright/test";
 import { declared, test } from "./fixtures.ts";

@@ -68,6 +68,22 @@ describe("026: the registry entry", () => {
     expect(names.indexOf("toast")).toBe(names.indexOf("progress") + 1);
   });
 
+  // 026 D1 (decision 23): the shell mounts the toaster, so it depends on it,
+  // in the source and in both built registries.
+  test("37, app-shell's half. app-shell's registryDependencies holds toast, once, last", () => {
+    const shell = registry.items.find((i) => i.name === "app-shell")!;
+    expect(shell.registryDependencies!.at(-1)).toBe("toast");
+    expect(
+      shell.registryDependencies!.filter((d) => d === "toast"),
+    ).toHaveLength(1);
+    for (const dir of ["static/r", "static/v0.13.0/r"]) {
+      const built = JSON.parse(
+        readFileSync(`${dir}/styles/maia/app-shell.json`, "utf8"),
+      ) as { registryDependencies?: string[] };
+      expect(built.registryDependencies, dir).toContain("toast");
+    }
+  });
+
   test("the six files of decision 1, and index.ts exports decision 3's names and no others", () => {
     for (const f of SIX) expect(existsSync(path.join(DIR, f)), f).toBe(true);
     const index = readFileSync(path.join(DIR, "index.ts"), "utf8");
@@ -125,6 +141,36 @@ describe("026: the changelog", () => {
       "`phosphor-svelte`",
     ])
       expect(b, phrase).toContain(phrase);
+  });
+
+  // 026 D1: the toast bullet's two app-shell phrases, restored (deviation 2),
+  // and decision 26's app-shell bullet, after it.
+  test("38, app-shell's half. the toast bullet names app-shell twice, and one app-shell bullet marks the interface change", () => {
+    const b = bullets[0]!;
+    expect(b).toContain(
+      "Mount `<Toaster />` once, in the root layout (`app-shell` does).",
+    );
+    expect(b).toContain(
+      "call `toast.navigating()` and `toast.navigated()` from your root layout if you do not use `app-shell`.",
+    );
+    const lines = entry.split("\n");
+    const shell = lines.filter((l) =>
+      l.startsWith(
+        "- `app-shell`: **interface change.** The layout mounts `<Toaster />`",
+      ),
+    );
+    expect(shell).toHaveLength(1);
+    for (const phrase of [
+      "<Toaster />",
+      "`beforeNavigate`",
+      "`afterNavigate`",
+      "`sonner`",
+      "`timers`",
+      "`add app-shell`",
+    ])
+      expect(shell[0], phrase).toContain(phrase);
+    // In landing order: right after the toast's own bullet.
+    expect(lines.indexOf(shell[0]!)).toBe(lines.indexOf(b) + 1);
   });
 });
 
@@ -322,5 +368,64 @@ describe("026: the upgrade guide", () => {
       "`svelte-sonner`",
     ])
       expect(text, phrase).toContain(phrase);
+  });
+
+  // 026 D1: the shell's step comes first, and the summary names its users.
+  test("43, app-shell's half. the summary names app-shell, and the first step updates it", async () => {
+    const { SECTIONS } = await import("../../src/lib/site/upgrade/0.13.0.ts");
+    const section = SECTIONS.find((s) => s.spec === "026")!;
+    expect(section.summary).toContain("`app-shell`");
+    const first = section.steps[0]!;
+    expect(first.text).toStartWith("With `app-shell`: `add app-shell`.");
+    expect(first.text).toContain("`<Toaster />` after `<AppShellSkipLink />`");
+    expect(first.command).toContain("app-shell");
+  });
+});
+
+/**
+ * 026 D1 (decisions 17 and 23): the shipped layout mounts one toaster right
+ * after the skip link and wires the two navigation hooks; the site's copy
+ * behind the shell views does the same, so every view matches the block.
+ */
+describe("026 D1: the app shell mounts the toaster", () => {
+  const LAYOUT = "src/lib/registry/blocks/app-shell/+layout.svelte";
+  const PREVIEW = "src/lib/preview/app-shell-view.svelte";
+  for (const file of [LAYOUT, PREVIEW])
+    test(`${file}: the imports, the two hooks, and one <Toaster /> straight after the skip link`, () => {
+      const text = readFileSync(file, "utf8");
+      expect(text).toContain(
+        'import { afterNavigate, beforeNavigate } from "$app/navigation";',
+      );
+      expect(text).toContain(
+        'import { toast, Toaster } from "#lib/registry/ui/toast";',
+      );
+      expect(text).toContain("beforeNavigate(() => toast.navigating());");
+      expect(text).toContain("afterNavigate(() => toast.navigated());");
+      // One mount; the layout's comment also shows a bound one.
+      expect(text.split("<Toaster />")).toHaveLength(2);
+      expect(text).toMatch(/<AppShellSkipLink \/>\s*<Toaster \/>/);
+    });
+
+  test("the layout's comment names the timers setting (decision 23)", () => {
+    const text = readFileSync(LAYOUT, "utf8");
+    expect(text).toContain(
+      '<Toaster timers={keepNotifications ? "off" : "on"} />',
+    );
+    expect(text).toContain("WCAG 2.2.1");
+  });
+
+  test("only the preview copy, which never ships, hands toast to the window", () => {
+    expect(readFileSync(PREVIEW, "utf8")).toContain("kuiperToast = toast");
+    expect(readFileSync(LAYOUT, "utf8")).not.toContain("kuiperToast");
+  });
+
+  test("the toast page's navigation must is for apps without app-shell", () => {
+    const page = readFileSync(
+      "src/routes/(site)/components/toast/+page.svelte",
+      "utf8",
+    );
+    expect(page.replace(/\s+/g, " ")).toContain(
+      "<code>toast.navigated()</code> in <code>afterNavigate</code> to your root layout if you do not use <code>app-shell</code>.",
+    );
   });
 });

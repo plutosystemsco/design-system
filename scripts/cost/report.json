@@ -31,6 +31,37 @@
       },
       "noisy": false,
       "seconds": 2546
+    },
+    "2026-11-16T09:45:50.723Z": {
+      "commit": "1a116a4+dirty",
+      "full": false,
+      "machine": {
+        "model": "MacBookPro18,3 (Apple M1 Pro)",
+        "cores": 10,
+        "os": "darwin 25.5.0"
+      },
+      "tools": {
+        "bun": "1.4.4",
+        "chromium": "156.0.8078.4",
+        "playwright": "1.64.1",
+        "cli": "1.7.1",
+        "zlib": "12731092979c6d07f42da27da673a9f6c7b13586"
+      },
+      "settings": {
+        "cpu": 4,
+        "launches": 6,
+        "block": "FIFIFIF",
+        "warmups": 1,
+        "gzipLevel": 9
+      },
+      "load": { "median": 9.1, "max": 9.6 },
+      "instrument": {
+        "floorHydrateMs": 117.9,
+        "noopMs": 43.7,
+        "calibrateMs": 92.2
+      },
+      "noisy": false,
+      "seconds": 191
     }
   },
   "empty": { "js": 31383, "css": 1444 },
@@ -48,9 +79,9 @@
   "floor": {
     "js": 42840,
     "css": 7525,
-    "run": "2026-11-16T06:27:03.737Z",
-    "hydrateMs": 121.9,
-    "noopMs": 43.8,
+    "run": "2026-11-16T09:45:50.723Z",
+    "hydrateMs": 117.9,
+    "noopMs": 43.7,
     "outputHash": "67b6685c60a3cfc6a165e21ebdbabcdbfffdf61cd4008a2903e4f22b98e3ad55"
   },
   "catalogue": {
@@ -2124,56 +2155,58 @@
       "cases": {}
     },
     "app-shell": {
-      "hash": "66879aeb44e035324cb62be47f83a945dd5e770188ec97e25258c0c89ed41f4c",
-      "runtimeHash": "e187b37e5ea884244cca77722644b37c7d179f5d417396264388fa945a4452c8",
-      "outputHash": "0840679f14a05d72fa579c9f5b3fcdb5cbb3f4972d43d285f340672f651a8138",
-      "run": "2026-11-16T06:27:03.737Z",
+      "hash": "cd4680a55c3570f9ecea49d1dc836bac1ee8f11af4912935230a3749d9e0768e",
+      "runtimeHash": "0842e62d272a88549339bd99c6f279978d3237e772d26dac594bf84f33a5e138",
+      "outputHash": "bae440492e6380269fc3e67a687879221602b955f3a540f7054b71a5ec24e054",
+      "run": "2026-11-16T09:45:50.723Z",
       "size": {
-        "js": 75267,
-        "css": 5443,
-        "lazy": 253,
+        "js": 85167,
+        "css": 6013,
+        "lazy": 256,
         "assets": 0,
-        "brotli": { "js": 63546, "css": 4619 }
+        "brotli": { "js": 71403, "css": 5061 }
       },
-      "hydrate": { "ms": 71.3, "spread": [61.6, 101.4], "settledMs": null },
+      "hydrate": { "ms": 79.9, "spread": [74.5, 84.1], "settledMs": null },
       "interaction": {
         "kind": "click",
         "start": "click",
         "says": "opens",
-        "ms": 92.6,
-        "spread": [78.5, 94],
-        "ownMs": 48.8,
+        "ms": 78.6,
+        "spread": [78, 94],
+        "ownMs": 34.9,
         "pressGapMs": 0,
-        "eventTimingMs": 60
+        "eventTimingMs": 56
       },
       "route": "/app-shell",
       "breakdown": [
-        { "source": "package:bits-ui", "js": 28104 },
-        { "source": "package:phosphor-svelte", "js": 8479 },
-        { "source": "runtime", "js": 7645 },
-        { "source": "own", "js": 6329 },
-        { "source": "package:tailwind-variants", "js": 3685 },
-        { "source": "item:sidebar", "js": 3599 },
-        { "source": "package:@floating-ui/core", "js": 2592 },
-        { "source": "package:@floating-ui/dom", "js": 2433 },
-        { "source": "package:svelte-toolbelt", "js": 1895 },
-        { "source": "package:tabbable", "js": 1657 },
-        { "source": "package:runed", "js": 1287 },
-        { "source": "item:sheet", "js": 1143 },
-        { "source": "package:@floating-ui/utils", "js": 1123 },
-        { "source": "item:dropdown-menu", "js": 921 },
-        { "source": "item:breadcrumb", "js": 736 },
-        { "source": "item:tooltip", "js": 652 },
-        { "source": "item:theme", "js": 610 },
-        { "source": "item:button", "js": 495 },
-        { "source": "package:inline-style-parser", "js": 431 },
-        { "source": "item:input", "js": 308 },
-        { "source": "item:collapsible", "js": 303 },
-        { "source": "item:avatar", "js": 298 },
-        { "source": "item:spinner", "js": 183 },
-        { "source": "item:four-dot", "js": 165 },
-        { "source": "item:kbd", "js": 116 },
-        { "source": "package:style-to-object", "js": 78 }
+        { "source": "package:bits-ui", "js": 29021 },
+        { "source": "package:phosphor-svelte", "js": 11375 },
+        { "source": "runtime", "js": 7962 },
+        { "source": "own", "js": 6558 },
+        { "source": "item:toast", "js": 4612 },
+        { "source": "package:tailwind-variants", "js": 3805 },
+        { "source": "item:sidebar", "js": 3718 },
+        { "source": "package:@floating-ui/core", "js": 2677 },
+        { "source": "package:@floating-ui/dom", "js": 2512 },
+        { "source": "package:svelte-toolbelt", "js": 1957 },
+        { "source": "package:tabbable", "js": 1711 },
+        { "source": "package:runed", "js": 1329 },
+        { "source": "item:sheet", "js": 1181 },
+        { "source": "package:@floating-ui/utils", "js": 1160 },
+        { "source": "item:dropdown-menu", "js": 951 },
+        { "source": "item:breadcrumb", "js": 762 },
+        { "source": "item:tooltip", "js": 673 },
+        { "source": "item:theme", "js": 630 },
+        { "source": "item:button", "js": 511 },
+        { "source": "package:inline-style-parser", "js": 445 },
+        { "source": "item:input", "js": 318 },
+        { "source": "item:collapsible", "js": 313 },
+        { "source": "item:avatar", "js": 308 },
+        { "source": "item:spinner", "js": 189 },
+        { "source": "item:four-dot", "js": 170 },
+        { "source": "item:kbd", "js": 120 },
+        { "source": "item:status", "js": 118 },
+        { "source": "package:style-to-object", "js": 81 }
       ],
       "cases": {}
     },

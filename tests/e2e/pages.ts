@@ -288,6 +288,8 @@ export const TEST_VIEWS = [
   "/view/code-agreement/",
   // 020 tests 7 and 8: the old and new context keys; goes in 0.14.0.
   "/view/field-keys/",
+  // 026 decision 20: the shipped shell around one button that raises a toast.
+  "/view/app-shell/toast/",
 ] as const;
 
 /** 010 decision 10: each composition's views, under /view/compositions/. */

@@ -1861,7 +1861,8 @@
 			"breadcrumb",
 			"dropdown-menu",
 			"avatar",
-			"collapsible"
+			"collapsible",
+			"toast"
 		],
 		"meta": {
 			"since": "0.6.0",

@@ -1,7 +1,6 @@
 /**
- * 026 tests 44 to 73: the toast, in the browser. The shell's parts of tests
- * 44, 61 and 74 wait for `app-shell`'s edit, which lands after `023`
- * (026 decision 24; the Landing notes hold the deferred step). Time is driven
+ * 026 tests 44 to 74: the toast, in the browser. The shell's parts of tests
+ * 44, 61 and 74, and 64h, came with `app-shell`'s mount (026 D1). Time is driven
  * with Playwright's clock where a test counts it; speech is read from the
  * announcers, logged by a MutationObserver with the page's own clock.
  */
@@ -15,9 +14,9 @@ import { open, VIEW_READY } from "./pages.ts";
 const PAGE = "/components/toast/";
 const T0 = new Date("2026-11-15T10:00:00Z");
 
-const tag = (check: string) => ({
+const tag = (check: string, item = "toast") => ({
   annotation: [
-    { type: "item", description: "toast" },
+    { type: "item", description: item },
     { type: "check", description: check },
   ],
 });
@@ -124,34 +123,40 @@ const run = (page: Page, ms: number) => page.clock.runFor(ms);
 const focusedSlot = (page: Page) =>
   page.evaluate(() => document.activeElement?.getAttribute("data-slot"));
 
+/** The shipped layout, and the site's copy of it behind the other shell views (026 D1). */
+const SHELL = "/view/app-shell/";
+const SHELL_SIDEBAR = "/view/app-shell/sidebar/";
+const SHELL_TOAST = "/view/app-shell/toast/";
+
 test.describe("026: the announcers", () => {
-  test(
-    "44. both announcers are in the server HTML, empty, and no region",
-    tag("live"),
-    async ({ request }) => {
-      const html = await (await request.get(PAGE)).text();
-      const status =
-        html.match(
-          /<div[^>]*data-slot="toaster-status"[^>]*>([\s\S]*?)<\/div>/g,
-        ) ?? [];
-      const alert =
-        html.match(
-          /<div[^>]*data-slot="toaster-alert"[^>]*>([\s\S]*?)<\/div>/g,
-        ) ?? [];
-      expect(status).toHaveLength(1);
-      expect(alert).toHaveLength(1);
-      expect(status[0]).toContain('role="status"');
-      expect(alert[0]).toContain('role="alert"');
-      const text = (s: string) =>
-        s
-          .replace(/<!--[\s\S]*?-->/g, "")
-          .replace(/<[^>]+>/g, "")
-          .trim();
-      expect(text(status[0]!)).toBe("");
-      expect(text(alert[0]!)).toBe("");
-      expect(html).not.toContain('data-slot="toaster"');
-    },
-  );
+  for (const path of [PAGE, SHELL, SHELL_TOAST])
+    test(
+      `44. both announcers are in the server HTML, empty, and no region${path === PAGE ? "" : `: ${path}`}`,
+      tag("live"),
+      async ({ request }) => {
+        const html = await (await request.get(path)).text();
+        const status =
+          html.match(
+            /<div[^>]*data-slot="toaster-status"[^>]*>([\s\S]*?)<\/div>/g,
+          ) ?? [];
+        const alert =
+          html.match(
+            /<div[^>]*data-slot="toaster-alert"[^>]*>([\s\S]*?)<\/div>/g,
+          ) ?? [];
+        expect(status).toHaveLength(1);
+        expect(alert).toHaveLength(1);
+        expect(status[0]).toContain('role="status"');
+        expect(alert[0]).toContain('role="alert"');
+        const text = (s: string) =>
+          s
+            .replace(/<!--[\s\S]*?-->/g, "")
+            .replace(/<[^>]+>/g, "")
+            .trim();
+        expect(text(status[0]!)).toBe("");
+        expect(text(alert[0]!)).toBe("");
+        expect(html).not.toContain('data-slot="toaster"');
+      },
+    );
 
   test(
     "45. success speaks politely, then clears",
@@ -653,6 +658,34 @@ test.describe("026: the stack and its place", () => {
       const view = await place();
       expect(Math.abs(view.top - 16)).toBeLessThanOrEqual(1);
       expect(Math.abs(view.end - 16)).toBeLessThanOrEqual(1);
+
+      // 026 D1: under the shell's sticky header, with a sidebar; the preview
+      // copy hands the window its toast, as no button there raises one.
+      await page.goto(SHELL_SIDEBAR);
+      await page.locator(VIEW_READY).waitFor();
+      await page.waitForFunction(
+        () => "kuiperToast" in (window as unknown as object),
+      );
+      await page.evaluate(() =>
+        (
+          window as unknown as {
+            kuiperToast: { loading: (t: string) => string };
+          }
+        ).kuiperToast.loading("Uploading"),
+      );
+      await expect(toasts(page)).toHaveCount(1);
+      const bar = await place();
+      expect(Math.abs(bar.top - 88)).toBeLessThanOrEqual(1);
+      expect(Math.abs(bar.end - 16)).toBeLessThanOrEqual(1);
+
+      // The shipped layout ships no sticky bar: the corner.
+      await page.goto(SHELL_TOAST);
+      await page.locator(VIEW_READY).waitFor();
+      await page.getByRole("button", { name: "Save", exact: true }).click();
+      await expect(toasts(page)).toHaveCount(1);
+      const shipped = await place();
+      expect(Math.abs(shipped.top - 16)).toBeLessThanOrEqual(1);
+      expect(Math.abs(shipped.end - 16)).toBeLessThanOrEqual(1);
     },
   );
 
@@ -837,6 +870,36 @@ test.describe("026: a toast never covers the keyboard focus", () => {
       await expect(skip).toBeFocused();
       await page.keyboard.press("Enter");
       await expect(page.locator("#main")).toBeFocused();
+      await run(page, 48);
+      await expect(toasts(page).first()).not.toHaveAttribute("data-aside", "");
+      expect(
+        await toasts(page)
+          .first()
+          .evaluate((e) => getComputedStyle(e).visibility),
+      ).toBe("visible");
+      await expect(more(page)).toHaveCount(0);
+      await run(page, 6000 + 240);
+      await expect(toasts(page)).toHaveCount(0);
+    },
+  );
+
+  // 026 D1, the change review's D1 note: the shell's own skip link and its
+  // `main#main`, the case finding 1 fixed, in the shipped layout.
+  test(
+    "64h. in the shipped shell, after its skip link, focus on main#main: the toast stays in view and timing",
+    tag("focus"),
+    async ({ page }) => {
+      await page.setViewportSize({ width: 1440, height: 900 });
+      await clocked(page, SHELL_TOAST);
+      const save = page.getByRole("button", { name: "Save", exact: true });
+      await save.focus();
+      await page.keyboard.press("Enter");
+      await expect(toasts(page)).toHaveCount(1);
+      const skip = page.locator('[data-slot="app-shell-skip-link"]');
+      await skip.focus();
+      await expect(skip).toBeFocused();
+      await page.keyboard.press("Enter");
+      await expect(page.locator("main#main")).toBeFocused();
       await run(page, 48);
       await expect(toasts(page).first()).not.toHaveAttribute("data-aside", "");
       expect(
@@ -1370,4 +1433,42 @@ test.describe("026: navigation, promises and repeats", () => {
       ).toHaveCount(2);
     },
   );
+});
+
+// 026 decision 23 and test 74: in both shells, the skip link comes first,
+// then the toaster's two announcers, then the header, in DOM order, so Tab
+// from the skip link reaches the region (Q6a).
+test.describe("026: the app shell mounts the toaster", () => {
+  for (const path of [SHELL, SHELL_SIDEBAR, SHELL_TOAST])
+    test(
+      `74. the app shell mounts the toaster after the skip link: ${path}`,
+      tag("structure", "app-shell"),
+      async ({ page }) => {
+        await page.goto(path);
+        await page.locator(VIEW_READY).waitFor();
+        const order = await page.evaluate(() => {
+          const all = [...document.body.querySelectorAll("*")];
+          const count = (s: string) => document.querySelectorAll(s).length;
+          const at = (s: string) => all.indexOf(document.querySelector(s)!);
+          return {
+            counts: [
+              count('[data-slot="app-shell-skip-link"]'),
+              count('[data-slot="toaster-status"]'),
+              count('[data-slot="toaster-alert"]'),
+              count("header"),
+            ],
+            skip: at('[data-slot="app-shell-skip-link"]'),
+            status: at('[data-slot="toaster-status"]'),
+            alert: at('[data-slot="toaster-alert"]'),
+            header: at("header"),
+          };
+        });
+        expect(order.counts).toEqual([1, 1, 1, 1]);
+        expect(order.skip).toBeGreaterThanOrEqual(0);
+        expect(order.status).toBeGreaterThan(order.skip);
+        expect(order.alert).toBeGreaterThan(order.skip);
+        expect(order.header).toBeGreaterThan(order.status);
+        expect(order.header).toBeGreaterThan(order.alert);
+      },
+    );
 });
