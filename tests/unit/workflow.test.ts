@@ -240,6 +240,52 @@ describe("022 test 3: matrix.yml", () => {
     ]);
   });
 
+  test("022l: each reader job runs in three shards, with a deadline inside its limit", () => {
+    for (const [job, reader] of [
+      ["voiceover", "voiceover"],
+      ["nvda", "nvda"],
+    ] as const) {
+      const j = wf.jobs[job]!;
+      expect(Object.keys(j.strategy!.matrix)).toEqual(["browser", "shard"]);
+      expect(j.strategy!.matrix.shard).toEqual([1, 2, 3]);
+      expect(j["timeout-minutes"]).toBe(45);
+      const test = steps(j).find((x) => (x.run ?? "").includes("test:sr"))!;
+      expect(test.run).toContain("--shard=${{ matrix.shard }}/3");
+      expect(test.run).toContain("--global-timeout=2400000");
+      expect(test.env?.PLAYWRIGHT_BLOB_OUTPUT_NAME).toBe(
+        `report-${reader}-\${{ matrix.browser }}-\${{ matrix.shard }}.zip`,
+      );
+      const upload = steps(j).find((x) =>
+        x.uses?.startsWith("actions/upload-artifact@"),
+      )!;
+      expect(upload.with?.name).toBe(
+        `sr-${reader}-\${{ matrix.browser }}-\${{ matrix.shard }}`,
+      );
+    }
+  });
+
+  test("022l: a failed VoiceOver set-up prints the TCC rows and log; NVDA's set-up is unchanged", () => {
+    const vo = steps(wf.jobs.voiceover!);
+    const setup = vo.findIndex(
+      (x) => x.run === "bun run sr:setup --macos-record",
+    );
+    expect(setup).toBeGreaterThanOrEqual(0);
+    const tcc = vo[setup + 1]!;
+    expect(tcc.if).toBe("${{ failure() }}");
+    expect(tcc.run).toContain("TCC.db");
+    expect(tcc.run).toContain("kTCCServicePostEvent");
+    expect(tcc.run).toContain('subsystem == "com.apple.TCC"');
+    expect(runs(wf.jobs.nvda!)).toContain("bun run sr:setup");
+    expect(runs(wf.jobs.nvda!).filter((x) => x.includes("sr:setup"))).toEqual([
+      "bun run sr:setup",
+    ]);
+  });
+
+  test("022l: in CI the screen-reader suite reports to blob and list", () => {
+    const text = readFileSync("playwright.sr.config.ts", "utf8");
+    expect(text).toContain('reporter: CI ? [["blob"], ["list"]] : "list"');
+  });
+
   test("gate needs every other job and runs if: always()", () => {
     const g = wf.jobs.gate!;
     expect(g.if).toBe("${{ always() }}");
@@ -250,12 +296,14 @@ describe("022 test 3: matrix.yml", () => {
     );
   });
 
-  test("the expanded job names: 5 plain jobs, 24 browsers, 2 voiceover, 2 nvda", () => {
+  test("the expanded job names: 5 plain jobs, 24 browsers, 6 voiceover, 6 nvda (022l)", () => {
     const names = jobNames(wf);
-    expect(names).toHaveLength(33);
+    expect(names).toHaveLength(41);
     expect(names).toContain("browsers (firefox, 3)");
-    expect(names).toContain("voiceover (webkit)");
-    expect(names).toContain("nvda (firefox)");
+    expect(names).toContain("voiceover (webkit, 1)");
+    expect(names).toContain("nvda (firefox, 3)");
+    expect(names.filter((n) => n.startsWith("voiceover ("))).toHaveLength(6);
+    expect(names.filter((n) => n.startsWith("nvda ("))).toHaveLength(6);
     expect(names.filter((n) => !n.includes("("))).toEqual([
       "build",
       "checks",
