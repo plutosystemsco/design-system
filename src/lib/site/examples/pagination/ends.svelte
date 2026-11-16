@@ -2,7 +2,7 @@
   export const meta = {
     title: "The ends",
     intro:
-      "Page 1 has no Previous, and page 12 no Next: there is nothing to do there. Each end's slot keeps its width, so the pages do not move.",
+      "Page 1 has no Previous, and page 12 has no Next, since there is nothing to do there. Each end's slot keeps its width, so the pages do not move.",
   };
 </script>
 

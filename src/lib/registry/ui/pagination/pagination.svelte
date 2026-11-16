@@ -42,7 +42,7 @@
     siblings?: 0 | 1 | 2;
     /** Pages 48 px tall, or 32 px for a dense table. Both meet the 24 px target. */
     size?: "default" | "sm";
-    /** Every word it says or shows: `label` "Pagination", `previous` "Previous", `next` "Next", `page` "Page", `endSuffix` " page", `summary` `(page, pages) => "Page 5 of 12"`. */
+    /** Every word it says or shows: `label` "Pagination", `previous` "Previous", `next` "Next", `page` "Page", `endSuffix` " page", and `summary`, a function that writes "Page 5 of 12". */
     strings?: Partial<PaginationStrings>;
     /** Classes for the `nav`. In a row beside other content, give it the remaining width, such as `flex-1`. */
     class?: string;

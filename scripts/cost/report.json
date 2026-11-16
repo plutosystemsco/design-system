@@ -85,8 +85,8 @@
     "outputHash": "67b6685c60a3cfc6a165e21ebdbabcdbfffdf61cd4008a2903e4f22b98e3ad55"
   },
   "catalogue": {
-    "js": 378571,
-    "css": 16754,
+    "js": 378560,
+    "css": 16752,
     "sumOfAlone": { "js": 1125412, "css": 63971 }
   },
   "items": {
@@ -2531,7 +2531,7 @@
       "cases": {}
     },
     "pagination": {
-      "hash": "47a9fc1a4c500c3de1a4330c1983e67a50616cb75a2929cd4bedba1510c5f222",
+      "hash": "f00bfe3875a9ac98c64ec0e63d986916a00201646dc49d6a0a703b02c5628636",
       "runtimeHash": "b796e952bd311c8f695bce082694b7ea51d7df6a0663795e45d170c1ac192add",
       "outputHash": "372d12ec546ca1da1fa54f96783e169d5c73be05870399cc0eda6aac95344849",
       "run": "2026-11-16T08:18:58.434Z",
