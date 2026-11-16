@@ -1,0 +1,909 @@
+{
+  "$schema": "https://www.designtokens.org/schemas/2025.10/format.json",
+  "$description": "The Kuiper Design System's light scheme.",
+  "$extensions": {
+    "co.plutosystems.kuiper": { "scheme": "light", "colorScheme": "light" }
+  },
+  "role": {
+    "$description": "The jobs colours do. Parts read roles, never primitives. Each names one primitive in this scheme.",
+    "background": {
+      "$type": "color",
+      "$value": "{primitive.paper}",
+      "$description": "The page's ground.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--background",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "foreground": {
+      "$type": "color",
+      "$value": "{primitive.ink}",
+      "$description": "Text and icons on the page's ground.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--foreground",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "card": {
+      "$type": "color",
+      "$value": "{primitive.raised}",
+      "$description": "A card's surface, one step up from the ground.",
+      "$extensions": {
+        "co.plutosystems.kuiper": { "cssVariable": "--card", "since": "0.1.0" }
+      }
+    },
+    "card-foreground": {
+      "$type": "color",
+      "$value": "{primitive.ink}",
+      "$description": "Text on a card.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--card-foreground",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "popover": {
+      "$type": "color",
+      "$value": "{primitive.raised}",
+      "$description": "A popover's or a menu's surface.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--popover",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "popover-foreground": {
+      "$type": "color",
+      "$value": "{primitive.ink}",
+      "$description": "Text in a popover or a menu.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--popover-foreground",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "primary": {
+      "$type": "color",
+      "$value": "{primitive.blue}",
+      "$description": "The one main action: a primary button, a selected control.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--primary",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "primary-foreground": {
+      "$type": "color",
+      "$value": "{primitive.raised}",
+      "$description": "Text and icons on the primary fill.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--primary-foreground",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "secondary": {
+      "$type": "color",
+      "$value": "{primitive.raised}",
+      "$description": "A secondary button's surface.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--secondary",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "secondary-foreground": {
+      "$type": "color",
+      "$value": "{primitive.ink}",
+      "$description": "Text on a secondary button.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--secondary-foreground",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "muted": {
+      "$type": "color",
+      "$value": "{primitive.wash}",
+      "$description": "A quiet surface: a wash behind a group.",
+      "$extensions": {
+        "co.plutosystems.kuiper": { "cssVariable": "--muted", "since": "0.1.0" }
+      }
+    },
+    "muted-foreground": {
+      "$type": "color",
+      "$value": "{primitive.ink-soft}",
+      "$description": "Secondary text: hints, captions, metadata.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--muted-foreground",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "accent": {
+      "$type": "color",
+      "$value": "{primitive.wash}",
+      "$description": "A hovered or highlighted row in a list or a menu.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--accent",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "accent-foreground": {
+      "$type": "color",
+      "$value": "{primitive.ink}",
+      "$description": "Text on the accent surface.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--accent-foreground",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "destructive": {
+      "$type": "color",
+      "$value": "{primitive.red-text}",
+      "$description": "Error text and the outline of a control in error.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--destructive",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "border": {
+      "$type": "color",
+      "$value": "{primitive.line}",
+      "$description": "The hairline around cards, tables and controls.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--border",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "input": {
+      "$type": "color",
+      "$value": "{primitive.line-input}",
+      "$description": "The edge of a text field.",
+      "$extensions": {
+        "co.plutosystems.kuiper": { "cssVariable": "--input", "since": "0.1.0" }
+      }
+    },
+    "ring": {
+      "$type": "color",
+      "$value": "{primitive.blue}",
+      "$description": "The focus ring.",
+      "$extensions": {
+        "co.plutosystems.kuiper": { "cssVariable": "--ring", "since": "0.1.0" }
+      }
+    },
+    "chart-1": {
+      "$type": "color",
+      "$value": "{primitive.blue}",
+      "$description": "The first series in a chart.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--chart-1",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "chart-2": {
+      "$type": "color",
+      "$value": "{primitive.red}",
+      "$description": "The second series in a chart.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--chart-2",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "chart-3": {
+      "$type": "color",
+      "$value": "{primitive.yellow}",
+      "$description": "The third series in a chart.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--chart-3",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "chart-4": {
+      "$type": "color",
+      "$value": "{primitive.green}",
+      "$description": "The fourth series in a chart.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--chart-4",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "chart-5": {
+      "$type": "color",
+      "$value": "{primitive.ink-soft}",
+      "$description": "The fifth series in a chart, a neutral.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--chart-5",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "sidebar": {
+      "$type": "color",
+      "$value": "{primitive.paper}",
+      "$description": "The sidebar's surface.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--sidebar",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "sidebar-foreground": {
+      "$type": "color",
+      "$value": "{primitive.ink}",
+      "$description": "Text in the sidebar.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--sidebar-foreground",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "sidebar-primary": {
+      "$type": "color",
+      "$value": "{primitive.blue}",
+      "$description": "The sidebar's current item.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--sidebar-primary",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "sidebar-primary-foreground": {
+      "$type": "color",
+      "$value": "{primitive.raised}",
+      "$description": "Text on the sidebar's current item.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--sidebar-primary-foreground",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "sidebar-accent": {
+      "$type": "color",
+      "$value": "{primitive.wash}",
+      "$description": "A hovered row in the sidebar.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--sidebar-accent",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "sidebar-accent-foreground": {
+      "$type": "color",
+      "$value": "{primitive.ink}",
+      "$description": "Text on a hovered sidebar row.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--sidebar-accent-foreground",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "sidebar-border": {
+      "$type": "color",
+      "$value": "{primitive.line}",
+      "$description": "The sidebar's hairline.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--sidebar-border",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "sidebar-ring": {
+      "$type": "color",
+      "$value": "{primitive.blue}",
+      "$description": "The focus ring in the sidebar.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--sidebar-ring",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "destructive-foreground": {
+      "$type": "color",
+      "$value": "{primitive.raised}",
+      "$description": "Text on the destructive fill.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--destructive-foreground",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "destructive-fill": {
+      "$type": "color",
+      "$value": "{primitive.red}",
+      "$description": "The fill of a destructive button or badge.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--destructive-fill",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "success": {
+      "$type": "color",
+      "$value": "{primitive.green-text}",
+      "$description": "Success text.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--success",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "success-foreground": {
+      "$type": "color",
+      "$value": "{primitive.raised}",
+      "$description": "Text on the success fill.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--success-foreground",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "success-fill": {
+      "$type": "color",
+      "$value": "{primitive.green}",
+      "$description": "The fill of a success badge or status.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--success-fill",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "caution": {
+      "$type": "color",
+      "$value": "{primitive.yellow}",
+      "$description": "The fill of a caution badge or status, the brand yellow.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--caution",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "caution-foreground": {
+      "$type": "color",
+      "$value": "{primitive.ink}",
+      "$description": "Text on the caution fill.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--caution-foreground",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "caution-text": {
+      "$type": "color",
+      "$value": "{primitive.yellow-text}",
+      "$description": "Caution text, on the page's ground.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--caution-text",
+          "since": "0.12.0"
+        }
+      }
+    },
+    "raised": {
+      "$type": "color",
+      "$value": "{primitive.raised}",
+      "$description": "The most raised surface, above a card.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--raised",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "mark-1": {
+      "$type": "color",
+      "$value": "{primitive.blue}",
+      "$description": "The mark's first dot, top left: blue.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--mark-1",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "mark-2": {
+      "$type": "color",
+      "$value": "{primitive.red}",
+      "$description": "The mark's second dot, top right: red.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--mark-2",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "mark-3": {
+      "$type": "color",
+      "$value": "{primitive.yellow}",
+      "$description": "The mark's third dot, bottom left: yellow.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--mark-3",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "mark-4": {
+      "$type": "color",
+      "$value": "{primitive.green}",
+      "$description": "The mark's fourth dot, bottom right: green.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--mark-4",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "groove-line": {
+      "$type": "color",
+      "$value": "{primitive.line}",
+      "$description": "The dark half of a groove, the line between rows.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--groove-line",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "groove-light": {
+      "$type": "color",
+      "$value": "{primitive.clear}",
+      "$description": "The light half of a groove, clear in this palette.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--groove-light",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "elevation-line": {
+      "$type": "color",
+      "$value": "{primitive.line-input}",
+      "$description": "The edge of a raised surface that floats.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--elevation-line",
+          "since": "0.2.0"
+        }
+      }
+    },
+    "elevation-shadow": {
+      "$type": "color",
+      "$value": "{primitive.clear}",
+      "$description": "The shadow under a floating surface, clear in this palette.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--elevation-shadow",
+          "since": "0.2.0"
+        }
+      }
+    },
+    "scrim": {
+      "$type": "color",
+      "$value": "{primitive.ink-scrim}",
+      "$description": "The veil behind a dialog or a sheet.",
+      "$extensions": {
+        "co.plutosystems.kuiper": { "cssVariable": "--scrim", "since": "0.2.0" }
+      }
+    },
+    "syntax-violet": {
+      "$type": "color",
+      "$value": "{primitive.code-violet}",
+      "$description": "Code's violet: keywords.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--syntax-violet",
+          "since": "0.12.0"
+        }
+      }
+    },
+    "syntax-blue": {
+      "$type": "color",
+      "$value": "{primitive.code-blue}",
+      "$description": "Code's blue: functions, links and changed lines.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--syntax-blue",
+          "since": "0.12.0"
+        }
+      }
+    },
+    "syntax-navy": {
+      "$type": "color",
+      "$value": "{primitive.code-navy}",
+      "$description": "Code's navy: types.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--syntax-navy",
+          "since": "0.12.0"
+        }
+      }
+    },
+    "syntax-green": {
+      "$type": "color",
+      "$value": "{primitive.code-green}",
+      "$description": "Code's green: strings and inserted lines.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--syntax-green",
+          "since": "0.12.0"
+        }
+      }
+    },
+    "syntax-yellow": {
+      "$type": "color",
+      "$value": "{primitive.code-yellow}",
+      "$description": "Code's yellow: numbers.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--syntax-yellow",
+          "since": "0.12.0"
+        }
+      }
+    },
+    "syntax-orange": {
+      "$type": "color",
+      "$value": "{primitive.code-orange}",
+      "$description": "Code's orange: constants.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--syntax-orange",
+          "since": "0.7.0"
+        }
+      }
+    },
+    "syntax-plum": {
+      "$type": "color",
+      "$value": "{primitive.code-plum}",
+      "$description": "Code's plum: meta, such as decorators and directives.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--syntax-plum",
+          "since": "0.12.0"
+        }
+      }
+    },
+    "syntax-red": {
+      "$type": "color",
+      "$value": "{primitive.code-red}",
+      "$description": "Code's red: special tokens and deleted lines.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--syntax-red",
+          "since": "0.12.0"
+        }
+      }
+    },
+    "syntax-grey": {
+      "$type": "color",
+      "$value": "{primitive.code-grey}",
+      "$description": "Code's grey: comments.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--syntax-grey",
+          "since": "0.12.0"
+        }
+      }
+    },
+    "syntax-ink": {
+      "$type": "color",
+      "$value": "{primitive.code-ink}",
+      "$description": "Code's body text.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--syntax-ink",
+          "since": "0.12.0"
+        }
+      }
+    },
+    "syntax-ground": {
+      "$type": "color",
+      "$value": "{primitive.raised}",
+      "$description": "The ground code sits on.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--syntax-ground",
+          "since": "0.12.0"
+        }
+      }
+    },
+    "syntax-active-line": {
+      "$type": "color",
+      "$value": "{primitive.paper}",
+      "$description": "The line the cursor is on, in an editor.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--syntax-active-line",
+          "since": "0.12.0"
+        }
+      }
+    }
+  },
+  "field": {
+    "$description": "Expressive mode's four colour fields, each a fill and its legend, the one colour measured on it.",
+    "field-1": {
+      "$description": "The first field: its fill and its legend.",
+      "fill": {
+        "$type": "color",
+        "$value": "{primitive.blue}",
+        "$description": "The field's fill.",
+        "$extensions": {
+          "co.plutosystems.kuiper": {
+            "cssVariable": "--field-1",
+            "since": "0.11.0"
+          }
+        }
+      },
+      "legend": {
+        "$type": "color",
+        "$value": "{primitive.raised}",
+        "$description": "Text, links and the ring on the field.",
+        "$extensions": {
+          "co.plutosystems.kuiper": {
+            "cssVariable": "--field-1-foreground",
+            "since": "0.11.0"
+          }
+        }
+      }
+    },
+    "field-2": {
+      "$description": "The second field: its fill and its legend.",
+      "fill": {
+        "$type": "color",
+        "$value": "{primitive.red}",
+        "$description": "The field's fill.",
+        "$extensions": {
+          "co.plutosystems.kuiper": {
+            "cssVariable": "--field-2",
+            "since": "0.11.0"
+          }
+        }
+      },
+      "legend": {
+        "$type": "color",
+        "$value": "{primitive.raised}",
+        "$description": "Text, links and the ring on the field.",
+        "$extensions": {
+          "co.plutosystems.kuiper": {
+            "cssVariable": "--field-2-foreground",
+            "since": "0.11.0"
+          }
+        }
+      }
+    },
+    "field-3": {
+      "$description": "The third field: its fill and its legend.",
+      "fill": {
+        "$type": "color",
+        "$value": "{primitive.yellow}",
+        "$description": "The field's fill.",
+        "$extensions": {
+          "co.plutosystems.kuiper": {
+            "cssVariable": "--field-3",
+            "since": "0.11.0"
+          }
+        }
+      },
+      "legend": {
+        "$type": "color",
+        "$value": "{primitive.ink}",
+        "$description": "Text, links and the ring on the field.",
+        "$extensions": {
+          "co.plutosystems.kuiper": {
+            "cssVariable": "--field-3-foreground",
+            "since": "0.11.0"
+          }
+        }
+      }
+    },
+    "field-4": {
+      "$description": "The fourth field: its fill and its legend.",
+      "fill": {
+        "$type": "color",
+        "$value": "{primitive.green}",
+        "$description": "The field's fill.",
+        "$extensions": {
+          "co.plutosystems.kuiper": {
+            "cssVariable": "--field-4",
+            "since": "0.11.0"
+          }
+        }
+      },
+      "legend": {
+        "$type": "color",
+        "$value": "{primitive.raised}",
+        "$description": "Text, links and the ring on the field.",
+        "$extensions": {
+          "co.plutosystems.kuiper": {
+            "cssVariable": "--field-4-foreground",
+            "since": "0.11.0"
+          }
+        }
+      }
+    }
+  },
+  "glass": {
+    "$description": "Expressive mode's liquid glass: its frosted tint, the lit rim, the edge, the opaque fallback, the pointer's light and the shadow.",
+    "tint": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.9529, 0.9412, 0.9098],
+        "alpha": 0.8588,
+        "hex": "#F3F0E8"
+      },
+      "$description": "The frosted tint over what lies behind.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--glass-tint",
+          "since": "0.11.0"
+        }
+      }
+    },
+    "rim": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [1, 1, 1],
+        "alpha": 0.8,
+        "hex": "#FFFFFF"
+      },
+      "$description": "The inner highlight along the top edge.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--glass-rim",
+          "since": "0.11.0"
+        }
+      }
+    },
+    "edge": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.0431, 0.0588, 0.0902],
+        "alpha": 0.0784,
+        "hex": "#0B0F17"
+      },
+      "$description": "The glass's border.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--glass-edge",
+          "since": "0.11.0"
+        }
+      }
+    },
+    "fallback": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.9843, 0.9804, 0.9647],
+        "hex": "#FBFAF6"
+      },
+      "$description": "The opaque ground where blur is unsupported, under reduced transparency, and under forced colours.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--glass-fallback",
+          "since": "0.11.0"
+        }
+      }
+    },
+    "light": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [1, 1, 1],
+        "alpha": 0.549,
+        "hex": "#FFFFFF"
+      },
+      "$description": "The rim's light where the pointer is.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--glass-light",
+          "since": "0.11.0"
+        }
+      }
+    },
+    "shadow": {
+      "$description": "The glass's two shadow layers' colours: a near line under it and a far fall-off. The CSS writes them into --glass-shadow.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--glass-shadow",
+          "since": "0.11.0"
+        }
+      },
+      "near": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.0431, 0.0588, 0.0902],
+          "alpha": 0.0588,
+          "hex": "#0B0F17"
+        },
+        "$description": "The near line's colour.",
+        "$extensions": { "co.plutosystems.kuiper": { "since": "0.11.0" } }
+      },
+      "far": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.0431, 0.0588, 0.0902],
+          "alpha": 0.2784,
+          "hex": "#0B0F17"
+        },
+        "$description": "The far fall-off's colour.",
+        "$extensions": { "co.plutosystems.kuiper": { "since": "0.11.0" } }
+      }
+    }
+  },
+  "expressive-mark": {
+    "$description": "The mark's four dots on an expressive ground. In light they are the roles mark-1 to mark-4, the same primitives, and nothing reads this copy.",
+    "mark-1": {
+      "$type": "color",
+      "$value": "{primitive.blue}",
+      "$description": "The mark's first dot on an expressive ground: the same primitive as role mark-1.",
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "mark-2": {
+      "$type": "color",
+      "$value": "{primitive.red}",
+      "$description": "The mark's second dot on an expressive ground: the same primitive as role mark-2.",
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "mark-3": {
+      "$type": "color",
+      "$value": "{primitive.yellow}",
+      "$description": "The mark's third dot on an expressive ground: the same primitive as role mark-3.",
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "mark-4": {
+      "$type": "color",
+      "$value": "{primitive.green}",
+      "$description": "The mark's fourth dot on an expressive ground: the same primitive as role mark-4.",
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    }
+  }
+}

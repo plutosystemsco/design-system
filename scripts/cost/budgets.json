@@ -531,6 +531,39 @@
       "lazy": 401700,
       "assets": 2254800,
       "hydrateMs": 284
+    },
+    "link": {
+      "js": 6500,
+      "css": 1300,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 13
+    },
+    "button-group": {
+      "js": 4700,
+      "css": 2200,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 16
+    },
+    "progress": {
+      "js": 4600,
+      "css": 1200,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 16
+    },
+    "toast": {
+      "js": 22800,
+      "css": 3100,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 24,
+      "interactionMs": 139,
+      "cases": {
+        "burst": { "hydrateMs": 27, "interactionMs": 146 },
+        "progress": { "hydrateMs": 28, "interactionMs": 94 }
+      }
     }
   }
 }

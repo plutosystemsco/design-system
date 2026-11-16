@@ -1,0 +1,282 @@
+{
+  "$comment": "The tree 031 builds on, beyond tokens/kuiper.tokens.json today: 029's solid tints (decision 10, owner's Q2) and 031b's draft solid hairline and disabled roles (decisions 7 and 9; its review is still running, so these re-run if it changes them). Each primitive is a composite recomputed by compositeTenths, not typed. After 031b's review: its disabled pairs stay out of kuiper.contrast.json, with 031b's own targets (4.5:1 text, 3:1 edge), and its light hairline is provisional. So no disabled row is measured here; the roles are listed exempt in more.draft.json, and 031b's own check runs under `more` too. After the owner's answers on 031a: `sunken` is a public role (031a decisions 1 and 1a), with its allowed rows and a `restricted` block of four pairs, read here; and 031b adds a public `sunken-line` (031a Knock-ons). Lane T order: 031a, 031b, 031.",
+  "composites": {
+    "red-tint": {
+      "of": "red-text",
+      "over": "raised",
+      "alpha": 0.1,
+      "from": "029 d10"
+    },
+    "green-tint": {
+      "of": "green-text",
+      "over": "raised",
+      "alpha": 0.1,
+      "from": "029 d10"
+    },
+    "red-tint-lifted": {
+      "of": "red-lifted",
+      "over": "ink-raised",
+      "alpha": 0.2,
+      "from": "029 d10"
+    },
+    "green-tint-lifted": {
+      "of": "green-lifted",
+      "over": "ink-raised",
+      "alpha": 0.2,
+      "from": "029 d10"
+    },
+    "line": {
+      "of": "ink",
+      "over": "paper",
+      "alpha": 0.1,
+      "from": "031b d7 (draft)",
+      "replaces": true
+    },
+    "paper-line": {
+      "of": "paper",
+      "over": "ink-raised",
+      "alpha": 0.1,
+      "from": "031b d7 (draft)",
+      "replaces": true
+    },
+    "ink-half": {
+      "of": "ink",
+      "over": "paper",
+      "alpha": 0.5,
+      "from": "031b d9 (draft)"
+    },
+    "paper-half": {
+      "of": "paper",
+      "over": "ink-raised",
+      "alpha": 0.5,
+      "from": "031b d9 (draft)"
+    },
+    "line-input-half": {
+      "of": "line-input",
+      "over": "paper",
+      "alpha": 0.5,
+      "from": "031b d9 (draft)"
+    },
+    "paper-line-input-half": {
+      "of": "paper-line-input",
+      "over": "ink-raised",
+      "alpha": 0.5,
+      "from": "031b d9 (draft)"
+    },
+    "paper-sunken-line": {
+      "of": "ink",
+      "over": "paper-sunken",
+      "alpha": 0.1,
+      "from": "031b (031a Knock-ons), draft"
+    },
+    "ink-sunken-line": {
+      "of": "paper",
+      "over": "ink-sunken",
+      "alpha": 0.1,
+      "from": "031b (031a Knock-ons), draft"
+    }
+  },
+  "roles": {
+    "light": {
+      "destructive-tint": "red-tint",
+      "success-tint": "green-tint",
+      "disabled": "wash",
+      "disabled-foreground": "ink-half",
+      "disabled-edge": "line-input-half",
+      "sunken": "paper-sunken",
+      "sunken-line": "paper-sunken-line"
+    },
+    "dark": {
+      "destructive-tint": "red-tint-lifted",
+      "success-tint": "green-tint-lifted",
+      "disabled": "ink-wash",
+      "disabled-foreground": "paper-half",
+      "disabled-edge": "paper-line-input-half",
+      "sunken": "ink-sunken",
+      "sunken-line": "ink-sunken-line"
+    }
+  },
+  "text": [
+    [
+      "destructive",
+      "destructive-tint"
+    ],
+    [
+      "success",
+      "success-tint"
+    ]
+  ],
+  "primitives": {
+    "paper-sunken": "#DCD7CA",
+    "ink-sunken": "#0B0A07"
+  },
+  "contrast": {
+    "from": "031a decisions 1 and 1a, after its second re-check (S1) and the design lead's ruling: sunken's allowed rows, and a restricted block of the status text, the input edge, the status fills and the chart colours, in every context",
+    "text": [
+      [
+        "foreground",
+        "sunken"
+      ],
+      [
+        "muted-foreground",
+        "sunken"
+      ],
+      [
+        "primary",
+        "sunken"
+      ]
+    ],
+    "nonText": [
+      [
+        "ring",
+        "sunken"
+      ]
+    ],
+    "exceptions": [],
+    "restricted": [
+      {
+        "kind": "text",
+        "pair": [
+          "destructive",
+          "sunken"
+        ],
+        "themes": [
+          "light",
+          "dark"
+        ],
+        "light": "measured",
+        "dark": "by rule"
+      },
+      {
+        "kind": "text",
+        "pair": [
+          "success",
+          "sunken"
+        ],
+        "themes": [
+          "light",
+          "dark"
+        ],
+        "light": "measured",
+        "dark": "by rule"
+      },
+      {
+        "kind": "text",
+        "pair": [
+          "caution-text",
+          "sunken"
+        ],
+        "themes": [
+          "light",
+          "dark"
+        ],
+        "light": "measured",
+        "dark": "by rule"
+      },
+      {
+        "kind": "non-text",
+        "pair": [
+          "input",
+          "sunken"
+        ],
+        "themes": [
+          "light",
+          "dark"
+        ],
+        "light": "measured",
+        "dark": "by rule"
+      },
+      {
+        "kind": "non-text",
+        "pair": [
+          "destructive-fill",
+          "sunken"
+        ],
+        "themes": [
+          "light",
+          "dark"
+        ],
+        "light": "by rule (S1)",
+        "dark": "by rule (S1)"
+      },
+      {
+        "kind": "non-text",
+        "pair": [
+          "success-fill",
+          "sunken"
+        ],
+        "themes": [
+          "light",
+          "dark"
+        ],
+        "light": "by rule (S1)",
+        "dark": "by rule (S1)"
+      },
+      {
+        "kind": "non-text",
+        "pair": [
+          "chart-1",
+          "sunken"
+        ],
+        "themes": [
+          "light",
+          "dark"
+        ],
+        "light": "by rule (S1)",
+        "dark": "by rule (S1)"
+      },
+      {
+        "kind": "non-text",
+        "pair": [
+          "chart-2",
+          "sunken"
+        ],
+        "themes": [
+          "light",
+          "dark"
+        ],
+        "light": "by rule (S1)",
+        "dark": "by rule (S1)"
+      },
+      {
+        "kind": "non-text",
+        "pair": [
+          "chart-3",
+          "sunken"
+        ],
+        "themes": [
+          "light",
+          "dark"
+        ],
+        "light": "by rule (S1)",
+        "dark": "by rule (S1)"
+      },
+      {
+        "kind": "non-text",
+        "pair": [
+          "chart-4",
+          "sunken"
+        ],
+        "themes": [
+          "light",
+          "dark"
+        ],
+        "light": "by rule (S1)",
+        "dark": "by rule (S1)"
+      },
+      {
+        "kind": "non-text",
+        "pair": [
+          "chart-5",
+          "sunken"
+        ],
+        "themes": [
+          "light",
+          "dark"
+        ],
+        "light": "by rule (S1)",
+        "dark": "by rule (S1)"
+      }
+    ]
+  }
+}

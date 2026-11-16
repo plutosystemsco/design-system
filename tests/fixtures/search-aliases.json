@@ -23,5 +23,25 @@
     "alias": "pluto-theme",
     "path": "/components/kuiper-theme/",
     "title": "Kuiper theme"
+  },
+  {
+    "alias": "hyperlink",
+    "path": "/components/link/",
+    "title": "Link"
+  },
+  {
+    "alias": "anchor",
+    "path": "/components/link/",
+    "title": "Link"
+  },
+  {
+    "alias": "snackbar",
+    "path": "/components/toast/",
+    "title": "Toast"
+  },
+  {
+    "alias": "notification",
+    "path": "/components/toast/",
+    "title": "Toast"
   }
 ]

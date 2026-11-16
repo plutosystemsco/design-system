@@ -1,0 +1,9 @@
+/*
+  The site's root stylesheet (020a). It is the theme an app installs,
+  `src/app.css`, which `scripts/build-tokens.ts` generates, and the site's
+  own sources: Tailwind reads class names from code only, never from the
+  prose and exhibits in `context/` or the fixtures in `tests/`.
+*/
+@import "../app.css";
+@source not "../../context";
+@source not "../../tests";

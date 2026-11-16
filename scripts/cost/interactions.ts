@@ -322,6 +322,31 @@ export const INTERACTIONS: Record<string, Interaction> = {
     says: "sends",
     viewport: DEFAULT,
   },
+  // 026 decision 25: the toast, and its two cases.
+  toast: {
+    kind: "click",
+    start: "click",
+    target: TARGET,
+    state: `document.querySelector("[data-slot=toast]") !== null && document.querySelector("[data-slot=toaster-status]")?.textContent?.trim() === "Success: Saved."`,
+    says: "shows",
+    viewport: DEFAULT,
+  },
+  "toast.burst": {
+    kind: "click",
+    start: "click",
+    target: TARGET,
+    state: `document.querySelectorAll("[data-slot=toast]").length === 3 && !!document.querySelector("[data-slot=toaster-more]")?.textContent?.includes("97 more")`,
+    says: "shows",
+    viewport: DEFAULT,
+  },
+  "toast.progress": {
+    kind: "click",
+    start: "click",
+    target: TARGET,
+    state: `[...document.querySelectorAll("[data-slot=toast-title]")].some((e) => e.textContent?.trim() === "Uploading 200 of 200")`,
+    says: "updates",
+    viewport: DEFAULT,
+  },
 };
 
 /** An entry serialised with its keys sorted: what the runtime hash reads. */

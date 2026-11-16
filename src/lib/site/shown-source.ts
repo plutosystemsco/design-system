@@ -18,6 +18,18 @@ export type ExampleMeta = {
   live?: boolean;
 };
 
+/**
+ * 026 decision 22: a do or don't pair file, `do-<pair>.svelte` or
+ * `dont-<pair>.svelte`, beside an item's examples (the page standard's
+ * names). It is drawn in the page's Usage lists, never as an example frame.
+ */
+export const PAIR_FILE = /^(?:do|dont)-[^/]*\.svelte$/;
+
+/** True when `file`, a name or a path, is a pair file: the one test of `PAIR_FILE`. */
+export function isPairFile(file: string): boolean {
+  return PAIR_FILE.test(path.basename(file));
+}
+
 /** The `meta` an example's module script exports. */
 export function exampleMeta(text: string): ExampleMeta {
   const module =

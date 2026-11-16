@@ -734,3 +734,25 @@ The design lead's rulings, made under the owner's overnight delegation. **QA and
 3. If the run moved the instrument, `bun run cost --budget instrument`; then `bun run cost --tighten`.
 4. A second `bun run cost --full` only if step 2's run was noisy.
 5. `bun scripts/site/release-check.ts`, without `--before-ci`.
+
+### The merge with `release/0.13.0` (2026-11-16)
+
+Merged at `a6fc673` (`ba8694d` plus the context commit holding this change's review), as the review's merge notes ask.
+
+- **The four new items' cost work came with the merge.** `toast` (`026` decision 25): `fixtures/toast.svelte`, `toast.burst.svelte` and `toast.progress.svelte`, and three `interactions.ts` entries (`toast`, `toast.burst`: click, `click`, "shows"; `toast.progress`: click, `click`, "updates"). `link`, `button-group` and `progress` (`027` decision 15): one fixture each, no interaction; they join decision 9's "hydration and size only" list. `button-group`'s fixture holds three native buttons, since a fixture imports only its own item. Counts: **80 items** (5 floor, 8 blocks, 67 fixture files), **75 measured, 3 cases, 35 interaction entries**.
+- **Nothing measured before was stale from the merge:** `021` changed nothing under `static/r/styles/`. But fix 2(c) changed every runtime key, so the cached run the review proposed would have re-measured everything without being marked full. So this was **`bun run cost --full`**: run `2026-11-16T06:27:03.737Z`, 2,546 s, load median 20.7 and max 33, floor 121.9 ms (−4.8% of the committed 128), no-op 43.8 ms (+4.5%), calibration 91.8 ms, not noisy. One figure over budget before the re-measure (`collapsible` hydration, 21.2 ms against 19), none after. Sizes repeated the earlier runs' bytes. `report.json` and `budgets.json` were regenerated, never hand-merged.
+- **The first budgets,** by `bun run cost --budget link,button-group,progress,toast`. Measured (alone, gzipped) and budgeted:
+
+| Item | JS | CSS | Hydration | Response | Budget: JS, CSS, hydration, response |
+|---|---|---|---|---|---|
+| `link` | 5.5 kB | 0.2 kB | 4.9 ms | – | 6.5 kB, 1.3 kB, 13 ms, – |
+| `button-group` | 3.6 kB | 1.2 kB | 7.9 ms | – | 4.7 kB, 2.2 kB, 16 ms, – |
+| `progress` | 3.6 kB | 0.2 kB | 7.1 ms | – | 4.6 kB, 1.2 kB, 16 ms, – |
+| `toast` | 21.7 kB | 2.1 kB | 15.4 ms | shows in 111.1 ms | 22.8 kB, 3.1 kB, 24 ms, 139 ms |
+| `toast.burst` | (21.7 kB) | (2.1 kB) | 18.4 ms | shows in 116.8 ms | –, –, 27 ms, 146 ms |
+| `toast.progress` | (21.7 kB) | (2.1 kB) | 19.3 ms | updates in 74.8 ms | –, –, 28 ms, 94 ms |
+
+  A case's sizes are reported, not budgeted (decision 10). `app-shell` does not mount `toast` yet (`026` D1 waits for `023`), so no `raised` record is needed.
+- **After the merge:** the catalogue, now 66 items, costs 373.8 kB of JS over the floor, against 1,085.7 kB summed (34%). `table` at 1,000 rows hydrates in 448.8 ms. The heaviest: `chart` 142.7 kB, `code-editor` 131.4, `app-shell` 80.7, `code-languages` 67.1, `product-home` 59.6 (JS and CSS). The slowest responses: `dropdown-menu` 115.3 ms, `toast` 111.1, `sidebar` 110.7, `popover` 109.3.
+- **The thumbnails' manifest** was taken from the base and rewritten with `bun scripts/site/thumbnails.ts --hash-only` (80 items, no picture changed). `roadmap.md` §2 now lists `report.json` and `budgets.json` as ledger files.
+- **Checks on the merged tree:** `tests/unit/cost.test.ts` 40 pass; `bun run test:unit` 1,446 pass, 0 fail, of 1,448; `scripts/site/release-check.ts` exit 0, its cost step "one full, quiet run on the release machine, fresh and within budget".

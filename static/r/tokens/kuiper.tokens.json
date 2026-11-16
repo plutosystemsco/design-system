@@ -1,0 +1,1604 @@
+{
+  "$schema": "https://www.designtokens.org/schemas/2025.10/format.json",
+  "$description": "The Kuiper Design System's tokens that are the same in every scheme. The scheme files hold the roles. Read them together through kuiper.resolver.json.",
+  "primitive": {
+    "$description": "The named colours. Parts never read a primitive; a role names one.",
+    "ink": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.0431, 0.0588, 0.0902],
+        "hex": "#0B0F17"
+      },
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "ink-soft": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.3137, 0.3373, 0.3804],
+        "hex": "#505661"
+      },
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "paper": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.9529, 0.9412, 0.9098],
+        "hex": "#F3F0E8"
+      },
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "raised": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [1, 1, 1],
+        "hex": "#FFFFFF"
+      },
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "blue": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.1765, 0.2824, 0.8314],
+        "hex": "#2D48D4"
+      },
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "red": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.7882, 0.1255, 0.2078],
+        "hex": "#C92035"
+      },
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "yellow": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.8863, 0.6902, 0],
+        "hex": "#E2B000"
+      },
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "green": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0, 0.502, 0.3451],
+        "hex": "#008058"
+      },
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "red-text": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.7569, 0.1176, 0.1922],
+        "hex": "#C11E31"
+      },
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "green-text": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0, 0.451, 0.3176],
+        "hex": "#007351"
+      },
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "yellow-text": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.502, 0.3843, 0],
+        "hex": "#806200"
+      },
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "wash": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.9137, 0.898, 0.8588],
+        "hex": "#E9E5DB"
+      },
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "line": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.0431, 0.0588, 0.0902],
+        "alpha": 0.102,
+        "hex": "#0B0F17"
+      },
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "line-input": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.5216, 0.4941, 0.4392],
+        "hex": "#857E70"
+      },
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "ink-raised": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.1333, 0.1216, 0.098],
+        "hex": "#221F19"
+      },
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "ink-wash": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.1725, 0.1569, 0.1294],
+        "hex": "#2C2821"
+      },
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "paper-soft": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.6392, 0.6157, 0.5647],
+        "hex": "#A39D90"
+      },
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "paper-line": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.9529, 0.9412, 0.9098],
+        "alpha": 0.102,
+        "hex": "#F3F0E8"
+      },
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "paper-line-input": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.4784, 0.451, 0.4],
+        "hex": "#7A7366"
+      },
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "blue-lifted": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.5765, 0.6902, 1],
+        "hex": "#93B0FF"
+      },
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "red-lifted": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [1, 0.5804, 0.5686],
+        "hex": "#FF9491"
+      },
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "green-lifted": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.3765, 0.7686, 0.5961],
+        "hex": "#60C498"
+      },
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "yellow-lifted": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.9725, 0.8471, 0.4549],
+        "hex": "#F8D874"
+      },
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "clear": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0, 0, 0],
+        "alpha": 0,
+        "hex": "#000000"
+      },
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "ink-shadow": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.0431, 0.0588, 0.0902],
+        "alpha": 0.1608,
+        "hex": "#0B0F17"
+      },
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "ink-scrim": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.0431, 0.0588, 0.0902],
+        "alpha": 0.502,
+        "hex": "#0B0F17"
+      },
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "ink-scrim-deep": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.0431, 0.0588, 0.0902],
+        "alpha": 0.6,
+        "hex": "#0B0F17"
+      },
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "code-violet": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.4392, 0.1961, 0.7255],
+        "hex": "#7032B9"
+      },
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "code-violet-lifted": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.7686, 0.6431, 0.9961],
+        "hex": "#C4A4FE"
+      },
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "code-blue": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.2, 0.3137, 0.7961],
+        "hex": "#3350CB"
+      },
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "code-blue-lifted": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.5686, 0.6824, 0.9922],
+        "hex": "#91AEFD"
+      },
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "code-navy": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.1412, 0.2314, 0.4784],
+        "hex": "#243B7A"
+      },
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "code-navy-lifted": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.6588, 0.7529, 0.8471],
+        "hex": "#A8C0D8"
+      },
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "code-green": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0, 0.4431, 0.3137],
+        "hex": "#007150"
+      },
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "code-green-lifted": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.3608, 0.7843, 0.6039],
+        "hex": "#5CC89A"
+      },
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "code-yellow": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.4235, 0.3529, 0],
+        "hex": "#6C5A00"
+      },
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "code-yellow-lifted": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.898, 0.8039, 0.4471],
+        "hex": "#E5CD72"
+      },
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "code-orange": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.6392, 0.302, 0.0824],
+        "hex": "#A34D15"
+      },
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "code-orange-lifted": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [1, 0.6392, 0.451],
+        "hex": "#FFA373"
+      },
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "code-plum": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.5725, 0.1843, 0.4314],
+        "hex": "#922F6E"
+      },
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "code-plum-lifted": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.9216, 0.6078, 0.7843],
+        "hex": "#EB9BC8"
+      },
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "code-red": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.7216, 0.1098, 0.1804],
+        "hex": "#B81C2E"
+      },
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "code-red-lifted": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.9882, 0.5529, 0.5412],
+        "hex": "#FC8D8A"
+      },
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "code-grey": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.3882, 0.4118, 0.4471],
+        "hex": "#636972"
+      },
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "code-grey-lifted": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.6196, 0.6431, 0.6824],
+        "hex": "#9EA4AE"
+      },
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "code-ink": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.1451, 0.1608, 0.1843],
+        "hex": "#25292F"
+      },
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "code-ink-lifted": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.851, 0.8745, 0.9098],
+        "hex": "#D9DFE8"
+      },
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "graphite": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.0863, 0.0784, 0.0588],
+        "hex": "#16140F"
+      },
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    }
+  },
+  "radius": {
+    "$description": "The corner radius, in px. The CSS writes it in rem.",
+    "case": {
+      "$type": "dimension",
+      "$value": { "value": 8, "unit": "px" },
+      "$description": "The case radius: every corner a part draws.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--radius",
+          "since": "0.1.0"
+        }
+      }
+    }
+  },
+  "spacing": {
+    "$description": "The spacing atom and the ladder of steps built from it, in px. The CSS writes them in rem.",
+    "atom": {
+      "$type": "dimension",
+      "$value": { "value": 4, "unit": "px" },
+      "$description": "One spacing step. Every ladder step is a whole number of atoms.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--spacing",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "ladder": {
+      "$description": "The steps a layout uses, named by their count of atoms, as Tailwind's spacing classes are.",
+      "1": {
+        "$type": "dimension",
+        "$value": { "value": 4, "unit": "px" },
+        "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+      },
+      "2": {
+        "$type": "dimension",
+        "$value": { "value": 8, "unit": "px" },
+        "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+      },
+      "3": {
+        "$type": "dimension",
+        "$value": { "value": 12, "unit": "px" },
+        "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+      },
+      "4": {
+        "$type": "dimension",
+        "$value": { "value": 16, "unit": "px" },
+        "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+      },
+      "6": {
+        "$type": "dimension",
+        "$value": { "value": 24, "unit": "px" },
+        "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+      },
+      "8": {
+        "$type": "dimension",
+        "$value": { "value": 32, "unit": "px" },
+        "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+      },
+      "12": {
+        "$type": "dimension",
+        "$value": { "value": 48, "unit": "px" },
+        "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+      },
+      "16": {
+        "$type": "dimension",
+        "$value": { "value": 64, "unit": "px" },
+        "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+      },
+      "24": {
+        "$type": "dimension",
+        "$value": { "value": 96, "unit": "px" },
+        "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+      }
+    }
+  },
+  "font": {
+    "$description": "The type: the three families, the size scale and its line heights, tracking, weights and leading.",
+    "family": {
+      "$description": "The three font stacks, most preferred first. Each family's extension names the package and the registry item that load it.",
+      "sans": {
+        "$type": "fontFamily",
+        "$value": ["Geist Variable", "system-ui", "sans-serif"],
+        "$description": "The body and interface face, Geist.",
+        "$extensions": {
+          "co.plutosystems.kuiper": {
+            "package": "@fontsource-variable/geist",
+            "item": "font-geist",
+            "import": "Geist",
+            "cssVariable": "--font-sans",
+            "since": "0.1.0"
+          }
+        }
+      },
+      "heading": {
+        "$type": "fontFamily",
+        "$value": ["IBM Plex Sans Variable", "system-ui", "sans-serif"],
+        "$description": "The headings' face, IBM Plex Sans.",
+        "$extensions": {
+          "co.plutosystems.kuiper": {
+            "package": "@fontsource-variable/ibm-plex-sans",
+            "item": "font-heading-ibm-plex-sans",
+            "import": "IBM_Plex_Sans",
+            "cssVariable": "--font-heading",
+            "since": "0.1.0"
+          }
+        }
+      },
+      "mono": {
+        "$type": "fontFamily",
+        "$value": ["JetBrains Mono Variable", "ui-monospace", "monospace"],
+        "$description": "Code's face, JetBrains Mono.",
+        "$extensions": {
+          "co.plutosystems.kuiper": {
+            "package": "@fontsource-variable/jetbrains-mono",
+            "item": "font-jetbrains-mono",
+            "import": "JetBrains_Mono",
+            "selector": "code, kbd, samp, pre",
+            "cssVariable": "--font-mono",
+            "since": "0.1.0"
+          }
+        }
+      }
+    },
+    "size": {
+      "$description": "The text sizes, in px. The CSS writes them in rem, as Tailwind's text-* steps.",
+      "xs": {
+        "$type": "dimension",
+        "$value": { "value": 12, "unit": "px" },
+        "$extensions": {
+          "co.plutosystems.kuiper": {
+            "cssVariable": "--text-xs",
+            "since": "0.1.0"
+          }
+        }
+      },
+      "sm": {
+        "$type": "dimension",
+        "$value": { "value": 13.5, "unit": "px" },
+        "$extensions": {
+          "co.plutosystems.kuiper": {
+            "cssVariable": "--text-sm",
+            "since": "0.1.0"
+          }
+        }
+      },
+      "base": {
+        "$type": "dimension",
+        "$value": { "value": 16, "unit": "px" },
+        "$extensions": {
+          "co.plutosystems.kuiper": {
+            "cssVariable": "--text-base",
+            "since": "0.1.0"
+          }
+        }
+      },
+      "2xl": {
+        "$type": "dimension",
+        "$value": { "value": 28, "unit": "px" },
+        "$extensions": {
+          "co.plutosystems.kuiper": {
+            "cssVariable": "--text-2xl",
+            "since": "0.1.0"
+          }
+        }
+      },
+      "5xl": {
+        "$type": "dimension",
+        "$value": { "value": 44, "unit": "px" },
+        "$extensions": {
+          "co.plutosystems.kuiper": {
+            "cssVariable": "--text-5xl",
+            "since": "0.1.0"
+          }
+        }
+      }
+    },
+    "line-height": {
+      "$description": "Each text size's line height, a multiple of the size, named by its step.",
+      "xs": {
+        "$type": "number",
+        "$value": 1.5,
+        "$extensions": {
+          "co.plutosystems.kuiper": {
+            "cssVariable": "--text-xs--line-height",
+            "since": "0.1.0"
+          }
+        }
+      },
+      "sm": {
+        "$type": "number",
+        "$value": 1.6,
+        "$extensions": {
+          "co.plutosystems.kuiper": {
+            "cssVariable": "--text-sm--line-height",
+            "since": "0.1.0"
+          }
+        }
+      },
+      "base": {
+        "$type": "number",
+        "$value": 1.6,
+        "$extensions": {
+          "co.plutosystems.kuiper": {
+            "cssVariable": "--text-base--line-height",
+            "since": "0.1.0"
+          }
+        }
+      },
+      "2xl": {
+        "$type": "number",
+        "$value": 1.2,
+        "$extensions": {
+          "co.plutosystems.kuiper": {
+            "cssVariable": "--text-2xl--line-height",
+            "since": "0.1.0"
+          }
+        }
+      },
+      "5xl": {
+        "$type": "number",
+        "$value": 1.15,
+        "$extensions": {
+          "co.plutosystems.kuiper": {
+            "cssVariable": "--text-5xl--line-height",
+            "since": "0.1.0"
+          }
+        }
+      }
+    },
+    "tracking": {
+      "$description": "Letter spacing, in em of the text it sits in. Each is 0, the font's own spacing.",
+      "display": {
+        "$type": "number",
+        "$value": 0,
+        "$description": "The display letter spacing, in em.",
+        "$extensions": {
+          "co.plutosystems.kuiper": {
+            "unit": "em",
+            "cssVariable": "--tracking-display",
+            "since": "0.1.0"
+          }
+        }
+      },
+      "section": {
+        "$type": "number",
+        "$value": 0,
+        "$description": "The section letter spacing, in em.",
+        "$extensions": {
+          "co.plutosystems.kuiper": {
+            "unit": "em",
+            "cssVariable": "--tracking-section",
+            "since": "0.1.0"
+          }
+        }
+      },
+      "eyebrow": {
+        "$type": "number",
+        "$value": 0,
+        "$description": "The eyebrow letter spacing, in em.",
+        "$extensions": {
+          "co.plutosystems.kuiper": {
+            "unit": "em",
+            "cssVariable": "--tracking-eyebrow",
+            "since": "0.1.0"
+          }
+        }
+      },
+      "mark": {
+        "$type": "number",
+        "$value": 0,
+        "$description": "The mark letter spacing, in em.",
+        "$extensions": {
+          "co.plutosystems.kuiper": {
+            "unit": "em",
+            "cssVariable": "--tracking-mark",
+            "since": "0.1.0"
+          }
+        }
+      }
+    },
+    "weight": {
+      "$description": "The font weights the parts use.",
+      "normal": {
+        "$type": "fontWeight",
+        "$value": 400,
+        "$extensions": {
+          "co.plutosystems.kuiper": {
+            "cssVariable": "--font-weight-normal",
+            "since": "0.1.0"
+          }
+        }
+      },
+      "medium": {
+        "$type": "fontWeight",
+        "$value": 500,
+        "$extensions": {
+          "co.plutosystems.kuiper": {
+            "cssVariable": "--font-weight-medium",
+            "since": "0.1.0"
+          }
+        }
+      },
+      "bold": {
+        "$type": "fontWeight",
+        "$value": 700,
+        "$extensions": {
+          "co.plutosystems.kuiper": {
+            "cssVariable": "--font-weight-bold",
+            "since": "0.1.0"
+          }
+        }
+      }
+    },
+    "leading": {
+      "$description": "Line heights with a name, a multiple of the text size.",
+      "none": {
+        "$type": "number",
+        "$value": 1,
+        "$extensions": {
+          "co.plutosystems.kuiper": {
+            "cssVariable": "--leading-none",
+            "since": "0.1.0"
+          }
+        }
+      }
+    }
+  },
+  "motion": {
+    "$description": "The two motion budgets, in ms, the entrance's easing, and the mark's entrance as shares of its budget.",
+    "entrance": {
+      "$type": "duration",
+      "$value": { "value": 900, "unit": "ms" },
+      "$description": "The mark's entrance: the four dots docking.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--motion-entrance",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "micro": {
+      "$type": "duration",
+      "$value": { "value": 200, "unit": "ms" },
+      "$description": "A response: a fade in or out, a hover reveal.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--motion-micro",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "ease-entrance": {
+      "$type": "cubicBezier",
+      "$value": [0.2, 0.7, 0.3, 1],
+      "$description": "The entrance's and the micro budget's easing.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--ease-entrance",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "entrance-dot": {
+      "$type": "number",
+      "$value": 0.55,
+      "$description": "One dot's share of the entrance budget.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--motion-entrance-dot",
+          "since": "0.6.0"
+        }
+      }
+    },
+    "entrance-start": {
+      "$type": "number",
+      "$value": 0.15,
+      "$description": "The first dot's delay, as a share of the budget.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--motion-entrance-start",
+          "since": "0.6.0"
+        }
+      }
+    },
+    "entrance-stagger": {
+      "$type": "number",
+      "$value": 0.1,
+      "$description": "The delay between dots, as a share of the budget.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--motion-entrance-stagger",
+          "since": "0.6.0"
+        }
+      }
+    }
+  },
+  "mark": {
+    "$description": "The mark's geometry, in em of the text it sits in, and the lockup's scale.",
+    "dot": {
+      "$type": "number",
+      "$value": 0.3,
+      "$description": "A dot's diameter, in em.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "unit": "em",
+          "cssVariable": "--mark-dot",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "gap": {
+      "$type": "number",
+      "$value": 0.08,
+      "$description": "The gap between dots, in em.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "unit": "em",
+          "cssVariable": "--mark-gap",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "lockup-scale": {
+      "$type": "number",
+      "$value": 0.87,
+      "$description": "The lockup's mark, as a fraction of the word.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--mark-lockup-scale",
+          "since": "0.11.0"
+        }
+      }
+    },
+    "rise": {
+      "$type": "number",
+      "$value": 0.36,
+      "$description": "How far the mark sits above the baseline, in em.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "unit": "em",
+          "cssVariable": "--mark-rise",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "lockup-gap": {
+      "$type": "number",
+      "$value": 0.1,
+      "$description": "The gap between the lockup's mark and its word, in em.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "unit": "em",
+          "cssVariable": "--mark-lockup-gap",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "orbit": {
+      "$type": "number",
+      "$value": 0.5,
+      "$description": "How far a dot travels before it docks, in em.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "unit": "em",
+          "cssVariable": "--mark-orbit",
+          "since": "0.6.0"
+        }
+      }
+    }
+  },
+  "line": {
+    "$description": "The hairline's width, in px.",
+    "width": {
+      "$type": "dimension",
+      "$value": { "value": 1, "unit": "px" },
+      "$description": "The hairline: borders, grooves and the elevation's edge.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--line-width",
+          "since": "0.1.0"
+        }
+      }
+    }
+  },
+  "focus": {
+    "$description": "The focus ring's width and its offset from the edge, in px.",
+    "width": {
+      "$type": "dimension",
+      "$value": { "value": 2, "unit": "px" },
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--focus-width",
+          "since": "0.1.0"
+        }
+      }
+    },
+    "offset": {
+      "$type": "dimension",
+      "$value": { "value": 2, "unit": "px" },
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--focus-offset",
+          "since": "0.1.0"
+        }
+      }
+    }
+  },
+  "elevation": {
+    "$description": "A floating surface's shadow: its offset and its blur, each a step of the spacing ladder. The CSS writes them into --shadow-elevation.",
+    "y": {
+      "$type": "dimension",
+      "$value": "{spacing.ladder.3}",
+      "$description": "The shadow's offset down.",
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    },
+    "blur": {
+      "$type": "dimension",
+      "$value": "{spacing.ladder.8}",
+      "$description": "The shadow's blur.",
+      "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+    }
+  },
+  "expressive": {
+    "$description": "Expressive mode's values: the display type, its motion, its sizes, the stage's gutter and the glass's blur. Every one is on :root in both modes.",
+    "display": {
+      "$description": "Expressive mode's display type: its family and the four steps.",
+      "family": {
+        "$type": "fontFamily",
+        "$value": "{font.family.heading}",
+        "$description": "The display face: the heading family. A subtree that sets the variable again changes every display line in it.",
+        "$extensions": {
+          "co.plutosystems.kuiper": {
+            "cssVariable": "--font-face-display",
+            "since": "0.11.0"
+          }
+        }
+      },
+      "display": {
+        "$description": "The display step: a hero's headline.",
+        "size": {
+          "$description": "The step's fluid size: min and max in px, preferred in vw. The CSS writes clamp(min, preferred, max), its ends in rem.",
+          "$extensions": {
+            "co.plutosystems.kuiper": {
+              "cssVariable": "--type-display-size",
+              "since": "0.11.0"
+            }
+          },
+          "min": {
+            "$type": "dimension",
+            "$value": { "value": 48, "unit": "px" },
+            "$extensions": { "co.plutosystems.kuiper": { "since": "0.11.0" } }
+          },
+          "preferred": {
+            "$type": "number",
+            "$value": 6,
+            "$description": "The preferred size, in vw of the viewport.",
+            "$extensions": {
+              "co.plutosystems.kuiper": { "unit": "vw", "since": "0.11.0" }
+            }
+          },
+          "max": {
+            "$type": "dimension",
+            "$value": { "value": 92, "unit": "px" },
+            "$extensions": { "co.plutosystems.kuiper": { "since": "0.11.0" } }
+          }
+        },
+        "line-height": {
+          "$type": "number",
+          "$value": 0.95,
+          "$description": "The step's line height, a multiple of its size.",
+          "$extensions": {
+            "co.plutosystems.kuiper": {
+              "cssVariable": "--type-display-leading",
+              "since": "0.11.0"
+            }
+          }
+        },
+        "tracking": {
+          "$type": "number",
+          "$value": 0,
+          "$description": "The step's letter spacing, in em.",
+          "$extensions": {
+            "co.plutosystems.kuiper": {
+              "unit": "em",
+              "cssVariable": "--type-display-tracking",
+              "since": "0.11.0"
+            }
+          }
+        },
+        "weight": {
+          "$type": "fontWeight",
+          "$value": 600,
+          "$description": "The step's weight, written into its type-* utility.",
+          "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+        }
+      },
+      "section": {
+        "$description": "The section step: a section's headline on a stage.",
+        "size": {
+          "$description": "The step's fluid size: min and max in px, preferred in vw. The CSS writes clamp(min, preferred, max), its ends in rem.",
+          "$extensions": {
+            "co.plutosystems.kuiper": {
+              "cssVariable": "--type-section-size",
+              "since": "0.11.0"
+            }
+          },
+          "min": {
+            "$type": "dimension",
+            "$value": { "value": 36, "unit": "px" },
+            "$extensions": { "co.plutosystems.kuiper": { "since": "0.11.0" } }
+          },
+          "preferred": {
+            "$type": "number",
+            "$value": 4,
+            "$description": "The preferred size, in vw of the viewport.",
+            "$extensions": {
+              "co.plutosystems.kuiper": { "unit": "vw", "since": "0.11.0" }
+            }
+          },
+          "max": {
+            "$type": "dimension",
+            "$value": { "value": 56, "unit": "px" },
+            "$extensions": { "co.plutosystems.kuiper": { "since": "0.11.0" } }
+          }
+        },
+        "line-height": {
+          "$type": "number",
+          "$value": 1.05,
+          "$description": "The step's line height, a multiple of its size.",
+          "$extensions": {
+            "co.plutosystems.kuiper": {
+              "cssVariable": "--type-section-leading",
+              "since": "0.11.0"
+            }
+          }
+        },
+        "tracking": {
+          "$type": "number",
+          "$value": 0,
+          "$description": "The step's letter spacing, in em.",
+          "$extensions": {
+            "co.plutosystems.kuiper": {
+              "unit": "em",
+              "cssVariable": "--type-section-tracking",
+              "since": "0.11.0"
+            }
+          }
+        },
+        "weight": {
+          "$type": "fontWeight",
+          "$value": 600,
+          "$description": "The step's weight, written into its type-* utility.",
+          "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+        }
+      },
+      "proof": {
+        "$description": "The proof step: a large figure, set in tabular numbers.",
+        "$extensions": { "co.plutosystems.kuiper": { "tabular": true } },
+        "size": {
+          "$description": "The step's fluid size: min and max in px, preferred in vw. The CSS writes clamp(min, preferred, max), its ends in rem.",
+          "$extensions": {
+            "co.plutosystems.kuiper": {
+              "cssVariable": "--type-proof-size",
+              "since": "0.11.0"
+            }
+          },
+          "min": {
+            "$type": "dimension",
+            "$value": { "value": 56, "unit": "px" },
+            "$extensions": { "co.plutosystems.kuiper": { "since": "0.11.0" } }
+          },
+          "preferred": {
+            "$type": "number",
+            "$value": 6,
+            "$description": "The preferred size, in vw of the viewport.",
+            "$extensions": {
+              "co.plutosystems.kuiper": { "unit": "vw", "since": "0.11.0" }
+            }
+          },
+          "max": {
+            "$type": "dimension",
+            "$value": { "value": 96, "unit": "px" },
+            "$extensions": { "co.plutosystems.kuiper": { "since": "0.11.0" } }
+          }
+        },
+        "line-height": {
+          "$type": "number",
+          "$value": 1,
+          "$description": "The step's line height, a multiple of its size.",
+          "$extensions": {
+            "co.plutosystems.kuiper": {
+              "cssVariable": "--type-proof-leading",
+              "since": "0.11.0"
+            }
+          }
+        },
+        "tracking": {
+          "$type": "number",
+          "$value": 0,
+          "$description": "The step's letter spacing, in em.",
+          "$extensions": {
+            "co.plutosystems.kuiper": {
+              "unit": "em",
+              "cssVariable": "--type-proof-tracking",
+              "since": "0.11.0"
+            }
+          }
+        },
+        "weight": {
+          "$type": "fontWeight",
+          "$value": 600,
+          "$description": "The step's weight, written into its type-* utility.",
+          "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+        }
+      },
+      "poster": {
+        "$description": "The poster step, for launches only.",
+        "size": {
+          "$description": "The step's fluid size: min and max in px, preferred in vw. The CSS writes clamp(min, preferred, max), its ends in rem.",
+          "$extensions": {
+            "co.plutosystems.kuiper": {
+              "cssVariable": "--type-poster-size",
+              "since": "0.11.0"
+            }
+          },
+          "min": {
+            "$type": "dimension",
+            "$value": { "value": 56, "unit": "px" },
+            "$extensions": { "co.plutosystems.kuiper": { "since": "0.11.0" } }
+          },
+          "preferred": {
+            "$type": "number",
+            "$value": 12,
+            "$description": "The preferred size, in vw of the viewport.",
+            "$extensions": {
+              "co.plutosystems.kuiper": { "unit": "vw", "since": "0.11.0" }
+            }
+          },
+          "max": {
+            "$type": "dimension",
+            "$value": { "value": 160, "unit": "px" },
+            "$extensions": { "co.plutosystems.kuiper": { "since": "0.11.0" } }
+          }
+        },
+        "line-height": {
+          "$type": "number",
+          "$value": 0.9,
+          "$description": "The step's line height, a multiple of its size.",
+          "$extensions": {
+            "co.plutosystems.kuiper": {
+              "cssVariable": "--type-poster-leading",
+              "since": "0.11.0"
+            }
+          }
+        },
+        "tracking": {
+          "$type": "number",
+          "$value": 0,
+          "$description": "The step's letter spacing, in em.",
+          "$extensions": {
+            "co.plutosystems.kuiper": {
+              "unit": "em",
+              "cssVariable": "--type-poster-tracking",
+              "since": "0.11.0"
+            }
+          }
+        },
+        "weight": {
+          "$type": "fontWeight",
+          "$value": 600,
+          "$description": "The step's weight, written into its type-* utility.",
+          "$extensions": { "co.plutosystems.kuiper": { "since": "0.13.0" } }
+        }
+      }
+    },
+    "motion": {
+      "$description": "Expressive mode's durations, in ms, its standard easing, the press's scale and the spring the mark's dots dock on.",
+      "press": {
+        "$type": "duration",
+        "$value": { "value": 160, "unit": "ms" },
+        "$description": "An action's press.",
+        "$extensions": {
+          "co.plutosystems.kuiper": {
+            "cssVariable": "--motion-press",
+            "since": "0.11.0"
+          }
+        }
+      },
+      "slide": {
+        "$type": "duration",
+        "$value": { "value": 220, "unit": "ms" },
+        "$description": "A slide into place.",
+        "$extensions": {
+          "co.plutosystems.kuiper": {
+            "cssVariable": "--motion-slide",
+            "since": "0.11.0"
+          }
+        }
+      },
+      "busy": {
+        "$type": "duration",
+        "$value": { "value": 400, "unit": "ms" },
+        "$description": "A card's busy edge.",
+        "$extensions": {
+          "co.plutosystems.kuiper": {
+            "cssVariable": "--motion-busy",
+            "since": "0.11.0"
+          }
+        }
+      },
+      "reveal": {
+        "$type": "duration",
+        "$value": { "value": 600, "unit": "ms" },
+        "$description": "A reveal, such as the glass's lit rim.",
+        "$extensions": {
+          "co.plutosystems.kuiper": {
+            "cssVariable": "--motion-reveal",
+            "since": "0.11.0"
+          }
+        }
+      },
+      "fill": {
+        "$type": "duration",
+        "$value": { "value": 700, "unit": "ms" },
+        "$description": "A fill: a meter or a progress bar.",
+        "$extensions": {
+          "co.plutosystems.kuiper": {
+            "cssVariable": "--motion-fill",
+            "since": "0.11.0"
+          }
+        }
+      },
+      "ease-standard": {
+        "$type": "cubicBezier",
+        "$value": [0.2, 0.7, 0.2, 1],
+        "$description": "Expressive mode's standard easing.",
+        "$extensions": {
+          "co.plutosystems.kuiper": {
+            "cssVariable": "--ease-standard",
+            "since": "0.11.0"
+          }
+        }
+      },
+      "press-scale": {
+        "$type": "number",
+        "$value": 0.98,
+        "$description": "How far an action shrinks under the finger, a scale of 1 or less.",
+        "$extensions": {
+          "co.plutosystems.kuiper": {
+            "cssVariable": "--press-scale",
+            "since": "0.11.0"
+          }
+        }
+      },
+      "spring": {
+        "$description": "The damped spring the mark's dots dock on: its damping ratio, how close it settles, and how many samples draw it. The CSS writes it as a linear() easing.",
+        "$extensions": {
+          "co.plutosystems.kuiper": {
+            "cssVariable": "--ease-spring",
+            "since": "0.11.0"
+          }
+        },
+        "damping-ratio": {
+          "$type": "number",
+          "$value": 0.65,
+          "$description": "The damping ratio, below 1: the spring overshoots once.",
+          "$extensions": { "co.plutosystems.kuiper": { "since": "0.11.0" } }
+        },
+        "settle": {
+          "$type": "number",
+          "$value": 0.002,
+          "$description": "The fraction within which the spring has settled.",
+          "$extensions": { "co.plutosystems.kuiper": { "since": "0.11.0" } }
+        },
+        "samples": {
+          "$type": "number",
+          "$value": 32,
+          "$description": "The number of samples in the linear() easing.",
+          "$extensions": { "co.plutosystems.kuiper": { "since": "0.11.0" } }
+        }
+      },
+      "light": {
+        "$type": "duration",
+        "$value": { "value": 600, "unit": "ms" },
+        "$description": "How long the glass's rim stays lit after the pointer stops.",
+        "$extensions": {
+          "co.plutosystems.kuiper": {
+            "cssVariable": "--motion-light",
+            "since": "0.11.0"
+          }
+        }
+      }
+    },
+    "size": {
+      "$description": "Expressive mode's sizes, in px: the sticky bar, the two actions and a track. The CSS writes them in rem.",
+      "bar": {
+        "$type": "dimension",
+        "$value": { "value": 72, "unit": "px" },
+        "$description": "The sticky bar's height.",
+        "$extensions": {
+          "co.plutosystems.kuiper": {
+            "cssVariable": "--size-bar",
+            "since": "0.11.0"
+          }
+        }
+      },
+      "action": {
+        "$type": "dimension",
+        "$value": { "value": 52, "unit": "px" },
+        "$description": "An action's height.",
+        "$extensions": {
+          "co.plutosystems.kuiper": {
+            "cssVariable": "--size-action",
+            "since": "0.11.0"
+          }
+        }
+      },
+      "action-small": {
+        "$type": "dimension",
+        "$value": { "value": 38, "unit": "px" },
+        "$description": "A small action's height.",
+        "$extensions": {
+          "co.plutosystems.kuiper": {
+            "cssVariable": "--size-action-small",
+            "since": "0.11.0"
+          }
+        }
+      },
+      "track": {
+        "$type": "dimension",
+        "$value": { "value": 6, "unit": "px" },
+        "$description": "A track's thickness: a meter or a progress bar.",
+        "$extensions": {
+          "co.plutosystems.kuiper": {
+            "cssVariable": "--size-track",
+            "since": "0.11.0"
+          }
+        }
+      }
+    },
+    "gutter": {
+      "$description": "The stage's side gutter: min and max in px, preferred in vw. The CSS writes clamp(min, preferred, max), its ends in rem.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--gutter-stage",
+          "since": "0.11.0"
+        }
+      },
+      "min": {
+        "$type": "dimension",
+        "$value": { "value": 16, "unit": "px" },
+        "$extensions": { "co.plutosystems.kuiper": { "since": "0.11.0" } }
+      },
+      "preferred": {
+        "$type": "number",
+        "$value": 4,
+        "$description": "The preferred size, in vw of the viewport.",
+        "$extensions": {
+          "co.plutosystems.kuiper": { "unit": "vw", "since": "0.11.0" }
+        }
+      },
+      "max": {
+        "$type": "dimension",
+        "$value": { "value": 56, "unit": "px" },
+        "$extensions": { "co.plutosystems.kuiper": { "since": "0.11.0" } }
+      }
+    },
+    "glass-blur": {
+      "$type": "dimension",
+      "$value": { "value": 16, "unit": "px" },
+      "$description": "The glass's frost, the same in both schemes.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--glass-blur",
+          "since": "0.11.0"
+        }
+      }
+    }
+  },
+  "code": {
+    "$description": "Code's highlight slots. Each names a role, so the scheme switch carries through.",
+    "text": {
+      "$type": "color",
+      "$value": "{role.syntax-ink}",
+      "$description": "Everything no other role names: identifiers, punctuation.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--code-text",
+          "since": "0.12.0"
+        }
+      }
+    },
+    "comment": {
+      "$type": "color",
+      "$value": "{role.syntax-grey}",
+      "$description": "Comments.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--code-comment",
+          "since": "0.4.0"
+        }
+      }
+    },
+    "keyword": {
+      "$type": "color",
+      "$value": "{role.syntax-violet}",
+      "$description": "Keywords: `if`, `return`, `import`.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--code-keyword",
+          "since": "0.4.0"
+        }
+      }
+    },
+    "function": {
+      "$type": "color",
+      "$value": "{role.syntax-blue}",
+      "$description": "Function and method names, where they are called or defined.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--code-function",
+          "since": "0.4.0"
+        }
+      }
+    },
+    "type": {
+      "$type": "color",
+      "$value": "{role.syntax-navy}",
+      "$description": "Type names and classes.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--code-type",
+          "since": "0.7.0"
+        }
+      }
+    },
+    "string": {
+      "$type": "color",
+      "$value": "{role.syntax-green}",
+      "$description": "Strings, and docstrings.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--code-string",
+          "since": "0.4.0"
+        }
+      }
+    },
+    "number": {
+      "$type": "color",
+      "$value": "{role.syntax-yellow}",
+      "$description": "Numbers.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--code-number",
+          "since": "0.7.0"
+        }
+      }
+    },
+    "constant": {
+      "$type": "color",
+      "$value": "{role.syntax-orange}",
+      "$description": "Constants and built-in values: `true`, `null`.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--code-constant",
+          "since": "0.4.0"
+        }
+      }
+    },
+    "meta": {
+      "$type": "color",
+      "$value": "{role.syntax-plum}",
+      "$description": "Meta: doctypes, attributes, decorators, directives.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--code-meta",
+          "since": "0.12.0"
+        }
+      }
+    },
+    "special": {
+      "$type": "color",
+      "$value": "{role.syntax-red}",
+      "$description": "Special tokens: escapes, regular expressions, substitutions.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--code-special",
+          "since": "0.12.0"
+        }
+      }
+    },
+    "link": {
+      "$type": "color",
+      "$value": "{role.syntax-blue}",
+      "$description": "Links, underlined: the one style in the palette.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--code-link",
+          "since": "0.4.0"
+        }
+      }
+    },
+    "inserted": {
+      "$type": "color",
+      "$value": "{role.syntax-green}",
+      "$description": "A diff's inserted lines.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--code-inserted",
+          "since": "0.4.0"
+        }
+      }
+    },
+    "deleted": {
+      "$type": "color",
+      "$value": "{role.syntax-red}",
+      "$description": "A diff's deleted lines.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--code-deleted",
+          "since": "0.4.0"
+        }
+      }
+    },
+    "changed": {
+      "$type": "color",
+      "$value": "{role.syntax-blue}",
+      "$description": "A diff's changed lines.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--code-changed",
+          "since": "0.4.0"
+        }
+      }
+    },
+    "background": {
+      "$type": "color",
+      "$value": "{role.syntax-ground}",
+      "$description": "The code ground.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--code-background",
+          "since": "0.4.0"
+        }
+      }
+    },
+    "active-line": {
+      "$type": "color",
+      "$value": "{role.syntax-active-line}",
+      "$description": "The cursor's line in an editor.",
+      "$extensions": {
+        "co.plutosystems.kuiper": {
+          "cssVariable": "--code-active-line",
+          "since": "0.4.0"
+        }
+      }
+    }
+  }
+}

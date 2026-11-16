@@ -1,29 +1,43 @@
 /**
- * `bun run build:tokens`: turns the token file into
+ * `bun run build:tokens`: turns the token files into
  *   (a) the token-owned fields of four items in `registry.json`
- *       (`kuiper-theme`'s `cssVars` and `css`, and each font item's `font`), and
- *   (b) `src/app.css`, the stylesheet an app holds after `add kuiper-theme`.
- * Both are formatted through prettier's API before they are written, and each
+ *       (`kuiper-theme`'s `cssVars` and `css`, and each font item's `font`),
+ *   (b) `src/app.css`, the stylesheet an app holds after `add kuiper-theme`, and
+ *   (c) the published token files (021 decision 13): `kuiper.css`, the DTCG
+ *       source, each scheme flattened, and the record of removed names, in
+ *       `static/r/tokens/` and `static/v<version>/r/tokens/`.
+ * Each is formatted through prettier's API before it is written, and each
  * is written only when its formatted content changes (001 decision 15).
  */
-import { readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import * as prettier from "prettier";
 import {
   FIELDS,
-  readTokens,
+  flattenScheme,
+  lowerTokens,
+  readTokenFiles,
+  REMOVED_FILE,
+  RESOLVER_FILE,
   resolveColor,
   resolveExpressive,
   THEMES,
-  TOKENS_PATH,
+  TOKENS_DIR,
   type Family,
   type Fluid,
   type Theme,
+  type TokenFiles,
   type Tokens,
 } from "./tokens.ts";
 
 export const REGISTRY_PATH = "registry.json";
 export const APP_CSS_PATH = "src/app.css";
+/** 021 decision 13: the current release's folder; the release's own is `static/v<version>/r/tokens`. */
+export const PUBLISHED_DIR = "static/r/tokens";
+export const publishedDirs = (version: string) => [
+  PUBLISHED_DIR,
+  `static/v${version}/r/tokens`,
+];
 
 type CssTree = { [key: string]: string | CssTree };
 type Vars = Record<string, string>;
@@ -38,18 +52,6 @@ type FontObject = {
 };
 
 const RADIUS_STEPS = ["xs", "sm", "md", "lg", "xl", "2xl", "3xl", "4xl"];
-
-/**
- * 011 decision 3: the primitives the mark's four dots take on a dark
- * expressive ground, in the mark's order. The dark theme's product screens
- * keep paper (008).
- */
-const EXPRESSIVE_DARK_MARKS = [
-  "blue-lifted",
-  "red-lifted",
-  "yellow-lifted",
-  "green-lifted",
-] as const;
 
 /**
  * 011 decision 10: the step response of a damped spring as a `linear()`
@@ -469,9 +471,10 @@ export function themeCss(tokens: Tokens): CssTree {
     // 011 decision 3: in the dark theme an expressive subtree shows the four
     // colours as the lifted four; after it, a productive island goes back to
     // the dark theme's paper. Plain rules at (0,2,0): they beat the `.dark`
-    // block on the element that carries both.
+    // block on the element that carries both. 021 decision 6: the four are
+    // the dark scheme's `expressive-mark` tokens.
     '.dark [data-mode="expressive"], [data-mode="expressive"].dark': marks(
-      EXPRESSIVE_DARK_MARKS.map((name) => tokens.primitives[name]),
+      tokens.expressiveDarkMarks.map((name) => tokens.primitives[name]),
     ),
     '.dark [data-mode="productive"], [data-mode="productive"].dark':
       marks(darkMark),
@@ -832,21 +835,168 @@ async function format(text: string, file: string): Promise<string> {
   return prettier.format(text, { ...config, filepath: file });
 }
 
-/** Both outputs, formatted by prettier, without writing anything. */
+/**
+ * 021 decision 11: `kuiper.css`, the tokens as plain custom properties for
+ * any stack. `:root` holds the theme's own `:root`, then the token-made
+ * values the theme keeps in `@theme inline`; `.dark` the theme's `.dark`,
+ * then `--shadow-elevation` again; then the reduced-motion durations. No
+ * rule, utility or Tailwind variable: those stay in the theme item.
+ */
+export function kuiperCss(
+  tokens: Tokens,
+  version: string,
+  source: string,
+): string {
+  const vars = themeCssVars(tokens);
+  const css = themeCss(tokens);
+  const { "color-scheme": lightScheme, ...rootRules } = css[":root"] as CssTree;
+  const { "color-scheme": darkScheme, ...darkRules } = css[".dark"] as CssTree;
+  const reduced = (css["@media (prefers-reduced-motion: reduce)"] as CssTree)[
+    "html:root"
+  ] as CssTree;
+  // The token-made values of `@theme inline`; its radius steps, colours,
+  // animations and transition default are Tailwind's.
+  const made: Vars = {};
+  for (const [name, value] of Object.entries(vars.theme))
+    if (
+      /^(spacing$|text-|tracking-|font-weight-|leading-|ease-entrance$|shadow-elevation$)/.test(
+        name,
+      )
+    )
+      made[name] = value;
+  const families = Object.values(tokens.type.families);
+  for (const family of families)
+    made[family.variable.replace(/^--/, "")] = family.family;
+  const packages = families.map((f) => f.package).join(", ");
+  const lines = [
+    "/*",
+    ` * Kuiper Design System ${version}: the tokens as plain CSS custom properties,`,
+    " * for any stack. Copy this file into your app; never link to it at run time.",
+    ` * Generated by scripts/build-tokens.ts from tokens/${RESOLVER_FILE}. Do not edit.`,
+    ` * Source: ${source}`,
+    " * With Tailwind and the shadcn-svelte CLI, add the kuiper-theme item instead:",
+    " * it holds these values and the theme's rules.",
+    " * The dark scheme is the dark class, on the root or on any subtree.",
+    ` * It loads no font: the theme item loads ${packages}.`,
+    " */",
+    ":root {",
+    ...declarationsOf(vars.light),
+    ...printTree(rootRules, ""),
+    ...declarationsOf(made),
+    `color-scheme: ${lightScheme};`,
+    "}",
+    "",
+    ".dark {",
+    ...declarationsOf(vars.dark),
+    ...printTree(darkRules, ""),
+    // A var() in a custom property is substituted where it is declared, so a
+    // dark subtree declares the elevation again to take its own hairline.
+    `--shadow-elevation: ${made["shadow-elevation"]};`,
+    `color-scheme: ${darkScheme};`,
+    "}",
+    "",
+    "@media (prefers-reduced-motion: reduce) {",
+    ...printTree({ "html:root": reduced }, ""),
+    "}",
+  ];
+  return `${lines.join("\n")}\n`;
+}
+
+/** JSON with `$`-properties first and each object of no groups on one line, for prettier to fold or break. */
+function tokenJson(value: unknown, indent = ""): string {
+  if (typeof value !== "object" || value === null || Array.isArray(value))
+    return JSON.stringify(value);
+  const node = value as Record<string, unknown>;
+  const keys = Object.keys(node);
+  const ordered = [
+    ...keys.filter((k) => k.startsWith("$")),
+    ...keys.filter((k) => !k.startsWith("$")),
+  ];
+  const nested = (v: unknown) =>
+    typeof v === "object" && v !== null && !Array.isArray(v);
+  const deep = Object.values(node).some(
+    (v) => nested(v) && Object.values(v as object).some(nested),
+  );
+  const holdsToken = Object.values(node).some(
+    (v) => nested(v) && "$value" in (v as object),
+  );
+  if (!deep && !holdsToken && !("$value" in node)) return JSON.stringify(node);
+  const inner = `${indent}  `;
+  const members = ordered.map(
+    (k) => `${inner}${JSON.stringify(k)}: ${tokenJson(node[k], inner)}`,
+  );
+  return `{\n${members.join(",\n")}\n${indent}}`;
+}
+
+/** 021 decision 13: the published token files, by name, each as its bytes. */
+async function publishedFiles(
+  root: string,
+  tokens: Tokens,
+  files: TokenFiles,
+  version: string,
+  source: string,
+): Promise<Record<string, string>> {
+  const dir = path.join(root, PUBLISHED_DIR);
+  const out: Record<string, string> = {};
+  out["kuiper.css"] = await format(
+    kuiperCss(tokens, version, source),
+    path.join(dir, "kuiper.css"),
+  );
+  // The DTCG source and the record, byte for byte.
+  for (const file of [
+    RESOLVER_FILE,
+    ...Object.keys(files).filter((f) => f.endsWith(".tokens.json")),
+    REMOVED_FILE,
+  ])
+    out[file] = readFileSync(path.join(root, TOKENS_DIR, file), "utf8");
+  // Each scheme alone, for a tool that cannot read a resolver.
+  for (const theme of THEMES) {
+    const file = `kuiper.flat-${theme}.tokens.json`;
+    out[file] = await format(
+      `${tokenJson(flattenScheme(files, theme))}\n`,
+      path.join(dir, file),
+    );
+  }
+  return Object.fromEntries(
+    Object.keys(out)
+      .sort()
+      .map((k) => [k, out[k]]),
+  );
+}
+
+/** Every output, formatted by prettier, without writing anything. */
 export async function generateTokenOutputs(
   root: string = process.cwd(),
-): Promise<{ registryJson: string; appCss: string }> {
-  const tokens = readTokens(path.join(root, TOKENS_PATH));
+): Promise<{
+  registryJson: string;
+  appCss: string;
+  published: Record<string, string>;
+}> {
+  const files = readTokenFiles(root);
+  const tokens = lowerTokens(files);
   const registryFile = path.join(root, REGISTRY_PATH);
   const cssFile = path.join(root, APP_CSS_PATH);
   const registryText = readFileSync(registryFile, "utf8");
+  const source = (JSON.parse(registryText) as { homepage?: string }).homepage;
   return {
     registryJson: await format(
       registryWithTokens(tokens, registryText),
       registryFile,
     ),
     appCss: await format(appCss(tokens), cssFile),
+    published: await publishedFiles(
+      root,
+      tokens,
+      files,
+      versionOf(root),
+      source ?? "",
+    ),
   };
+}
+
+function versionOf(root: string): string {
+  return JSON.parse(readFileSync(path.join(root, "package.json"), "utf8"))
+    .version as string;
 }
 
 function writeIfChanged(file: string, content: string): boolean {
@@ -857,11 +1007,12 @@ function writeIfChanged(file: string, content: string): boolean {
     current = undefined;
   }
   if (current === content) return false;
+  mkdirSync(path.dirname(file), { recursive: true });
   writeFileSync(file, content);
   return true;
 }
 
-/** Writes both outputs, each only when its content changes. Returns the files written. */
+/** Writes every output, each only when its content changes. Returns the files written. */
 export async function buildTokens(
   root: string = process.cwd(),
 ): Promise<{ changed: string[] }> {
@@ -871,6 +1022,11 @@ export async function buildTokens(
     changed.push(REGISTRY_PATH);
   if (writeIfChanged(path.join(root, APP_CSS_PATH), outputs.appCss))
     changed.push(APP_CSS_PATH);
+  for (const dir of publishedDirs(versionOf(root)))
+    for (const [file, content] of Object.entries(outputs.published)) {
+      const at = path.join(dir, file);
+      if (writeIfChanged(path.join(root, at), content)) changed.push(at);
+    }
   return { changed };
 }
 

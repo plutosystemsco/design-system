@@ -81,7 +81,8 @@ test("a token change rewrites src/app.css and kuiper-theme.json within 10 s", as
 
   const tokensFile = path.join(copy, "tokens", "kuiper.tokens.json");
   const tokens = JSON.parse(readFileSync(tokensFile, "utf8"));
-  tokens.motion.microMs = 250;
+  // 021 decision 14: the DTCG source, a duration's value.
+  tokens.motion.micro.$value.value = 250;
   writeFileSync(tokensFile, JSON.stringify(tokens, null, 2));
 
   expect(await until(() => css() !== cssBefore, 10_000)).toBe(true);

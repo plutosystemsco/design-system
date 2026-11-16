@@ -1,5 +1,5 @@
 <script lang="ts">
-  import "../app.css";
+  import "./layout.css";
   import type { Snippet } from "svelte";
 
   // The root layout has no chrome: the site's header lives in (site), and a

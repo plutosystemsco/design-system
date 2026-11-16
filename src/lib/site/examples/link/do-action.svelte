@@ -1,0 +1,15 @@
+<script lang="ts" module>
+  export const meta = {
+    kind: "do",
+    pair: "action",
+    title: "Do: a button for an action",
+    caption:
+      "Delete acts on this page and goes nowhere, so it is a destructive button.",
+  };
+</script>
+
+<script lang="ts">
+  import { Button } from "#lib/registry/ui/button";
+</script>
+
+<Button variant="destructive" size="sm">Delete project</Button>

@@ -9,7 +9,7 @@
 
 ## In short
 
-Kuiper 0.13 as built from `025`'s landing tree (re-scored after `020` and after `025`; the first run was Pluto 0.12 at `ea1f9bd`, in the run log). Each score is 0 to 4 (§2).
+Kuiper 0.13 as built at `025`'s merge with `release/0.13.0` at `a6fc673` (re-scored after `020`, `027a`, `026`, `021` and `025`; `021` moved row 5 and `025` added row 15; the first run was Pluto 0.12 at `ea1f9bd`, in the run log). Each score is 0 to 4 (§2).
 
 | # | Dimension | Pluto | Carbon | Material 3 | Spectrum 2 | Atlassian | Primer | Radix Themes | GOV.UK |
 |---|---|---|---|---|---|---|---|---|---|
@@ -17,7 +17,7 @@ Kuiper 0.13 as built from `025`'s landing tree (re-scored after `020` and after 
 | 2 | Guidance depth | 2 | **3** | **3** | **3** | 2 | **3** | 0 | 1 |
 | 3 | Accessibility evidence | 1 | **3** | 1 | 0 | 0 | 2 | 0 | 2 |
 | 4 | Theming | 2 | 3 | **4** | 2 | 2 | **4** | **4** | 0 |
-| 5 | Tokens | 1 | 3 | 1 | 2 | 3 | **4** | 1 | 1 |
+| 5 | Tokens | **4** | 3 | 1 | 2 | 3 | **4** | 1 | 1 |
 | 6 | Navigation and search | **4** | 2 | 3 | 3 | 3 | 3 | 2 | 3 |
 | 7 | The part first | 2 | 1 | **4** | 3 | 2 | 2 | **4** | **4** |
 | 8 | Page weight and paint | **4** | 0 | 0 | 2 | 2 | 1 | 2 | **4** |
@@ -27,20 +27,20 @@ Kuiper 0.13 as built from `025`'s landing tree (re-scored after `020` and after 
 | 12 | Design tooling | 0 | 2 | 2 | 2 | 2 | **4** | 1 | 1 |
 | 13 | Reach | 1 | **3** | **3** | **3** | 0 | 1 | 0 | 2 |
 | 14 | Governance | 3 | **4** | 0 | 1 | 2 | **4** | 1 | 3 |
-| | **Total, of 56** | **32** | 37 | 28 | 32 | 30 | 41 | 25 | 31 |
+| | **Total, of 56** | **35** | 37 | 28 | 32 | 30 | 41 | 25 | 31 |
 | 15 | Component cost (not in the total) | **2** | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 
 Bold marks the best score in a row. The total is a summary, not a target: the rows weigh differently for Pluto's apps. Row 15 joined with `025` and stays out of the headline total, so every run compares with the first; the run log gives the total of 60 beside it.
 
-**The five biggest gaps** (Pluto against the best reference, §5):
+**The biggest gaps** (Pluto against the best reference, §5). Tokens, the second, closed with `021`: DTCG 2025.10 with every role's job in the source, a removed-names record checked against every release, and two targets, CSS variables and DTCG JSON (4, tying Primer).
 
 1. **Design tooling, 0 against 4 (Primer).** No design-tool library, no tokens as design variables, no designer path.
-2. **Tokens, 1 against 4 (Primer).** The file is not DTCG, the role words live in the site, not the token file, and nothing records a removed or renamed name.
+2. ~~Tokens, 1 against 4 (Primer).~~ Closed by `021`: 4 against 4.
 3. **Accessibility evidence, 1 against 3 (Carbon).** axe in both themes and measured contrast, but no per-component status, no forced-colours pass over items, no high-contrast scheme, no keyboard table, no screen-reader record.
 4. **Theming, 2 against 4 (Material, Primer, Radix).** Light and dark and the expressive mode, but a light island cannot sit in a dark page, and there is no contrast scheme.
 5. **The part first, 2 against 4 (Material, Radix, GOV.UK).** The first frame starts at y = 419, but the part's own pixels start at y = 572 at 1440 and y = 661 at 390. The frame's header takes 150 px.
 
-One more row sits two steps behind: reach (1 against 3). Governance is one step behind (3 against 4) since `020`, and change communication ties the best (3) since `020`'s upgrade guide. **Pluto leads** on navigation and search (the 018 work: tree, phone tree, grouped and highlighted search, aliases, previous and next) and ties GOV.UK on page weight: 380 kB and a 1.0 s paint on Button, against 1.9 to 6.0 MB for five of the seven.
+One more row sits two steps behind: reach (1 against 3). Governance is one step behind (3 against 4) since `020`, and change communication ties the best (3) since `020`'s upgrade guide. **Pluto leads** on navigation and search (the 018 work: tree, phone tree, grouped and highlighted search, aliases, previous and next) and ties GOV.UK on page weight: 374 kB and a 0.9 s paint on Button, against 1.9 to 6.0 MB for five of the seven.
 
 ## How to read this
 
@@ -122,7 +122,7 @@ The table is in "In short". Pluto's raw numbers for this run (EXECUTED, `pluto.t
 
 | | Documented | Of 40 | Score | Missing |
 |---|---|---|---|---|
-| Pluto | 65 (ui and blocks) | 29 | 3 | button group, combobox, date picker, file upload, link, pagination, search, slider, number input, toast, tag |
+| Pluto | 69 (ui and blocks) | 32 | 3 | combobox, date picker, file upload, pagination, search, slider, number input, tag |
 | Carbon | 42 | 33 | 3 | avatar, badge, combobox, empty state, separator, skeleton, textarea (some live inside other pages) |
 | Material 3 | 37 | 24 | 2 | accordion, alert, avatar, breadcrumbs, combobox, empty state, file upload, form field, link, pagination, popover, select, skeleton, number input, table, textarea |
 | Spectrum 2 | 68 | 37 | 4 | drawer, pagination, skeleton |
@@ -131,7 +131,7 @@ The table is in "In short". Pluto's raw numbers for this run (EXECUTED, `pluto.t
 | Radix Themes | 56 | 25 | 2 | accordion, breadcrumbs, button group, combobox, date picker, drawer, empty state, file upload, form field, side nav, pagination, search, number input, toast, tag |
 | GOV.UK | 37 | 17 | 1 | 23, by design: no dialog, menu, popover, tooltip, switch … |
 
-Pluto's 65 include 9 compositions and 8 blocks, which match none of the 40. GOV.UK's 30 patterns are not counted (READ, *GOV.UK* §3).
+Pluto's 69 include 9 compositions and 8 blocks, which match none of the 40. After `027a` (`9395b46`): `link` and `button-group` each add a part; `progress` matches "progress / meter", which `meter` already held. After `026` (merged at `445d663`): `toast` matches "toast / snackbar". GOV.UK's 30 patterns are not counted (READ, *GOV.UK* §3).
 
 ### Row 2. Guidance depth (EXECUTED, `depth.ts`)
 
@@ -192,7 +192,7 @@ Pluto's 65 include 9 compositions and 8 blocks, which match none of the 40. GOV.
 
 | | a one source | b jobs written | c in the source | d DTCG | e pairs tested | f lifecycle | g targets | Count | Score |
 |---|---|---|---|---|---|---|---|---|---|
-| Pluto | ✓ | ✓ | – | – | ✓ | – | – | 3 | 1 |
+| Pluto | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | 7 | 4 |
 | Carbon | ✓ | ✓ | ✓ | ✓ | – | ✓ | ✓ | 6 | 3 |
 | Material 3 | ✓ | ✓ | ? | – | ? | – | ✓ | 3 | 1 |
 | Spectrum 2 | ✓ | – | – | ✓ | – | ✓ | ✓ | 4 | 2 |
@@ -201,7 +201,7 @@ Pluto's 65 include 9 compositions and 8 blocks, which match none of the 40. GOV.
 | Radix Themes | ✓ | ✓ | – | – | – | – | ✓ | 3 | 1 |
 | GOV.UK | ✓ | ✓ | – | – | – | ✓ | – | 3 | 1 |
 
-- **Pluto:** one file, bespoke shape; words in the site; 129 pairs tested; no rename record; CSS only (EXECUTED; READ, *Primer* §1, *Spectrum* §3).
+- **Pluto** (since `021`, `b37dcf4`): DTCG 2025.10, a resolver over a base file and one file per scheme, valid against the published schemas (Ajv 8.17.1) and read by Terrazzo 2.10.0 (`tz check`, no errors); 61 of 61 roles and 16 of 16 code slots described in the source (c); `tokens/kuiper.removed.json` lists the 24 removed names and a test checks it against every release under `static/` (f), with `since` on every token; published as `kuiper.css` and as DTCG JSON, the source and each scheme flattened, at `/r/tokens/` (g); 129 pairs tested (EXECUTED, `kuiper.ts`, the unit suite). Before `021`: one file, bespoke shape; words in the site; no rename record; CSS only.
 - **Carbon:** DTCG 2025.10 with a resolver; a test fails a token without a description; deprecation in the description (READ, *Carbon* §1.1). **Spectrum:** UUIDs, lifecycle, semantic diff, DTCG and Figma exporters; 106 of 2,523 rows described (READ and EXECUTED, *Spectrum* §1, §3). **Atlassian:** every token listed with its job and "Introduced v …" (EXECUTED, `/components/tokens/all-tokens`). **Primer:** DTCG JSON5, `$description` and LLM rules, `removed.json`, contrast CI, Figma variables (READ, *Primer* §1, §4). **Radix:** twelve-step scales with step jobs, no contrast test (READ, *Radix* §1). **GOV.UK:** Sass settings, named colour uses, deprecation warnings (READ, *GOV.UK* §5).
 
 ### Row 6. Navigation and search
@@ -238,7 +238,7 @@ Material's specimen is read from the screenshot, since no live example exists to
 
 | | Transfer, kB (main frame) | Requests | LCP, ms | CLS | Score |
 |---|---|---|---|---|---|
-| Pluto | 380 (380) | 87 | 1,036 | 0 | 4 |
+| Pluto | 374 (374) | 87 | 912 | 0 | 4 |
 | Carbon | 5,958 (2,511) | 344 | 22,120 | 0 | 0 |
 | Material 3 | 3,375 (3,289) | 38 | 9,324 | 0.009 | 0 |
 | Spectrum 2 | 1,859 (476) | 245 | 1,860 | 0.015 | 2 |
@@ -365,7 +365,7 @@ READ: *enterprise* §3–4, *developer* §4–5, *product* §3–5, *Carbon* §3
 | # | Dimension | Pluto | Best | Who | Gap | What the best does |
 |---|---|---|---|---|---|---|
 | 12 | Design tooling | 0 | 4 | Primer | **−4** | Figma library, tokens as Figma variables, a contribution path for the library, an LLM guide. |
-| 5 | Tokens | 1 | 4 | Primer | **−3** | DTCG with descriptions and pairing rules in the token, `removed.json` checked in CI, contrast CI, several outputs. |
+| 5 | Tokens | 4 | 4 | Primer | 0 | Closed by `021`. Primer also keeps pairing rules in each token and an LLM guide. |
 | 3 | Accessibility evidence | 1 | 3 | Carbon | −2 | Tagged automated checks per state, a generated status page, forced-colours rules in 30 components, manual screen-reader passes. |
 | 4 | Theming | 2 | 4 | Material, Primer, Radix | −2 | Either scheme on any subtree; a contrast scheme or a scale. |
 | 7 | The part first | 2 | 4 | Material, Radix, GOV.UK | −2 | The specimen at y ≈ 290–330, inside the first phone screen. |
@@ -387,7 +387,7 @@ Each line names the smallest change that moves the row by one, and what is alrea
 2. **Depth 2 → 3:** one more element on both pages. Prop doc comments, so 80% of rows are described, are already placed after `018` (READ, *synthesis* §1). A keyboard table from data the tests read, and an anatomy figure, would reach 4.
 3. **Accessibility evidence 1 → 2:** two more criteria. Planned for 0.13.0: the status generated from the test report (d) and a forced-colours pass over items (e) (READ, `handoff.md`, "Next"). Six criteria make 3: add the `019` VoiceOver run, recorded (h), and hover, pressed, disabled and invalid states driven in the axe pass (b).
 4. **Theming 2 → 3:** scoped schemes both ways, option B of *scoped* §6 (`light-dark()` and `data-scheme`). The high-contrast scheme after it makes 4.
-5. **Tokens 1 → 2:** role words moved from `words.ts` into the token file (c). Add the removed-names record (f) for 3 (*Primer* idea 1, *Spectrum* idea 2).
+5. **Tokens 4:** hold, since `021`. The fixtures under `tests/fixtures/021-before/`, the record's test and the validator guard it.
 6. **Navigation and search 4:** hold. Keep `nav.spec.ts` and `search.spec.ts` guarding it.
 7. **The part first 2 → 3:** the stage above y = 500 at 1440 and inside the phone's first screen: about 80 px to find. Put the frame's title and the Light | Dark switch on one row, or move the first frame's description below its stage.
 8. **Weight 4:** hold under `perf.spec.ts`'s budgets.
@@ -436,8 +436,15 @@ Use any `<out>` folder outside the repository, such as the session scratchpad. W
 | 2026-11-15 | `ea1f9bd` (0.12.0, after `018`) | 2026-11-15 13:53, working tree with `019` in progress | a researcher | 3 2 1 2 1 4 2 4 3 3 2 0 1 2 | 30 | First run. References live on 2026-11-15. Carbon's URLs now sit under `/building-blocks/core/components/`; Spectrum 2's under `/web/rsp/components/`. |
 | 2026-11-15 | `020`'s landing tree, on `release/0.13.0` from `f9e1c1a`, before its commit | 2026-11-15, the same tree | a builder | 3 2 1 2 1 4 2 4 3 3 3 0 1 3 | 32 | After `020`. `kuiper.ts` (working tree): `migrationPages` 0 → 2 (the guide's two route files), so row 11 (d) is met, 2 → 3; `deprecatedItems` 0 → 1 (`pluto-theme`, naming `kuiper-theme`), so row 14 (c) is met, 2 → 3. `breadth.items` reads 76: the count includes the alias entry; row 1 reads `breadth.ts`, which matches parts, and holds. `site.ts --only kuiper`: Button 381 kB, LCP 992 ms, the part at 572 (1440) and 661 (390), 76 nav links, search and theme present; rows 6, 7 and 8 hold. Tokens and every other count as at `ea1f9bd`. References not re-checked. |
 | 2026-11-15 | `6c00a12` (`020`, committed on its build branch) | the same tree as the row above | a builder | 3 2 1 2 1 4 2 4 3 3 3 0 1 3 | 32 | `kuiper.ts --rev 6c00a12`: `migrationPages` 2, `deprecatedItems` 1, 12 releases, 33 interface marks, 9 versioned registries; tokens 48 primitives, 61 roles, 61 described, 129 contrast rows. The scores of the row above stand. |
+| 2026-11-15 | `9395b46` (`027a`, committed on its build branch, on `release/0.13.0` from `0372323`) | 2026-11-16 03:21 UTC, at that commit | a builder | 3 2 1 2 1 4 2 4 3 3 3 0 1 3 | 32 | After `027a` (link, button group, progress). `breadth.ts --only kuiper --rev 9395b46`: 68 documented, **31 of 40** (29 before; `link` and `button group` hit), score 3 held (34 or more is 4); with `026`'s toast it would read 32, and `027b` brings 35. `kuiper.ts --rev 9395b46`: 79 entries, 60 `registry:ui`; tokens, theming and every other count as at `6c00a12`. `site.ts --only kuiper`: Button 383 kB (was 381), LCP 1,020 ms, the part at 572 (1440) and 661 (390), 79 nav links, search and theme present; rows 6, 7 and 8 hold. Every page grew by about 0.9 kB, of which 0.67 kB is `registry.json` in the shared chunk; the Button page's 382 kB budget was already exceeded at `0372323` (382.5 kB), see `027`'s landing notes. `depth.ts` not run: it reads the Button and Dialog pages, which `027a` did not change. References not re-checked. |
+| 2026-11-15 | `027a`'s landing tree: the commit "027a: the review's fixes", on the merge of `release/0.13.0` at `421cea7` | 2026-11-16, that tree | a builder | 3 2 1 2 1 4 2 4 3 3 3 0 1 3 | 32 | Supersedes the row above for `027a`'s movement (the review's finding 6). `site.ts --only kuiper`: Button **374 kB** of its 382 kB budget (`020a`'s CSS that reads only code is in it), LCP 912 ms, the part at 572 (1440) and 661 (390), 79 nav links, search and theme present; rows 6, 7 and 8 hold. `breadth.ts --only kuiper`: 68 documented, 31 of 40, score 3 held. Tokens and every other count as at `9395b46`. `depth.ts` not run: Button and Dialog unchanged. References not re-checked. |
+| 2026-11-15 | `367ac57` (`026`, the toast, on its build branch from `44cec73`; its `app-shell` edit deferred) | 2026-11-16 03:26 UTC, the commit's tree | a builder | 3 2 1 2 1 4 2 4 3 3 3 0 1 3 | 32 | After `026`. `breadth.ts --rev 367ac57`: Kuiper documents 66 and covers 30 of 40 (was 29): "toast / snackbar" is no longer missing; row 1 holds at 3 (4 needs 34). `kuiper.ts --rev 367ac57`: 77 registry entries (58 ui, the alias among the 77), 76 pages, 32 e2e specs, forced-colours rules in items 0, tokens unchanged (48 primitives, 61 roles, 129 contrast rows), 12 releases, 33 interface marks. `site.ts --only kuiper`: Button 382 kB (base 381.5 kB, now 382.1 kB by byte count; the `026` Landing notes give each page's change), LCP 1,056 ms, the part at 572 (1440) and 661 (390), 77 nav links, search and theme present; rows 6, 7 and 8 hold. `depth.ts`: Button 5 of 10 (728 words), Dialog 5 of 10 (909 words); row 2 holds. The machine ran under heavy load (load average 75 to 130); LCP is from 3 throttled runs. References not re-checked (only `breadth.ts` and `depth.ts` re-read them; no reference count changed). |
+| 2026-11-16 | `445d663` (`026`'s merge of `release/0.13.0` at `874c5da`, after `027a`) | 2026-11-16, that tree | a builder | 3 2 1 2 1 4 2 4 3 3 3 0 1 3 | 32 | After `026` on `027a`. `breadth.ts --rev 445d663`: Kuiper documents 69 and covers 32 of 40 (`027a`'s 31 and the toast); missing combobox, date picker, file upload, pagination, search, slider, number input, tag; row 1 holds at 3 (4 needs 34). `kuiper.ts --rev 445d663`: 80 registry entries (61 ui, the alias among the 80), 79 pages, 36 e2e specs, forced-colours rules in items 0, tokens unchanged (48 primitives, 61 roles, 129 contrast rows), 12 releases, 33 interface marks. `site.ts --only kuiper`: Button 375 kB, LCP 892 ms, the part at 572 (1440) and 661 (390), 80 nav links, search and theme present; rows 6, 7 and 8 hold. `depth.ts`: Button 5 of 10 (730 words), Dialog 5 of 10 (909 words); row 2 holds. This row replaces the `367ac57` row above for the merged tree, which held 30 of 40 before `027a`. References not re-checked. |
+| 2026-11-15 | `b37dcf4` (`021`, committed on its build branch) | the same tree | a builder | 3 2 1 2 4 4 2 4 3 3 3 0 1 3 | 35 | After `021`. `kuiper.ts --rev b37dcf4`: tokens in the new shape: 48 primitives, light and dark, 61 roles, 61 described, `groups` 15 (was 13 top-level keys in the old file, a changed meaning), 317 `$value`, 317 `$type`, 286 descriptions, 129 contrast rows. Row 5 (c), (d), (f) and (g) are met: 3 → 7 criteria, 1 → 4. Row 12 holds at 0: decision 16 (c)'s Penpot import was not run in the build, so (b) has no evidence yet. `kuiper.ts --rev ea1f9bd` prints the first run's token counts unchanged. No page's layout changed but `/foundations/tokens/`, so `site.ts` was not re-run; rows 6, 7 and 8 hold. References not re-checked. |
+| 2026-11-16 | `c5df65b` (`021`'s merge of `release/0.13.0` at `a30ffa7`, after `027a` and `026`) | 2026-11-16 05:45 UTC, that tree | a builder | 3 2 1 2 4 4 2 4 3 3 3 0 1 3 | 35 | After `021` on `027a` and `026`. `kuiper.ts --rev c5df65b`: 80 registry entries (61 ui), 12 releases, 34 interface marks, 2 migration pages, 9 versioned registries; tokens in the DTCG shape as at `b37dcf4` (48 primitives, light and dark, 61 roles, 61 described, `groups` 15, 317 `$value`, 317 `$type`, 286 descriptions, 129 contrast rows). `site.ts --only kuiper`: Button 375 kB, LCP 868 ms (3 runs: 892, 868, 864), the part at 572 (1440) and 661 (390), 80 nav links, search and theme present; rows 6, 7 and 8 hold. Row 5 is 4 and row 12 0, as at `b37dcf4`; rows 1 and 2 as at `445d663` (`breadth.ts` and `depth.ts` not re-run: `021` adds no part and changes neither Button nor Dialog). This row replaces the `b37dcf4` row for the merged tree. References not re-checked. |
 | 2026-11-16 | `025`'s landing tree, on its build branch from `44cec73`, before its commit | none: `025` changes no page | a builder | 3 2 1 2 1 4 2 4 3 3 3 0 1 3; row 15: 2 | 32; 34 of 60 | After `025`. Row 15 joins, outside the headline total, with *cost* §7's rubric and §9.5's scores (every reference 0). Kuiper (b) ✓: 71 items and 1 case budgeted in `scripts/cost/budgets.json`, held by `tests/unit/cost.test.ts` and the release check; (d) ✓: `table.1000-rows`' hydration, 477 ms, under its 618 ms budget; (a) and (c) – until `030` shows them: 2. `bun run cost --full` twice at the landing tree: 3,286 s and 3,349 s; the second run held one figure over budget before its re-measure and none after. Rows 1 to 14: `025` adds no item and changes no page, token or rendered text, so `site.ts`, `depth.ts` and `breadth.ts` were not re-run (roadmap §4, step 1). `kuiper.ts` (working tree, `build/` of 2026-11-16 05:15): 76 items, `migrationPages` 2, `deprecatedItems` 1, 12 releases, 33 interface marks, 9 versioned registries; tokens 48 primitives, 61 roles, 61 described, 129 contrast rows; as at `6c00a12`, so rows 1 to 14 hold. References not re-checked. |
 | 2026-11-16 | `c213a0d` (`025`, committed on its build branch) | the same tree as the row above | a builder | 3 2 1 2 1 4 2 4 3 3 3 0 1 3; row 15: 2 | 32; 34 of 60 | `kuiper.ts --rev c213a0d`: 76 items, `migrationPages` 2, `deprecatedItems` 1, 12 releases, 33 interface marks, 9 versioned registries; tokens 48 primitives, 61 roles, 61 described, 129 contrast rows. At the commit, `tests/unit/cost.test.ts` passes 33 of 33 and the release check's cost step passes: the report's hashes equal the commit's. The scores of the row above stand. |
+| 2026-11-16 | `025`'s merge of `release/0.13.0` at `a6fc673`, after its fixes (`fbc996d`), before its commit | none: `025` changes no page | a builder | 3 2 1 2 4 4 2 4 3 3 3 0 1 3; row 15: 2 | 35; 37 of 60 | After `025` on `027a`, `026` and `021`. Row 15 holds at 2: (b) 75 items and 3 cases budgeted, held by `tests/unit/cost.test.ts` (sizes) and the release check (runtime), as ruled at landing; (d) `table.1000-rows` hydrates in 448.8 ms under its 618 ms budget. `bun run cost --full`: 2,546 s, load median 20.7; one figure over before the re-measure, none after. The four new items: `link` 5.5 kB, `button-group` 3.6 kB, `progress` 3.6 kB, `toast` 21.7 kB (shows in 111.1 ms). Rows 1 to 14 as at `c5df65b`. References not re-checked. |
 
 ## 9. Limits
 

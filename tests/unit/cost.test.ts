@@ -121,7 +121,7 @@ describe("025 criterion 1: fixtures and routes", () => {
 describe("025 criterion 2: interactions", () => {
   const entries = Object.entries(INTERACTIONS);
 
-  test("one entry per decision 9 item, and one per case that has an interaction", () => {
+  test("one entry per decision 9 item, and one per case that has an interaction [35]", () => {
     for (const [key] of entries) {
       const [item, kase] = key.split(".");
       expect(kinds.measured, key).toContain(item!);
@@ -165,6 +165,10 @@ describe("025 criterion 2: interactions", () => {
         "settings",
         "app-shell",
         "chat",
+        // 026 decision 25: the toast and its two cases.
+        "toast",
+        "toast.burst",
+        "toast.progress",
       ].sort(),
     );
   });
