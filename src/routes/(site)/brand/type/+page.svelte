@@ -39,7 +39,7 @@
     </p>
     <ul class="grid gap-6">
       {#each faces as f (f.id)}
-        <!-- source: decisions.md, D1; tokens/kuiper.tokens.json, type.families -->
+        <!-- source: decisions.md, D1; tokens/kuiper.tokens.json, font.family -->
         <li data-claim="settled" class="grid gap-1">
           <span class={f.class} aria-hidden="true">Work runs on data.</span>
           <span>{name(data.families[f.id].family)} {f.job}</span>
@@ -49,7 +49,7 @@
   </Section>
 
   <Section id="ladder" title="The display ladder">
-    <!-- source: 011 decision 9; 019a decision 1; tokens/kuiper.tokens.json, expressive.display.steps -->
+    <!-- source: 011 decision 9; 019a decision 1; tokens/kuiper.tokens.json, expressive.display -->
     <p data-claim="settled">
       Display type comes in four steps. Each grows with the window, between its
       smallest and its largest size, at the font's own spacing, with little
@@ -64,7 +64,7 @@
     </figure>
     <ul data-figure-dims="ladder" class="grid gap-1 text-sm">
       {#each data.steps as [id, s] (id)}
-        <!-- source: tokens/kuiper.tokens.json, expressive.display.steps -->
+        <!-- source: tokens/kuiper.tokens.json, expressive.display -->
         <li
           data-claim="settled"
           data-dim={id}

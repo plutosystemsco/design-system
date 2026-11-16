@@ -1,10 +1,11 @@
 /**
- * The Foundations pages' tables, generated from the token file (017 decision
+ * The Foundations pages' tables, generated from the token files (017 decision
  * 6). Pure: a page's server load and the unit test each pass the tokens.
  * Nothing here is copied by hand, so a palette change redraws every table.
+ * A role's and a code slot's job are its `$description` in the token files
+ * (021 decision 9).
  */
 import type { Theme, Tokens } from "../../../../scripts/tokens.ts";
-import { CODE_WORDS, ROLE_WORDS } from "./words.ts";
 
 /** One row of the tokens table: a primitive or a theme role. */
 export type TokenRow = {
@@ -51,7 +52,7 @@ export function tokenRows(tokens: Tokens): TokenRow[] {
     light: tokens.primitives[light[name]],
     dark: tokens.primitives[dark[name]],
     reads: { light: light[name], dark: dark[name] },
-    words: ROLE_WORDS[name] ?? "",
+    words: tokens.descriptions.roles[name] ?? "",
   }));
   return [...primitives, ...roles];
 }
@@ -72,7 +73,7 @@ export function codeRows(tokens: Tokens): CodeRow[] {
     token,
     light: colour(tokens, "light", token),
     dark: colour(tokens, "dark", token),
-    words: CODE_WORDS[role] ?? "",
+    words: tokens.descriptions.code[role] ?? "",
   }));
 }
 

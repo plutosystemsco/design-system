@@ -1,0 +1,26 @@
+{
+  "$schema": "https://www.designtokens.org/schemas/2025.10/resolver.json",
+  "name": "Kuiper",
+  "version": "2025.10",
+  "description": "The Kuiper Design System's tokens. The scheme modifier picks light or dark.",
+  "sets": {
+    "base": {
+      "description": "Every token the same in each scheme.",
+      "sources": [{ "$ref": "kuiper.tokens.json" }]
+    }
+  },
+  "modifiers": {
+    "scheme": {
+      "description": "The colour scheme. Its contexts are the values of the theme's scheme switch.",
+      "contexts": {
+        "light": [{ "$ref": "kuiper.light.tokens.json" }],
+        "dark": [{ "$ref": "kuiper.dark.tokens.json" }]
+      },
+      "default": "light"
+    }
+  },
+  "resolutionOrder": [
+    { "$ref": "#/sets/base" },
+    { "$ref": "#/modifiers/scheme" }
+  ]
+}

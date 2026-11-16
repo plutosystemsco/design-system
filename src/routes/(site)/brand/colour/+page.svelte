@@ -32,20 +32,20 @@
             {@attach pointerLight}
           >
             <ul class="grid gap-1 font-mono text-sm">
-              <!-- source: tokens/kuiper.tokens.json, expressive.field; 016 decision 5 for the yellow -->
+              <!-- source: tokens/kuiper.light.tokens.json and tokens/kuiper.dark.tokens.json, field; 016 decision 5 for the yellow -->
               <li data-claim="settled">
                 Light: {fd.light.fill}, text {fd.light.legend}, {fd.light.ratio.toFixed(
                   2,
                 )}:1
               </li>
-              <!-- source: tokens/kuiper.tokens.json, expressive.field; 011 decision 11, fieldRows -->
+              <!-- source: tokens/kuiper.light.tokens.json and tokens/kuiper.dark.tokens.json, field; 011 decision 11, fieldRows -->
               <li data-claim="settled">
                 Dark: {fd.dark.fill}, text {fd.dark.legend}, {fd.dark.ratio.toFixed(
                   2,
                 )}:1
               </li>
             </ul>
-            <!-- source: decisions.md, "A yellower yellow, in code and in the brand"; 011 decision 6, the four fields; tokens/kuiper.tokens.json, the theme roles primary, ring, destructive and success -->
+            <!-- source: decisions.md, "A yellower yellow, in code and in the brand"; 011 decision 6, the four fields; tokens/kuiper.light.tokens.json, the roles role.primary, role.ring, role.destructive and role.success -->
             <p data-claim="settled">{JOBS[i]}</p>
           </div>
         </div>

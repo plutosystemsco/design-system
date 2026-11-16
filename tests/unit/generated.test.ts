@@ -1425,10 +1425,16 @@ describe("the spring (011 criterion 6)", () => {
   });
 
   test("equals the step response recomputed from the token", () => {
+    // 021 decision 14: the spring is a DTCG group of three numbers.
     const tokens = JSON.parse(
       readFileSync("tokens/kuiper.tokens.json", "utf8"),
     );
-    const { dampingRatio, settle, samples } = tokens.expressive.motion.spring;
+    const group = tokens.expressive.motion.spring;
+    const [dampingRatio, settle, samples] = [
+      group["damping-ratio"].$value,
+      group.settle.$value,
+      group.samples.$value,
+    ];
     const points = /^linear\((.*)\)$/
       .exec(value()["--ease-spring"] as string)![1]
       .split(",")
@@ -1619,7 +1625,13 @@ describe("012 criterion 1: the stage is gone", () => {
 
   test("no removed class name appears as a class token", () => {
     const found: string[] = [];
-    for (const file of files()) {
+    // 021: the published DTCG files are data, not class sources: their
+    // names and words (glass.rim, the scrim's "veil") are not classes.
+    // kuiper.css is CSS, and stays in.
+    const classSources = files().filter(
+      (f) => !/^static\/r\/tokens\/.*\.json$/.test(f),
+    );
+    for (const file of classSources) {
       const tokens = new Set(classTokens(readFileSync(file, "utf8")));
       for (const name of CLASS_TOKENS)
         if (tokens.has(name)) found.push(`${file}: ${name}`);

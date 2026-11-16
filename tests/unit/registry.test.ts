@@ -1877,7 +1877,14 @@ describe("016: the brand yellow", () => {
         (f) => f && existsSync(f) && !/\.(png|jpe?g|webp|woff2?|ico)$/.test(f),
       );
     expect(files.length).toBeGreaterThan(300);
-    const hits = files.filter((f) => /amber|#?f19e20|#?915b00/i.test(read(f)));
+    // 021 decision 10: the record of removed names keeps the two names that
+    // shipped, --syntax-amber and its --color- form, so that it can say what
+    // replaces them. Only those two names are dropped; the rest is scanned.
+    const text = (f: string) =>
+      f.endsWith("/kuiper.removed.json")
+        ? read(f).replace(/--(color-)?syntax-amber(?![\w-])/g, "")
+        : read(f);
+    const hits = files.filter((f) => /amber|#?f19e20|#?915b00/i.test(text(f)));
     expect(hits).toEqual([]);
   });
 
@@ -2377,5 +2384,37 @@ describe("027a test 2: the 0.13.0 entry has one bullet per built batch A item", 
     expect(found[0]).toContain("new, a `registry:ui`");
     expect(found[0]).not.toContain("**interface change.**");
     for (const w of words) expect(found[0], w).toContain(w);
+  });
+});
+
+describe("021 criterion 18: the 0.13.0 changelog's token bullets", () => {
+  const log = readFileSync("CHANGELOG.md", "utf8");
+  const entry = log.includes("## 0.13.0")
+    ? log.slice(log.indexOf("## 0.13.0"), log.indexOf("\n## 0.12.0"))
+    : "";
+  const bullets = entry.split("\n").filter((l) => l.startsWith("- "));
+
+  test("a kuiper-theme bullet says the source is DTCG and the CSS is unchanged", () => {
+    const b =
+      bullets.find(
+        (l) =>
+          l.startsWith("- `kuiper-theme`") &&
+          l.includes("not an interface change"),
+      ) ?? "";
+    expect(b).toContain("DTCG 2025.10");
+    expect(b).toContain("byte for byte");
+  });
+
+  test("a new-files bullet names the files, the folder, and the paths as an interface", () => {
+    const b = bullets.find((l) => l.startsWith("- **New:**")) ?? "";
+    for (const name of [
+      "kuiper.css",
+      "kuiper.resolver.json",
+      "kuiper.removed.json",
+      "/r/tokens/",
+    ])
+      expect(b, name).toContain(name);
+    expect(b).toContain("DTCG token paths");
+    expect(b).toContain("interface");
   });
 });
