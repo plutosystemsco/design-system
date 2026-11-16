@@ -3,10 +3,18 @@
  * technology; the figure's name and its table are what a reader gets, and
  * layerchart's pointer tooltip is the pointer's affordance only.
  *
- * C1: from the element before the figure, within 15 `next()` steps, the
+ * C1: from the element before the figure, within 25 `next()` steps, the
  * figure's name, the table's caption and its first column header are
  * spoken whole, in that order. C2: none of the tooltip's texts (the series
  * label with its value, as the tooltip formats it) is spoken in those steps.
+ *
+ * 022q decision 6: 25 steps, room for the name, `004`'s fourteen tick
+ * labels (a layerchart figure exposes its ticks and nothing else), the
+ * caption and a header. 25 VoiceOver steps take 4.2 to 5.8 minutes, past
+ * the suite's 5-minute timeout, so this file's test has its own 7-minute
+ * timeout and runs once, with no retry: an exception to 022 decision 10,
+ * which keeps shard 1 inside its 40-minute deadline. A failed C1 is read
+ * from its phrases, which the walk records whole.
  *
  * The example's table has no `<caption>`: its disclosure's summary, "Show
  * as table", names it, so that is the caption the rule reads. The
@@ -14,6 +22,10 @@
  */
 import { declared, test } from "./fixtures.ts";
 import { C1, C2 } from "./rules.ts";
+
+test.describe.configure({ retries: 0, timeout: 7 * 60_000 });
+
+const STEPS = 25;
 
 const PATH = "/example/chart/variants/";
 const FIGURE = "Visitors per weekday, last week";
@@ -55,7 +67,7 @@ test(
     await sr.focused(
       page.locator('[data-testid="chart-bars"] [data-slot="card-description"]'),
     );
-    const steps = await sr.steps(15);
+    const steps = await sr.steps(STEPS);
     const c1 = C1(steps, [FIGURE, CAPTION, FIRST_HEADER]);
     await sr.judge(c1, C2(steps, TOOLTIPS, c1.length === 0));
   },

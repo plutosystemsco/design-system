@@ -66,9 +66,9 @@ test(
     await sr.open(PATH);
     const sentinel = await sr.sentinel();
     await sr.after(() => menu(page).focus(), "focus");
-    await sr.after(() => pressToOpen(page), "open");
-    const steps = await sr.steps(10);
-    await sr.judge(O2(steps, sentinel, NAME, sr.inside));
+    const opened = await sr.after(() => pressToOpen(page), "open");
+    const steps = await sr.steps(10, { trigger: "Menu", title: NAME });
+    await sr.judge(O2(opened, steps, sentinel, NAME, sr.overlay, sr.back));
   },
 );
 

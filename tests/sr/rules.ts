@@ -56,18 +56,35 @@ export const AFTER_MS = 6000;
 
 /**
  * 1. Unicode NFKC. 2. Lower case. 3. Drop straight and curly quotes and
- * apostrophes. 4. Collapse whitespace to one space, and trim. 5. Drop one
- * final `.`, `,`, `;`, `:`, `!` or `?`.
+ * apostrophes. 4. Turn every comma into a space (022q decision 5: NVDA
+ * joins speech chunks with commas, "Previous, page, button"; no expected
+ * text needs one). 5. Collapse whitespace to one space, and trim. 6. Drop
+ * one final `.`, `,`, `;`, `:`, `!` or `?`.
  */
 export function normalise(s: string): string {
   return s
     .normalize("NFKC")
     .toLowerCase()
     .replace(/['"‘’“”]/g, "")
+    .replace(/,/g, " ")
     .replace(/\s+/g, " ")
     .trim()
     .replace(/[.,;:!?]$/, "");
 }
+
+/**
+ * 022q decision 5: a text a rule looks for, or a list of its spoken forms,
+ * where a reader says a symbol or a key aloud ("ada at example dot com",
+ * "F 8"). Each test that needs a list states its forms; no rule guesses one.
+ */
+export type Spoken = string | readonly string[];
+
+const formsOf = (text: Spoken): string[] =>
+  typeof text === "string" ? [text] : [...text];
+const shown = (text: Spoken): string =>
+  formsOf(text)
+    .map((f) => `"${f}"`)
+    .join(" or ");
 
 /**
  * Where `text` is spoken whole in `phrases`: the index of the first phrase
@@ -85,72 +102,144 @@ export function spokenAt(phrases: string[], text: string): number {
   return -1;
 }
 
-/** An expected text is spoken whole in a window. */
-export function spokenWhole(phrases: string[], text: string): boolean {
-  return spokenAt(phrases, text) >= 0;
+/** An expected text, or any of its spoken forms, is spoken whole in a window. */
+export function spokenWhole(phrases: string[], text: Spoken): boolean {
+  return formsOf(text).some((f) => spokenAt(phrases, f) >= 0);
+}
+
+/** Whether one phrase holds the text, or any of its forms, normalised. */
+const holds = (phrase: string, text: Spoken): boolean => {
+  const n = normalise(phrase);
+  return formsOf(text).some((f) => {
+    const want = normalise(f);
+    return want !== "" && n.includes(want);
+  });
+};
+
+/** guidepup joins one capture's speech into one log entry, its parts joined by ". ". */
+const partsOf = (entry: string): string[] => entry.split(". ");
+
+/**
+ * 022q decision 7: VoiceOver's window is two captures, the action's and
+ * the wait's. guidepup logs VoiceOver's last phrase again once its skip of
+ * the previous phrase ends. Amended after the change review (finding 4):
+ * the drop compares parts, not entries. It removes the longest run of
+ * parts at the start of the wait capture's first entry that equals,
+ * normalised, the run at the end of the action capture's last entry. A
+ * real repeat at that join is then not counted.
+ */
+export function joinCaptures(action: string[], wait: string[]): string[] {
+  const last = action.at(-1);
+  const first = wait[0];
+  if (last === undefined || first === undefined) return [...action, ...wait];
+  const tail = partsOf(last).map(normalise);
+  const head = partsOf(first);
+  const headN = head.map(normalise);
+  let k = Math.min(tail.length, head.length);
+  for (; k > 0; k--)
+    if (
+      tail
+        .slice(tail.length - k)
+        .every((part, i) => part !== "" && part === headN[i])
+    )
+      break;
+  if (k === 0) return [...action, ...wait];
+  const rest = head.slice(k).join(". ");
+  return [...action, ...(rest === "" ? [] : [rest]), ...wait.slice(1)];
 }
 
 const nonEmpty = (w: string[]) => w.some((p) => normalise(p) !== "");
 const x0 = (why: string): Fault[] => [{ rule: "X0", message: why }];
 const fault = (rule: RuleId, message: string): Fault[] => [{ rule, message }];
 
-/** L1. The message is spoken whole (after). */
-export function L1(after: string[], message: string): Fault[] {
+/** L1. The message, in any of its spoken forms, is spoken whole (after). */
+export function L1(after: string[], message: Spoken): Fault[] {
   if (!nonEmpty(after)) return x0("L1: the after window is empty");
   return spokenWhole(after, message)
     ? []
-    : fault("L1", `"${message}" was not spoken whole`);
+    : fault("L1", `${shown(message)} was not spoken whole`);
 }
 
-/** L2. The message is not spoken before the action (before), while L1 holds. */
+/** L2. No form of the message is spoken before the action (before), while L1 holds. */
 export function L2(
   before: string[],
   after: string[],
-  message: string,
+  message: Spoken,
 ): Fault[] {
   if (!nonEmpty(after) || !spokenWhole(after, message))
     return x0(
       "L2: L1 does not hold, so the reader's silence before proves nothing",
     );
   return spokenWhole(before, message)
-    ? fault("L2", `"${message}" was spoken before the action`)
+    ? fault("L2", `${shown(message)} was spoken before the action`)
     : [];
 }
 
-/** L3. No two adjacent phrases each contain the message whole (after). */
-export function L3(after: string[], message: string): Fault[] {
+/**
+ * Whether one entry holds the message, in any form, whole twice, in two of
+ * its parts: two places that do not overlap, with a part boundary (the
+ * ". " guidepup joins parts with) between them. Compared normalised.
+ */
+const heldTwice = (entry: string, message: Spoken): boolean => {
+  const n = normalise(entry);
+  const at: { start: number; end: number }[] = [];
+  for (const form of formsOf(message)) {
+    const want = normalise(form);
+    if (!want) continue;
+    for (let i = n.indexOf(want); i >= 0; i = n.indexOf(want, i + 1))
+      at.push({ start: i, end: i + want.length });
+  }
+  return at.some((a) =>
+    at.some((b) => a.end <= b.start && n.slice(a.end, b.start).includes(".")),
+  );
+};
+
+/**
+ * L3. No two adjacent phrases each contain the message, in any form, whole
+ * (after). Amended after the change review (finding 2): nor does one entry
+ * hold it whole twice, in two of its parts. Under NVDA's one capture every
+ * window is one entry, so without this L3 could never fault there.
+ */
+export function L3(after: string[], message: Spoken): Fault[] {
   if (!nonEmpty(after) || !spokenWhole(after, message))
     return x0("L3: L1 does not hold");
-  const want = normalise(message);
-  const n = after.map(normalise);
-  for (let i = 1; i < n.length; i++)
-    if (n[i - 1]!.includes(want) && n[i]!.includes(want))
+  for (let i = 1; i < after.length; i++)
+    if (holds(after[i - 1]!, message) && holds(after[i]!, message))
       return fault(
         "L3",
-        `"${message}" was read twice in a row (phrases ${i} and ${i + 1})`,
+        `${shown(message)} was read twice in a row (phrases ${i} and ${i + 1})`,
       );
+  const twice = after.findIndex((p) => heldTwice(p, message));
+  if (twice >= 0)
+    return fault(
+      "L3",
+      `${shown(message)} was read twice within phrase ${twice + 1}`,
+    );
   return [];
 }
 
 /** L4. A promised repeat: spoken whole again on the identical second trigger. */
 export function L4(
   second: string[],
-  message: string,
+  message: Spoken,
   firstHeld: boolean,
 ): Fault[] {
   if (!firstHeld) return x0("L4: L1 did not hold on the first trigger");
   if (!nonEmpty(second)) return x0("L4: the second after window is empty");
   return spokenWhole(second, message)
     ? []
-    : fault("L4", `"${message}" was not spoken again on the second trigger`);
+    : fault(
+        "L4",
+        `${shown(message)} was not spoken again on the second trigger`,
+      );
 }
 
 /** F1. The focus target's accessible name (for a heading, its text) is spoken whole. */
-export function F1(after: string[], name: string): Fault[] {
+export function F1(after: string[], name: Spoken): Fault[] {
   if (!nonEmpty(after)) return x0("F1: the after window is empty");
   return spokenWhole(after, name)
     ? []
-    : fault("F1", `the focus target "${name}" was not spoken whole`);
+    : fault("F1", `the focus target ${shown(name)} was not spoken whole`);
 }
 
 /** O1. The overlay's name is spoken whole: a dialog's title, a menu's first item. */
@@ -162,37 +251,178 @@ export function O1(after: string[], name: string): Fault[] {
 }
 
 /**
+ * 022q decision 1: what `Sr.steps()` reads from the DOM before it walks an
+ * open overlay.
+ */
+export type Overlay = {
+  /** The trigger's accessible name, as the test gives it. */
+  trigger: string;
+  /** The overlay's own name in the DOM: its `aria-labelledby` text, or `aria-label`. */
+  title: string;
+  /** The overlay's description: its `aria-describedby` texts. */
+  descriptions: string[];
+  /**
+   * The overlay texts: the visible texts of elements inside the overlay,
+   * found by DOM containment (`h1`–`h4`, `[role="heading"]`, `p`, `label`,
+   * `button`, `a`, `li`, and the elements its `aria-labelledby` and
+   * `aria-describedby` name). An element with an `aria-label` gives that.
+   */
+  texts: string[];
+  /** The accessible text of the element focused when the walk began. */
+  focused: string;
+};
+
+/**
+ * 022q decision 1: the inside texts, the overlay texts less four kinds:
+ * the trigger's name; the overlay's own name (`name`, and its title in the
+ * DOM); its description (`aria-describedby`); and any text the trigger's
+ * name contains as whole words. A reader announces the title and the description as the
+ * overlay opens wherever its cursor stays, and a phrase on the trigger
+ * holds every word of the trigger's name: none proves the cursor went in.
+ * Compared normalised.
+ */
+export function insideTexts(overlay: Overlay, name: string): string[] {
+  // Amended after the change review (finding 7): by whole words, so "Name"
+  // inside "Rename project" stays an inside text.
+  const trigger = ` ${normalise(overlay.trigger)} `;
+  const own = new Set(
+    [name, overlay.title, ...overlay.descriptions].map(normalise),
+  );
+  return overlay.texts.filter((t) => {
+    const n = normalise(t);
+    return n !== "" && !own.has(n) && !trigger.includes(` ${n} `);
+  });
+}
+
+/** VoiceOver's hint after a move ("You are currently on a button…"), not the item. */
+const isHint = (p: string) => normalise(p).startsWith("you are currently on");
+
+/**
+ * 022q decision 1: the last step's phrase, the last non-empty step entry
+ * that is not a VoiceOver hint. Undefined if there is none.
+ */
+export function lastStepPhrase(steps: string[]): string | undefined {
+  return steps.findLast((p) => normalise(p) !== "" && !isHint(p));
+}
+
+/**
+ * 022q decision 1, step 4 (the rebuild's conflict, ruled 2026-11-16):
+ * VoiceOver's boundary of the overlay itself, a phrase that begins "end of"
+ * and then the overlay's name (`name`, or its title in the DOM), and names a
+ * dialog, compared normalised. VoiceOver speaks it only at the end of the container its
+ * cursor is in. The title alone, which a phrase on the trigger can hold,
+ * proves nothing.
+ */
+const isBoundary = (phrase: string, overlay: Overlay, name: string) => {
+  const n = normalise(phrase);
+  return (
+    // The re-check's finding 9: "end of" the overlay's name itself, and a
+    // dialog's, since VoiceOver ends a navigation landmark with the word
+    // "navigation", which can be the title.
+    n.includes("dialog") &&
+    [name, overlay.title].some(
+      (t) => normalise(t) !== "" && n.startsWith(`end of ${normalise(t)}`),
+    )
+  );
+};
+
+/**
+ * The last step's phrase, and whether it holds an inside text or the
+ * trigger's name, or is VoiceOver's boundary of the overlay.
+ */
+function stall(steps: string[], overlay: Overlay, name: string) {
+  const last = lastStepPhrase(steps);
+  const inside = insideTexts(overlay, name);
+  return {
+    last,
+    inside: last !== undefined && inside.some((t) => holds(last, t)),
+    boundary: last !== undefined && isBoundary(last, overlay, name),
+    trigger: last !== undefined && holds(last, overlay.trigger),
+  };
+}
+
+/**
+ * 022q decision 1, step 4: the walk ended on the trigger's name and no
+ * inside text, so `Sr.steps()` takes one `previous()` step after it.
+ */
+export function needsBack(
+  steps: string[],
+  overlay: Overlay,
+  name: string,
+): boolean {
+  const s = stall(steps, overlay, name);
+  return s.trigger && !s.inside && !s.boundary;
+}
+
+/**
  * O2. Modal containment: the sentinel is never spoken in ten `next()`
- * steps. Precondition: at least three distinct non-empty phrases, one of
- * them containing the overlay's name.
+ * steps. 022q decision 1: it judges in this order, and stops at the first
+ * that decides.
+ *
+ * 1. Got in: the `open` window or a step speaks an inside text. Else X0.
+ * 2. Moved: a step speaks an inside text other than the focused element's,
+ *    or the trigger's name. Else X0. Amended after the change review
+ *    (finding 3): the title, the description and texts inside the
+ *    trigger's name no longer count, since a reader speaks them from the
+ *    trigger or as the overlay opens. The `open` window always holds
+ *    speech once focus lands inside, so it cannot prove a walk.
+ * 3. The sentinel: a step speaks it, and O2 faults. A non-modal overlay
+ *    faults here, before any stall evidence is asked for.
+ * 4. The stall: the last step's phrase holds an inside text or the
+ *    trigger's name, so the walk ended inside. Else X0. If it holds the
+ *    trigger's name and no inside text, `back`, the one `previous()` step
+ *    taken after the walk, must speak an inside text, else X0: inside an
+ *    alert dialog whose action is named as its trigger is, the real
+ *    trigger and the action read the same, and only the element before
+ *    the action tells them apart. The last phrase also proves the stall
+ *    when it is VoiceOver's boundary of the overlay: it begins "end of"
+ *    and holds the overlay's name (ruled 2026-11-16).
  */
 export function O2(
+  open: string[],
   steps: string[],
   sentinel: string,
-  overlayName: string,
-  inside: string[] = [],
+  name: string,
+  overlay: Overlay,
+  back: string[] = [],
 ): Fault[] {
-  const distinct = new Set(steps.map(normalise).filter(Boolean));
-  if (distinct.size < 3)
+  const inside = insideTexts(overlay, name);
+  const spokeInside = (w: string[]) => inside.some((t) => spokenWhole(w, t));
+  if (!spokeInside(open) && !spokeInside(steps))
     return x0(
-      `O2: ${distinct.size} distinct phrases in the steps; 3 are needed`,
+      inside.length
+        ? `O2: neither the open window nor a step spoke an inside text (${inside.map((t) => `"${t}"`).join(", ")})`
+        : "O2: the overlay has no inside text to prove the reader got in",
     );
-  if (!spokenWhole(steps, overlayName))
-    return x0(`O2: no step spoke the overlay's name "${overlayName}"`);
-  // A trigger often bears the overlay's name, so a reader that never left
-  // it would meet the precondition. Where the test knows texts found only
-  // inside the overlay (`Sr.steps()` reads them from the DOM), one of them
-  // must be spoken too. Found by the Orca rehearsal (022 Q9).
-  if (inside.length && !inside.some((t) => spokenWhole(steps, t)))
+  // Every inside text the focused element's own text holds is its.
+  const focused = normalise(overlay.focused);
+  const others = inside.filter((t) => {
+    const n = normalise(t);
+    return !(focused !== "" && focused.includes(n));
+  });
+  const moved = steps.some(
+    (p) => others.some((t) => holds(p, t)) || holds(p, overlay.trigger),
+  );
+  if (!moved)
     return x0(
-      `O2: no step reached inside the overlay (none of ${inside.map((t) => `"${t}"`).join(", ")} was spoken)`,
+      `O2: no step spoke an inside text other than the focused element's ("${overlay.focused}"), or the trigger's name, so the walk never moved`,
     );
-  return spokenWhole(steps, sentinel)
-    ? fault(
-        "O2",
-        "the page behind the modal was reached: the sentinel was spoken",
-      )
-    : [];
+  if (spokenWhole(steps, sentinel))
+    return fault(
+      "O2",
+      "the page behind the modal was reached: the sentinel was spoken",
+    );
+  const end = stall(steps, overlay, name);
+  if (end.inside || end.boundary) return [];
+  if (end.trigger)
+    return spokeInside(back)
+      ? []
+      : x0(
+          `O2: the walk ended on the trigger's name ("${end.last}"), and the step before it (${back.length ? back.map((p) => `"${p}"`).join(", ") : "none"}) spoke no inside text`,
+        );
+  return x0(
+    `O2: the last step's phrase (${end.last === undefined ? "none" : `"${end.last}"`}) holds no inside text and not the trigger's name, and is not VoiceOver's end of the overlay, so the walk did not end inside`,
+  );
 }
 
 /** O3. Escape returns: the trigger's name is spoken whole, and it has focus. */
@@ -277,7 +507,9 @@ export function T2(dom: {
 
 /**
  * C1. The chart: within the steps, the figure's name, the table's caption
- * and its first column header are spoken whole, in that order.
+ * and its first column header are spoken whole, in that order. 022q
+ * decision 6: the walk takes 25 steps, room for the name, `004`'s fourteen
+ * tick labels, the caption and a header.
  */
 export function C1(steps: string[], inOrder: string[]): Fault[] {
   if (!nonEmpty(steps)) return x0("C1: the steps are empty");
@@ -330,33 +562,43 @@ export function C2(
 
 /**
  * U1 (026 decision 20, `unspoken`): a fault for each phrase that holds
- * `phrase`. Precondition: the window is not empty (a silent reader would
- * pass any "never said").
+ * `phrase`, in any of its spoken forms. Precondition: the window is not
+ * empty (a silent reader would pass any "never said").
  */
-export function U1(window: string[], phrase: string): Fault[] {
+export function U1(window: string[], phrase: Spoken): Fault[] {
   if (!nonEmpty(window)) return x0("U1: the window is empty");
-  const want = normalise(phrase);
   return window
-    .filter((p) => normalise(p).includes(want))
+    .filter((p) => holds(p, phrase))
     .map((p) => ({
       rule: "U1" as const,
-      message: `"${phrase}" was spoken: "${p}"`,
+      message: `${shown(phrase)} was spoken: "${p}"`,
     }));
 }
 
 /**
  * B1 (026 decision 20, `before`): `first` is spoken whole and ends before
- * `then` begins. Precondition: `then` is spoken whole.
+ * `then` begins. Precondition: `then` is spoken whole. Either may be a
+ * list of spoken forms; `then` is read where its first form is spoken.
  */
-export function B1(window: string[], first: string, then: string): Fault[] {
+export function B1(window: string[], first: Spoken, then: Spoken): Fault[] {
   if (!nonEmpty(window)) return x0("B1: the window is empty");
-  const at = spokenAt(window, then);
-  if (at < 0) return x0(`B1: "${then}" was not spoken, so nothing comes after`);
+  const found = formsOf(then)
+    .map((form) => ({ form, at: spokenAt(window, form) }))
+    .filter((f) => f.at >= 0)
+    .sort((a, b) => a.at - b.at)[0];
+  if (!found)
+    return x0(`B1: ${shown(then)} was not spoken, so nothing comes after`);
   // `first` must be whole within the phrases before `then`'s, or in the same
   // phrase before it.
   const n = window.map(normalise);
-  const before = [...n.slice(0, at), n[at]!.split(normalise(then))[0]!];
+  const before = [
+    ...n.slice(0, found.at),
+    n[found.at]!.split(normalise(found.form))[0]!,
+  ];
   return spokenWhole(before, first)
     ? []
-    : fault("B1", `"${first}" was not spoken whole before "${then}"`);
+    : fault(
+        "B1",
+        `${shown(first)} was not spoken whole before "${found.form}"`,
+      );
 }

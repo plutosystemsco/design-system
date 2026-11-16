@@ -100,9 +100,12 @@ test(
     await sr.open(PATH);
     const sentinel = await sr.sentinel();
     await openConfirm(page, sr);
-    await sr.after(() => pressToOpen(page), "open");
-    const steps = await sr.steps(10);
-    await sr.judge(O2(steps, sentinel, CONFIRM, sr.inside));
+    const opened = await sr.after(() => pressToOpen(page), "open");
+    const steps = await sr.steps(10, {
+      trigger: "Delete account",
+      title: CONFIRM,
+    });
+    await sr.judge(O2(opened, steps, sentinel, CONFIRM, sr.overlay, sr.back));
   },
 );
 

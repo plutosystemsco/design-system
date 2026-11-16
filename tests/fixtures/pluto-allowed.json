@@ -187,7 +187,7 @@
     {
       "files": "**",
       "pattern": "pluto-sandbox",
-      "count": 15,
+      "count": 17,
       "class": "brand",
       "reason": "Sample content: the example project's name."
     },

@@ -262,6 +262,8 @@ A **focus move** here means focus going where the user did not Tab or arrow to: 
 | **C1** | `chart`: from the element before the figure, within 15 `next()` steps, the figure's name, the table's caption and its first column header are spoken whole, in that order | the steps | the steps are not empty |
 | **C2** | `chart`: none of the example's tooltip texts (each series label with its value, as the tooltip formats it) is spoken in those steps | the steps | C1 holds |
 
+Changed since, by [`022q`](./022q-the-speech-suites-own-faults.md) (2026-11-16): O2's precondition and order, C1's step count (now 25), and the normalisation (commas become spaces; a rule may take spoken forms). This table stays the record of this decision.
+
 **The sentinel** (O2). Before opening a modal, the test inserts a visible paragraph, `<p data-sr-sentinel>`, with unique text (`sentinel ` and 8 random hex digits), as the first child of `<main>`, outside the overlay's subtree. It is test code, injected through Playwright; no site file changes. Words like "Close" or "button" exist on both sides of a modal, so only the sentinel can show the page behind.
 
 **Which overlays get which rules:**

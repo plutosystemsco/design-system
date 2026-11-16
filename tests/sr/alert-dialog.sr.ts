@@ -37,9 +37,9 @@ test(
     await sr.open(PATH);
     const sentinel = await sr.sentinel();
     await sr.after(() => trigger(page).focus(), "focus");
-    await sr.after(() => open(page), "open");
-    const steps = await sr.steps(10);
-    await sr.judge(O2(steps, sentinel, TITLE, sr.inside));
+    const opened = await sr.after(() => open(page), "open");
+    const steps = await sr.steps(10, { trigger: TRIGGER, title: TITLE });
+    await sr.judge(O2(opened, steps, sentinel, TITLE, sr.overlay, sr.back));
   },
 );
 

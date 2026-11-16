@@ -40,6 +40,10 @@ test(
   declared("tooltip", ["T2"]),
   async ({ page, sr }) => {
     await sr.open(PATH);
+    // 022q decision 4: the reader's helper can leave focus on the trigger
+    // and close the tooltip with its Escape, so blur first and open the
+    // tooltip by this test's own focus, as T1 does.
+    await sr.after(() => away(page), "away");
     await sr.after(() => trigger(page).focus(), "focus");
     const wasOpen = sr.fact(
       "the tooltip is open on focus",

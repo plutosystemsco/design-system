@@ -54,10 +54,14 @@ test(
     const after = await sr.after(() => page.keyboard.press("Enter"));
     await sr.focused(button(page, "Page 12"));
     // The review's finding 6: the status's "Page 12 of 12" also holds
-    // "Page 12", so the focus target is judged over the other phrases only.
+    // "Page 12". 022q decision 6: the status's text is taken out of each
+    // phrase, not the phrase, since NVDA may speak it and the focus
+    // announcement as one ("Page 12 of 12. list, with 6 items, Page, 12,
+    // button, current page").
+    const status = normalise("Page 12 of 12");
     await sr.judge(
       F1(
-        after.filter((p) => !normalise(p).includes("of 12")),
+        after.map((p) => normalise(p).replaceAll(status, " ")),
         "Page 12",
       ),
     );
