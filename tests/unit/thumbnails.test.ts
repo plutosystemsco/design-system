@@ -104,6 +104,7 @@ describe("018 decision 13: the thumbnails", () => {
       "src/lib/site/page/frame.svelte",
       "src/lib/site/site.css",
       "src/app.css",
+      "src/routes/layout.css",
       "scripts/site/thumbnails.ts",
     ])
       expect(inputs).toContain(f);
