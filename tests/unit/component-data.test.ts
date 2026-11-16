@@ -19,15 +19,15 @@ const updated = Object.fromEntries(
 );
 
 describe("018 decision 4: Updated", () => {
-  test("79 of 79 items have a version", () => {
-    expect(registry.items).toHaveLength(79);
+  test("82 of 82 items have a version", () => {
+    expect(registry.items).toHaveLength(82);
     for (const i of registry.items)
       expect(updated[i.name], i.name).toMatch(/^\d+\.\d+\.\d+$/);
   });
 
-  test("77 are named at a bullet's head; name-strip and cta-band take their since, 0.11.0", () => {
+  test("80 are named at a bullet's head; name-strip and cta-band take their since, 0.11.0", () => {
     const named = registry.items.filter((i) => updatedIn(i.name, null, log));
-    expect(named).toHaveLength(77);
+    expect(named).toHaveLength(80);
     expect(
       registry.items
         .filter((i) => !named.includes(i))

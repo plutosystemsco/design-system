@@ -49,9 +49,9 @@ const ALL = WITH_EXAMPLES.flatMap((i) =>
 const isPair = isPairFile;
 
 describe("015: examples are files", () => {
-  // 027a: link, button-group and progress join the 58; 026's toast, a 62nd.
-  test("each of the 62 items that are not blocks or compositions has at least 1 example file", () => {
-    expect(WITH_EXAMPLES).toHaveLength(62);
+  // 027a: link, button-group and progress join the 58; 026's toast, a 62nd; 027b's pagination, search-field and tag make 65.
+  test("each of the 65 items that are not blocks or compositions has at least 1 example file", () => {
+    expect(WITH_EXAMPLES).toHaveLength(65);
     expect(
       WITH_EXAMPLES.filter((i) => files(i.name).length === 0).map(
         (i) => i.name,
@@ -193,16 +193,29 @@ describe("015: shownSource", () => {
  * are whole. Each pair file has `kind`, `pair` and a caption of 20 words or
  * fewer; each don't has `breaks`; the page imports every pair file.
  */
-describe("027a test 5: batch A's examples and pairs", () => {
+describe("027 test 5: batch A's examples and pairs (027a's three, then 027b's)", () => {
   const ORDER: Record<string, string[]> = {
     link: ["inline", "standalone", "new-tab", "visited", "inherit"],
     "button-group": ["attached", "with-menu", "vertical", "spaced"],
     progress: ["upload", "states", "in-a-card"],
+    pagination: ["links", "buttons", "in-a-footer", "ends", "narrow", "small"],
+    "search-field": [
+      "filter",
+      "from-a-server",
+      "site",
+      "in-a-field",
+      "in-a-dialog",
+      "disabled",
+    ],
+    tag: ["removable", "pressable", "mixed", "fallback", "static"],
   };
   const PAIRS: Record<string, string[]> = {
     link: ["words", "action"],
     "button-group": ["weight", "state"],
     progress: ["numbers", "unknown"],
+    pagination: ["urls", "steps"],
+    "search-field": ["label", "landmark"],
+    tag: ["name", "role"],
   };
 
   /** A pair file's meta: its string fields, read from the module script. */

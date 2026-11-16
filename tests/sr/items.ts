@@ -48,6 +48,10 @@ export const SR_ITEMS: Record<string, Kind[]> = {
   "product-home": ["live", "overlay"],
   // 026 decision 20 (D2, built at 022's merge): two announcers and F8.
   toast: ["live", "focus"],
+  // 027 decision 11: batch A's interactive items.
+  pagination: ["live", "focus"],
+  "search-field": ["live", "focus"],
+  tag: ["focus"],
 };
 
 export const SR_EXCLUDED: Record<string, string> = {

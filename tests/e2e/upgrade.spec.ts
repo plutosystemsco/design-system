@@ -144,7 +144,7 @@ test.describe("020 test 17: the guide", () => {
   });
 });
 
-// 020 test 5's half that reads a page: the components index lists the 79
+// 020 test 5's half that reads a page: the components index lists the 82
 // items, the Kuiper theme among them, and no alias.
 test("the components index links to /components/kuiper-theme/ and to no pluto-theme page", async ({
   page,

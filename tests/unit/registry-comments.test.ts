@@ -60,12 +60,12 @@ function items(raw: unknown): ItemJson | null {
 }
 
 describe("published item files cite no internal document", () => {
-  // 020 decision 3: the 79 items (027a's three and 026's toast among them) and the one alias entry.
-  test("static/r holds the 80 entries' JSON", () => {
+  // 020 decision 3: the 82 items (027a's three, 026's toast and 027b's three among them) and the one alias entry.
+  test("static/r holds the 83 entries' JSON", () => {
     const named = FILES.map((f) =>
       items(JSON.parse(readFileSync(f, "utf8"))),
     ).filter(Boolean);
-    expect(named.length).toBe(80);
+    expect(named.length).toBe(83);
   });
 
   test("0 decoded lines and 0 joined comment blocks match a citation pattern, but the fixture's kept lines", () => {
@@ -359,4 +359,106 @@ describe("027a test 3: batch A has 0 empty API rows", () => {
     expect(members.map((m) => m.name)).toEqual(["newTab"]);
     expect(members.filter((m) => m.doc === 0)).toEqual([]);
   });
+});
+
+/**
+ * 027b test 3: batch A's interactive items have 0 empty API rows. Every
+ * prop of `Pagination`, `SearchField`, `TagGroup` and `Tag` has a doc
+ * comment, each variant prop shows its values, and every member of
+ * `PaginationStrings`, `SearchFieldStrings` and `TagStrings` is described.
+ */
+describe("027b test 3: batch A's interactive items have 0 empty API rows", () => {
+  type Item = { name: string; files: { path: string; type: string }[] };
+  const registry = JSON.parse(
+    readFileSync(path.join(ROOT, "registry.json"), "utf8"),
+  ) as { items: Item[] };
+
+  test.each([
+    ["pagination", "Pagination", "every attribute of an element"],
+    ["search-field", "SearchField", "every attribute of `<input>`"],
+    ["tag", "TagGroup", "every attribute of `<ul>`"],
+    ["tag", "Tag", "every attribute of an element"],
+  ] as const)(
+    "%s: every row of %s has a doc comment, and it inherits %s",
+    async (name, part, inherits) => {
+      const { apiTables } = await import("../../src/lib/site/api.server.ts");
+      const item = registry.items.find((i) => i.name === name);
+      expect(item, name).toBeDefined();
+      const table = apiTables(item!).find((t) => t.part === part);
+      expect(table, part).toBeDefined();
+      expect(table!.rows.length).toBeGreaterThan(0);
+      expect(table!.rows.filter((r) => !r.doc).map((r) => r.name)).toEqual([]);
+      expect(table!.inherits).toBe(`and ${inherits}`);
+    },
+  );
+
+  test.each([
+    [
+      "pagination",
+      "Pagination",
+      {
+        siblings: "0 | 1 | 2",
+        size: '"default" | "sm"',
+        page: "number",
+        pages: "number",
+      },
+    ],
+    [
+      "search-field",
+      "SearchField",
+      { value: "string", results: "string | undefined", resultsFor: "string" },
+    ],
+    ["tag", "Tag", { label: "string", pressed: "boolean" }],
+  ] as const)(
+    "%s: %s's types read as their values",
+    async (name, part, types) => {
+      const { apiTables } = await import("../../src/lib/site/api.server.ts");
+      const item = registry.items.find((i) => i.name === name)!;
+      const table = apiTables(item).find((t) => t.part === part)!;
+      for (const [prop, type] of Object.entries(types))
+        expect(table.rows.find((r) => r.name === prop)?.type, prop).toBe(type);
+    },
+  );
+
+  test.each([
+    [
+      "src/lib/registry/ui/pagination/pagination.svelte",
+      "PaginationStrings",
+      ["label", "previous", "next", "page", "endSuffix", "summary"],
+    ],
+    [
+      "src/lib/registry/ui/search-field/search-field.svelte",
+      "SearchFieldStrings",
+      ["clear"],
+    ],
+    ["src/lib/registry/ui/tag/tag.svelte", "TagStrings", ["remove"]],
+  ] as const)(
+    "every member of %s's %s has a doc comment",
+    async (file, name, want) => {
+      const ts = (await import("typescript")).default;
+      const text = readFileSync(path.join(ROOT, file), "utf8");
+      const module =
+        /<script[^>]*\bmodule\b[^>]*>([\s\S]*?)<\/script>/.exec(text)?.[1] ??
+        "";
+      const source = ts.createSourceFile(
+        "m.ts",
+        module,
+        ts.ScriptTarget.Latest,
+        true,
+      );
+      const alias = source.statements.find(
+        (s): s is import("typescript").TypeAliasDeclaration =>
+          ts.isTypeAliasDeclaration(s) && s.name.text === name,
+      );
+      expect(alias, name).toBeDefined();
+      const literal = alias!.type as import("typescript").TypeLiteralNode;
+      expect(ts.isTypeLiteralNode(literal)).toBe(true);
+      const members = literal.members.map((m) => ({
+        name: m.name?.getText(source) ?? "",
+        doc: ((m as unknown as { jsDoc?: unknown[] }).jsDoc ?? []).length,
+      }));
+      expect(members.map((m) => m.name)).toEqual([...want]);
+      expect(members.filter((m) => m.doc === 0)).toEqual([]);
+    },
+  );
 });

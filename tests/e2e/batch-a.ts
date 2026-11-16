@@ -122,3 +122,134 @@ async function decode(
   const i = (Math.min(y, h - 1) * w + Math.min(x, w - 1)) * 4;
   return rgbToHex(`rgb(${data[i]}, ${data[i + 1]}, ${data[i + 2]})`);
 }
+
+/** 027b's items, with their page examples and pair files, in page order. */
+export const PART_B: {
+  item: string;
+  examples: string[];
+  pairs: string[];
+  /** A don't's broken axe rule, by pair, where its `meta.axe` names one. */
+  axe?: Record<string, string>;
+}[] = [
+  {
+    item: "pagination",
+    examples: ["links", "buttons", "in-a-footer", "ends", "narrow", "small"],
+    pairs: ["urls", "steps"],
+  },
+  {
+    item: "search-field",
+    examples: [
+      "filter",
+      "from-a-server",
+      "site",
+      "in-a-field",
+      "in-a-dialog",
+      "disabled",
+    ],
+    pairs: ["label", "landmark"],
+  },
+  {
+    item: "tag",
+    examples: ["removable", "pressable", "mixed", "fallback", "static"],
+    pairs: ["name", "role"],
+    axe: { name: "button-name" },
+  },
+];
+
+/**
+ * An element's colours as `#rrggbb`: its text, its top border, its own
+ * background (or its ground, when its own is transparent), and its ground,
+ * the first opaque background above it.
+ */
+export async function coloursOf(locator: Locator): Promise<{
+  text: string;
+  border: string;
+  background: string;
+  ground: string;
+}> {
+  const raw = await locator.evaluate((el) => {
+    const opaque = (c: string) =>
+      c !== "transparent" && !/rgba\([^)]*,\s*0\)$/.test(c);
+    let ground = "";
+    for (let n = el.parentElement; n; n = n.parentElement) {
+      const bg = getComputedStyle(n).backgroundColor;
+      if (opaque(bg)) {
+        ground = bg;
+        break;
+      }
+    }
+    const s = getComputedStyle(el);
+    return {
+      text: s.color,
+      border: s.borderTopColor,
+      background: opaque(s.backgroundColor) ? s.backgroundColor : ground,
+      ground,
+    };
+  });
+  return {
+    text: rgbToHex(raw.text),
+    border: rgbToHex(raw.border),
+    background: rgbToHex(raw.background),
+    ground: rgbToHex(raw.ground),
+  };
+}
+
+/** Whether a computed colour is fully transparent. */
+export function transparent(c: string): boolean {
+  return c === "transparent" || /rgba\([^)]*,\s*0\)$/.test(c);
+}
+
+/**
+ * Every change to the text of the elements `selector` matches, logged by a
+ * MutationObserver from the page's first script, with the page's clock.
+ * Read it back with `writes(page)`.
+ */
+export async function logWrites(page: Page, selector: string): Promise<void> {
+  await page.addInitScript((sel) => {
+    const log: { text: string; t: number }[] = [];
+    (window as unknown as { __writes: typeof log }).__writes = log;
+    const seen = new WeakSet<Element>();
+    const attach = () => {
+      for (const el of document.querySelectorAll(sel)) {
+        if (seen.has(el)) continue;
+        seen.add(el);
+        new MutationObserver(() =>
+          log.push({ text: (el.textContent ?? "").trim(), t: Date.now() }),
+        ).observe(el, { childList: true, characterData: true, subtree: true });
+      }
+    };
+    const watch = () => {
+      attach();
+      new MutationObserver(attach).observe(document.documentElement, {
+        childList: true,
+        subtree: true,
+      });
+    };
+    if (document.readyState === "loading")
+      document.addEventListener("DOMContentLoaded", watch);
+    else watch();
+  }, selector);
+}
+
+/** The writes `logWrites` saw, in order. */
+export function writes(page: Page): Promise<{ text: string; t: number }[]> {
+  return page.evaluate(
+    () =>
+      (window as unknown as { __writes?: { text: string; t: number }[] })
+        .__writes ?? [],
+  );
+}
+
+/** Waits `n` animation frames in the page. */
+export function frames(page: Page, n = 2): Promise<void> {
+  return page.evaluate(
+    (count) =>
+      new Promise<void>((resolve) => {
+        let left = count;
+        const step = () =>
+          --left <= 0 ? resolve() : requestAnimationFrame(step);
+        requestAnimationFrame(step);
+      }),
+    n,
+  );
+}

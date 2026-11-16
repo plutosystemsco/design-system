@@ -105,6 +105,34 @@ export const PATCHES: Patch[] = [
     },
   },
   {
+    // 027 decision 11: the status is rendered, but the summary is never
+    // written to it, so a pressed page is said by no reader.
+    set: "main",
+    patch: "9-pagination-status.patch",
+    target: "pagination:status",
+    fault: "L1",
+    why: "the summary is never written to the status",
+    witness: {
+      file: "pagination.sr.ts",
+      title:
+        "P1 a page is said: Next on page 5 speaks Page 6 of 12, once, and not before",
+    },
+  },
+  {
+    // 027 decision 11: the group no longer moves focus after a removal, so
+    // focus falls to the page and the reader says no tag.
+    set: "main",
+    patch: "10-tag-focus.patch",
+    target: "tag:group",
+    fault: "F1",
+    why: "the group no longer moves focus after a removal",
+    witness: {
+      file: "tag.sr.ts",
+      title:
+        "T1 the next: removing the first tag speaks the next tag's remove button",
+    },
+  },
+  {
     set: "double-read",
     patch: "7b-error-summary.patch",
     target: "error-summary",

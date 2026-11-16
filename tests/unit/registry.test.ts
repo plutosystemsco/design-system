@@ -50,7 +50,16 @@ const GROUPS: [group: string, names: string[]][] = [
   // 027a decision 1: button-group, progress and link end their groups.
   [
     "actions",
-    ["button", "tooltip", "kbd", "toggle", "toggle-group", "button-group"],
+    [
+      "button",
+      "tooltip",
+      "kbd",
+      "toggle",
+      "toggle-group",
+      "button-group",
+      // 027b decision 1.
+      "tag",
+    ],
   ],
   [
     "surfaces",
@@ -95,6 +104,8 @@ const GROUPS: [group: string, names: string[]][] = [
       "radio-group",
       "switch",
       "input-otp",
+      // 027b decision 1.
+      "search-field",
     ],
   ],
   [
@@ -118,6 +129,8 @@ const GROUPS: [group: string, names: string[]][] = [
       "sidebar",
       "is-mobile",
       "link",
+      // 027b decision 1.
+      "pagination",
     ],
   ],
   ["chat", ["message-log", "message", "marker", "composer"]],
@@ -335,6 +348,8 @@ const BLOCKS = [...BLOCKS_003, ...ITEMS_006.map(([n]) => n), "product-home"];
 const ITEMS_003 = ["status", "error-summary", ...BLOCKS_003];
 /** 027a decision 1: 0.13.0's batch A items, so far. */
 const ITEMS_027A = ["button-group", "progress", "link"];
+/** 027b decision 1: batch A's interactive items. */
+const ITEMS_027B = ["tag", "search-field", "pagination"];
 /** 026 decision 1: the toast. Its own checks are in toast-site.test.ts. */
 const ITEMS_026 = ["toast"];
 /** 002's 26 items. */
@@ -349,7 +364,8 @@ const ITEMS_002 = GROUPS.slice(1)
       !ITEMS_006.some(([name]) => name === n) &&
       !TYPE_007.has(n) &&
       !NAMES_010.includes(n) &&
-      !ITEMS_027A.includes(n),
+      !ITEMS_027A.includes(n) &&
+      !ITEMS_027B.includes(n),
   );
 const ITEMS: [string, string][] = [
   ...ITEMS_001,
@@ -455,8 +471,8 @@ describe("registry.json", () => {
     expect(() => registrySchema.parse(registry)).not.toThrow();
   });
 
-  test("holds the 79 items of 006 decision 3, 007 decision 7, 009 decision 10, 010 decision 1, 011 decision 8 027a decision 1 and 026 decision 1, in order, with their types (1, 3, 4, 2, 61, 8)", () => {
-    expect(ITEMS).toHaveLength(79);
+  test("holds the 82 items of 006 decision 3, 007 decision 7, 009 decision 10, 010 decision 1, 011 decision 8, 027a decision 1, 026 decision 1 and 027b decision 1, in order, with their types (1, 3, 4, 2, 64, 8)", () => {
+    expect(ITEMS).toHaveLength(82);
     const types = ITEMS.map(([, t]) => t);
     expect(
       [
@@ -467,7 +483,7 @@ describe("registry.json", () => {
         "registry:ui",
         "registry:block",
       ].map((t) => types.filter((x) => x === t).length),
-    ).toEqual([1, 3, 4, 2, 61, 8]);
+    ).toEqual([1, 3, 4, 2, 64, 8]);
     expect(
       registry.items.map((i: { name: string; type: string }) => [
         i.name,
@@ -565,11 +581,11 @@ describe("registry.json", () => {
       (i: { type: string }) => i.type === "registry:ui",
     );
     expect(ui).toHaveLength(UI_COUNT);
-    expect(UI_COUNT).toBe(61);
+    expect(UI_COUNT).toBe(64);
     for (const item of ui) expect(item.files.length).toBeGreaterThanOrEqual(2);
   });
 
-  test("79 of 79 items carry a meta.group among the 11, in the order their specifications give", () => {
+  test("82 of 82 items carry a meta.group among the 11, in the order their specifications give", () => {
     expect(GROUPS).toHaveLength(11);
     const groups = new Set(GROUPS.map(([g]) => g));
     for (const item of registry.items as {
@@ -1004,9 +1020,9 @@ describe("the built registry", () => {
     if (out) rmSync(out, { recursive: true, force: true });
   });
 
-  // 020 decision 3: the 79 items (with 027a's and 026's), and the one deprecated entry, which the
+  // 020 decision 3: the 82 items (with 027a's, 026's and 027b's), and the one deprecated entry, which the
   // CLI must find in the index.
-  test("81 files under r/styles/maia and 81 byte-identical files under the versioned path", () => {
+  test("84 files under r/styles/maia and 84 byte-identical files under the versioned path", () => {
     const files = readdirSync(latest()).sort();
     expect(files).toEqual(
       [
@@ -1019,7 +1035,7 @@ describe("the built registry", () => {
           .map((i: { name: string }) => `${i.name}.json`),
       ].sort(),
     );
-    expect(files).toHaveLength(81);
+    expect(files).toHaveLength(84);
     expect(readdirSync(versioned()).sort()).toEqual(files);
     for (const file of files) {
       expect(readFileSync(path.join(versioned(), file))).toEqual(
@@ -1050,9 +1066,9 @@ describe("the built registry", () => {
     }
   });
 
-  test("every target of the 61 registry:ui items starts <name>/", () => {
+  test("every target of the 64 registry:ui items starts <name>/", () => {
     const ui = ITEMS.filter(([, type]) => type === "registry:ui");
-    expect(ui).toHaveLength(61);
+    expect(ui).toHaveLength(64);
     for (const [name] of ui) {
       const item = JSON.parse(
         readFileSync(path.join(latest(), `${name}.json`), "utf8"),
@@ -1280,9 +1296,9 @@ describe("the built registry", () => {
 
   // 005 decision 4: an app that adds one item into an
   // empty project must get every file it imports.
-  test("61 of 61 built registry:ui items import only $UI$ names in their own registryDependencies", () => {
+  test("64 of 64 built registry:ui items import only $UI$ names in their own registryDependencies", () => {
     const ui = ITEMS.filter(([, type]) => type === "registry:ui");
-    expect(ui).toHaveLength(61);
+    expect(ui).toHaveLength(64);
     const offending: string[] = [];
     for (const [name] of ui) {
       const item = JSON.parse(
@@ -2103,12 +2119,12 @@ describe("020 test 3: kuiper-theme is the theme", () => {
     expect(Object.keys(theme?.css ?? {}).length).toBeGreaterThan(10);
   });
 
-  // 027a: link, button-group and progress name it too, and 026's toast.
-  test("the 74 items that name the theme name kuiper-theme, and none names pluto-theme", () => {
+  // 027a: link, button-group and progress name it too, 026's toast, and 027b's three.
+  test("the 77 items that name the theme name kuiper-theme, and none names pluto-theme", () => {
     const naming = all.filter((i) =>
       (i.registryDependencies ?? []).includes("kuiper-theme"),
     );
-    expect(naming.filter((i) => !i.meta?.deprecated)).toHaveLength(74);
+    expect(naming.filter((i) => !i.meta?.deprecated)).toHaveLength(77);
     expect(
       all.filter((i) => (i.registryDependencies ?? []).includes("pluto-theme")),
     ).toEqual([]);
@@ -2147,17 +2163,17 @@ describe("020 test 4: the pluto-theme alias", () => {
       readFileSync("static/r/styles/maia/index.json", "utf8"),
     ) as { name: string }[];
     expect(index.filter((i) => i.name === "pluto-theme")).toHaveLength(1);
-    expect(index).toHaveLength(80);
+    expect(index).toHaveLength(83);
     expect(existsSync("static/r/styles/maia/pluto-theme.json")).toBe(true);
     expect(existsSync("static/r/styles/maia/kuiper-theme.json")).toBe(true);
   });
 });
 
 describe("020 test 5: a deprecated item is not listed", () => {
-  test("listedItems() returns the 79 items, without pluto-theme", async () => {
+  test("listedItems() returns the 82 items, without pluto-theme", async () => {
     const { listedItems } = await import("../../src/lib/site/items.ts");
     const listed = listedItems();
-    expect(listed).toHaveLength(79);
+    expect(listed).toHaveLength(82);
     expect(listed.map((i) => i.name)).not.toContain("pluto-theme");
     expect(listed.map((i) => i.name)).toContain("kuiper-theme");
   });
@@ -2187,7 +2203,7 @@ describe("020 test 5: a deprecated item is not listed", () => {
     const manifest = JSON.parse(
       readFileSync("src/lib/site/thumbnails/manifest.json", "utf8"),
     );
-    expect(Object.keys(manifest)).toHaveLength(79);
+    expect(Object.keys(manifest)).toHaveLength(82);
     expect(Object.keys(manifest)).not.toContain("pluto-theme");
     expect(Object.keys(manifest)).toContain("kuiper-theme");
 
@@ -2197,7 +2213,7 @@ describe("020 test 5: a deprecated item is not listed", () => {
     expect(Object.keys(EXAMPLE_ORDER)).toContain("kuiper-theme");
 
     const { DOORS } = await import("../../src/lib/site/doors.ts");
-    expect(DOORS.find((d) => d.id === "components")?.line).toBe("79 parts");
+    expect(DOORS.find((d) => d.id === "components")?.line).toBe("82 parts");
 
     // The components index's loader lists through listedItems; its
     // rendered cards are counted in upgrade.spec.ts.
@@ -2380,6 +2396,105 @@ describe("027a test 2: the 0.13.0 entry has one bullet per built batch A item", 
     ["link", ["`newTab`", "`noopener", "`linkVariants`"]],
     ["button-group", ["`attached`", "`spaced`", "`aria-label`"]],
     ["progress", ["`<progress>`", "`valuetext`", "`spinner`"]],
+  ] as const)("%s: one bullet, new, naming %p", (name, words) => {
+    const found = bullets(name);
+    expect(found, name).toHaveLength(1);
+    expect(found[0]).toContain("new, a `registry:ui`");
+    expect(found[0]).not.toContain("**interface change.**");
+    for (const w of words) expect(found[0], w).toContain(w);
+  });
+});
+
+/**
+ * 027b tests 1 and 2: batch A's interactive items, pagination, search field
+ * and tag. Each is a registry:ui of its own, since 0.13.0, with no stock
+ * origin, its icons from `phosphor-svelte`; each has one bullet in the
+ * 0.13.0 entry.
+ */
+describe("027b test 1: batch A's interactive items are registry:ui items", () => {
+  const BATCH_A_027B = [
+    {
+      name: "pagination",
+      group: "navigation",
+      deps: ["utils", "kuiper-theme", "button", "status"],
+      files: 3,
+    },
+    {
+      name: "search-field",
+      group: "forms",
+      deps: ["utils", "kuiper-theme", "input-group", "status"],
+      files: 2,
+    },
+    {
+      name: "tag",
+      group: "actions",
+      deps: ["utils", "kuiper-theme", "button"],
+      files: 3,
+    },
+  ];
+  const byName = new Map(
+    (
+      registry.items as {
+        name: string;
+        type: string;
+        registryDependencies?: string[];
+        files: unknown[];
+        meta: {
+          since?: string;
+          modes?: string[];
+          group?: string;
+          stock?: unknown;
+        };
+      }[]
+    ).map((i) => [i.name, i]),
+  );
+
+  test.each(BATCH_A_027B)(
+    "$name: registry:ui, since 0.13.0, productive, in $group, no meta.stock, its dependencies and $files files",
+    ({ name, group, deps, files }) => {
+      const item = byName.get(name);
+      expect(item, name).toBeDefined();
+      expect(item!.type).toBe("registry:ui");
+      expect(item!.meta.since).toBe("0.13.0");
+      expect(item!.meta.modes).toEqual(["productive"]);
+      expect(item!.meta.group).toBe(group);
+      expect("stock" in item!.meta).toBe(false);
+      expect(item!.registryDependencies).toEqual(deps);
+      expect(item!.files).toHaveLength(files);
+    },
+  );
+
+  test.each(BATCH_A_027B)(
+    "$name: the built item's one package is phosphor-svelte",
+    ({ name }) => {
+      const built = JSON.parse(
+        readFileSync(`static/r/styles/maia/${name}.json`, "utf8"),
+      ) as { dependencies?: string[]; devDependencies?: string[] };
+      expect(
+        [
+          ...(built.dependencies ?? []),
+          ...(built.devDependencies ?? []),
+        ].sort(),
+      ).toEqual(["phosphor-svelte@^3.1.1"]);
+    },
+  );
+});
+
+describe("027b test 2: the 0.13.0 entry has one bullet per interactive batch A item", () => {
+  const log = readFileSync("CHANGELOG.md", "utf8");
+  const entry = log.includes("## 0.13.0")
+    ? log.slice(log.indexOf("## 0.13.0"), log.indexOf("\n## 0.12.0"))
+    : "";
+  const bullets = (name: string) =>
+    entry.split("\n").filter((l) => l.startsWith(`- \`${name}\`: `));
+
+  test.each([
+    [
+      "pagination",
+      ["`aria-current", "`href", "`onpagechange`", "Page 6 of 12", "`flex-1`"],
+    ],
+    ["search-field", ["Escape", "`results`", "`resultsFor`", "750 ms"]],
+    ["tag", ["Remove", "Delete", "`fallback`"]],
   ] as const)("%s: one bullet, new, naming %p", (name, words) => {
     const found = bullets(name);
     expect(found, name).toHaveLength(1);

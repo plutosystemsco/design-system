@@ -8,7 +8,7 @@ import AxeBuilder from "@axe-core/playwright";
 import type { Page } from "@playwright/test";
 import { expect, test } from "../test.ts";
 import { open, componentPath, settled } from "./pages.ts";
-import { openExample, PART_A } from "./batch-a.ts";
+import { openExample, PART_A, PART_B } from "./batch-a.ts";
 
 const TAGS = [
   "wcag2a",
@@ -24,9 +24,17 @@ const TAGS = [
  * leaves an existing item's inherited rules to it: the card's hairline edge
  * is one. An element with one of these slots is skipped; its descendants
  * are not. 031b removes this list when it makes `card`'s edge solid, so a
- * translucent edge that came back would fail here.
+ * translucent edge that came back would fail here. 027b adds `table-row`,
+ * whose row rule is the same hairline, under pagination's tables.
  */
-const AUDITED_BY_031B = ["card"];
+const AUDITED_BY_031B = ["card", "table-row"];
+
+/**
+ * 027 decision 13: test 50 runs on the enabled examples. A disabled search
+ * field keeps `input`'s own `disabled:opacity-50`, which `031b` audits;
+ * test 26a checks that example's controls.
+ */
+const DISABLED_EXAMPLES = ["search-field/disabled"];
 
 /** Every descendant of the view's main with a translucent fill or border, a backdrop filter or opacity below 1. */
 function translucent(page: Page): Promise<string[]> {
@@ -68,14 +76,23 @@ function translucent(page: Page): Promise<string[]> {
   }, AUDITED_BY_031B);
 }
 
-for (const { item, examples, pairs } of PART_A)
+for (const { part, item, examples, pairs, axe } of [
+  ...PART_A.map((p) => ({
+    ...p,
+    part: "027a",
+    axe: {} as Record<string, string>,
+  })),
+  ...PART_B.map((p) => ({ ...p, part: "027b", axe: p.axe ?? {} })),
+])
   test.describe(
-    `027a: ${item}, across its examples`,
+    `${part}: ${item}, across its examples`,
     { annotation: { type: "item", description: item } },
     () => {
       test.use({ viewport: { width: 1440, height: 900 } });
 
-      for (const id of examples)
+      for (const id of examples.filter(
+        (id) => !DISABLED_EXAMPLES.includes(`${item}/${id}`),
+      ))
         test(
           `50. nothing in ${item}/${id} is translucent, at rest, hovered or focused`,
           { annotation: { type: "check", description: "depth" } },
@@ -130,27 +147,36 @@ for (const { item, examples, pairs } of PART_A)
         ...pairs.flatMap((p) => [`do-${p}`, `dont-${p}`]),
       ];
       for (const width of [1440, 390])
-        for (const id of views)
+        for (const id of views) {
+          // A don't whose `meta.axe` names a rule reports exactly that rule;
+          // every other view, and a don't broken in words, reports none.
+          const breaks = id.startsWith("dont-")
+            ? axe[id.slice("dont-".length)]
+            : undefined;
           test(
-            `52. axe finds 0 violations on ${item}/${id} at ${width}`,
+            breaks
+              ? `52. axe finds exactly ${breaks} on ${item}/${id} at ${width}`
+              : `52. axe finds 0 violations on ${item}/${id} at ${width}`,
             { annotation: { type: "check", description: "axe" } },
             async ({ page }, info) => {
               await page.setViewportSize({ width, height: 900 });
               await openExample(page, info, item, id);
               await settled(page);
-              // Every don't of 027a breaks a rule in words, not an axe rule,
-              // so each reports none.
               const results = await new AxeBuilder({ page })
                 .withTags(TAGS)
                 .analyze();
-              expect(
-                results.violations.map(
-                  (v) =>
-                    `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(" | ")}`,
-                ),
-              ).toEqual([]);
+              if (breaks)
+                expect(results.violations.map((v) => v.id)).toEqual([breaks]);
+              else
+                expect(
+                  results.violations.map(
+                    (v) =>
+                      `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(" | ")}`,
+                  ),
+                ).toEqual([]);
             },
           );
+        }
 
       test(
         `5. ${item}'s page renders its ${pairs.length * 2} pair files in its Usage lists, each don't inside inert`,

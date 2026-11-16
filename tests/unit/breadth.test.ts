@@ -27,6 +27,8 @@ const partsOf = (slug: string) =>
 
 /** 027a's three names. */
 const PART_A = ["link", "button-group", "progress"];
+/** 027b's three names. */
+const PART_B = ["pagination", "search-field", "tag"];
 
 describe("027 test 6: batch A's names meet REFERENCE_PARTS", () => {
   test("the list holds 40 parts", () => {
@@ -53,5 +55,23 @@ describe("027 test 6: batch A's names meet REFERENCE_PARTS", () => {
       SLUGS.includes(n),
     ).length;
     expect(covered(SLUGS).length).toBe(31 + toast + partB);
+  });
+
+  // 027b: pagination, search-field and tag.
+  test("pagination, search-field and tag each match exactly one part", () => {
+    expect(partsOf("pagination")).toEqual(["pagination"]);
+    expect(partsOf("search-field")).toEqual(["search"]);
+    expect(partsOf("tag")).toEqual(["tag / chip"]);
+  });
+
+  test("part b's items are registry:ui items in the working tree", () => {
+    for (const name of PART_B) expect(SLUGS, name).toContain(name);
+  });
+
+  test("part b adds 3 hits more: 35 of 40 with toast", () => {
+    const without = SLUGS.filter((s) => !PART_B.includes(s));
+    expect(covered(SLUGS).length - covered(without).length).toBe(3);
+    expect(SLUGS).toContain("toast");
+    expect(covered(SLUGS).length).toBe(35);
   });
 });

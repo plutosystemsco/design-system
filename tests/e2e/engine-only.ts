@@ -174,4 +174,47 @@ export const ENGINE_ONLY: EngineOnly[] = [
     // 011 criterion 4 is stated for the light theme.
     reason: "light theme only",
   },
+  // 027b: pagination, search field and tag.
+  {
+    file: "pagination.spec.ts",
+    title:
+      "027b: pagination › 15a. focus stays on a pressed page across range changes, by click",
+    helper: "adaptsIn",
+    engine: "webkit",
+    // 027's re-review, R2: WebKit, as macOS, focuses no button on click.
+    reason:
+      "focus on click: WebKit does not focus a button on click, so the item moves no focus",
+  },
+  {
+    file: "pagination.spec.ts",
+    title:
+      "027b: pagination › 18. a WebKit click on Next onto the last page, from outside the nav, moves no focus",
+    helper: "onlyIn",
+    engine: "webkit",
+    reason:
+      "focus on click: only WebKit leaves focus where it was when a button is clicked",
+  },
+  {
+    file: "pagination.spec.ts",
+    title: "027b: pagination › 24. forced colours keep the current page",
+    helper: "notIn",
+    engine: "webkit",
+    reason: "forced colours: Playwright's WebKit does not emulate forcedColors",
+  },
+  {
+    file: "search-field.spec.ts",
+    title: "027b: the search field › 28. WebKit's cancel button is hidden",
+    helper: "notIn",
+    engine: "firefox",
+    reason:
+      "::-webkit-search-cancel-button: Firefox draws no cancel button on a search input",
+  },
+  {
+    file: "tag.spec.ts",
+    title:
+      "027b: the tag › 40. a pressable tag keeps its check under forced colours",
+    helper: "notIn",
+    engine: "webkit",
+    reason: "forced colours: Playwright's WebKit does not emulate forcedColors",
+  },
 ];
