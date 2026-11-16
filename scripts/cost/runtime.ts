@@ -270,7 +270,7 @@ export async function runBlocks(
   const log = options.log ?? (() => {});
   const server = serveBuild(path.join(floor.dir, "build"));
   const started = performance.now();
-  type Block = { floor: Trial[]; item: Trial[]; base: App };
+  type Block = { floor: Trial[]; item: Trial[]; base: App; viewport: string };
   const blocks = new Map<string, Block[]>(subjects.map((s) => [s.key, []]));
   const failed: Record<string, string> = {};
   const loads: number[] = [];
@@ -298,7 +298,12 @@ export async function runBlocks(
           if (failed[s.key]) continue;
           const entry = s.calibrate ? CALIBRATE : s.entry;
           const viewport = entry?.viewport ?? SETTINGS.viewport;
-          const block: Block = { floor: [], item: [], base: s.base };
+          const block: Block = {
+            floor: [],
+            item: [],
+            base: s.base,
+            viewport,
+          };
           try {
             for (const slot of SETTINGS.block) {
               if (slot === "F")
@@ -384,11 +389,15 @@ export async function runBlocks(
   }
 
   // The instrument: the floor's own hydration and the no-op click, from
-  // every floor trial on the floor, a launch median each, then their median.
+  // every floor trial on the floor at the default viewport (a phone-width
+  // block's are left out: the change review's finding 11), a launch median
+  // each, then their median.
   const onFloor = (launch: number) =>
     subjects.flatMap((s) => {
       const b = blocks.get(s.key)![launch];
-      return b && b.base.dir === floor.dir ? b.floor : [];
+      return b && b.base.dir === floor.dir && b.viewport === SETTINGS.viewport
+        ? b.floor
+        : [];
     });
   const perLaunch = (pick: (t: Trial) => number) =>
     Array.from({ length: launches }, (_, l) => onFloor(l))

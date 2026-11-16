@@ -233,7 +233,7 @@ export const INTERACTIONS: Record<string, Interaction> = {
     state: `!!document.querySelector("[data-slot=chart-tooltip]")?.textContent?.includes("Mon")`,
     says: "shows",
     viewport: DEFAULT,
-    note: "The target is the first point's hover band, which layerchart lays over the bars.",
+    note: "The target is the first point's hover band, which layerchart lays over the bars. It is layerchart's own class: re-check it on a layerchart update.",
   },
   sidebar: {
     kind: "click",
@@ -310,7 +310,7 @@ export const INTERACTIONS: Record<string, Interaction> = {
     state: `__cost.inside("[data-shell=menu]")`,
     says: "opens",
     viewport: "390x844",
-    note: "The block as installed has no user, so no user menu: the phone menu opens the shell's navigation sheet. Its block's floor trials run at its viewport too.",
+    note: "On a phone-width screen. The block as installed has no user, so no user menu: the phone menu opens the shell's navigation sheet, mostly the sheet's own work. Its block's floor trials, and its hydration, run at that viewport too.",
   },
   chat: {
     kind: "key",

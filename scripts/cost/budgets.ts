@@ -99,35 +99,48 @@ function budgetOf(
   return kase ? b?.cases?.[kase] : b;
 }
 
+/** A runtime figure is held to its budget only from a quiet run on the release machine. */
+function heldRun(report: Report, run: string, budgets: Budgets): boolean {
+  const r = report.runs[run];
+  return r !== undefined && r.machine.model === budgets.machine && !r.noisy;
+}
+
 /**
  * Every figure over its budget, as "<item> <metric>: <figure> over <budget>".
- * Sizes and hydration are held everywhere. A response time is held to the
- * 200 ms ceiling always, and to its budget only when its run is on the
- * release machine and not noisy (decisions 12 and 15).
+ * Sizes are held everywhere: they are deterministic. A response time is held
+ * to the 200 ms ceiling always. Hydration and response time are held to
+ * their budgets only when their run is on the release machine and not noisy
+ * (decisions 12 and 15; the change review's finding 5 for hydration).
  */
 export function overBudget(report: Report, budgets: Budgets): string[] {
-  const out: string[] = [];
+  return check(report, budgets).fail;
+}
+
+/** Runtime figures over budget that `overBudget` does not hold: from a noisy run, or another machine. */
+export function budgetWarnings(report: Report, budgets: Budgets): string[] {
+  return check(report, budgets).warn;
+}
+
+function check(report: Report, budgets: Budgets) {
+  const fail: string[] = [];
+  const warn: string[] = [];
   for (const { key, entry, isCase } of entries(report)) {
     const b = budgetOf(budgets, key) as Record<string, number> | undefined;
-    const run = report.runs[entry.run];
+    const held = heldRun(report, entry.run, budgets);
     for (const [metric, value] of Object.entries(figures(entry, isCase))) {
-      if (metric === "interactionMs") {
-        if (value > SETTINGS.ceilingMs)
-          out.push(
-            `${key} interactionMs: ${value} over the ${SETTINGS.ceilingMs} ms ceiling`,
-          );
-        const held =
-          run !== undefined &&
-          run.machine.model === budgets.machine &&
-          !run.noisy;
-        if (!held) continue;
-      }
+      if (metric === "interactionMs" && value > SETTINGS.ceilingMs)
+        fail.push(
+          `${key} interactionMs: ${value} over the ${SETTINGS.ceilingMs} ms ceiling`,
+        );
       const budget = b?.[metric];
-      if (typeof budget === "number" && value > budget)
-        out.push(`${key} ${metric}: ${value} over ${budget}`);
+      if (typeof budget !== "number" || value <= budget) continue;
+      const line = `${key} ${metric}: ${value} over ${budget}`;
+      const runtime = metric === "hydrateMs" || metric === "interactionMs";
+      if (runtime && !held) warn.push(`${line} (not held: run ${entry.run})`);
+      else fail.push(line);
     }
   }
-  return out;
+  return { fail, warn };
 }
 
 /** Every budget an entry lacks for a figure it has, and every budget for a figure it lacks. */
@@ -224,7 +237,9 @@ export function checkRulings(
         for (const r of list) {
           const text = readSpec(r.ruling);
           const notes = text && landingNotes(text);
-          if (!notes || !notes.includes(item))
+          // The name in backticks, as landing notes write names, so that
+          // `button-group` never stands for `button` (finding 12).
+          if (!notes || !notes.includes(`\`${item}\``))
             out.push(
               `${label}: ${name}'s ${r.metric} ruling ${r.ruling} is not a specification whose Landing notes name ${item}`,
             );
@@ -233,7 +248,7 @@ export function checkRulings(
             r.to > SETTINGS.ceilingMs &&
             !notes
               .split(/\n\s*\n/)
-              .some((p) => p.includes("the owner") && p.includes(item))
+              .some((p) => p.includes("the owner") && p.includes(`\`${item}\``))
           )
             out.push(
               `${label}: ${name}'s interactionMs over ${SETTINGS.ceilingMs} needs a Landing notes paragraph naming it and "the owner"`,

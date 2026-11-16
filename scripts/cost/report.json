@@ -1,37 +1,6 @@
 {
   "schema": 1,
   "runs": {
-    "2026-11-16T02:55:56.743Z": {
-      "commit": "44cec73+dirty",
-      "full": true,
-      "machine": {
-        "model": "MacBookPro18,3 (Apple M1 Pro)",
-        "cores": 10,
-        "os": "darwin 25.5.0"
-      },
-      "tools": {
-        "bun": "1.4.4",
-        "chromium": "156.0.8078.4",
-        "playwright": "1.64.1",
-        "cli": "1.7.1",
-        "zlib": "12731092979c6d07f42da27da673a9f6c7b13586"
-      },
-      "settings": {
-        "cpu": 4,
-        "launches": 6,
-        "block": "FIFIFIF",
-        "warmups": 1,
-        "gzipLevel": 9
-      },
-      "load": { "median": 66.3, "max": 81.7 },
-      "instrument": {
-        "floorHydrateMs": 128,
-        "noopMs": 41.9,
-        "calibrateMs": 90.6
-      },
-      "noisy": false,
-      "seconds": 3286
-    },
     "2026-11-16T03:52:04.663Z": {
       "commit": "44cec73+dirty",
       "full": true,
@@ -73,24 +42,27 @@
       "font-geist": 76420,
       "font-heading-ibm-plex-sans": 162416,
       "font-jetbrains-mono": 84216
-    }
+    },
+    "outputHash": "6303416dc26317c740b6990898cb35af2ae9b286dcfdd26eb8023d36cbfa126b"
   },
   "floor": {
     "js": 42840,
     "css": 7525,
     "run": "2026-11-16T03:52:04.663Z",
     "hydrateMs": 126.6,
-    "noopMs": 42.9
+    "noopMs": 42.9,
+    "outputHash": "67b6685c60a3cfc6a165e21ebdbabcdbfffdf61cd4008a2903e4f22b98e3ad55"
   },
   "catalogue": {
-    "js": 362601,
-    "css": 15985,
-    "sumOfAlone": { "js": 1051307, "css": 56354 }
+    "js": 362612,
+    "css": 15990,
+    "sumOfAlone": { "js": 1051301, "css": 56359 }
   },
   "items": {
     "utils": {
-      "hash": "31a626a4b51baf3c9cd9ee1f383f22b87d39fd79da45fdf68f4827e410351b51",
+      "hash": "e39961e3e867667728bc28b326c23d07da6d8295c8263e850659f74cebae01e8",
       "runtimeHash": "dd16f6851253746ec1422e8ba70302f221b0f0039750f4c7ee04aa45bd9312ec",
+      "outputHash": "c26a5f812e00e7f58e8d360216cfc515b2ea46cc22f2cfda165fc734090ddd41",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 11436,
@@ -110,8 +82,9 @@
       "cases": {}
     },
     "four-dot": {
-      "hash": "2d277e99879d5e74f0594efc714436a15b847d60398028bde7af8576095062af",
+      "hash": "00ec782628406d48b374075daafbca52fff09651327570ca5e8213031bdaf891",
       "runtimeHash": "da15fd0f43baf0c5387a296ea9e15c55c2cad4735cd1c989ec0b6c849ece3b71",
+      "outputHash": "fdacdb426c48a9e77fa7e9476dcffaff2f8bee98bde9eb0e20299502b3d3e0ef",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 5131,
@@ -130,8 +103,9 @@
       "cases": {}
     },
     "theme": {
-      "hash": "00f67623a64e8e752c6a98d5e4ccbc6b1e1e7362cecf51dac72d420a20832b8e",
+      "hash": "bdc15a4f7673005e454dcbf19ebc373326f9ce2af5d3cca413c5b551ae316dcd",
       "runtimeHash": "8b7228903f9f2d984a085fecb16bfbc5ce894c8247abcbb2c629af1991c36ec3",
+      "outputHash": "26692b7ac8331a2634458cbe633c9ce5e27b6251340c6f607d19c10a71ccb862",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 12449,
@@ -163,8 +137,9 @@
       "cases": {}
     },
     "read-token": {
-      "hash": "c470b6a8d92f992c05b40a21935cdda0e0e07a4790f66a1613e7e5570764bde8",
+      "hash": "3d0bfc20c0960f705485de962369af792bda4df8aa633616c25d9037aa3e39de",
       "runtimeHash": "c536d1d02b2c656c642e2aee48bb78ec2a537697a520170c8379ea81bdf869ff",
+      "outputHash": "1cd58f0f1450fa852f67eae52df3eb12a3abf02e2b2e50fc1802ccc07c7013ab",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 211,
@@ -183,8 +158,9 @@
       "cases": {}
     },
     "liquid-glass": {
-      "hash": "0d8efeb71505c102251bb3d7ab40863672c45c88ea14c5502c5dda153c7e8e8d",
+      "hash": "8b41a4ae500cf5d2897cf2e289b238465de2a7c2c379472f4d62c7814038ac46",
       "runtimeHash": "ec2ae8f178077556e5daba1f2dce662c5c708386dbcb2dac730f4051bf11d050",
+      "outputHash": "de58e566e614fc6784732362607feabe447761fbc51c66bad9c886e1cbde1fe7",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 584,
@@ -204,8 +180,9 @@
       "cases": {}
     },
     "button": {
-      "hash": "90ba55ea55fb44c429a6d7d3006df579cb1c2f994156739a0b75f6e7a7f7b211",
+      "hash": "1afdeece41ebb807f811b4e48e63c2a1681a16511c9cbce0c701e3bc72050bce",
       "runtimeHash": "6477586e2a6891a1b240bd03662fe7b61d7f0172423653609fbada059ed9f00d",
+      "outputHash": "06ed1487880727b0bf7da2011519b58f5f50ce6a54d4f3754d9428af27c206ee",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 9960,
@@ -236,8 +213,9 @@
       "cases": {}
     },
     "tooltip": {
-      "hash": "afbe9964b44b1f68db87210a2b74ec911abe4f159144e35f0f63523336d83be6",
+      "hash": "69a328ccf88a21d6f6421c2d651a76b132a919a58ce4791c851abf6d3a6d582a",
       "runtimeHash": "f367bea03aacb87d5124726352b9e14926615fffc656a7f1e7fecc862e53b254",
+      "outputHash": "11009b6f867a7f4fe76993b938b3178993f94b51b46a70cf83aa6abc1df10b31",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 32652,
@@ -274,8 +252,9 @@
       "cases": {}
     },
     "kbd": {
-      "hash": "56d26bfe2705577dab54a0ea79dae10520753a22637369c125545ef72442ee9b",
+      "hash": "fd557f9fab64ed4646daba5657869705246f81415191cccbbd3b37313ab8831a",
       "runtimeHash": "3a6cb98606226cbdda160bb54d70d1620c9ccf531cd54ebe07993903efbb2b3b",
+      "outputHash": "bec65104ae7d29f7ae3384904a404a1ef2fe0355e2815106c217ff4c884465f3",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 3507,
@@ -294,8 +273,9 @@
       "cases": {}
     },
     "toggle": {
-      "hash": "d8dfd07ea1e87623dfc5e23baa173f9e3b233884f2a3becee3f731e6e9359e93",
+      "hash": "2e3f476bbcc6347b14eda5aa0f0eaaf54e90f578122c836520a494296280762d",
       "runtimeHash": "c0714ac6216202c71e1a0bc7b4e15130de9af40d1d77794a987dd74517449fcf",
+      "outputHash": "928361cf527ece8417fcb3c010f3f7339c81a62e772248cd118bc1f39235e813",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 10714,
@@ -328,8 +308,9 @@
       "cases": {}
     },
     "toggle-group": {
-      "hash": "aa395a21e25bc32a996ef51ef90a72570d8f0fec26af3fef10b7c9983dc51806",
+      "hash": "78e7963a5a61e0b94acc5145a0c56070cbccd245cb4cb2650ae653734082e9ed",
       "runtimeHash": "232e3cf3884b8e776b151f321444617d1edd40fa12cf2a27cd7ce23f3af6a180",
+      "outputHash": "f4b1be7df6662deb30e15a430b6d80b86c0d8f6347f26d483389e0e605085a3b",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 13655,
@@ -364,8 +345,9 @@
       "cases": {}
     },
     "card": {
-      "hash": "08d2e25da3ff04a3bba2972de4c6a8d76212a302f8e482bcd2c7c0bfc4b286c9",
+      "hash": "0a30a4bea8d68588336b41987823332972f0579a574b5566510eba1616d305f4",
       "runtimeHash": "05bc464b72522c6348be13ea937c9ebddeff149da754bf7d14b750042b801b0e",
+      "outputHash": "4b54a24bb55fbbf99eee545ae2e7022a0f396fb9b1e7f62746f307b1acbd39f1",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 4284,
@@ -384,8 +366,9 @@
       "cases": {}
     },
     "separator": {
-      "hash": "2546f3d0843490be318654455966421f82fd1ef2020233123cec75b5abaa81c3",
+      "hash": "448ac6481768361a831fa0fe7438d1e9323c3cfe5fc9343a56620e6ea00484cf",
       "runtimeHash": "be3f70b98ce4e1e6c032cf9aa93acf506160e949049db46b72340d243d45eb09",
+      "outputHash": "daf6f10f1a4c82bfcf7c73574dff140f92ee1a4244945fee85fe5ccbd2173348",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 6953,
@@ -408,8 +391,9 @@
       "cases": {}
     },
     "item": {
-      "hash": "27494732ad88693380443f6e40b987bd0ff22611130bcd76a3311d3d9d9f517c",
+      "hash": "038c701c69b473deedccfe1f70f7bdcc055bd94ab582198b88422cac56baa24a",
       "runtimeHash": "a12fb46ae8475f71e5b33e715a007f3935260eb3c89995c05485774fe51da6ef",
+      "outputHash": "aed7be91cdf22cadb6525c7f10ae26a98bdfda18f5bbf08b1f3468bc51ad883c",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 7607,
@@ -429,8 +413,9 @@
       "cases": {}
     },
     "table": {
-      "hash": "99a0eacba8586e92ae203e4b99c043c5b30ba2a0df7aead49b14624c5090d4e3",
+      "hash": "ba6ebbb028ca53d5e3f31f3352301e02d543ae04361b53d227bc6e649f748550",
       "runtimeHash": "3134c14d78486e1ad5d0ac2431f3ee9fd95c6b602ba3e5adc995adabb9a8d2af",
+      "outputHash": "61df4f33aaa4e57daaee006299ef764b92b0b8805f113f90bab49738f6468678",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 5738,
@@ -448,8 +433,9 @@
       ],
       "cases": {
         "1000-rows": {
-          "hash": "49feb11d43a8f596bcdc95770f6cccee87512087b7fadb6a281fe96938912f07",
+          "hash": "c947d83f2b202a09170512126db91067b2035b5e565ad31a4544078e43291701",
           "runtimeHash": "e8f9590c395316c43833567a075c3b5e661d2a6f57c0d174d35f1dc3fbf86760",
+          "outputHash": "e174827422ab79b096fa56aa794fc0af1bd7e503c1b6cd4ddd7d84088adc73dc",
           "run": "2026-11-16T03:52:04.663Z",
           "size": {
             "js": 5853,
@@ -468,8 +454,9 @@
       }
     },
     "tabs": {
-      "hash": "579539dd17309d26ac94755299eb0ba32ba7df328087321bcd7119f2b4372c53",
+      "hash": "78a5818de6ce145ec800c18a68a280bd29459826b73fec857dbc90e9be250ddb",
       "runtimeHash": "4ad29663673711f8c1e581d7730c135dc4cd8ef8deae98e9efe9bb6fc6214b01",
+      "outputHash": "edb157b64d76db874b52fa7b97197cc4a6d8aa960b8aaae4a845d2c2c072d575",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 14406,
@@ -503,8 +490,9 @@
       "cases": {}
     },
     "collapsible": {
-      "hash": "1dfe97bce462842b1290cca655cb1564f655829e1be5735306adbf3c1d45bb04",
+      "hash": "0075b80275f78a5678a0eadc41ca8fc1bffef78672b9e9e7bd84f4f0843e7304",
       "runtimeHash": "df347b558d254ab079ed5ea5d22e9ab3a31a62d4b66c8faf49234175e79974dd",
+      "outputHash": "eeca6170847bcec53d9e26467904bf1a805747f3ca51365d80a4879abea456e5",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 9469,
@@ -537,8 +525,9 @@
       "cases": {}
     },
     "avatar": {
-      "hash": "7d3e97f98a14d641a97b16a808ed7d6f300b221e2da384331cd3953f8b90079e",
+      "hash": "835a32dbc76e9af02eb2f5b2c20df02c6d1eced13c146007a1283eb744947dde",
       "runtimeHash": "d3e5559deda5ec5d84f6ad1ff6d9943ec7a5cb8eac612fdac266ff79f0a7acf8",
+      "outputHash": "7c9b57a8243d2d2f464a04d0671e23c7f1c6e94d2c41a0e443ebfef92a32f5a6",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 8226,
@@ -562,8 +551,9 @@
       "cases": {}
     },
     "popover": {
-      "hash": "6caa70a256f8963065abcf3cac76b0a776e844536463bba8ddb65bf624affbe2",
+      "hash": "17d193809b15d2c98964ab9dcfbb28a224ad0edb9f8182a7a3a9286ac79c535d",
       "runtimeHash": "484ea1479740689b4dc63afa2f35d504b8a55c39a0375c606bc3125cf19e9d75",
+      "outputHash": "0010631e79013926cce73c19c85149a811a53667a4888c3f0d203d1fc778eb5e",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 31696,
@@ -600,8 +590,9 @@
       "cases": {}
     },
     "accordion": {
-      "hash": "9bbc01e5d556c519d8cf3349b2517bf3db36ff03f827eb2e835364f733d2ef10",
+      "hash": "1b63b4faf0a0cf19b7208f92e56387844e7322d5526702616c8e70ce22fcfad4",
       "runtimeHash": "1b9e1ff7c96eae4f3a3e68e9915a78322f7299115011af3ffd14c27c9f77be41",
+      "outputHash": "fca4f55e5e891a154200272b2eb9aa333ca7e225006261919651951c15461621",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 13009,
@@ -635,8 +626,9 @@
       "cases": {}
     },
     "alert": {
-      "hash": "cf7c91a3789565d1144ab4649cbbe4a50000ce9c89ae3ffcbb802da4f760995e",
+      "hash": "7e71c56d118c24507f7724804af84b82dc39f1a4f0d1762baafdf0aa1ae119fb",
       "runtimeHash": "6f9ecc3443e88fe00b7add848893c925cc1bace4ce959f03f475035236436215",
+      "outputHash": "efb07af7620f0c657292fa36b77388d1a6982a466bb115e7db60f400fc71d23c",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 7412,
@@ -656,8 +648,9 @@
       "cases": {}
     },
     "alert-dialog": {
-      "hash": "6840f1516295b9b479a38422b3be0bbcf707e248a5c486872bcd42eafce27ad6",
+      "hash": "dd6da8b99c39753843c81b246c7b0c52921c5b7d132f0ec6c851bb538e7e41c9",
       "runtimeHash": "270d1285844d4a6daa70757a3038f9b979252b6c614547f7961c81cf41e68847",
+      "outputHash": "70b13a3cf051acd90ccba6c251b15e0b931cba64b95546537473cc09cc36e0ae",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 22988,
@@ -693,8 +686,9 @@
       "cases": {}
     },
     "badge": {
-      "hash": "a5fe1b3a245992b880042e7b24263c305ee449c530004fb1d0b77a65a787f5ed",
+      "hash": "e8be791b0f2486fc4ad33b5a88e1c0aba3441481f697d839c17c30e2aefb4065",
       "runtimeHash": "bf0af3334be1e79327ed450224e55e2ad6caf92af6707dbba2becabab5ea0f0f",
+      "outputHash": "243d4fc6a6641c215f684d947493002aa532362eeb8099c5d76d4f20f3cf4706",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 6966,
@@ -714,8 +708,9 @@
       "cases": {}
     },
     "empty": {
-      "hash": "3db0078a32375b5ade917ede4eedfc3814a1f92a46e0353cbcfa5db8afaa425e",
+      "hash": "725e5d01c2f24ebc5563bf216bbb03a6b7994f914a0257207490a99162d14f66",
       "runtimeHash": "edcfc4beb4a962da90f5e00fb94a9c151d767618b8075a15541634955b9a3994",
+      "outputHash": "5fabfe46bded475949b23d873877d52395eb5f1a0854e3bb80f7aa4064a2a682",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 7591,
@@ -735,8 +730,9 @@
       "cases": {}
     },
     "skeleton": {
-      "hash": "a82a316f7e5d9f6d418b5912d20be4b78fff2108e48d689a30fbcd7baafe7a8f",
+      "hash": "041f1113604021db1187d7fde3f2d79bfea5674f6c96096010900a4d0f46c88a",
       "runtimeHash": "e8bf705cb071dd22a7747c6ed01c91b005cfbae7cdb65362ae55e92c21a92a74",
+      "outputHash": "162af95b085c9d45a5d9eff73f718c75462382bc7b2f3e0f7ef99aa02041e142",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 3349,
@@ -755,8 +751,9 @@
       "cases": {}
     },
     "spinner": {
-      "hash": "576a6931701544fdd22f0c0fc2b11deb4889e6bb4ee246a3027463b4350a1b8a",
+      "hash": "e57bdbf97cfc6c1c2227358257ef00f547e040e64dcfd883ef293f90b86a9fe7",
       "runtimeHash": "60864fc1ed32069d30d6b8084f9a0dd1381c57d9d9b1912cfb29bf8e831d258f",
+      "outputHash": "530d1ef1b999696ff3076adf248a0b549259812f2219ff183346d54578475fd2",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 5631,
@@ -776,8 +773,9 @@
       "cases": {}
     },
     "status": {
-      "hash": "f2af365e6ed8ead321ffe8895dc5109a8e2265d9d7795666a6b24ac043a672a3",
+      "hash": "57ae19950901fe7e6c95448824214c86c8fdc52ae0687ae31645a8547f47c345",
       "runtimeHash": "46cb3c7697a8d9b8fbaa3d5424d95929e6cf6ee375dbbc25611799d3f9fb36a8",
+      "outputHash": "506038433f420ffc16a03725195d5573500a6b6bc58e0a7ce6913d1a53e59843",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 3419,
@@ -796,8 +794,9 @@
       "cases": {}
     },
     "error-summary": {
-      "hash": "2b694d668f3b72766f37ca26c6b6e4a7c9b7f68ec2fdbc585d97c26fc52ba736",
+      "hash": "e452da6d6e3bd1dd7d353e84d602eb9ec775a66de75ae3e1fcf9ba8cac77ec5a",
       "runtimeHash": "10fefcdcaef5a58a94553560f23e3ddccfb37b3e0304971af71aac0ccb4e810a",
+      "outputHash": "3d1928b2691840a7e2e6482919900ee2a3d8e12aa989655295dfde85cf9f00bb",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 11816,
@@ -828,8 +827,9 @@
       "cases": {}
     },
     "label": {
-      "hash": "ea75ce02fd6cf5b5dc4c151b089a27d9b22f3666feacd134beaa7d41bca7313c",
+      "hash": "cb3548e4027303ede944fc509d532165385de4a046760ced07192fd8e1cb13bd",
       "runtimeHash": "b1721ef1a604ae7b1d12f9ae8efb032c609dc848ae961951aff273128a1f5ef4",
+      "outputHash": "4dfbac4be9ad4900e47c2fd4bb74d848dca27f77d4834e921df49e8fde224f18",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 6945,
@@ -852,8 +852,9 @@
       "cases": {}
     },
     "field": {
-      "hash": "1a68f883b3b04a5fd63bb254a9ca8ec4b59dc397c809fb3797f10b49461cbd35",
+      "hash": "da7d4b91002dbd5914ea52b8a4aff54dfe65cfd34208d4784dcad7207abc34ab",
       "runtimeHash": "a752b883e1270aa1ff4254bae05e089fedaf5a8bd3d8660f28e577c25f813904",
+      "outputHash": "7d246b8e4e099d9a9b2dde9eb3bf9c4abb79ad8297b85b303a6e0c19fc948317",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 13393,
@@ -878,8 +879,9 @@
       "cases": {}
     },
     "input": {
-      "hash": "ae6fc3e0ba599659b6ade44926a3e822a3e90b600a033fb65f9bb249a35793a7",
+      "hash": "a5e574d5efb01c4d62dff23083a3bf7cb9a3daf1f0c361c47aafc59dc0e04914",
       "runtimeHash": "8b22a86b8a21f03c84a6b802a1da3e41894e68460040bda1a5552e3c859da409",
+      "outputHash": "4e0656da092c9319b3463b2947e304e918323944b95d541614192d30cd91eeeb",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 4208,
@@ -898,8 +900,9 @@
       "cases": {}
     },
     "textarea": {
-      "hash": "374f891b098efebfc158aef075a963a77e66912e0619a6f96cd37c1c8986c3c8",
+      "hash": "f20691b1809ef9a46fdcd7331d0ed380eea7dfd920b39beaaad75483ab2fd4ee",
       "runtimeHash": "566e7175b3bbc59182a69a6c9124065a1769981b8d6284d425e60e30f4f70e8c",
+      "outputHash": "d14146125d93c7faa85e9359145b4d2d5903ba663ca8f05248743652849a50e4",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 4042,
@@ -918,8 +921,9 @@
       "cases": {}
     },
     "input-group": {
-      "hash": "ef867be04825b3e4455706e6b82584301e7c2251616135aff846044314de8723",
+      "hash": "26027e17c6a26370374addf98ee919b7e8f5b8ad11cb68ac4055cdfb8c8a1406",
       "runtimeHash": "b592eba8c960aa400c3066f4b2b0cd3d996d7c18524d9f2e9cc92d49b553cca6",
+      "outputHash": "826e22531676bbdb57a44fa21f98e5406ba67191ca7833a443f830252c1c4f4d",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 11752,
@@ -952,8 +956,9 @@
       "cases": {}
     },
     "native-select": {
-      "hash": "fc9fcdc1206e4bb03fd42c4f5f79a7fd7fcfe6e56a360c02037324857781cd9d",
+      "hash": "49c66a1c7d0c1c7845e7fb85303011384ebb4a32be43cdc51aa5644553b2fe6a",
       "runtimeHash": "674dd836fd323960eddaab3c8f354d753403be6a5d6c767ee17ab1c1696e9372",
+      "outputHash": "9b9d1db6a6019b508d1af14f3609663d35f73717e45a0f26d7e395ce9e896941",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 5538,
@@ -973,8 +978,9 @@
       "cases": {}
     },
     "checkbox": {
-      "hash": "81008eb73170f545e349580f88269218ba64322094ddad1000165d0c0026636d",
+      "hash": "887c886e22a7c732d8c80e8a43c83ba1c6c14f43d3d6d32f195d83187c337371",
       "runtimeHash": "3fefb2cce612aab46920e7f367f528d2e8d93e82cb5d70d5065453808528d11b",
+      "outputHash": "6c2908658b97ab95e24a7d3dbce772fc5268e4ad514ea3eabf852dd17d2ebaa5",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 10920,
@@ -1008,8 +1014,9 @@
       "cases": {}
     },
     "radio-group": {
-      "hash": "94b781cf1ab360ecb1b1977efb1096b42541ce3a547c33e9faa5b769e0a307e0",
+      "hash": "bc33d7f2e30bb57892b4ce9b2af4d211cceecdaf3e999cac079f6e5bf10e1d83",
       "runtimeHash": "5b8d983fd7f1271e63622ba641c31311888e593a58416ccb22ce46d7fa2e8774",
+      "outputHash": "030bde4921891ea77fd009e6a08525ced6533acc7e8379d529dd1fce17a65cb5",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 10537,
@@ -1042,8 +1049,9 @@
       "cases": {}
     },
     "switch": {
-      "hash": "a883ebda914b4d3fccee036c33c691d38369895aff1f815afcc3e43d3aebf76c",
+      "hash": "499a13b19a970a9af3bb93da1610aac63d560354bcd9faa57e31ae62fc30916f",
       "runtimeHash": "703cb653e55935a4b5d71a90634abb1cb3976de7bf7a09d2a296a3bc6afcc6ef",
+      "outputHash": "88a44c7432ff5909c7721b1749195c85182e42ffe0ed9c4dd7ed2c44eaebaa91",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 8703,
@@ -1076,8 +1084,9 @@
       "cases": {}
     },
     "input-otp": {
-      "hash": "30a7bab091a1cd50f47910ec2fc1ddaea36e738f2bfe074ad2d6d3a3aa28252f",
+      "hash": "6f18bf2ad25a97431caa69264bc19f7f40964639dbd62edbc23312421ed751d5",
       "runtimeHash": "cec264015ad6aeee7e80d7939a935afb90a9b0a8f0ee126c1942f6c5cf8c9f50",
+      "outputHash": "63719ea5b0dc8cbdf45c58f2e7604221ac85f4dc0114fe70b8240f6dcfff7420",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 13509,
@@ -1110,8 +1119,9 @@
       "cases": {}
     },
     "code-block": {
-      "hash": "1adddab680983190fa4240724b3059766aed2c1ee5dfe2e2552bd6d6025b31de",
+      "hash": "9cce17da09e71d11f15d6b426703c4e10e9a2b49f637cff6a302f082e257bf70",
       "runtimeHash": "217ae740b788363234e52976508735c58fda2ea31e638fe3ad9271ace9ede763",
+      "outputHash": "b66ae80be883a8faa120c2c9d728bd26d50a5c4e85465869ab5a44980cf54706",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 25566,
@@ -1146,8 +1156,9 @@
       "cases": {}
     },
     "code-editor": {
-      "hash": "f34583065d5bd225eca33924ecc49c35a0bfa8af2975aebdcc88deab6c5e748d",
+      "hash": "fc58605d1658d15d53c9b8276b3bd690e3da1ba7c6635a9094fe2c85331e64ff",
       "runtimeHash": "f8509686cea70acf1b1be59bf329636e8a339daeacb015f367e437123426bb66",
+      "outputHash": "3d43c3c85878be92b699a6f08bcf0bffcdb3e154dfbc45483b6182a5acc3d334",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 130841,
@@ -1189,8 +1200,9 @@
       "cases": {}
     },
     "highlighter": {
-      "hash": "1c66137a149690d3b6f164b35078fab95b1936f6053a50bfdcda6607ea1a541e",
+      "hash": "cfba62ca207dc27e1f483d581c0b1addedec6b5646255224905ba19ce0d5b157",
       "runtimeHash": "fc6b13f325d57962696709809b4d47903de3ce8f8edf0056d6560974ac331c42",
+      "outputHash": "f1289d2185ec6517d740dfffc0afc4b92eba1a53a914fb2dd67a8152749861be",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 10839,
@@ -1209,8 +1221,9 @@
       "cases": {}
     },
     "use-highlighted-code": {
-      "hash": "b832a9e28f90aa239e6cd5c717399a0fdb91b8b77e39612ddac505579bb92667",
+      "hash": "51b97bb54b2e1429f34b03386315eb7ca9fd8e49ecef3e023487096e374301c3",
       "runtimeHash": "94f286f3b1df10213c2d26c302ca9b1eb7782d5d04284dba85899d96a466c149",
+      "outputHash": "241c3f03d88ac15c3afc78461d9cc4479c50141b94ff0c5bb38a5827bc635113",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 11171,
@@ -1230,8 +1243,9 @@
       "cases": {}
     },
     "code-languages": {
-      "hash": "99a580ebbd7aa5a3b93127cc2a52ff8b1dcf36cff37e00de9759c24ed344a7ad",
+      "hash": "6ccc653902b9428e2f296594b646d5bbf8fae277975b3f1f0d2b981d87e9a795",
       "runtimeHash": "f8e8430ce85c89cdae31d944871dd19d9078317bee9e707a454508e33b1ac898",
+      "outputHash": "8b5132f06f26738a608599f66cfd9a7612dcd00762db3d9224ae611db3ad2061",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 66538,
@@ -1257,15 +1271,16 @@
       "cases": {}
     },
     "chart": {
-      "hash": "7e249e0a30cae234234f10cdd0b01cde6899a2d2cc6eea9b0ed955de73d0b637",
+      "hash": "4f05496b48ce5f9fc11d3b0fed407dbe3d813ae69a30902fd14d59afcdbcae8f",
       "runtimeHash": "7bc3157ecc43e1e6c893b7fc3aac5901f64960f3bf56628a3a177caff4c2aa74",
+      "outputHash": "e3692b997e3d359698c2b4a2cd2f6318e5d521248fba7b5b3fe18c38992b2204",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
-        "js": 137419,
-        "css": 5340,
-        "lazy": 57820,
+        "js": 137413,
+        "css": 5345,
+        "lazy": 57822,
         "assets": 418,
-        "brotli": { "js": 120386, "css": 4408 }
+        "brotli": { "js": 120301, "css": 4403 }
       },
       "hydrate": { "ms": 165, "spread": [150.6, 175.5], "settledMs": 293.4 },
       "interaction": {
@@ -1280,10 +1295,10 @@
       },
       "route": "/",
       "breakdown": [
-        { "source": "package:layerchart", "js": 88543 },
+        { "source": "package:layerchart", "js": 88539 },
         { "source": "runtime", "js": 10175 },
         { "source": "package:tailwind-merge", "js": 9501 },
-        { "source": "package:@layerstack/utils", "js": 6737 },
+        { "source": "package:@layerstack/utils", "js": 6736 },
         { "source": "package:d3-time-format", "js": 2863 },
         { "source": "package:d3-interpolate-path", "js": 2117 },
         { "source": "own", "js": 1944 },
@@ -1300,15 +1315,16 @@
         { "source": "package:d3-path", "js": 520 },
         { "source": "package:memoize", "js": 377 },
         { "source": "package:mimic-function", "js": 333 },
-        { "source": "package:internmap", "js": 263 },
+        { "source": "package:internmap", "js": 262 },
         { "source": "package:@layerstack/svelte-actions", "js": 190 },
         { "source": "package:@layerstack/tailwind", "js": 102 }
       ],
       "cases": {}
     },
     "meter": {
-      "hash": "a31eea2b39db810950ca852c34727c95e06907469435b9d3de1f7ebe566642b2",
+      "hash": "2a4dc8429a3b15d0674d520a0315f737b031000e25e789a290215b092913f35f",
       "runtimeHash": "433ea752920781905495d4579ec94c1e720c97f1dc6887f4d4dadf955e5a93f7",
+      "outputHash": "88308adcd72f5a77c6c42de79228bbab3ce695a68d0f13d1cbe2ae6f84b2be7f",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 3408,
@@ -1327,8 +1343,9 @@
       "cases": {}
     },
     "dropdown-menu": {
-      "hash": "a6d9286d63618003ecac6d631f19e28d3d615ee7aa6744d4b6e3560494a5ea49",
+      "hash": "ef29d8c62bd7aba15b1ba2abeb047bf65799f1e239f56bea3e5ba9a10e23421d",
       "runtimeHash": "e8d39fdcba506e3d5d589d3b5904d4941e0152cec33f9f848a741de57d9ec5e5",
+      "outputHash": "2f936beb33cff039d7f970f6dfdc8dce0fd8744de368477daf263b6cb95cb3ea",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 35176,
@@ -1365,8 +1382,9 @@
       "cases": {}
     },
     "sheet": {
-      "hash": "8d16bcd078c266fe6b838e8a1ac70795e2554729b4cf65ed6d46b586924a8584",
+      "hash": "cb36d65bef9c678f3922dd63eaee2ad9e03f1edd99f64bd70edfd85b7986a8a4",
       "runtimeHash": "026000f3afb1a0ce9e2a247ad5a5846043d55e3aca61d8c3d43db966799b3aa8",
+      "outputHash": "18a5dd9eaa9238255eb8091de9bb043488ced573a71e703d160c4921f8304190",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 25313,
@@ -1404,8 +1422,9 @@
       "cases": {}
     },
     "dialog": {
-      "hash": "c7224e4469a2cfc59f04fe3ef7fe478a637e69f256da98d073a4feacbb848a45",
+      "hash": "af35c08d5731a9bf578c6c287a442c793d8bb212454ee8a320dc78543a76b4ac",
       "runtimeHash": "51cb9392fca336ae32dc92dde65248184549731bf92377c7e717baaca8f66cb0",
+      "outputHash": "9966d286975898e6bf8aae7854165e51d4ed39863afd4b490ee848b05cf4602c",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 25457,
@@ -1443,8 +1462,9 @@
       "cases": {}
     },
     "breadcrumb": {
-      "hash": "95400cb1bed55a4f24ebb36c5ebe6ed751428d48734c9aad40f668f477423add",
+      "hash": "25f8b73d8e3da4993177bd48d54b392ff3c6fa836c01f2ffe5804129b726e4e5",
       "runtimeHash": "f969c65ce7732fb633f0f1c26a954f3dbb62d94e5dfed487d68ca8779b7b3fce",
+      "outputHash": "548c245a13a8850e24614319fb646a5a36bfd8e2a4531f8064863b96f96280d1",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 5205,
@@ -1464,8 +1484,9 @@
       "cases": {}
     },
     "sidebar": {
-      "hash": "beb36d474571549a7b2e41b24effa4920ab864a9d9a6a1902056d5285500582c",
+      "hash": "76e1a91e4b4270b0fce134bb33d3583f2ad706554bf4652b6661ce3b9ccdc05e",
       "runtimeHash": "7a77f5436d42f9d86f4cf6980f34401e3b72c1921819e7cf46ad027d735ef816",
+      "outputHash": "20136154fed0d8b9a23458d259cda0937e6dac6bca1845226d27104f05d51fbd",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 45467,
@@ -1510,8 +1531,9 @@
       "cases": {}
     },
     "is-mobile": {
-      "hash": "e76f5aae014c888c483f2eb96f832384d66ffd7faee18b1f8327fc78339109b6",
+      "hash": "5b92a2a82ad04d02c18ab54fa021a0a07272c66b9a2ca8cb0f406f3bb2326265",
       "runtimeHash": "63436d3128b9ed6bebe3932fe0d97c9c2b9c1af8bd4b8dbd9ac7445d558c846c",
+      "outputHash": "0054e3af58e88df20210e6f8e08e61ebb9ed9cbd12c4204e205f267de0b432cf",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 486,
@@ -1530,8 +1552,9 @@
       "cases": {}
     },
     "message-log": {
-      "hash": "027d9647854fd00325e1131ebefaa55fca9af51d577ee46dca771be450a098fd",
+      "hash": "da3c66898d878114d203153c51b990de646c2688ac5acea394539385b82073e1",
       "runtimeHash": "79724412b2ccbf986374537139d8a6cd8ba041463ea0a6e9ded9b050ee3e7d8a",
+      "outputHash": "43f4ec91a687d80876973836e6288c063c954e2ca3a1e948dd232dfe1183317c",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 11409,
@@ -1554,8 +1577,9 @@
       "cases": {}
     },
     "message": {
-      "hash": "48856fa60e55c94d268db9a88e70ee067db5404892658ab23b729a5233081739",
+      "hash": "29bb07dba739d7fca59f2ae0cdddefff55eedce1057b8a5773c3eec975180bc8",
       "runtimeHash": "214b7b106ae72f5d32c19de353d382a4308436df7b1e6be3e49fb09bf607d11c",
+      "outputHash": "1fbb30bd8be818350c0a40fd34e294a4a9689ac16ea87826542e4d43e75b4249",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 7592,
@@ -1575,8 +1599,9 @@
       "cases": {}
     },
     "marker": {
-      "hash": "b80d5cd4d86a4f1e06c817b171932a9937b4003f671db761c5603b1f9eba58d8",
+      "hash": "d85cb0cc9efc19c18fba8d65899f492a5b347faa91107d283268cef6e597d0c0",
       "runtimeHash": "65fdcafda07a9f0cbd2eea74870f63903e91a76b676049ed52b21a0764eed9ed",
+      "outputHash": "bc9da01a449a422c4c21136228114b1611986f01660897f0ce0c6008871e41d1",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 7235,
@@ -1596,8 +1621,9 @@
       "cases": {}
     },
     "composer": {
-      "hash": "0832da25354e9401fb35d3753cd453e6c9bc27937fef0bf4facc7913c4712ff7",
+      "hash": "4816d909c50ae07d237aa5721b040074cd383ebef87c494b86c52c60abceb333",
       "runtimeHash": "8829682831ef8a5ca017d8fa44032c31ece4f8efe877c1acf5ae716704b10316",
+      "outputHash": "c6e57093302762f19d4d14126d4495234cf407b6dfb5257293d097463ff0218c",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 19203,
@@ -1639,8 +1665,9 @@
       "cases": {}
     },
     "stage": {
-      "hash": "13b58b195c891363fe724b0944b4a67d6b816125dfef523fd48f8a9e37371107",
+      "hash": "a8c32051924deae0bc0487e3693dac4f6f6a9c5b6eacf9dca39969c7539a9dce",
       "runtimeHash": "3bcf508fc7cdcb82bfa4b10f0eb4349775808769d58906c963e6905897485ec3",
+      "outputHash": "ae554b3c06ed51498f9b154aaa836a1b349abe82722951adff645e21afddee22",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 3934,
@@ -1659,8 +1686,9 @@
       "cases": {}
     },
     "stage-card": {
-      "hash": "d6eb0a10a927158c8bea2144f62560c0f8b53b4c45a20f2c3de15d08ad1cccb2",
+      "hash": "386061801666419d0f549eec3f0209dd052c39ff9100d7f05817642b24945f9a",
       "runtimeHash": "4b15bf16f81a13b083f26789baa9d10c375d5b0fb043ef5a212862985f9b6469",
+      "outputHash": "826db8ca0934d7992e3013907057a3efa429be16c6f5649c932a33ac0600a249",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 26966,
@@ -1696,8 +1724,9 @@
       "cases": {}
     },
     "marketing-bar": {
-      "hash": "79064c5ada2e76f39baff44833f3ef0a49db5ffd9f1f7216bbfe806fd7dd4447",
+      "hash": "36a499a03c3a2cf0d6a17fc6c483b1161994c0ecaca62f4d45908813329d0c8e",
       "runtimeHash": "2d3763feff0671578adbcde534e9b0bac230e2dc55f221f7d94eae44171ff43c",
+      "outputHash": "1c633fe8543533ee424fc61986248e1b3650b87b5a5d8438ffe2dc188e28950e",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 29175,
@@ -1738,8 +1767,9 @@
       "cases": {}
     },
     "stage-hero": {
-      "hash": "53a90895a2a62280baa28741413be6b801f2e9ccc8cb5f37ffeca1b8b2b28baf",
+      "hash": "33d0810ebe082991becd8ab9a854595da5ef4eb957958d1684c6a7ddaa7c9e69",
       "runtimeHash": "50d9ac625c4ba7870ff5d614274a3cef9518c39c9206e22ed43a83b9fb8f35b4",
+      "outputHash": "d176609c30b0ed2591b3a847f45a1c41d1dbf144514d37156e25b9db83a7a400",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 13252,
@@ -1764,8 +1794,9 @@
       "cases": {}
     },
     "proof-band": {
-      "hash": "196e11212ff88da0a0129539377549d29e435d3cf5a9b330c380741da66a6753",
+      "hash": "29c923e915f0ebb3be7daf3831de530d170410a947eaced156d5b3331ca849ae",
       "runtimeHash": "7e607ea6ac1fb0b85fd327dad6a44c498c26764c1d15f3db42b9c8b58dab9f94",
+      "outputHash": "25595fc888d1cda031df2c400803c5ecd581f97fad943c8aaee8b3c4265d707e",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 6881,
@@ -1785,8 +1816,9 @@
       "cases": {}
     },
     "live-console": {
-      "hash": "09ceaaf84008c276db0dd07f29b870162b4c37de5af3064a058f52c29906515b",
+      "hash": "5865aab38225e19b7ec70349e6280976c4b83f62c18b77ec5f957009b745e39b",
       "runtimeHash": "c170535856023468875ca3fc6bc444b695ffe771e50edb3794058f601e916d77",
+      "outputHash": "4bbe53f9e69ce0bc3988033ceb7004011c797ba3145554a8f3854cd400506717",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 33138,
@@ -1830,8 +1862,9 @@
       "cases": {}
     },
     "name-strip": {
-      "hash": "a4ebfea5b33cce98d45dfc4ac64a7a599527ae4c84ea121c5b014d4b2411601d",
+      "hash": "24668d98fe92217c8e009f3c8485e11696c3c6d26da12d78c378e355ad69dadf",
       "runtimeHash": "ce11d677ffb05fbcc6d84442c5dd0a3c6b8698dba9dc2073177b375aea1b6b15",
+      "outputHash": "120b5fba942cb5468388c7c7d4c4abfd46a7a82ea30c3158595bb2e99515ea47",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 5093,
@@ -1850,8 +1883,9 @@
       "cases": {}
     },
     "cta-band": {
-      "hash": "734103ae87ded20d7c9dbda1dfb6c07c3bf7c1c278ac8ed40bfbb49e8525627f",
+      "hash": "362c9d594600ed299a5b75f7bcd7f8228f27266e9dd2b31ae535bfc641e7e157",
       "runtimeHash": "16d5627fc4ba3c9e894fc3b98e33d7e439d4e96be117c36bc43308c7da9c5d42",
+      "outputHash": "501c4d68f6c2467f9e7f71e4ce74f67acffa359e6bebe40eed44ccc867f9fce5",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 12262,
@@ -1874,8 +1908,9 @@
       "cases": {}
     },
     "marketing-footer": {
-      "hash": "bd990c8dfe4a50720b5d44283951902048bd610eac35ecf6a5071d090f1f6fa4",
+      "hash": "25ccbd06a60bcbc688e53b76ad9a0176baf0f6e4d219b226b1879b186ed59bd3",
       "runtimeHash": "e052ce514353e460abb92bdb52a487c24f15bb0ec9d23d0335ccd9de5b584c3c",
+      "outputHash": "42d19bb86bac149db7eafcbd8096b0f866847efdc3db882b06ab58720ed8d750",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 3311,
@@ -1894,8 +1929,9 @@
       "cases": {}
     },
     "hero": {
-      "hash": "ce90aced5b87e17a6e0602921571b158f692ee7baffa82a17b773a51ef72f623",
+      "hash": "50b75c80e464896f9e979cb36cc73d05fc67a1b9d812c413e5d8f93c004c674e",
       "runtimeHash": "4e92689128b252704acc7f0f01bcb16a63a242d6707a59d39bbf4016316e818c",
+      "outputHash": "94ebd2959e832d088442f2301256a5722edfebe157bfb2b5cd12ee8f1762d739",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 13008,
@@ -1918,8 +1954,9 @@
       "cases": {}
     },
     "sign-in": {
-      "hash": "ca2e24f97f0f3d3758bce6d642d18af983a7e38ca24d174ea7f4fb695351048c",
+      "hash": "316e25a08f8eba04debe2c6b5fb1b883a8a401f9d7ba1c3d21bdce5788477c1c",
       "runtimeHash": "3553e5f34c8c5704bdb1da1908685a7d9b0fc5b0faff1abb1560ef541912c2df",
+      "outputHash": "60cf94811be9ad87a091890c3a710ed8e037dcffd0b3bb363df06d8a34d1f117",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 22114,
@@ -1963,8 +2000,9 @@
       "cases": {}
     },
     "sign-up": {
-      "hash": "c7e75f49401f268610fee185e475aeee721959c157ccdfa770a51cedf4535932",
+      "hash": "ccee0f5f6088073b560203386710abd167d67126e9d6edbe5103cae08c55ea18",
       "runtimeHash": "27b629e500fbd0413aa39ad6f84902f63833a455456dfed3f5dd70706183a2c2",
+      "outputHash": "67fe3ead2d3bf8e0b670ab654090b16bdb00a6320c7eb45b7fde028014e2a2c0",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 29636,
@@ -2010,8 +2048,9 @@
       "cases": {}
     },
     "page-states": {
-      "hash": "e815b5d0f1fb7e4b0290d6f9619d91d0398bceadaea7af282b267752bc8b70bb",
+      "hash": "a284ad7442267df7d9586c80d36c22850f498459053c4cd48f6f93ccd4e038b0",
       "runtimeHash": "d46cdcbd3fa6ba10ab245af70115b2a55d15af44d849dd2469c3269a99b1cba1",
+      "outputHash": "8a72c519cd8be298ebb3cc8513aa4e0882ba625c166f8d8f216a018f5c81f0d8",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 14344,
@@ -2035,8 +2074,9 @@
       "cases": {}
     },
     "settings": {
-      "hash": "4e7372f07581788956ddfbdeba1996fe1c2e3b2a17bc47e2c0e9389b9a7179d1",
+      "hash": "948236166fb14f33f03a66245cbf1ee91a410565162b16e6dbe226a76c528ca8",
       "runtimeHash": "cfd94860760923ef8787112e2eb4ebfa387d5bb2994d6d7e4bb39ef399bfb3d6",
+      "outputHash": "08bd461da8877031dad58979621b45739bf869b57604a18d33ccfd90e0801195",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 40631,
@@ -2084,8 +2124,9 @@
       "cases": {}
     },
     "app-shell": {
-      "hash": "f6f5d3a36f707e26ebbce3998a64cd9beec1418beb6f8ce2c0371eed4fec87a7",
+      "hash": "3c1dea50c065c530b199e8b739307adc4ee79b3933835ffe6989980ee3587664",
       "runtimeHash": "239a80a687e407fc1b912de3afb141ea6085553ca92bd36c0133d5462f902cb2",
+      "outputHash": "0840679f14a05d72fa579c9f5b3fcdb5cbb3f4972d43d285f340672f651a8138",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 75267,
@@ -2137,8 +2178,9 @@
       "cases": {}
     },
     "chat": {
-      "hash": "579d46959418eea2add7b6efe67ba44f9a7c50ba42a6bbf80c61e81e52f80e51",
+      "hash": "80c62b7756431b3b2b596b613ff9409d16da70698cd69144b5f80e17ca14a804",
       "runtimeHash": "849791dc151b5e418dd2b9ec6bfd026e70476de0d8a5b52949c720a9a570b7c8",
+      "outputHash": "1e061167acfaf189a0b7d4a08d088d66c1d9b414879ae8f5673bbf282b28649f",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 38613,
@@ -2189,8 +2231,9 @@
       "cases": {}
     },
     "product-home": {
-      "hash": "bc51993a9cc5c9f63ed75ac45c67c5340862da0bac4abd86db20ea50cf138e19",
+      "hash": "8adcaa0fa796df075d211f5765a72231daf56a270c6afc930616255d6a19d6b3",
       "runtimeHash": "fc7e4e0d19837e38c08ac4948039b04b6bab0cb623cded9a76c6b712a253d58e",
+      "outputHash": "13ea751afa138ae8e71310d67bd3af8d098ec0eee4de3f8f2a52a644e3baeeec",
       "run": "2026-11-16T03:52:04.663Z",
       "size": {
         "js": 53931,

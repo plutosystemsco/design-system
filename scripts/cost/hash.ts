@@ -1,9 +1,12 @@
 /**
- * 025 decision 13: two hashes per item and per case. The size hash covers
- * everything that decides its size figures; the runtime hash, that plus what
- * decides its runtime figures. `bun run cost` rebuilds an item whose size
- * hash differs from the report's, and re-measures one whose runtime hash
- * differs. The unit gate holds every hash equal to the report's.
+ * 025 decision 13, as the change review's finding 2 ruled it: two keys per
+ * item and per case. The size hash covers everything that decides its size
+ * figures; `bun run cost` rebuilds an item whose size hash differs from the
+ * report's, and the unit gate fails on one. The runtime key covers what its
+ * runtime figures were measured on: the item app's built output and its
+ * base's (`outputHash`), the interaction, and the runtime's own files. A
+ * rebuild that yields the same output keeps its runtime figures. The unit
+ * gate warns on a stale runtime key; the release check refuses one.
  */
 import { createHash } from "node:crypto";
 import { readdirSync, readFileSync, statSync } from "node:fs";
@@ -94,20 +97,51 @@ export function sizeHash(key: string, ctx: HashContext): string {
     if (fixtures.includes(f))
       parts.push([`fixture ${f}`, read(path.join(FIXTURES_DIR, f))]);
   for (const f of filesUnder(APP_DIR)) parts.push([rel(f), read(f)]);
-  for (const f of ["build.ts", "hash.ts", "items.ts", "settings.ts"])
+  // `items.ts` decides closures and kinds, which reach this hash through
+  // the served JSON and the fixture files (the change review's finding 10).
+  for (const f of ["build.ts", "hash.ts", "settings.ts"])
     parts.push([f, read(path.join(COST_DIR, f))]);
   parts.push(["cli", ctx.cli], ["zlib", ctx.zlib]);
   return digest(parts);
 }
 
-/** The runtime hash: the size hash plus the interaction and the runtime's own files. */
-export function runtimeHash(key: string, ctx: HashContext): string {
+/**
+ * The runtime key of an item or a case: its app's output and its base's (the
+ * floor, or for `utils` the theme floor), its interaction entry, and the
+ * files and versions that decide how it is timed.
+ */
+export function runtimeHash(
+  key: string,
+  ctx: HashContext,
+  output: { item: string; base: string },
+): string {
   return digest([
-    ["size", sizeHash(key, ctx)],
+    ["output", output.item],
+    ["base output", output.base],
     ["interaction", canonical(INTERACTIONS[key])],
     ["_calibrate.svelte", read(path.join(FIXTURES_DIR, "_calibrate.svelte"))],
     ["runtime.ts", read(path.join(COST_DIR, "runtime.ts"))],
     ["stats.ts", read(path.join(COST_DIR, "stats.ts"))],
+    ["settings.ts", read(path.join(COST_DIR, "settings.ts"))],
     ["playwright", ctx.playwright],
   ]);
+}
+
+/** The runtime key an entry of a report should carry, from the outputs it records. */
+export function runtimeKeyOf(
+  key: string,
+  report: {
+    items: Record<
+      string,
+      { outputHash: string; cases: Record<string, { outputHash: string }> }
+    >;
+    floor: { outputHash: string };
+    themeFloor: { outputHash: string };
+  },
+  ctx: HashContext,
+): string {
+  const [item, kase] = key.split(".") as [string, string | undefined];
+  const e = kase ? report.items[item]!.cases[kase]! : report.items[item]!;
+  const base = item === UTILS ? report.themeFloor : report.floor;
+  return runtimeHash(key, ctx, { item: e.outputHash, base: base.outputHash });
 }

@@ -1,13 +1,26 @@
 /**
- * 025 decision 16: the release check's cost step. Every item's runtime
- * figures must come from one run that is full, not noisy, on the release
- * machine, at the commit being tagged or with hashes equal to the report's,
- * made with this Bun and this zlib.
+ * 025 decision 16: the release check's cost step, in `022`'s `Check` shape.
+ * It is the gate for runtime freshness (the change review's finding 2(b)):
+ * every item's runtime figures must come from one run that is full, not
+ * noisy, on the release machine, made with this Bun and this zlib; every
+ * size hash and runtime key must equal the report's; and every figure must
+ * be within its budget (finding 7). `release-check.ts --before-ci` skips it
+ * by name; nothing skips it silently (finding 3).
  */
-import { execFileSync } from "node:child_process";
-import { readBudgets } from "./budgets.ts";
-import { hashContext, runtimeHash, sizeHash } from "./hash.ts";
+import {
+  budgetWarnings,
+  missingBudgets,
+  overBudget,
+  readBudgets,
+} from "./budgets.ts";
+import { hashContext, runtimeKeyOf, sizeHash } from "./hash.ts";
 import { readReport } from "./report.ts";
+
+export type Check = { ok: boolean; lines: string[] };
+
+/** What `--before-ci` says when it leaves this step out. */
+export const SKIPPED_COST =
+  "release-check: skipped (--before-ci): the cost run, which the tag's full run on the release machine gives (025 Q3).";
 
 /** The reasons the tag must wait; empty when the cost step passes. */
 export function costReleaseProblems(): string[] {
@@ -38,45 +51,42 @@ export function costReleaseProblems(): string[] {
     out.push(
       `run ${id} used zlib ${run.tools.zlib}; this is ${process.versions.zlib}`,
     );
-  const head = execFileSync("git", ["rev-parse", "--short", "HEAD"], {
-    encoding: "utf8",
-  }).trim();
-  if (run.commit !== head) {
-    const ctx = hashContext(run.tools.zlib);
-    const stale = entries
-      .filter(
-        ([key, e]) =>
-          sizeHash(key, ctx) !== e.hash ||
-          runtimeHash(key, ctx) !== e.runtimeHash,
-      )
-      .map(([key]) => key);
-    if (stale.length)
-      out.push(
-        `run ${id} was at ${run.commit}, and ${stale.length} item(s) have changed since: ${stale.slice(0, 8).join(", ")}`,
-      );
-  }
+  const ctx = hashContext(run.tools.zlib);
+  const stale = entries
+    .filter(
+      ([key, e]) =>
+        sizeHash(key, ctx) !== e.hash ||
+        runtimeKeyOf(key, report, ctx) !== e.runtimeHash,
+    )
+    .map(([key]) => key);
+  if (stale.length)
+    out.push(
+      `${stale.length} item(s) have changed since their figures: ${stale.slice(0, 8).join(", ")}; run \`bun run cost --full\``,
+    );
+  for (const line of [
+    ...overBudget(report, budgets),
+    ...budgetWarnings(report, budgets),
+  ])
+    out.push(`over budget: ${line}`);
+  for (const line of missingBudgets(report, budgets)) out.push(line);
   return out;
 }
 
-/** Prints the step's result; false when the tag must wait. */
-export function costReleaseOk(): boolean {
-  // Q3 (the owner): `bun run test` holds only the report's hashes and
-  // budgets (`tests/unit/cost.test.ts`); one full run gates the tag. The
-  // unit suite runs this script (`headers.test.ts`), so under the test
-  // runner the step says so and steps aside.
-  if (process.env.NODE_ENV === "test") {
-    console.log(
-      "release-check: cost: not checked under the test runner; tests/unit/cost.test.ts holds the report fresh and within budget.",
-    );
-    return true;
-  }
+/** The cost step as a `Check`. */
+export function costCheck(): Check {
   const problems = costReleaseProblems();
-  for (const p of problems) console.error(`release-check: cost: ${p}.`);
-  if (!problems.length)
-    console.log(
-      "release-check: cost: one full, quiet run on the release machine.",
-    );
-  return problems.length === 0;
+  return problems.length
+    ? { ok: false, lines: problems.map((p) => `release-check: cost: ${p}.`) }
+    : {
+        ok: true,
+        lines: [
+          "release-check: cost: one full, quiet run on the release machine, fresh and within budget.",
+        ],
+      };
 }
 
-if (import.meta.main) process.exit(costReleaseOk() ? 0 : 1);
+if (import.meta.main) {
+  const c = costCheck();
+  (c.ok ? console.log : console.error)(c.lines.join("\n"));
+  process.exit(c.ok ? 0 : 1);
+}

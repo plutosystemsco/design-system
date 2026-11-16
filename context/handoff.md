@@ -31,6 +31,18 @@ The tree holds 75 items. The last runs, on `019`'s build: unit 1206 pass; e2e 27
 
 The order to the tag: `019`'s fixes, its commit, the owner's listen, then the local `v0.12.0` tag.
 
+- **`025`'s QA and QB, for the morning status** (`specifications/025-component-cost.md`, "Rulings at landing (2026-11-16)"). The design lead ruled both under the overnight delegation; the owner may reverse either. QA: a runtime figure's freshness is enforced at the tag, not at every landing, which narrows the owner's Q3 answer (`bun run test` holds sizes and budgets and warns on runtime). QB: one Bun everywhere, 1.4.4, in `package.json` and in CI's `setup-bun`.
+
+## Before the 0.13.0 tag: the cost run
+
+`025`'s figures gate the tag (its "Rulings at landing", the tag procedure):
+
+1. A quiet machine, plugged in, nothing else running.
+2. `bun run cost --full`.
+3. If the run moved the instrument, `bun run cost --budget instrument`; then `bun run cost --tighten`.
+4. A second `bun run cost --full` only if step 2's run was noisy.
+5. `bun scripts/site/release-check.ts`, without `--before-ci`.
+
 ## What this work checks, and what it does not
 
 - Every page is checked in Chromium, in both themes, by the browser suites, axe and the keyboard walk.

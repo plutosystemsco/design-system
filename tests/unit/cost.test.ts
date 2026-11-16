@@ -8,13 +8,20 @@ import { execFileSync } from "node:child_process";
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import path from "node:path";
 import {
+  budgetWarnings,
   checkRulings,
   missingBudgets,
   overBudget,
   readBudgets,
   type Budgets,
 } from "../../scripts/cost/budgets.ts";
-import { hashContext, runtimeHash, sizeHash } from "../../scripts/cost/hash.ts";
+import { addItem, cliEnv, OFFLINE_ENV } from "../../scripts/cost/build.ts";
+import { parseFlags } from "../../scripts/cost/flags.ts";
+import {
+  hashContext,
+  runtimeKeyOf,
+  sizeHash,
+} from "../../scripts/cost/hash.ts";
 import {
   INTERACTIONS,
   KINDS,
@@ -341,10 +348,18 @@ describe("025 criterion 4: the report's shape", () => {
 });
 
 describe("025 criterion 5: fresh", () => {
-  test("every item's and case's size and runtime hash equal the report's", () => {
-    const full = newestFullRun(report);
+  // The change review's finding 2, as the design lead ruled it (2026-11-16):
+  // a stale size fails here, at every landing; a stale runtime figure is
+  // named here and refused by the release check, at the tag.
+  const full = newestFullRun(report);
+  const ctx = hashContext(full?.tools.zlib ?? process.versions.zlib!);
+  const all = Object.entries(report.items).flatMap(([name, e]) => [
+    [name, e] as const,
+    ...Object.entries(e.cases).map(([k, c]) => [`${name}.${k}`, c] as const),
+  ]);
+
+  test("every item's and case's size hash equals the report's", () => {
     expect(full, "a full run in the report").toBeDefined();
-    const ctx = hashContext(full!.tools.zlib);
     if (Bun.version !== full!.tools.bun)
       console.warn(
         `cost: the local Bun is ${Bun.version}; the report's newest full run used ${full!.tools.bun}`,
@@ -353,21 +368,25 @@ describe("025 criterion 5: fresh", () => {
       console.warn(
         `cost: the local zlib is ${process.versions.zlib}; the report's newest full run used ${full!.tools.zlib}`,
       );
-    const stale: string[] = [];
-    for (const [name, e] of Object.entries(report.items)) {
-      if (sizeHash(name, ctx) !== e.hash) stale.push(`${name} (size)`);
-      else if (runtimeHash(name, ctx) !== e.runtimeHash)
-        stale.push(`${name} (runtime)`);
-      for (const [k, c] of Object.entries(e.cases)) {
-        if (sizeHash(`${name}.${k}`, ctx) !== c.hash)
-          stale.push(`${name}.${k} (size)`);
-        else if (runtimeHash(`${name}.${k}`, ctx) !== c.runtimeHash)
-          stale.push(`${name}.${k} (runtime)`);
-      }
-    }
+    const stale = all
+      .filter(([key, e]) => sizeHash(key, ctx) !== e.hash)
+      .map(([key]) => key);
     if (stale.length)
       throw new Error(
-        `stale: run \`bun run cost\`. ${stale.length} stale: ${stale.join(", ")}`,
+        `stale sizes: run \`bun run cost --sizes-only\` (minutes) or \`bun run cost\`. ${stale.length} stale: ${stale.join(", ")}`,
+      );
+  });
+
+  test("a stale runtime key is named, not failed: the release check holds it", () => {
+    for (const [key, e] of all) expect(typeof e.outputHash, key).toBe("string");
+    expect(typeof report.floor.outputHash).toBe("string");
+    expect(typeof report.themeFloor.outputHash).toBe("string");
+    const stale = all
+      .filter(([key, e]) => runtimeKeyOf(key, report, ctx) !== e.runtimeHash)
+      .map(([key]) => key);
+    if (stale.length)
+      console.warn(
+        `cost: ${stale.length} runtime figure(s) were measured on other builds: ${stale.join(", ")}. The tag's \`bun run cost --full\` re-measures them; \`bun run cost --only <items>\` does it now.`,
       );
   });
 });
@@ -375,6 +394,8 @@ describe("025 criterion 5: fresh", () => {
 describe("025 criterion 6: within budget", () => {
   test("every figure is within its budget, and every response time within 200 ms", () => {
     expect(overBudget(report, budgets)).toEqual([]);
+    for (const line of budgetWarnings(report, budgets))
+      console.warn(`cost: over budget, not held: ${line}`);
   });
 
   test("every item and case has a budget for each figure it has, and none for a figure it lacks", () => {
@@ -493,6 +514,7 @@ function entry(over: Partial<Entry>): Entry {
   return {
     hash: "",
     runtimeHash: "",
+    outputHash: "",
     run: "",
     route: "/",
     size: { js: 0, css: 0, lazy: 0, assets: 0, brotli: { js: 0, css: 0 } },
@@ -727,5 +749,120 @@ describe("025 criterion 14: a rise without a ruling fails", () => {
       specs,
     );
     expect(problems.join("\n")).toContain("removed or changed");
+  });
+});
+
+describe("025 change review, finding 5: hydration is held like response time", () => {
+  test("a hydration figure over budget from another machine is a warning, not a failure", () => {
+    const r = copyOf(report);
+    const id = "2099-01-02T00:00:00.000Z";
+    const base = Object.values(r.runs)[0]!;
+    r.runs[id] = {
+      ...structuredClone(base),
+      machine: { ...base.machine, model: "Another machine" },
+    };
+    r.items.button!.run = id;
+    r.items.button!.hydrate.ms = budgets.items.button!.hydrateMs + 1;
+    expect(overBudget(r, budgets)).toEqual([]);
+    expect(budgetWarnings(r, budgets).join("\n")).toContain("button hydrateMs");
+  });
+
+  test("and from a noisy run on the release machine, the same", () => {
+    const r = copyOf(report);
+    const id = "2099-01-03T00:00:00.000Z";
+    const base = Object.values(r.runs)[0]!;
+    r.runs[id] = {
+      ...structuredClone(base),
+      machine: { ...base.machine, model: budgets.machine },
+      noisy: true,
+    };
+    r.items.button!.run = id;
+    r.items.button!.hydrate.ms = budgets.items.button!.hydrateMs + 1;
+    expect(overBudget(r, budgets)).toEqual([]);
+  });
+});
+
+describe("025 change review, finding 4: the flags", () => {
+  test("--full with --only is refused; each alone parses", () => {
+    expect(() => parseFlags(["--full", "--only", "button"])).toThrow(
+      "takes no --only",
+    );
+    expect(parseFlags(["--full"]).full).toBe(true);
+    expect(parseFlags(["--only", "button,dialog"]).only).toEqual([
+      "button",
+      "dialog",
+    ]);
+    expect(parseFlags(["--sizes-only"]).sizesOnly).toBe(true);
+  });
+});
+
+describe("025 change review, finding 8: every CLI run is offline", () => {
+  test("cliEnv is OFFLINE_ENV and the registry's address, and nothing else", () => {
+    expect(Object.keys(OFFLINE_ENV).sort()).toEqual([
+      "BUN_CONFIG_REGISTRY",
+      "npm_config_fetch_retries",
+      "npm_config_registry",
+    ]);
+    expect(OFFLINE_ENV.npm_config_fetch_retries).toBe("0");
+    expect(cliEnv("http://127.0.0.1:1/r")).toEqual({
+      ...OFFLINE_ENV,
+      REGISTRY_URL: "http://127.0.0.1:1/r",
+    });
+    // addItem takes no environment of its own: it always passes cliEnv.
+    expect(addItem.length).toBe(3);
+  });
+
+  test("the harness runs the CLI in one place, addItem, under cliEnv", () => {
+    const dir = "scripts/cost";
+    const sources = readdirSync(dir)
+      .filter((f) => f.endsWith(".ts"))
+      .map((f) => ({ f, text: readFileSync(path.join(dir, f), "utf8") }));
+    const calls = sources.flatMap(({ f, text }) =>
+      [...text.matchAll(/"shadcn-svelte",\s*"add"/g)].map(() => f),
+    );
+    expect(calls).toEqual(["build.ts"]);
+    const build = sources.find((s) => s.f === "build.ts")!.text;
+    const body = build.slice(
+      build.indexOf("export async function addItem("),
+      build.indexOf("/** The package names a package.json lists. */"),
+    );
+    expect(body).toContain('"shadcn-svelte"');
+    expect(body).toContain("cliEnv(registryUrl)");
+  });
+});
+
+describe("025 change review, finding 12: a ruling names its item exactly", () => {
+  test("notes that name only `button-group` are no ruling for `button`", () => {
+    const b = (js: number, raised: unknown[] = []) =>
+      ({
+        machine: "M",
+        instrument: { floorHydrateMs: 100, noopMs: 40 },
+        items: {
+          button: {
+            js,
+            css: 1000,
+            lazy: 1000,
+            assets: 1000,
+            hydrateMs: 30,
+            raised,
+          },
+        },
+      }) as Budgets;
+    const record = {
+      metric: "js",
+      from: 10_000,
+      to: 11_000,
+      date: "2026-11-16",
+      ruling: "context/specifications/025-component-cost.md#landing-notes",
+    };
+    const notes = (text: string) => () => `## Landing notes\n\n${text}\n`;
+    const versions = [
+      { label: "a", budgets: b(10_000) },
+      { label: "b", budgets: b(11_000, [record]) },
+    ];
+    expect(
+      checkRulings(versions, notes("`button-group`'s js rises.")),
+    ).toHaveLength(1);
+    expect(checkRulings(versions, notes("`button`'s js rises."))).toEqual([]);
   });
 });

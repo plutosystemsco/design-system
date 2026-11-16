@@ -101,11 +101,26 @@ describe("the site's address", () => {
     expect(re.test(`${SITE_ORIGIN}/components/button/`)).toBe(true);
   });
 
-  test("scripts/site/release-check.ts exits 0", () => {
+  // 025's change review, finding 3: the tag's own checks (the cost run) are
+  // left out by name with `--before-ci`, never by an ambient variable. The
+  // address check is pure and is called directly.
+  test("addressCheck passes on SITE_ORIGIN and fails on the placeholder", async () => {
+    const { addressCheck } =
+      await import("../../scripts/site/release-check.ts");
+    const { SITE_ORIGIN } = await import("../../src/lib/site/site.ts");
+    expect(addressCheck(SITE_ORIGIN).ok).toBe(true);
+    expect(addressCheck("https://<account>.workers.dev").ok).toBe(false);
+  });
+
+  test("scripts/site/release-check.ts --before-ci exits 0 and names what it skipped", () => {
     const r = Bun.spawnSync([
       process.execPath,
       "scripts/site/release-check.ts",
+      "--before-ci",
     ]);
+    const out = r.stdout.toString();
     expect(r.exitCode).toBe(0);
+    expect(out).toContain("release-check: SITE_ORIGIN is https://");
+    expect(out).toContain("skipped (--before-ci): the cost run");
   });
 });

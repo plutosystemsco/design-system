@@ -103,7 +103,10 @@ export function walk(dir: string, base = dir): string[] {
 
 /**
  * The registry guard (decision 3): a fresh `build:registry --out` must equal
- * `staticR` by content. Returns the files that differ, or are only on one side.
+ * `staticR` by content, in the one folder `build-registry` writes and the
+ * harness serves, `styles/`. (`static/r/tokens/` is `build-tokens`', since
+ * `021`; the change review's finding 1.) Returns the files that differ, or
+ * are only on one side, relative to `staticR`.
  */
 export async function registryGuard(staticR = STATIC_R): Promise<string[]> {
   const out = mkdtempSync(path.join(tmpdir(), "kuiper-cost-registry-"));
@@ -115,8 +118,12 @@ export async function registryGuard(staticR = STATIC_R): Promise<string[]> {
     if (r.code !== 0)
       throw new Error(`cost: build:registry --out failed\n${r.output}`);
     const fresh = path.join(out, "r");
-    const a = walk(fresh);
-    const b = walk(staticR);
+    const a = walk(path.join(fresh, "styles")).map((f) =>
+      path.join("styles", f),
+    );
+    const b = walk(path.join(staticR, "styles")).map((f) =>
+      path.join("styles", f),
+    );
     const differ = [...new Set([...a, ...b])].sort().filter((f) => {
       const x = path.join(fresh, f);
       const y = path.join(staticR, f);
@@ -155,12 +162,22 @@ export function copyApp(from: string, to: string, nodeModules: string): void {
   symlinkSync(nodeModules, path.join(to, "node_modules"), "dir");
 }
 
-/** One `add`, with the repository's locked CLI under Bun, timed. */
+/**
+ * The whole environment of a CLI run beyond the process's own: OFFLINE_ENV
+ * and the registry's address, nothing else (the change review's finding 8).
+ */
+export function cliEnv(registryUrl: string): Record<string, string> {
+  return { ...OFFLINE_ENV, REGISTRY_URL: registryUrl };
+}
+
+/**
+ * One `add`, with the repository's locked CLI under Bun, timed. The only
+ * place the harness runs the CLI, always under `cliEnv`.
+ */
 export async function addItem(
   dir: string,
   names: string[],
   registryUrl: string,
-  env: Record<string, string> = OFFLINE_ENV,
 ): Promise<Result & { ms: number }> {
   const t = performance.now();
   const r = await run(
@@ -174,7 +191,7 @@ export async function addItem(
       "--no-deps-install",
     ),
     dir,
-    { ...env, REGISTRY_URL: registryUrl },
+    cliEnv(registryUrl),
   );
   return { ...r, ms: performance.now() - t };
 }
@@ -306,6 +323,22 @@ export function sizesOf(dir: string, route: string): Sizes {
   return out;
 }
 
+/**
+ * The change review's finding 2(c): one SHA-256 over every file an app built,
+ * by path and bytes. It keys the runtime figures, so a source change that
+ * builds the same output (a comment) re-measures nothing.
+ */
+export function outputHash(dir: string): string {
+  const build = path.join(dir, "build");
+  const h = createHash("sha256");
+  for (const f of walk(build)) {
+    h.update(f + "\0");
+    h.update(readFileSync(path.join(build, f)));
+    h.update("\0");
+  }
+  return h.digest("hex");
+}
+
 /** The SHA-256 of every JS and CSS file an app built, by path (criterion 15). */
 export function fileHashes(dir: string): Record<string, string> {
   const build = path.join(dir, "build");
@@ -341,6 +374,8 @@ export type Built = {
   /** Each client chunk's modules and their rendered lengths. */
   modules: Record<string, Record<string, number>>;
   buildMs: number;
+  /** `outputHash` of its `build/`. */
+  outputHash: string;
 };
 
 /** A page that renders the floor's page and then each fixture, in order. */
@@ -535,6 +570,7 @@ export class Harness {
       sizes: sizesOf(dir, route),
       modules: JSON.parse(readFileSync(modulesFile, "utf8")),
       buildMs,
+      outputHash: outputHash(dir),
     };
   }
 

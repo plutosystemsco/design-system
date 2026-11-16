@@ -4,10 +4,10 @@
  * figure is over budget. It writes nothing else in the repository, except
  * `budgets.json` when `--budget` or `--tighten` asks.
  *
- *   --full              measure everything, ignoring the cache
+ *   --full              measure everything, ignoring the cache (not with --only)
  *   --only a,b          consider only these items
- *   --sizes-only        build and size; no runtime phase; print, write nothing
- *   --out <file>        with --sizes-only, also write the figures there
+ *   --sizes-only        rebuild size-stale items and write their sizes; keep
+ *                       every runtime figure (the change review's finding 2(a))
  *   --budget <names>    write first budgets for these items (or `new`: every
  *                       measured item without one), or `instrument`
  *   --tighten           lower budgets with headroom over twice their margin
@@ -30,6 +30,7 @@ import {
 } from "./build.ts";
 import {
   BUDGETS_PATH,
+  budgetWarnings,
   firstBudget,
   overBudget,
   readBudgets,
@@ -37,7 +38,8 @@ import {
   type Budgets,
   type ItemBudget,
 } from "./budgets.ts";
-import { hashContext, runtimeHash, sizeHash } from "./hash.ts";
+import { parseFlags } from "./flags.ts";
+import { hashContext, runtimeHash, runtimeKeyOf, sizeHash } from "./hash.ts";
 import { INTERACTIONS } from "./interactions.ts";
 import {
   catalogueItems,
@@ -63,15 +65,23 @@ import { runBlocks, type RuntimeResult, type Subject } from "./runtime.ts";
 import { SETTINGS } from "./settings.ts";
 import { tenth } from "./stats.ts";
 
-const args = process.argv.slice(2);
-const flag = (name: string) => args.includes(name);
-const value = (name: string) => {
-  const at = args.indexOf(name);
-  return at === -1 ? undefined : args[at + 1];
-};
 const log = (line: string) => console.log(line);
+const opts = (() => {
+  try {
+    return parseFlags(process.argv.slice(2));
+  } catch (error) {
+    console.error(error instanceof Error ? error.message : String(error));
+    process.exit(1);
+  }
+})();
 
-const staticR = path.resolve(value("--registry") ?? STATIC_R);
+const staticR = path.resolve(opts.registry ?? STATIC_R);
+
+/** QB (the design lead, 2026-11-16): one Bun everywhere, the one `package.json` names. */
+function pinnedBun(): string {
+  const pkg = JSON.parse(readFileSync(path.join(REPO, "package.json"), "utf8"));
+  return String(pkg.packageManager ?? "").replace(/^bun@/, "");
+}
 
 /** The machine's model string, as `budgets.json`'s `machine` names it. */
 export function machineModel(): string {
@@ -135,7 +145,12 @@ async function waitForQuiet(): Promise<void> {
   }
 }
 
-/** Decision 12: the instrument check against the committed values. */
+/**
+ * Decision 12: the instrument check against the committed values. One-sided
+ * (the change review's finding 6): contention only slows a run, so a run is
+ * noisy when its floor or its no-op click is over the band, never under it.
+ * The calibration bound is absolute, and two-sided.
+ */
 function noisyBecause(r: RuntimeResult, budgets: Budgets | null): string[] {
   const out: string[] = [];
   if (budgets?.instrument) {
@@ -144,8 +159,8 @@ function noisyBecause(r: RuntimeResult, budgets: Budgets | null): string[] {
       ["floorHydrateMs", r.floorHydrateMs, budgets.instrument.floorHydrateMs],
       ["noopMs", r.noopMs, budgets.instrument.noopMs],
     ] as const)
-      if (Math.abs(now - then) > band * then)
-        out.push(`${name} ${now} is outside ±${band * 100}% of ${then}`);
+      if (now - then > band * then)
+        out.push(`${name} ${now} is over ${then} + ${band * 100}%`);
   }
   const lo = SETTINGS.calibrateMs;
   const hi = SETTINGS.calibrateMs + r.noopMs + 16;
@@ -160,7 +175,7 @@ async function budgetCommand(): Promise<void> {
   const budgets: Budgets = existsSync(BUDGETS_PATH)
     ? readBudgets()
     : { machine: "", instrument: { floorHydrateMs: 0, noopMs: 0 }, items: {} };
-  const asked = value("--budget");
+  const asked = opts.budget;
   if (asked === "instrument") {
     const ids = Object.keys(report.runs).sort();
     const run = report.runs[ids.at(-1)!]!;
@@ -232,7 +247,7 @@ async function budgetCommand(): Promise<void> {
     }
     log(`cost: first budgets for ${names.length} item(s)`);
   }
-  if (flag("--tighten")) {
+  if (opts.tighten) {
     let lowered = 0;
     for (const [name, b] of Object.entries(budgets.items)) {
       const e = report.items[name];
@@ -276,8 +291,7 @@ async function budgetCommand(): Promise<void> {
 async function measure(): Promise<number> {
   const t0 = performance.now();
   const runId = new Date().toISOString();
-  const full = flag("--full");
-  const sizesOnly = flag("--sizes-only");
+  const { full, sizesOnly, only } = opts;
   const old: Report | null = existsSync(REPORT_PATH) ? readReport() : null;
   const budgets = existsSync(BUDGETS_PATH) ? readBudgets() : null;
   const zlib = process.versions.zlib!;
@@ -293,7 +307,6 @@ async function measure(): Promise<number> {
     staticR,
   );
   const kinds = classify();
-  const only = value("--only")?.split(",");
   const considered = kinds.measured.filter((n) => !only || only.includes(n));
   const cases = kinds.cases.filter((c) => considered.includes(c.item));
 
@@ -308,26 +321,40 @@ async function measure(): Promise<number> {
   ];
   const entryOf = (k: Key): CaseEntry | undefined =>
     k.kase ? old?.items[k.item]?.cases[k.kase] : old?.items[k.item];
-  const sizeStale = new Set<string>();
-  const runtimeStale = new Set<string>();
-  for (const k of keys) {
-    const e = entryOf(k);
-    if (full || !e || e.hash !== sizeHash(k.key, ctx)) sizeStale.add(k.key);
-    if (full || !e || e.runtimeHash !== runtimeHash(k.key, ctx))
-      runtimeStale.add(k.key);
+  const sizeStale = new Set(
+    keys
+      .filter(
+        (k) => full || !entryOf(k) || entryOf(k)!.hash !== sizeHash(k.key, ctx),
+      )
+      .map((k) => k.key),
+  );
+  if (sizesOnly) {
+    const unmeasured = keys.filter((k) => !entryOf(k)).map((k) => k.key);
+    if (unmeasured.length) {
+      console.error(
+        `cost: --sizes-only keeps each item's runtime figures, and ${unmeasured.join(", ")} has none yet. Run \`bun run cost\`.`,
+      );
+      return 1;
+    }
   }
-  const toBuild = keys.filter(
-    (k) => sizeStale.has(k.key) || runtimeStale.has(k.key),
-  );
-  log(
-    `cost: ${keys.length} items and cases; ${sizeStale.size} size-stale, ${runtimeStale.size} runtime-stale${full ? " (--full)" : ""}`,
-  );
-  if (toBuild.length === 0 && old) {
+  // A size-fresh item's output is the report's; its runtime key reads it.
+  const recordedKey = (k: Key) =>
+    old &&
+    entryOf(k)?.outputHash &&
+    (k.item === UTILS ? old.themeFloor : old.floor).outputHash
+      ? runtimeKeyOf(k.key, old, ctx)
+      : null;
+  if (
+    !full &&
+    old &&
+    sizeStale.size === 0 &&
+    keys.every((k) => sizesOnly || recordedKey(k) === entryOf(k)!.runtimeHash)
+  ) {
     log("cost: every figure is fresh");
     return gate(old, budgets);
   }
 
-  // The size phase.
+  // The size phase: the floors, then every size-stale item.
   const work = mkdtempSync(path.join(os.tmpdir(), "kuiper-cost-"));
   log(`cost: building in ${work}`);
   const h = await Harness.prepare(work, staticR);
@@ -343,13 +370,11 @@ async function measure(): Promise<number> {
       SETTINGS.buildsAtOnce,
       ([key, kind]) => h.build(key, { kind }),
     );
-    const catalogueStale =
-      full || !old || [...sizeStale].some((k) => catalogueItems().includes(k));
-    const buildFailures: string[] = [];
-    const builds = await pool(
-      [...toBuild.map((k) => k.key), ...(catalogueStale ? ["_catalogue"] : [])],
-      SETTINGS.buildsAtOnce,
-      async (key) => {
+    const baseOf = (item: string) => (item === UTILS ? themeFloor! : floor!);
+    const built = new Map<string, Built>();
+    const failures: string[] = [];
+    const buildAll = async (list: string[]) => {
+      const done = await pool(list, SETTINGS.buildsAtOnce, async (key) => {
         try {
           const b =
             key === "_catalogue"
@@ -362,53 +387,56 @@ async function measure(): Promise<number> {
         } catch (error) {
           // Every failure is reported, not only the first.
           const why = error instanceof Error ? error.message : String(error);
-          buildFailures.push(why);
+          failures.push(why);
           log(`cost: ${key} failed to build: ${why.split("\n")[0]}`);
           return null;
         }
-      },
-    );
-    if (buildFailures.length) {
-      for (const why of buildFailures) console.error(why.slice(-3000));
-      console.error(`cost: ${buildFailures.length} build(s) failed`);
-      return 1;
-    }
-    const built = new Map(builds.map((b) => [b!.key, b!]));
-    const baseOf = (item: string) => (item === UTILS ? themeFloor! : floor!);
+      });
+      for (const b of done) if (b) built.set(b.key, b);
+    };
+    const catalogueStale =
+      full || !old || [...sizeStale].some((k) => catalogueItems().includes(k));
+    await buildAll([...sizeStale, ...(catalogueStale ? ["_catalogue"] : [])]);
 
-    if (sizesOnly) {
-      const rows = toBuild.map((k) => ({
-        key: k.key,
-        ...minus(built.get(k.key)!, baseOf(k.item)),
-      }));
-      const out = {
-        empty: empty!.sizes,
-        themeFloor: themeFloor!.sizes,
-        floor: floor!.sizes,
-        rows,
-      };
-      for (const r of rows)
-        log(
-          `${r.key.padEnd(24)} js ${String(r.js).padStart(7)} css ${String(r.css).padStart(6)} lazy ${String(r.lazy).padStart(8)} assets ${String(r.assets).padStart(9)}`,
-        );
-      const file = value("--out");
-      if (file) await Bun.write(file, JSON.stringify(out, null, 2));
-      return 0;
+    // Runtime staleness, keyed on output (the change review's finding 2(c)).
+    const keyOf = (k: Key) =>
+      runtimeHash(k.key, ctx, {
+        item: built.get(k.key)?.outputHash ?? entryOf(k)!.outputHash,
+        base: baseOf(k.item).outputHash,
+      });
+    const runtimeStale = new Set(
+      keys
+        .filter(
+          (k) => full || !entryOf(k) || entryOf(k)!.runtimeHash !== keyOf(k),
+        )
+        .map((k) => k.key),
+    );
+    log(
+      `cost: ${keys.length} items and cases; ${sizeStale.size} size-stale, ${runtimeStale.size} runtime-stale${full ? " (--full)" : ""}${sizesOnly ? " (--sizes-only: runtime figures kept)" : ""}`,
+    );
+    if (!sizesOnly)
+      await buildAll([...runtimeStale].filter((k) => !built.has(k)));
+    if (failures.length) {
+      for (const why of failures) console.error(why.slice(-3000));
+      console.error(`cost: ${failures.length} build(s) failed`);
+      return 1;
     }
 
     // The runtime phase.
     let runtime: RuntimeResult | null = null;
-    const subjects: Subject[] = toBuild
-      .filter((k) => runtimeStale.has(k.key))
-      .map((k) => ({
-        key: k.key,
-        app: built.get(k.key)!,
-        base: baseOf(k.item),
-        entry: INTERACTIONS[k.key] ?? null,
-        settled:
-          fixtureOf(k.key) !== null &&
-          readFileSync(fixtureOf(k.key)!, "utf8").includes("cost:settled"),
-      }));
+    const subjects: Subject[] = sizesOnly
+      ? []
+      : keys
+          .filter((k) => runtimeStale.has(k.key))
+          .map((k) => ({
+            key: k.key,
+            app: built.get(k.key)!,
+            base: baseOf(k.item),
+            entry: INTERACTIONS[k.key] ?? null,
+            settled:
+              fixtureOf(k.key) !== null &&
+              readFileSync(fixtureOf(k.key)!, "utf8").includes("cost:settled"),
+          }));
     if (subjects.length) {
       subjects.push({
         key: "_calibrate",
@@ -461,41 +489,42 @@ async function measure(): Promise<number> {
       seconds: 0,
     };
 
-    const figuresOf = (k: Key, previous: CaseEntry | undefined) => {
-      const app = built.get(k.key)!;
+    /** An entry from what this run built and measured, the rest kept. */
+    const entryFor = (k: Key): CaseEntry => {
+      const prev = entryOf(k);
+      const app = built.get(k.key);
       const fig = runtime?.subjects[k.key];
-      const entry = INTERACTIONS[k.key];
-      const out: CaseEntry = {
-        hash: sizeHash(k.key, ctx),
-        runtimeHash: runtimeHash(k.key, ctx),
-        run: fig ? runId : previous!.run,
-        size: minus(app, baseOf(k.item)),
+      const ie = INTERACTIONS[k.key];
+      return {
+        hash: app ? sizeHash(k.key, ctx) : prev!.hash,
+        runtimeHash: fig ? keyOf(k) : prev!.runtimeHash,
+        outputHash: app ? app.outputHash : prev!.outputHash,
+        run: fig ? runId : prev!.run,
+        size: app ? minus(app, baseOf(k.item)) : prev!.size,
         hydrate: fig
           ? {
               ms: fig.hydrate.ms,
               spread: fig.hydrate.spread,
               settledMs: fig.hydrate.settledMs,
             }
-          : previous!.hydrate,
-        interaction:
-          fig && entry && fig.interaction
+          : prev!.hydrate,
+        interaction: fig
+          ? ie && fig.interaction
             ? {
-                kind: entry.kind,
-                start: entry.start,
-                says: entry.says,
+                kind: ie.kind,
+                start: ie.start,
+                says: ie.says,
                 ms: fig.interaction.ms,
                 spread: fig.interaction.spread,
                 ownMs: tenth(fig.interaction.ms - run.instrument.noopMs),
                 pressGapMs:
-                  entry.kind === "click" ? fig.interaction.pressGapMs : null,
+                  ie.kind === "click" ? fig.interaction.pressGapMs : null,
                 eventTimingMs:
-                  entry.kind === "hover" ? null : fig.interaction.eventTimingMs,
+                  ie.kind === "hover" ? null : fig.interaction.eventTimingMs,
               }
-            : fig
-              ? null
-              : previous!.interaction,
+            : null
+          : prev!.interaction,
       };
-      return out;
     };
 
     report = old
@@ -504,18 +533,26 @@ async function measure(): Promise<number> {
           schema: 1,
           runs: {},
           empty: { js: 0, css: 0 },
-          themeFloor: { js: 0, css: 0, assets: 0, fonts: {} },
-          floor: { js: 0, css: 0, run: runId, hydrateMs: 0, noopMs: 0 },
+          themeFloor: { js: 0, css: 0, assets: 0, fonts: {}, outputHash: "" },
+          floor: {
+            js: 0,
+            css: 0,
+            run: runId,
+            hydrateMs: 0,
+            noopMs: 0,
+            outputHash: "",
+          },
           catalogue: { js: 0, css: 0, sumOfAlone: { js: 0, css: 0 } },
           items: {},
         } as Report);
-    report.runs[runId] = run;
+    if (runtime) report.runs[runId] = run;
     report.empty = { js: empty!.sizes.js, css: empty!.sizes.css };
     report.themeFloor = {
       js: themeFloor!.sizes.js,
       css: themeFloor!.sizes.css,
       assets: themeFloor!.sizes.assets,
       fonts: fontsByItem(themeFloor!.sizes),
+      outputHash: themeFloor!.outputHash,
     };
     report.floor = {
       js: floor!.sizes.js,
@@ -523,20 +560,30 @@ async function measure(): Promise<number> {
       run: runtime ? runId : report.floor.run,
       hydrateMs: runtime ? runtime.floorHydrateMs : report.floor.hydrateMs,
       noopMs: runtime ? runtime.noopMs : report.floor.noopMs,
+      outputHash: floor!.outputHash,
     };
-    for (const k of toBuild.filter((k) => !k.kase)) {
-      const app = built.get(k.key)!;
-      const base = baseOf(k.item);
-      const fig = figuresOf(k, old?.items[k.item]);
+    const write = (k: Key) => {
+      const e = entryFor(k);
+      if (k.kase) {
+        report.items[k.item]!.cases[k.kase] = e;
+        return;
+      }
+      const prev = old?.items[k.item];
+      const app = built.get(k.key);
       report.items[k.item] = {
-        ...fig,
-        route: app.route,
-        breakdown: breakdownOf(k.item, app, base, fig.size.js),
-        cases: old?.items[k.item]?.cases ?? {},
+        ...e,
+        route: app ? app.route : prev!.route,
+        breakdown: app
+          ? breakdownOf(k.item, app, baseOf(k.item), e.size.js)
+          : prev!.breakdown,
+        cases: report.items[k.item]?.cases ?? prev?.cases ?? {},
       } as Entry;
-    }
-    for (const k of toBuild.filter((k) => k.kase))
-      report.items[k.item]!.cases[k.kase!] = figuresOf(k, entryOf(k));
+    };
+    const touched = keys.filter(
+      (k) => built.has(k.key) || runtime?.subjects[k.key],
+    );
+    for (const k of touched.filter((k) => !k.kase)) write(k);
+    for (const k of touched.filter((k) => k.kase)) write(k);
     // Drop items and cases the registry no longer has.
     for (const name of Object.keys(report.items))
       if (!kinds.measured.includes(name)) delete report.items[name];
@@ -559,9 +606,11 @@ async function measure(): Promise<number> {
 
     // Decision 11: a runtime figure over budget is re-measured at once.
     if (runtime && budgets) {
-      const over = overBudget(report, budgets).filter((line) =>
-        /(hydrateMs|interactionMs)/.test(line),
-      );
+      const runtimeOver = () =>
+        overBudget(report, budgets).filter((line) =>
+          /(hydrateMs|interactionMs)/.test(line),
+        );
+      const over = runtimeOver();
       const keysOver = [...new Set(over.map((l) => l.split(" ")[0]!))];
       log(
         `cost: ${over.length} runtime figure(s) over budget before the re-measure${over.length ? `: ${over.join("; ")}` : ""}`,
@@ -574,22 +623,9 @@ async function measure(): Promise<number> {
           const fig = second.subjects[k];
           if (!fig) continue;
           runtime.subjects[k] = fig;
-          const key = keys.find((x) => x.key === k)!;
-          if (key.kase)
-            report.items[key.item]!.cases[key.kase] = figuresOf(
-              key,
-              entryOf(key),
-            );
-          else {
-            const e = report.items[key.item]!;
-            const f = figuresOf(key, e);
-            e.hydrate = f.hydrate;
-            e.interaction = f.interaction;
-          }
+          write(keys.find((x) => x.key === k)!);
         }
-        const still = overBudget(report, budgets).filter((line) =>
-          /(hydrateMs|interactionMs)/.test(line),
-        );
+        const still = runtimeOver();
         log(
           `cost: ${still.length} runtime figure(s) over budget after the re-measure${still.length ? `: ${still.join("; ")}` : ""}`,
         );
@@ -598,11 +634,13 @@ async function measure(): Promise<number> {
     run.seconds = Math.round((performance.now() - t0) / 1000);
     await writeReport(report);
     log(
-      `cost: wrote ${path.relative(REPO, REPORT_PATH)}: run ${runId}, ${run.seconds} s, load median ${run.load.median} max ${run.load.max}, floor ${run.instrument.floorHydrateMs} ms, no-op ${run.instrument.noopMs} ms, calibrate ${run.instrument.calibrateMs} ms${run.noisy ? ", noisy" : ""}`,
+      runtime
+        ? `cost: wrote ${path.relative(REPO, REPORT_PATH)}: run ${runId}, ${run.seconds} s, load median ${run.load.median} max ${run.load.max}, floor ${run.instrument.floorHydrateMs} ms, no-op ${run.instrument.noopMs} ms, calibrate ${run.instrument.calibrateMs} ms${run.noisy ? ", noisy" : ""}`
+        : `cost: wrote ${path.relative(REPO, REPORT_PATH)}: the sizes of ${built.size} app(s), ${run.seconds} s; runtime figures kept`,
     );
   } finally {
     await h.close();
-    if (!flag("--keep")) rmSync(work, { recursive: true, force: true });
+    if (!opts.keep) rmSync(work, { recursive: true, force: true });
   }
   return gate(report, budgets);
 }
@@ -614,17 +652,25 @@ function gate(report: Report, budgets: Budgets | null): number {
     return 0;
   }
   const over = overBudget(report, budgets);
+  for (const line of budgetWarnings(report, budgets))
+    console.warn(`cost: over budget, not held: ${line}`);
   for (const line of over) console.error(`cost: over budget: ${line}`);
   return over.length ? 1 : 0;
 }
 
 if (import.meta.main) {
+  if (Bun.version !== pinnedBun()) {
+    console.error(
+      `cost: this is Bun ${Bun.version}; package.json pins bun@${pinnedBun()}, and gzip's bytes follow the Bun build. Use that Bun.`,
+    );
+    process.exit(1);
+  }
   await guard();
-  if (flag("--guard")) {
+  if (opts.guard) {
     log("cost: the registry matches a fresh build");
     process.exit(0);
   }
-  if (value("--budget") || flag("--tighten")) {
+  if (opts.budget || opts.tighten) {
     await budgetCommand();
     process.exit(0);
   }

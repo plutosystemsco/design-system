@@ -44,6 +44,8 @@ export type InteractionFigure = {
 export type CaseEntry = {
   hash: string;
   runtimeHash: string;
+  /** SHA-256 over its app's built files; part of its runtime key. */
+  outputHash: string;
   run: string;
   size: Size;
   hydrate: Hydrate;
@@ -95,6 +97,7 @@ export type Report = {
     css: number;
     assets: number;
     fonts: Record<string, number>;
+    outputHash: string;
   };
   /** The theme floor whose page calls `cn` once. */
   floor: {
@@ -103,6 +106,7 @@ export type Report = {
     run: string;
     hydrateMs: number;
     noopMs: number;
+    outputHash: string;
   };
   /** Every non-block item on one page, over the floor, beside the same items' alone figures summed. */
   catalogue: {
@@ -127,7 +131,19 @@ export async function writeJson(file: string, value: unknown): Promise<void> {
   writeFileSync(file, text);
 }
 
+/** Drops the runs no item, case or floor names (the change review's finding 11). */
+export function pruneRuns(report: Report): void {
+  const named = new Set([report.floor.run]);
+  for (const e of Object.values(report.items)) {
+    named.add(e.run);
+    for (const c of Object.values(e.cases)) named.add(c.run);
+  }
+  for (const id of Object.keys(report.runs))
+    if (!named.has(id)) delete report.runs[id];
+}
+
 export function writeReport(report: Report, file = REPORT_PATH) {
+  pruneRuns(report);
   return writeJson(file, report);
 }
 

@@ -22,7 +22,6 @@ import {
   copyApp,
   fileHashes,
   Harness,
-  OFFLINE_ENV,
   type Built,
 } from "../../scripts/cost/build.ts";
 import { INTERACTIONS } from "../../scripts/cost/interactions.ts";
@@ -175,6 +174,18 @@ describe("025 criterion 18: a stale build cannot leak", () => {
 });
 
 describe("025 criterion 19: the registry guard, and the fixtures type-check", () => {
+  // The change review's finding 1: the guard must pass on the real tree, so
+  // a new folder under static/r/ that build-registry does not write (021's
+  // tokens/) is caught here, not by every `bun run cost`.
+  test("the guard passes on the repository's own static/r", async () => {
+    const r = await run(
+      [process.execPath, "scripts/cost/run.ts", "--guard"],
+      REPO,
+    );
+    expect(r.code, r.output).toBe(0);
+    expect(r.output).toContain("the registry matches a fresh build");
+  }, 120_000);
+
   test("a static/r one byte off a fresh build exits 2 and says to run build:registry", async () => {
     const copy = path.join(work, "static-r");
     cpSync(STATIC_R, copy, { recursive: true });
@@ -208,13 +219,15 @@ describe("025 criterion 19: the registry guard, and the fixtures type-check", ()
   }, 120_000);
 });
 
+// Criterion 22 holds at a load under the core count; at a load of 100 a lone
+// add has crossed 10 s (the change review's finding 8, a write-in).
 describe("025 criterion 22: an offline add is fast", () => {
   test("add separator, offline, in a fresh copy of the template, exits 0 in under 10 s", async () => {
     const dir = path.join(work, "add-timed");
     copyApp(h.template, dir, h.nodeModules);
     expect(existsSync(path.join(dir, "node_modules"))).toBe(true);
     const t = performance.now();
-    const r = await addItem(dir, ["separator"], h.registryUrl, OFFLINE_ENV);
+    const r = await addItem(dir, ["separator"], h.registryUrl);
     const ms = performance.now() - t;
     console.info(`cost: an offline add took ${Math.round(ms)} ms`);
     expect(r.code, r.output).toBe(0);
