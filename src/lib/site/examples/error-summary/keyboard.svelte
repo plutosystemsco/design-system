@@ -2,7 +2,7 @@
   export const meta = {
     title: "Keyboard",
     intro:
-      "Submit the form empty: the summary is inserted, its content announced as an alert, and takes focus. Each link focuses its field, and brings the field's label into view if it is not. The last one goes to the radio group's first radio, below its legend.",
+      "Submit the form empty: the summary is inserted, its content announced as an alert, and takes focus. Each link focuses its field, and brings the field's label into view if it is not. The last one goes to the radio group's first radio, below its legend. Submit it again unchanged, and the summary is announced again.",
   };
 </script>
 
@@ -21,6 +21,8 @@
     {},
   );
   let summary = $state<HTMLElement | null>(null);
+  // Raised on each failed submit, so an unchanged one is announced again.
+  let attempt = $state(0);
 
   const links = $derived(
     [
@@ -41,6 +43,7 @@
       visibility: visibility ? undefined : "Choose who can see the project",
     };
     if (links.length === 0) return;
+    attempt += 1;
     await tick();
     summary?.focus();
   }
@@ -52,7 +55,7 @@
   class="grid max-w-sm gap-6"
   data-testid="keyboard-fixture"
 >
-  <ErrorSummary bind:ref={summary} errors={links} />
+  <ErrorSummary bind:ref={summary} errors={links} {attempt} />
   <Field.Field id="project-name" error={errors.name}>
     <Field.Label>Project name</Field.Label>
     <Input bind:value={name} autocomplete="off" />

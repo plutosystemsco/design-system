@@ -1,8 +1,8 @@
 diff --git a/src/lib/registry/ui/error-summary/error-summary.svelte b/src/lib/registry/ui/error-summary/error-summary.svelte
-index 7cb1928..e332ddf 100644
+index b634cd4..b464a91 100644
 --- a/src/lib/registry/ui/error-summary/error-summary.svelte
 +++ b/src/lib/registry/ui/error-summary/error-summary.svelte
-@@ -133,7 +133,7 @@
+@@ -142,7 +142,7 @@
      bind:ref
      variant="destructive"
      data-slot="error-summary"
@@ -11,12 +11,12 @@ index 7cb1928..e332ddf 100644
      tabindex={-1}
      class={cn(className)}
      {...restProps}
-@@ -141,7 +141,7 @@
-     <WarningCircle aria-hidden="true" />
-     <div
-       data-slot="error-summary-content"
--      role={announce ? "alert" : null}
-+      role={null}
-       class="col-start-2 row-span-2 grid gap-1"
-     >
-       <svelte:element
+@@ -151,7 +151,7 @@
+     {#key attempt}
+       <div
+         data-slot="error-summary-content"
+-        role={announce ? "alert" : null}
++        role={null}
+         class="col-start-2 row-span-2 grid gap-1"
+       >
+         <svelte:element

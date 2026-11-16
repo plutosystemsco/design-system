@@ -820,6 +820,153 @@ test.describe("a callback that rejects", () => {
 });
 
 /**
+ * 022t criterion 4: each block's failure, done twice with the same errors,
+ * is one insertion of the summary's content, before focus. The watch is on
+ * the block's scope, not the summary's root: a server path removes the root
+ * while it waits and adds a new one. A `MutationObserver` on the scope logs
+ * each added element that is, or holds, the content node; a `focusin`
+ * listener on the scope logs the root's. The count runs from the second
+ * submit until 500 ms after that focusin, since a late write is flushed
+ * after the focus move.
+ */
+test.describe("022t: each block's failure is one insertion, before focus", () => {
+  const CONTENT = '[data-slot="error-summary-content"]';
+
+  /** Starts the count on `scope`. */
+  function watch(scope: Locator): Promise<void> {
+    return scope.evaluate((el, content) => {
+      const log: string[] = [];
+      new MutationObserver((records) => {
+        for (const r of records)
+          for (const n of r.addedNodes)
+            if (
+              n instanceof Element &&
+              (n.matches(content) || n.querySelector(content))
+            )
+              log.push("add");
+      }).observe(el, { childList: true, subtree: true });
+      el.addEventListener("focusin", (e) => {
+        if (
+          e.target instanceof Element &&
+          e.target.matches('[data-slot="error-summary"]')
+        )
+          log.push("focus-root");
+      });
+      Object.assign(window, { __count: log });
+    }, CONTENT);
+  }
+
+  /** Waits for the root's focusin, then 500 ms, and checks the count. */
+  async function expectOneInsertion(page: Page, scope: Locator) {
+    const log = () =>
+      page.evaluate(() => (window as unknown as { __count: string[] }).__count);
+    await expect.poll(log).toContain("focus-root");
+    await page.waitForTimeout(500);
+    const seen = await log();
+    expect(
+      seen.filter((e) => e === "add"),
+      `one content node added (${seen.join(",")})`,
+    ).toHaveLength(1);
+    expect(
+      seen.indexOf("add"),
+      `added before the root's focusin (${seen.join(",")})`,
+    ).toBeLessThan(seen.indexOf("focus-root"));
+    const root = scope.locator('[data-slot="error-summary"]');
+    await expect(root.locator(CONTENT)).toHaveAttribute("role", "alert");
+    await expect(root).toBeFocused();
+  }
+
+  const PATHS: {
+    name: string;
+    view: string;
+    scope: string;
+    /** Puts the form in its failing state, for each submit. */
+    fill?: (page: Page) => Promise<void>;
+    submit: (page: Page) => Promise<void>;
+  }[] = [
+    {
+      name: "sign in, empty",
+      view: "/view/sign-in/",
+      scope: '[data-slot="sign-in-form"]',
+      submit: (page) => page.getByRole("button", { name: "Sign in" }).click(),
+    },
+    {
+      name: "sign up, the details step empty",
+      view: "/view/sign-up/",
+      scope: '[data-slot="sign-up-form"]',
+      submit: (page) =>
+        page.getByRole("button", { name: "Create account" }).click(),
+    },
+    {
+      name: "sign up, the code step empty",
+      view: "/view/sign-up/verify/",
+      scope: '[data-slot="sign-up-verify"]',
+      submit: (page) =>
+        page.getByRole("button", { name: "Verify email" }).click(),
+    },
+    {
+      name: "settings, a save with an empty name",
+      view: "/view/settings/",
+      scope: '[data-slot="settings-form"]',
+      fill: (page) => page.locator("#settings-name").fill(""),
+      submit: (page) =>
+        page.getByRole("button", { name: "Save changes" }).click(),
+    },
+    {
+      name: "sign in, refused by the stand-in server",
+      view: "/view/sign-in/",
+      scope: '[data-slot="sign-in-form"]',
+      // The refusal empties the password, so each submit types it again.
+      fill: async (page) => {
+        await page.locator("#sign-in-email").fill("ada@example.com");
+        await page.locator("#sign-in-password").fill("correct horse battery");
+      },
+      submit: (page) => page.getByRole("button", { name: "Sign in" }).click(),
+    },
+    {
+      name: "settings, a save the server fails",
+      view: "/view/settings/failed/",
+      scope: '[data-slot="settings-form"]',
+      fill: (page) => page.locator("#settings-name").fill("Ada King"),
+      submit: (page) =>
+        page.getByRole("button", { name: "Save changes" }).click(),
+    },
+    {
+      name: "settings, a delete that fails",
+      view: "/view/settings/failed/",
+      scope: '[data-slot="settings-delete"]',
+      submit: async (page) => {
+        await page
+          .locator('[data-slot="settings-delete"]')
+          .getByRole("button", { name: "Delete account" })
+          .click();
+        await page
+          .getByRole("alertdialog")
+          .getByRole("button", { name: "Delete account" })
+          .click();
+      },
+    },
+  ];
+
+  for (const path of PATHS)
+    test(`4. ${path.name}: the second failure adds one content node, before the root's focusin`, async ({
+      page,
+    }) => {
+      await openView(page, path.view);
+      const scope = page.locator(path.scope);
+      const root = scope.locator('[data-slot="error-summary"]');
+      await path.fill?.(page);
+      await path.submit(page);
+      await expect(root).toBeFocused();
+      await expect(root.locator(CONTENT)).toHaveAttribute("role", "alert");
+      await path.fill?.(page);
+      await watch(scope);
+      await path.submit(page);
+      await expectOneInsertion(page, scope);
+    });
+});
+
+/**
  * 006 decision 14, A1 to A7: the app shell, in both themes. A1 landmarks;
  * A2 the header's 64 px row and its grooved bottom edge, read as computed
  * style and as pixels; A3 the footer's rows; A4 the tagline once; A5 the

@@ -529,3 +529,206 @@ test.describe("019: the error summary", () => {
     ).toBeLessThanOrEqual(1);
   });
 });
+
+/**
+ * 022t: the error summary speaks again on an unchanged submit. Criteria 1,
+ * 2, 3 and 6. Each watches the summary's root, which stays on these paths.
+ * In the page, a watch logs, in order, each `MutationObserver` callback on
+ * the root (the content nodes its `childList` records add and remove, and
+ * its record count) and each `focusin` on the root itself.
+ */
+type Logged =
+  | { kind: "mutations"; added: number; removed: number; records: number }
+  | { kind: "focusin" };
+
+const CONTENT = '[data-slot="error-summary-content"]';
+
+/** Starts watching `root`; keeps it and its content node for later checks. */
+function watch(root: Locator): Promise<void> {
+  return root.evaluate((el, content) => {
+    const log: unknown[] = [];
+    const isContent = (n: Node) => n instanceof Element && n.matches(content);
+    const record = (records: MutationRecord[]) => {
+      let added = 0;
+      let removed = 0;
+      for (const r of records) {
+        if (r.type !== "childList") continue;
+        added += [...r.addedNodes].filter(isContent).length;
+        removed += [...r.removedNodes].filter(isContent).length;
+      }
+      log.push({ kind: "mutations", added, removed, records: records.length });
+    };
+    const observer = new MutationObserver(record);
+    observer.observe(el, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      characterData: true,
+    });
+    el.addEventListener("focusin", (e) => {
+      if (e.target === el) log.push({ kind: "focusin" });
+    });
+    Object.assign(window, {
+      __watch: {
+        log,
+        root: el,
+        content: el.querySelector(content),
+        height: el.getBoundingClientRect().height,
+        // Records still queued are logged before the observer stops.
+        stop: () => {
+          const queued = observer.takeRecords();
+          if (queued.length) record(queued);
+          observer.disconnect();
+        },
+      },
+    });
+  }, CONTENT);
+}
+
+/** What the watch saw, and the watched root and content node as they are now. */
+function watched(root: Locator) {
+  return root.evaluate((el, content) => {
+    const w = (
+      window as unknown as {
+        __watch: {
+          log: Logged[];
+          root: Element;
+          content: Element | null;
+          height: number;
+          stop: () => void;
+        };
+      }
+    ).__watch;
+    w.stop();
+    const now = el.querySelector(content);
+    return {
+      log: w.log,
+      sameRoot: w.root === el,
+      sameContent: !!now && w.content === now,
+      oldConnected: !!w.content?.isConnected,
+      heightMoved: Math.abs(el.getBoundingClientRect().height - w.height),
+    };
+  }, CONTENT);
+}
+
+/** Criterion 1 (a) and (b): one callback removes one content node and adds one, before the root's focusin. */
+function expectOneInsertionBeforeFocus(log: Logged[]) {
+  const swaps = log.flatMap((e, i) =>
+    e.kind === "mutations" && (e.added || e.removed) ? [{ ...e, i }] : [],
+  );
+  expect(
+    swaps.map(({ added, removed }) => ({ added, removed })),
+    "one callback, removing one content node and adding one",
+  ).toEqual([{ added: 1, removed: 1 }]);
+  const focus = log.findIndex((e) => e.kind === "focusin");
+  expect(focus, "the root's focusin").toBeGreaterThan(-1);
+  expect(swaps[0]!.i, "the callback runs before the focusin").toBeLessThan(
+    focus,
+  );
+}
+
+/** Criterion 1 (d): the new node's role, heading and links. */
+async function expectAlertContent(root: Locator, title: string, links: number) {
+  const content = root.locator(CONTENT);
+  await expect(content).toHaveCount(1);
+  await expect(content).toHaveAttribute("role", "alert");
+  await expect(content.getByRole("heading", { name: title })).toHaveCount(1);
+  await expect(content.getByRole("link")).toHaveCount(links);
+}
+
+test.describe("022t: the error summary speaks again on an unchanged submit", () => {
+  // Criterion 1.
+  test("1. the second unchanged submit: one callback swaps the content node, before the root's focusin; the old node is gone, the new one an alert with the heading and 3 links; the same root, focused, its height unchanged", async ({
+    page,
+  }) => {
+    await openView(page, EXAMPLE);
+    await submitEmpty(page);
+    const root = summary(page);
+    await watch(root);
+    await submitEmpty(page);
+    const seen = await watched(root);
+    expectOneInsertionBeforeFocus(seen.log);
+    expect(seen.oldConnected, "the old content node is connected").toBe(false);
+    await expectAlertContent(root, "There is a problem", 3);
+    expect(seen.sameRoot, "the same root").toBe(true);
+    await expect(root).toBeFocused();
+    expect(seen.heightMoved).toBeLessThanOrEqual(0.5);
+  });
+
+  // Criterion 2: a guard, passing before and after.
+  test("2. typing 3 letters into Project name after a failed submit records no mutation in the summary and keeps its content node", async ({
+    page,
+  }) => {
+    await openView(page, EXAMPLE);
+    await submitEmpty(page);
+    const root = summary(page);
+    await watch(root);
+    await fixture(page).locator("#project-name").focus();
+    await page.keyboard.type("abc");
+    await expect(fixture(page).locator("#project-name")).toHaveValue("abc");
+    const seen = await watched(root);
+    expect(seen.log.filter((e) => e.kind === "mutations")).toEqual([]);
+    expect(seen.sameContent).toBe(true);
+  });
+
+  // Criterion 3.
+  test("3. on the test view: 5 letters in Notes record 0 mutations in A and keep its node; a second submit gives A a new content node; B keeps its node through both", async ({
+    page,
+  }) => {
+    const form = page.getByTestId("attempt-fixture");
+    const a = form.getByTestId("summary-a");
+    const b = form.getByTestId("summary-b");
+    const send = () => form.getByRole("button", { name: "Send" }).click();
+    await openView(page, "/view/error-summary-attempt/");
+    await expect(a).toHaveCount(0);
+    await expect(b).toHaveCount(0);
+    await send();
+    await expect(a).toBeFocused();
+    const bContent = await b.locator(CONTENT).elementHandle();
+    await watch(a);
+    await form.locator("#attempt-notes").focus();
+    await page.keyboard.type("hello");
+    await expect(form.locator("#attempt-notes")).toHaveValue("hello");
+    const typed = await watched(a);
+    const records = typed.log.reduce(
+      (n, e) => n + (e.kind === "mutations" ? e.records : 0),
+      0,
+    );
+    expect(records, "mutation records in A while typing").toBe(0);
+    expect(typed.sameContent).toBe(true);
+    await watch(a);
+    await send();
+    await expect(a).toBeFocused();
+    const second = await watched(a);
+    expectOneInsertionBeforeFocus(second.log);
+    expect(second.oldConnected, "A's old content node is connected").toBe(
+      false,
+    );
+    await expectAlertContent(a, "There is a problem (A)", 2);
+    expect(second.sameRoot, "A's root is the same").toBe(true);
+    expect(
+      await bContent!.evaluate((n) => n.isConnected),
+      "B's content node is the one from the first submit",
+    ).toBe(true);
+    expect(
+      await b.locator(CONTENT).evaluate((n, old) => n === old, bContent!),
+    ).toBe(true);
+  });
+
+  // Criterion 6.
+  test("6. a summary present at load: the first empty submit on /view/sign-in/errors/ leaves a new content node with role alert, and the root focused", async ({
+    page,
+  }) => {
+    await openView(page, "/view/sign-in/errors/");
+    const root = page.locator('[data-slot="error-summary"]');
+    await expect(root.locator(CONTENT)).toHaveCount(1);
+    expect(await root.locator(CONTENT).getAttribute("role")).toBeNull();
+    await watch(root);
+    await page.getByRole("button", { name: "Sign in" }).click();
+    await expect(root).toBeFocused();
+    const seen = await watched(root);
+    expect(seen.sameRoot, "the same root").toBe(true);
+    expect(seen.oldConnected, "the old content node is connected").toBe(false);
+    await expect(root.locator(CONTENT)).toHaveAttribute("role", "alert");
+  });
+});

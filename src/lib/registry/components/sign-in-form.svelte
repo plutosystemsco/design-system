@@ -102,6 +102,9 @@
   let password = $state("");
   // role="alert" only on a summary a submit in this page inserted.
   let announce = $state(false);
+  // Raised on each failed submit, so the summary is announced again even
+  // when its errors are the same.
+  let attempt = $state(0);
   // What the status says once the callback has answered.
   let notice = $state("");
   let summary = $state<HTMLElement | null>(null);
@@ -130,6 +133,7 @@
 
   async function failed() {
     announce = true;
+    attempt += 1;
     await tick();
     summary?.focus();
   }
@@ -194,6 +198,7 @@
       <ErrorSummary
         bind:ref={summary}
         {announce}
+        {attempt}
         errors={links}
         message={formError}
       />

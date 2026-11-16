@@ -121,6 +121,9 @@
   // svelte-ignore state_referenced_locally
   let form = $state<SettingsValues>({ ...(draft ?? values) });
   let announce = $state(false);
+  // Raised on each failed submit, so the summary is announced again even
+  // when its errors are the same.
+  let attempt = $state(0);
   let notice = $state("");
   let summary = $state<HTMLElement | null>(null);
   let nameInput = $state<HTMLInputElement | null>(null);
@@ -166,6 +169,7 @@
 
   async function failed() {
     announce = true;
+    attempt += 1;
     await tick();
     summary?.focus();
   }
@@ -245,6 +249,7 @@
   <ErrorSummary
     bind:ref={summary}
     {announce}
+    {attempt}
     errors={links}
     message={formError}
   />

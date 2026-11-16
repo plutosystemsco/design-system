@@ -31,6 +31,9 @@
   let text = $state("");
   let message = $state<string>();
   let summary = $state<HTMLElement | null>(null);
+  // Raised on each failed delete, so the summary is announced again even
+  // when its message is the same.
+  let attempt = $state(0);
   // The summary's title ranks under this section's heading.
   const summaryLevel = $derived(Math.min(level + 1, 6) as 2 | 3 | 4 | 5 | 6);
 
@@ -43,6 +46,7 @@
       text = requested;
     } catch {
       message = FAILED;
+      attempt += 1;
       text = FAILED;
       await tick();
       summary?.focus();
@@ -70,7 +74,7 @@
       This removes your data and settings for good. It cannot be undone.
     </p>
   </div>
-  <ErrorSummary bind:ref={summary} {message} level={summaryLevel} />
+  <ErrorSummary bind:ref={summary} {message} {attempt} level={summaryLevel} />
   <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
     <AlertDialog.Root bind:open>
       <AlertDialog.Trigger
