@@ -39,10 +39,18 @@ const files = (name: string) =>
 const ALL = WITH_EXAMPLES.flatMap((i) =>
   files(i.name).map((f) => ({ item: i, file: f })),
 );
+/**
+ * The page standard reserves `do-*` and `dont-*` for pair files: a do or a
+ * don't, rendered in the Usage section's lists, not as a page example
+ * (`026` decision 22; `027` decision 12). They carry a pair's meta in place
+ * of a title and an intro.
+ */
+const isPair = (file: string) => /^(do|dont)-/.test(path.basename(file));
 
 describe("015: examples are files", () => {
-  test("each of the 58 items that are not blocks or compositions has at least 1 example file", () => {
-    expect(WITH_EXAMPLES).toHaveLength(58);
+  // 027a: link, button-group and progress join the 58.
+  test("each of the 61 items that are not blocks or compositions has at least 1 example file", () => {
+    expect(WITH_EXAMPLES).toHaveLength(61);
     expect(
       WITH_EXAMPLES.filter((i) => files(i.name).length === 0).map(
         (i) => i.name,
@@ -61,7 +69,7 @@ describe("015: examples are files", () => {
   });
 
   test("every example exports meta with a title and a one-sentence intro", () => {
-    for (const { file } of ALL) {
+    for (const { file } of ALL.filter(({ file }) => !isPair(file))) {
       const meta = exampleMeta(readFileSync(file, "utf8"));
       expect(meta.title.length, file).toBeGreaterThan(0);
       expect(meta.intro.length, file).toBeGreaterThan(0);
@@ -177,4 +185,85 @@ describe("015: shownSource", () => {
 <Button variant="secondary">Save</Button>
 `);
   });
+});
+
+/**
+ * 027a test 5: each batch A page's examples are in order, and its pairs
+ * are whole. Each pair file has `kind`, `pair` and a caption of 20 words or
+ * fewer; each don't has `breaks`; the page imports every pair file.
+ */
+describe("027a test 5: batch A's examples and pairs", () => {
+  const ORDER: Record<string, string[]> = {
+    link: ["inline", "standalone", "new-tab", "visited", "inherit"],
+    "button-group": ["attached", "with-menu", "vertical", "spaced"],
+    progress: ["upload", "states", "in-a-card"],
+  };
+  const PAIRS: Record<string, string[]> = {
+    link: ["words", "action"],
+    "button-group": ["weight", "state"],
+    progress: ["numbers", "unknown"],
+  };
+
+  /** A pair file's meta: its string fields, read from the module script. */
+  function pairMeta(text: string): Record<string, string> {
+    const module =
+      /<script[^>]*\bmodule\b[^>]*>([\s\S]*?)<\/script>/.exec(text)?.[1] ?? "";
+    const out: Record<string, string> = {};
+    const body = /export const meta = \{([\s\S]*?)\};/.exec(module)?.[1] ?? "";
+    for (const m of body.matchAll(/(\w+):\s*\n?\s*"((?:[^"\\]|\\.)*)"/g))
+      out[m[1]] = m[2];
+    return out;
+  }
+
+  test.each(Object.keys(ORDER))(
+    "%s: EXAMPLE_ORDER holds its examples, each a file, and no pair file",
+    async (name) => {
+      const { exampleOrder } =
+        await import("../../src/lib/site/example-order.ts");
+      expect(exampleOrder(name)).toEqual(ORDER[name]);
+      for (const id of ORDER[name])
+        expect(existsSync(path.join(ROOT, name, `${id}.svelte`)), id).toBe(
+          true,
+        );
+      const pages = files(name)
+        .map((f) => path.basename(f, ".svelte"))
+        .filter((f) => !/^(do|dont)-/.test(f))
+        .sort();
+      expect(pages).toEqual([...ORDER[name]].sort());
+    },
+  );
+
+  test.each(Object.keys(PAIRS))(
+    "%s: two pairs, each a do and a don't with kind, pair and a caption of 20 words or fewer; each don't has breaks; the page imports all four",
+    (name) => {
+      const route = readFileSync(
+        `src/routes/(site)/components/${name}/+page.svelte`,
+        "utf8",
+      );
+      const pairFiles = files(name)
+        .map((f) => path.basename(f, ".svelte"))
+        .filter((f) => /^(do|dont)-/.test(f))
+        .sort();
+      expect(pairFiles).toEqual(
+        PAIRS[name].flatMap((p) => [`do-${p}`, `dont-${p}`]).sort(),
+      );
+      for (const pair of PAIRS[name])
+        for (const kind of ["do", "dont"] as const) {
+          const file = path.join(ROOT, name, `${kind}-${pair}.svelte`);
+          const meta = pairMeta(readFileSync(file, "utf8"));
+          expect(meta.kind, file).toBe(kind);
+          expect(meta.pair, file).toBe(pair);
+          expect(meta.caption?.length, file).toBeGreaterThan(0);
+          expect(meta.caption.split(/\s+/).length, file).toBeLessThanOrEqual(
+            20,
+          );
+          if (kind === "dont")
+            expect(meta.breaks?.length, file).toBeGreaterThan(0);
+          else expect(meta.breaks, file).toBeUndefined();
+          expect(route, `${name} imports ${kind}-${pair}`).toContain(
+            `#lib/site/examples/${name}/${kind}-${pair}.svelte`,
+          );
+        }
+    },
+  );
 });

@@ -19,6 +19,9 @@ export const ALIASES: readonly SearchAlias[] = [
   { alias: "drawer", path: "/components/sheet/" },
   // 020 decision 10: the theme item's old name, until 0.14.0.
   { alias: "pluto-theme", path: "/components/kuiper-theme/" },
+  // 027a decision 12: the link's other names.
+  { alias: "hyperlink", path: "/components/link/" },
+  { alias: "anchor", path: "/components/link/" },
 ];
 
 /** A page's aliases, in the list's order. */

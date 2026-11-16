@@ -54,7 +54,7 @@ test.describe("015: the pages in build/", () => {
   });
 
   // 020 decision 10: the one _redirects is static/_redirects, copied whole.
-  test("criterion 3: 75 of 75 components/<name>/index.html; nothing under items/, identity/ or workbench/; _redirects is static/_redirects", () => {
+  test("criterion 3: 78 of 78 components/<name>/index.html; nothing under items/, identity/ or workbench/; _redirects is static/_redirects", () => {
     const registry = withListedItems(
       JSON.parse(readFileSync("registry.json", "utf8")),
     ) as {
@@ -64,7 +64,7 @@ test.describe("015: the pages in build/", () => {
       registry.items.filter((i) =>
         existsSync(path.join(BUILD, "components", i.name, "index.html")),
       ),
-    ).toHaveLength(75);
+    ).toHaveLength(78);
     for (const gone of ["items", "identity", "workbench"])
       expect(existsSync(path.join(BUILD, gone)), gone).toBe(false);
     expect(readFileSync(path.join(BUILD, "_redirects"), "utf8")).toBe(
@@ -204,7 +204,9 @@ test.describe("015: the Markdown twins", () => {
     expect(wrong).toEqual([]);
   });
 
-  test("criterion 19: 75 of 75 component twins hold the shown source of each of their examples, fenced as svelte", () => {
+  // A pair file (`do-*`, `dont-*`) renders in the Usage lists, not as a
+  // page example with its code (026 decision 22; 027 decision 12).
+  test("criterion 19: 78 of 78 component twins hold the shown source of each of their examples, fenced as svelte", () => {
     const registry = withListedItems(
       JSON.parse(readFileSync("registry.json", "utf8")),
     ) as {
@@ -216,7 +218,9 @@ test.describe("015: the Markdown twins", () => {
       const twin = readFileSync(twinOf(`/components/${item.name}/`), "utf8");
       const dir = path.join("src/lib/site/examples", item.name);
       if (existsSync(dir))
-        for (const f of readdirSync(dir).filter((f) => f.endsWith(".svelte"))) {
+        for (const f of readdirSync(dir).filter(
+          (f) => f.endsWith(".svelte") && !/^(do|dont)-/.test(f),
+        )) {
           const shown = shownSource(
             readFileSync(path.join(dir, f), "utf8"),
           ).replace(/\n+$/, "");
@@ -225,7 +229,7 @@ test.describe("015: the Markdown twins", () => {
         }
       checked++;
     }
-    expect(checked).toBe(75);
+    expect(checked).toBe(78);
     expect(wrong).toEqual([]);
   });
 
@@ -543,7 +547,7 @@ test.describe("018: the footer link and the twins", () => {
 });
 
 test.describe("018 criterion 18: the first stage is exampleOrder's first", () => {
-  test("on 75 of 75 pages, the first frame's data-example (or the viewer's first view) is the one exampleOrder names", async () => {
+  test("on 78 of 78 pages, the first frame's data-example (or the viewer's first view) is the one exampleOrder names", async () => {
     const { firstStage } = await import("../../src/lib/site/example-order.ts");
     const registry = withListedItems(
       JSON.parse(readFileSync("registry.json", "utf8")),
@@ -570,7 +574,7 @@ test.describe("018 criterion 18: the first stage is exampleOrder's first", () =>
 });
 
 test.describe("018 review, finding 7: the index without scripts", () => {
-  test("each of the 72 lazy tiles holds its light picture in a <noscript>, with a src", () => {
+  test("each of the 75 lazy tiles holds its light picture in a <noscript>, with a src", () => {
     const html = readFileSync(
       path.join(BUILD, "components", "index.html"),
       "utf8",
@@ -578,7 +582,7 @@ test.describe("018 review, finding 7: the index without scripts", () => {
     const pics = [...html.matchAll(/<noscript>\s*<img[^>]*src="([^"]+)"/g)].map(
       (m) => m[1],
     );
-    expect(pics).toHaveLength(72);
+    expect(pics).toHaveLength(75);
     for (const src of pics) expect(src).toMatch(/-light\.[\w-]+\.webp$/);
   });
 });

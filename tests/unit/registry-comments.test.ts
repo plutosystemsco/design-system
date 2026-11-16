@@ -60,12 +60,12 @@ function items(raw: unknown): ItemJson | null {
 }
 
 describe("published item files cite no internal document", () => {
-  // 020 decision 3: the 75 items and the one alias entry.
-  test("static/r holds the 76 entries' JSON", () => {
+  // 020 decision 3: the 78 items and the one alias entry.
+  test("static/r holds the 79 entries' JSON", () => {
     const named = FILES.map((f) =>
       items(JSON.parse(readFileSync(f, "utf8"))),
     ).filter(Boolean);
-    expect(named.length).toBe(76);
+    expect(named.length).toBe(79);
   });
 
   test("0 decoded lines and 0 joined comment blocks match a citation pattern, but the fixture's kept lines", () => {
@@ -268,5 +268,95 @@ describe("018: the Kuiper Design System", () => {
       "migration guide",
     ])
       expect(line, words).toContain(words);
+  });
+});
+
+/**
+ * 027a test 3: batch A has 0 empty API rows. `023`'s described-list test
+ * does not exist at this build, so the check lives here, and `023` absorbs
+ * it. Every prop of `Link`, `ButtonGroup` and `Progress` has a doc comment,
+ * and so does every member of `LinkStrings`.
+ */
+describe("027a test 3: batch A has 0 empty API rows", () => {
+  type Item = { name: string; files: { path: string; type: string }[] };
+  const registry = JSON.parse(
+    readFileSync(path.join(ROOT, "registry.json"), "utf8"),
+  ) as { items: Item[] };
+
+  test.each([
+    ["link", "Link"],
+    ["button-group", "ButtonGroup"],
+    ["progress", "Progress"],
+  ])("%s: every row of %s has a doc comment", async (name, part) => {
+    const { apiTables } = await import("../../src/lib/site/api.server.ts");
+    const item = registry.items.find((i) => i.name === name);
+    expect(item, name).toBeDefined();
+    const table = apiTables(item!).find((t) => t.part === part);
+    expect(table, part).toBeDefined();
+    expect(table!.rows.length).toBeGreaterThan(0);
+    expect(table!.rows.filter((r) => !r.doc).map((r) => r.name)).toEqual([]);
+  });
+
+  // The design lead's ruling at the landing: the table names the element,
+  // not a TypeScript type; each variant prop shows its values.
+  test.each([
+    [
+      "link",
+      "Link",
+      "every attribute of `<a>`",
+      { variant: '"default" | "inherit"' },
+    ],
+    [
+      "button-group",
+      "ButtonGroup",
+      "every attribute of `<div>`",
+      {
+        variant: '"attached" | "spaced"',
+        orientation: '"horizontal" | "vertical"',
+      },
+    ],
+    [
+      "progress",
+      "Progress",
+      "every attribute of `<progress>`",
+      { variant: '"default" | "destructive"' },
+    ],
+  ] as const)(
+    "%s: %s inherits %s, and its variants read as their values",
+    async (name, part, inherits, types) => {
+      const { apiTables } = await import("../../src/lib/site/api.server.ts");
+      const item = registry.items.find((i) => i.name === name)!;
+      const table = apiTables(item).find((t) => t.part === part)!;
+      expect(table.inherits).toBe(`and ${inherits}`);
+      for (const [prop, type] of Object.entries(types))
+        expect(table.rows.find((r) => r.name === prop)?.type, prop).toBe(type);
+    },
+  );
+
+  test("every member of LinkStrings has a doc comment", async () => {
+    const ts = (await import("typescript")).default;
+    const file = path.join(ROOT, "src/lib/registry/ui/link/link.svelte");
+    const text = readFileSync(file, "utf8");
+    const module =
+      /<script[^>]*\bmodule\b[^>]*>([\s\S]*?)<\/script>/.exec(text)?.[1] ?? "";
+    const source = ts.createSourceFile(
+      "link.ts",
+      module,
+      ts.ScriptTarget.Latest,
+      true,
+    );
+    const alias = source.statements.find(
+      (s): s is import("typescript").TypeAliasDeclaration =>
+        ts.isTypeAliasDeclaration(s) && s.name.text === "LinkStrings",
+    );
+    expect(alias).toBeDefined();
+    const literal = alias!.type as import("typescript").TypeLiteralNode;
+    expect(ts.isTypeLiteralNode(literal)).toBe(true);
+    const members = literal.members.map((m) => ({
+      name: m.name?.getText(source) ?? "",
+      doc: ((m as unknown as { jsDoc?: unknown[] }).jsDoc ?? []).length,
+    }));
+    expect(members.map((m) => m.name)).toEqual(["newTab"]);
+    expect(members.filter((m) => m.doc === 0)).toEqual([]);
   });
 });
