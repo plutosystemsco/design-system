@@ -80,17 +80,4 @@ export const LEDGER: LedgerLine[] = [
     },
     FIREFOX,
   ),
-  // 022e: the overflowing sidebar content is a Tab stop in Firefox.
-  ...inProjects(
-    {
-      file: "keyboard.spec.ts",
-      title:
-        "block views at 1280 › /view/app-shell/sidebar-icon/: 12 stops in order, each with the ring, then out of the document",
-      expect: { error: "div:workspace" },
-      finding:
-        "Firefox makes the icon sidebar's overflowing content a Tab stop of its own, before its first link.",
-      change: "022e",
-    },
-    FIREFOX,
-  ),
 ];

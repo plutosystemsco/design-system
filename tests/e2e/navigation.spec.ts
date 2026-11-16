@@ -649,7 +649,8 @@ test.describe("N5. the sidebar", () => {
         ),
     ).toBe(0);
 
-    // The content box: a scroller with no stop of its own.
+    // The content box: a scroller with no stop of its own. It holds rows, so
+    // it is tabindex -1 (022e), which keeps Firefox from making it a stop.
     const content = nav.locator('[data-slot="sidebar-content"]');
     expect(await computed(content, "overflow-y")).toBe("auto");
     adaptsIn(
@@ -657,7 +658,7 @@ test.describe("N5. the sidebar", () => {
       "scrollbar-width: Playwright's Firefox computes none for every element, so the value is read from the author's rules",
     );
     expect(await scrollbarWidth(content)).toBe("thin");
-    expect(await content.getAttribute("tabindex")).toBeNull();
+    await expect(content).toHaveAttribute("tabindex", "-1");
 
     // The current row: aria-current, the accent inset and the primary start edge.
     const current = nav.locator(
