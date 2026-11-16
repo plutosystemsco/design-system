@@ -2,14 +2,16 @@
 <style>
   body { margin: 0; font: 14px/1.45 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; background: #F3F0E8; color: #0B0F17; }
   main { max-width: 1400px; margin: 0 auto; padding: 32px 24px 48px; }
-  h1 { font-size: 26px; margin: 0 0 4px; } h2 { font-size: 19px; margin: 36px 0 6px; } h3 { font-size: 15px; margin: 22px 0 8px; }
-  p.lede { margin: 0 0 8px; max-width: 72ch; }
-  table { width: 100%; border-collapse: collapse; background: #FFFFFF; border: 1px solid #0B0F171A; }
-  th, td { text-align: left; padding: 7px 9px; border-bottom: 1px solid #0B0F1714; vertical-align: middle; }
+  h1 { font-size: 26px; margin: 0 0 4px; } h2 { font-size: 19px; margin: 34px 0 8px; }
+  p.lede { margin: 0 0 8px; max-width: 80ch; }
+  .notice { background: #FFFFFF; border: 1px solid #6D6659; border-radius: 8px; padding: 12px 16px; max-width: 90ch; margin: 12px 0; }
+  .notice li { margin: 4px 0; }
+  table { width: 100%; border-collapse: collapse; background: #FFFFFF; border: 1px solid #DCDAD3; }
+  th, td { text-align: left; padding: 7px 9px; border-bottom: 1px solid #E9E5DB; vertical-align: middle; }
   th { font-weight: 600; font-size: 12px; background: #E9E5DB; }
   .num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
-  .num s { color: #6D6659; } .low { background: #F5E6E9; }
-  .sub { font-size: 11px; color: #444A55; } .why { font-size: 12px; max-width: 30ch; } .note { display: block; margin-top: 2px; }
+  .num s, .sub s { color: #6D6659; } .low { background: #F5E6E9; }
+  .sub { font-size: 11px; color: #444A55; } .why { font-size: 12px; max-width: 34ch; }
   code { font: 12px ui-monospace, SFMono-Regular, Menlo, monospace; } .hex { font-weight: 600; }
   .pair { display: flex; align-items: center; gap: 4px; } .arrow { color: #6D6659; width: 10px; }
   .chip { width: 22px; height: 22px; border-radius: 4px; display: inline-block; box-shadow: inset 0 0 0 1px #0B0F1726; }
@@ -23,50 +25,68 @@
   .alert { border-radius: 6px; padding: 6px 8px; font-size: 13px; margin: 6px 0; }
   pre { font: 12px ui-monospace, Menlo, monospace; padding: 6px 8px; border-radius: 6px; margin: 6px 0; overflow: hidden; white-space: pre; }
   .bars { display: flex; align-items: flex-end; gap: 6px; height: 44px; margin-top: 6px; } .bars span { width: 22px; border-radius: 3px 3px 0 0; }
-  .legend { font-size: 12px; color: #444A55; margin-top: 6px; }
+  .well { border-radius: 6px; padding: 8px; margin: 6px 0; font-size: 13px; }
+  .legend { font-size: 12px; color: #444A55; margin-top: 6px; max-width: 110ch; }
+  table.small { width: auto; } table.small td, table.small th { padding: 5px 12px; }
 </style></head><body><main>
 <h1>Kuiper high contrast: the swatches</h1>
-<p class="lede">For the owner's approval (spec <code>031</code>, Q1). Each new primitive keeps its source's hue and moves in lightness alone, the least that reaches the target. Text: <b>7:1</b> on every ground it sits on. Non-text (inputs, borders, focus, the glass edge): <b>4.5:1</b>. Grounds, the marks and the brand fills that already pass do not change. Ratios as <code>scripts/contrast.ts</code> computes them: WCAG 2.2, truncated to two decimals. <s>Struck</s> figures are the source colour's.</p>
-<p class="legend">Measured 2026-11-15 by <code>palette.ts</code> over <code>tokens/pluto.tokens.json</code> and 029's tints: 196 pairs across both schemes, 0 below target.</p>
+<p class="lede">For the owner's approval (spec <code>031</code>, Q1), re-derived on the tree <code>031a</code>, <code>029</code> and <code>031b</code> leave, with <code>sunken</code> a public ground. Each new primitive keeps its source's hue and moves in lightness alone, the least that reaches the target on every ground and line the contrast rules put it on. Text: <b>7:1</b>. Non-text (inputs, every border and divider, focus, the glass edge, an overlay's edge under the scrim): <b>4.5:1</b>. Grounds, the marks, the disabled roles and every colour that already passes do not change. Ratios as <code>scripts/contrast.ts</code> computes them (WCAG 2.2, truncated to two decimals). <s>Struck</s> figures are the source colour's.</p>
+<div class="notice"><b>What changed since the last exhibit</b>
+<ul>
+<li><b><code>sunken</code> is now a public ground</b> (<code>031a</code>), so every pair allowed on it is measured under high contrast too. Three swatches darken to reach their targets on it: <code>ink-soft-more</code> <code>#444A55</code> → <code>#3D424D</code> (muted-foreground on sunken, 7.01); <code>blue-more</code> <code>#2236C3</code> → <code>#1D2AB8</code> (primary on sunken, 7.04); <code>line-more</code> <code>#6D6659</code> → <code>#645D50</code> (sunken-line on sunken, 4.53). Each also reads higher on every other ground.</li>
+<li><b>What <code>031a</code> restricts on <code>sunken</code> stays restricted under high contrast,</b> in every context: the status text (<code>destructive</code>, <code>success</code>, <code>caution-text</code>), the <code>input</code> edge, the status fills and the five chart colours. No row is made for them. So on a well, the rows are only <code>foreground</code>, <code>muted-foreground</code> and <code>primary</code> text, the <code>ring</code>, and the lines.</li>
+</ul>
+<b>What you will notice</b>
+<ul>
+<li><b>Light yellow text turns olive-brown, as before.</b> <code>caution-text</code> becomes <code>yellow-more</code> <code>#5E4701</code>, and the third chart series the existing <code>yellow-text</code> <code>#806200</code>. Their hue is the brand's yellow, within 0.4°, but at this darkness a yellow hue no longer reads as yellow. The brand's yellow fills (caution, field-3, the third dot) do not change.</li>
+<li><b>Light charts get closer together for one reader.</b> Under deuteranopia the closest pair of the five series falls from <b>7</b> to <b>4.1</b> ΔE (chart-2/chart-3), unchanged by <code>sunken</code>: charts are restricted there. Series are labelled directly, so no meaning rests on colour alone, and the figure is a floor.</li>
+<li><b>The light primary blue is darker:</b> <code>#1D2AB8</code>, the link, the primary button and the focus ring.</li>
+<li><b>Every line becomes a 4.5:1 line,</b> on the well too.</li>
+<li><b>The dark set barely changes.</b></li>
+</ul></div>
+<p class="legend">Measured 2026-11-15 by <code>palette.ts</code>, which reads every ground and line from the token file's contrast rows, <code>029</code>'s tints and <code>031b</code>'s draft roles (solid hairline <code>#DCDAD3</code> / <code>#37342E</code>, provisional; disabled roles), and <code>031</code>'s proposed <code>more</code> section: <b>220 pairs, 0 below target</b>; every role is in a row or exempt with its reason. When <code>031b</code> lands, this re-runs from the token file; no swatch depends on the hairline's standard value.</p>
 
 <h2>In use</h2>
 <div class="samples"><div class="sample" style="background:#F3F0E8;color:#0B0F17">
     <div class="tag" style="color:#505661">light · standard</div>
-    <div class="card" style="background:#FFFFFF;border:1px solid #0B0F171A">
+    <div class="card" style="background:#FFFFFF;border:1px solid #DCDAD3">
       <div class="h">Deploy settings</div>
       <p style="color:#505661">Muted help text explains the field below.</p>
       <div class="input" style="border:1px solid #857E70;color:#505661">us-east-1</div>
       <p>Read the <a style="color:#2D48D4">region guide</a> first. <span style="color:#806200">Caution: billing changes.</span></p>
-      <div class="row"><span class="btn" style="background:#2D48D4;color:#FFFFFF">Deploy</span><span class="btn ghost" style="border:1px solid #857E70;color:#0B0F17">Cancel</span></div>
+      <div class="row"><span class="btn" style="background:#2D48D4;color:#FFFFFF">Deploy</span><span class="btn ghost" style="border:1px solid #857E70;color:#0B0F17">Cancel</span><span class="btn" style="background:#E9E5DB;color:#7F8080;border:1px solid #BCB7AC">Disabled</span></div>
       <div class="alert" style="background:#F9E9EA;border:1px solid #C11E31;color:#C11E31">The build failed at step 3.</div>
       <div class="alert" style="background:#E6F1EE;border:1px solid #007351;color:#007351">Saved two minutes ago.</div>
-      <pre style="background:#FFFFFF;border:1px solid #0B0F171A"><span style="color:#7032B9">def</span> deploy(region=<span style="color:#007150">"us-east-1"</span>):  <span style="color:#636972"># the default</span></pre>
+      <pre style="background:#FFFFFF;border:1px solid #DCDAD3"><span style="color:#7032B9">def</span> deploy(region=<span style="color:#007150">"us-east-1"</span>):  <span style="color:#636972"># the default</span></pre>
+      <div class="well" style="background:#DCD7CA"><div style="color:#505661">In a well: muted text, and a <a style="color:#2D48D4">link</a>.</div><div style="border-top:1px solid #C7C3B8;margin-top:6px;padding-top:6px;color:#0B0F17">A divider on the well</div></div>
       <div class="bars"><span style="background:#2D48D4;height:40px"></span><span style="background:#C92035;height:28px"></span><span style="background:#E2B000;height:34px"></span><span style="background:#008058;height:22px"></span><span style="background:#505661;height:16px"></span></div>
     </div>
   </div><div class="sample" style="background:#F3F0E8;color:#0B0F17">
-    <div class="tag" style="color:#444A55">light · more contrast</div>
-    <div class="card" style="background:#FFFFFF;border:1px solid #6D6659">
+    <div class="tag" style="color:#3D424D">light · more contrast</div>
+    <div class="card" style="background:#FFFFFF;border:1px solid #645D50">
       <div class="h">Deploy settings</div>
-      <p style="color:#444A55">Muted help text explains the field below.</p>
-      <div class="input" style="border:1px solid #6D6659;color:#444A55">us-east-1</div>
-      <p>Read the <a style="color:#2236C3">region guide</a> first. <span style="color:#5E4701">Caution: billing changes.</span></p>
-      <div class="row"><span class="btn" style="background:#2236C3;color:#FFFFFF">Deploy</span><span class="btn ghost" style="border:1px solid #6D6659;color:#0B0F17">Cancel</span></div>
+      <p style="color:#3D424D">Muted help text explains the field below.</p>
+      <div class="input" style="border:1px solid #645D50;color:#3D424D">us-east-1</div>
+      <p>Read the <a style="color:#1D2AB8">region guide</a> first. <span style="color:#5E4701">Caution: billing changes.</span></p>
+      <div class="row"><span class="btn" style="background:#1D2AB8;color:#FFFFFF">Deploy</span><span class="btn ghost" style="border:1px solid #645D50;color:#0B0F17">Cancel</span><span class="btn" style="background:#E9E5DB;color:#7F8080;border:1px solid #BCB7AC">Disabled</span></div>
       <div class="alert" style="background:#F5E6E9;border:1px solid #99011F;color:#99011F">The build failed at step 3.</div>
       <div class="alert" style="background:#E6EEEB;border:1px solid #01553B;color:#01553B">Saved two minutes ago.</div>
-      <pre style="background:#FFFFFF;border:1px solid #6D6659"><span style="color:#6B2BB3">def</span> deploy(region=<span style="color:#015C41">"us-east-1"</span>):  <span style="color:#4C515A"># the default</span></pre>
+      <pre style="background:#FFFFFF;border:1px solid #645D50"><span style="color:#6B2BB3">def</span> deploy(region=<span style="color:#015C41">"us-east-1"</span>):  <span style="color:#4C515A"># the default</span></pre>
+      <div class="well" style="background:#DCD7CA"><div style="color:#3D424D">In a well: muted text, and a <a style="color:#1D2AB8">link</a>.</div><div style="border-top:1px solid #645D50;margin-top:6px;padding-top:6px;color:#0B0F17">A divider on the well</div></div>
       <div class="bars"><span style="background:#2D48D4;height:40px"></span><span style="background:#C92035;height:28px"></span><span style="background:#806200;height:34px"></span><span style="background:#007351;height:22px"></span><span style="background:#505661;height:16px"></span></div>
     </div>
   </div><div class="sample" style="background:#16140F;color:#F3F0E8">
     <div class="tag" style="color:#A39D90">dark · standard</div>
-    <div class="card" style="background:#221F19;border:1px solid #F3F0E81A">
+    <div class="card" style="background:#221F19;border:1px solid #37342E">
       <div class="h">Deploy settings</div>
       <p style="color:#A39D90">Muted help text explains the field below.</p>
       <div class="input" style="border:1px solid #7A7366;color:#A39D90">us-east-1</div>
       <p>Read the <a style="color:#93B0FF">region guide</a> first. <span style="color:#F8D874">Caution: billing changes.</span></p>
-      <div class="row"><span class="btn" style="background:#93B0FF;color:#0B0F17">Deploy</span><span class="btn ghost" style="border:1px solid #7A7366;color:#F3F0E8">Cancel</span></div>
+      <div class="row"><span class="btn" style="background:#93B0FF;color:#0B0F17">Deploy</span><span class="btn ghost" style="border:1px solid #7A7366;color:#F3F0E8">Cancel</span><span class="btn" style="background:#2C2821;color:#8B8881;border:1px solid #4E4940">Disabled</span></div>
       <div class="alert" style="background:#4E3631;border:1px solid #FF9491;color:#FF9491">The build failed at step 3.</div>
       <div class="alert" style="background:#2E4032;border:1px solid #60C498;color:#60C498">Saved two minutes ago.</div>
-      <pre style="background:#2C2821;border:1px solid #F3F0E81A"><span style="color:#C4A4FE">def</span> deploy(region=<span style="color:#5CC89A">"us-east-1"</span>):  <span style="color:#9EA4AE"># the default</span></pre>
+      <pre style="background:#2C2821;border:1px solid #37342E"><span style="color:#C4A4FE">def</span> deploy(region=<span style="color:#5CC89A">"us-east-1"</span>):  <span style="color:#9EA4AE"># the default</span></pre>
+      <div class="well" style="background:#0B0A07"><div style="color:#A39D90">In a well: muted text, and a <a style="color:#93B0FF">link</a>.</div><div style="border-top:1px solid #22211E;margin-top:6px;padding-top:6px;color:#F3F0E8">A divider on the well</div></div>
       <div class="bars"><span style="background:#93B0FF;height:40px"></span><span style="background:#FF9491;height:28px"></span><span style="background:#F8D874;height:34px"></span><span style="background:#60C498;height:22px"></span><span style="background:#A39D90;height:16px"></span></div>
     </div>
   </div><div class="sample" style="background:#16140F;color:#F3F0E8">
@@ -76,171 +96,175 @@
       <p style="color:#B9B3A5">Muted help text explains the field below.</p>
       <div class="input" style="border:1px solid #958E80;color:#B9B3A5">us-east-1</div>
       <p>Read the <a style="color:#95B2FF">region guide</a> first. <span style="color:#F8D874">Caution: billing changes.</span></p>
-      <div class="row"><span class="btn" style="background:#95B2FF;color:#0B0F17">Deploy</span><span class="btn ghost" style="border:1px solid #958E80;color:#F3F0E8">Cancel</span></div>
-      <div class="alert" style="background:#382C26;border:1px solid #FFA29F;color:#FFA29F">The build failed at step 3.</div>
+      <div class="row"><span class="btn" style="background:#95B2FF;color:#0B0F17">Deploy</span><span class="btn ghost" style="border:1px solid #958E80;color:#F3F0E8">Cancel</span><span class="btn" style="background:#2C2821;color:#8B8881;border:1px solid #4E4940">Disabled</span></div>
+      <div class="alert" style="background:#382C26;border:1px solid #FFA29E;color:#FFA29E">The build failed at step 3.</div>
       <div class="alert" style="background:#293027;border:1px solid #69CDA0;color:#69CDA0">Saved two minutes ago.</div>
       <pre style="background:#2C2821;border:1px solid #958E80"><span style="color:#C4A4FE">def</span> deploy(region=<span style="color:#5CC89A">"us-east-1"</span>):  <span style="color:#AEB4BE"># the default</span></pre>
+      <div class="well" style="background:#0B0A07"><div style="color:#B9B3A5">In a well: muted text, and a <a style="color:#95B2FF">link</a>.</div><div style="border-top:1px solid #958E80;margin-top:6px;padding-top:6px;color:#F3F0E8">A divider on the well</div></div>
       <div class="bars"><span style="background:#93B0FF;height:40px"></span><span style="background:#FF9491;height:28px"></span><span style="background:#F8D874;height:34px"></span><span style="background:#60C498;height:22px"></span><span style="background:#A39D90;height:16px"></span></div>
     </div>
   </div></div>
+<p class="legend">The disabled button uses <code>031b</code>'s draft disabled roles, which high contrast keeps as they are: a disabled control is exempt from WCAG's contrast rules, and <code>031b</code>'s own check (its own targets, outside the contrast file) runs under high contrast too. Its values are provisional until <code>031b</code> lands.</p>
 
 <h2>Light: the brand's hues and neutrals</h2>
-<h3>Text, fills and edges</h3><table><thead><tr><th>Swatch</th><th>Name</th><th>Hex</th><th class="num">on paper<div class="sub">background #F3F0E8</div></th><th class="num">on raised<div class="sub">card #FFFFFF</div></th><th class="num">on wash<div class="sub">muted #E9E5DB</div></th><th>Job</th></tr></thead><tbody><tr>
-    <td><div class="pair"><span class="chip" style="background:#505661"></span><span class="arrow">→</span><span class="chip big" style="background:#444A55"></span></div></td>
+<table><thead><tr><th>Swatch</th><th>Name</th><th>Hex</th><th class="num">on paper<div class="sub">background #F3F0E8</div></th><th class="num">on raised<div class="sub">card #FFFFFF</div></th><th class="num">on wash<div class="sub">muted #E9E5DB</div></th><th class="num">on paper-sunken<div class="sub">sunken #DCD7CA</div></th><th>What takes it</th></tr></thead><tbody><tr>
+    <td><div class="pair"><span class="chip" style="background:#505661"></span><span class="arrow">→</span><span class="chip big" style="background:#3D424D"></span></div></td>
     <td><code>ink-soft-more</code><div class="sub">from <code>ink-soft</code> #505661</div></td>
-    <td><code class="hex">#444A55</code><div class="sub">L 0.408 C 0.02 h 262.6 (was L 0.452)</div></td>
-    <td class="num "><s>6.48</s> <b>7.82</b></td><td class="num "><s>7.38</s> <b>8.91</b></td><td class="num "><s>5.86</s> <b>7.08</b></td>
-    <td class="why">muted text, 7:1 on wash</td>
+    <td><code class="hex">#3D424D</code><div class="sub">L 0.379 C 0.020 h 266.0 (was L 0.452)</div><div class="sub">hue moved 3.36° (tolerance 7.14°)</div></td>
+    <td class="num "><s>6.48</s> <b>8.84</b></td><td class="num "><s>7.38</s> <b>10.07</b></td><td class="num "><s>5.86</s> <b>8.00</b></td><td class="num "><s>5.13</s> <b>7.01</b></td>
+    <td class="why"><b>Takes:</b> muted-foreground<div class="sub">binding: muted-foreground on sunken, <s>5.13</s> <b>7.01</b></div></td>
   </tr><tr>
-    <td><div class="pair"><span class="chip" style="background:#2D48D4"></span><span class="arrow">→</span><span class="chip big" style="background:#2236C3"></span></div></td>
+    <td><div class="pair"><span class="chip" style="background:#2D48D4"></span><span class="arrow">→</span><span class="chip big" style="background:#1D2AB8"></span></div></td>
     <td><code>blue-more</code><div class="sub">from <code>blue</code> #2D48D4</div></td>
-    <td><code class="hex">#2236C3</code><div class="sub">L 0.429 C 0.216 h 268.0 (was L 0.479)</div></td>
-    <td class="num "><s>6.16</s> <b>7.73</b></td><td class="num "><s>7.02</s> <b>8.80</b></td><td class="num "><s>5.58</s> <b>7.00</b></td>
-    <td class="why">primary, link, ring, chart-1, field-1: 7:1 on wash</td>
+    <td><code class="hex">#1D2AB8</code><div class="sub">L 0.397 C 0.216 h 268.1 (was L 0.479)</div><div class="sub">hue moved 0.09° (tolerance 1°)</div></td>
+    <td class="num "><s>6.16</s> <b>8.88</b></td><td class="num "><s>7.02</s> <b>10.11</b></td><td class="num "><s>5.58</s> <b>8.04</b></td><td class="num "><s>4.88</s> <b>7.04</b></td>
+    <td class="why"><b>Takes:</b> primary, ring, sidebar-primary, sidebar-ring<div class="sub">binding: primary on sunken, <s>4.88</s> <b>7.04</b></div></td>
   </tr><tr>
     <td><div class="pair"><span class="chip" style="background:#C11E31"></span><span class="arrow">→</span><span class="chip big" style="background:#99011F"></span></div></td>
     <td><code>red-more</code><div class="sub">from <code>red-text</code> #C11E31</div></td>
-    <td><code class="hex">#99011F</code><div class="sub">L 0.432 C 0.173 h 22.2 (was L 0.524)</div></td>
-    <td class="num "><s>5.27</s> <b>7.75</b></td><td class="num "><s>6.00</s> <b>8.82</b></td><td class="num "><s>4.77</s> <b>7.01</b></td>
-    <td class="why">destructive text and fill, chart-2, field-2: 7:1 on wash and on its tint</td>
+    <td><code class="hex">#99011F</code><div class="sub">L 0.432 C 0.173 h 22.2 (was L 0.524)</div><div class="sub">hue moved 0.15° (tolerance 1°)</div></td>
+    <td class="num "><s>5.27</s> <b>7.75</b></td><td class="num "><s>6.00</s> <b>8.82</b></td><td class="num "><s>4.77</s> <b>7.01</b></td><td class="num "><s>4.17</s> <b>6.14</b><div class="sub">restricted on sunken</div></td>
+    <td class="why"><b>Takes:</b> destructive, field-2 fill<div class="sub">binding: destructive on muted, <s>4.77</s> <b>7.01</b></div></td>
   </tr><tr>
     <td><div class="pair"><span class="chip" style="background:#007351"></span><span class="arrow">→</span><span class="chip big" style="background:#01553B"></span></div></td>
     <td><code>green-more</code><div class="sub">from <code>green-text</code> #007351</div></td>
-    <td><code class="hex">#01553B</code><div class="sub">L 0.398 C 0.084 h 164.3 (was L 0.492)</div></td>
-    <td class="num "><s>5.16</s> <b>7.80</b></td><td class="num "><s>5.88</s> <b>8.88</b></td><td class="num "><s>4.67</s> <b>7.06</b></td>
-    <td class="why">success text and fill, chart-4, field-4: 7:1 on wash and on its tint</td>
+    <td><code class="hex">#01553B</code><div class="sub">L 0.398 C 0.084 h 164.3 (was L 0.492)</div><div class="sub">hue moved 0.01° (tolerance 1.7°)</div></td>
+    <td class="num "><s>5.16</s> <b>7.80</b></td><td class="num "><s>5.88</s> <b>8.88</b></td><td class="num "><s>4.67</s> <b>7.06</b></td><td class="num "><s>4.09</s> <b>6.18</b><div class="sub">restricted on sunken</div></td>
+    <td class="why"><b>Takes:</b> success, field-4 fill<div class="sub">binding: success on muted, <s>4.67</s> <b>7.06</b></div></td>
   </tr><tr>
     <td><div class="pair"><span class="chip" style="background:#806200"></span><span class="arrow">→</span><span class="chip big" style="background:#5E4701"></span></div></td>
     <td><code>yellow-more</code><div class="sub">from <code>yellow-text</code> #806200</div></td>
-    <td><code class="hex">#5E4701</code><div class="sub">L 0.411 C 0.084 h 87.2 (was L 0.512)</div></td>
-    <td class="num "><s>5.03</s> <b>7.75</b></td><td class="num "><s>5.73</s> <b>8.83</b></td><td class="num "><s>4.55</s> <b>7.02</b></td>
-    <td class="why">caution text, chart-3: 7:1 on wash</td>
+    <td><code class="hex">#5E4701</code><div class="sub">L 0.411 C 0.084 h 87.2 (was L 0.512)</div><div class="sub">hue moved 0.38° (tolerance 1.71°)</div></td>
+    <td class="num "><s>5.03</s> <b>7.75</b></td><td class="num "><s>5.73</s> <b>8.83</b></td><td class="num "><s>4.55</s> <b>7.02</b></td><td class="num "><s>3.98</s> <b>6.14</b><div class="sub">restricted on sunken</div></td>
+    <td class="why"><b>Takes:</b> caution-text<div class="sub">binding: caution-text on muted, <s>4.55</s> <b>7.02</b></div></td>
   </tr><tr>
-    <td><div class="pair"><span class="chip" style="background:#857E70"></span><span class="arrow">→</span><span class="chip big" style="background:#6D6659"></span></div></td>
+    <td><div class="pair"><span class="chip" style="background:#857E70"></span><span class="arrow">→</span><span class="chip big" style="background:#645D50"></span></div></td>
     <td><code>line-more</code><div class="sub">from <code>line-input</code> #857E70</div></td>
-    <td><code class="hex">#6D6659</code><div class="sub">L 0.513 C 0.022 h 83.0 (was L 0.595)</div></td>
-    <td class="num "><s>3.53</s> <b>4.99</b></td><td class="num "><s>4.02</s> <b>5.68</b></td><td class="num "><s>3.20</s> <b>4.51</b></td>
-    <td class="why">input, border, groove, elevation line, glass edge: 4.5:1 on wash</td>
+    <td><code class="hex">#645D50</code><div class="sub">L 0.481 C 0.022 h 83.0 (was L 0.595)</div><div class="sub">hue moved 1.58° (tolerance 6.46°)</div></td>
+    <td class="num "><s>3.53</s> <b>5.72</b></td><td class="num "><s>4.02</s> <b>6.51</b></td><td class="num "><s>3.20</s> <b>5.17</b></td><td class="num "><s>2.80</s> <b>4.53</b></td>
+    <td class="why"><b>Takes:</b> input, elevation-line, border, sidebar-border, groove-line, sunken-line, glass-edge<div class="sub">binding: sunken-line on sunken, <s>1.22</s> <b>4.53</b></div></td>
   </tr><tr>
     <td><div class="pair"><span class="arrow"></span><span class="chip big" style="background:#F5E6E9"></span></div></td>
-    <td><code>red-tint-more</code><div class="sub">red-more over raised, 10%</div></td>
+    <td><code>red-tint-more</code><div class="sub">red-more at 10% over raised</div></td>
     <td><code class="hex">#F5E6E9</code><div class="sub">L 0.938 C 0.017 h 3.7</div></td>
-    <td class="num">—</td><td class="num">—</td><td class="num">—</td>
-    <td class="why">destructive alert ground<span class="note">red-more on it: <b>7.30</b></span></td>
+    <td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td>
+    <td class="why"><b>Takes:</b> destructive-tint<div class="sub">binding: destructive on destructive-tint, <s>5.10</s> <b>7.30</b></div></td>
   </tr><tr>
     <td><div class="pair"><span class="arrow"></span><span class="chip big" style="background:#E6EEEB"></span></div></td>
-    <td><code>green-tint-more</code><div class="sub">green-more over raised, 10%</div></td>
+    <td><code>green-tint-more</code><div class="sub">green-more at 10% over raised</div></td>
     <td><code class="hex">#E6EEEB</code><div class="sub">L 0.942 C 0.009 h 171.8</div></td>
-    <td class="num">—</td><td class="num">—</td><td class="num">—</td>
-    <td class="why">success alert ground<span class="note">green-more on it: <b>7.52</b></span></td>
+    <td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td>
+    <td class="why"><b>Takes:</b> success-tint<div class="sub">binding: success on success-tint, <s>5.09</s> <b>7.52</b></div></td>
   </tr></tbody></table>
 <h2>Dark: the brand's hues and neutrals</h2>
-<h3>Text, fills and edges</h3><table><thead><tr><th>Swatch</th><th>Name</th><th>Hex</th><th class="num">on graphite<div class="sub">background #16140F</div></th><th class="num">on ink-raised<div class="sub">card #221F19</div></th><th class="num">on ink-wash<div class="sub">muted #2C2821</div></th><th>Job</th></tr></thead><tbody><tr>
+<table><thead><tr><th>Swatch</th><th>Name</th><th>Hex</th><th class="num">on graphite<div class="sub">background #16140F</div></th><th class="num">on ink-raised<div class="sub">card #221F19</div></th><th class="num">on ink-wash<div class="sub">muted #2C2821</div></th><th class="num">on ink-sunken<div class="sub">sunken #0B0A07</div></th><th>What takes it</th></tr></thead><tbody><tr>
     <td><div class="pair"><span class="chip" style="background:#A39D90"></span><span class="arrow">→</span><span class="chip big" style="background:#B9B3A5"></span></div></td>
     <td><code>paper-soft-more</code><div class="sub">from <code>paper-soft</code> #A39D90</div></td>
-    <td><code class="hex">#B9B3A5</code><div class="sub">L 0.768 C 0.021 h 87.5 (was L 0.697)</div></td>
-    <td class="num "><s>6.82</s> <b>8.81</b></td><td class="num "><s>6.08</s> <b>7.86</b></td><td class="num "><s>5.43</s> <b>7.01</b></td>
-    <td class="why">muted text, 7:1 on ink-wash</td>
+    <td><code class="hex">#B9B3A5</code><div class="sub">L 0.768 C 0.021 h 87.5 (was L 0.697)</div><div class="sub">hue moved 1.37° (tolerance 6.89°)</div></td>
+    <td class="num "><s>6.82</s> <b>8.81</b></td><td class="num "><s>6.08</s> <b>7.86</b></td><td class="num "><s>5.43</s> <b>7.01</b></td><td class="num "><s>7.33</s> <b>9.47</b></td>
+    <td class="why"><b>Takes:</b> muted-foreground<div class="sub">binding: muted-foreground on muted, <s>5.43</s> <b>7.01</b></div></td>
   </tr><tr>
     <td><div class="pair"><span class="chip" style="background:#93B0FF"></span><span class="arrow">→</span><span class="chip big" style="background:#95B2FF"></span></div></td>
     <td><code>blue-lifted-more</code><div class="sub">from <code>blue-lifted</code> #93B0FF</div></td>
-    <td><code class="hex">#95B2FF</code><div class="sub">L 0.772 C 0.115 h 267.9 (was L 0.767)</div></td>
-    <td class="num "><s>8.67</s> <b>8.84</b></td><td class="num "><s>7.74</s> <b>7.89</b></td><td class="num "><s>6.90</s> <b>7.04</b></td>
-    <td class="why">primary, link, ring, chart-1, field-1: 7:1 on ink-wash</td>
+    <td><code class="hex">#95B2FF</code><div class="sub">L 0.772 C 0.115 h 267.9 (was L 0.767)</div><div class="sub">hue moved 0.28° (tolerance 1.24°)</div></td>
+    <td class="num "><s>8.67</s> <b>8.84</b></td><td class="num "><s>7.74</s> <b>7.89</b></td><td class="num "><s>6.90</s> <b>7.04</b></td><td class="num "><s>9.32</s> <b>9.51</b></td>
+    <td class="why"><b>Takes:</b> primary, ring, sidebar-primary, sidebar-ring, syntax-blue<div class="sub">binding: primary on muted, <s>6.90</s> <b>7.04</b></div></td>
   </tr><tr>
-    <td><div class="pair"><span class="chip" style="background:#FF9491"></span><span class="arrow">→</span><span class="chip big" style="background:#FFA29F"></span></div></td>
+    <td><div class="pair"><span class="chip" style="background:#FF9491"></span><span class="arrow">→</span><span class="chip big" style="background:#FFA29E"></span></div></td>
     <td><code>red-lifted-more</code><div class="sub">from <code>red-lifted</code> #FF9491</div></td>
-    <td><code class="hex">#FFA29F</code><div class="sub">L 0.805 C 0.111 h 21.8 (was L 0.779)</div></td>
-    <td class="num "><s>8.67</s> <b>9.57</b></td><td class="num "><s>7.74</s> <b>8.54</b></td><td class="num "><s>6.90</s> <b>7.62</b></td>
-    <td class="why">destructive: 7:1 on ink-wash and on its tint</td>
+    <td><code class="hex">#FFA29E</code><div class="sub">L 0.804 C 0.111 h 22.5 (was L 0.779)</div><div class="sub">hue moved 0.34° (tolerance 1.29°)</div></td>
+    <td class="num "><s>8.67</s> <b>9.56</b></td><td class="num "><s>7.74</s> <b>8.53</b></td><td class="num "><s>6.90</s> <b>7.61</b></td><td class="num "><s>9.33</s> <b>10.28</b></td>
+    <td class="why"><b>Takes:</b> destructive<div class="sub">binding: destructive on destructive-tint, <s>5.21</s> <b>7.01</b></div></td>
   </tr><tr>
     <td><div class="pair"><span class="chip" style="background:#60C498"></span><span class="arrow">→</span><span class="chip big" style="background:#69CDA0"></span></div></td>
     <td><code>green-lifted-more</code><div class="sub">from <code>green-lifted</code> #60C498</div></td>
-    <td><code class="hex">#69CDA0</code><div class="sub">L 0.775 C 0.116 h 162.5 (was L 0.748)</div></td>
-    <td class="num "><s>8.62</s> <b>9.50</b></td><td class="num "><s>7.70</s> <b>8.48</b></td><td class="num "><s>6.87</s> <b>7.56</b></td>
-    <td class="why">success: 7:1 on ink-wash and on its tint</td>
+    <td><code class="hex">#69CDA0</code><div class="sub">L 0.775 C 0.116 h 162.5 (was L 0.748)</div><div class="sub">hue moved 0.25° (tolerance 1.24°)</div></td>
+    <td class="num "><s>8.62</s> <b>9.50</b></td><td class="num "><s>7.70</s> <b>8.48</b></td><td class="num "><s>6.87</s> <b>7.56</b></td><td class="num "><s>9.28</s> <b>10.22</b></td>
+    <td class="why"><b>Takes:</b> success<div class="sub">binding: success on success-tint, <s>5.19</s> <b>7.01</b></div></td>
   </tr><tr>
     <td><div class="pair"><span class="chip" style="background:#7A7366"></span><span class="arrow">→</span><span class="chip big" style="background:#958E80"></span></div></td>
     <td><code>paper-line-more</code><div class="sub">from <code>paper-line-input</code> #7A7366</div></td>
-    <td><code class="hex">#958E80</code><div class="sub">L 0.649 C 0.022 h 84.6 (was L 0.558)</div></td>
-    <td class="num "><s>3.91</s> <b>5.66</b></td><td class="num "><s>3.49</s> <b>5.05</b></td><td class="num "><s>3.12</s> <b>4.50</b></td>
-    <td class="why">input, border, groove, elevation line, glass edge: 4.5:1 on ink-wash</td>
+    <td><code class="hex">#958E80</code><div class="sub">L 0.649 C 0.022 h 84.6 (was L 0.558)</div><div class="sub">hue moved 1.56° (tolerance 6.5°)</div></td>
+    <td class="num "><s>3.91</s> <b>5.66</b></td><td class="num "><s>3.49</s> <b>5.05</b></td><td class="num "><s>3.12</s> <b>4.50</b></td><td class="num "><s>4.21</s> <b>6.08</b></td>
+    <td class="why"><b>Takes:</b> input, elevation-line, border, sidebar-border, groove-line, sunken-line, glass-edge<div class="sub">binding: input on muted, <s>3.12</s> <b>4.50</b></div></td>
   </tr><tr>
     <td><div class="pair"><span class="arrow"></span><span class="chip big" style="background:#382C26"></span></div></td>
-    <td><code>red-tint-lifted-more</code><div class="sub">red-lifted-more over ink-raised, 10%</div></td>
+    <td><code>red-tint-lifted-more</code><div class="sub">red-lifted-more at 10% over ink-raised</div></td>
     <td><code class="hex">#382C26</code><div class="sub">L 0.305 C 0.021 h 48.0</div></td>
-    <td class="num">—</td><td class="num">—</td><td class="num">—</td>
-    <td class="why">destructive alert ground<span class="note">red-lifted-more on it: <b>7.01</b></span></td>
+    <td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td>
+    <td class="why"><b>Takes:</b> destructive-tint<div class="sub">binding: destructive on destructive-tint, <s>5.21</s> <b>7.01</b></div></td>
   </tr><tr>
     <td><div class="pair"><span class="arrow"></span><span class="chip big" style="background:#293027"></span></div></td>
-    <td><code>green-tint-lifted-more</code><div class="sub">green-lifted-more over ink-raised, 10%</div></td>
+    <td><code>green-tint-lifted-more</code><div class="sub">green-lifted-more at 10% over ink-raised</div></td>
     <td><code class="hex">#293027</code><div class="sub">L 0.299 C 0.019 h 138.7</div></td>
-    <td class="num">—</td><td class="num">—</td><td class="num">—</td>
-    <td class="why">success alert ground<span class="note">green-lifted-more on it: <b>7.01</b></span></td>
+    <td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td>
+    <td class="why"><b>Takes:</b> success-tint<div class="sub">binding: success on success-tint, <s>5.19</s> <b>7.01</b></div></td>
   </tr></tbody></table>
-<p class="legend">Dark needs no new yellow: <code>yellow-lifted</code> #F8D874 is already 10.51 on ink-wash.</p>
+<p class="legend">Dark needs no new yellow: <code>yellow-lifted</code> #F8D874 is already 10.51 on ink-wash. Dark <code>syntax-blue</code> takes <code>blue-lifted-more</code> (one hex, one primitive).</p>
 <h2>Code: Meridian, at 7:1</h2>
-<h3>Light code</h3><table><thead><tr><th>Swatch</th><th>Name</th><th>Hex</th><th class="num">on raised<div class="sub">code ground #FFFFFF</div></th><th class="num">on paper<div class="sub">active line #F3F0E8</div></th><th>Job</th></tr></thead><tbody><tr>
+<table><thead><tr><th>Swatch</th><th>Name</th><th>Hex</th><th class="num">on raised<div class="sub">code ground #FFFFFF</div></th><th class="num">on paper<div class="sub">active line #F3F0E8</div></th><th>What takes it</th></tr></thead><tbody><tr>
     <td><div class="pair"><span class="chip" style="background:#7032B9"></span><span class="arrow">→</span><span class="chip big" style="background:#6B2BB3"></span></div></td>
     <td><code>code-violet-more</code><div class="sub">from <code>code-violet</code> #7032B9</div></td>
-    <td><code class="hex">#6B2BB3</code><div class="sub">L 0.457 C 0.2 h 299.7 (was L 0.476)</div></td>
+    <td><code class="hex">#6B2BB3</code><div class="sub">L 0.457 C 0.200 h 299.7 (was L 0.476)</div><div class="sub">hue moved 0.07° (tolerance 1°)</div></td>
     <td class="num "><s>7.37</s> <b>8.01</b></td><td class="num "><s>6.47</s> <b>7.03</b></td>
-    <td class="why">code text: 7:1 on raised and paper</td>
+    <td class="why"><b>Takes:</b> syntax-violet<div class="sub">binding: syntax-violet on syntax-active-line, <s>6.47</s> <b>7.03</b></div></td>
   </tr><tr>
     <td><div class="pair"><span class="chip" style="background:#3350CB"></span><span class="arrow">→</span><span class="chip big" style="background:#2943BD"></span></div></td>
     <td><code>code-blue-more</code><div class="sub">from <code>code-blue</code> #3350CB</div></td>
-    <td><code class="hex">#2943BD</code><div class="sub">L 0.447 C 0.193 h 267.9 (was L 0.488)</div></td>
+    <td><code class="hex">#2943BD</code><div class="sub">L 0.447 C 0.193 h 267.9 (was L 0.488)</div><div class="sub">hue moved 0.15° (tolerance 1°)</div></td>
     <td class="num "><s>6.66</s> <b>7.97</b></td><td class="num "><s>5.85</s> <b>7.00</b></td>
-    <td class="why">code text: 7:1 on raised and paper</td>
+    <td class="why"><b>Takes:</b> syntax-blue<div class="sub">binding: syntax-blue on syntax-active-line, <s>5.85</s> <b>7.00</b></div></td>
   </tr><tr>
     <td><div class="pair"><span class="chip" style="background:#007150"></span><span class="arrow">→</span><span class="chip big" style="background:#015C41"></span></div></td>
     <td><code>code-green-more</code><div class="sub">from <code>code-green</code> #007150</div></td>
-    <td><code class="hex">#015C41</code><div class="sub">L 0.421 C 0.088 h 165.0 (was L 0.486)</div></td>
+    <td><code class="hex">#015C41</code><div class="sub">L 0.421 C 0.088 h 165.0 (was L 0.486)</div><div class="sub">hue moved 0.37° (tolerance 1.62°)</div></td>
     <td class="num "><s>6.03</s> <b>8.05</b></td><td class="num "><s>5.30</s> <b>7.06</b></td>
-    <td class="why">code text: 7:1 on raised and paper</td>
+    <td class="why"><b>Takes:</b> syntax-green<div class="sub">binding: syntax-green on syntax-active-line, <s>5.30</s> <b>7.06</b></div></td>
   </tr><tr>
     <td><div class="pair"><span class="chip" style="background:#6C5A00"></span><span class="arrow">→</span><span class="chip big" style="background:#5F4F02"></span></div></td>
     <td><code>code-yellow-more</code><div class="sub">from <code>code-yellow</code> #6C5A00</div></td>
-    <td><code class="hex">#5F4F02</code><div class="sub">L 0.431 C 0.088 h 95.4 (was L 0.471)</div></td>
+    <td><code class="hex">#5F4F02</code><div class="sub">L 0.431 C 0.088 h 95.4 (was L 0.471)</div><div class="sub">hue moved 0.1° (tolerance 1.63°)</div></td>
     <td class="num "><s>6.77</s> <b>8.05</b></td><td class="num "><s>5.94</s> <b>7.07</b></td>
-    <td class="why">code text: 7:1 on raised and paper</td>
+    <td class="why"><b>Takes:</b> syntax-yellow<div class="sub">binding: syntax-yellow on syntax-active-line, <s>5.94</s> <b>7.07</b></div></td>
   </tr><tr>
     <td><div class="pair"><span class="chip" style="background:#A34D15"></span><span class="arrow">→</span><span class="chip big" style="background:#863A01"></span></div></td>
     <td><code>code-orange-more</code><div class="sub">from <code>code-orange</code> #A34D15</div></td>
-    <td><code class="hex">#863A01</code><div class="sub">L 0.444 C 0.12 h 48.4 (was L 0.521)</div></td>
+    <td><code class="hex">#863A01</code><div class="sub">L 0.444 C 0.120 h 48.4 (was L 0.521)</div><div class="sub">hue moved 0.12° (tolerance 1.2°)</div></td>
     <td class="num "><s>5.78</s> <b>8.01</b></td><td class="num "><s>5.08</s> <b>7.04</b></td>
-    <td class="why">code text: 7:1 on raised and paper</td>
+    <td class="why"><b>Takes:</b> syntax-orange<div class="sub">binding: syntax-orange on syntax-active-line, <s>5.08</s> <b>7.04</b></div></td>
   </tr><tr>
     <td><div class="pair"><span class="chip" style="background:#922F6E"></span><span class="arrow">→</span><span class="chip big" style="background:#8B2968"></span></div></td>
     <td><code>code-plum-more</code><div class="sub">from <code>code-plum</code> #922F6E</div></td>
-    <td><code class="hex">#8B2968</code><div class="sub">L 0.452 C 0.149 h 345.2 (was L 0.472)</div></td>
+    <td><code class="hex">#8B2968</code><div class="sub">L 0.452 C 0.149 h 345.2 (was L 0.472)</div><div class="sub">hue moved 0.03° (tolerance 1°)</div></td>
     <td class="num "><s>7.35</s> <b>8.03</b></td><td class="num "><s>6.46</s> <b>7.05</b></td>
-    <td class="why">code text: 7:1 on raised and paper</td>
+    <td class="why"><b>Takes:</b> syntax-plum<div class="sub">binding: syntax-plum on syntax-active-line, <s>6.46</s> <b>7.05</b></div></td>
   </tr><tr>
     <td><div class="pair"><span class="chip" style="background:#B81C2E"></span><span class="arrow">→</span><span class="chip big" style="background:#A50021"></span></div></td>
     <td><code>code-red-more</code><div class="sub">from <code>code-red</code> #B81C2E</div></td>
-    <td><code class="hex">#A50021</code><div class="sub">L 0.456 C 0.184 h 22.5 (was L 0.506)</div></td>
+    <td><code class="hex">#A50021</code><div class="sub">L 0.456 C 0.184 h 22.5 (was L 0.506)</div><div class="sub">hue moved 0.08° (tolerance 1°)</div></td>
     <td class="num "><s>6.47</s> <b>8.00</b></td><td class="num "><s>5.68</s> <b>7.03</b></td>
-    <td class="why">code text: 7:1 on raised and paper</td>
+    <td class="why"><b>Takes:</b> syntax-red<div class="sub">binding: syntax-red on syntax-active-line, <s>5.68</s> <b>7.03</b></div></td>
   </tr><tr>
     <td><div class="pair"><span class="chip" style="background:#636972"></span><span class="arrow">→</span><span class="chip big" style="background:#4C515A"></span></div></td>
     <td><code>code-grey-more</code><div class="sub">from <code>code-grey</code> #636972</div></td>
-    <td><code class="hex">#4C515A</code><div class="sub">L 0.434 C 0.016 h 262.3 (was L 0.519)</div></td>
+    <td><code class="hex">#4C515A</code><div class="sub">L 0.434 C 0.016 h 262.3 (was L 0.519)</div><div class="sub">hue moved 3.95° (tolerance 8.78°)</div></td>
     <td class="num "><s>5.53</s> <b>7.97</b></td><td class="num "><s>4.86</s> <b>7.00</b></td>
-    <td class="why">code text: 7:1 on raised and paper</td>
+    <td class="why"><b>Takes:</b> syntax-grey<div class="sub">binding: syntax-grey on syntax-active-line, <s>4.86</s> <b>7.00</b></div></td>
   </tr></tbody></table>
-<h3>Dark code</h3><table><thead><tr><th>Swatch</th><th>Name</th><th>Hex</th><th class="num">on ink-wash<div class="sub">code ground #2C2821</div></th><th class="num">on ink-raised<div class="sub">active line #221F19</div></th><th class="num">on graphite<div class="sub">page #16140F</div></th><th>Job</th></tr></thead><tbody><tr>
+<table><thead><tr><th>Swatch</th><th>Name</th><th>Hex</th><th class="num">on ink-wash<div class="sub">code ground #2C2821</div></th><th class="num">on ink-raised<div class="sub">active line #221F19</div></th><th class="num">on graphite<div class="sub">page #16140F</div></th><th>What takes it</th></tr></thead><tbody><tr>
     <td><div class="pair"><span class="chip" style="background:#FC8D8A"></span><span class="arrow">→</span><span class="chip big" style="background:#FF9692"></span></div></td>
     <td><code>code-red-lifted-more</code><div class="sub">from <code>code-red-lifted</code> #FC8D8A</div></td>
-    <td><code class="hex">#FF9692</code><div class="sub">L 0.782 C 0.127 h 22.7 (was L 0.762)</div></td>
+    <td><code class="hex">#FF9692</code><div class="sub">L 0.782 C 0.127 h 22.7 (was L 0.762)</div><div class="sub">hue moved 0.34° (tolerance 1.13°)</div></td>
     <td class="num "><s>6.50</s> <b>7.00</b></td><td class="num "><s>7.28</s> <b>7.84</b></td><td class="num "><s>8.16</s> <b>8.78</b></td>
-    <td class="why">code text: 7:1 on ink-wash, ink-raised and graphite</td>
+    <td class="why"><b>Takes:</b> syntax-red<div class="sub">binding: syntax-red on syntax-ground, <s>6.50</s> <b>7.00</b></div></td>
   </tr><tr>
     <td><div class="pair"><span class="chip" style="background:#9EA4AE"></span><span class="arrow">→</span><span class="chip big" style="background:#AEB4BE"></span></div></td>
     <td><code>code-grey-lifted-more</code><div class="sub">from <code>code-grey-lifted</code> #9EA4AE</div></td>
-    <td><code class="hex">#AEB4BE</code><div class="sub">L 0.768 C 0.016 h 260.7 (was L 0.717)</div></td>
+    <td><code class="hex">#AEB4BE</code><div class="sub">L 0.768 C 0.016 h 260.7 (was L 0.717)</div><div class="sub">hue moved 0° (tolerance 9.02°)</div></td>
     <td class="num "><s>5.84</s> <b>7.03</b></td><td class="num "><s>6.55</s> <b>7.88</b></td><td class="num "><s>7.33</s> <b>8.82</b></td>
-    <td class="why">code text: 7:1 on ink-wash, ink-raised and graphite</td>
+    <td class="why"><b>Takes:</b> syntax-grey<div class="sub">binding: syntax-grey on syntax-ground, <s>5.84</s> <b>7.03</b></div></td>
   </tr></tbody></table>
-<p class="legend">Unchanged because they already pass: light <code>code-navy</code>, <code>code-ink</code>; dark <code>code-violet-lifted</code>, <code>-navy-</code>, <code>-green-</code>, <code>-yellow-</code>, <code>-orange-</code>, <code>-plum-</code>, <code>-ink-</code>. Dark <code>syntax-blue</code> takes <code>blue-lifted-more</code> (one hex, one primitive).</p>
+<p class="legend">Unchanged because they already pass: light <code>code-navy</code>, <code>code-ink</code>; dark violet, navy, green, yellow, orange, plum and ink.</p>
+<h2>Chart distinctness</h2>
+<table class="small"><thead><tr><th>Scheme</th><th>Vision</th><th class="num">Standard: closest pair, ΔE</th><th class="num">More contrast</th></tr></thead><tbody><tr><td>light</td><td>typical</td><td class="num">14.3 <span class="sub">chart-4/chart-5</span></td><td class="num low">11.6 <span class="sub">chart-4/chart-5</span></td></tr><tr><td>light</td><td>deuteranopia</td><td class="num">7 <span class="sub">chart-2/chart-4</span></td><td class="num low">4.1 <span class="sub">chart-2/chart-3</span></td></tr><tr><td>light</td><td>protanopia</td><td class="num">6.8 <span class="sub">chart-2/chart-5</span></td><td class="num ">6.8 <span class="sub">chart-2/chart-5</span></td></tr><tr><td>dark</td><td>typical</td><td class="num">12.3 <span class="sub">chart-4/chart-5</span></td><td class="num ">12.3 <span class="sub">chart-4/chart-5</span></td></tr><tr><td>dark</td><td>deuteranopia</td><td class="num">4.8 <span class="sub">chart-4/chart-5</span></td><td class="num ">4.8 <span class="sub">chart-4/chart-5</span></td></tr><tr><td>dark</td><td>protanopia</td><td class="num">3.1 <span class="sub">chart-2/chart-5</span></td><td class="num ">3.1 <span class="sub">chart-2/chart-5</span></td></tr></tbody></table>
 </main></body></html>
