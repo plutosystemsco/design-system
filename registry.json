@@ -3792,7 +3792,8 @@
         "breadcrumb",
         "dropdown-menu",
         "avatar",
-        "collapsible"
+        "collapsible",
+        "toast"
       ],
       "files": [
         {

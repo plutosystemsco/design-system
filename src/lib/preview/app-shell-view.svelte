@@ -1,7 +1,8 @@
 <script lang="ts">
-  import type { Snippet } from "svelte";
+  import { onMount, type Snippet } from "svelte";
   import { version } from "$app/env";
   import { page } from "$app/state";
+  import { afterNavigate, beforeNavigate } from "$app/navigation";
   import AppShellFooter from "#lib/registry/components/app-shell-footer.svelte";
   import AppShellHeader from "#lib/registry/components/app-shell-header.svelte";
   import AppShellSidebar from "#lib/registry/components/app-shell-sidebar.svelte";
@@ -9,6 +10,7 @@
   import Page from "#lib/registry/blocks/app-shell/+page.svelte";
   import * as Breadcrumb from "#lib/registry/ui/breadcrumb";
   import * as Sidebar from "#lib/registry/ui/sidebar";
+  import { toast, Toaster } from "#lib/registry/ui/toast";
   import { ThemeScript } from "#lib/registry/ui/theme";
 
   /**
@@ -47,12 +49,22 @@
     sourceHref: "https://github.com/plutosystemsco/design-system",
   };
   const current = $derived(page.url.hash);
+
+  // 026 decision 23: the shipped layout's toaster and its two lines.
+  beforeNavigate(() => toast.navigating());
+  afterNavigate(() => toast.navigated());
+  // For 026 test 61 only: this copy never ships, and no button here raises
+  // a toast, so a test raises one through the window.
+  onMount(() => {
+    (window as unknown as { kuiperToast?: typeof toast }).kuiperToast = toast;
+  });
 </script>
 
 <ThemeScript />
 
 {#snippet shell()}
   <AppShellSkipLink />
+  <Toaster />
   <AppShellHeader
     {appName}
     {logo}

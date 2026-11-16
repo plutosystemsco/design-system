@@ -510,12 +510,21 @@
       "interactionMs": 136
     },
     "app-shell": {
-      "js": 79100,
+      "js": 89500,
       "css": 6500,
       "lazy": 1300,
       "assets": 1000,
       "hydrateMs": 95,
-      "interactionMs": 110
+      "interactionMs": 110,
+      "raised": [
+        {
+          "metric": "js",
+          "from": 79100,
+          "to": 89500,
+          "date": "2026-11-16",
+          "ruling": "context/specifications/026-toast.md#landing-notes"
+        }
+      ]
     },
     "chat": {
       "js": 40600,

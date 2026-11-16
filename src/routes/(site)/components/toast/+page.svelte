@@ -117,7 +117,8 @@
     <li>Offer every action somewhere else on the page too.</li>
     <li>
       Add <code>toast.navigating()</code> in <code>beforeNavigate</code> and
-      <code>toast.navigated()</code> in <code>afterNavigate</code> to your root layout.
+      <code>toast.navigated()</code> in <code>afterNavigate</code> to your root
+      layout if you do not use <code>app-shell</code>.
     </li>
     <li>
       Portal your own modals, or a toast raised under an inline one may show

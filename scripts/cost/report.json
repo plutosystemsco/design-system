@@ -23,7 +23,10 @@
         "warmups": 1,
         "gzipLevel": 9
       },
-      "load": { "median": 20.7, "max": 33 },
+      "load": {
+        "median": 20.7,
+        "max": 33
+      },
       "instrument": {
         "floorHydrateMs": 121.9,
         "noopMs": 43.8,
@@ -31,6 +34,40 @@
       },
       "noisy": false,
       "seconds": 2546
+    },
+    "2026-11-16T09:45:50.723Z": {
+      "commit": "1a116a4+dirty",
+      "full": false,
+      "machine": {
+        "model": "MacBookPro18,3 (Apple M1 Pro)",
+        "cores": 10,
+        "os": "darwin 25.5.0"
+      },
+      "tools": {
+        "bun": "1.4.4",
+        "chromium": "156.0.8078.4",
+        "playwright": "1.64.1",
+        "cli": "1.7.1",
+        "zlib": "12731092979c6d07f42da27da673a9f6c7b13586"
+      },
+      "settings": {
+        "cpu": 4,
+        "launches": 6,
+        "block": "FIFIFIF",
+        "warmups": 1,
+        "gzipLevel": 9
+      },
+      "load": {
+        "median": 9.1,
+        "max": 9.6
+      },
+      "instrument": {
+        "floorHydrateMs": 117.9,
+        "noopMs": 43.7,
+        "calibrateMs": 92.2
+      },
+      "noisy": false,
+      "seconds": 191
     },
     "2026-11-16T10:13:18.680Z": {
       "commit": "ab15732+dirty",
@@ -54,7 +91,10 @@
         "warmups": 1,
         "gzipLevel": 9
       },
-      "load": { "median": 17.3, "max": 22.8 },
+      "load": {
+        "median": 17.3,
+        "max": 22.8
+      },
       "instrument": {
         "floorHydrateMs": 119.9,
         "noopMs": 44.3,
@@ -64,7 +104,10 @@
       "seconds": 327
     }
   },
-  "empty": { "js": 31383, "css": 1444 },
+  "empty": {
+    "js": 31383,
+    "css": 1444
+  },
   "themeFloor": {
     "js": 31382,
     "css": 7477,
@@ -87,7 +130,10 @@
   "catalogue": {
     "js": 379006,
     "css": 16791,
-    "sumOfAlone": { "js": 1125739, "css": 64030 }
+    "sumOfAlone": {
+      "js": 1125739,
+      "css": 64030
+    }
   },
   "items": {
     "utils": {
@@ -100,15 +146,31 @@
         "css": 48,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 10062, "css": 56 }
+        "brotli": {
+          "js": 10062,
+          "css": 56
+        }
       },
-      "hydrate": { "ms": 17, "spread": [12.2, 20.4], "settledMs": null },
+      "hydrate": {
+        "ms": 17,
+        "spread": [12.2, 20.4],
+        "settledMs": null
+      },
       "interaction": null,
       "route": "/",
       "breakdown": [
-        { "source": "own", "js": 10340 },
-        { "source": "runtime", "js": 974 },
-        { "source": "package:clsx", "js": 122 }
+        {
+          "source": "own",
+          "js": 10340
+        },
+        {
+          "source": "runtime",
+          "js": 974
+        },
+        {
+          "source": "package:clsx",
+          "js": 122
+        }
       ],
       "cases": {}
     },
@@ -122,14 +184,27 @@
         "css": 582,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 4682, "css": 507 }
+        "brotli": {
+          "js": 4682,
+          "css": 507
+        }
       },
-      "hydrate": { "ms": 8.3, "spread": [4.6, 11.2], "settledMs": null },
+      "hydrate": {
+        "ms": 8.3,
+        "spread": [4.6, 11.2],
+        "settledMs": null
+      },
       "interaction": null,
       "route": "/",
       "breakdown": [
-        { "source": "runtime", "js": 4906 },
-        { "source": "own", "js": 225 }
+        {
+          "source": "runtime",
+          "js": 4906
+        },
+        {
+          "source": "own",
+          "js": 225
+        }
       ],
       "cases": {}
     },
@@ -143,9 +218,16 @@
         "css": 911,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 10943, "css": 787 }
+        "brotli": {
+          "js": 10943,
+          "css": 787
+        }
       },
-      "hydrate": { "ms": 22.5, "spread": [-15.7, 32.4], "settledMs": null },
+      "hydrate": {
+        "ms": 22.5,
+        "spread": [-15.7, 32.4],
+        "settledMs": null
+      },
       "interaction": {
         "kind": "click",
         "start": "click",
@@ -158,12 +240,30 @@
       },
       "route": "/",
       "breakdown": [
-        { "source": "package:tailwind-variants", "js": 4285 },
-        { "source": "runtime", "js": 3916 },
-        { "source": "package:phosphor-svelte", "js": 2777 },
-        { "source": "own", "js": 681 },
-        { "source": "item:button", "js": 577 },
-        { "source": "item:spinner", "js": 213 }
+        {
+          "source": "package:tailwind-variants",
+          "js": 4285
+        },
+        {
+          "source": "runtime",
+          "js": 3916
+        },
+        {
+          "source": "package:phosphor-svelte",
+          "js": 2777
+        },
+        {
+          "source": "own",
+          "js": 681
+        },
+        {
+          "source": "item:button",
+          "js": 577
+        },
+        {
+          "source": "item:spinner",
+          "js": 213
+        }
       ],
       "cases": {}
     },
@@ -177,14 +277,27 @@
         "css": 10,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 195, "css": 19 }
+        "brotli": {
+          "js": 195,
+          "css": 19
+        }
       },
-      "hydrate": { "ms": 1.9, "spread": [0, 4.5], "settledMs": null },
+      "hydrate": {
+        "ms": 1.9,
+        "spread": [0, 4.5],
+        "settledMs": null
+      },
       "interaction": null,
       "route": "/",
       "breakdown": [
-        { "source": "own", "js": 210 },
-        { "source": "runtime", "js": 1 }
+        {
+          "source": "own",
+          "js": 210
+        },
+        {
+          "source": "runtime",
+          "js": 1
+        }
       ],
       "cases": {}
     },
@@ -198,15 +311,31 @@
         "css": 344,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 547, "css": 285 }
+        "brotli": {
+          "js": 547,
+          "css": 285
+        }
       },
-      "hydrate": { "ms": 1.8, "spread": [-1, 3.9], "settledMs": null },
+      "hydrate": {
+        "ms": 1.8,
+        "spread": [-1, 3.9],
+        "settledMs": null
+      },
       "interaction": null,
       "route": "/",
       "breakdown": [
-        { "source": "own", "js": 359 },
-        { "source": "runtime", "js": 115 },
-        { "source": "item:read-token", "js": 110 }
+        {
+          "source": "own",
+          "js": 359
+        },
+        {
+          "source": "runtime",
+          "js": 115
+        },
+        {
+          "source": "item:read-token",
+          "js": 110
+        }
       ],
       "cases": {}
     },
@@ -220,9 +349,16 @@
         "css": 911,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 8971, "css": 787 }
+        "brotli": {
+          "js": 8971,
+          "css": 787
+        }
       },
-      "hydrate": { "ms": 15.8, "spread": [11.3, 48], "settledMs": null },
+      "hydrate": {
+        "ms": 15.8,
+        "spread": [11.3, 48],
+        "settledMs": null
+      },
       "interaction": {
         "kind": "click",
         "start": "click",
@@ -235,11 +371,26 @@
       },
       "route": "/",
       "breakdown": [
-        { "source": "package:tailwind-variants", "js": 4287 },
-        { "source": "runtime", "js": 3770 },
-        { "source": "package:phosphor-svelte", "js": 995 },
-        { "source": "own", "js": 695 },
-        { "source": "item:spinner", "js": 213 }
+        {
+          "source": "package:tailwind-variants",
+          "js": 4287
+        },
+        {
+          "source": "runtime",
+          "js": 3770
+        },
+        {
+          "source": "package:phosphor-svelte",
+          "js": 995
+        },
+        {
+          "source": "own",
+          "js": 695
+        },
+        {
+          "source": "item:spinner",
+          "js": 213
+        }
       ],
       "cases": {}
     },
@@ -253,9 +404,16 @@
         "css": 362,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 29038, "css": 299 }
+        "brotli": {
+          "js": 29038,
+          "css": 299
+        }
       },
-      "hydrate": { "ms": 31.4, "spread": [17.1, 48.7], "settledMs": null },
+      "hydrate": {
+        "ms": 31.4,
+        "spread": [17.1, 48.7],
+        "settledMs": null
+      },
       "interaction": {
         "kind": "hover",
         "start": "pointerover",
@@ -268,17 +426,50 @@
       },
       "route": "/",
       "breakdown": [
-        { "source": "package:bits-ui", "js": 15947 },
-        { "source": "runtime", "js": 3975 },
-        { "source": "package:@floating-ui/core", "js": 2711 },
-        { "source": "package:@floating-ui/dom", "js": 2544 },
-        { "source": "package:svelte-toolbelt", "js": 1806 },
-        { "source": "package:tabbable", "js": 1697 },
-        { "source": "package:runed", "js": 1346 },
-        { "source": "package:@floating-ui/utils", "js": 1174 },
-        { "source": "own", "js": 919 },
-        { "source": "package:inline-style-parser", "js": 451 },
-        { "source": "package:style-to-object", "js": 82 }
+        {
+          "source": "package:bits-ui",
+          "js": 15947
+        },
+        {
+          "source": "runtime",
+          "js": 3975
+        },
+        {
+          "source": "package:@floating-ui/core",
+          "js": 2711
+        },
+        {
+          "source": "package:@floating-ui/dom",
+          "js": 2544
+        },
+        {
+          "source": "package:svelte-toolbelt",
+          "js": 1806
+        },
+        {
+          "source": "package:tabbable",
+          "js": 1697
+        },
+        {
+          "source": "package:runed",
+          "js": 1346
+        },
+        {
+          "source": "package:@floating-ui/utils",
+          "js": 1174
+        },
+        {
+          "source": "own",
+          "js": 919
+        },
+        {
+          "source": "package:inline-style-parser",
+          "js": 451
+        },
+        {
+          "source": "package:style-to-object",
+          "js": 82
+        }
       ],
       "cases": {}
     },
@@ -292,14 +483,27 @@
         "css": 232,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 3204, "css": 215 }
+        "brotli": {
+          "js": 3204,
+          "css": 215
+        }
       },
-      "hydrate": { "ms": 23.8, "spread": [15.3, 33.6], "settledMs": null },
+      "hydrate": {
+        "ms": 23.8,
+        "spread": [15.3, 33.6],
+        "settledMs": null
+      },
       "interaction": null,
       "route": "/",
       "breakdown": [
-        { "source": "runtime", "js": 3308 },
-        { "source": "own", "js": 199 }
+        {
+          "source": "runtime",
+          "js": 3308
+        },
+        {
+          "source": "own",
+          "js": 199
+        }
       ],
       "cases": {}
     },
@@ -313,9 +517,16 @@
         "css": 503,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 9654, "css": 437 }
+        "brotli": {
+          "js": 9654,
+          "css": 437
+        }
       },
-      "hydrate": { "ms": 19.6, "spread": [14.1, 40.5], "settledMs": null },
+      "hydrate": {
+        "ms": 19.6,
+        "spread": [14.1, 40.5],
+        "settledMs": null
+      },
       "interaction": {
         "kind": "click",
         "start": "click",
@@ -328,13 +539,34 @@
       },
       "route": "/",
       "breakdown": [
-        { "source": "package:tailwind-variants", "js": 4205 },
-        { "source": "runtime", "js": 3487 },
-        { "source": "package:svelte-toolbelt", "js": 1413 },
-        { "source": "package:bits-ui", "js": 689 },
-        { "source": "package:inline-style-parser", "js": 492 },
-        { "source": "own", "js": 339 },
-        { "source": "package:style-to-object", "js": 89 }
+        {
+          "source": "package:tailwind-variants",
+          "js": 4205
+        },
+        {
+          "source": "runtime",
+          "js": 3487
+        },
+        {
+          "source": "package:svelte-toolbelt",
+          "js": 1413
+        },
+        {
+          "source": "package:bits-ui",
+          "js": 689
+        },
+        {
+          "source": "package:inline-style-parser",
+          "js": 492
+        },
+        {
+          "source": "own",
+          "js": 339
+        },
+        {
+          "source": "package:style-to-object",
+          "js": 89
+        }
       ],
       "cases": {}
     },
@@ -348,9 +580,16 @@
         "css": 839,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 12312, "css": 739 }
+        "brotli": {
+          "js": 12312,
+          "css": 739
+        }
       },
-      "hydrate": { "ms": 30.6, "spread": [26.8, 45.7], "settledMs": null },
+      "hydrate": {
+        "ms": 30.6,
+        "spread": [26.8, 45.7],
+        "settledMs": null
+      },
       "interaction": {
         "kind": "click",
         "start": "click",
@@ -363,15 +602,42 @@
       },
       "route": "/",
       "breakdown": [
-        { "source": "package:tailwind-variants", "js": 4010 },
-        { "source": "runtime", "js": 3554 },
-        { "source": "package:bits-ui", "js": 2224 },
-        { "source": "package:svelte-toolbelt", "js": 1565 },
-        { "source": "package:runed", "js": 1001 },
-        { "source": "own", "js": 641 },
-        { "source": "package:inline-style-parser", "js": 469 },
-        { "source": "item:toggle", "js": 106 },
-        { "source": "package:style-to-object", "js": 85 }
+        {
+          "source": "package:tailwind-variants",
+          "js": 4010
+        },
+        {
+          "source": "runtime",
+          "js": 3554
+        },
+        {
+          "source": "package:bits-ui",
+          "js": 2224
+        },
+        {
+          "source": "package:svelte-toolbelt",
+          "js": 1565
+        },
+        {
+          "source": "package:runed",
+          "js": 1001
+        },
+        {
+          "source": "own",
+          "js": 641
+        },
+        {
+          "source": "package:inline-style-parser",
+          "js": 469
+        },
+        {
+          "source": "item:toggle",
+          "js": 106
+        },
+        {
+          "source": "package:style-to-object",
+          "js": 85
+        }
       ],
       "cases": {}
     },
@@ -385,14 +651,27 @@
         "css": 633,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 3804, "css": 543 }
+        "brotli": {
+          "js": 3804,
+          "css": 543
+        }
       },
-      "hydrate": { "ms": 24.7, "spread": [16.5, 35.2], "settledMs": null },
+      "hydrate": {
+        "ms": 24.7,
+        "spread": [16.5, 35.2],
+        "settledMs": null
+      },
       "interaction": null,
       "route": "/",
       "breakdown": [
-        { "source": "runtime", "js": 3446 },
-        { "source": "own", "js": 838 }
+        {
+          "source": "runtime",
+          "js": 3446
+        },
+        {
+          "source": "own",
+          "js": 838
+        }
       ],
       "cases": {}
     },
@@ -406,18 +685,43 @@
         "css": 169,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 6246, "css": 140 }
+        "brotli": {
+          "js": 6246,
+          "css": 140
+        }
       },
-      "hydrate": { "ms": 9.8, "spread": [5.9, 13.7], "settledMs": null },
+      "hydrate": {
+        "ms": 9.8,
+        "spread": [5.9, 13.7],
+        "settledMs": null
+      },
       "interaction": null,
       "route": "/",
       "breakdown": [
-        { "source": "runtime", "js": 3886 },
-        { "source": "package:svelte-toolbelt", "js": 1575 },
-        { "source": "package:bits-ui", "js": 601 },
-        { "source": "package:inline-style-parser", "js": 548 },
-        { "source": "own", "js": 244 },
-        { "source": "package:style-to-object", "js": 99 }
+        {
+          "source": "runtime",
+          "js": 3886
+        },
+        {
+          "source": "package:svelte-toolbelt",
+          "js": 1575
+        },
+        {
+          "source": "package:bits-ui",
+          "js": 601
+        },
+        {
+          "source": "package:inline-style-parser",
+          "js": 548
+        },
+        {
+          "source": "own",
+          "js": 244
+        },
+        {
+          "source": "package:style-to-object",
+          "js": 99
+        }
       ],
       "cases": {}
     },
@@ -431,15 +735,31 @@
         "css": 930,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 6822, "css": 815 }
+        "brotli": {
+          "js": 6822,
+          "css": 815
+        }
       },
-      "hydrate": { "ms": 23.7, "spread": [12.4, 31.9], "settledMs": null },
+      "hydrate": {
+        "ms": 23.7,
+        "spread": [12.4, 31.9],
+        "settledMs": null
+      },
       "interaction": null,
       "route": "/",
       "breakdown": [
-        { "source": "package:tailwind-variants", "js": 3838 },
-        { "source": "runtime", "js": 2980 },
-        { "source": "own", "js": 789 }
+        {
+          "source": "package:tailwind-variants",
+          "js": 3838
+        },
+        {
+          "source": "runtime",
+          "js": 2980
+        },
+        {
+          "source": "own",
+          "js": 789
+        }
       ],
       "cases": {}
     },
@@ -453,14 +773,27 @@
         "css": 616,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 5218, "css": 539 }
+        "brotli": {
+          "js": 5218,
+          "css": 539
+        }
       },
-      "hydrate": { "ms": 26.2, "spread": [21.6, 32.3], "settledMs": null },
+      "hydrate": {
+        "ms": 26.2,
+        "spread": [21.6, 32.3],
+        "settledMs": null
+      },
       "interaction": null,
       "route": "/",
       "breakdown": [
-        { "source": "runtime", "js": 4587 },
-        { "source": "own", "js": 1151 }
+        {
+          "source": "runtime",
+          "js": 4587
+        },
+        {
+          "source": "own",
+          "js": 1151
+        }
       ],
       "cases": {
         "1000-rows": {
@@ -473,7 +806,10 @@
             "css": 616,
             "lazy": 0,
             "assets": 0,
-            "brotli": { "js": 5305, "css": 539 }
+            "brotli": {
+              "js": 5305,
+              "css": 539
+            }
           },
           "hydrate": {
             "ms": 448.8,
@@ -494,9 +830,16 @@
         "css": 849,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 12911, "css": 726 }
+        "brotli": {
+          "js": 12911,
+          "css": 726
+        }
       },
-      "hydrate": { "ms": 32.4, "spread": [25.6, 56.6], "settledMs": null },
+      "hydrate": {
+        "ms": 32.4,
+        "spread": [25.6, 56.6],
+        "settledMs": null
+      },
       "interaction": {
         "kind": "click",
         "start": "click",
@@ -509,14 +852,38 @@
       },
       "route": "/",
       "breakdown": [
-        { "source": "runtime", "js": 3948 },
-        { "source": "package:tailwind-variants", "js": 3898 },
-        { "source": "package:bits-ui", "js": 2593 },
-        { "source": "package:svelte-toolbelt", "js": 1521 },
-        { "source": "package:runed", "js": 973 },
-        { "source": "own", "js": 934 },
-        { "source": "package:inline-style-parser", "js": 456 },
-        { "source": "package:style-to-object", "js": 83 }
+        {
+          "source": "runtime",
+          "js": 3948
+        },
+        {
+          "source": "package:tailwind-variants",
+          "js": 3898
+        },
+        {
+          "source": "package:bits-ui",
+          "js": 2593
+        },
+        {
+          "source": "package:svelte-toolbelt",
+          "js": 1521
+        },
+        {
+          "source": "package:runed",
+          "js": 973
+        },
+        {
+          "source": "own",
+          "js": 934
+        },
+        {
+          "source": "package:inline-style-parser",
+          "js": 456
+        },
+        {
+          "source": "package:style-to-object",
+          "js": 83
+        }
       ],
       "cases": {}
     },
@@ -530,9 +897,16 @@
         "css": 0,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 8569, "css": 0 }
+        "brotli": {
+          "js": 8569,
+          "css": 0
+        }
       },
-      "hydrate": { "ms": 15.8, "spread": [6.8, 26], "settledMs": null },
+      "hydrate": {
+        "ms": 15.8,
+        "spread": [6.8, 26],
+        "settledMs": null
+      },
       "interaction": {
         "kind": "click",
         "start": "click",
@@ -545,13 +919,34 @@
       },
       "route": "/",
       "breakdown": [
-        { "source": "runtime", "js": 3536 },
-        { "source": "package:bits-ui", "js": 2542 },
-        { "source": "package:svelte-toolbelt", "js": 1381 },
-        { "source": "package:runed", "js": 995 },
-        { "source": "package:inline-style-parser", "js": 467 },
-        { "source": "own", "js": 463 },
-        { "source": "package:style-to-object", "js": 85 }
+        {
+          "source": "runtime",
+          "js": 3536
+        },
+        {
+          "source": "package:bits-ui",
+          "js": 2542
+        },
+        {
+          "source": "package:svelte-toolbelt",
+          "js": 1381
+        },
+        {
+          "source": "package:runed",
+          "js": 995
+        },
+        {
+          "source": "package:inline-style-parser",
+          "js": 467
+        },
+        {
+          "source": "own",
+          "js": 463
+        },
+        {
+          "source": "package:style-to-object",
+          "js": 85
+        }
       ],
       "cases": {}
     },
@@ -565,19 +960,47 @@
         "css": 591,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 7425, "css": 528 }
+        "brotli": {
+          "js": 7425,
+          "css": 528
+        }
       },
-      "hydrate": { "ms": 16.8, "spread": [-3.7, 24.1], "settledMs": null },
+      "hydrate": {
+        "ms": 16.8,
+        "spread": [-3.7, 24.1],
+        "settledMs": null
+      },
       "interaction": null,
       "route": "/",
       "breakdown": [
-        { "source": "runtime", "js": 3624 },
-        { "source": "package:svelte-toolbelt", "js": 1656 },
-        { "source": "package:runed", "js": 1021 },
-        { "source": "package:bits-ui", "js": 953 },
-        { "source": "package:inline-style-parser", "js": 478 },
-        { "source": "own", "js": 407 },
-        { "source": "package:style-to-object", "js": 87 }
+        {
+          "source": "runtime",
+          "js": 3624
+        },
+        {
+          "source": "package:svelte-toolbelt",
+          "js": 1656
+        },
+        {
+          "source": "package:runed",
+          "js": 1021
+        },
+        {
+          "source": "package:bits-ui",
+          "js": 953
+        },
+        {
+          "source": "package:inline-style-parser",
+          "js": 478
+        },
+        {
+          "source": "own",
+          "js": 407
+        },
+        {
+          "source": "package:style-to-object",
+          "js": 87
+        }
       ],
       "cases": {}
     },
@@ -591,9 +1014,16 @@
         "css": 590,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 28201, "css": 499 }
+        "brotli": {
+          "js": 28201,
+          "css": 499
+        }
       },
-      "hydrate": { "ms": 27.3, "spread": [24, 43.9], "settledMs": null },
+      "hydrate": {
+        "ms": 27.3,
+        "spread": [24, 43.9],
+        "settledMs": null
+      },
       "interaction": {
         "kind": "click",
         "start": "click",
@@ -606,17 +1036,50 @@
       },
       "route": "/",
       "breakdown": [
-        { "source": "package:bits-ui", "js": 14595 },
-        { "source": "runtime", "js": 4275 },
-        { "source": "package:@floating-ui/core", "js": 2674 },
-        { "source": "package:@floating-ui/dom", "js": 2510 },
-        { "source": "package:svelte-toolbelt", "js": 1786 },
-        { "source": "package:tabbable", "js": 1709 },
-        { "source": "package:runed", "js": 1328 },
-        { "source": "package:@floating-ui/utils", "js": 1158 },
-        { "source": "own", "js": 1135 },
-        { "source": "package:inline-style-parser", "js": 445 },
-        { "source": "package:style-to-object", "js": 81 }
+        {
+          "source": "package:bits-ui",
+          "js": 14595
+        },
+        {
+          "source": "runtime",
+          "js": 4275
+        },
+        {
+          "source": "package:@floating-ui/core",
+          "js": 2674
+        },
+        {
+          "source": "package:@floating-ui/dom",
+          "js": 2510
+        },
+        {
+          "source": "package:svelte-toolbelt",
+          "js": 1786
+        },
+        {
+          "source": "package:tabbable",
+          "js": 1709
+        },
+        {
+          "source": "package:runed",
+          "js": 1328
+        },
+        {
+          "source": "package:@floating-ui/utils",
+          "js": 1158
+        },
+        {
+          "source": "own",
+          "js": 1135
+        },
+        {
+          "source": "package:inline-style-parser",
+          "js": 445
+        },
+        {
+          "source": "package:style-to-object",
+          "js": 81
+        }
       ],
       "cases": {}
     },
@@ -630,9 +1093,16 @@
         "css": 627,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 11663, "css": 555 }
+        "brotli": {
+          "js": 11663,
+          "css": 555
+        }
       },
-      "hydrate": { "ms": 40.5, "spread": [36.6, 75.2], "settledMs": null },
+      "hydrate": {
+        "ms": 40.5,
+        "spread": [36.6, 75.2],
+        "settledMs": null
+      },
       "interaction": {
         "kind": "click",
         "start": "click",
@@ -645,14 +1115,38 @@
       },
       "route": "/",
       "breakdown": [
-        { "source": "package:bits-ui", "js": 4310 },
-        { "source": "runtime", "js": 3752 },
-        { "source": "package:svelte-toolbelt", "js": 1624 },
-        { "source": "own", "js": 1173 },
-        { "source": "package:runed", "js": 1012 },
-        { "source": "package:phosphor-svelte", "js": 577 },
-        { "source": "package:inline-style-parser", "js": 475 },
-        { "source": "package:style-to-object", "js": 86 }
+        {
+          "source": "package:bits-ui",
+          "js": 4310
+        },
+        {
+          "source": "runtime",
+          "js": 3752
+        },
+        {
+          "source": "package:svelte-toolbelt",
+          "js": 1624
+        },
+        {
+          "source": "own",
+          "js": 1173
+        },
+        {
+          "source": "package:runed",
+          "js": 1012
+        },
+        {
+          "source": "package:phosphor-svelte",
+          "js": 577
+        },
+        {
+          "source": "package:inline-style-parser",
+          "js": 475
+        },
+        {
+          "source": "package:style-to-object",
+          "js": 86
+        }
       ],
       "cases": {}
     },
@@ -666,15 +1160,31 @@
         "css": 779,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 6679, "css": 690 }
+        "brotli": {
+          "js": 6679,
+          "css": 690
+        }
       },
-      "hydrate": { "ms": 18.4, "spread": [8.6, 23.6], "settledMs": null },
+      "hydrate": {
+        "ms": 18.4,
+        "spread": [8.6, 23.6],
+        "settledMs": null
+      },
       "interaction": null,
       "route": "/",
       "breakdown": [
-        { "source": "package:tailwind-variants", "js": 3867 },
-        { "source": "runtime", "js": 2933 },
-        { "source": "own", "js": 612 }
+        {
+          "source": "package:tailwind-variants",
+          "js": 3867
+        },
+        {
+          "source": "runtime",
+          "js": 2933
+        },
+        {
+          "source": "own",
+          "js": 612
+        }
       ],
       "cases": {}
     },
@@ -688,9 +1198,16 @@
         "css": 2023,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 20422, "css": 1759 }
+        "brotli": {
+          "js": 20422,
+          "css": 1759
+        }
       },
-      "hydrate": { "ms": 25.5, "spread": [17.9, 27.1], "settledMs": null },
+      "hydrate": {
+        "ms": 25.5,
+        "spread": [17.9, 27.1],
+        "settledMs": null
+      },
       "interaction": {
         "kind": "click",
         "start": "click",
@@ -703,16 +1220,46 @@
       },
       "route": "/",
       "breakdown": [
-        { "source": "package:bits-ui", "js": 8713 },
-        { "source": "runtime", "js": 3874 },
-        { "source": "package:tailwind-variants", "js": 3757 },
-        { "source": "package:svelte-toolbelt", "js": 1721 },
-        { "source": "package:tabbable", "js": 1655 },
-        { "source": "own", "js": 1624 },
-        { "source": "package:runed", "js": 939 },
-        { "source": "package:inline-style-parser", "js": 439 },
-        { "source": "item:button", "js": 186 },
-        { "source": "package:style-to-object", "js": 80 }
+        {
+          "source": "package:bits-ui",
+          "js": 8713
+        },
+        {
+          "source": "runtime",
+          "js": 3874
+        },
+        {
+          "source": "package:tailwind-variants",
+          "js": 3757
+        },
+        {
+          "source": "package:svelte-toolbelt",
+          "js": 1721
+        },
+        {
+          "source": "package:tabbable",
+          "js": 1655
+        },
+        {
+          "source": "own",
+          "js": 1624
+        },
+        {
+          "source": "package:runed",
+          "js": 939
+        },
+        {
+          "source": "package:inline-style-parser",
+          "js": 439
+        },
+        {
+          "source": "item:button",
+          "js": 186
+        },
+        {
+          "source": "package:style-to-object",
+          "js": 80
+        }
       ],
       "cases": {}
     },
@@ -726,15 +1273,31 @@
         "css": 310,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 6343, "css": 262 }
+        "brotli": {
+          "js": 6343,
+          "css": 262
+        }
       },
-      "hydrate": { "ms": 29, "spread": [24.3, 32.7], "settledMs": null },
+      "hydrate": {
+        "ms": 29,
+        "spread": [24.3, 32.7],
+        "settledMs": null
+      },
       "interaction": null,
       "route": "/",
       "breakdown": [
-        { "source": "package:tailwind-variants", "js": 3829 },
-        { "source": "runtime", "js": 2903 },
-        { "source": "own", "js": 234 }
+        {
+          "source": "package:tailwind-variants",
+          "js": 3829
+        },
+        {
+          "source": "runtime",
+          "js": 2903
+        },
+        {
+          "source": "own",
+          "js": 234
+        }
       ],
       "cases": {}
     },
@@ -748,15 +1311,31 @@
         "css": 470,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 6765, "css": 422 }
+        "brotli": {
+          "js": 6765,
+          "css": 422
+        }
       },
-      "hydrate": { "ms": 21.5, "spread": [16.9, 23.5], "settledMs": null },
+      "hydrate": {
+        "ms": 21.5,
+        "spread": [16.9, 23.5],
+        "settledMs": null
+      },
       "interaction": null,
       "route": "/",
       "breakdown": [
-        { "source": "package:tailwind-variants", "js": 3751 },
-        { "source": "runtime", "js": 3193 },
-        { "source": "own", "js": 647 }
+        {
+          "source": "package:tailwind-variants",
+          "js": 3751
+        },
+        {
+          "source": "runtime",
+          "js": 3193
+        },
+        {
+          "source": "own",
+          "js": 647
+        }
       ],
       "cases": {}
     },
@@ -770,14 +1349,27 @@
         "css": 41,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 3083, "css": 43 }
+        "brotli": {
+          "js": 3083,
+          "css": 43
+        }
       },
-      "hydrate": { "ms": 6.3, "spread": [-6.2, 27.6], "settledMs": null },
+      "hydrate": {
+        "ms": 6.3,
+        "spread": [-6.2, 27.6],
+        "settledMs": null
+      },
       "interaction": null,
       "route": "/",
       "breakdown": [
-        { "source": "runtime", "js": 3212 },
-        { "source": "own", "js": 137 }
+        {
+          "source": "runtime",
+          "js": 3212
+        },
+        {
+          "source": "own",
+          "js": 137
+        }
       ],
       "cases": {}
     },
@@ -791,15 +1383,31 @@
         "css": 172,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 5034, "css": 139 }
+        "brotli": {
+          "js": 5034,
+          "css": 139
+        }
       },
-      "hydrate": { "ms": 9.4, "spread": [1.5, 16.4], "settledMs": null },
+      "hydrate": {
+        "ms": 9.4,
+        "spread": [1.5, 16.4],
+        "settledMs": null
+      },
       "interaction": null,
       "route": "/",
       "breakdown": [
-        { "source": "runtime", "js": 4225 },
-        { "source": "package:phosphor-svelte", "js": 1121 },
-        { "source": "own", "js": 285 }
+        {
+          "source": "runtime",
+          "js": 4225
+        },
+        {
+          "source": "package:phosphor-svelte",
+          "js": 1121
+        },
+        {
+          "source": "own",
+          "js": 285
+        }
       ],
       "cases": {}
     },
@@ -813,14 +1421,27 @@
         "css": 83,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 3154, "css": 78 }
+        "brotli": {
+          "js": 3154,
+          "css": 78
+        }
       },
-      "hydrate": { "ms": 5.6, "spread": [-6.8, 14.4], "settledMs": null },
+      "hydrate": {
+        "ms": 5.6,
+        "spread": [-6.8, 14.4],
+        "settledMs": null
+      },
       "interaction": null,
       "route": "/",
       "breakdown": [
-        { "source": "runtime", "js": 3242 },
-        { "source": "own", "js": 177 }
+        {
+          "source": "runtime",
+          "js": 3242
+        },
+        {
+          "source": "own",
+          "js": 177
+        }
       ],
       "cases": {}
     },
@@ -834,9 +1455,16 @@
         "css": 891,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 10507, "css": 786 }
+        "brotli": {
+          "js": 10507,
+          "css": 786
+        }
       },
-      "hydrate": { "ms": 35.3, "spread": [27.6, 46.6], "settledMs": null },
+      "hydrate": {
+        "ms": 35.3,
+        "spread": [27.6, 46.6],
+        "settledMs": null
+      },
       "interaction": {
         "kind": "click",
         "start": "click",
@@ -849,11 +1477,26 @@
       },
       "route": "/",
       "breakdown": [
-        { "source": "runtime", "js": 5791 },
-        { "source": "package:tailwind-variants", "js": 4173 },
-        { "source": "own", "js": 913 },
-        { "source": "package:phosphor-svelte", "js": 666 },
-        { "source": "item:alert", "js": 273 }
+        {
+          "source": "runtime",
+          "js": 5791
+        },
+        {
+          "source": "package:tailwind-variants",
+          "js": 4173
+        },
+        {
+          "source": "own",
+          "js": 913
+        },
+        {
+          "source": "package:phosphor-svelte",
+          "js": 666
+        },
+        {
+          "source": "item:alert",
+          "js": 273
+        }
       ],
       "cases": {}
     },
@@ -867,18 +1510,43 @@
         "css": 192,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 6221, "css": 160 }
+        "brotli": {
+          "js": 6221,
+          "css": 160
+        }
       },
-      "hydrate": { "ms": 14.5, "spread": [11.2, 26.9], "settledMs": null },
+      "hydrate": {
+        "ms": 14.5,
+        "spread": [11.2, 26.9],
+        "settledMs": null
+      },
       "interaction": null,
       "route": "/",
       "breakdown": [
-        { "source": "runtime", "js": 3908 },
-        { "source": "package:svelte-toolbelt", "js": 1583 },
-        { "source": "package:inline-style-parser", "js": 551 },
-        { "source": "package:bits-ui", "js": 540 },
-        { "source": "own", "js": 263 },
-        { "source": "package:style-to-object", "js": 100 }
+        {
+          "source": "runtime",
+          "js": 3908
+        },
+        {
+          "source": "package:svelte-toolbelt",
+          "js": 1583
+        },
+        {
+          "source": "package:inline-style-parser",
+          "js": 551
+        },
+        {
+          "source": "package:bits-ui",
+          "js": 540
+        },
+        {
+          "source": "own",
+          "js": 263
+        },
+        {
+          "source": "package:style-to-object",
+          "js": 100
+        }
       ],
       "cases": {}
     },
@@ -892,20 +1560,51 @@
         "css": 1133,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 12079, "css": 962 }
+        "brotli": {
+          "js": 12079,
+          "css": 962
+        }
       },
-      "hydrate": { "ms": 27.2, "spread": [22.3, 36], "settledMs": null },
+      "hydrate": {
+        "ms": 27.2,
+        "spread": [22.3, 36],
+        "settledMs": null
+      },
       "interaction": null,
       "route": "/",
       "breakdown": [
-        { "source": "runtime", "js": 5243 },
-        { "source": "package:tailwind-variants", "js": 4048 },
-        { "source": "own", "js": 1576 },
-        { "source": "package:svelte-toolbelt", "js": 1360 },
-        { "source": "package:inline-style-parser", "js": 473 },
-        { "source": "package:bits-ui", "js": 464 },
-        { "source": "item:label", "js": 143 },
-        { "source": "package:style-to-object", "js": 86 }
+        {
+          "source": "runtime",
+          "js": 5243
+        },
+        {
+          "source": "package:tailwind-variants",
+          "js": 4048
+        },
+        {
+          "source": "own",
+          "js": 1576
+        },
+        {
+          "source": "package:svelte-toolbelt",
+          "js": 1360
+        },
+        {
+          "source": "package:inline-style-parser",
+          "js": 473
+        },
+        {
+          "source": "package:bits-ui",
+          "js": 464
+        },
+        {
+          "source": "item:label",
+          "js": 143
+        },
+        {
+          "source": "package:style-to-object",
+          "js": 86
+        }
       ],
       "cases": {}
     },
@@ -919,14 +1618,27 @@
         "css": 410,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 3874, "css": 346 }
+        "brotli": {
+          "js": 3874,
+          "css": 346
+        }
       },
-      "hydrate": { "ms": 9.2, "spread": [6.5, 26.8], "settledMs": null },
+      "hydrate": {
+        "ms": 9.2,
+        "spread": [6.5, 26.8],
+        "settledMs": null
+      },
       "interaction": null,
       "route": "/",
       "breakdown": [
-        { "source": "runtime", "js": 3806 },
-        { "source": "own", "js": 402 }
+        {
+          "source": "runtime",
+          "js": 3806
+        },
+        {
+          "source": "own",
+          "js": 402
+        }
       ],
       "cases": {}
     },
@@ -940,14 +1652,27 @@
         "css": 297,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 3679, "css": 279 }
+        "brotli": {
+          "js": 3679,
+          "css": 279
+        }
       },
-      "hydrate": { "ms": 10.6, "spread": [6.5, 18], "settledMs": null },
+      "hydrate": {
+        "ms": 10.6,
+        "spread": [6.5, 18],
+        "settledMs": null
+      },
       "interaction": null,
       "route": "/",
       "breakdown": [
-        { "source": "runtime", "js": 3785 },
-        { "source": "own", "js": 257 }
+        {
+          "source": "runtime",
+          "js": 3785
+        },
+        {
+          "source": "own",
+          "js": 257
+        }
       ],
       "cases": {}
     },
@@ -961,9 +1686,16 @@
         "css": 1649,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 10421, "css": 1448 }
+        "brotli": {
+          "js": 10421,
+          "css": 1448
+        }
       },
-      "hydrate": { "ms": 31.2, "spread": [7.9, 49.3], "settledMs": null },
+      "hydrate": {
+        "ms": 31.2,
+        "spread": [7.9, 49.3],
+        "settledMs": null
+      },
       "interaction": {
         "kind": "click",
         "start": "click",
@@ -976,13 +1708,34 @@
       },
       "route": "/",
       "breakdown": [
-        { "source": "package:tailwind-variants", "js": 4249 },
-        { "source": "runtime", "js": 4205 },
-        { "source": "own", "js": 1174 },
-        { "source": "package:phosphor-svelte", "js": 986 },
-        { "source": "item:button", "js": 572 },
-        { "source": "item:input", "js": 354 },
-        { "source": "item:spinner", "js": 212 }
+        {
+          "source": "package:tailwind-variants",
+          "js": 4249
+        },
+        {
+          "source": "runtime",
+          "js": 4205
+        },
+        {
+          "source": "own",
+          "js": 1174
+        },
+        {
+          "source": "package:phosphor-svelte",
+          "js": 986
+        },
+        {
+          "source": "item:button",
+          "js": 572
+        },
+        {
+          "source": "item:input",
+          "js": 354
+        },
+        {
+          "source": "item:spinner",
+          "js": 212
+        }
       ],
       "cases": {}
     },
@@ -996,15 +1749,31 @@
         "css": 535,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 4962, "css": 467 }
+        "brotli": {
+          "js": 4962,
+          "css": 467
+        }
       },
-      "hydrate": { "ms": 17.4, "spread": [15.5, 28.3], "settledMs": null },
+      "hydrate": {
+        "ms": 17.4,
+        "spread": [15.5, 28.3],
+        "settledMs": null
+      },
       "interaction": null,
       "route": "/",
       "breakdown": [
-        { "source": "runtime", "js": 4223 },
-        { "source": "package:phosphor-svelte", "js": 664 },
-        { "source": "own", "js": 651 }
+        {
+          "source": "runtime",
+          "js": 4223
+        },
+        {
+          "source": "package:phosphor-svelte",
+          "js": 664
+        },
+        {
+          "source": "own",
+          "js": 651
+        }
       ],
       "cases": {}
     },
@@ -1018,9 +1787,16 @@
         "css": 446,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 9721, "css": 385 }
+        "brotli": {
+          "js": 9721,
+          "css": 385
+        }
       },
-      "hydrate": { "ms": 14.4, "spread": [12.6, 19.8], "settledMs": null },
+      "hydrate": {
+        "ms": 14.4,
+        "spread": [12.6, 19.8],
+        "settledMs": null
+      },
       "interaction": {
         "kind": "click",
         "start": "click",
@@ -1033,14 +1809,38 @@
       },
       "route": "/",
       "breakdown": [
-        { "source": "runtime", "js": 4318 },
-        { "source": "package:bits-ui", "js": 1838 },
-        { "source": "package:svelte-toolbelt", "js": 1469 },
-        { "source": "package:phosphor-svelte", "js": 1171 },
-        { "source": "package:runed", "js": 1050 },
-        { "source": "package:inline-style-parser", "js": 493 },
-        { "source": "own", "js": 492 },
-        { "source": "package:style-to-object", "js": 89 }
+        {
+          "source": "runtime",
+          "js": 4318
+        },
+        {
+          "source": "package:bits-ui",
+          "js": 1838
+        },
+        {
+          "source": "package:svelte-toolbelt",
+          "js": 1469
+        },
+        {
+          "source": "package:phosphor-svelte",
+          "js": 1171
+        },
+        {
+          "source": "package:runed",
+          "js": 1050
+        },
+        {
+          "source": "package:inline-style-parser",
+          "js": 493
+        },
+        {
+          "source": "own",
+          "js": 492
+        },
+        {
+          "source": "package:style-to-object",
+          "js": 89
+        }
       ],
       "cases": {}
     },
@@ -1054,9 +1854,16 @@
         "css": 387,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 9454, "css": 345 }
+        "brotli": {
+          "js": 9454,
+          "css": 345
+        }
       },
-      "hydrate": { "ms": 19.7, "spread": [16.7, 24.9], "settledMs": null },
+      "hydrate": {
+        "ms": 19.7,
+        "spread": [16.7, 24.9],
+        "settledMs": null
+      },
       "interaction": {
         "kind": "click",
         "start": "click",
@@ -1069,13 +1876,34 @@
       },
       "route": "/",
       "breakdown": [
-        { "source": "runtime", "js": 3787 },
-        { "source": "package:bits-ui", "js": 2743 },
-        { "source": "package:svelte-toolbelt", "js": 1722 },
-        { "source": "package:runed", "js": 1066 },
-        { "source": "own", "js": 628 },
-        { "source": "package:inline-style-parser", "js": 500 },
-        { "source": "package:style-to-object", "js": 91 }
+        {
+          "source": "runtime",
+          "js": 3787
+        },
+        {
+          "source": "package:bits-ui",
+          "js": 2743
+        },
+        {
+          "source": "package:svelte-toolbelt",
+          "js": 1722
+        },
+        {
+          "source": "package:runed",
+          "js": 1066
+        },
+        {
+          "source": "own",
+          "js": 628
+        },
+        {
+          "source": "package:inline-style-parser",
+          "js": 500
+        },
+        {
+          "source": "package:style-to-object",
+          "js": 91
+        }
       ],
       "cases": {}
     },
@@ -1089,9 +1917,16 @@
         "css": 487,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 7815, "css": 427 }
+        "brotli": {
+          "js": 7815,
+          "css": 427
+        }
       },
-      "hydrate": { "ms": 13.7, "spread": [12.1, 24.2], "settledMs": null },
+      "hydrate": {
+        "ms": 13.7,
+        "spread": [12.1, 24.2],
+        "settledMs": null
+      },
       "interaction": {
         "kind": "click",
         "start": "click",
@@ -1104,13 +1939,34 @@
       },
       "route": "/",
       "breakdown": [
-        { "source": "runtime", "js": 3682 },
-        { "source": "package:bits-ui", "js": 1579 },
-        { "source": "package:svelte-toolbelt", "js": 1450 },
-        { "source": "package:runed", "js": 1037 },
-        { "source": "package:inline-style-parser", "js": 486 },
-        { "source": "own", "js": 381 },
-        { "source": "package:style-to-object", "js": 88 }
+        {
+          "source": "runtime",
+          "js": 3682
+        },
+        {
+          "source": "package:bits-ui",
+          "js": 1579
+        },
+        {
+          "source": "package:svelte-toolbelt",
+          "js": 1450
+        },
+        {
+          "source": "package:runed",
+          "js": 1037
+        },
+        {
+          "source": "package:inline-style-parser",
+          "js": 486
+        },
+        {
+          "source": "own",
+          "js": 381
+        },
+        {
+          "source": "package:style-to-object",
+          "js": 88
+        }
       ],
       "cases": {}
     },
@@ -1124,9 +1980,16 @@
         "css": 627,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 12227, "css": 561 }
+        "brotli": {
+          "js": 12227,
+          "css": 561
+        }
       },
-      "hydrate": { "ms": 32.4, "spread": [29.1, 42.7], "settledMs": null },
+      "hydrate": {
+        "ms": 32.4,
+        "spread": [29.1, 42.7],
+        "settledMs": null
+      },
       "interaction": {
         "kind": "key",
         "start": "keydown",
@@ -1139,13 +2002,34 @@
       },
       "route": "/",
       "breakdown": [
-        { "source": "runtime", "js": 5584 },
-        { "source": "package:bits-ui", "js": 3445 },
-        { "source": "package:svelte-toolbelt", "js": 1903 },
-        { "source": "package:runed", "js": 1077 },
-        { "source": "own", "js": 896 },
-        { "source": "package:inline-style-parser", "js": 511 },
-        { "source": "package:style-to-object", "js": 93 }
+        {
+          "source": "runtime",
+          "js": 5584
+        },
+        {
+          "source": "package:bits-ui",
+          "js": 3445
+        },
+        {
+          "source": "package:svelte-toolbelt",
+          "js": 1903
+        },
+        {
+          "source": "package:runed",
+          "js": 1077
+        },
+        {
+          "source": "own",
+          "js": 896
+        },
+        {
+          "source": "package:inline-style-parser",
+          "js": 511
+        },
+        {
+          "source": "package:style-to-object",
+          "js": 93
+        }
       ],
       "cases": {}
     },
@@ -1159,9 +2043,16 @@
         "css": 2444,
         "lazy": 382311,
         "assets": 2147405,
-        "brotli": { "js": 22401, "css": 2134 }
+        "brotli": {
+          "js": 22401,
+          "css": 2134
+        }
       },
-      "hydrate": { "ms": 59.3, "spread": [50.6, 75.2], "settledMs": 347.3 },
+      "hydrate": {
+        "ms": 59.3,
+        "spread": [50.6, 75.2],
+        "settledMs": 347.3
+      },
       "interaction": {
         "kind": "click",
         "start": "click",
@@ -1174,15 +2065,42 @@
       },
       "route": "/",
       "breakdown": [
-        { "source": "item:highlighter", "js": 8613 },
-        { "source": "runtime", "js": 6228 },
-        { "source": "package:tailwind-variants", "js": 4630 },
-        { "source": "package:phosphor-svelte", "js": 2422 },
-        { "source": "own", "js": 2374 },
-        { "source": "item:button", "js": 623 },
-        { "source": "item:use-highlighted-code", "js": 302 },
-        { "source": "item:spinner", "js": 231 },
-        { "source": "item:status", "js": 143 }
+        {
+          "source": "item:highlighter",
+          "js": 8613
+        },
+        {
+          "source": "runtime",
+          "js": 6228
+        },
+        {
+          "source": "package:tailwind-variants",
+          "js": 4630
+        },
+        {
+          "source": "package:phosphor-svelte",
+          "js": 2422
+        },
+        {
+          "source": "own",
+          "js": 2374
+        },
+        {
+          "source": "item:button",
+          "js": 623
+        },
+        {
+          "source": "item:use-highlighted-code",
+          "js": 302
+        },
+        {
+          "source": "item:spinner",
+          "js": 231
+        },
+        {
+          "source": "item:status",
+          "js": 143
+        }
       ],
       "cases": {}
     },
@@ -1196,9 +2114,16 @@
         "css": 587,
         "lazy": 382311,
         "assets": 2147405,
-        "brotli": { "js": 111729, "css": 468 }
+        "brotli": {
+          "js": 111729,
+          "css": 468
+        }
       },
-      "hydrate": { "ms": 118.3, "spread": [109.7, 129.9], "settledMs": 403.6 },
+      "hydrate": {
+        "ms": 118.3,
+        "spread": [109.7, 129.9],
+        "settledMs": 403.6
+      },
       "interaction": {
         "kind": "key",
         "start": "keydown",
@@ -1211,22 +2136,70 @@
       },
       "route": "/",
       "breakdown": [
-        { "source": "package:@codemirror/view", "js": 52900 },
-        { "source": "package:@codemirror/state", "js": 16424 },
-        { "source": "item:highlighter", "js": 10116 },
-        { "source": "package:@codemirror/commands", "js": 8978 },
-        { "source": "package:@lezer/lr", "js": 8574 },
-        { "source": "package:@lezer/python", "js": 8494 },
-        { "source": "package:@lezer/common", "js": 7297 },
-        { "source": "package:@codemirror/language", "js": 6243 },
-        { "source": "runtime", "js": 4336 },
-        { "source": "package:@lezer/highlight", "js": 1694 },
-        { "source": "package:@codemirror/autocomplete", "js": 1684 },
-        { "source": "own", "js": 1559 },
-        { "source": "package:style-mod", "js": 738 },
-        { "source": "package:@marijn/find-cluster-break", "js": 697 },
-        { "source": "package:@codemirror/lang-python", "js": 694 },
-        { "source": "package:w3c-keyname", "js": 413 }
+        {
+          "source": "package:@codemirror/view",
+          "js": 52900
+        },
+        {
+          "source": "package:@codemirror/state",
+          "js": 16424
+        },
+        {
+          "source": "item:highlighter",
+          "js": 10116
+        },
+        {
+          "source": "package:@codemirror/commands",
+          "js": 8978
+        },
+        {
+          "source": "package:@lezer/lr",
+          "js": 8574
+        },
+        {
+          "source": "package:@lezer/python",
+          "js": 8494
+        },
+        {
+          "source": "package:@lezer/common",
+          "js": 7297
+        },
+        {
+          "source": "package:@codemirror/language",
+          "js": 6243
+        },
+        {
+          "source": "runtime",
+          "js": 4336
+        },
+        {
+          "source": "package:@lezer/highlight",
+          "js": 1694
+        },
+        {
+          "source": "package:@codemirror/autocomplete",
+          "js": 1684
+        },
+        {
+          "source": "own",
+          "js": 1559
+        },
+        {
+          "source": "package:style-mod",
+          "js": 738
+        },
+        {
+          "source": "package:@marijn/find-cluster-break",
+          "js": 697
+        },
+        {
+          "source": "package:@codemirror/lang-python",
+          "js": 694
+        },
+        {
+          "source": "package:w3c-keyname",
+          "js": 413
+        }
       ],
       "cases": {}
     },
@@ -1240,14 +2213,27 @@
         "css": 418,
         "lazy": 382311,
         "assets": 2147405,
-        "brotli": { "js": 9609, "css": 336 }
+        "brotli": {
+          "js": 9609,
+          "css": 336
+        }
       },
-      "hydrate": { "ms": 9.8, "spread": [6.4, 12.8], "settledMs": 272.7 },
+      "hydrate": {
+        "ms": 9.8,
+        "spread": [6.4, 12.8],
+        "settledMs": 272.7
+      },
       "interaction": null,
       "route": "/",
       "breakdown": [
-        { "source": "own", "js": 10618 },
-        { "source": "runtime", "js": 221 }
+        {
+          "source": "own",
+          "js": 10618
+        },
+        {
+          "source": "runtime",
+          "js": 221
+        }
       ],
       "cases": {}
     },
@@ -1261,15 +2247,31 @@
         "css": 418,
         "lazy": 382311,
         "assets": 2147405,
-        "brotli": { "js": 9963, "css": 336 }
+        "brotli": {
+          "js": 9963,
+          "css": 336
+        }
       },
-      "hydrate": { "ms": 11.5, "spread": [4.4, 28.9], "settledMs": 284.7 },
+      "hydrate": {
+        "ms": 11.5,
+        "spread": [4.4, 28.9],
+        "settledMs": 284.7
+      },
       "interaction": null,
       "route": "/",
       "breakdown": [
-        { "source": "item:highlighter", "js": 10433 },
-        { "source": "own", "js": 489 },
-        { "source": "runtime", "js": 249 }
+        {
+          "source": "item:highlighter",
+          "js": 10433
+        },
+        {
+          "source": "own",
+          "js": 489
+        },
+        {
+          "source": "runtime",
+          "js": 249
+        }
       ],
       "cases": {}
     },
@@ -1283,21 +2285,55 @@
         "css": 587,
         "lazy": 2316,
         "assets": 2147405,
-        "brotli": { "js": 57925, "css": 468 }
+        "brotli": {
+          "js": 57925,
+          "css": 468
+        }
       },
-      "hydrate": { "ms": 30.8, "spread": [24.8, 34.2], "settledMs": null },
+      "hydrate": {
+        "ms": 30.8,
+        "spread": [24.8, 34.2],
+        "settledMs": null
+      },
       "interaction": null,
       "route": "/",
       "breakdown": [
-        { "source": "package:@codemirror/view", "js": 46854 },
-        { "source": "package:@codemirror/state", "js": 15412 },
-        { "source": "item:highlighter", "js": 2087 },
-        { "source": "package:style-mod", "js": 706 },
-        { "source": "package:@marijn/find-cluster-break", "js": 661 },
-        { "source": "own", "js": 487 },
-        { "source": "package:w3c-keyname", "js": 290 },
-        { "source": "item:code-editor", "js": 40 },
-        { "source": "runtime", "js": 1 }
+        {
+          "source": "package:@codemirror/view",
+          "js": 46854
+        },
+        {
+          "source": "package:@codemirror/state",
+          "js": 15412
+        },
+        {
+          "source": "item:highlighter",
+          "js": 2087
+        },
+        {
+          "source": "package:style-mod",
+          "js": 706
+        },
+        {
+          "source": "package:@marijn/find-cluster-break",
+          "js": 661
+        },
+        {
+          "source": "own",
+          "js": 487
+        },
+        {
+          "source": "package:w3c-keyname",
+          "js": 290
+        },
+        {
+          "source": "item:code-editor",
+          "js": 40
+        },
+        {
+          "source": "runtime",
+          "js": 1
+        }
       ],
       "cases": {}
     },
@@ -1311,9 +2347,16 @@
         "css": 5347,
         "lazy": 57817,
         "assets": 419,
-        "brotli": { "js": 120259, "css": 4406 }
+        "brotli": {
+          "js": 120259,
+          "css": 4406
+        }
       },
-      "hydrate": { "ms": 164.5, "spread": [146.5, 189.4], "settledMs": 294.4 },
+      "hydrate": {
+        "ms": 164.5,
+        "spread": [146.5, 189.4],
+        "settledMs": 294.4
+      },
       "interaction": {
         "kind": "hover",
         "start": "pointerover",
@@ -1326,29 +2369,98 @@
       },
       "route": "/",
       "breakdown": [
-        { "source": "package:layerchart", "js": 88542 },
-        { "source": "runtime", "js": 10175 },
-        { "source": "package:tailwind-merge", "js": 9501 },
-        { "source": "package:@layerstack/utils", "js": 6736 },
-        { "source": "package:d3-time-format", "js": 2863 },
-        { "source": "package:d3-interpolate-path", "js": 2117 },
-        { "source": "own", "js": 1944 },
-        { "source": "package:d3-scale", "js": 1916 },
-        { "source": "package:d3-time", "js": 1806 },
-        { "source": "package:d3-shape", "js": 1757 },
-        { "source": "package:d3-color", "js": 1668 },
-        { "source": "package:d3-format", "js": 1657 },
-        { "source": "package:runed", "js": 1641 },
-        { "source": "package:d3-array", "js": 1139 },
-        { "source": "package:d3-interpolate", "js": 943 },
-        { "source": "package:phosphor-svelte", "js": 642 },
-        { "source": "package:@layerstack/svelte-state", "js": 585 },
-        { "source": "package:d3-path", "js": 520 },
-        { "source": "package:memoize", "js": 377 },
-        { "source": "package:mimic-function", "js": 333 },
-        { "source": "package:internmap", "js": 263 },
-        { "source": "package:@layerstack/svelte-actions", "js": 190 },
-        { "source": "package:@layerstack/tailwind", "js": 102 }
+        {
+          "source": "package:layerchart",
+          "js": 88542
+        },
+        {
+          "source": "runtime",
+          "js": 10175
+        },
+        {
+          "source": "package:tailwind-merge",
+          "js": 9501
+        },
+        {
+          "source": "package:@layerstack/utils",
+          "js": 6736
+        },
+        {
+          "source": "package:d3-time-format",
+          "js": 2863
+        },
+        {
+          "source": "package:d3-interpolate-path",
+          "js": 2117
+        },
+        {
+          "source": "own",
+          "js": 1944
+        },
+        {
+          "source": "package:d3-scale",
+          "js": 1916
+        },
+        {
+          "source": "package:d3-time",
+          "js": 1806
+        },
+        {
+          "source": "package:d3-shape",
+          "js": 1757
+        },
+        {
+          "source": "package:d3-color",
+          "js": 1668
+        },
+        {
+          "source": "package:d3-format",
+          "js": 1657
+        },
+        {
+          "source": "package:runed",
+          "js": 1641
+        },
+        {
+          "source": "package:d3-array",
+          "js": 1139
+        },
+        {
+          "source": "package:d3-interpolate",
+          "js": 943
+        },
+        {
+          "source": "package:phosphor-svelte",
+          "js": 642
+        },
+        {
+          "source": "package:@layerstack/svelte-state",
+          "js": 585
+        },
+        {
+          "source": "package:d3-path",
+          "js": 520
+        },
+        {
+          "source": "package:memoize",
+          "js": 377
+        },
+        {
+          "source": "package:mimic-function",
+          "js": 333
+        },
+        {
+          "source": "package:internmap",
+          "js": 263
+        },
+        {
+          "source": "package:@layerstack/svelte-actions",
+          "js": 190
+        },
+        {
+          "source": "package:@layerstack/tailwind",
+          "js": 102
+        }
       ],
       "cases": {}
     },
@@ -1362,14 +2474,27 @@
         "css": 37,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 3152, "css": 18 }
+        "brotli": {
+          "js": 3152,
+          "css": 18
+        }
       },
-      "hydrate": { "ms": 7.2, "spread": [-12.3, 9.6], "settledMs": null },
+      "hydrate": {
+        "ms": 7.2,
+        "spread": [-12.3, 9.6],
+        "settledMs": null
+      },
       "interaction": null,
       "route": "/",
       "breakdown": [
-        { "source": "runtime", "js": 3237 },
-        { "source": "own", "js": 171 }
+        {
+          "source": "runtime",
+          "js": 3237
+        },
+        {
+          "source": "own",
+          "js": 171
+        }
       ],
       "cases": {}
     },
@@ -1383,9 +2508,16 @@
         "css": 1346,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 31110, "css": 1167 }
+        "brotli": {
+          "js": 31110,
+          "css": 1167
+        }
       },
-      "hydrate": { "ms": 31.5, "spread": [27.2, 68.4], "settledMs": null },
+      "hydrate": {
+        "ms": 31.5,
+        "spread": [27.2, 68.4],
+        "settledMs": null
+      },
       "interaction": {
         "kind": "click",
         "start": "pointerdown",
@@ -1398,17 +2530,50 @@
       },
       "route": "/",
       "breakdown": [
-        { "source": "package:bits-ui", "js": 18104 },
-        { "source": "runtime", "js": 4020 },
-        { "source": "package:@floating-ui/core", "js": 2741 },
-        { "source": "package:@floating-ui/dom", "js": 2573 },
-        { "source": "package:svelte-toolbelt", "js": 1981 },
-        { "source": "package:tabbable", "js": 1752 },
-        { "source": "package:runed", "js": 1361 },
-        { "source": "package:@floating-ui/utils", "js": 1188 },
-        { "source": "own", "js": 917 },
-        { "source": "package:inline-style-parser", "js": 456 },
-        { "source": "package:style-to-object", "js": 83 }
+        {
+          "source": "package:bits-ui",
+          "js": 18104
+        },
+        {
+          "source": "runtime",
+          "js": 4020
+        },
+        {
+          "source": "package:@floating-ui/core",
+          "js": 2741
+        },
+        {
+          "source": "package:@floating-ui/dom",
+          "js": 2573
+        },
+        {
+          "source": "package:svelte-toolbelt",
+          "js": 1981
+        },
+        {
+          "source": "package:tabbable",
+          "js": 1752
+        },
+        {
+          "source": "package:runed",
+          "js": 1361
+        },
+        {
+          "source": "package:@floating-ui/utils",
+          "js": 1188
+        },
+        {
+          "source": "own",
+          "js": 917
+        },
+        {
+          "source": "package:inline-style-parser",
+          "js": 456
+        },
+        {
+          "source": "package:style-to-object",
+          "js": 83
+        }
       ],
       "cases": {}
     },
@@ -1422,9 +2587,16 @@
         "css": 1744,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 22427, "css": 1492 }
+        "brotli": {
+          "js": 22427,
+          "css": 1492
+        }
       },
-      "hydrate": { "ms": 25.8, "spread": [23.5, 31.9], "settledMs": null },
+      "hydrate": {
+        "ms": 25.8,
+        "spread": [23.5, 31.9],
+        "settledMs": null
+      },
       "interaction": {
         "kind": "click",
         "start": "click",
@@ -1437,18 +2609,54 @@
       },
       "route": "/",
       "breakdown": [
-        { "source": "package:bits-ui", "js": 8728 },
-        { "source": "runtime", "js": 4179 },
-        { "source": "package:tailwind-variants", "js": 3908 },
-        { "source": "package:svelte-toolbelt", "js": 1772 },
-        { "source": "package:tabbable", "js": 1721 },
-        { "source": "package:phosphor-svelte", "js": 1512 },
-        { "source": "own", "js": 1255 },
-        { "source": "package:runed", "js": 977 },
-        { "source": "item:button", "js": 527 },
-        { "source": "package:inline-style-parser", "js": 457 },
-        { "source": "item:spinner", "js": 194 },
-        { "source": "package:style-to-object", "js": 83 }
+        {
+          "source": "package:bits-ui",
+          "js": 8728
+        },
+        {
+          "source": "runtime",
+          "js": 4179
+        },
+        {
+          "source": "package:tailwind-variants",
+          "js": 3908
+        },
+        {
+          "source": "package:svelte-toolbelt",
+          "js": 1772
+        },
+        {
+          "source": "package:tabbable",
+          "js": 1721
+        },
+        {
+          "source": "package:phosphor-svelte",
+          "js": 1512
+        },
+        {
+          "source": "own",
+          "js": 1255
+        },
+        {
+          "source": "package:runed",
+          "js": 977
+        },
+        {
+          "source": "item:button",
+          "js": 527
+        },
+        {
+          "source": "package:inline-style-parser",
+          "js": 457
+        },
+        {
+          "source": "item:spinner",
+          "js": 194
+        },
+        {
+          "source": "package:style-to-object",
+          "js": 83
+        }
       ],
       "cases": {}
     },
@@ -1462,9 +2670,16 @@
         "css": 1589,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 22552, "css": 1350 }
+        "brotli": {
+          "js": 22552,
+          "css": 1350
+        }
       },
-      "hydrate": { "ms": 26.9, "spread": [21.6, 47.5], "settledMs": null },
+      "hydrate": {
+        "ms": 26.9,
+        "spread": [21.6, 47.5],
+        "settledMs": null
+      },
       "interaction": {
         "kind": "click",
         "start": "click",
@@ -1477,18 +2692,54 @@
       },
       "route": "/",
       "breakdown": [
-        { "source": "package:bits-ui", "js": 8655 },
-        { "source": "runtime", "js": 4143 },
-        { "source": "package:tailwind-variants", "js": 3874 },
-        { "source": "package:svelte-toolbelt", "js": 1757 },
-        { "source": "package:tabbable", "js": 1706 },
-        { "source": "own", "js": 1602 },
-        { "source": "package:phosphor-svelte", "js": 1500 },
-        { "source": "package:runed", "js": 969 },
-        { "source": "item:button", "js": 523 },
-        { "source": "package:inline-style-parser", "js": 453 },
-        { "source": "item:spinner", "js": 193 },
-        { "source": "package:style-to-object", "js": 82 }
+        {
+          "source": "package:bits-ui",
+          "js": 8655
+        },
+        {
+          "source": "runtime",
+          "js": 4143
+        },
+        {
+          "source": "package:tailwind-variants",
+          "js": 3874
+        },
+        {
+          "source": "package:svelte-toolbelt",
+          "js": 1757
+        },
+        {
+          "source": "package:tabbable",
+          "js": 1706
+        },
+        {
+          "source": "own",
+          "js": 1602
+        },
+        {
+          "source": "package:phosphor-svelte",
+          "js": 1500
+        },
+        {
+          "source": "package:runed",
+          "js": 969
+        },
+        {
+          "source": "item:button",
+          "js": 523
+        },
+        {
+          "source": "package:inline-style-parser",
+          "js": 453
+        },
+        {
+          "source": "item:spinner",
+          "js": 193
+        },
+        {
+          "source": "package:style-to-object",
+          "js": 82
+        }
       ],
       "cases": {}
     },
@@ -1502,15 +2753,31 @@
         "css": 466,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 4655, "css": 393 }
+        "brotli": {
+          "js": 4655,
+          "css": 393
+        }
       },
-      "hydrate": { "ms": 19.9, "spread": [18.3, 23.4], "settledMs": null },
+      "hydrate": {
+        "ms": 19.9,
+        "spread": [18.3, 23.4],
+        "settledMs": null
+      },
       "interaction": null,
       "route": "/",
       "breakdown": [
-        { "source": "runtime", "js": 3515 },
-        { "source": "own", "js": 1079 },
-        { "source": "package:phosphor-svelte", "js": 611 }
+        {
+          "source": "runtime",
+          "js": 3515
+        },
+        {
+          "source": "own",
+          "js": 1079
+        },
+        {
+          "source": "package:phosphor-svelte",
+          "js": 611
+        }
       ],
       "cases": {}
     },
@@ -1524,9 +2791,16 @@
         "css": 3491,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 39709, "css": 3004 }
+        "brotli": {
+          "js": 39709,
+          "css": 3004
+        }
       },
-      "hydrate": { "ms": 66.4, "spread": [55.2, 75.6], "settledMs": null },
+      "hydrate": {
+        "ms": 66.4,
+        "spread": [55.2, 75.6],
+        "settledMs": null
+      },
       "interaction": {
         "kind": "click",
         "start": "click",
@@ -1539,25 +2813,82 @@
       },
       "route": "/",
       "breakdown": [
-        { "source": "package:bits-ui", "js": 18130 },
-        { "source": "runtime", "js": 4457 },
-        { "source": "package:tailwind-variants", "js": 3688 },
-        { "source": "own", "js": 3294 },
-        { "source": "package:@floating-ui/core", "js": 2595 },
-        { "source": "package:@floating-ui/dom", "js": 2435 },
-        { "source": "package:phosphor-svelte", "js": 1979 },
-        { "source": "package:svelte-toolbelt", "js": 1728 },
-        { "source": "package:tabbable", "js": 1625 },
-        { "source": "package:runed", "js": 1289 },
-        { "source": "package:@floating-ui/utils", "js": 1124 },
-        { "source": "item:sheet", "js": 1051 },
-        { "source": "item:tooltip", "js": 736 },
-        { "source": "item:button", "js": 498 },
-        { "source": "package:inline-style-parser", "js": 431 },
-        { "source": "item:spinner", "js": 184 },
-        { "source": "item:kbd", "js": 116 },
-        { "source": "package:style-to-object", "js": 78 },
-        { "source": "item:is-mobile", "js": 29 }
+        {
+          "source": "package:bits-ui",
+          "js": 18130
+        },
+        {
+          "source": "runtime",
+          "js": 4457
+        },
+        {
+          "source": "package:tailwind-variants",
+          "js": 3688
+        },
+        {
+          "source": "own",
+          "js": 3294
+        },
+        {
+          "source": "package:@floating-ui/core",
+          "js": 2595
+        },
+        {
+          "source": "package:@floating-ui/dom",
+          "js": 2435
+        },
+        {
+          "source": "package:phosphor-svelte",
+          "js": 1979
+        },
+        {
+          "source": "package:svelte-toolbelt",
+          "js": 1728
+        },
+        {
+          "source": "package:tabbable",
+          "js": 1625
+        },
+        {
+          "source": "package:runed",
+          "js": 1289
+        },
+        {
+          "source": "package:@floating-ui/utils",
+          "js": 1124
+        },
+        {
+          "source": "item:sheet",
+          "js": 1051
+        },
+        {
+          "source": "item:tooltip",
+          "js": 736
+        },
+        {
+          "source": "item:button",
+          "js": 498
+        },
+        {
+          "source": "package:inline-style-parser",
+          "js": 431
+        },
+        {
+          "source": "item:spinner",
+          "js": 184
+        },
+        {
+          "source": "item:kbd",
+          "js": 116
+        },
+        {
+          "source": "package:style-to-object",
+          "js": 78
+        },
+        {
+          "source": "item:is-mobile",
+          "js": 29
+        }
       ],
       "cases": {}
     },
@@ -1571,14 +2902,27 @@
         "css": 0,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 482, "css": 0 }
+        "brotli": {
+          "js": 482,
+          "css": 0
+        }
       },
-      "hydrate": { "ms": 2.3, "spread": [-12.3, 18.5], "settledMs": null },
+      "hydrate": {
+        "ms": 2.3,
+        "spread": [-12.3, 18.5],
+        "settledMs": null
+      },
       "interaction": null,
       "route": "/",
       "breakdown": [
-        { "source": "runtime", "js": 344 },
-        { "source": "own", "js": 142 }
+        {
+          "source": "runtime",
+          "js": 344
+        },
+        {
+          "source": "own",
+          "js": 142
+        }
       ],
       "cases": {}
     },
@@ -1592,18 +2936,43 @@
         "css": 1064,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 10165, "css": 934 }
+        "brotli": {
+          "js": 10165,
+          "css": 934
+        }
       },
-      "hydrate": { "ms": 21, "spread": [17, 27.9], "settledMs": null },
+      "hydrate": {
+        "ms": 21,
+        "spread": [17, 27.9],
+        "settledMs": null
+      },
       "interaction": null,
       "route": "/",
       "breakdown": [
-        { "source": "package:tailwind-variants", "js": 4339 },
-        { "source": "runtime", "js": 3794 },
-        { "source": "package:phosphor-svelte", "js": 1616 },
-        { "source": "own", "js": 860 },
-        { "source": "item:button", "js": 584 },
-        { "source": "item:spinner", "js": 216 }
+        {
+          "source": "package:tailwind-variants",
+          "js": 4339
+        },
+        {
+          "source": "runtime",
+          "js": 3794
+        },
+        {
+          "source": "package:phosphor-svelte",
+          "js": 1616
+        },
+        {
+          "source": "own",
+          "js": 860
+        },
+        {
+          "source": "item:button",
+          "js": 584
+        },
+        {
+          "source": "item:spinner",
+          "js": 216
+        }
       ],
       "cases": {}
     },
@@ -1617,15 +2986,31 @@
         "css": 369,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 6743, "css": 335 }
+        "brotli": {
+          "js": 6743,
+          "css": 335
+        }
       },
-      "hydrate": { "ms": 32.9, "spread": [26.2, 40.9], "settledMs": null },
+      "hydrate": {
+        "ms": 32.9,
+        "spread": [26.2, 40.9],
+        "settledMs": null
+      },
       "interaction": null,
       "route": "/",
       "breakdown": [
-        { "source": "package:tailwind-variants", "js": 3751 },
-        { "source": "runtime", "js": 3194 },
-        { "source": "own", "js": 647 }
+        {
+          "source": "package:tailwind-variants",
+          "js": 3751
+        },
+        {
+          "source": "runtime",
+          "js": 3194
+        },
+        {
+          "source": "own",
+          "js": 647
+        }
       ],
       "cases": {}
     },
@@ -1639,15 +3024,31 @@
         "css": 504,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 6557, "css": 423 }
+        "brotli": {
+          "js": 6557,
+          "css": 423
+        }
       },
-      "hydrate": { "ms": 17.2, "spread": [12.5, 33.8], "settledMs": null },
+      "hydrate": {
+        "ms": 17.2,
+        "spread": [12.5, 33.8],
+        "settledMs": null
+      },
       "interaction": null,
       "route": "/",
       "breakdown": [
-        { "source": "package:tailwind-variants", "js": 3860 },
-        { "source": "runtime", "js": 2927 },
-        { "source": "own", "js": 448 }
+        {
+          "source": "package:tailwind-variants",
+          "js": 3860
+        },
+        {
+          "source": "runtime",
+          "js": 2927
+        },
+        {
+          "source": "own",
+          "js": 448
+        }
       ],
       "cases": {}
     },
@@ -1661,9 +3062,16 @@
         "css": 2672,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 17080, "css": 2317 }
+        "brotli": {
+          "js": 17080,
+          "css": 2317
+        }
       },
-      "hydrate": { "ms": 67.5, "spread": [59.3, 85.6], "settledMs": null },
+      "hydrate": {
+        "ms": 67.5,
+        "spread": [59.3, 85.6],
+        "settledMs": null
+      },
       "interaction": {
         "kind": "key",
         "start": "keydown",
@@ -1676,22 +3084,70 @@
       },
       "route": "/",
       "breakdown": [
-        { "source": "runtime", "js": 5952 },
-        { "source": "package:tailwind-variants", "js": 4123 },
-        { "source": "package:phosphor-svelte", "js": 2131 },
-        { "source": "item:field", "js": 1468 },
-        { "source": "package:svelte-toolbelt", "js": 1385 },
-        { "source": "own", "js": 1164 },
-        { "source": "item:input-group", "js": 569 },
-        { "source": "item:button", "js": 556 },
-        { "source": "package:inline-style-parser", "js": 482 },
-        { "source": "package:bits-ui", "js": 473 },
-        { "source": "item:spinner", "js": 206 },
-        { "source": "item:textarea", "js": 205 },
-        { "source": "item:label", "js": 145 },
-        { "source": "item:kbd", "js": 129 },
-        { "source": "item:status", "js": 128 },
-        { "source": "package:style-to-object", "js": 87 }
+        {
+          "source": "runtime",
+          "js": 5952
+        },
+        {
+          "source": "package:tailwind-variants",
+          "js": 4123
+        },
+        {
+          "source": "package:phosphor-svelte",
+          "js": 2131
+        },
+        {
+          "source": "item:field",
+          "js": 1468
+        },
+        {
+          "source": "package:svelte-toolbelt",
+          "js": 1385
+        },
+        {
+          "source": "own",
+          "js": 1164
+        },
+        {
+          "source": "item:input-group",
+          "js": 569
+        },
+        {
+          "source": "item:button",
+          "js": 556
+        },
+        {
+          "source": "package:inline-style-parser",
+          "js": 482
+        },
+        {
+          "source": "package:bits-ui",
+          "js": 473
+        },
+        {
+          "source": "item:spinner",
+          "js": 206
+        },
+        {
+          "source": "item:textarea",
+          "js": 205
+        },
+        {
+          "source": "item:label",
+          "js": 145
+        },
+        {
+          "source": "item:kbd",
+          "js": 129
+        },
+        {
+          "source": "item:status",
+          "js": 128
+        },
+        {
+          "source": "package:style-to-object",
+          "js": 87
+        }
       ],
       "cases": {}
     },
@@ -1705,14 +3161,27 @@
         "css": 391,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 3491, "css": 291 }
+        "brotli": {
+          "js": 3491,
+          "css": 291
+        }
       },
-      "hydrate": { "ms": 8, "spread": [5, 34.1], "settledMs": null },
+      "hydrate": {
+        "ms": 8,
+        "spread": [5, 34.1],
+        "settledMs": null
+      },
       "interaction": null,
       "route": "/",
       "breakdown": [
-        { "source": "runtime", "js": 3653 },
-        { "source": "own", "js": 281 }
+        {
+          "source": "runtime",
+          "js": 3653
+        },
+        {
+          "source": "own",
+          "js": 281
+        }
       ],
       "cases": {}
     },
@@ -1726,9 +3195,16 @@
         "css": 2629,
         "lazy": 382311,
         "assets": 2147405,
-        "brotli": { "js": 23083, "css": 2292 }
+        "brotli": {
+          "js": 23083,
+          "css": 2292
+        }
       },
-      "hydrate": { "ms": 60.5, "spread": [55.5, 96.1], "settledMs": 335.9 },
+      "hydrate": {
+        "ms": 60.5,
+        "spread": [55.5, 96.1],
+        "settledMs": 335.9
+      },
       "interaction": {
         "kind": "click",
         "start": "click",
@@ -1741,16 +3217,46 @@
       },
       "route": "/",
       "breakdown": [
-        { "source": "item:highlighter", "js": 8799 },
-        { "source": "runtime", "js": 6363 },
-        { "source": "package:tailwind-variants", "js": 4732 },
-        { "source": "package:phosphor-svelte", "js": 2477 },
-        { "source": "item:code-block", "js": 2157 },
-        { "source": "own", "js": 1110 },
-        { "source": "item:button", "js": 638 },
-        { "source": "item:use-highlighted-code", "js": 308 },
-        { "source": "item:spinner", "js": 236 },
-        { "source": "item:status", "js": 146 }
+        {
+          "source": "item:highlighter",
+          "js": 8799
+        },
+        {
+          "source": "runtime",
+          "js": 6363
+        },
+        {
+          "source": "package:tailwind-variants",
+          "js": 4732
+        },
+        {
+          "source": "package:phosphor-svelte",
+          "js": 2477
+        },
+        {
+          "source": "item:code-block",
+          "js": 2157
+        },
+        {
+          "source": "own",
+          "js": 1110
+        },
+        {
+          "source": "item:button",
+          "js": 638
+        },
+        {
+          "source": "item:use-highlighted-code",
+          "js": 308
+        },
+        {
+          "source": "item:spinner",
+          "js": 236
+        },
+        {
+          "source": "item:status",
+          "js": 146
+        }
       ],
       "cases": {}
     },
@@ -1764,9 +3270,16 @@
         "css": 2402,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 25486, "css": 2075 }
+        "brotli": {
+          "js": 25486,
+          "css": 2075
+        }
       },
-      "hydrate": { "ms": 45.4, "spread": [39.4, 55.4], "settledMs": null },
+      "hydrate": {
+        "ms": 45.4,
+        "spread": [39.4, 55.4],
+        "settledMs": null
+      },
       "interaction": {
         "kind": "click",
         "start": "click",
@@ -1779,21 +3292,66 @@
       },
       "route": "/",
       "breakdown": [
-        { "source": "package:bits-ui", "js": 8849 },
-        { "source": "runtime", "js": 5903 },
-        { "source": "package:tailwind-variants", "js": 3958 },
-        { "source": "package:phosphor-svelte", "js": 2117 },
-        { "source": "package:svelte-toolbelt", "js": 1795 },
-        { "source": "package:tabbable", "js": 1743 },
-        { "source": "own", "js": 1217 },
-        { "source": "item:sheet", "js": 1099 },
-        { "source": "package:runed", "js": 992 },
-        { "source": "item:button", "js": 535 },
-        { "source": "package:inline-style-parser", "js": 463 },
-        { "source": "item:spinner", "js": 197 },
-        { "source": "item:liquid-glass", "js": 158 },
-        { "source": "package:style-to-object", "js": 84 },
-        { "source": "item:read-token", "js": 65 }
+        {
+          "source": "package:bits-ui",
+          "js": 8849
+        },
+        {
+          "source": "runtime",
+          "js": 5903
+        },
+        {
+          "source": "package:tailwind-variants",
+          "js": 3958
+        },
+        {
+          "source": "package:phosphor-svelte",
+          "js": 2117
+        },
+        {
+          "source": "package:svelte-toolbelt",
+          "js": 1795
+        },
+        {
+          "source": "package:tabbable",
+          "js": 1743
+        },
+        {
+          "source": "own",
+          "js": 1217
+        },
+        {
+          "source": "item:sheet",
+          "js": 1099
+        },
+        {
+          "source": "package:runed",
+          "js": 992
+        },
+        {
+          "source": "item:button",
+          "js": 535
+        },
+        {
+          "source": "package:inline-style-parser",
+          "js": 463
+        },
+        {
+          "source": "item:spinner",
+          "js": 197
+        },
+        {
+          "source": "item:liquid-glass",
+          "js": 158
+        },
+        {
+          "source": "package:style-to-object",
+          "js": 84
+        },
+        {
+          "source": "item:read-token",
+          "js": 65
+        }
       ],
       "cases": {}
     },
@@ -1807,20 +3365,51 @@
         "css": 2115,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 11738, "css": 1772 }
+        "brotli": {
+          "js": 11738,
+          "css": 1772
+        }
       },
-      "hydrate": { "ms": 30.5, "spread": [26.3, 68.7], "settledMs": null },
+      "hydrate": {
+        "ms": 30.5,
+        "spread": [26.3, 68.7],
+        "settledMs": null
+      },
       "interaction": null,
       "route": "/",
       "breakdown": [
-        { "source": "runtime", "js": 6014 },
-        { "source": "package:tailwind-variants", "js": 4330 },
-        { "source": "package:phosphor-svelte", "js": 1008 },
-        { "source": "own", "js": 857 },
-        { "source": "item:button", "js": 584 },
-        { "source": "item:spinner", "js": 215 },
-        { "source": "item:liquid-glass", "js": 173 },
-        { "source": "item:read-token", "js": 71 }
+        {
+          "source": "runtime",
+          "js": 6014
+        },
+        {
+          "source": "package:tailwind-variants",
+          "js": 4330
+        },
+        {
+          "source": "package:phosphor-svelte",
+          "js": 1008
+        },
+        {
+          "source": "own",
+          "js": 857
+        },
+        {
+          "source": "item:button",
+          "js": 584
+        },
+        {
+          "source": "item:spinner",
+          "js": 215
+        },
+        {
+          "source": "item:liquid-glass",
+          "js": 173
+        },
+        {
+          "source": "item:read-token",
+          "js": 71
+        }
       ],
       "cases": {}
     },
@@ -1834,15 +3423,31 @@
         "css": 358,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 6216, "css": 299 }
+        "brotli": {
+          "js": 6216,
+          "css": 299
+        }
       },
-      "hydrate": { "ms": 52.8, "spread": [46.1, 67.3], "settledMs": 189.2 },
+      "hydrate": {
+        "ms": 52.8,
+        "spread": [46.1, 67.3],
+        "settledMs": 189.2
+      },
       "interaction": null,
       "route": "/",
       "breakdown": [
-        { "source": "runtime", "js": 5757 },
-        { "source": "own", "js": 776 },
-        { "source": "item:read-token", "js": 348 }
+        {
+          "source": "runtime",
+          "js": 5757
+        },
+        {
+          "source": "own",
+          "js": 776
+        },
+        {
+          "source": "item:read-token",
+          "js": 348
+        }
       ],
       "cases": {}
     },
@@ -1856,9 +3461,16 @@
         "css": 3104,
         "lazy": 382311,
         "assets": 2147405,
-        "brotli": { "js": 29088, "css": 2707 }
+        "brotli": {
+          "js": 29088,
+          "css": 2707
+        }
       },
-      "hydrate": { "ms": 79.6, "spread": [75.1, 98.9], "settledMs": 344.8 },
+      "hydrate": {
+        "ms": 79.6,
+        "spread": [75.1, 98.9],
+        "settledMs": 344.8
+      },
       "interaction": {
         "kind": "click",
         "start": "click",
@@ -1871,24 +3483,78 @@
       },
       "route": "/",
       "breakdown": [
-        { "source": "item:highlighter", "js": 8510 },
-        { "source": "runtime", "js": 6939 },
-        { "source": "package:tailwind-variants", "js": 4576 },
-        { "source": "package:bits-ui", "js": 3043 },
-        { "source": "package:svelte-toolbelt", "js": 1785 },
-        { "source": "own", "js": 1602 },
-        { "source": "item:code-block", "js": 1266 },
-        { "source": "package:runed", "js": 1143 },
-        { "source": "package:phosphor-svelte", "js": 1065 },
-        { "source": "item:tabs", "js": 801 },
-        { "source": "item:button", "js": 618 },
-        { "source": "package:inline-style-parser", "js": 535 },
-        { "source": "item:read-token", "js": 355 },
-        { "source": "item:use-highlighted-code", "js": 298 },
-        { "source": "item:spinner", "js": 228 },
-        { "source": "item:status", "js": 142 },
-        { "source": "item:meter", "js": 135 },
-        { "source": "package:style-to-object", "js": 97 }
+        {
+          "source": "item:highlighter",
+          "js": 8510
+        },
+        {
+          "source": "runtime",
+          "js": 6939
+        },
+        {
+          "source": "package:tailwind-variants",
+          "js": 4576
+        },
+        {
+          "source": "package:bits-ui",
+          "js": 3043
+        },
+        {
+          "source": "package:svelte-toolbelt",
+          "js": 1785
+        },
+        {
+          "source": "own",
+          "js": 1602
+        },
+        {
+          "source": "item:code-block",
+          "js": 1266
+        },
+        {
+          "source": "package:runed",
+          "js": 1143
+        },
+        {
+          "source": "package:phosphor-svelte",
+          "js": 1065
+        },
+        {
+          "source": "item:tabs",
+          "js": 801
+        },
+        {
+          "source": "item:button",
+          "js": 618
+        },
+        {
+          "source": "package:inline-style-parser",
+          "js": 535
+        },
+        {
+          "source": "item:read-token",
+          "js": 355
+        },
+        {
+          "source": "item:use-highlighted-code",
+          "js": 298
+        },
+        {
+          "source": "item:spinner",
+          "js": 228
+        },
+        {
+          "source": "item:status",
+          "js": 142
+        },
+        {
+          "source": "item:meter",
+          "js": 135
+        },
+        {
+          "source": "package:style-to-object",
+          "js": 97
+        }
       ],
       "cases": {}
     },
@@ -1902,14 +3568,27 @@
         "css": 84,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 4640, "css": 85 }
+        "brotli": {
+          "js": 4640,
+          "css": 85
+        }
       },
-      "hydrate": { "ms": 24.3, "spread": [-2.8, 82.6], "settledMs": null },
+      "hydrate": {
+        "ms": 24.3,
+        "spread": [-2.8, 82.6],
+        "settledMs": null
+      },
       "interaction": null,
       "route": "/",
       "breakdown": [
-        { "source": "runtime", "js": 4900 },
-        { "source": "own", "js": 193 }
+        {
+          "source": "runtime",
+          "js": 4900
+        },
+        {
+          "source": "own",
+          "js": 193
+        }
       ],
       "cases": {}
     },
@@ -1923,18 +3602,43 @@
         "css": 1111,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 10983, "css": 986 }
+        "brotli": {
+          "js": 10983,
+          "css": 986
+        }
       },
-      "hydrate": { "ms": 36.7, "spread": [26.1, 41.3], "settledMs": null },
+      "hydrate": {
+        "ms": 36.7,
+        "spread": [26.1, 41.3],
+        "settledMs": null
+      },
       "interaction": null,
       "route": "/",
       "breakdown": [
-        { "source": "runtime", "js": 5888 },
-        { "source": "package:tailwind-variants", "js": 4207 },
-        { "source": "package:phosphor-svelte", "js": 977 },
-        { "source": "item:button", "js": 567 },
-        { "source": "own", "js": 414 },
-        { "source": "item:spinner", "js": 209 }
+        {
+          "source": "runtime",
+          "js": 5888
+        },
+        {
+          "source": "package:tailwind-variants",
+          "js": 4207
+        },
+        {
+          "source": "package:phosphor-svelte",
+          "js": 977
+        },
+        {
+          "source": "item:button",
+          "js": 567
+        },
+        {
+          "source": "own",
+          "js": 414
+        },
+        {
+          "source": "item:spinner",
+          "js": 209
+        }
       ],
       "cases": {}
     },
@@ -1948,14 +3652,27 @@
         "css": 453,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 3077, "css": 395 }
+        "brotli": {
+          "js": 3077,
+          "css": 395
+        }
       },
-      "hydrate": { "ms": 31.6, "spread": [21.3, 35.3], "settledMs": null },
+      "hydrate": {
+        "ms": 31.6,
+        "spread": [21.3, 35.3],
+        "settledMs": null
+      },
       "interaction": null,
       "route": "/",
       "breakdown": [
-        { "source": "runtime", "js": 2299 },
-        { "source": "own", "js": 1012 }
+        {
+          "source": "runtime",
+          "js": 2299
+        },
+        {
+          "source": "own",
+          "js": 1012
+        }
       ],
       "cases": {}
     },
@@ -1969,18 +3686,43 @@
         "css": 1395,
         "lazy": 240,
         "assets": 0,
-        "brotli": { "js": 11718, "css": 1216 }
+        "brotli": {
+          "js": 11718,
+          "css": 1216
+        }
       },
-      "hydrate": { "ms": 62, "spread": [28.1, 89.4], "settledMs": null },
+      "hydrate": {
+        "ms": 62,
+        "spread": [28.1, 89.4],
+        "settledMs": null
+      },
       "interaction": null,
       "route": "/hero",
       "breakdown": [
-        { "source": "runtime", "js": 5846 },
-        { "source": "package:tailwind-variants", "js": 4403 },
-        { "source": "package:phosphor-svelte", "js": 1023 },
-        { "source": "own", "js": 923 },
-        { "source": "item:button", "js": 594 },
-        { "source": "item:spinner", "js": 219 }
+        {
+          "source": "runtime",
+          "js": 5846
+        },
+        {
+          "source": "package:tailwind-variants",
+          "js": 4403
+        },
+        {
+          "source": "package:phosphor-svelte",
+          "js": 1023
+        },
+        {
+          "source": "own",
+          "js": 923
+        },
+        {
+          "source": "item:button",
+          "js": 594
+        },
+        {
+          "source": "item:spinner",
+          "js": 219
+        }
       ],
       "cases": {}
     },
@@ -1994,9 +3736,16 @@
         "css": 3518,
         "lazy": 247,
         "assets": 0,
-        "brotli": { "js": 19629, "css": 3041 }
+        "brotli": {
+          "js": 19629,
+          "css": 3041
+        }
       },
-      "hydrate": { "ms": 60.9, "spread": [54.1, 98.4], "settledMs": null },
+      "hydrate": {
+        "ms": 60.9,
+        "spread": [54.1, 98.4],
+        "settledMs": null
+      },
       "interaction": {
         "kind": "click",
         "start": "click",
@@ -2009,24 +3758,78 @@
       },
       "route": "/sign-in",
       "breakdown": [
-        { "source": "runtime", "js": 6583 },
-        { "source": "package:tailwind-variants", "js": 4151 },
-        { "source": "package:phosphor-svelte", "js": 1598 },
-        { "source": "own", "js": 1496 },
-        { "source": "item:field", "js": 1477 },
-        { "source": "package:svelte-toolbelt", "js": 1394 },
-        { "source": "item:input-group", "js": 1088 },
-        { "source": "item:error-summary", "js": 841 },
-        { "source": "item:card", "js": 777 },
-        { "source": "item:button", "js": 560 },
-        { "source": "package:inline-style-parser", "js": 486 },
-        { "source": "package:bits-ui", "js": 476 },
-        { "source": "item:input", "js": 346 },
-        { "source": "item:alert", "js": 272 },
-        { "source": "item:spinner", "js": 207 },
-        { "source": "item:label", "js": 146 },
-        { "source": "item:status", "js": 128 },
-        { "source": "package:style-to-object", "js": 88 }
+        {
+          "source": "runtime",
+          "js": 6583
+        },
+        {
+          "source": "package:tailwind-variants",
+          "js": 4151
+        },
+        {
+          "source": "package:phosphor-svelte",
+          "js": 1598
+        },
+        {
+          "source": "own",
+          "js": 1496
+        },
+        {
+          "source": "item:field",
+          "js": 1477
+        },
+        {
+          "source": "package:svelte-toolbelt",
+          "js": 1394
+        },
+        {
+          "source": "item:input-group",
+          "js": 1088
+        },
+        {
+          "source": "item:error-summary",
+          "js": 841
+        },
+        {
+          "source": "item:card",
+          "js": 777
+        },
+        {
+          "source": "item:button",
+          "js": 560
+        },
+        {
+          "source": "package:inline-style-parser",
+          "js": 486
+        },
+        {
+          "source": "package:bits-ui",
+          "js": 476
+        },
+        {
+          "source": "item:input",
+          "js": 346
+        },
+        {
+          "source": "item:alert",
+          "js": 272
+        },
+        {
+          "source": "item:spinner",
+          "js": 207
+        },
+        {
+          "source": "item:label",
+          "js": 146
+        },
+        {
+          "source": "item:status",
+          "js": 128
+        },
+        {
+          "source": "package:style-to-object",
+          "js": 88
+        }
       ],
       "cases": {}
     },
@@ -2040,9 +3843,16 @@
         "css": 3808,
         "lazy": 246,
         "assets": 0,
-        "brotli": { "js": 25722, "css": 3272 }
+        "brotli": {
+          "js": 25722,
+          "css": 3272
+        }
       },
-      "hydrate": { "ms": 64, "spread": [56.8, 81.7], "settledMs": null },
+      "hydrate": {
+        "ms": 64,
+        "spread": [56.8, 81.7],
+        "settledMs": null
+      },
       "interaction": {
         "kind": "click",
         "start": "click",
@@ -2055,26 +3865,86 @@
       },
       "route": "/sign-up",
       "breakdown": [
-        { "source": "runtime", "js": 6430 },
-        { "source": "package:tailwind-variants", "js": 4019 },
-        { "source": "own", "js": 3804 },
-        { "source": "package:bits-ui", "js": 3478 },
-        { "source": "package:phosphor-svelte", "js": 2072 },
-        { "source": "package:svelte-toolbelt", "js": 1750 },
-        { "source": "item:field", "js": 1433 },
-        { "source": "item:input-group", "js": 1055 },
-        { "source": "package:runed", "js": 991 },
-        { "source": "item:input-otp", "js": 871 },
-        { "source": "item:error-summary", "js": 815 },
-        { "source": "item:card", "js": 754 },
-        { "source": "item:button", "js": 543 },
-        { "source": "package:inline-style-parser", "js": 470 },
-        { "source": "item:input", "js": 335 },
-        { "source": "item:alert", "js": 264 },
-        { "source": "item:spinner", "js": 201 },
-        { "source": "item:label", "js": 142 },
-        { "source": "item:status", "js": 124 },
-        { "source": "package:style-to-object", "js": 85 }
+        {
+          "source": "runtime",
+          "js": 6430
+        },
+        {
+          "source": "package:tailwind-variants",
+          "js": 4019
+        },
+        {
+          "source": "own",
+          "js": 3804
+        },
+        {
+          "source": "package:bits-ui",
+          "js": 3478
+        },
+        {
+          "source": "package:phosphor-svelte",
+          "js": 2072
+        },
+        {
+          "source": "package:svelte-toolbelt",
+          "js": 1750
+        },
+        {
+          "source": "item:field",
+          "js": 1433
+        },
+        {
+          "source": "item:input-group",
+          "js": 1055
+        },
+        {
+          "source": "package:runed",
+          "js": 991
+        },
+        {
+          "source": "item:input-otp",
+          "js": 871
+        },
+        {
+          "source": "item:error-summary",
+          "js": 815
+        },
+        {
+          "source": "item:card",
+          "js": 754
+        },
+        {
+          "source": "item:button",
+          "js": 543
+        },
+        {
+          "source": "package:inline-style-parser",
+          "js": 470
+        },
+        {
+          "source": "item:input",
+          "js": 335
+        },
+        {
+          "source": "item:alert",
+          "js": 264
+        },
+        {
+          "source": "item:spinner",
+          "js": 201
+        },
+        {
+          "source": "item:label",
+          "js": 142
+        },
+        {
+          "source": "item:status",
+          "js": 124
+        },
+        {
+          "source": "package:style-to-object",
+          "js": 85
+        }
       ],
       "cases": {}
     },
@@ -2088,19 +3958,47 @@
         "css": 1478,
         "lazy": 1122,
         "assets": 0,
-        "brotli": { "js": 12744, "css": 1293 }
+        "brotli": {
+          "js": 12744,
+          "css": 1293
+        }
       },
-      "hydrate": { "ms": 48.8, "spread": [38.7, 76.8], "settledMs": null },
+      "hydrate": {
+        "ms": 48.8,
+        "spread": [38.7, 76.8],
+        "settledMs": null
+      },
       "interaction": null,
       "route": "/page-states",
       "breakdown": [
-        { "source": "runtime", "js": 4415 },
-        { "source": "package:tailwind-variants", "js": 4289 },
-        { "source": "package:phosphor-svelte", "js": 2852 },
-        { "source": "own", "js": 1184 },
-        { "source": "item:empty", "js": 813 },
-        { "source": "item:button", "js": 578 },
-        { "source": "item:spinner", "js": 213 }
+        {
+          "source": "runtime",
+          "js": 4415
+        },
+        {
+          "source": "package:tailwind-variants",
+          "js": 4289
+        },
+        {
+          "source": "package:phosphor-svelte",
+          "js": 2852
+        },
+        {
+          "source": "own",
+          "js": 1184
+        },
+        {
+          "source": "item:empty",
+          "js": 813
+        },
+        {
+          "source": "item:button",
+          "js": 578
+        },
+        {
+          "source": "item:spinner",
+          "js": 213
+        }
       ],
       "cases": {}
     },
@@ -2114,9 +4012,16 @@
         "css": 3985,
         "lazy": 240,
         "assets": 0,
-        "brotli": { "js": 35548, "css": 3429 }
+        "brotli": {
+          "js": 35548,
+          "css": 3429
+        }
       },
-      "hydrate": { "ms": 121.6, "spread": [99.9, 139.1], "settledMs": null },
+      "hydrate": {
+        "ms": 121.6,
+        "spread": [99.9, 139.1],
+        "settledMs": null
+      },
       "interaction": {
         "kind": "click",
         "start": "click",
@@ -2129,82 +4034,241 @@
       },
       "route": "/settings",
       "breakdown": [
-        { "source": "package:bits-ui", "js": 12283 },
-        { "source": "runtime", "js": 7005 },
-        { "source": "package:tailwind-variants", "js": 3642 },
-        { "source": "own", "js": 3132 },
-        { "source": "package:phosphor-svelte", "js": 2885 },
-        { "source": "item:field", "js": 1954 },
-        { "source": "package:svelte-toolbelt", "js": 1881 },
-        { "source": "package:tabbable", "js": 1605 },
-        { "source": "item:alert-dialog", "js": 1430 },
-        { "source": "package:runed", "js": 911 },
-        { "source": "item:error-summary", "js": 739 },
-        { "source": "item:button", "js": 492 },
-        { "source": "item:radio-group", "js": 438 },
-        { "source": "package:inline-style-parser", "js": 426 },
-        { "source": "item:checkbox", "js": 385 },
-        { "source": "item:native-select", "js": 380 },
-        { "source": "item:input", "js": 303 },
-        { "source": "item:alert", "js": 239 },
-        { "source": "item:spinner", "js": 182 },
-        { "source": "item:label", "js": 129 },
-        { "source": "item:status", "js": 113 },
-        { "source": "package:style-to-object", "js": 77 }
+        {
+          "source": "package:bits-ui",
+          "js": 12283
+        },
+        {
+          "source": "runtime",
+          "js": 7005
+        },
+        {
+          "source": "package:tailwind-variants",
+          "js": 3642
+        },
+        {
+          "source": "own",
+          "js": 3132
+        },
+        {
+          "source": "package:phosphor-svelte",
+          "js": 2885
+        },
+        {
+          "source": "item:field",
+          "js": 1954
+        },
+        {
+          "source": "package:svelte-toolbelt",
+          "js": 1881
+        },
+        {
+          "source": "package:tabbable",
+          "js": 1605
+        },
+        {
+          "source": "item:alert-dialog",
+          "js": 1430
+        },
+        {
+          "source": "package:runed",
+          "js": 911
+        },
+        {
+          "source": "item:error-summary",
+          "js": 739
+        },
+        {
+          "source": "item:button",
+          "js": 492
+        },
+        {
+          "source": "item:radio-group",
+          "js": 438
+        },
+        {
+          "source": "package:inline-style-parser",
+          "js": 426
+        },
+        {
+          "source": "item:checkbox",
+          "js": 385
+        },
+        {
+          "source": "item:native-select",
+          "js": 380
+        },
+        {
+          "source": "item:input",
+          "js": 303
+        },
+        {
+          "source": "item:alert",
+          "js": 239
+        },
+        {
+          "source": "item:spinner",
+          "js": 182
+        },
+        {
+          "source": "item:label",
+          "js": 129
+        },
+        {
+          "source": "item:status",
+          "js": 113
+        },
+        {
+          "source": "package:style-to-object",
+          "js": 77
+        }
       ],
       "cases": {}
     },
     "app-shell": {
-      "hash": "66879aeb44e035324cb62be47f83a945dd5e770188ec97e25258c0c89ed41f4c",
-      "runtimeHash": "e187b37e5ea884244cca77722644b37c7d179f5d417396264388fa945a4452c8",
-      "outputHash": "0840679f14a05d72fa579c9f5b3fcdb5cbb3f4972d43d285f340672f651a8138",
-      "run": "2026-11-16T06:27:03.737Z",
+      "hash": "cd4680a55c3570f9ecea49d1dc836bac1ee8f11af4912935230a3749d9e0768e",
+      "runtimeHash": "0842e62d272a88549339bd99c6f279978d3237e772d26dac594bf84f33a5e138",
+      "outputHash": "bae440492e6380269fc3e67a687879221602b955f3a540f7054b71a5ec24e054",
+      "run": "2026-11-16T09:45:50.723Z",
       "size": {
-        "js": 75267,
-        "css": 5443,
-        "lazy": 253,
+        "js": 85167,
+        "css": 6013,
+        "lazy": 256,
         "assets": 0,
-        "brotli": { "js": 63546, "css": 4619 }
+        "brotli": {
+          "js": 71403,
+          "css": 5061
+        }
       },
-      "hydrate": { "ms": 71.3, "spread": [61.6, 101.4], "settledMs": null },
+      "hydrate": {
+        "ms": 79.9,
+        "spread": [74.5, 84.1],
+        "settledMs": null
+      },
       "interaction": {
         "kind": "click",
         "start": "click",
         "says": "opens",
-        "ms": 92.6,
-        "spread": [78.5, 94],
-        "ownMs": 48.8,
+        "ms": 78.6,
+        "spread": [78, 94],
+        "ownMs": 34.9,
         "pressGapMs": 0,
-        "eventTimingMs": 60
+        "eventTimingMs": 56
       },
       "route": "/app-shell",
       "breakdown": [
-        { "source": "package:bits-ui", "js": 28104 },
-        { "source": "package:phosphor-svelte", "js": 8479 },
-        { "source": "runtime", "js": 7645 },
-        { "source": "own", "js": 6329 },
-        { "source": "package:tailwind-variants", "js": 3685 },
-        { "source": "item:sidebar", "js": 3599 },
-        { "source": "package:@floating-ui/core", "js": 2592 },
-        { "source": "package:@floating-ui/dom", "js": 2433 },
-        { "source": "package:svelte-toolbelt", "js": 1895 },
-        { "source": "package:tabbable", "js": 1657 },
-        { "source": "package:runed", "js": 1287 },
-        { "source": "item:sheet", "js": 1143 },
-        { "source": "package:@floating-ui/utils", "js": 1123 },
-        { "source": "item:dropdown-menu", "js": 921 },
-        { "source": "item:breadcrumb", "js": 736 },
-        { "source": "item:tooltip", "js": 652 },
-        { "source": "item:theme", "js": 610 },
-        { "source": "item:button", "js": 495 },
-        { "source": "package:inline-style-parser", "js": 431 },
-        { "source": "item:input", "js": 308 },
-        { "source": "item:collapsible", "js": 303 },
-        { "source": "item:avatar", "js": 298 },
-        { "source": "item:spinner", "js": 183 },
-        { "source": "item:four-dot", "js": 165 },
-        { "source": "item:kbd", "js": 116 },
-        { "source": "package:style-to-object", "js": 78 }
+        {
+          "source": "package:bits-ui",
+          "js": 29021
+        },
+        {
+          "source": "package:phosphor-svelte",
+          "js": 11375
+        },
+        {
+          "source": "runtime",
+          "js": 7962
+        },
+        {
+          "source": "own",
+          "js": 6558
+        },
+        {
+          "source": "item:toast",
+          "js": 4612
+        },
+        {
+          "source": "package:tailwind-variants",
+          "js": 3805
+        },
+        {
+          "source": "item:sidebar",
+          "js": 3718
+        },
+        {
+          "source": "package:@floating-ui/core",
+          "js": 2677
+        },
+        {
+          "source": "package:@floating-ui/dom",
+          "js": 2512
+        },
+        {
+          "source": "package:svelte-toolbelt",
+          "js": 1957
+        },
+        {
+          "source": "package:tabbable",
+          "js": 1711
+        },
+        {
+          "source": "package:runed",
+          "js": 1329
+        },
+        {
+          "source": "item:sheet",
+          "js": 1181
+        },
+        {
+          "source": "package:@floating-ui/utils",
+          "js": 1160
+        },
+        {
+          "source": "item:dropdown-menu",
+          "js": 951
+        },
+        {
+          "source": "item:breadcrumb",
+          "js": 762
+        },
+        {
+          "source": "item:tooltip",
+          "js": 673
+        },
+        {
+          "source": "item:theme",
+          "js": 630
+        },
+        {
+          "source": "item:button",
+          "js": 511
+        },
+        {
+          "source": "package:inline-style-parser",
+          "js": 445
+        },
+        {
+          "source": "item:input",
+          "js": 318
+        },
+        {
+          "source": "item:collapsible",
+          "js": 313
+        },
+        {
+          "source": "item:avatar",
+          "js": 308
+        },
+        {
+          "source": "item:spinner",
+          "js": 189
+        },
+        {
+          "source": "item:four-dot",
+          "js": 170
+        },
+        {
+          "source": "item:kbd",
+          "js": 120
+        },
+        {
+          "source": "item:status",
+          "js": 118
+        },
+        {
+          "source": "package:style-to-object",
+          "js": 81
+        }
       ],
       "cases": {}
     },
@@ -2218,9 +4282,16 @@
         "css": 4906,
         "lazy": 382558,
         "assets": 2147405,
-        "brotli": { "js": 33422, "css": 4193 }
+        "brotli": {
+          "js": 33422,
+          "css": 4193
+        }
       },
-      "hydrate": { "ms": 106.9, "spread": [89.7, 123], "settledMs": null },
+      "hydrate": {
+        "ms": 106.9,
+        "spread": [89.7, 123],
+        "settledMs": null
+      },
       "interaction": {
         "kind": "key",
         "start": "keydown",
@@ -2233,31 +4304,106 @@
       },
       "route": "/chat",
       "breakdown": [
-        { "source": "item:highlighter", "js": 7903 },
-        { "source": "runtime", "js": 6843 },
-        { "source": "package:phosphor-svelte", "js": 4632 },
-        { "source": "package:tailwind-variants", "js": 4249 },
-        { "source": "own", "js": 2796 },
-        { "source": "item:code-block", "js": 1942 },
-        { "source": "item:field", "js": 1513 },
-        { "source": "package:svelte-toolbelt", "js": 1428 },
-        { "source": "item:composer", "js": 1112 },
-        { "source": "item:message-log", "js": 759 },
-        { "source": "item:input-group", "js": 587 },
-        { "source": "item:button", "js": 573 },
-        { "source": "item:message", "js": 571 },
-        { "source": "item:empty", "js": 568 },
-        { "source": "item:alert", "js": 536 },
-        { "source": "package:inline-style-parser", "js": 497 },
-        { "source": "package:bits-ui", "js": 487 },
-        { "source": "item:marker", "js": 412 },
-        { "source": "item:use-highlighted-code", "js": 277 },
-        { "source": "item:spinner", "js": 212 },
-        { "source": "item:textarea", "js": 211 },
-        { "source": "item:label", "js": 150 },
-        { "source": "item:kbd", "js": 133 },
-        { "source": "item:status", "js": 132 },
-        { "source": "package:style-to-object", "js": 90 }
+        {
+          "source": "item:highlighter",
+          "js": 7903
+        },
+        {
+          "source": "runtime",
+          "js": 6843
+        },
+        {
+          "source": "package:phosphor-svelte",
+          "js": 4632
+        },
+        {
+          "source": "package:tailwind-variants",
+          "js": 4249
+        },
+        {
+          "source": "own",
+          "js": 2796
+        },
+        {
+          "source": "item:code-block",
+          "js": 1942
+        },
+        {
+          "source": "item:field",
+          "js": 1513
+        },
+        {
+          "source": "package:svelte-toolbelt",
+          "js": 1428
+        },
+        {
+          "source": "item:composer",
+          "js": 1112
+        },
+        {
+          "source": "item:message-log",
+          "js": 759
+        },
+        {
+          "source": "item:input-group",
+          "js": 587
+        },
+        {
+          "source": "item:button",
+          "js": 573
+        },
+        {
+          "source": "item:message",
+          "js": 571
+        },
+        {
+          "source": "item:empty",
+          "js": 568
+        },
+        {
+          "source": "item:alert",
+          "js": 536
+        },
+        {
+          "source": "package:inline-style-parser",
+          "js": 497
+        },
+        {
+          "source": "package:bits-ui",
+          "js": 487
+        },
+        {
+          "source": "item:marker",
+          "js": 412
+        },
+        {
+          "source": "item:use-highlighted-code",
+          "js": 277
+        },
+        {
+          "source": "item:spinner",
+          "js": 212
+        },
+        {
+          "source": "item:textarea",
+          "js": 211
+        },
+        {
+          "source": "item:label",
+          "js": 150
+        },
+        {
+          "source": "item:kbd",
+          "js": 133
+        },
+        {
+          "source": "item:status",
+          "js": 132
+        },
+        {
+          "source": "package:style-to-object",
+          "js": 90
+        }
       ],
       "cases": {}
     },
@@ -2271,43 +4417,143 @@
         "css": 5673,
         "lazy": 382551,
         "assets": 2147405,
-        "brotli": { "js": 45686, "css": 4712 }
+        "brotli": {
+          "js": 45686,
+          "css": 4712
+        }
       },
-      "hydrate": { "ms": 190.5, "spread": [178.4, 220.1], "settledMs": null },
+      "hydrate": {
+        "ms": 190.5,
+        "spread": [178.4, 220.1],
+        "settledMs": null
+      },
       "interaction": null,
       "route": "/product-home",
       "breakdown": [
-        { "source": "package:bits-ui", "js": 12005 },
-        { "source": "item:highlighter", "js": 7871 },
-        { "source": "runtime", "js": 7055 },
-        { "source": "package:tailwind-variants", "js": 4233 },
-        { "source": "package:phosphor-svelte", "js": 3498 },
-        { "source": "package:svelte-toolbelt", "js": 2113 },
-        { "source": "item:code-block", "js": 1937 },
-        { "source": "package:tabbable", "js": 1864 },
-        { "source": "item:live-console", "js": 1366 },
-        { "source": "item:marketing-bar", "js": 1198 },
-        { "source": "item:sheet", "js": 1177 },
-        { "source": "package:runed", "js": 1060 },
-        { "source": "item:marketing-footer", "js": 953 },
-        { "source": "own", "js": 918 },
-        { "source": "item:stage-card", "js": 907 },
-        { "source": "item:stage-hero", "js": 778 },
-        { "source": "item:tabs", "js": 742 },
-        { "source": "item:proof-band", "js": 656 },
-        { "source": "item:button", "js": 572 },
-        { "source": "package:inline-style-parser", "js": 495 },
-        { "source": "item:four-dot", "js": 477 },
-        { "source": "item:cta-band", "js": 369 },
-        { "source": "item:read-token", "js": 329 },
-        { "source": "item:use-highlighted-code", "js": 276 },
-        { "source": "item:spinner", "js": 211 },
-        { "source": "item:stage", "js": 209 },
-        { "source": "item:liquid-glass", "js": 169 },
-        { "source": "item:name-strip", "js": 147 },
-        { "source": "item:status", "js": 131 },
-        { "source": "item:meter", "js": 125 },
-        { "source": "package:style-to-object", "js": 90 }
+        {
+          "source": "package:bits-ui",
+          "js": 12005
+        },
+        {
+          "source": "item:highlighter",
+          "js": 7871
+        },
+        {
+          "source": "runtime",
+          "js": 7055
+        },
+        {
+          "source": "package:tailwind-variants",
+          "js": 4233
+        },
+        {
+          "source": "package:phosphor-svelte",
+          "js": 3498
+        },
+        {
+          "source": "package:svelte-toolbelt",
+          "js": 2113
+        },
+        {
+          "source": "item:code-block",
+          "js": 1937
+        },
+        {
+          "source": "package:tabbable",
+          "js": 1864
+        },
+        {
+          "source": "item:live-console",
+          "js": 1366
+        },
+        {
+          "source": "item:marketing-bar",
+          "js": 1198
+        },
+        {
+          "source": "item:sheet",
+          "js": 1177
+        },
+        {
+          "source": "package:runed",
+          "js": 1060
+        },
+        {
+          "source": "item:marketing-footer",
+          "js": 953
+        },
+        {
+          "source": "own",
+          "js": 918
+        },
+        {
+          "source": "item:stage-card",
+          "js": 907
+        },
+        {
+          "source": "item:stage-hero",
+          "js": 778
+        },
+        {
+          "source": "item:tabs",
+          "js": 742
+        },
+        {
+          "source": "item:proof-band",
+          "js": 656
+        },
+        {
+          "source": "item:button",
+          "js": 572
+        },
+        {
+          "source": "package:inline-style-parser",
+          "js": 495
+        },
+        {
+          "source": "item:four-dot",
+          "js": 477
+        },
+        {
+          "source": "item:cta-band",
+          "js": 369
+        },
+        {
+          "source": "item:read-token",
+          "js": 329
+        },
+        {
+          "source": "item:use-highlighted-code",
+          "js": 276
+        },
+        {
+          "source": "item:spinner",
+          "js": 211
+        },
+        {
+          "source": "item:stage",
+          "js": 209
+        },
+        {
+          "source": "item:liquid-glass",
+          "js": 169
+        },
+        {
+          "source": "item:name-strip",
+          "js": 147
+        },
+        {
+          "source": "item:status",
+          "js": 131
+        },
+        {
+          "source": "item:meter",
+          "js": 125
+        },
+        {
+          "source": "package:style-to-object",
+          "js": 90
+        }
       ],
       "cases": {}
     },
@@ -2321,14 +4567,27 @@
         "css": 1150,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 3318, "css": 990 }
+        "brotli": {
+          "js": 3318,
+          "css": 990
+        }
       },
-      "hydrate": { "ms": 7.9, "spread": [-0.2, 31.4], "settledMs": null },
+      "hydrate": {
+        "ms": 7.9,
+        "spread": [-0.2, 31.4],
+        "settledMs": null
+      },
       "interaction": null,
       "route": "/",
       "breakdown": [
-        { "source": "runtime", "js": 3335 },
-        { "source": "own", "js": 312 }
+        {
+          "source": "runtime",
+          "js": 3335
+        },
+        {
+          "source": "own",
+          "js": 312
+        }
       ],
       "cases": {}
     },
@@ -2342,14 +4601,27 @@
         "css": 157,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 3292, "css": 122 }
+        "brotli": {
+          "js": 3292,
+          "css": 122
+        }
       },
-      "hydrate": { "ms": 7.1, "spread": [1, 13.3], "settledMs": null },
+      "hydrate": {
+        "ms": 7.1,
+        "spread": [1, 13.3],
+        "settledMs": null
+      },
       "interaction": null,
       "route": "/",
       "breakdown": [
-        { "source": "runtime", "js": 3307 },
-        { "source": "own", "js": 255 }
+        {
+          "source": "runtime",
+          "js": 3307
+        },
+        {
+          "source": "own",
+          "js": 255
+        }
       ],
       "cases": {}
     },
@@ -2363,9 +4635,16 @@
         "css": 2075,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 19110, "css": 1824 }
+        "brotli": {
+          "js": 19110,
+          "css": 1824
+        }
       },
-      "hydrate": { "ms": 15.4, "spread": [7.2, 26.3], "settledMs": null },
+      "hydrate": {
+        "ms": 15.4,
+        "spread": [7.2, 26.3],
+        "settledMs": null
+      },
       "interaction": {
         "kind": "click",
         "start": "click",
@@ -2378,13 +4657,34 @@
       },
       "route": "/",
       "breakdown": [
-        { "source": "runtime", "js": 6345 },
-        { "source": "own", "js": 5367 },
-        { "source": "package:phosphor-svelte", "js": 4680 },
-        { "source": "package:tailwind-variants", "js": 4370 },
-        { "source": "item:button", "js": 589 },
-        { "source": "item:spinner", "js": 217 },
-        { "source": "item:status", "js": 136 }
+        {
+          "source": "runtime",
+          "js": 6345
+        },
+        {
+          "source": "own",
+          "js": 5367
+        },
+        {
+          "source": "package:phosphor-svelte",
+          "js": 4680
+        },
+        {
+          "source": "package:tailwind-variants",
+          "js": 4370
+        },
+        {
+          "source": "item:button",
+          "js": 589
+        },
+        {
+          "source": "item:spinner",
+          "js": 217
+        },
+        {
+          "source": "item:status",
+          "js": 136
+        }
       ],
       "cases": {
         "burst": {
@@ -2397,9 +4697,16 @@
             "css": 2075,
             "lazy": 0,
             "assets": 0,
-            "brotli": { "js": 19099, "css": 1824 }
+            "brotli": {
+              "js": 19099,
+              "css": 1824
+            }
           },
-          "hydrate": { "ms": 18.4, "spread": [1.2, 44.8], "settledMs": null },
+          "hydrate": {
+            "ms": 18.4,
+            "spread": [1.2, 44.8],
+            "settledMs": null
+          },
           "interaction": {
             "kind": "click",
             "start": "click",
@@ -2421,9 +4728,16 @@
             "css": 2075,
             "lazy": 0,
             "assets": 0,
-            "brotli": { "js": 19140, "css": 1824 }
+            "brotli": {
+              "js": 19140,
+              "css": 1824
+            }
           },
-          "hydrate": { "ms": 19.3, "spread": [17.8, 24], "settledMs": null },
+          "hydrate": {
+            "ms": 19.3,
+            "spread": [17.8, 24],
+            "settledMs": null
+          },
           "interaction": {
             "kind": "click",
             "start": "click",
@@ -2447,15 +4761,31 @@
         "css": 237,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 4911, "css": 206 }
+        "brotli": {
+          "js": 4911,
+          "css": 206
+        }
       },
-      "hydrate": { "ms": 4.9, "spread": [-6.2, 12.5], "settledMs": null },
+      "hydrate": {
+        "ms": 4.9,
+        "spread": [-6.2, 12.5],
+        "settledMs": null
+      },
       "interaction": null,
       "route": "/",
       "breakdown": [
-        { "source": "runtime", "js": 4038 },
-        { "source": "package:phosphor-svelte", "js": 874 },
-        { "source": "own", "js": 542 }
+        {
+          "source": "runtime",
+          "js": 4038
+        },
+        {
+          "source": "package:phosphor-svelte",
+          "js": 874
+        },
+        {
+          "source": "own",
+          "js": 542
+        }
       ],
       "cases": {}
     },
@@ -2469,9 +4799,16 @@
         "css": 1093,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 12405, "css": 962 }
+        "brotli": {
+          "js": 12405,
+          "css": 962
+        }
       },
-      "hydrate": { "ms": 28.3, "spread": [22.8, 31.8], "settledMs": null },
+      "hydrate": {
+        "ms": 28.3,
+        "spread": [22.8, 31.8],
+        "settledMs": null
+      },
       "interaction": {
         "kind": "click",
         "start": "click",
@@ -2484,12 +4821,30 @@
       },
       "route": "/",
       "breakdown": [
-        { "source": "runtime", "js": 5659 },
-        { "source": "package:tailwind-variants", "js": 4002 },
-        { "source": "package:phosphor-svelte", "js": 2676 },
-        { "source": "own", "js": 1001 },
-        { "source": "item:button", "js": 539 },
-        { "source": "item:spinner", "js": 199 }
+        {
+          "source": "runtime",
+          "js": 5659
+        },
+        {
+          "source": "package:tailwind-variants",
+          "js": 4002
+        },
+        {
+          "source": "package:phosphor-svelte",
+          "js": 2676
+        },
+        {
+          "source": "own",
+          "js": 1001
+        },
+        {
+          "source": "item:button",
+          "js": 539
+        },
+        {
+          "source": "item:spinner",
+          "js": 199
+        }
       ],
       "cases": {}
     },
@@ -2503,9 +4858,16 @@
         "css": 1695,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 11902, "css": 1476 }
+        "brotli": {
+          "js": 11902,
+          "css": 1476
+        }
       },
-      "hydrate": { "ms": 27, "spread": [25.9, 29.9], "settledMs": null },
+      "hydrate": {
+        "ms": 27,
+        "spread": [25.9, 29.9],
+        "settledMs": null
+      },
       "interaction": {
         "kind": "key",
         "start": "keydown",
@@ -2518,15 +4880,42 @@
       },
       "route": "/",
       "breakdown": [
-        { "source": "package:tailwind-variants", "js": 4178 },
-        { "source": "runtime", "js": 4156 },
-        { "source": "package:phosphor-svelte", "js": 2222 },
-        { "source": "own", "js": 853 },
-        { "source": "item:input-group", "js": 754 },
-        { "source": "item:button", "js": 563 },
-        { "source": "item:input", "js": 348 },
-        { "source": "item:spinner", "js": 208 },
-        { "source": "item:status", "js": 129 }
+        {
+          "source": "package:tailwind-variants",
+          "js": 4178
+        },
+        {
+          "source": "runtime",
+          "js": 4156
+        },
+        {
+          "source": "package:phosphor-svelte",
+          "js": 2222
+        },
+        {
+          "source": "own",
+          "js": 853
+        },
+        {
+          "source": "item:input-group",
+          "js": 754
+        },
+        {
+          "source": "item:button",
+          "js": 563
+        },
+        {
+          "source": "item:input",
+          "js": 348
+        },
+        {
+          "source": "item:spinner",
+          "js": 208
+        },
+        {
+          "source": "item:status",
+          "js": 129
+        }
       ],
       "cases": {}
     },
@@ -2540,9 +4929,16 @@
         "css": 1262,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 11251, "css": 1108 }
+        "brotli": {
+          "js": 11251,
+          "css": 1108
+        }
       },
-      "hydrate": { "ms": 45.9, "spread": [39.6, 57.9], "settledMs": null },
+      "hydrate": {
+        "ms": 45.9,
+        "spread": [39.6, 57.9],
+        "settledMs": null
+      },
       "interaction": {
         "kind": "click",
         "start": "click",
@@ -2555,12 +4951,30 @@
       },
       "route": "/",
       "breakdown": [
-        { "source": "runtime", "js": 5086 },
-        { "source": "package:tailwind-variants", "js": 4106 },
-        { "source": "own", "js": 1924 },
-        { "source": "package:phosphor-svelte", "js": 1133 },
-        { "source": "item:button", "js": 204 },
-        { "source": "item:status", "js": 127 }
+        {
+          "source": "runtime",
+          "js": 5086
+        },
+        {
+          "source": "package:tailwind-variants",
+          "js": 4106
+        },
+        {
+          "source": "own",
+          "js": 1924
+        },
+        {
+          "source": "package:phosphor-svelte",
+          "js": 1133
+        },
+        {
+          "source": "item:button",
+          "js": 204
+        },
+        {
+          "source": "item:status",
+          "js": 127
+        }
       ],
       "cases": {}
     }

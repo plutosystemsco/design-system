@@ -249,7 +249,7 @@ describe("8. the views", () => {
     ]);
   });
 
-  test("0 other +page.svelte files under src/routes/(view)/view/ or src/routes/(shell)/view/, but 013's and 020's test views", () => {
+  test("0 other +page.svelte files under src/routes/(view)/view/ or src/routes/(shell)/view/, but 013's, 020's and 026's test views", () => {
     const expected = new Set([
       ...views.map((v) => routeFile(v.block, v.path)),
       ...compositionViews.map((v) => compositionFile(v.path)),
@@ -257,6 +257,8 @@ describe("8. the views", () => {
       path.join("src/routes/(view)/view/code-agreement/+page.svelte"),
       // 020 tests 7 and 8: the old and new context keys; goes in 0.14.0.
       path.join("src/routes/(view)/view/field-keys/+page.svelte"),
+      // 026 decision 20: a test surface for A1, not a block's view.
+      path.join("src/routes/(shell)/view/app-shell/toast/+page.svelte"),
     ]);
     const found: string[] = [];
     const walk = (dir: string) => {

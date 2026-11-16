@@ -532,7 +532,7 @@ The item, its examples and its page build at once with everything else in wave 1
 **The 0.13.0 entry gains two bullets:**
 
 > - `toast`: new, a `registry:ui`. `toast("Saved")`, `toast.success`, `toast.info`, `toast.caution`, `toast.error`, `toast.loading` and `toast.promise` raise a short message at the top end of the page, under a declared sticky bar; `toast.dismiss` closes one or all. Mount `<Toaster />` once, in the root layout (`app-shell` does). Two hidden announcers, present from the first render and on one schedule, speak each toast: errors interrupt, the rest wait their turn, and a success raised beside an error is spoken after it. The visible stack is never live, and no toast is a tab stop; F8 moves focus to the list and back, and Escape in a toast dismisses it. A toast never covers the element that has keyboard focus: it steps aside until focus moves, and the stack's count line says "1 hidden". Success and info leave after at least 6 s, longer for longer text, and pause on hover, on focus, while the window is in the background and while a modal is open; errors, cautions, loading toasts and any toast with an action wait to be dismissed. `duration: Infinity` keeps a toast. `timers="off"` turns timing off: to meet WCAG 2.2.1, bind it to a setting the person can reach first, or keep every timed message on the page too. Three show at once (one below 640 px); errors go first. A success or info toast survives one navigation; call `toast.navigating()` and `toast.navigated()` from your root layout if you do not use `app-shell`. A toast raised while a modal is open shows when it closes. Text only: no custom components. It depends on `status`, `button` and `spinner`, and on `phosphor-svelte`.
-> - `app-shell`: **interface change.** The layout mounts `<Toaster />` right after the skip link, and calls `toast.navigating()` and `toast.navigated()` in `beforeNavigate` and `afterNavigate`. It now depends on `toast`. If you moved the layout into your routes, add the import and the three lines by hand (the upgrade guide shows them). If your app mounts another toaster, such as shadcn-svelte's `sonner`, remove it, so two corners do not compete. To meet WCAG 2.2.1, bind the toaster's `timers` to a person's setting, as the layout's comment shows. No prop or class changes. Update with `add app-shell`.
+> - `app-shell`: **interface change.** The layout mounts `<Toaster />` right after the skip link, and calls `toast.navigating()` and `toast.navigated()` in `beforeNavigate` and `afterNavigate`. It now depends on `toast`. If you moved the layout into your routes, add the two imports and the three lines by hand (the upgrade guide shows them). If your app mounts another toaster, such as shadcn-svelte's `sonner`, remove it, so two corners do not compete. To meet WCAG 2.2.1, bind the toaster's `timers` to a person's setting, as the layout's comment shows. No prop or class changes. Update with `add app-shell`.
 
 **The guide** (`src/lib/site/upgrade/0.13.0.ts`) gains a section, "`026`: a toast of Kuiper's own":
 
@@ -923,7 +923,7 @@ The upgrade guide's address follows `020` Q4: `/changelog/0.13.0/upgrade/`. This
 
 ### Deferred steps, each for a later landing
 
-**D1. The `app-shell` mount (lane I, after `023`; decisions 5a, 17, 20, 23 and 26).** `023` writes doc comments into the same file, so the anchors below are quoted, not line numbers. In `src/lib/registry/blocks/app-shell/+layout.svelte`:
+**D1. The `app-shell` mount (lane I, after `023`; decisions 5a, 17, 20, 23 and 26).** *Landed 2026-11-16; see "D1, landed" below.* `023` writes doc comments into the same file, so the anchors below are quoted, not line numbers. In `src/lib/registry/blocks/app-shell/+layout.svelte`:
 
 1. After `import { page } from "$app/state";`, add:
 
@@ -974,7 +974,7 @@ Then, in the same landing:
 - The two rules are `U1` (`unspoken`) and `B1` (`before`) in `tests/sr/rules.ts`, each with a precondition (U1: the window is not empty; B1: the later phrase is spoken), unit-tested in VoiceOver's and NVDA's wording (test 76).
 - The `toast-alert` patch is `tests/sr/mutations/main/8-toast.patch` (target `toast:assertive`, fault L1, witness S2). The re-derived `main` set expects 68 failures, exactly S2 and S10 under the four pairs beside `022`'s 60, as decision 20 predicts (test 77 holds it through `mutations.test.ts`).
 - Dry-run (`SR_DRY=1`) in Chromium, WebKit and Firefox: 30 of 30 pass; speech waits for push B.
-- **A1 waits for D1** (the `app-shell` mount, after `023`): `tests/sr/app-shell.sr.ts` gains it then, with `app-shell`'s `live` kind.
+- **A1 waits for D1** (the `app-shell` mount, after `023`): `tests/sr/app-shell.sr.ts` gains it then, with `app-shell`'s `live` kind. *Built with D1; see "D1, landed".*
 
 **D3. The cost case (lane E, after `025`; decision 25).** `scripts/cost/fixtures/toast.svelte`, `toast.burst.svelte`, `toast.progress.svelte`; the three `interactions.ts` entries; `bun run cost --budget toast`. Test 78.
 
@@ -1151,3 +1151,74 @@ The perf project, on one worker: the Button page, home, the components index, th
 - `bun run test:smoke`: 138 pass, 1 fail; the failure, the dev loop's 5 s rewrite under load, passed alone (2 of 2).
 - `bun scripts/site/release-check.ts`: exit 0.
 - The scorecard at `445d663` (`kuiper.ts`, `breadth.ts`, `site.ts --only kuiper`, `depth.ts`): row 1 reads 32 of 40 parts, score 3 held; every other row holds; the total stays 32. The run log has the row.
+
+### D1, landed (2026-11-16)
+
+- **Built by:** a builder, in lane I, on a worktree branch from `release/0.13.0` at `1a116a4` (`022`, `023`, `024`, `025` landed). Another builder was changing `dropdown-menu`, `sidebar` and `use-highlighted-code` at the same time; this diff touches none of their files.
+- **Built, as D1 wrote it:** the four edits in `src/lib/registry/blocks/app-shell/+layout.svelte`, word for word (the two imports, the comment and the two navigation lines after `const current`, `<Toaster />` straight after `<AppShellSkipLink />`); `"toast"` appended to `app-shell`'s `registryDependencies`, and `static/r/` and `static/v0.13.0/r/` regenerated; the same edits in `src/lib/preview/app-shell-view.svelte`, with `window.kuiperToast` set in an `onMount` for test 61; the view `src/routes/(shell)/view/app-shell/toast/+page.svelte` and its line in `blocks.test.ts`'s exception set; decision 26's `app-shell` bullet, word for word, right after the `toast` bullet, whose two `app-shell` phrases are restored; the guide's `app-shell` step, first in the `026` section, and its summary; A1; the toast page's navigation must; the cost raise; the thumbnails.
+- **No sidebar file changed.** `app-shell` uses `Sidebar`; nothing under `src/lib/registry/ui/sidebar/` was edited.
+
+**Deviations, each with its reason.**
+
+1. **The toast view also renders the shipped example page,** after its "Save" button. The shipped layout's links are anchors (`#overview`, `#activity`, `#members`), and the prerender fails a page that links an id it does not hold (`vite.config.ts`, `handleMissingId`). The page holds those ids. A1 and tests 44, 61, 64h and 74 read only the button, the toaster and the skip link.
+2. **The view is in `TEST_VIEWS`** (`tests/e2e/pages.ts`), beside `013`'s and `020`'s test views, so axe at 1280 and the theme check scan it. The keyboard walk does not, as for the others.
+3. **The guide's two `sonner` steps say what changes with the shell:** step 2 says `app-shell` mounts the toaster already, and step 3's navigation lines are "if you do not use `app-shell`", as the changelog says.
+4. **Test 74 carries `item: app-shell`**; the rest of `toast.spec.ts` carries `item: toast`. The test judges the shell's DOM order.
+5. **`registry.test.ts`'s set of named dependencies gains `toast`** (57 to 58). Every dependency named anywhere is in that list; `app-shell` is the first item to name `toast`.
+6. **`--budget app-shell` cannot raise a budget.** `bun run cost --budget` writes first budgets only, and refuses an item that has one ("a budget rises only by a ruling"). So `bun run cost --only app-shell` measured it, and the raised figure was computed with `firstBudget` (`025` decision 15's margin) and written by hand, with its `raised` record.
+7. **The preview copy's comment points at decision 23** instead of repeating the layout's eight lines; the copy never ships. Its `import type { Snippet }` became `import { onMount, type Snippet }` for the window hook. `toast-site.test.ts` pins the code lines in both files (D1's change review, finding 3).
+
+**Tests first, each seen failing.** Against the base tree (`1a116a4`, built as it was, with only the tests changed):
+
+- Unit, `toast-site.test.ts`: 8 new tests failed, 9 passed. Test 37's `app-shell` half (no `toast` in its dependencies); test 38's `app-shell` half (no bullet, no phrases); test 43's `app-shell` half (no step); the layout and the preview copy, one test each (no imports, no hooks, no `<Toaster />`); the layout's `timers` comment; the window hook only in the preview; the toast page's "if you do not use `app-shell`".
+- Unit, `sr-items.test.ts`: with A1 written and `app-shell`'s kinds `live`, `focus` and `overlay`, "each hears entry is the item or one of its transitive dependencies" failed: `toast` was no dependency of `app-shell`. `mutations.test.ts` passed: A1 hears `toast:polite`, which no patch targets, so `expected.json` does not move.
+- Browser, `toast.spec.ts` in `chromium-light`: 7 of 8 failed. Test 44 on `/view/app-shell/` and `/view/app-shell/toast/` (no announcers; no view); test 61 (no `kuiperToast`); test 64h (no view); test 74 on the three shell views (no announcers, and no view). Test 44 on `/components/toast/` passed, as before.
+- New: **64h**, the change review's D1 note: in the shipped shell, the skip link, Enter, focus on `main#main`: the toast stays visible, not aside, with no count line, and leaves after its 6 s (finding 1's fix, in the shell). The smoke's test 6b now also finds the two announcers after the skip link and before the header in the installed app's prerendered page, and test 2 expects `toast`'s 6 files among the dependencies (236, of 266 in all).
+
+**The cost raise (the design lead's ruling, 2026-11-16, as D1 and decision 25 anticipated).** `bun run cost --only app-shell` (run `2026-11-16T09:45:50.723Z`, load median 9.1 on 10 cores): `app-shell` now mounts `toast`.
+
+| Metric | Before (the report) | Now | Budget | Ruling |
+|---|---|---|---|---|
+| `js` (initial, gzipped) | 75,267 B | 85,167 B | 79,100 → **89,500** | raised, with a `raised` record |
+| `css` | 5,443 B | 6,013 B | 6,500 | within |
+| `hydrateMs` | 71.3 ms | 79.9 ms | 95 | within |
+| `interactionMs` (the phone menu) | 92.6 ms | 78.6 ms | 110 | within |
+
+Of the 9.9 kB of JS, the breakdown gives `toast` 4.6 kB (`item:toast`), `phosphor-svelte` 2.9 kB more (the toast's icons) and `status` 0.1 kB; the rest is spread over every group, as the breakdown shares the gzipped bundle out by each source's raw bytes. 89,500 is 85,167 plus `025`'s size margin (5%, at least 1,000 B), rounded up to 100. The record in `scripts/cost/budgets.json`: `js`, from 79,100 to 89,500, 2026-11-16, ruling `context/specifications/026-toast.md#landing-notes`. Only `js` was over.
+
+**The site's budgets (`024`, the review's D1 note).** The shell views are frames, not site pages: `024`'s templates count a page's main frame, so the toaster's JS in `/view/app-shell/…` reaches no template budget. `/components/app-shell/` gains only its longer layout source. The perf project passes, 26 of 26, every template within its transfer, LCP and CLS budgets; no budget was raised.
+
+**Thumbnails.** `bun scripts/site/thumbnails.ts --no-build app-shell`, then `toast` (its page changed, so its hash moved): the four pictures came out byte for byte as before, since an empty toaster draws nothing; the manifest's two hashes moved.
+
+**A1** is in `tests/sr/app-shell.sr.ts`, `declared("app-shell", ["L1", "L3"], ["toast:polite"])`, on `/view/app-shell/toast/`; `app-shell`'s `SR_ITEMS` kinds are `live`, `focus` and `overlay`. Criterion 20's speech still waits for push B.
+
+**Checks run** (the built site served on ports 5731 to 5736, with `E2E_PREBUILT=1`; the machine loaded by other builds, load average 10 to 40):
+
+- `bun run check`: 0 errors, 0 warnings, 2,378 files. `bun run lint`: clean.
+- The unit suite, with a 120 s timeout: 1,809 pass, 2 skip, 0 fail, in 66 files.
+- `toast.spec.ts` and `blocks.spec.ts` in all six projects (`chromium-*`, `firefox-*`, `webkit-*`), four workers: 601 passed, 2 skipped (test 68 in WebKit, as before), 3 failed on time alone: `blocks.spec.ts` tests 24, 25 and 26, each a 38-page loop that timed out at 30 s in Firefox under load. Re-run in Firefox light and dark on one worker: 6 of 6 passed.
+- `upgrade.spec.ts` in Chromium light and dark: 28 passed. axe at 1280 and the theme check on the new test view, with the guide's pages: 42 passed.
+- The screen-reader dry run (`SR_DRY=1`), `toast.sr.ts` and `app-shell.sr.ts`, in WebKit, Chromium and Firefox: 45 of 45 pass (S1 to S10, A1 and `app-shell`'s four). Speech waits for push B.
+- `bun run test:smoke`: 151 pass, 0 fail, in 10 files (505 s). `blocks-add.test.ts` installs `app-shell`, and with it `toast` (6 files) and `status`; the scratch app builds, passes `svelte-check` with 0 errors, and its prerendered `app-shell.html` holds the two announcers after the skip link. This is the first install of `toast` into an app (the change review's finding 10): the extensionless import in `index.ts` builds.
+- The perf project, alone: 26 passed.
+- `bun scripts/site/release-check.ts --before-ci`: exit 0, with its four named skips.
+- **Not run:** the scorecard. D1 is a deferred step of a landed specification, not a landing; `breadth.ts` counts `toast` already, and the shell's mount moves no row.
+
+**D1's change review, and its fixes.** [`../reviews/026-d1-the-toaster-in-app-shell-pr-2026-11-16.md`](../reviews/026-d1-the-toaster-in-app-shell-pr-2026-11-16.md) read "Land after two small fixes". Fixed in one commit, "026: D1, the review's fixes":
+
+1. **Finding 1.** The changelog's `app-shell` bullet and decision 26's quoted bullet say "add the two imports and the three lines by hand"; test 38's `app-shell` half now names "the two imports".
+2. **Finding 2.** The `app-shell` component page gains an accessibility bullet after the skip link (the toaster's two announcers, present from the first render; toasts at the top end; F8; a link to `toast`) and a setup bullet (bind `timers` to a setting the person can reach before the first toast, per WCAG 2.2.1, or keep every timed message on the page too).
+3. **Finding 3.** Deviation 7 above.
+4. **Finding 4.** The scorecard: a run-log row at this step's merge of `release/0.13.0` (`kuiper.ts`: interface marks 14 → 15; no row moves).
+5. **Finding 5, a follow-up for `025`** (kind _small change_; it adds a flag, no interface an app sees): `bun run cost --raise <item>[,<item>] --ruling <spec path>#<anchor>`, writing `budgets.json` only. It refuses an item with no budget, and one whose report entry is stale against the tree. For each metric over its budget, it sets `firstBudget(metric, figure)` and appends the `raised` record with today's date; `interactionMs` stays capped at 200 ms without the owner's paragraph; runtime metrics rise only from a quiet run on the release machine. It touches no metric within budget, exits non-zero with "nothing to raise", checks before writing that the ruling's Landing notes name `` `<item>` `` (export `landingNotes` from `budgets.ts`), and prints one line per raise for the Landing notes. Tests in `cost.test.ts`, beside the `checkRulings` fixtures. Until it exists, a raise is computed with `firstBudget` and written by hand, as deviation 6 did.
+6. **Findings 6 and 7** are notes: deviations 1 to 6 stand, and `window.kuiperToast` on the site's non-shipped shell views stays.
+
+**The merge with `release/0.13.0` at `d79ce59`** (after `022b`, `022c`, `022d` and `027b`):
+
+- **`CHANGELOG.md`:** `toast`, then `app-shell`, then `027b`'s `pagination`, `search-field` and `tag`; test 38 requires the `app-shell` bullet straight after `toast`'s. D1's edited `toast` bullet is kept; `027b` did not change it.
+- **`scripts/cost/report.json`:** every run and every item entry kept: D1's run (`2026-11-16T09:45:50.723Z`, `app-shell`) and `027b`'s (`2026-11-16T10:13:18.680Z`, its three items); `floor` and `catalogue` from the later run. `app-shell`'s size hash still equals the report's on the merged tree, so it was not re-measured; the `raised` record is unchanged.
+- **The thumbnails' manifest:** the release's, then `bun scripts/site/thumbnails.ts --no-build app-shell toast` on the merged build: the four pictures byte for byte as before, two hashes moved.
+- **Regenerated:** `static/r/` and `static/v0.13.0/r/` (`build:registry`; no diff left). `bun install --frozen-lockfile`: no changes.
+- **Counts:** `UI_COUNT` 64 (`027b`'s); named dependencies 58; `app-shell`'s `SR_ITEMS` kinds `live`, `focus` and `overlay`.
+- **The scorecard:** a run-log row at this merge: `kuiper.ts`, interface marks 14 → 15; no row moves.
+

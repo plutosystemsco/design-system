@@ -566,9 +566,11 @@ describe("registry.json", () => {
         "marketing-footer",
         // 012 decisions 3, 4 and 7: the hero, the bar and the block name the glass.
         "liquid-glass",
+        // 026 D1: app-shell mounts the toaster.
+        "toast",
       ].sort(),
     );
-    expect(deps.size).toBe(57);
+    expect(deps.size).toBe(58);
     for (const dep of deps) {
       expect(dep).not.toMatch(/^local:/);
       expect(dep).not.toMatch(/^[a-z][a-z0-9+.-]*:/i);

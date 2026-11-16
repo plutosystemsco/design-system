@@ -43,6 +43,13 @@
       <code>tabindex="-1"</code>.
     </li>
     <li>
+      Right after the skip link, the toaster's two hidden announcers, present
+      from the first render. Toasts show at the top end; F8 moves focus to them
+      and back. See <a href="/components/toast/" class="text-primary underline"
+        >toast</a
+      >.
+    </li>
+    <li>
       Landmarks: the header is the <code>banner</code>; the primary links sit in
       a <code>nav</code> named "Primary" (with a sidebar, the sidebar's
       <code>nav</code> "Main" holds them instead); one <code>main</code>; the
@@ -166,6 +173,11 @@ export default defineConfig({
       gives the page a <code>scroll-padding-top</code> of
       <code>--size-bar</code> and an anchor lands below the header. Your own
       <code>scroll-padding-top</code> on <code>html</code> wins over it.
+    </li>
+    <li>
+      To meet WCAG 2.2.1, bind the toaster's <code>timers</code> to a setting the
+      person can reach before the first toast, as the layout's comment shows, or keep
+      every timed message on the page too.
     </li>
   {/snippet}
 </BlockPage>

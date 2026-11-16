@@ -6,10 +6,15 @@
  * and Escape returns to the menu button (O3).
  *
  * The O2 test hears `sheet`, whose modality it judges.
+ *
+ * A1 (026 decision 20, after D1): the shipped layout mounts the toaster, its
+ * announcers rendered on the server. On `/view/app-shell/toast/`, "Save"
+ * raises "Project saved", spoken whole and once. It hears the polite
+ * announcer, `toast:polite`, a part of a dependency of `app-shell`.
  */
 import type { Page } from "@playwright/test";
 import { declared, test } from "./fixtures.ts";
-import { F1, O1, O2, O3 } from "./rules.ts";
+import { F1, L1, L3, O1, O2, O3 } from "./rules.ts";
 
 const PATH = "/view/app-shell/";
 const NAME = "Sandbox";
@@ -75,5 +80,17 @@ test(
     await sr.after(() => pressToOpen(page), "open");
     const after = await sr.after(() => page.keyboard.press("Escape"), "escape");
     await sr.judge(O3(after, "Menu", await sr.focused(menu(page))));
+  },
+);
+
+test(
+  "A1 the shell: Save's success is spoken whole, once",
+  declared("app-shell", ["L1", "L3"], ["toast:polite"]),
+  async ({ page, sr }) => {
+    await sr.open("/view/app-shell/toast/");
+    await page.getByRole("button", { name: "Save", exact: true }).focus();
+    const after = await sr.after(() => page.keyboard.press("Enter"));
+    const message = "Success: Project saved";
+    await sr.judge(L1(after, message), L3(after, message));
   },
 );

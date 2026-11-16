@@ -164,6 +164,8 @@ const EXPECTED_DEPS: Record<string, number> = {
   // 013 decision 5: the highlighter's 29 files, its 24 queries among them.
   highlighter: 29,
   "use-highlighted-code": 1,
+  // 026 D1: the shell mounts the toaster; status, button and spinner were here.
+  toast: 6,
 };
 
 /** The prerendered pages and their one h1. */
@@ -262,7 +264,7 @@ describe.each([
     );
   });
 
-  test(`2. ${FULL ? 260 : FILES.length} files land: the block files at their app paths and every dependency's`, () => {
+  test(`2. ${FULL ? 266 : FILES.length} files land: the block files at their app paths and every dependency's`, () => {
     if (FULL) {
       expect(BLOCK_FILES).toHaveLength(30);
       expect(
@@ -275,8 +277,8 @@ describe.each([
           number
         >,
       );
-      expect(DEP_FILES).toHaveLength(230);
-      expect(FILES).toHaveLength(260);
+      expect(DEP_FILES).toHaveLength(236);
+      expect(FILES).toHaveLength(266);
     }
     const missing = FILES.filter((f) => !existsSync(path.join(r.app, f)));
     expect(missing).toEqual([]);
@@ -376,6 +378,15 @@ describe.each([
       );
     expect(firstTag?.[1]).toBe("a");
     expect(firstTag?.[2]).toBe("app-shell-skip-link");
+    // 026 D1: the toaster's two announcers, rendered on the server, come
+    // right after the skip link and before the header.
+    const skipAt = body.indexOf('data-slot="app-shell-skip-link"');
+    const statusAt = body.indexOf('data-slot="toaster-status"');
+    const alertAt = body.indexOf('data-slot="toaster-alert"');
+    const headerAt = body.indexOf("<header");
+    expect(statusAt).toBeGreaterThan(skipAt);
+    expect(alertAt).toBeGreaterThan(skipAt);
+    expect(headerAt).toBeGreaterThan(Math.max(statusAt, alertAt));
     expect(body).toContain("<footer");
     expect(body).not.toMatch(/<dt[^>]*>commit<\/dt>/);
     expect(body).not.toMatch(/<dt[^>]*>built<\/dt>/);
@@ -400,7 +411,7 @@ describe.each([
     expect(Number(completed![1])).toBe(0);
   });
 
-  test(`8. our lint finds 0 violations in the ${FULL ? 260 : FILES.length} installed files`, () => {
+  test(`8. our lint finds 0 violations in the ${FULL ? 266 : FILES.length} installed files`, () => {
     expect(lintFiles(FILES, loadRules(REPO), r.app)).toEqual([]);
   });
 
