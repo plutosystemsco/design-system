@@ -9,15 +9,6 @@
  */
 import type { LedgerLine } from "./ledger.ts";
 
-const SUB_MENU_ESCAPE = {
-  file: "dropdown-menu.sr.ts",
-  title: "Escape in the sub-menu speaks its parent item, which has focus",
-  expect: { fault: "O3s" },
-  finding:
-    "Escape in a sub-menu closes the whole menu and focus goes to the trigger, not the parent item.",
-  change: "022a",
-} as const;
-
 const FIREFOX = ["firefox-light", "firefox-dark"];
 
 /** One line per project, for a fault seen in each. */
@@ -38,11 +29,6 @@ const BLOCKS = [
 ];
 
 export const LEDGER: LedgerLine[] = [
-  // 022a: dropdown-menu's sub-menu, under every reader and browser pair.
-  { ...SUB_MENU_ESCAPE, where: { reader: "voiceover", browser: "webkit" } },
-  { ...SUB_MENU_ESCAPE, where: { reader: "voiceover", browser: "chromium" } },
-  { ...SUB_MENU_ESCAPE, where: { reader: "nvda", browser: "chromium" } },
-  { ...SUB_MENU_ESCAPE, where: { reader: "nvda", browser: "firefox" } },
   // 022b: the pressed theme segment in Firefox's forced palette. The test
   // runs in light projects only (onlyProjects).
   {

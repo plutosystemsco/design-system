@@ -54,8 +54,8 @@
     "outputHash": "67b6685c60a3cfc6a165e21ebdbabcdbfffdf61cd4008a2903e4f22b98e3ad55"
   },
   "catalogue": {
-    "js": 373795,
-    "css": 16582,
+    "js": 373791,
+    "css": 16579,
     "sumOfAlone": { "js": 1085760, "css": 59980 }
   },
   "items": {
@@ -1343,7 +1343,7 @@
       "cases": {}
     },
     "dropdown-menu": {
-      "hash": "5c0599458c7705ebab7883d4074254fe5b5c6524a85c876c50f840f901866c86",
+      "hash": "40ab7c3e21df3385b20289af9b0cb6b60922c4b9a496b9e1bd7beba6a3c32b6f",
       "runtimeHash": "8c92980b46852d3a313d089ad6b3deff7d877394b35eb9b2de9c749f1805ef9d",
       "outputHash": "2f936beb33cff039d7f970f6dfdc8dce0fd8744de368477daf263b6cb95cb3ea",
       "run": "2026-11-16T06:27:03.737Z",
@@ -2124,7 +2124,7 @@
       "cases": {}
     },
     "app-shell": {
-      "hash": "66879aeb44e035324cb62be47f83a945dd5e770188ec97e25258c0c89ed41f4c",
+      "hash": "55c9c2d5107a31f967b13c9a3f83695a2eb9f503af18a4ba4865b756953ae83f",
       "runtimeHash": "e187b37e5ea884244cca77722644b37c7d179f5d417396264388fa945a4452c8",
       "outputHash": "0840679f14a05d72fa579c9f5b3fcdb5cbb3f4972d43d285f340672f651a8138",
       "run": "2026-11-16T06:27:03.737Z",

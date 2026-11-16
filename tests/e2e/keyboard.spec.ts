@@ -625,6 +625,39 @@ test.describe("behaviours", () => {
     await expect(trigger).toHaveAttribute("aria-expanded", "false");
   });
 
+  // 022a, the WAI-ARIA menu pattern: Escape closes the menu that holds
+  // focus and returns focus to the item that opened it. In a sub-menu, that
+  // is its parent item; a second Escape closes the menu.
+  test("022a. Escape in the sub-menu closes it alone: the menu stays open with focus on Invite users; Escape again returns to the trigger", async ({
+    page,
+  }) => {
+    await open(page, componentPath("dropdown-menu"));
+    const trigger = fixture(page).getByRole("button", { name: "Account" });
+    const menu = page.locator('[data-slot="dropdown-menu-content"]');
+    const sub = page.locator('[data-slot="dropdown-menu-sub-content"]');
+    const parent = menu.locator('[data-slot="dropdown-menu-sub-trigger"]');
+    await trigger.focus();
+    await page.keyboard.press("Enter");
+    await expect(menu).toBeVisible();
+    // The parent item, by keyboard: the last item, then one up.
+    await page.keyboard.press("End");
+    await page.keyboard.press("ArrowUp");
+    await expect(parent).toBeFocused();
+    await expect(parent).toHaveText(/Invite users/);
+    await page.keyboard.press("ArrowRight");
+    await expect(sub).toBeVisible();
+    await expect(sub.getByRole("menuitem").first()).toBeFocused();
+    await page.keyboard.press("Escape");
+    await expect(sub).toHaveCount(0);
+    await expect(menu).toBeVisible();
+    await expect(parent).toBeFocused();
+    await expect(parent).toHaveAttribute("aria-expanded", "false");
+    await expect(trigger).toHaveAttribute("aria-expanded", "true");
+    await page.keyboard.press("Escape");
+    await expect(menu).toHaveCount(0);
+    await expect(trigger).toBeFocused();
+  });
+
   // 005 decision 17, behaviours 4 and 5.
   test("Enter on the sheet trigger opens it with focus on its first link; Tab loops through the close button back to the first link", async ({
     page,
