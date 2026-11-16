@@ -3,14 +3,8 @@
  * link serves its file, and an app with no Tailwind takes the colours from
  * `kuiper.css` alone, in Chromium, Firefox and WebKit.
  */
-import {
-  chromium,
-  expect,
-  firefox,
-  test,
-  webkit,
-  type BrowserType,
-} from "@playwright/test";
+import { expect, test } from "../test.ts";
+import { onlyProjects } from "./engines.ts";
 import { readFileSync } from "node:fs";
 import { SITE_REGISTRY } from "../../src/lib/site/site.ts";
 import { open } from "./pages.ts";
@@ -73,12 +67,6 @@ test.describe("021 T16: the site shows the files", () => {
   });
 });
 
-const ENGINES: [string, BrowserType][] = [
-  ["chromium", chromium],
-  ["firefox", firefox],
-  ["webkit", webkit],
-];
-
 /** A blank page that loads only kuiper.css, from the test server. */
 const BLANK = (base: string) => `<!doctype html>
 <html>
@@ -92,58 +80,62 @@ const BLANK = (base: string) => `<!doctype html>
 </html>`;
 
 test.describe("021 T17: an app without Tailwind gets the colours", () => {
-  // playwright.config.ts is lane E's (022 adds the engine matrix), so this
-  // check launches Firefox and WebKit itself beside the project's Chromium.
-  for (const [name, engine] of ENGINES) {
-    test(`${name}: --background, the nested dark hairline, and reduced motion`, async ({
-      baseURL,
-    }) => {
-      const browser = await engine.launch();
-      try {
-        const context = await browser.newContext({ reducedMotion: "reduce" });
-        const page = await context.newPage();
-        const still = await browser.newContext();
-        const moving = await still.newPage();
-        for (const p of [page, moving]) {
-          await p.setContent(BLANK(baseURL!), { waitUntil: "load" });
-          await p.waitForFunction(
-            () =>
-              getComputedStyle(document.documentElement)
-                .getPropertyValue("--background")
-                .trim() !== "",
-          );
-        }
-        const read = (selector: string, property: string) =>
-          moving.evaluate(
-            ([s, p]) =>
-              getComputedStyle(document.querySelector(s)!)
-                .getPropertyValue(p)
-                .trim(),
-            [selector, property],
-          );
-        expect(await read("html", "--background")).toBe("#f3f0e8");
-        expect(await read("#dark", "--background")).toBe("#16140f");
-        expect(await read("html", "color-scheme")).toBe("light");
-        expect(await read("#dark", "color-scheme")).toBe("dark");
-        // 021 decision 11: --shadow-elevation is repeated in .dark, so a dark
-        // subtree in a light page draws the dark hairline.
-        const shadow = (selector: string) => read(selector, "box-shadow");
-        expect(await shadow("#nested")).toContain("rgb(122, 115, 102)");
-        expect(await shadow("#nested")).not.toContain("rgb(133, 126, 112)");
-        expect(await shadow("#light-box")).toContain("rgb(133, 126, 112)");
-        expect(await read("html", "--motion-micro")).toBe("200ms");
-        expect(
-          await page.evaluate(() =>
+  // 022's merge: the engine projects run it, so it uses the project's
+  // browser rather than launching its own. The page sets its scheme itself
+  // (its contexts ask for light), so each engine's light project covers it.
+  onlyProjects(
+    ["chromium-light", "firefox-light", "webkit-light"],
+    "the page sets its own scheme, so each engine's light project covers it",
+  );
+  test("--background, the nested dark hairline, and reduced motion", async ({
+    baseURL,
+    browser,
+  }) => {
+    {
+      const context = await browser.newContext({
+        reducedMotion: "reduce",
+        colorScheme: "light",
+      });
+      const page = await context.newPage();
+      const still = await browser.newContext({ colorScheme: "light" });
+      const moving = await still.newPage();
+      for (const p of [page, moving]) {
+        await p.setContent(BLANK(baseURL!), { waitUntil: "load" });
+        await p.waitForFunction(
+          () =>
             getComputedStyle(document.documentElement)
-              .getPropertyValue("--motion-micro")
-              .trim(),
-          ),
-        ).toBe("0ms");
-        await still.close();
-        await context.close();
-      } finally {
-        await browser.close();
+              .getPropertyValue("--background")
+              .trim() !== "",
+        );
       }
-    });
-  }
+      const read = (selector: string, property: string) =>
+        moving.evaluate(
+          ([s, p]) =>
+            getComputedStyle(document.querySelector(s)!)
+              .getPropertyValue(p)
+              .trim(),
+          [selector, property],
+        );
+      expect(await read("html", "--background")).toBe("#f3f0e8");
+      expect(await read("#dark", "--background")).toBe("#16140f");
+      expect(await read("html", "color-scheme")).toBe("light");
+      expect(await read("#dark", "color-scheme")).toBe("dark");
+      // 021 decision 11: --shadow-elevation is repeated in .dark, so a dark
+      // subtree in a light page draws the dark hairline.
+      const shadow = (selector: string) => read(selector, "box-shadow");
+      expect(await shadow("#nested")).toContain("rgb(122, 115, 102)");
+      expect(await shadow("#nested")).not.toContain("rgb(133, 126, 112)");
+      expect(await shadow("#light-box")).toContain("rgb(133, 126, 112)");
+      expect(await read("html", "--motion-micro")).toBe("200ms");
+      expect(
+        await page.evaluate(() =>
+          getComputedStyle(document.documentElement)
+            .getPropertyValue("--motion-micro")
+            .trim(),
+        ),
+      ).toBe("0ms");
+      await still.close();
+      await context.close();
+    }
+  });
 });

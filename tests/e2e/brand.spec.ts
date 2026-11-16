@@ -3,7 +3,9 @@
  * glass and its fallbacks (9), the pointer light (10) and the fields (11).
  * Both projects run every test, so each holds in the light and dark theme.
  */
-import { expect, test, type Locator, type Page } from "@playwright/test";
+import type { Locator, Page } from "@playwright/test";
+import { expect, test } from "../test.ts";
+import { onlyIn } from "./engines.ts";
 import { hexToRgb, open, componentPath } from "./pages.ts";
 
 const THEME = componentPath("kuiper-theme");
@@ -71,6 +73,12 @@ test.describe("criterion 9: the glass and its opaque fallbacks", () => {
   test("under reduced transparency (emulated through CDP) the backdrop is none and the ground is the fallback", async ({
     page,
   }) => {
+    // 022 decision 3: Playwright's emulateMedia has no reduced-transparency
+    // option, so this stays on CDP, which only Chromium has.
+    onlyIn(
+      "chromium",
+      "CDP: Emulation.setEmulatedMedia for prefers-reduced-transparency",
+    );
     await open(page, GLASS);
     const cdp = await page.context().newCDPSession(page);
     await cdp.send("Emulation.setEmulatedMedia", {

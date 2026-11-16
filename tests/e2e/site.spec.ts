@@ -5,7 +5,9 @@
  * (criterion 26).
  */
 import AxeBuilder from "@axe-core/playwright";
-import { expect, test } from "@playwright/test";
+import { expect, test } from "../test.ts";
+import { projectLabel, scheme } from "./scheme.ts";
+import { adaptsIn } from "./engines.ts";
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { withListedItems } from "../../src/lib/site/items.ts";
 import path from "node:path";
@@ -243,7 +245,7 @@ test.describe("015 criterion 23: the 404 page at any depth", () => {
       expect(response?.status()).toBe(404);
       await expect(page.locator("body")).toHaveCSS(
         "background-color",
-        GROUND[info.project.name as ThemeName],
+        GROUND[scheme(info)],
       );
       // The whole frame, at any depth: the bar with its lockup, the footer,
       // and the theme script's choice (the canvas above, in either theme).
@@ -739,7 +741,7 @@ test.describe("018 criteria 12 to 14: the measure, one h3, smoothing", () => {
         return per.length ? per[Math.floor(per.length / 2)] : null;
       });
       out.push(`${p} ${cpl?.toFixed(1)}`);
-      console.log(`CPL ${info.project.name} ${p}: ${cpl?.toFixed(1)}`);
+      console.log(`CPL ${projectLabel(info)} ${p}: ${cpl?.toFixed(1)}`);
       expect(cpl, p).not.toBeNull();
       expect(cpl!, p).toBeGreaterThanOrEqual(58);
       expect(cpl!, p).toBeLessThanOrEqual(70);
@@ -766,7 +768,10 @@ test.describe("018 criteria 12 to 14: the measure, one h3, smoothing", () => {
               )
               .map((h) => {
                 const s = getComputedStyle(h);
-                return s.fontFamily.startsWith('"IBM Plex Sans') &&
+                // 022: quotes dropped; WebKit and Firefox write the family as it is written.
+                return s.fontFamily
+                  .replace(/["']/g, "")
+                  .startsWith("IBM Plex Sans") &&
                   s.fontWeight === "600" &&
                   s.fontSize === "20px"
                   ? ""
@@ -784,15 +789,29 @@ test.describe("018 criteria 12 to 14: the measure, one h3, smoothing", () => {
     page,
   }) => {
     test.setTimeout(600_000);
+    // 022's merge (found when 023a's review put toast in the page lists):
+    // Firefox stores -webkit-font-smoothing as an alias of its own
+    // -moz-osx-font-smoothing, so Tailwind's `antialiased` (both, the moz
+    // one last) reads `grayscale` there: Firefox's form of the same thing.
+    // Where Firefox does not support the property (Linux), nothing to check.
+    const firefox = adaptsIn(
+      "firefox",
+      "font smoothing: Firefox reads -webkit-font-smoothing as its -moz-osx-font-smoothing alias",
+    );
+    const want = firefox ? "grayscale" : "antialiased";
     const wrong: string[] = [];
     for (const p of PAGES) {
       await open(page, p);
-      const v = await page.evaluate(() =>
-        getComputedStyle(document.body).getPropertyValue(
-          "-webkit-font-smoothing",
-        ),
+      const v = await page.evaluate(
+        (firefox) =>
+          firefox && !CSS.supports("-moz-osx-font-smoothing", "grayscale")
+            ? null
+            : getComputedStyle(document.body).getPropertyValue(
+                firefox ? "-moz-osx-font-smoothing" : "-webkit-font-smoothing",
+              ),
+        firefox,
       );
-      if (v !== "antialiased") wrong.push(`${p}: ${v}`);
+      if (v !== null && v !== want) wrong.push(`${p}: ${v}`);
     }
     expect(wrong).toEqual([]);
   });
@@ -808,7 +827,7 @@ test.describe("018 criterion 18: the Components index", () => {
   test("79 tiles, each image sized, lazy and alt-less; no other-scheme images fetched; the filter narrows and counts", async ({
     page,
   }, info) => {
-    const other = info.project.name === "dark" ? "light" : "dark";
+    const other = scheme(info) === "dark" ? "light" : "dark";
     const fetched: string[] = [];
     page.on("request", (r) => {
       if (/\.webp/.test(r.url())) fetched.push(r.url());

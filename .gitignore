@@ -23,3 +23,7 @@ context/prior_art/*
 # Test output
 test-results/
 playwright-report/
+blob-report/
+matrix-report/
+recordings/
+site.tar

@@ -622,3 +622,14 @@ The change review ([`../reviews/024-budgets-per-template-pr-2026-11-16.md`](../r
 The four live-console pages, now in `component`, measure 328.4 to 332.4 kB. Every probe's throttled transfer equalled its unthrottled figure, `kuiper-theme`'s included (760.8 kB both ways on this run).
 
 **The checks on the merged tree:** `bun run check` 0 errors, 0 warnings; `bun run lint` clean; `bun test tests/unit/budgets.test.ts` 56 pass, 0 fail; `bun scripts/site/release-check.ts` exits **1**, naming the eight templates with no runner LCP figure and "024 build step 7", as ruled; `bun scripts/site/release-check.ts --before-ci` exits **0** and names the skip.
+
+### The merge of `release/0.13.0` after `022` (2026-11-16)
+
+`release/0.13.0` at `9884f65` (`022`, the test matrix, and the thumbnail hashes after it) merged in with a merge commit, "024: merge release/0.13.0 (after 022)". Two conflicts, both folds:
+
+- **`scripts/site/release-check.ts`.** `022`'s file is kept whole: its `Check` shape, the ledger and matrix steps, and the room it left for `025`. `ciLcpCheck` is check 4, after the matrix step; its skip line is the third in `022`'s one `SKIPPED_BEFORE_CI` list. The order is the matrix, then `024`'s runner figures, then `025`'s cost step when it lands (the comment says so).
+- **`tests/e2e/perf.spec.ts`.** This branch's file is kept. `test` and `expect` come from `../test.ts`, and `import type { Browser } from "@playwright/test"` stays. `022`'s `expectLcp` is not carried over: `lcpBudget`'s `null` path (decision 8) does its job. `budgets.ts` is not a spec file, so `matrix.test.ts`'s import ban does not read it.
+
+`bun install --frozen-lockfile` installed `022`'s pinned packages. Then: `bun run check` 0 errors, 0 warnings (2,343 files); lint clean; `budgets.test.ts` 56 pass, `matrix.test.ts` 13, `headers.test.ts` 8, `release-check.test.ts` 13, all 0 fail. `release-check.ts` exits **1**: the fault ledger's 27 open faults, no qualifying matrix run (GitHub has no `matrix.yml` run yet), and the eight templates with no runner LCP figure. `--before-ci` exits **0** and names its three skips.
+
+The perf project once, Chromium (`E2E_PORT=5284 bun --bun playwright test --project=perf --no-deps`): **25 passed**, 6.1 minutes with the build, load 6 to 19. Heaviest pages: `/` 301.6 kB (budget 335), `/components/` 350.6 (385), `/start/` 301.5 (335), `sidebar` 405.1 (445; Button 375.2, toast 383.6), `kuiper-theme` 760.9 (840), `chart` 481.0 (530), `/changelog/` 335.5 (370), `/brand/downloads/` 300.4 (330).

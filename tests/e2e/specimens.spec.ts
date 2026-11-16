@@ -3,7 +3,9 @@
  * specimens, read from the token file. Both projects. `017`'s token-page
  * checks (`tokens-pages.test.ts`, `build-output.spec.ts`) stay as they are.
  */
-import { expect, test, type Locator, type Page } from "@playwright/test";
+import type { Locator, Page } from "@playwright/test";
+import { expect, test } from "../test.ts";
+import { adaptsIn } from "./engines.ts";
 import { contrastTable } from "../../scripts/contrast.ts";
 import { readTokens, resolveColor } from "../../scripts/tokens.ts";
 import { open } from "./pages.ts";
@@ -42,7 +44,9 @@ const style = (l: Locator) =>
       leading: s.lineHeight,
       colour: s.color,
       ground: s.backgroundColor,
-      adjust: s.forcedColorAdjust,
+      // 022: WebKit has no forced-colours mode and no such property;
+      // there nothing repaints, so the swatch keeps its colour as `none` asks.
+      adjust: s.forcedColorAdjust ?? "none (no forced colours)",
       border: s.borderTopWidth,
     };
   });
@@ -138,6 +142,10 @@ test.describe("018 criterion 17: Colour", () => {
   test("each role row shows 2 swatches of at least 56 px, in the token file's light and dark values, each with its value", async ({
     page,
   }) => {
+    adaptsIn(
+      "webkit",
+      "forced-color-adjust: WebKit has no forced-colours mode and no such property, so a swatch's none holds there vacuously",
+    );
     await open(page, "/foundations/colour/");
     for (const role of roles) {
       const { row, sw } = await rowSwatches(page, role);
@@ -158,7 +166,7 @@ test.describe("018 criterion 17: Colour", () => {
           );
           await expect(one, `${role} ${theme}`).toHaveText("Aa");
         } else sameColour(s.ground, value, `${role} ${theme}`);
-        expect(s.adjust, `${role} ${theme}`).toBe("none");
+        expect(s.adjust, `${role} ${theme}`).toMatch(/^none/);
         expect(s.border, `${role} ${theme}`).toBe("1px");
         await expect(row, `${role} ${theme}`).toContainText(value);
       }
@@ -199,13 +207,17 @@ test.describe("018 criterion 17: Colour", () => {
       .locator('[data-slot="swatch"]')
       .evaluateAll((els) =>
         els.map((e) => [
-          getComputedStyle(e).forcedColorAdjust,
+          getComputedStyle(e).forcedColorAdjust ?? "none (no forced colours)",
           getComputedStyle(e).borderTopWidth,
         ]),
       );
     expect(chips.length).toBeGreaterThan(100);
+    adaptsIn(
+      "webkit",
+      "forced-color-adjust: WebKit has no forced-colours mode and no such property, so a swatch's none holds there vacuously",
+    );
     for (const [adjust, border] of chips) {
-      expect(adjust).toBe("none");
+      expect(adjust).toMatch(/^none/);
       expect(border).toBe("1px");
     }
   });

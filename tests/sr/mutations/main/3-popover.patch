@@ -1,0 +1,11 @@
+diff --git a/src/lib/registry/ui/popover/popover-content.svelte b/src/lib/registry/ui/popover/popover-content.svelte
+index 8fe01ca..437f004 100644
+--- a/src/lib/registry/ui/popover/popover-content.svelte
++++ b/src/lib/registry/ui/popover/popover-content.svelte
+@@ -81,5 +81,6 @@
+       className,
+     )}
+     {...restProps}
++    onCloseAutoFocus={(e) => e.preventDefault()}
+   />
+ </PopoverPortal>

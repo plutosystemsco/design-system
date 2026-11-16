@@ -3,15 +3,21 @@
  * the marker (L3) and the composer (L4). Runs in both projects, light and
  * dark.
  */
-import {
-  expect,
-  test,
-  type APIRequestContext,
-  type Browser,
-  type Locator,
-  type Page,
+import type {
+  APIRequestContext,
+  Browser,
+  Locator,
+  Page,
 } from "@playwright/test";
-import { cssVar, hexToRgb, open, componentPath } from "./pages.ts";
+import { expect, test } from "../test.ts";
+import { adaptsIn } from "./engines.ts";
+import {
+  cssVar,
+  hexToRgb,
+  open,
+  componentPath,
+  scrollbarWidth,
+} from "./pages.ts";
 
 async function computed(locator: Locator, property: string): Promise<string> {
   return locator.evaluate(
@@ -66,7 +72,11 @@ test.describe("L1. the message log", () => {
     await expect(log).toHaveAttribute("aria-relevant", "additions");
     expect(await log.getAttribute("aria-live")).toBeNull();
     expect(await computed(region, "overflow-y")).toBe("auto");
-    expect(await computed(region, "scrollbar-width")).toBe("thin");
+    adaptsIn(
+      "firefox",
+      "scrollbar-width: Playwright's Firefox computes none for every element, so the value is read from the author's rules",
+    );
+    expect(await scrollbarWidth(region)).toBe("thin");
     expect(await computed(region, "overscroll-behavior-y")).toBe("contain");
     expect(await computed(region, "scroll-padding-bottom")).toBe("96px");
     const state = await scrollState(region);
@@ -295,7 +305,8 @@ test.describe("L4. the composer", () => {
     expect(await computed(t, "field-sizing")).toBe("content");
     await expect(t).toHaveAttribute("rows", "1");
     expect(await computed(t, "resize")).toBe("none");
-    expect((await size(t))[1]).toBe(64);
+    // 022: to 0.01 px; Firefox lays the box out in 1/60 px units.
+    expect((await size(t))[1]).toBeCloseTo(64, 2);
     expect(await computed(t, "max-height")).toBe("256px");
     await expect(t).toHaveAccessibleName("Message");
     const described = await t.getAttribute("aria-describedby");
@@ -328,7 +339,7 @@ test.describe("L4. the composer", () => {
       await page.keyboard.press("Shift+Enter");
       await page.keyboard.type(`line ${i}`);
     }
-    expect((await size(t))[1]).toBe(256);
+    expect((await size(t))[1]).toBeCloseTo(256, 2);
     expect(await computed(t, "overflow-y")).toBe("auto");
     const [scrollHeight, clientHeight] = await t.evaluate((el) => [
       el.scrollHeight,

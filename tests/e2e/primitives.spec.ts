@@ -3,13 +3,17 @@
  * borders, elevation and scrim, motion, the code input and field wiring.
  * Runs in both projects, light and dark.
  */
-import { expect, test, type Locator, type Page } from "@playwright/test";
+import type { Locator, Page } from "@playwright/test";
+import { expect, test } from "../test.ts";
+import { scheme } from "./scheme.ts";
 import {
   compositeAlphaByte,
   contrastRatio,
   parseHex,
 } from "../../scripts/contrast.ts";
 import {
+  clipboard,
+  writeClipboard,
   ITEMS_004,
   ITEMS_005,
   ITEMS_006,
@@ -359,7 +363,7 @@ test.describe("elevation and scrim", () => {
       ),
       `box-shadow ${shadow} holds ${line}`,
     ).toBe(true);
-    if (info.project.name === "dark") {
+    if (scheme(info) === "dark") {
       const background = await cssVar(page, "--background");
       const s = hexChannels(scrim);
       const scrimHex = `${toHex(s)}${Math.round(s.a * 255)
@@ -469,25 +473,24 @@ test.describe("the code input", () => {
     await expect(input).toHaveAttribute("pattern", /.+/);
   });
 
-  for (const text of ["123456", "123-456", "123456\n"]) {
-    test(`pasting ${JSON.stringify(text)} fills 6 cells`, async ({ page }) => {
-      await open(page, componentPath("input-otp"));
-      const input = page.getByTestId("otp-paste").locator("input");
-      await input.focus();
-      await input.evaluate((el, value) => {
-        const data = new DataTransfer();
-        data.setData("text/plain", value);
-        el.dispatchEvent(
-          new ClipboardEvent("paste", {
-            clipboardData: data,
-            bubbles: true,
-            cancelable: true,
-          }),
-        );
-      }, text);
-      await expect.poll(() => filled(page)).toBe(6);
-    });
-  }
+  // 022's review, finding 5: a real paste, by keyboard, in every engine.
+  // Firefox gives a page's own (untrusted) paste event an empty
+  // DataTransfer; a user's paste needs no permission there.
+  test.describe("pasting", () => {
+    test.use({ permissions: clipboard });
+    for (const text of ["123456", "123-456", "123456\n"]) {
+      test(`pasting ${JSON.stringify(text)} fills 6 cells`, async ({
+        page,
+      }) => {
+        await open(page, componentPath("input-otp"));
+        const input = page.getByTestId("otp-paste").locator("input");
+        await writeClipboard(page, text);
+        await input.focus();
+        await page.keyboard.press("ControlOrMeta+V");
+        await expect.poll(() => filled(page)).toBe(6);
+      });
+    }
+  });
 
   test("typing a letter leaves the value and every cell empty", async ({
     page,

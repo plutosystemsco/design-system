@@ -1,5 +1,7 @@
-import { expect, test, type Page } from "@playwright/test";
+import type { Page } from "@playwright/test";
+import { expect, test } from "../test.ts";
 import {
+  activate,
   BAR_STOPS,
   BLOCKS,
   COMPONENTS_STOPS,
@@ -12,6 +14,9 @@ import {
   VIEWS,
   waitForHighlight,
   componentPath,
+  tabOut,
+  clipboard,
+  readClipboard,
 } from "./pages.ts";
 import { BLOCK_VIEWS } from "../../src/lib/preview/blocks.ts";
 
@@ -185,14 +190,7 @@ async function walk(page: Page, expected: string[]): Promise<void> {
     await expectRingUnclipped(page, by);
   }
   // No further stop: the page has no other focusable element.
-  await page.keyboard.press("Tab");
-  expect(
-    await page.evaluate(() =>
-      document.activeElement === document.body
-        ? null
-        : document.activeElement?.outerHTML.slice(0, 120),
-    ),
-  ).toBeNull();
+  expect((await tabOut(page)).other).toBeNull();
 }
 
 test.describe("at 1280 × 900", () => {
@@ -877,10 +875,12 @@ test.describe("behaviours", () => {
     await expect(count).toHaveText("0");
     await busy.focus();
     await page.keyboard.press("Enter");
+    // Focus stays after Enter. (A click does not focus a button in macOS
+    // WebKit, so focus is checked before the clicks: 022's review, finding 4.)
+    await expect(busy).toBeFocused();
     await busy.click();
     await busy.click();
     await expect(count).toHaveText("0");
-    await expect(busy).toBeFocused();
     await expect(busy).toHaveAttribute("aria-busy", "true");
     await expect(busy.locator('[data-slot="spinner"]')).toHaveCount(1);
     // The positive control: once not busy, the same button submits.
@@ -1040,7 +1040,7 @@ test.describe("behaviours", () => {
 
   // 004 decision 8. The clipboard is granted, as the code spec grants it.
   test.describe("with the clipboard granted", () => {
-    test.use({ permissions: ["clipboard-read", "clipboard-write"] });
+    test.use({ permissions: clipboard });
 
     test("Enter on the copy button sets the status text to Copied and the button's name", async ({
       page,
@@ -1447,10 +1447,10 @@ test.describe("block views at 1280", () => {
         expect(await signature(page), `stop ${i + 1}`).toBe(expected[i]);
         await expectRingOutline(page, colour, await drawnByContainer(page));
       }
-      await page.keyboard.press("Tab");
-      expect(await signature(page), "the next Tab leaves the document").toBe(
-        null,
-      );
+      expect(
+        (await tabOut(page)).other,
+        "the next Tab leaves the document",
+      ).toBeNull();
     });
   }
 });
@@ -1499,7 +1499,7 @@ test("the 8 viewer toolbars hold 69 stops", () => {
 });
 
 test.describe("017: the token page by keyboard", () => {
-  test.use({ permissions: ["clipboard-read", "clipboard-write"] });
+  test.use({ permissions: clipboard });
 
   test("criterion 4: Tab reaches the first 3 copy buttons in order, and Enter on the first says Copied", async ({
     page,
@@ -1524,9 +1524,7 @@ test.describe("017: the token page by keyboard", () => {
     await buttons.first().focus();
     await page.keyboard.press("Enter");
     await expect(buttons.first()).toHaveAttribute("aria-label", "Copied");
-    expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(
-      "--background",
-    );
+    expect(await readClipboard(page)).toBe("--background");
   });
 });
 

@@ -1,0 +1,13 @@
+diff --git a/src/lib/registry/ui/toast/toaster.svelte b/src/lib/registry/ui/toast/toaster.svelte
+index 040f769..f2a3880 100644
+--- a/src/lib/registry/ui/toast/toaster.svelte
++++ b/src/lib/registry/ui/toast/toaster.svelte
+@@ -511,8 +511,6 @@
+   <Status bind:ref={status} data-slot="toaster-status" text={polite} />
+   <div
+     data-slot="toaster-alert"
+-    role="alert"
+-    aria-live="assertive"
+     aria-atomic="true"
+     class="sr-only"
+   >

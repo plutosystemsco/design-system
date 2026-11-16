@@ -1,0 +1,30 @@
+# 022 decision 15's fallback, "push A": only if GitHub refuses
+#   gh workflow run matrix.yml --ref release/0.13.0 -f mutate=true
+# while `main` has no matrix.yml. The owner copies this file to
+# `.github/workflows/matrix.yml` on `main` and pushes it. It has no push
+# trigger and runs nothing by itself. When the release branch merges into
+# `main`, the full matrix.yml replaces it.
+name: matrix
+run-name: ${{ inputs.mutate && format('matrix (mutation {0})', inputs.set) || 'matrix' }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      mutate:
+        description: "Apply a set from tests/sr/mutations/ and expect exactly its faults"
+        type: boolean
+        default: false
+      set:
+        description: "Which mutation set"
+        type: choice
+        options: [main, double-read]
+        default: main
+
+permissions:
+  contents: read
+
+jobs:
+  bootstrap:
+    runs-on: ubuntu-24.04
+    steps:
+      - run: echo "The full matrix lives on the release branch. Dispatch on that ref."

@@ -1,6 +1,6 @@
 # 022 — The test matrix
 
-- **Status:** Ready to build after `020`: review approved with changes, all applied (2026-11-15). The review, [`../reviews/022-the-test-matrix-spec-2026-11-15.md`](../reviews/022-the-test-matrix-spec-2026-11-15.md), raised 16 findings (2 High, 7 Medium, 7 Low) and, on re-review, R1 to R6 (1 Medium, 5 Low). Each is answered under "Review". The owner answered Q1 to Q9 on 2026-11-15, each with the recommended option (see Landing notes). Ready to build after `020`.
+- **Status:** Built locally (build steps 1 to 6, 2026-11-15; see Landing notes), awaiting the checkpoint and push B. Was: ready to build after `020`: review approved with changes, all applied (2026-11-15). The review, [`../reviews/022-the-test-matrix-spec-2026-11-15.md`](../reviews/022-the-test-matrix-spec-2026-11-15.md), raised 16 findings (2 High, 7 Medium, 7 Low) and, on re-review, R1 to R6 (1 Medium, 5 Low). Each is answered under "Review". The owner answered Q1 to Q9 on 2026-11-15, each with the recommended option (see Landing notes). Ready to build after `020`.
 - **Date:** 2026-11-15
 - **Author:** the design lead
 - **Kind:** test harness (lane E). No registry item changes. No token changes. **Interface changes:** none for an installed app. Two dev-only packages are added and pinned (decision 17). The repository gains its first CI workflow.
@@ -954,4 +954,223 @@ The re-review closed the 16 findings above, approved with changes, and raised R1
 - **Q8:** option 1. Push B, a likely push C for first-run fixes, then one push after each later landing. Push A happens only if Q7's route is refused. The owner makes every push; agents never push.
 - **Q9:** option 1. Rehearse in containers on this machine before push B: Playwright's Linux image at 1.64.1, and Orca in guidepup's image. These count as rehearsal only, and no macOS setting changes.
 
-Not yet landed.
+### The build (the builder, 2026-11-15)
+
+Built on `worktree-agent-a3cec37006404b9a4`, from `44cec73` ("Merge 020: the Kuiper rename"), build steps 1 to 6. Steps 7 to 11 (the checkpoint, the owner's pushes and dispatch, the change review, the landing and the scorecard) wait on the design lead and the owner. Nothing was pushed, and nothing touched GitHub's state; the release check made one read-only `gh run list` call.
+
+**Step 1, the tools.**
+
+- Bun 1.3.14 has `Bun.YAML` (EXECUTED, `bun x bun@1.3.14`, which caches a binary and installs nothing globally). Under 1.3.14 the browser suite lists 9,223 tests and the screen-reader suite 198 (66 tests × 3 projects), as under the local 1.4.4.
+- `@guidepup/playwright` 0.21.0 and `@guidepup/setup` 0.29.2 install exact beside Playwright 1.64.1 (`bun add -d --exact`; 42 packages; `bun.lock`).
+- The ledger fixture's mechanism is proven by criterion 19 below.
+
+**The tests, each seen failing first.**
+
+| Test | How it failed before its code |
+|---|---|
+| 1, 2 `matrix.test.ts` | 10 of 13 failed: three projects named `light`, `dark`, `perf`; no screen-reader config; 42 `.project.name` reads in 15 files; 31 direct imports. (The "SR_READER unset throws" case passed vacuously, since the file was missing.) |
+| 3 `workflow.test.ts` | no `scripts/ci/workflow.ts`: the file failed to load |
+| 4 `sr-rules.test.ts` | no `tests/sr/rules.ts`. Once written, 1 of 26 failed: C1 accepted a caption spoken before the figure's name, because a match across two phrases was counted from the first. C1 now compares positions in speech. |
+| 5 `sr-items.test.ts`, 5a `sr-static.test.ts` | no `tests/sr/declared.ts` or `items.ts` |
+| 6 `mutations.test.ts` | no patch table or derivation |
+| 7 `fault-ledger.test.ts`, 7a `engine-only.test.ts` | no `tests/fault-ledger.ts`, `tests/e2e/engine-only.ts`. Once written, 7a's call finder missed `brand.spec.ts`'s `onlyIn`, read as a member call because a comment ending in "." came before it; fixed. |
+| 8 `gate.test.ts`, 9 `release-check.test.ts` | no `gate.ts`, no `qualify.ts` |
+| 10 `deps.test.ts` `PACKAGES_022` | 5 failed against the lockfile before `bun add` (the packages were added, set aside, and the old `package.json` and `bun.lock` restored to see it fail) |
+
+**The counts.**
+
+- The suite at build start was 3,095 browser tests: `light` 1,558, `dark` 1,532, `perf` 5 (020 added three spec files, `field-keys`, `redirects` and `upgrade`, to the memo's 28). With three engines it lists **9,223** (1,558 + 1,532 + 5 + 4 × 1,532), as criterion 4 requires. `build-output.spec.ts` is in `chromium-light` alone.
+- **31** spec files import the shared `test` (`tests/test.ts`). The 42 reads became 38 `scheme(info)` calls, 3 `projectLabel(info)` labels, and two `onlyProjects` skips (`forced-colors.spec.ts`, and `spacing.spec.ts`, below).
+- **`ENGINE_ONLY`: `onlyIn` 2, `notIn` 7, `onlyProjects` 3, 12 entries** (criterion 5):
+  - `brand.spec.ts`, "under reduced transparency (emulated through CDP)…": `onlyIn("chromium", "CDP: Emulation.setEmulatedMedia for prefers-reduced-transparency")`. Playwright 1.64.1's `emulateMedia` has `colorScheme`, `reducedMotion`, `forcedColors` and `contrast`, and no reduced transparency, so no engine-neutral rewrite exists.
+  - `bar-glass.spec.ts`, "the bar's glass blurs what lies under it": `onlyIn("chromium", "screenshots: …")` (step 3).
+  - The six tests that read the clipboard (`code` C4, `keyboard`'s token copy, `nav`'s two Copy page tests, `search`'s two copy tests): `notIn("firefox", "clipboard: Playwright's Firefox has no clipboard-read permission, so a page cannot read what it wrote")`. The five grants of decision 3 now ask each engine for the permissions it knows (`clipboard` in `pages.ts`), so the copy tests that only check the status, and `nav`'s two other tests under that grant, run in Firefox too.
+  - `primitives.spec.ts`, the three synthetic paste tests: `notIn("firefox", …)` (step 3).
+  - `forced-colors.spec.ts`: `onlyProjects(["chromium-light", "firefox-light", "webkit-light"], "light schemes only")`, decision 2's entry, word for word.
+  - `spacing.spec.ts` and `tokens.spec.ts` (builder's ruling, below): their scheme skips (`test.skip` on the scheme) became `onlyProjects` over the three light projects, with their old reasons, "letter spacing is the same in both schemes" and "light theme only".
+  - `notIn` is in `engines.ts` from the start, as `028` asked.
+- **`tests/sr/`: 28 files, 66 tests**, each declaring `item`, `rules` and `hears` statically through `declared()`. The listing shows them, with the config's tag (`reader-nvda`, `reader-voiceover`; Playwright drops the `@` in the JSON) on every test.
+- **The mutation sets:** `main`, seven patches, 60 expected failures (15 tests × 4 pairs); `double-read`, patch 7b, 20 (5 tests × 4 pairs). Both apply with `git apply --check`, alone and together; `expected.json` is written by `tests/sr/mutations/write-expected.ts` and checked by test 6.
+
+**Criterion 18, flakes.** A scratch test that failed when `retry` was 0 and passed on its retry, run with `CI=1`: "1 flaky", and Playwright exited 1 under `failOnFlakyTests`. Deleted.
+
+**Criterion 19, the ledger, three ways.** A scratch spec with three ledger lines in `chromium-light` (2026-11-15, Playwright 1.64.1):
+
+1. a test failing with the error its line names: status `expected` (expected `failed`, got `failed`); the run stays green for it;
+2. the same line on a test that passes: status `unexpected`; red;
+3. a test failing for another reason: expected status set back to `passed`, a `ledger-mismatch` annotation ("an error does not contain "scratch fault C": …"), status `unexpected`; red. Under `CI=1` its retry failed the same way: "1 failed", not flaky.
+
+The scratch spec and lines were removed. `testInfo.titlePath` is the file, then the describes, then the title, so a line's `title` is the describes and the title joined by " › ".
+
+**Builder's rulings** (for the design lead to confirm at the checkpoint):
+
+1. **`E2E_PORT`.** `tests/server.ts` reads `E2E_PORT`, default 4173. Another worktree held 4173 during this build; every local run here used 4373, 4473 or 448x. CI never sets it.
+2. **`SR_DRY=1`, a dry screen-reader run, local only.** A silent reader in place of guidepup; every page, locator and action runs headless; speech is not judged, but focus and DOM facts are (`sr.focused()`, `sr.fact()`). `reader.ts` throws on it in CI, and its tag is `@reader-dry`. Every one of the 66 tests was dry-run in Chromium, WebKit and Firefox.
+3. **The engine-only title convention.** An `ENGINE_ONLY` entry's `title` is the title path below the file of the test the call skips, or of the describe a describe-level call covers; `""` covers the whole file. One entry per call, as decision 3 says. The unit test matches calls to entries by file and helper, and by arguments wherever they are literals; `engines.ts` also throws at run time on a call with no entry, so a call with computed arguments (as `028`'s will be) is still counted.
+4. **`spacing.spec.ts` and `tokens.spec.ts`** skipped by scheme with a bare `test.skip`. Decision 3 makes the three helpers the only ways to skip by project, and `030` grades an undeclared skip as a fault, so both moved onto `onlyProjects`. They run in the same tests as before.
+5. **The release check's matrix test is in `scripts/ci/qualify.ts`** from the start, which `030` asked for; `release-check.ts` imports it.
+6. **Thumbnail hashes.** 018 decision 13 hashes `package.json` into every thumbnail, so the two new devDependencies staled all 58 pairs. `bun scripts/site/thumbnails.ts --hash-only` rewrote `src/lib/site/thumbnails/manifest.json`; no picture changed. This is the one file under `src/lib/site/` the build touches, against criterion 23's letter; the review should confirm it.
+7. **`headers.test.ts`.** Its test "release-check.ts exits 0" now checks the address step alone: from `022` the check exits 1 without a green matrix run, by design (decision 19).
+8. **`tests/fixtures/pluto-allowed.json`.** Three sample-content uses of the brand's name in screen-reader tests ("Pluto Systems" twice each in `marketing-bar.sr.ts` and `product-home.sr.ts`, "pluto-sandbox" once in `alert-dialog.sr.ts`) are added to `020`'s pinned counts.
+9. **No `item`/`check` annotations on browser tests.** No browser test was written or moved by this build, only re-imported, so none gained them. `030`'s `about()` adds them with their tags.
+10. **The job summary's "slowest shard"** is not in the merged `report.json`, which records no shard. `scripts/ci/report.ts` gives each configuration's summed test time instead; criterion 22's shard times come from the run's job timings.
+11. **`report` and `perf` blob names.** Each test job sets `PLAYWRIGHT_BLOB_OUTPUT_NAME` (`report-<engine>-<shard>.zip`, `report-perf.zip`, `report-<reader>-<browser>.zip`), so the 29 blobs never collide when `report` gathers them into one folder. A local merge of a browser blob and a dry screen-reader blob through `playwright.merge.config.ts` and `report.ts` gave the summary, `sr-logs/dry-chromium/*.json` with phrases and faults, and, with `MUTATE=true`, the comparison with `expected.json`.
+12. **The two waits rules for screen-reader tests:** a trigger is focused before the window, so the window's action is the key press alone and a trigger's name never satisfies O1 or F1; and no wait depends on the promise a rule checks (a dialog is waited for by role, never by name), so a mutation fails a rule, not a set-up step.
+
+**Decision 13's two edits** were made in the build, since the script they name is deleted here: `handoff.md`'s `019` line now says the listen passed and the scripted runs replace the script; `registry.test.ts` requires only `/JAWS (is|are) not tested/`. The Error summary page is unchanged.
+
+**Criterion 23.** No file under `src/lib/registry/`, `tokens/` or `static/` changed. Under `src/lib/site/`, only the thumbnail manifest (ruling 6).
+
+### Step 3, Firefox and WebKit locally: the triage
+
+A first triage run of `firefox-light` and `webkit-light` (macOS, Playwright's builds, 2026-11-15; a 20 s timeout, to fail fast) gave 2,818 passed and 242 failed: 165 in Firefox, 77 in WebKit, in 82 clusters. Each was triaged by decision 16.
+
+**Harness faults, fixed here** (the test relied on Chromium):
+
+| Cluster | Engines | What only Chromium does | The fix |
+|---|---|---|---|
+| font families (`expressive.spec.ts`, 76) | Firefox, WebKit | quotes a family name with a space | compare family lists, quotes dropped |
+| sizes (`expressive`, `chat`, `viewer`, 11) | Firefox | lays out in whole pixels (86.4px is 86.375px, 768 is 767.99994) | compare to 0.05 px or 0.01 px |
+| the walk's end (`keyboard`, `compositions`, about 40) | Firefox | moves focus to the body after the last stop; headless Firefox keeps it on the last stop | `tabOut()` in `pages.ts`: no other element took focus |
+| `scrollbar-width` (`chat`, `code`, `navigation`, `tokens`, 7) | Firefox | Playwright's Firefox computes `none` for every element, even an inline `thin` | `scrollbarWidth()` reads the author's matching rules where a probe shows the engine hides it |
+| `box-decoration-break` (`code`, 1) | WebKit | knows the unprefixed property | read the prefixed one too; the theme writes both |
+| clipboard grants (`code`, `keyboard`, `nav`, `search`, 9) | Firefox, WebKit | knows both permission names | `clipboard` in `pages.ts`: both in Chromium, `clipboard-read` in WebKit, none in Firefox (it writes without a grant). The six tests that read the clipboard take `notIn("firefox", …)` |
+| synthetic paste (`primitives`, 3) | Firefox | lets a page read an untrusted paste event's data | `notIn("firefox", …)`: Firefox keeps that DataTransfer empty, and has no permission for a real paste |
+| the bar's blur (`bar-glass`, 10) | Firefox, WebKit | composites `backdrop-filter` into a screenshot | `onlyIn("chromium", …)`. A probe (stripes under a plain `blur(16px)`) kept every edge in both other engines' captures; the filter itself computes `blur(16px)` in all three |
+
+**Site and item faults: ledgered, each with a small change** (`tests/fault-ledger.ts`; the stubs are in `context/specifications/`):
+
+| Change | Lane | Fault | Where | `expect` |
+|---|---|---|---|---|
+| [`022a`](./022a-escape-closes-only-the-sub-menu.md) | I | Escape in `dropdown-menu`'s sub-menu closes the whole menu | `dropdown-menu.sr.ts`, O3s, all four pairs (seen in every engine's dry run) | `{ fault: "O3s" }` |
+| [`022b`](./022b-the-pressed-theme-segment-under-firefoxs-forced-colours.md) | S | the frame's theme switch, pressed, reads 2.94:1 in Firefox's forced palette | `forced-colors.spec.ts`, `firefox-light` | `{ error: "/components/button/: color-contrast" }` |
+| [`022c`](./022c-the-viewer-keeps-the-frames-theme-in-firefox.md) | S | the viewer's theme copy loses to the frame's own code in Firefox | `viewer.spec.ts` test 4, 8 blocks, Firefox | `{ error: "Object.is equality" }` |
+| [`022d`](./022d-the-section-nav-is-not-a-tab-stop-in-firefox.md) | S | the overflowing section nav is a Tab stop in Firefox | `keyboard.spec.ts`, the Components landing walk, Firefox | `{ error: "nav:Components pages" }` |
+| [`022e`](./022e-the-sidebars-content-is-not-a-tab-stop-in-firefox.md) | I | the overflowing sidebar content is a Tab stop in Firefox | `keyboard.spec.ts`, the sidebar-icon walk, Firefox | `{ error: "div:workspace" }` |
+| [`022f`](./022f-the-code-editors-budgets-in-firefox.md) | I | the code editor misses `013`'s E7 budgets in Firefox (Chromium and WebKit meet them under the same load). **Needs the design lead's ruling**: fix the cost, or budgets per engine | `code.spec.ts` E7, Firefox | `{ error: "toBeLessThanOrEqual" }` |
+
+**The ledger: 27 lines.** `022a` 4 (one per reader and browser pair), `022b` 1 (`firefox-light`; the test runs in light projects only), `022c` 16 (8 blocks × `firefox-light`, `firefox-dark`), `022d`, `022e` and `022f` 2 each (both Firefox projects). Every browser line was seen failing in its project, and run once more with the ledger in place: each came out `expected` (failed as its line says), the run green for it. `022a`'s lines rest on the dry runs, where its focus fact fails in all three engines; the readers confirm them in push B's run.
+
+**What was not a fault** (each re-run alone, or with two workers, passed):
+
+- **Load.** The machine was shared with other work throughout (load average 50 to 94 on 10 cores). Tests that timed out under it (the axe scans of the theme page and `/view/code-agreement/`, `blocks` 24 to 26, the reflow sweeps, `specimens`' role rows, the bar's contrast sampling, Firefox's "Enter on the first item row") passed when re-run alone. The sheet's fade (`navigation` N2) holds the closed node for 215 to 237 ms in all three engines (a probe); its failures were the poll missing that window under load.
+- **macOS WebKit** (about 60 tests): Tab skips links, and a click does not focus a button, by the platform's default. They pass on Linux WebKit (step 5) and are not ledgered.
+- **More harness faults, fixed** (found in the confirmation runs): `site.spec.ts` criterion 13 and `expressive.spec.ts` criterion 13 compared a quoted family; `specimens.spec.ts` read `forced-color-adjust`, which WebKit does not have (there nothing repaints, so `none`'s promise holds vacuously; `028` marks WebKit's forced-colours gap); `blocks.spec.ts` A2 read a 1 × 4 px screenshot as 1× when WebKit's desktop device draws at 2×; `viewer.spec.ts` test 4's init script read the frame's scheme before WebKit had applied the emulated one, so its inversion was always light.
+### Step 4, the screen-reader suite
+
+- **28 files, 66 tests**, written by the builder and checked in three dry runs (`SR_DRY=1`) per browser: every page, locator and action works in Chromium, WebKit and Firefox, and every focus and DOM fact holds, but one: `dropdown-menu`'s O3s, a real fault (`022a`).
+- **The mutated site, dry** (local, not CI; 2026-11-15): the `main` set applied to a copy of the tree with `patch -p1`, built, and the suite dry-run in Chromium against it. It builds. Three tests failed, and only three: `popover.sr.ts`'s O3 (patch 3's witness: focus no longer returns), `sign-up.sr.ts`'s code step (patch 5's witness: the heading no longer takes focus), and `dropdown-menu`'s O3s (`022a`, unchanged by any patch). The other five patches break only what a reader hears, which a dry run cannot judge; the mutation run (criterion 15) is their proof.
+- **`expected.json`:** `main` 60 entries, `double-read` 20, both derived; every witness has an entry under all four pairs that no other patch reaches with the same fault.
+
+### Step 5, the rehearsals (022 Q9): rehearsal, never evidence
+
+**Orca, in guidepup's image** (`ghcr.io/guidepup/guidepup:0.40.0-ubuntu-resolute-node24`, digest `sha256:a2a6e220b63a98af067717b831946b423de736170b97cc22f7eb41a3a4a7579a`, arm64; Ubuntu 26.04.1, Orca 50.3; `bun run sr:setup` "Environment setup complete"; Firefox, `SR_READER=orca`). Three findings, all fixed in the harness:
+
+1. **`@guidepup/playwright` 0.21.0 and guidepup 0.40.0 disagree on Orca's commands.** `navigateOrcaToWebContent` calls `orcaKeyCodeCommands.PresentTitle`; 0.40.0 groups Orca's commands by service (`WhereAmIPresenter.PresentTitle`), so the call threw "undefined is not an object (evaluating 'command.service')". VoiceOver's and NVDA's commands are flat in both versions (checked: `openItemChooser`, `reportTitle`, `exitFocusMode`, `readNextFocusableItem`, `toggleBetweenBrowseAndFocusMode`). `fixtures.ts` flattens Orca's commands when the reader is Orca, and only then.
+2. **guidepup logs speech only around its own commands.** A window that cleared the log, pressed a key through Playwright and waited read nothing. Each window's action, and the wait after it, now runs inside `screenReader.capture()`: Orca and NVDA hear what is spoken during it, VoiceOver polls what is spoken after. A reader command inside a window would deadlock guidepup's queue, so `page-states.sr.ts` no longer calls `navigateToWebContent()` in one.
+3. **O2 could pass on a reader that never entered the overlay.** Under Orca the reader stayed on the trigger, which bears the dialog's name, and ran out of page ("No next."). O2's precondition now also needs one text found only inside the open overlay (`Sr.steps()` reads them from the DOM), where one exists, and a second sentinel goes at the end of `<body>`, after the portal, so a reader leaving a non-modal overlay forward meets it. `app-shell`'s menu sheet repeats the page's own links, so its O2 keeps the name-only precondition; its phrases.json records the empty list.
+
+With the first two fixed, all 66 tests ran under Orca in Firefox (30.2 min): 24 passed, 42 failed, **every failure on a rule fault, none on a timeout or exception.** The third finding came from that run's logs. After its fix, `dialog`'s O2, which had passed there on the trigger alone, and `alert-dialog`'s give X0 ("no step reached inside the overlay"), and `sheet`'s X0 for its name: under Orca in this container no overlay rule can pass, as it should not. Orca spoke live regions (the status, alert, spinner, composer, stage card, live console, code block's copy, the log and marker) and state changes ("expanded", "collapsed"), but not focus moved by Playwright, so the focus and overlay rules failed with empty windows. Whether that is the container's or Orca's is not known; Orca is not evidence (Q6).
+
+**Linux, in Playwright's image** (`mcr.microsoft.com/playwright:v1.64.1-noble`, digest `sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f`, arm64; Bun 1.3.14; the site built on this machine, `E2E_PREBUILT=1`). Two findings, both fixed before push B, and both risks for CI itself:
+
+1. **A dependency's install script.** `bun install --frozen-lockfile` under Bun 1.3.14 ran `tree-sitter-json`'s `node-gyp-build`, which found no prebuild for the platform and failed ("install script from "tree-sitter-json" exited with 1"). No script is needed (the grammars load as WebAssembly; Bun 1.4.4 blocks the 19 scripts here). Every install in `matrix.yml` is now `bun install --frozen-lockfile --ignore-scripts`, and `workflow.test.ts` holds it.
+2. **The server's address.** `vite preview` bound `localhost` to `::1`, the readiness check asked `127.0.0.1`, and `webServer` timed out after 180 s. `tests/server.ts` now serves and tests on `127.0.0.1` everywhere.
+
+The suites then ran, but the machine was loaded by other work (load average about 50 on 10 cores), and most of the container's tests timed out. The rehearsal was cut to WebKit's light project and three files (`frames`, `keyboard`, `blocks`): 183 ran, 19 failed, 15 of them on timeouts. What it settled:
+
+- **The macOS-only WebKit failures pass on Linux.** On macOS, WebKit keeps its platform's defaults: Tab skips links unless "Press Tab to highlight each item" is set, and a click does not focus a button. So the local triage's WebKit failures on Tab order and on focus after a click (about 50: the bar's stops, every walk that starts at a skip link, the frames' theme buttons, the dialogs' focus returns) are not Kuiper's, and CI's Linux WebKit is the evidence. The home page's walk, the start page's bar, the frame's theme buttons, `/view/app-shell/`, `/view/hero/`, the four-dot lockup and the sidebar fixture each ran and passed on Linux. These are recorded here and not ledgered: the ledger holds what CI runs, and the owner's machine setting is not changed (Q9).
+- **The header's hairline pixels differ in WebKit on both systems** by one step a channel (`blocks.spec.ts` A2): a harness fault, now compared within 2 steps.
+
+The full Linux run of all four projects is CI's first run.
+
+### The suites' figures (local, macOS, 2026-11-15)
+
+- **Chromium, `bun run test:e2e`** (criterion 3), after every harness edit: 3,095 tests, **2,973 passed, 114 skipped**, 3 timed out under load (the bar's contrast sampling in `chromium-dark`) and so `perf`'s 5 did not start. The three, re-run alone: passed (8 of 8 with their siblings). `perf`, run alone with `--no-deps`: **5 passed**. So 2,981 passed and 114 skipped, none failed. The skips are the scheme skips, now counted: `forced-colors` 7, `spacing` 103, `tokens` 4, all in `chromium-dark`. The first Chromium run, before the engine triage, was 2,981 passed and 114 skipped in one go.
+- **Budgets:** Button **382 kB**, at its 382 kB budget (LCP 1,028 to 1,044 ms against 1,157); `/` 308 kB; `/components/` 356 kB; code-block 355 kB; Colour 304 kB.
+- **Firefox and WebKit, `bun run test:e2e:engines`'s four projects:**
+  - the triage run of both light projects, before the fixes: 3,064 tests, 2,818 passed, 242 failed (Firefox 165, WebKit 77), 4 skipped;
+  - after the fixes, a full run of all four projects was started and stopped at 1,070 tests (all in `firefox-light`), because under the machine's load it would have taken about four hours: 17 failed there, 12 on load timeouts and 5 on ledgered faults (`022b`, `022d`, `022e`, `022f`), and none on a harness fault;
+  - then every failing cluster was re-run in all four projects with two workers (the confirmation runs, 72 + 28 + 48 + 2 tests): the harness fixes hold in every engine, each ledgered line fails as it says in every project it names, and what remains is macOS WebKit's Tab and click defaults;
+  - listing: 9,223 tests (criterion 4).
+- **Unit** (`bun run test:unit`, Bun 1.4.4): 1,393 tests, 1,389 passed; the 2 failures were 5 s timeouts of `thumbnails.test.ts`'s tree-copy tests under load, which pass alone (10 of 10). **Under Bun 1.3.14** (CI's version, build step 1): the same, and one real difference, fixed: Bun 1.3.14's `Bun.Glob` matches no `**` inside braces, so `020`'s "no stray pluto" test failed on every alias line; `rename.test.ts` now splits an outer brace into one glob per alternative, and passes under both.
+- **`bun run check`:** 0 errors, 0 warnings (2,253 files). **`bun run lint`:** clean. **Literal lint:** 0 violations, 1 allowance (L24).
+- **Smoke** (`bun run test:smoke`): 139 tests, 138 passed; 1 failed, `dev-loop.test.ts`'s "a token change rewrites … within 10 s" (the theme file read mid-rewrite under load); alone, its sibling "touching registry.json rewrites index.json within 10 s" timed out instead, at 10.05 s. Both are 10-second windows that this load breaks; `022` touches neither the watcher nor the registry build.
+- **The release check** exits 1, as it must here: the address step passes; the ledger holds 27 open faults (Q3); and GitHub has no `matrix` run for HEAD ("workflow matrix.yml not found on the default branch"). That refusal is decision 19's intended behaviour: it never passes on missing evidence, and the tag waits for push B's green run and an empty ledger.
+
+### What waits on the owner and the design lead
+
+- **Steps 7 to 11:** the checkpoint (the design lead), push B (the owner), the first full `matrix` run and its triage (criteria 12 to 14, 16, 17, 22, including Linux-only faults and every reader's first speech), the mutation dispatch `gh workflow run matrix.yml --ref release/0.13.0 -f mutate=true` (criterion 15), the change review, the landing, and the scorecard (criterion 24: row 3 (h) with the run's id). Nothing here can be run without a push.
+- **`022f`'s ruling:** given at landing (below).
+- **Opening `022a` to `022f`** as small changes, `022a`, `022e` and `022f` in lane I behind `023`.
+
+### Rulings at landing (2026-11-15)
+
+The change review, [`../reviews/022-the-test-matrix-pr-2026-11-15.md`](../reviews/022-the-test-matrix-pr-2026-11-15.md), read "land locally after fixes". The design lead's rulings on it:
+
+- **`022f`: option 1.** Find and fix Firefox's cost; one budget for every engine. The stub now says so, and its first step is a measurement on a quiet machine or from push B's figures, because the evidence here was taken at load average 50 to 90.
+- **The macOS-only WebKit failures stay unledgered**, since Linux CI passes them, with a committed record of each test and its cause (finding 4). Where a test clicks and then asserts focus, and focus is the point, it now presses the control by keyboard. The Alt+Tab harness change was small, so it is done.
+- **`022e` keeps keyboard scrolling** (finding 8). `tabindex="-1"` goes on the sidebar's scroll box only when the box holds a focusable element; otherwise it stays focusable. Precedent: WCAG 2.1.1, axe's `scrollable-region-focusable`, and Chromium's focusable-scroller rule (focusable only when it has no focusable child). The stub is updated, with a test for a text-only sidebar.
+- **The release check takes `--before-ci`** (finding 9). It runs every check except the two that need CI's evidence (the empty ledger and the matrix run), names what it skipped, and exits 0 when the rest pass. **Landing gates use `bun scripts/site/release-check.ts --before-ci` until push B; the tag uses the full check.** `headers.test.ts` no longer makes a network call: it calls the pure `addressCheck()` and runs the script only with `--before-ci`.
+
+### The review's fixes (2026-11-16)
+
+Committed as "022: the review's fixes". By finding:
+
+1. **A mutation run's gate (High).** The `voiceover` and `nvda` test steps now pass `MUTATE` and `MUTATION_SET`. Under `MUTATE=true`, `fixtures.ts` turns the set's `expected.json` into ledger lines (`mutationLines()` in `tests/sr/mutations/derive.ts`, each `expect: { fault }`) for its reader's two browsers. So an expected test is marked to fail and is not retried; a perfect mutation run's reader jobs succeed and `gate` can pass; an expected test that passes, or fails on another rule, still turns its job red. `report.ts` judges each test by its last attempt's own result (`passed` or not), so its exact comparison with `expected.json` is unchanged. The ledger now accepts X0 beside the named fault (L3 has nothing to judge once L1 fails), never alone. Tests: `workflow.test.ts` (the env, and no `continue-on-error`), `gate.test.ts` (the conclusions a perfect mutation run yields, and one with a red reader job), `mutations.test.ts` (one line per expected test and pair; `fixtures.ts` wires them), `fault-ledger.test.ts` (X0 beside a fault, and alone).
+2. **The checkout's history and tags (High).** `checks` checks out with `fetch-depth: 0` and `fetch-tags: true`; `workflow.test.ts` holds it. The proof, run on the branch at the fixes' first commit (2026-11-16, Bun 1.4.4, `--timeout 60000`): in `git clone --depth 1 --no-tags` (1 commit, 0 tags), `bun run test:unit` gave 1,393 pass, 3 fail, the failures "released snapshots › at least one released snapshot exists" and the two timing tests that fail under this machine's load (`highlight-session.test.ts`'s streaming budget, `highlight.test.ts`'s timings); in a full clone (37 commits, 11 tags), 1,402 pass, 2 fail, the same two timing tests only. So the snapshot test was the one test that leans on history and tags, and `fetch-depth: 0` with `fetch-tags: true` answers it.
+3. **The ledger's matcher (Medium).** An `error` line now also requires every entry of a `toEqual` string list it received to hold the named text (`receivedEntries()` reads the diff or the `Received:` line), so a new failure beside the named one turns the test red; `fault-ledger.test.ts` has the superset case. `forced-colors.spec.ts`'s axe test is one test per page; `022b`'s line names `/components/button/` alone, and Colour and the changelog are scanned on their own. `viewer.spec.ts` test 4's first poll has a message, "at load, the frame's theme is the page's", and `022c`'s lines name it. `fault-ledger.test.ts` also refuses two lines for one test and one place (write-in 7).
+4. **macOS WebKit (Medium).** `tests/test.ts` presses Alt+Tab where a test presses Tab, in WebKit on macOS only: WebKit reaches links with Alt held. Seven tests that click and then assert focus now press the control by keyboard (`activate()` in `pages.ts`): the frames' theme switch (9 tests), the sheet and the rename dialog (`navigation` N2, N3), settings' Delete account, the ink surface's popover, the stage card's Run. The busy button checks focus after Enter and before the clicks. The record is `tests/e2e/macos-webkit.ts`: 58 tests, 42 `tab-to-links` and 16 `click-focus`, kept in step with the listing by `tests/unit/macos-webkit.test.ts`. Re-run in `webkit-light` with Alt+Tab, before the keyboard rewrites, the 77 triage failures fell to 21: the 16 `click-focus` tests and 5 load timeouts. With the keyboard rewrites too, the review's samples (below) passed in `webkit-light` (81) and `webkit-dark` (78, 3 skipped), every `click-focus` test among them. After push B, every test in the record must have passed on Linux WebKit; one that did not is a fault, ledgered with a small change.
+5. **The clipboard and paste skips (Medium).** All nine are gone. `readClipboard()` in `pages.ts` reads the clipboard as a user does, in every engine: it pastes (Control+V or Meta+V) into a scratch textarea beside the focused element (inside an open dialog, where there is one), and puts focus back. A keyboard paste needs no permission, so Firefox reads too. The three paste tests write the text (`writeClipboard()`), focus the code input and paste by keyboard, in every engine; they sit in a `pasting` describe with the per-engine grant. `ENGINE_ONLY` loses its seven `notIn` entries.
+6. **`022f`** carries the ruling (above).
+7. **Toast at the merge (Medium):** at the merge with `026`, as the review's merge notes say. Not done here; the coordinator merges `release/0.13.0` after `026` lands.
+8. **`022e`'s trade-off:** ruled (above).
+9. **The release check:** `--before-ci` (above).
+10. **Engine branches outside the helpers (Low).** A fourth kind, `adaptsIn(engine, reason)` in `engines.ts`: the test runs everywhere, and in that engine checks less or another way. It never skips; it is listed in `ENGINE_ONLY` like the others, throws when unlisted, and adds an `adapts` annotation in that engine, so `030` can read the pass as partial there. Nine calls: Firefox's `scrollbar-width` read from the author's rules (six tests), WebKit's missing `forced-color-adjust` (two `specimens` tests), and WebKit's 2-step pixel slack in `blocks` A2, which is now exact in Chromium and Firefox (write-in 1). `ENGINE_ONLY`: onlyIn 2, notIn 0, onlyProjects 3, adaptsIn 9.
+11. **Write-ins.** 1, A2's slack in WebKit only (above). 4, `gate`'s mirror now waits 95 minutes, the most its 100-minute job allows; a slower first push run makes the pull request's gate fail while the push run is fine, and a re-run of the gate reads the finished run. 5, the job summary counts as "Ledgered" only the ledgered tests that failed as their lines say; a ledgered test that went red counts as failed. 6, the browsers' cache key is `bun.lock`'s hash, so a Playwright bump changes it. 7, duplicate ledger lines are refused (above). Not done: 2, the Linux `build` job is push B's to prove; 3, a DOM probe of the speech-only patches; 8, the sizes change again at the merge.
+
+**The checks after the fixes** (2026-11-16, load average 50 to 65 on 10 cores from other work):
+
+- `bun run check`: 0 errors, 0 warnings. `bun run lint`: clean.
+- The 022 unit files (`matrix`, `workflow`, `engine-only`, `fault-ledger`, `mutations`, `sr-rules`, `sr-items`, `sr-static`, `gate`, `release-check`, `deps`, `headers`, `rename`, `macos-webkit`): **235 pass, 0 fail**. `ENGINE_ONLY`: onlyIn 2, notIn 0, onlyProjects 3, adaptsIn 9.
+- **Samples** (the review's touched tests: the clipboard and paste tests, the per-page forced-colours axe tests, viewer test 4, A2, the `adaptsIn` tests, the click-focus and Tab walks), with three workers: `webkit-light` 81 passed; `webkit-dark` 78 passed, 3 skipped (the light-only forced-colours tests); `firefox-light` 68 passed and 8 ledgered tests failed as their lines say. The rest in `firefox-light`:
+  - viewer test 4 in three blocks failed on the toggle's check, not the load's: in Firefox the copy loses at load or after a toggle, by turns. Both checks now carry messages that share "the frame's theme is the page's", and `022c`'s lines name that. Re-run: all 16 Firefox lines failed as they say.
+  - `nav`'s delayed ClipboardItem test missed its 900 ms timing under three workers; alone it passed in Firefox and Chromium.
+  - `specimens`' role rows timed out at 30 s in Firefox under this load, alone too, as in the confirmation runs before the fixes; it passed in the triage run at a lower load. A load timeout, recorded; push B's runner will show it.
+- The per-page forced-colours tests: Button fails in `firefox-light` as `022b`'s line says; Colour and the changelog pass there, and all three pass in Chromium.
+- The release check: `--before-ci` exits 0, naming the two steps it skipped; the full check still exits 1 (the ledger's 27 lines and no matrix run), as the tag's gate should.
+- **At landing:** `roadmap.md` §5's sizes read 2,981 and 8,881; at this build's start they are 3,095 and 9,223.
+
+### The merge with `release/0.13.0` (2026-11-16)
+
+`release/0.13.0` at `ba8694d` (`020a`, `020b`, `027a`, `026` and `021` landed) was merged into this branch with a merge commit, "022: merge release/0.13.0", by the review's merge notes and the coordinator's list.
+
+- **Conflicts:** two. The thumbnail manifest was taken from either side and regenerated (`bun scripts/site/thumbnails.ts --hash-only`, 80 items). The pluto allow-list's two counts were re-derived as the other side's plus `022`'s own (Pluto Systems 324 + 4 = 328; `pluto-sandbox` 14 + 1 = 15), and `rename.test.ts` passes on the merged tree.
+- **The new spec files** (`027a`'s `link`, `button-group`, `progress` and `batch-a` specs, `026`'s `toast.spec.ts`, `021`'s `tokens-files.spec.ts`) import the shared `test`; `020b`'s additions to `upgrade.spec.ts` merged into the converted file. `batch-a.ts`'s `schemeOf` now returns `scheme(info)`. `023a`'s `api-table.spec.ts` has not landed.
+- **WebKit's forced colours:** `progress.spec.ts` test 48 checks the bar's own colours in every engine and its forced half everywhere but WebKit, through `adaptsIn("webkit", "forced colours: Playwright's WebKit does not emulate forcedColors")`; `toast.spec.ts` test 68 is wholly about forced colours, so it takes `notIn("webkit", …)` with the same reason. Both have `ENGINE_ONLY` entries: harness limits, not faults, so no ledger lines. `028` marks WebKit's forced-colours gap on them.
+- **`021`'s T17** launched Firefox and WebKit itself because the engine projects did not exist. Now it uses the project's `browser`, with its contexts asking for the light scheme, and runs in each engine's light project through `onlyProjects(["chromium-light", "firefox-light", "webkit-light"], "the page sets its own scheme, so each engine's light project covers it")`. One test, three engines, no launches of its own.
+- **Toast under screen readers** (the review's finding 7, `026`'s D2): `toast` joins `SR_ITEMS` (`live`, `focus`); `tests/sr/toast.sr.ts` holds S1 to S10 with its parts `assertive`, `polite` and `focus`; `U1` (`unspoken`) and `B1` (`before`) join `rules.ts` with their unit tests; the `toast-alert` patch joins the `main` set as `8-toast.patch` (target `toast:assertive`, L1, witness S2). Recorded in `026`'s Landing notes too. A1 waits for `026`'s D1 (the `app-shell` mount).
+- **The mutation sets, re-derived:** `main` 68 expected failures (8 patches; 026's adds exactly S2 and S10 × 4 pairs), `double-read` 20. Both apply together on the merged tree.
+- **The Components landing's walk** is 201 stops now (193 before), so `022d`'s lines and the macOS WebKit record name the new title.
+- **The release check** leaves room for `025`'s cost step after the matrix step (a comment where it goes); `025` has not landed.
+- **Counts on the merged tree:** the browser suite lists **10,256** tests (`chromium-light` 1,731, `chromium-dark` 1,704, each Firefox and WebKit project 1,704, `perf` 5): Chromium's `test:e2e` is 3,440. The screen-reader suite lists 228 (76 tests × 3 browsers). `ENGINE_ONLY`: onlyIn 2, notIn 1, onlyProjects 4, adaptsIn 10.
+
+**Checks on the merged tree (2026-11-16, load average 42 to 50 on 10 cores):**
+
+- `check` 0 errors over 2,337 files; lint clean; the unit suite 1,558 of 1,560 pass on the first run, the two misses being the Components landing's new title (fixed above), then all pass; the screen-reader unit files (`sr-rules`, `sr-items`, `sr-static`, `mutations`) 64 pass.
+- **Chromium's suite with `perf`:** 3,305 passed, 121 skipped, 9 timed out (eight `bar-glass.spec.ts` cases at 1440 and one axe page, all in `chromium-dark`, all "Test timeout of 30000ms exceeded" in a `waitForTimeout` or a page load). Rerun with two workers, 11 of 12 pass; the twelfth passes alone. `perf` did not run in the full run, since a dependency project failed; run alone (`--no-deps`), its 5 pass, Button still at 382 kB.
+- **The new items and the token pages in Firefox and WebKit** (`link`, `button-group`, `progress`, `batch-a`, `toast`, `tokens-files`, `tokens`, `upgrade`; 195 tests in each of the four projects, 780 in all): 765 passed, 12 skipped (the `ENGINE_ONLY` skips and T17's dark projects), 3 timed out, all `toast.spec.ts` test 57 in `firefox-dark` (hover, window blur, the page hidden hold the clock).
+- **Test 57 in Firefox, triaged:** a rerun of its ten cases in both Firefox projects with four workers failed four (a count assertion, not a timeout); then 2 of 2, 8 of 8 (with Chromium), 18 of 18 (three repeats, three workers) and the whole of `toast.spec.ts` in both Firefox projects with four workers (88 of 88) passed. No failure reproduced at lower load, so it is neither a ledger line (a line must fail every time, or the ledger reports a mismatch) nor a small change yet. **To watch in push B's run:** CI's `failOnFlakyTests` turns a pass on retry into a failure, so a repeat there opens `022g` (the likely cause is the clock and Firefox's event order under load, a harness question first).
+- **Smoke:** 137 of 139 on the first run; the two misses are `dev-loop.test.ts`'s 10 s watch deadlines (10.1 s and 9.3 s); rerun alone, both pass.
+- **The screen-reader suite dry** (`SR_DRY=1`), toast's ten tests in the three browsers: 30 of 30.
+- The release check `--before-ci` exits 0, naming its two skips.
+- **New ledger lines: none.** The ledger still holds its 27 lines; no new engine fault reproduced, so no `022g` stub was opened.
+
+**Found by `023a`'s change review (2026-11-16): `toast` was missing from the browser suites' item list.** `tests/e2e/pages.ts`'s `ITEMS`, a hand list, lacked `toast`, so `COMPONENT_PAGES` had 78 pages while the sitemap had 79, and the specs that walk them (`doors`, `site`, `expressive`; `primitives` through `ITEMS_002`) left the toast page out.
+
+- `toast` joins `ITEMS` (feedback, `026`) and a new `ITEMS_026`/`PAGES_026`, kept out of `ITEMS_002` and `PAGES_002`, which are 002's own.
+- `COMPONENT_PAGES` is now derived from the sitemap (`doorPages("components")`), so a new item cannot be missed again. `ITEMS` stays a hand list because it carries 005's order.
+- `tests/unit/pages-lists.test.ts` holds `ITEMS` and `COMPONENT_PAGES` equal to the sitemap's component pages, and keeps `toast` out of 002's pages. It was seen failing on the old list (two of three tests), then passing.
+- The four files in all six projects: 1,160 passed, 4 failed. Two were load timeouts in `primitives.spec.ts` (`firefox-light`), which pass on rerun. The other two were **018 criterion 14** ("the body is antialiased on every page") in both Firefox projects, which had failed in the first engine triage too and had slipped through it. Every page read `grayscale`.
+- **Criterion 14, triaged: harness, not item.** Firefox keeps `-webkit-font-smoothing` as an alias of its own `-moz-osx-font-smoothing`. Tailwind's `antialiased` sets both, the moz one last, so Firefox reports `grayscale`, its form of the same request. The test now reads `-moz-osx-font-smoothing` in Firefox and expects `grayscale`, through `adaptsIn("firefox", …)` with an `ENGINE_ONLY` entry. Where Firefox does not support the property (`CSS.supports` false, as on Linux), there is nothing to check. Seen failing in both Firefox projects first; it now passes in `firefox-light`, `firefox-dark`, `chromium-light` and `webkit-dark`. No ledger line.
+- **Counts after it:** the browser suite lists **10,262** (`chromium-light` 1,732, the other five 1,705 each, `perf` 5); Chromium's `test:e2e` is 3,442. `ENGINE_ONLY`: onlyIn 2, notIn 1, onlyProjects 4, adaptsIn 11.

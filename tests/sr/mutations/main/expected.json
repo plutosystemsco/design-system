@@ -1,0 +1,592 @@
+{
+  "set": "main",
+  "patches": [
+    {
+      "patch": "1-alert.patch",
+      "target": "alert",
+      "fault": "L1"
+    },
+    {
+      "patch": "2-dialog.patch",
+      "target": "dialog",
+      "fault": "O1"
+    },
+    {
+      "patch": "3-popover.patch",
+      "target": "popover",
+      "fault": "O3"
+    },
+    {
+      "patch": "4-error-summary.patch",
+      "target": "error-summary",
+      "fault": "L1"
+    },
+    {
+      "patch": "5-sign-up.patch",
+      "target": "sign-up",
+      "fault": "F1"
+    },
+    {
+      "patch": "6-sheet.patch",
+      "target": "sheet",
+      "fault": "O2"
+    },
+    {
+      "patch": "7-code-block.patch",
+      "target": "code-block",
+      "fault": "L3"
+    },
+    {
+      "patch": "8-toast.patch",
+      "target": "toast:assertive",
+      "fault": "L1"
+    }
+  ],
+  "expected": [
+    {
+      "patch": "1-alert.patch",
+      "file": "alert.sr.ts",
+      "title": "a destructive alert inserted after load is spoken whole, and not before",
+      "reader": "nvda",
+      "browser": "chromium",
+      "fault": "L1"
+    },
+    {
+      "patch": "1-alert.patch",
+      "file": "alert.sr.ts",
+      "title": "a destructive alert inserted after load is spoken whole, and not before",
+      "reader": "nvda",
+      "browser": "firefox",
+      "fault": "L1"
+    },
+    {
+      "patch": "1-alert.patch",
+      "file": "alert.sr.ts",
+      "title": "a destructive alert inserted after load is spoken whole, and not before",
+      "reader": "voiceover",
+      "browser": "chromium",
+      "fault": "L1"
+    },
+    {
+      "patch": "1-alert.patch",
+      "file": "alert.sr.ts",
+      "title": "a destructive alert inserted after load is spoken whole, and not before",
+      "reader": "voiceover",
+      "browser": "webkit",
+      "fault": "L1"
+    },
+    {
+      "patch": "2-dialog.patch",
+      "file": "dialog.sr.ts",
+      "title": "opening speaks the dialog's title",
+      "reader": "nvda",
+      "browser": "chromium",
+      "fault": "O1"
+    },
+    {
+      "patch": "2-dialog.patch",
+      "file": "dialog.sr.ts",
+      "title": "opening speaks the dialog's title",
+      "reader": "nvda",
+      "browser": "firefox",
+      "fault": "O1"
+    },
+    {
+      "patch": "2-dialog.patch",
+      "file": "dialog.sr.ts",
+      "title": "opening speaks the dialog's title",
+      "reader": "voiceover",
+      "browser": "chromium",
+      "fault": "O1"
+    },
+    {
+      "patch": "2-dialog.patch",
+      "file": "dialog.sr.ts",
+      "title": "opening speaks the dialog's title",
+      "reader": "voiceover",
+      "browser": "webkit",
+      "fault": "O1"
+    },
+    {
+      "patch": "3-popover.patch",
+      "file": "popover.sr.ts",
+      "title": "Escape closes it; the trigger is spoken and has focus",
+      "reader": "nvda",
+      "browser": "chromium",
+      "fault": "O3"
+    },
+    {
+      "patch": "3-popover.patch",
+      "file": "popover.sr.ts",
+      "title": "Escape closes it; the trigger is spoken and has focus",
+      "reader": "nvda",
+      "browser": "firefox",
+      "fault": "O3"
+    },
+    {
+      "patch": "3-popover.patch",
+      "file": "popover.sr.ts",
+      "title": "Escape closes it; the trigger is spoken and has focus",
+      "reader": "voiceover",
+      "browser": "chromium",
+      "fault": "O3"
+    },
+    {
+      "patch": "3-popover.patch",
+      "file": "popover.sr.ts",
+      "title": "Escape closes it; the trigger is spoken and has focus",
+      "reader": "voiceover",
+      "browser": "webkit",
+      "fault": "O3"
+    },
+    {
+      "patch": "4-error-summary.patch",
+      "file": "error-summary.sr.ts",
+      "title": "the insertion: the title and every message spoken whole, none twice in a row, none before",
+      "reader": "nvda",
+      "browser": "chromium",
+      "fault": "L1"
+    },
+    {
+      "patch": "4-error-summary.patch",
+      "file": "error-summary.sr.ts",
+      "title": "the insertion: the title and every message spoken whole, none twice in a row, none before",
+      "reader": "nvda",
+      "browser": "firefox",
+      "fault": "L1"
+    },
+    {
+      "patch": "4-error-summary.patch",
+      "file": "error-summary.sr.ts",
+      "title": "the insertion: the title and every message spoken whole, none twice in a row, none before",
+      "reader": "voiceover",
+      "browser": "chromium",
+      "fault": "L1"
+    },
+    {
+      "patch": "4-error-summary.patch",
+      "file": "error-summary.sr.ts",
+      "title": "the insertion: the title and every message spoken whole, none twice in a row, none before",
+      "reader": "voiceover",
+      "browser": "webkit",
+      "fault": "L1"
+    },
+    {
+      "patch": "4-error-summary.patch",
+      "file": "error-summary.sr.ts",
+      "title": "the second submit, unchanged: spoken whole again, none twice in a row",
+      "reader": "nvda",
+      "browser": "chromium",
+      "fault": "L1"
+    },
+    {
+      "patch": "4-error-summary.patch",
+      "file": "error-summary.sr.ts",
+      "title": "the second submit, unchanged: spoken whole again, none twice in a row",
+      "reader": "nvda",
+      "browser": "firefox",
+      "fault": "L1"
+    },
+    {
+      "patch": "4-error-summary.patch",
+      "file": "error-summary.sr.ts",
+      "title": "the second submit, unchanged: spoken whole again, none twice in a row",
+      "reader": "voiceover",
+      "browser": "chromium",
+      "fault": "L1"
+    },
+    {
+      "patch": "4-error-summary.patch",
+      "file": "error-summary.sr.ts",
+      "title": "the second submit, unchanged: spoken whole again, none twice in a row",
+      "reader": "voiceover",
+      "browser": "webkit",
+      "fault": "L1"
+    },
+    {
+      "patch": "4-error-summary.patch",
+      "file": "settings.sr.ts",
+      "title": "a save with an empty name: the summary's title and message spoken whole, none twice in a row",
+      "reader": "nvda",
+      "browser": "chromium",
+      "fault": "L1"
+    },
+    {
+      "patch": "4-error-summary.patch",
+      "file": "settings.sr.ts",
+      "title": "a save with an empty name: the summary's title and message spoken whole, none twice in a row",
+      "reader": "nvda",
+      "browser": "firefox",
+      "fault": "L1"
+    },
+    {
+      "patch": "4-error-summary.patch",
+      "file": "settings.sr.ts",
+      "title": "a save with an empty name: the summary's title and message spoken whole, none twice in a row",
+      "reader": "voiceover",
+      "browser": "chromium",
+      "fault": "L1"
+    },
+    {
+      "patch": "4-error-summary.patch",
+      "file": "settings.sr.ts",
+      "title": "a save with an empty name: the summary's title and message spoken whole, none twice in a row",
+      "reader": "voiceover",
+      "browser": "webkit",
+      "fault": "L1"
+    },
+    {
+      "patch": "4-error-summary.patch",
+      "file": "sign-in.sr.ts",
+      "title": "an empty submit: the summary's title and messages spoken whole, none twice in a row",
+      "reader": "nvda",
+      "browser": "chromium",
+      "fault": "L1"
+    },
+    {
+      "patch": "4-error-summary.patch",
+      "file": "sign-in.sr.ts",
+      "title": "an empty submit: the summary's title and messages spoken whole, none twice in a row",
+      "reader": "nvda",
+      "browser": "firefox",
+      "fault": "L1"
+    },
+    {
+      "patch": "4-error-summary.patch",
+      "file": "sign-in.sr.ts",
+      "title": "an empty submit: the summary's title and messages spoken whole, none twice in a row",
+      "reader": "voiceover",
+      "browser": "chromium",
+      "fault": "L1"
+    },
+    {
+      "patch": "4-error-summary.patch",
+      "file": "sign-in.sr.ts",
+      "title": "an empty submit: the summary's title and messages spoken whole, none twice in a row",
+      "reader": "voiceover",
+      "browser": "webkit",
+      "fault": "L1"
+    },
+    {
+      "patch": "4-error-summary.patch",
+      "file": "sign-up.sr.ts",
+      "title": "an empty submit: the summary's title and messages spoken whole, none twice in a row",
+      "reader": "nvda",
+      "browser": "chromium",
+      "fault": "L1"
+    },
+    {
+      "patch": "4-error-summary.patch",
+      "file": "sign-up.sr.ts",
+      "title": "an empty submit: the summary's title and messages spoken whole, none twice in a row",
+      "reader": "nvda",
+      "browser": "firefox",
+      "fault": "L1"
+    },
+    {
+      "patch": "4-error-summary.patch",
+      "file": "sign-up.sr.ts",
+      "title": "an empty submit: the summary's title and messages spoken whole, none twice in a row",
+      "reader": "voiceover",
+      "browser": "chromium",
+      "fault": "L1"
+    },
+    {
+      "patch": "4-error-summary.patch",
+      "file": "sign-up.sr.ts",
+      "title": "an empty submit: the summary's title and messages spoken whole, none twice in a row",
+      "reader": "voiceover",
+      "browser": "webkit",
+      "fault": "L1"
+    },
+    {
+      "patch": "5-sign-up.patch",
+      "file": "sign-up.sr.ts",
+      "title": "the code step: its heading takes focus and is spoken",
+      "reader": "nvda",
+      "browser": "chromium",
+      "fault": "F1"
+    },
+    {
+      "patch": "5-sign-up.patch",
+      "file": "sign-up.sr.ts",
+      "title": "the code step: its heading takes focus and is spoken",
+      "reader": "nvda",
+      "browser": "firefox",
+      "fault": "F1"
+    },
+    {
+      "patch": "5-sign-up.patch",
+      "file": "sign-up.sr.ts",
+      "title": "the code step: its heading takes focus and is spoken",
+      "reader": "voiceover",
+      "browser": "chromium",
+      "fault": "F1"
+    },
+    {
+      "patch": "5-sign-up.patch",
+      "file": "sign-up.sr.ts",
+      "title": "the code step: its heading takes focus and is spoken",
+      "reader": "voiceover",
+      "browser": "webkit",
+      "fault": "F1"
+    },
+    {
+      "patch": "6-sheet.patch",
+      "file": "app-shell.sr.ts",
+      "title": "at 360 the menu sheet: the page behind is never reached in ten steps",
+      "reader": "nvda",
+      "browser": "chromium",
+      "fault": "O2"
+    },
+    {
+      "patch": "6-sheet.patch",
+      "file": "app-shell.sr.ts",
+      "title": "at 360 the menu sheet: the page behind is never reached in ten steps",
+      "reader": "nvda",
+      "browser": "firefox",
+      "fault": "O2"
+    },
+    {
+      "patch": "6-sheet.patch",
+      "file": "app-shell.sr.ts",
+      "title": "at 360 the menu sheet: the page behind is never reached in ten steps",
+      "reader": "voiceover",
+      "browser": "chromium",
+      "fault": "O2"
+    },
+    {
+      "patch": "6-sheet.patch",
+      "file": "app-shell.sr.ts",
+      "title": "at 360 the menu sheet: the page behind is never reached in ten steps",
+      "reader": "voiceover",
+      "browser": "webkit",
+      "fault": "O2"
+    },
+    {
+      "patch": "6-sheet.patch",
+      "file": "marketing-bar.sr.ts",
+      "title": "below md, the page behind the menu's sheet is never reached in ten steps",
+      "reader": "nvda",
+      "browser": "chromium",
+      "fault": "O2"
+    },
+    {
+      "patch": "6-sheet.patch",
+      "file": "marketing-bar.sr.ts",
+      "title": "below md, the page behind the menu's sheet is never reached in ten steps",
+      "reader": "nvda",
+      "browser": "firefox",
+      "fault": "O2"
+    },
+    {
+      "patch": "6-sheet.patch",
+      "file": "marketing-bar.sr.ts",
+      "title": "below md, the page behind the menu's sheet is never reached in ten steps",
+      "reader": "voiceover",
+      "browser": "chromium",
+      "fault": "O2"
+    },
+    {
+      "patch": "6-sheet.patch",
+      "file": "marketing-bar.sr.ts",
+      "title": "below md, the page behind the menu's sheet is never reached in ten steps",
+      "reader": "voiceover",
+      "browser": "webkit",
+      "fault": "O2"
+    },
+    {
+      "patch": "6-sheet.patch",
+      "file": "product-home.sr.ts",
+      "title": "at 360 the bar's menu sheet: the page behind is never reached in ten steps",
+      "reader": "nvda",
+      "browser": "chromium",
+      "fault": "O2"
+    },
+    {
+      "patch": "6-sheet.patch",
+      "file": "product-home.sr.ts",
+      "title": "at 360 the bar's menu sheet: the page behind is never reached in ten steps",
+      "reader": "nvda",
+      "browser": "firefox",
+      "fault": "O2"
+    },
+    {
+      "patch": "6-sheet.patch",
+      "file": "product-home.sr.ts",
+      "title": "at 360 the bar's menu sheet: the page behind is never reached in ten steps",
+      "reader": "voiceover",
+      "browser": "chromium",
+      "fault": "O2"
+    },
+    {
+      "patch": "6-sheet.patch",
+      "file": "product-home.sr.ts",
+      "title": "at 360 the bar's menu sheet: the page behind is never reached in ten steps",
+      "reader": "voiceover",
+      "browser": "webkit",
+      "fault": "O2"
+    },
+    {
+      "patch": "6-sheet.patch",
+      "file": "sheet.sr.ts",
+      "title": "the page behind the sheet is never reached in ten steps",
+      "reader": "nvda",
+      "browser": "chromium",
+      "fault": "O2"
+    },
+    {
+      "patch": "6-sheet.patch",
+      "file": "sheet.sr.ts",
+      "title": "the page behind the sheet is never reached in ten steps",
+      "reader": "nvda",
+      "browser": "firefox",
+      "fault": "O2"
+    },
+    {
+      "patch": "6-sheet.patch",
+      "file": "sheet.sr.ts",
+      "title": "the page behind the sheet is never reached in ten steps",
+      "reader": "voiceover",
+      "browser": "chromium",
+      "fault": "O2"
+    },
+    {
+      "patch": "6-sheet.patch",
+      "file": "sheet.sr.ts",
+      "title": "the page behind the sheet is never reached in ten steps",
+      "reader": "voiceover",
+      "browser": "webkit",
+      "fault": "O2"
+    },
+    {
+      "patch": "6-sheet.patch",
+      "file": "sidebar.sr.ts",
+      "title": "at 360 px, the page behind the sheet is never reached in ten steps",
+      "reader": "nvda",
+      "browser": "chromium",
+      "fault": "O2"
+    },
+    {
+      "patch": "6-sheet.patch",
+      "file": "sidebar.sr.ts",
+      "title": "at 360 px, the page behind the sheet is never reached in ten steps",
+      "reader": "nvda",
+      "browser": "firefox",
+      "fault": "O2"
+    },
+    {
+      "patch": "6-sheet.patch",
+      "file": "sidebar.sr.ts",
+      "title": "at 360 px, the page behind the sheet is never reached in ten steps",
+      "reader": "voiceover",
+      "browser": "chromium",
+      "fault": "O2"
+    },
+    {
+      "patch": "6-sheet.patch",
+      "file": "sidebar.sr.ts",
+      "title": "at 360 px, the page behind the sheet is never reached in ten steps",
+      "reader": "voiceover",
+      "browser": "webkit",
+      "fault": "O2"
+    },
+    {
+      "patch": "7-code-block.patch",
+      "file": "code-block.sr.ts",
+      "title": "copy: the outcome is spoken whole, and not twice in a row",
+      "reader": "nvda",
+      "browser": "chromium",
+      "fault": "L3"
+    },
+    {
+      "patch": "7-code-block.patch",
+      "file": "code-block.sr.ts",
+      "title": "copy: the outcome is spoken whole, and not twice in a row",
+      "reader": "nvda",
+      "browser": "firefox",
+      "fault": "L3"
+    },
+    {
+      "patch": "7-code-block.patch",
+      "file": "code-block.sr.ts",
+      "title": "copy: the outcome is spoken whole, and not twice in a row",
+      "reader": "voiceover",
+      "browser": "chromium",
+      "fault": "L3"
+    },
+    {
+      "patch": "7-code-block.patch",
+      "file": "code-block.sr.ts",
+      "title": "copy: the outcome is spoken whole, and not twice in a row",
+      "reader": "voiceover",
+      "browser": "webkit",
+      "fault": "L3"
+    },
+    {
+      "patch": "8-toast.patch",
+      "file": "toast.sr.ts",
+      "title": "S10 both channels: the error and the success are each spoken whole",
+      "reader": "nvda",
+      "browser": "chromium",
+      "fault": "L1"
+    },
+    {
+      "patch": "8-toast.patch",
+      "file": "toast.sr.ts",
+      "title": "S10 both channels: the error and the success are each spoken whole",
+      "reader": "nvda",
+      "browser": "firefox",
+      "fault": "L1"
+    },
+    {
+      "patch": "8-toast.patch",
+      "file": "toast.sr.ts",
+      "title": "S10 both channels: the error and the success are each spoken whole",
+      "reader": "voiceover",
+      "browser": "chromium",
+      "fault": "L1"
+    },
+    {
+      "patch": "8-toast.patch",
+      "file": "toast.sr.ts",
+      "title": "S10 both channels: the error and the success are each spoken whole",
+      "reader": "voiceover",
+      "browser": "webkit",
+      "fault": "L1"
+    },
+    {
+      "patch": "8-toast.patch",
+      "file": "toast.sr.ts",
+      "title": "S2 assertive: the error is spoken whole",
+      "reader": "nvda",
+      "browser": "chromium",
+      "fault": "L1"
+    },
+    {
+      "patch": "8-toast.patch",
+      "file": "toast.sr.ts",
+      "title": "S2 assertive: the error is spoken whole",
+      "reader": "nvda",
+      "browser": "firefox",
+      "fault": "L1"
+    },
+    {
+      "patch": "8-toast.patch",
+      "file": "toast.sr.ts",
+      "title": "S2 assertive: the error is spoken whole",
+      "reader": "voiceover",
+      "browser": "chromium",
+      "fault": "L1"
+    },
+    {
+      "patch": "8-toast.patch",
+      "file": "toast.sr.ts",
+      "title": "S2 assertive: the error is spoken whole",
+      "reader": "voiceover",
+      "browser": "webkit",
+      "fault": "L1"
+    }
+  ],
+  "notProvable": []
+}

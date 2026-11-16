@@ -106,11 +106,36 @@ function* matches(
   }
 }
 
+/**
+ * A glob whose outer `{a,b,…}` is split into one glob per alternative.
+ * 022 (build step 1): Bun 1.3.14, the version CI pins, matches no `**`
+ * inside braces (`{src/lib/registry/ui/**,…}`); Bun 1.4.4 does.
+ */
+function braced(pattern: string): Bun.Glob {
+  const outer = pattern.match(/^\{(.*)\}$/);
+  if (!outer) return new Bun.Glob(pattern);
+  const parts: string[] = [];
+  let depth = 0;
+  let start = 0;
+  const body = outer[1]!;
+  for (let i = 0; i < body.length; i++) {
+    if (body[i] === "{") depth++;
+    else if (body[i] === "}") depth--;
+    else if (body[i] === "," && depth === 0) {
+      parts.push(body.slice(start, i));
+      start = i + 1;
+    }
+  }
+  parts.push(body.slice(start));
+  const globs = parts.map((p) => new Bun.Glob(p));
+  return { match: (f: string) => globs.some((g) => g.match(f)) } as Bun.Glob;
+}
+
 describe("020 test 1: no stray pluto", () => {
   const entries = allowlist.entries.map((entry, index) => ({
     entry,
     index,
-    glob: new Bun.Glob(entry.files),
+    glob: braced(entry.files),
     re: new RegExp(entry.pattern, "g"),
   }));
 

@@ -1,0 +1,17 @@
+diff --git a/src/lib/registry/ui/alert/alert.svelte b/src/lib/registry/ui/alert/alert.svelte
+index cecde00..64decd0 100644
+--- a/src/lib/registry/ui/alert/alert.svelte
++++ b/src/lib/registry/ui/alert/alert.svelte
+@@ -36,9 +36,9 @@
+     "alert" | "status" | undefined
+   > = {
+     default: undefined,
+-    destructive: "alert",
+-    success: "status",
+-    caution: "status",
++    destructive: undefined,
++    success: undefined,
++    caution: undefined,
+   };
+ 
+   let {

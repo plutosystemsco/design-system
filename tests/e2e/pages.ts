@@ -1,5 +1,5 @@
 import { readFileSync } from "node:fs";
-import type { Page } from "@playwright/test";
+import type { Locator, Page } from "@playwright/test";
 
 import {
   BLOCK_VIEWS,
@@ -10,6 +10,7 @@ import {
 import { DOORS } from "../../src/lib/site/doors.ts";
 import {
   componentPath,
+  doorPages,
   GROUPS,
   navOrder,
   SITEMAP,
@@ -72,6 +73,8 @@ export const ITEMS = [
   "error-summary",
   // feedback (027a)
   "progress",
+  // feedback (026)
+  "toast",
   // forms
   "label",
   "field",
@@ -166,6 +169,8 @@ export const ITEMS_009 = ["read-token"];
 export const ITEMS_011 = ["liquid-glass"];
 /** 027a decision 1: batch A's quiet items. */
 export const ITEMS_027A = ["button-group", "progress", "link"];
+/** 026's one item. */
+export const ITEMS_026 = ["toast"];
 /** 010 decision 1: the nine compositions, in registry order. */
 export const COMPOSITIONS = [
   "stage",
@@ -198,7 +203,8 @@ export const ITEMS_002 = ITEMS.slice(8).filter(
     !ITEMS_007.includes(name) &&
     !ITEMS_010.includes(name) &&
     !ITEMS_011.includes(name) &&
-    !ITEMS_027A.includes(name),
+    !ITEMS_027A.includes(name) &&
+    !ITEMS_026.includes(name),
 );
 /** The 7 items 003 adds. */
 export const ITEMS_003 = [
@@ -238,10 +244,17 @@ export const PAGES_010 = ITEMS_010.map(componentPath);
 export const PAGES_011 = ITEMS_011.map(componentPath);
 /** 027a's 3 item pages. */
 export const PAGES_027A = ITEMS_027A.map(componentPath);
+/** 026's item page. */
+export const PAGES_026 = ITEMS_026.map(componentPath);
 /** Every page of the site, from the one list (015 decision 1). */
 export const PAGES = SITEMAP.map((p) => p.path);
-/** The 79 component pages. */
-export const COMPONENT_PAGES = ITEMS.map(componentPath);
+/**
+ * Every component page, from the sitemap (023a's change review: a hand list
+ * missed `toast`), so a new item cannot be left out. `ITEMS` keeps 005's
+ * order for the specs that walk it; `pages-lists.test.ts` holds the two
+ * equal as sets.
+ */
+export const COMPONENT_PAGES = doorPages("components").map((p) => p.path);
 /** 002's 32 component pages. */
 export const PAGES_002 = COMPONENT_PAGES.filter(
   (p) =>
@@ -253,7 +266,8 @@ export const PAGES_002 = COMPONENT_PAGES.filter(
     !PAGES_009.includes(p) &&
     !PAGES_010.includes(p) &&
     !PAGES_011.includes(p) &&
-    !PAGES_027A.includes(p),
+    !PAGES_027A.includes(p) &&
+    !PAGES_026.includes(p),
 );
 
 /** The views (003 decision 16; 006 decision 12), each with its block and label. */
@@ -538,6 +552,144 @@ export const GROUND = {
 } as const;
 
 export type ThemeName = keyof typeof GROUND;
+
+/**
+ * 022: the clipboard permissions each engine knows, for `test.use({
+ * permissions: clipboard })`. Chromium needs both to read and to write.
+ * WebKit knows only `clipboard-read`, and writes without a grant. Playwright's
+ * Firefox knows neither and refuses a context that asks; it writes without a
+ * grant and cannot read, so a test that reads the clipboard takes
+ * `notIn("firefox", …)`.
+ */
+const CLIPBOARD: Record<string, string[]> = {
+  chromium: ["clipboard-read", "clipboard-write"],
+  webkit: ["clipboard-read"],
+  firefox: [],
+};
+export const clipboard = [
+  async (
+    { browserName }: { browserName: string },
+    use: (permissions: string[]) => Promise<void>,
+  ) => use(CLIPBOARD[browserName] ?? []),
+  { scope: "test" },
+] as never;
+
+/**
+ * 022's review, finding 5: what the clipboard holds, read the way a user
+ * reads it, by pasting, in every engine. A scratch textarea goes beside the
+ * focused element (inside an open dialog's focus trap, if there is one),
+ * takes Control+V or Meta+V, gives back its text, and is removed; focus goes
+ * back where it was. A keyboard paste needs no permission, so Firefox, which
+ * has no `clipboard-read`, reads too.
+ */
+export async function readClipboard(page: Page): Promise<string> {
+  await page.evaluate(() => {
+    const w = window as unknown as { __clipFrom: HTMLElement | null };
+    const from = document.activeElement as HTMLElement | null;
+    w.__clipFrom = from;
+    const box = document.createElement("textarea");
+    box.setAttribute("data-clipboard-probe", "");
+    box.setAttribute("aria-hidden", "true");
+    box.style.cssText = "position:fixed;inset-block-start:0;opacity:0";
+    const host =
+      from?.closest('[role="dialog"], [role="alertdialog"]') ?? document.body;
+    host.append(box);
+    box.focus();
+  });
+  await page.keyboard.press("ControlOrMeta+V");
+  return page.evaluate(() => {
+    const w = window as unknown as { __clipFrom: HTMLElement | null };
+    const box = document.querySelector<HTMLTextAreaElement>(
+      "textarea[data-clipboard-probe]",
+    )!;
+    const text = box.value;
+    box.remove();
+    w.__clipFrom?.focus({ preventScroll: true });
+    return text;
+  });
+}
+
+/**
+ * 022's review, finding 4: press a control by keyboard (focus, then Enter),
+ * where a test then asserts focus. A click does not focus a button in
+ * macOS WebKit (Safari's platform default), so a click-then-focus check
+ * tests the platform there; the keyboard path is the one focus is about.
+ */
+export async function activate(control: Locator): Promise<void> {
+  await control.focus();
+  await control.press("Enter");
+}
+
+/** Put text on the clipboard as a page does, before a keyboard paste. */
+export function writeClipboard(page: Page, text: string): Promise<void> {
+  return page.evaluate((t) => navigator.clipboard.writeText(t), text);
+}
+
+/**
+ * 022: an element's `scrollbar-width`. Playwright's Firefox computes `none`
+ * for every element, even one with an inline `scrollbar-width: thin`, since
+ * it hides scrollbars. Where the engine does that (a probe says so), the
+ * value is read from the author's rules that match the element instead.
+ */
+export function scrollbarWidth(locator: Locator): Promise<string> {
+  return locator.evaluate((el) => {
+    const probe = document.createElement("div");
+    probe.style.scrollbarWidth = "thin";
+    document.body.append(probe);
+    const honest = getComputedStyle(probe).scrollbarWidth === "thin";
+    probe.remove();
+    if (honest) return getComputedStyle(el).scrollbarWidth;
+    let found = "auto";
+    const walk = (rules: CSSRuleList) => {
+      for (const r of rules) {
+        if (r instanceof CSSStyleRule) {
+          try {
+            if (el.matches(r.selectorText) && r.style.scrollbarWidth)
+              found = r.style.scrollbarWidth;
+          } catch {
+            // a selector this engine cannot match
+          }
+        }
+        const inner = (r as CSSGroupingRule).cssRules;
+        if (inner?.length) walk(inner);
+      }
+    };
+    for (const s of document.styleSheets) {
+      try {
+        walk(s.cssRules);
+      } catch {
+        // a sheet from another origin
+      }
+    }
+    return (el as HTMLElement).style.scrollbarWidth || found;
+  });
+}
+
+/**
+ * 022: Tab from the last stop, and what took focus in the document, if
+ * anything. Chromium and WebKit move focus out to the body; Playwright's
+ * headless Firefox has no browser chrome to take it, so focus stays on the
+ * last stop. Either says no other element in the document is a stop: `other`
+ * is null. `stayed` says focus is still on the last stop, so a walk back
+ * starts there.
+ */
+export async function tabOut(
+  page: Page,
+): Promise<{ other: string | null; stayed: boolean }> {
+  await page.evaluate(() => {
+    (window as unknown as { __lastStop: Element | null }).__lastStop =
+      document.activeElement;
+  });
+  await page.keyboard.press("Tab");
+  return page.evaluate(() => {
+    const el = document.activeElement;
+    const last = (window as unknown as { __lastStop: Element | null })
+      .__lastStop;
+    const stayed = !!el && el === last && el !== document.body;
+    if (!el || el === document.body || stayed) return { other: null, stayed };
+    return { other: el.outerHTML.slice(0, 120), stayed };
+  });
+}
 
 /**
  * Opens a page and waits until it has hydrated (the theme toggle marks itself

@@ -967,6 +967,15 @@ Then, in the same landing:
 
 **D2. The screen-reader files (lane E, after `022`; decision 20).** `tests/sr/toast.sr.ts` (S1 to S10), A1 in `tests/sr/app-shell.sr.ts` (after D1), `unspoken` and `before` in `tests/sr/rules.ts` with their unit tests, `toast` in `SR_ITEMS` with kinds `live` and `focus`, the `toast-alert` mutation and `expected.json`, derived. Tests 76 and 77. `022` must allow `<item>:<part>` targets in `hears`.
 
+**D2, built at `022`'s merge with `release/0.13.0` (2026-11-16, `022`'s builder; `022`'s review, finding 7).** Done but A1:
+
+- `toast` is in `SR_ITEMS` with kinds `live` and `focus`; the derivation would have demanded it (`role="alert"`, `aria-live`, `.focus(`, `tabindex="-1"` in `toaster.svelte`).
+- `tests/sr/toast.sr.ts` holds S1 to S10, each declared statically with its rules and `hears`, and declares the parts `assertive`, `polite` and `focus`. One change from decision 20's table: S9 hears `toast:polite` only, since `alert-dialog` is no dependency of `toast` and `022` decision 12 allows only the item and its dependencies; its rule B1 still judges the trigger's name before the success.
+- The two rules are `U1` (`unspoken`) and `B1` (`before`) in `tests/sr/rules.ts`, each with a precondition (U1: the window is not empty; B1: the later phrase is spoken), unit-tested in VoiceOver's and NVDA's wording (test 76).
+- The `toast-alert` patch is `tests/sr/mutations/main/8-toast.patch` (target `toast:assertive`, fault L1, witness S2). The re-derived `main` set expects 68 failures, exactly S2 and S10 under the four pairs beside `022`'s 60, as decision 20 predicts (test 77 holds it through `mutations.test.ts`).
+- Dry-run (`SR_DRY=1`) in Chromium, WebKit and Firefox: 30 of 30 pass; speech waits for push B.
+- **A1 waits for D1** (the `app-shell` mount, after `023`): `tests/sr/app-shell.sr.ts` gains it then, with `app-shell`'s `live` kind.
+
 **D3. The cost case (lane E, after `025`; decision 25).** `scripts/cost/fixtures/toast.svelte`, `toast.burst.svelte`, `toast.progress.svelte`; the three `interactions.ts` entries; `bun run cost --budget toast`. Test 78.
 
 **D4. Test 39 moves.** `023`'s described-list test does not exist yet. Test 39 runs here, in `toast-site.test.ts`, over `apiTables`. When `023` lands, its test covers `toast` and this one can go.

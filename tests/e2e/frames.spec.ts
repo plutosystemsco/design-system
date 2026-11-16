@@ -2,8 +2,11 @@
  * 015 decision 12, criterion 14: an example in either theme, in a frame of
  * its own document.
  */
-import { expect, test, type Locator, type Page } from "@playwright/test";
+import type { Locator, Page } from "@playwright/test";
+import { expect, test } from "../test.ts";
+import { scheme } from "./scheme.ts";
 import {
+  activate,
   componentPath,
   GROUND,
   hexToRgb,
@@ -31,7 +34,7 @@ async function pick(page: Page, frame: Locator, theme: ThemeName) {
     name: theme === "dark" ? "Dark" : "Light",
     exact: true,
   });
-  await option.click();
+  await activate(option);
   await expect(option).toBeFocused();
   await expect(option).toHaveAttribute("aria-pressed", "true");
 }
@@ -64,7 +67,7 @@ for (const item of [
     page,
   }, info) => {
     await open(page, componentPath(item));
-    const start = info.project.name as ThemeName;
+    const start = scheme(info);
     const frame = firstFrame(page);
     await expect(frame.locator("iframe")).toHaveCount(0);
     await pick(page, frame, other(start));
@@ -110,7 +113,7 @@ test("alert: the framed alert takes the other theme's card", async ({
   page,
 }, info) => {
   await open(page, componentPath("alert"));
-  const start = info.project.name as ThemeName;
+  const start = scheme(info);
   const frame = firstFrame(page);
   await pick(page, frame, other(start));
   await expectFramed(frame, other(start));
@@ -131,7 +134,7 @@ test("dropdown-menu: the open menu in a frame takes the frame's theme and stays 
   page,
 }, info) => {
   await open(page, componentPath("dropdown-menu"));
-  const start = info.project.name as ThemeName;
+  const start = scheme(info);
   const frame = firstFrame(page);
   await pick(page, frame, other(start));
   await expectFramed(frame, other(start));
@@ -155,7 +158,7 @@ test("four-dot: the framed marks are the four in light and paper in dark", async
   page,
 }, info) => {
   await open(page, componentPath("four-dot"));
-  const start = info.project.name as ThemeName;
+  const start = scheme(info);
   const frame = firstFrame(page);
   await pick(page, frame, other(start));
   await expectFramed(frame, other(start));

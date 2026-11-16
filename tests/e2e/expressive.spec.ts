@@ -2,7 +2,9 @@
  * 009: expressive mode and the brand slots, in the browser. Both projects run
  * every test, so each holds in the light and the dark theme.
  */
-import { expect, test, type Page } from "@playwright/test";
+import type { Page } from "@playwright/test";
+import { expect, test } from "../test.ts";
+import { scheme } from "./scheme.ts";
 import { hexToRgb, ITEMS, open, componentPath } from "./pages.ts";
 
 /**
@@ -15,6 +17,10 @@ const V080 = {
   code: '"JetBrains Mono Variable", ui-monospace, monospace',
   button: "8px",
 };
+
+/** A computed font-family as a list of names, quotes dropped. */
+const families = (s: string | null) =>
+  (s ?? "").split(",").map((f) => f.trim().replace(/^["']|["']$/g, ""));
 
 /** `button`'s own radius class: the action radius, 8 px when it is unset. */
 const BUTTON_RADIUS = "rounded-[var(--radius-action,var(--radius))]";
@@ -65,9 +71,11 @@ test.describe("criterion 3: a productive page looks as it did in v0.8.0", () => 
     }) => {
       await open(page, componentPath(name));
       const faces = await productiveFaces(page);
-      expect(faces.heading).toBe(V080.heading);
-      expect(faces.paragraph).toBe(V080.paragraph);
-      expect(faces.code).toBe(V080.code);
+      // 022: the family list, compared without quotes. Chromium quotes a
+      // family name with a space; Firefox serialises it as it is written.
+      expect(families(faces.heading)).toEqual(families(V080.heading));
+      expect(families(faces.paragraph)).toEqual(families(V080.paragraph));
+      expect(families(faces.code)).toEqual(families(V080.code));
       expect(faces.buttons.length).toBeGreaterThan(0);
       expect(faces.buttons.filter((r) => r !== V080.button)).toEqual([]);
     });
@@ -184,7 +192,12 @@ test.describe("criterion 10: the display steps are fluid", () => {
       const measured = [];
       for (const step of ["display", "section", "proof"])
         measured.push(await computed(page, `type-${step}`, "font-size"));
-      expect(measured).toEqual([...sizes]);
+      // 022: within 0.05 px. Firefox keeps font sizes in 1/64 px, so
+      // 86.4px computes 86.375px there.
+      expect(measured).toHaveLength(sizes.length);
+      measured.forEach((m, i) =>
+        expect(parseFloat(m)).toBeCloseTo(parseFloat(sizes[i]!), 1),
+      );
     });
   }
 
@@ -244,7 +257,7 @@ test.describe("criterion 12: read-token in the browser", () => {
     const inDark = await page.getByTestId("read-dark-mark-1").textContent();
     // The light theme's mark-1 is blue; the dark theme's marks are paper.
     expect(rgb(onPage!)).toBe(
-      info.project.name === "light" ? "rgb(45, 72, 212)" : "rgb(243, 240, 232)",
+      scheme(info) === "light" ? "rgb(45, 72, 212)" : "rgb(243, 240, 232)",
     );
     expect(rgb(inDark!)).toBe("rgb(243, 240, 232)");
   });
@@ -266,7 +279,7 @@ test.describe("criterion 12: read-token in the browser", () => {
         const [r, g, b] = ctx.getImageData(x, y, 1, 1).data;
         return `rgb(${r}, ${g}, ${b})`;
       });
-    const light = info.project.name === "light";
+    const light = scheme(info) === "light";
     expect(await pixel()).toBe(
       light ? "rgb(45, 72, 212)" : "rgb(243, 240, 232)",
     );
@@ -283,9 +296,9 @@ test.describe("criterion 13: the display slot", () => {
   }) => {
     await open(page, THEME);
     const line = page.getByTestId("type-display");
-    expect(await line.evaluate((el) => getComputedStyle(el).fontFamily)).toBe(
-      '"IBM Plex Sans Variable", system-ui, sans-serif',
-    );
+    expect(
+      families(await line.evaluate((el) => getComputedStyle(el).fontFamily)),
+    ).toEqual(families('"IBM Plex Sans Variable", system-ui, sans-serif'));
     await line.evaluate((el) =>
       el.parentElement!.style.setProperty("--font-face-display", "serif"),
     );

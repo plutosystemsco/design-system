@@ -10,14 +10,13 @@
  * question is clear.
  */
 import AxeBuilder from "@axe-core/playwright";
-import {
-  expect,
-  test,
-  type APIRequestContext,
-  type Browser,
-  type Locator,
-  type Page,
+import type {
+  APIRequestContext,
+  Browser,
+  Locator,
+  Page,
 } from "@playwright/test";
+import { expect, test } from "../test.ts";
 import { componentPath, open, openView } from "./pages.ts";
 
 const PAGE = componentPath("error-summary");

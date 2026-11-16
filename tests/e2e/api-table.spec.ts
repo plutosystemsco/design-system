@@ -2,7 +2,8 @@
  * 023a: the API table's Type cell breaks a type only between words, at
  * its punctuation, and no API table scrolls sideways for it, at 1440 or 390.
  */
-import { expect, test, type Page } from "@playwright/test";
+import type { Page } from "@playwright/test";
+import { expect, test } from "../test.ts";
 import { componentPath, open, SITEMAP } from "./pages.ts";
 
 /** The three pages that showed the defect, and two that did not yet. */

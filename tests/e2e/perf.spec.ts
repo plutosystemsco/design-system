@@ -26,7 +26,8 @@
  *
  * Run it alone: `bun --bun playwright test --project=perf --no-deps`.
  */
-import { expect, test, type Browser } from "@playwright/test";
+import type { Browser } from "@playwright/test";
+import { expect, test } from "../test.ts";
 import {
   existsSync,
   mkdirSync,
