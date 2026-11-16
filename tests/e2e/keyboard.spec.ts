@@ -390,11 +390,12 @@ const FIXTURES: [item: string, stops: string[]][] = [
   // 005 decision 13: the textarea and the send button.
   ["composer", ["textarea:Message", "button:Send message"]],
   // 007 decision 9: the ink surface's 7 stops in DOM order. The ring inside
-  // it is the dark ring, which the test reads where the element is.
+  // it is the dark ring, which the test reads where the element is. 024d:
+  // the first is the still specimen's region, where the editor's content was.
   [
     "kuiper-theme",
     [
-      "textbox:Surface example",
+      "region:*",
       "button:Copy code",
       // 015 criterion 26: a named region, as the code scrolls sideways.
       "region:*",
@@ -421,11 +422,11 @@ function drawnBy(
     return '[data-slot="input-group"]';
   if (item === "input-otp") return '[data-slot="input-otp"]';
   // 004 decision 8: the block's root draws the ring for its pre (the surface
-  // fixture on the kuiper-theme page holds a block too, 007 decision 9).
+  // fixture on the kuiper-theme page holds two blocks, 007 decision 9, 024d).
   if (focused.slot === "code-block-content") return '[data-slot="code-block"]';
   // 004 decision 9: the whole editor, gutter included, draws the ring.
   if (
-    ["code-editor", "kuiper-theme", "code-languages"].includes(item) &&
+    ["code-editor", "code-languages"].includes(item) &&
     focused.signature.startsWith("textbox:")
   )
     return ".cm-editor";

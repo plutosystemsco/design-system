@@ -2,7 +2,7 @@
   export const meta = {
     title: "An ink surface",
     intro:
-      "Put dark and surface-ink on any element. Inside it every token is the dark theme's, in both page themes, and the code ground and the editor's ground equal the surface. Overlays opened inside land inside it; a modal stays the page's.",
+      "Put dark and surface-ink on any element. Inside it every token is the dark theme's, in both page themes. The code ground equals the surface, so a code block or an editor sits flush with it, and a highlighted line, as an editor's active line, takes the muted step. Overlays opened inside land inside it; a modal stays the page's.",
     frameMinHeight: 420,
   };
 </script>
@@ -11,7 +11,6 @@
   import { BitsConfig } from "bits-ui";
   import { Button, buttonVariants } from "#lib/registry/ui/button";
   import * as CodeBlock from "#lib/registry/ui/code-block";
-  import { CodeEditor, pythonSetup } from "#lib/registry/ui/code-editor";
   import * as Dialog from "#lib/registry/ui/dialog";
   import * as DropdownMenu from "#lib/registry/ui/dropdown-menu";
   import * as Field from "#lib/registry/ui/field";
@@ -25,10 +24,13 @@
 
   let { data }: { data: ThemeData } = $props();
 
-  // One preset, made once. The surface element is the portal target for
-  // every overlay opened inside it.
-  const python = pythonSetup();
-  let surfaceCode = $state(SURFACE_CODE);
+  // 024d: a still specimen, not a live editor, so the page loads no
+  // CodeMirror and no tree-sitter. The lines are highlighted at prerender;
+  // the third is the highlighted line, on the active line's ground.
+  const lines = $derived(data.surface ?? SURFACE_CODE.split("\n"));
+  const ACTIVE = 2;
+  // The surface element is the portal target for every overlay opened
+  // inside it.
   let surface: HTMLElement | undefined = $state();
   let verbose = $state(true);
 </script>
@@ -41,15 +43,25 @@
   <BitsConfig defaultPortalTo={surface}>
     <div class="grid gap-6 lg:grid-cols-2">
       <div class="grid min-w-0 content-start gap-2">
-        <CodeEditor
-          bind:value={surfaceCode}
-          label="Surface example"
-          extensions={python}
-        />
+        <CodeBlock.Root data-testid="surface-specimen">
+          <CodeBlock.Content
+            lineNumbers
+            role="region"
+            aria-label="Numbered code on the ink surface"
+          >
+            {#each lines as line, index (index)}
+              <CodeBlock.Line
+                code={line}
+                variant={index === ACTIVE ? "highlighted" : "default"}
+              />
+            {/each}
+          </CodeBlock.Content>
+        </CodeBlock.Root>
         <p class="text-sm text-muted-foreground" data-testid="inline-surface">
-          The editor's ground is the surface, edged by the hairline, as inline <code
+          The code ground is the surface, edged by the hairline, as inline <code
             >code</code
-          > is. Tab leaves it.
+          > is. Line 3 is highlighted: one step up, the ground an editor's active
+          line takes.
         </p>
       </div>
       <CodeBlock.Root data-testid="surface-block">

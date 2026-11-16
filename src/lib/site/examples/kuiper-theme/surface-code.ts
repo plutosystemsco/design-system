@@ -1,6 +1,6 @@
 /**
- * The ink surface example's code: the editor starts from it, the block shows
- * it, and the page's data highlights it at prerender.
+ * The ink surface example's code: both blocks show it, and the page's data
+ * highlights it at prerender.
  */
 export const SURFACE_CODE = `import random
 
