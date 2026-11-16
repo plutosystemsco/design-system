@@ -134,7 +134,8 @@
                 <Snippet
                   code={command.code}
                   lines={command.lines}
-                  label={`${section.title}, step ${i + 1}`}
+                  label={`Step ${i + 1}`}
+                  name={`${section.title}, step ${i + 1}`}
                   language={step.language ?? "bash"}
                 />
               </div>

@@ -389,6 +389,33 @@ test.describe("026: keyboard and focus", () => {
     },
   );
 
+  // The change review, finding 3: the pointer passing over a focused toast
+  // must not free it.
+  test(
+    "53b. at 390, the pointer passing over a focused toast leaves it in place",
+    tag("focus"),
+    async ({ page }) => {
+      await page.setViewportSize({ width: 390, height: 844 });
+      await open(page, PAGE);
+      await button(page, "raise", "Save").click();
+      await expect(toasts(page)).toHaveCount(1);
+      await page.keyboard.press("F8");
+      await page.keyboard.press("Tab");
+      const dismiss = toasts(page).first().locator('[data-slot="toast-close"]');
+      await expect(dismiss).toBeFocused();
+      await toasts(page).first().hover();
+      await page.mouse.move(10, 800);
+      await button(page, "raise", "Save with an error").dispatchEvent("click");
+      await expect(more(page)).toHaveText("1 more");
+      await expect(toasts(page)).toHaveCount(1);
+      await expect(toasts(page).first()).toHaveAttribute(
+        "data-kind",
+        "success",
+      );
+      await expect(dismiss).toBeFocused();
+    },
+  );
+
   test(
     "54. narrowing keeps the focused toast",
     tag("focus"),
@@ -475,10 +502,12 @@ test.describe("026: timing", () => {
     },
     {
       name: "window blur",
-      hold: async (page) =>
-        page.evaluate(() => window.dispatchEvent(new Event("blur"))),
-      release: async (page) =>
-        page.evaluate(() => window.dispatchEvent(new Event("focus"))),
+      hold: async (page) => {
+        await page.evaluate(() => window.dispatchEvent(new Event("blur")));
+      },
+      release: async (page) => {
+        await page.evaluate(() => window.dispatchEvent(new Event("focus")));
+      },
     },
     {
       name: "the page hidden",
@@ -672,6 +701,15 @@ test.describe("026: a toast never covers the keyboard focus", () => {
       if (!a || a === document.body || a.closest('[data-slot="toaster"]'))
         return null;
       const f = a.getBoundingClientRect();
+      // The item's own exemption (the review's finding 1): a focused element
+      // whose visible part is wider than the region, or as tall as the
+      // viewport, cannot be hidden by the stack, so nothing steps aside.
+      const region = document
+        .querySelector('[data-slot="toaster"]')!
+        .getBoundingClientRect();
+      const width = Math.min(f.right, innerWidth) - Math.max(f.left, 0);
+      const height = Math.min(f.bottom, innerHeight) - Math.max(f.top, 0);
+      if (width > region.width || height >= innerHeight) return null;
       for (const li of document.querySelectorAll<HTMLElement>(
         '[data-slot="toaster"] li[data-toast-id]',
       )) {
@@ -774,6 +812,37 @@ test.describe("026: a toast never covers the keyboard focus", () => {
       expect(await toast.evaluate((e) => getComputedStyle(e).visibility)).toBe(
         "visible",
       );
+      await run(page, 6000 + 240);
+      await expect(toasts(page)).toHaveCount(0);
+    },
+  );
+
+  // The change review, finding 1: a container that takes focus, such as
+  // `main` after a skip link, is larger than any toast. Nothing steps aside
+  // for it, and the toasts keep their time.
+  test(
+    "64g. after the skip link, focus on #main: every toast stays in view and timing",
+    tag("focus"),
+    async ({ page }) => {
+      await page.setViewportSize({ width: 1440, height: 900 });
+      await clocked(page);
+      const save = button(page, "raise", "Save");
+      await save.focus();
+      await page.keyboard.press("Enter");
+      await expect(toasts(page)).toHaveCount(1);
+      const skip = page.locator('a[href="#main"]').first();
+      await skip.focus();
+      await expect(skip).toBeFocused();
+      await page.keyboard.press("Enter");
+      await expect(page.locator("#main")).toBeFocused();
+      await run(page, 48);
+      await expect(toasts(page).first()).not.toHaveAttribute("data-aside", "");
+      expect(
+        await toasts(page)
+          .first()
+          .evaluate((e) => getComputedStyle(e).visibility),
+      ).toBe("visible");
+      await expect(more(page)).toHaveCount(0);
       await run(page, 6000 + 240);
       await expect(toasts(page)).toHaveCount(0);
     },
@@ -1110,7 +1179,14 @@ test.describe("026: forced colours", () => {
   test(
     "68. forced colours draw the edge, and the icons differ",
     tag("forced-colors"),
-    async ({ page }) => {
+    async ({ page, browserName }) => {
+      // The change review, finding 7: Playwright's WebKit does not emulate
+      // forced colours, so every border stays transparent there. `022`'s
+      // fault ledger takes it over when its engine projects land.
+      test.skip(
+        browserName === "webkit",
+        "Playwright's WebKit does not emulate forcedColors",
+      );
       await open(page, PAGE);
       const rows = await example(page, "kinds")
         .locator('[data-slot="toast"]')

@@ -255,11 +255,30 @@ describe("026: the stack", () => {
     const h = harness();
     h.queue.setMax(1);
     const a = h.queue.raise("success", "A");
-    h.queue.hold(a, true);
+    h.queue.hold(a, "focus", true);
     const e = h.queue.raise("error", "E");
     expect(h.ids()).toEqual([a]);
     expect(h.queue.entries().waiting.map((w) => w.id)).toEqual([e]);
-    h.queue.hold(a, false);
+    h.queue.hold(a, "focus", false);
+    h.queue.dismiss(a);
+    expect(h.ids()).toEqual([e]);
+  });
+
+  // The change review, finding 3: focus and the pointer hold apart.
+  test("10b. the pointer passing over a focused toast does not free it", () => {
+    const h = harness();
+    h.queue.setMax(1);
+    const a = h.queue.raise("success", "A");
+    h.queue.hold(a, "focus", true);
+    h.queue.hold(a, "pointer", true);
+    h.queue.hold(a, "pointer", false);
+    const e = h.queue.raise("error", "E");
+    expect(h.ids()).toEqual([a]);
+    expect(h.queue.entries().waiting.map((w) => w.id)).toEqual([e]);
+    expect(h.queue.entries().showing[0]!.held).toBe(true);
+    // Focus leaves too: now it is free, and the error shows when A closes.
+    h.queue.hold(a, "focus", false);
+    expect(h.queue.entries().showing[0]!.held).toBe(false);
     h.queue.dismiss(a);
     expect(h.ids()).toEqual([e]);
   });
@@ -267,12 +286,12 @@ describe("026: the stack", () => {
   test("11. a smaller max keeps the held toast", () => {
     const h = harness();
     const [x, y, z] = ["X", "Y", "Z"].map((n) => h.queue.raise("success", n));
-    h.queue.hold(y!, true);
+    h.queue.hold(y!, "pointer", true);
     h.queue.setMax(1);
     expect(h.ids()).toEqual([y]);
     expect(h.last().waiting).toBe(2);
     expect(h.queue.entries().waiting.map((w) => w.id)).toEqual([x, z]);
-    h.queue.hold(y!, false);
+    h.queue.hold(y!, "pointer", false);
     expect(h.ids()).toEqual([y]);
     expect(h.last().waiting).toBe(2);
   });
@@ -674,6 +693,82 @@ describe("026: the announcers' one schedule", () => {
     expect(again[1]!.at).toBe(alertClear.at + FRAME);
     const c = all.find((s) => s.text === "Success: Record C saved.")!;
     expect(c.at).toBeGreaterThan(alertClear.at);
+  });
+
+  // The change review, finding 4: the schedule's rules, each held by a test.
+  test("26b. while an error is held, a polite message waits for it to clear", () => {
+    const h = harness();
+    h.advance(100);
+    h.queue.raise("error", "Couldn't save");
+    h.advance(500);
+    h.queue.raise("success", "Record saved");
+    h.advance(3000);
+    const clear = h.said.find(
+      (s) => s.channel === "assertive" && s.text === "",
+    )!;
+    const saved = h.spoken("polite")[0]!;
+    expect(saved.text).toBe("Success: Record saved.");
+    expect(saved.at).toBeGreaterThan(clear.at);
+  });
+
+  test("26c. a success raised with two errors is heard again once, after the last error", () => {
+    const h = harness();
+    h.advance(100);
+    h.queue.raise("success", "Record A saved");
+    h.queue.raise("error", "Couldn't save Record B");
+    h.queue.raise("error", "Couldn't save Record C");
+    h.advance(6000);
+    const success = h
+      .spoken("polite")
+      .filter((s) => s.text === "Success: Record A saved.");
+    expect(success).toHaveLength(2);
+    const lastError = h.said.filter(
+      (s) => s.channel === "assertive" && s.text === "",
+    );
+    expect(lastError).toHaveLength(2);
+    expect(success[1]!.at).toBeGreaterThan(lastError[1]!.at);
+  });
+
+  test("26d. a rewrite is written once, even when another error interrupts it", () => {
+    const h = harness();
+    h.advance(100);
+    h.queue.raise("success", "Record A saved");
+    h.queue.raise("error", "Couldn't save Record B");
+    // Until the rewrite is in the region.
+    let rewrite: number | undefined;
+    for (let i = 0; i < 400 && rewrite === undefined; i++) {
+      h.advance(8);
+      const s = h
+        .spoken("polite")
+        .filter((x) => x.text === "Success: Record A saved.");
+      if (s.length === 2) rewrite = s[1]!.at;
+    }
+    expect(rewrite).toBeDefined();
+    h.queue.raise("error", "Couldn't save Record C");
+    h.advance(6000);
+    expect(
+      h.spoken("polite").filter((x) => x.text === "Success: Record A saved."),
+    ).toHaveLength(2);
+    expect(h.spoken("assertive")).toHaveLength(2);
+  });
+
+  test("8b. a waiting toast updated by id is spoken, in its new words, when it shows", () => {
+    const h = harness();
+    h.queue.setMax(1);
+    h.queue.raise("success", "Uploaded 1 file", { id: "a" });
+    // After its words have cleared, so the error interrupts nothing.
+    h.advance(1500);
+    const e = h.queue.raise("error", "Couldn't sync");
+    expect(h.queue.entries().waiting.map((w) => w.id)).toEqual(["a"]);
+    h.queue.raise("success", "Uploaded 2 files", { id: "a" });
+    h.advance(3000);
+    h.queue.dismiss(e);
+    h.advance(3000);
+    expect(h.spoken().map((s) => s.text)).toEqual([
+      "Success: Uploaded 1 file.",
+      "Error: Couldn't sync.",
+      "Success: Uploaded 2 files.",
+    ]);
   });
 
   test("a repeat of the region's text is cleared first, then written", () => {

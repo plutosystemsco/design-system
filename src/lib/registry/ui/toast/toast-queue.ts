@@ -115,13 +115,18 @@ type Entry = {
   timer: unknown;
   state: "waiting" | "showing";
   aside: boolean;
-  /** Holds focus or the pointer. */
-  held: boolean;
+  /** Holds keyboard focus. */
+  focused: boolean;
+  /** Holds the pointer. Two flags, so one leaving does not free the other's hold. */
+  pointed: boolean;
   /** Has lived through one navigation. */
   survived: boolean;
   /** Has been spoken since it was raised or last changed. */
   spoken: boolean;
 };
+
+/** A toast that holds focus or the pointer never leaves the stack but by closing. */
+const held = (e: Entry) => e.focused || e.pointed;
 
 /** One message for an announcer; a rewrite repeats what an error interrupted. */
 type Message = { text: string | (() => string); rewrite: boolean };
@@ -360,7 +365,7 @@ export function createToastQueue(deps: ToastQueueDeps) {
       }
       if (!displace || head.kind !== "error") break;
       const free = showing
-        .filter((s) => s.timed && !s.held)
+        .filter((s) => s.timed && !held(s))
         .sort((a, b) => a.seq - b.seq)[0];
       if (!free) break;
       waiting.shift();
@@ -374,7 +379,7 @@ export function createToastQueue(deps: ToastQueueDeps) {
     const over = showing.length - max;
     if (over <= 0) return;
     const free = showing
-      .filter((s) => !s.held)
+      .filter((s) => !held(s))
       .sort((a, b) => a.seq - b.seq)
       .slice(0, over);
     unshow(free);
@@ -451,12 +456,16 @@ export function createToastQueue(deps: ToastQueueDeps) {
   function write() {
     const polite = channels.polite;
     const assertive = channels.assertive;
+    // An error waiting to be written would interrupt a rewrite at once, and
+    // a rewrite is written only once: it waits until no error is due.
+    const errorDue = !blocked(assertive) && assertive.queue.length > 0;
     // Polite first: an error written in the same frame then interrupts it.
     if (
       !blocked(polite) &&
       polite.current === null &&
       assertive.current === null &&
-      polite.queue.length
+      polite.queue.length &&
+      !(polite.queue[0]!.rewrite && errorDue)
     )
       put(polite, polite.queue.shift()!);
     if (
@@ -607,7 +616,8 @@ export function createToastQueue(deps: ToastQueueDeps) {
       timer: undefined,
       state: "waiting",
       aside: false,
-      held: false,
+      focused: false,
+      pointed: false,
       survived: false,
       spoken: false,
     };
@@ -695,12 +705,13 @@ export function createToastQueue(deps: ToastQueueDeps) {
       reclock();
       emit();
     },
-    /** Focus or the pointer is in a toast, or has left it. */
-    hold(id: string, on: boolean) {
+    /** Focus or the pointer is in a toast, or has left it. Each holds on its own. */
+    hold(id: string, cause: "focus" | "pointer", on: boolean) {
       const e = find(id);
-      if (!e || e.held === on) return;
-      e.held = on;
-      if (!on) {
+      const flag = cause === "focus" ? "focused" : "pointed";
+      if (!e || e[flag] === on) return;
+      e[flag] = on;
+      if (!held(e)) {
         shrink();
         promote(false);
         reclock();
@@ -801,7 +812,7 @@ export function createToastQueue(deps: ToastQueueDeps) {
         kind: e.kind,
         title: e.title,
         aside: e.aside,
-        held: e.held,
+        held: held(e),
         remaining:
           e.started === null
             ? e.remaining

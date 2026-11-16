@@ -975,7 +975,7 @@ Then, in the same landing:
 
 1. **Toast's registry and site checks live in `tests/unit/toast-site.test.ts`** (tests 37, 38, 39, 41 and 43), not in `registry.test.ts` and `examples.test.ts`. Those files are edited by every wave-1 build; a file of its own cannot conflict. Tests 40 and 42 stay where the spec puts them, since they change shared counts.
 2. **The changelog's `toast` bullet** leaves out its two `app-shell` phrases until D1 (the bullet would otherwise say the shell mounts a toaster it does not). Test 38 checks the `toast` bullet; its `app-shell` half moves to D1.
-3. **The guide's `026` section** covers `sonner` and the toast now; the `app-shell` step comes with D1. The guide page draws a section's rename table only when the section has renames (`026` has none), and each command's region is named by its section and step ("026: a toast of Kuiper's own, step 1"): a second section's "Step 1" repeated a landmark name, which axe reports (`landmark-unique`). Two small edits to the guide's page, which is the guide's own.
+3. **The guide's `026` section** covers `sonner` and the toast now; the `app-shell` step comes with D1. The guide page draws a section's rename table only when the section has renames (`026` has none), and each command keeps its visible title, "Step 1", while its scrolling region is named by its section and step ("026: a toast of Kuiper's own, step 1"), through a new optional `name` on the site's `Snippet` (`src/lib/site/page/snippet.svelte`): a second section's "Step 1" repeated a landmark name, which axe reports (`landmark-unique`). The first build put the long name in the visible title; the change review's finding 6 shortened it again.
 4. **The API table names a module's region "<part>, exports"**, a component's "<part>, API" as before (`src/lib/site/page/api-table.svelte`, lane S, one line). The toast's function `toast` and its card `Toast` differ only in case, and axe's `landmark-unique` compares names without case.
 5. **`toast.ts` also has a default export, and `index.ts` imports the item's files without an extension.** The API reader names a module's table by its default import in `index.ts`, and resolves only bare or `.ts` paths. So the table is `toast`, not a second `Toast`. `#lib` items already import extensionless (`chart`, `code-editor`).
 6. **`findTrap` lives in `toast-queue.ts`.** The spec names no file; that file is pure TypeScript and already unit-tested.
@@ -1062,7 +1062,7 @@ Then, in the same landing:
 
 On the final tree (Chromium; light and dark projects; the repository's config, copied to serve on port 5232, since parallel builds share port 4173; the copy and every scratch file were deleted before the commit):
 
-- `bun run check`: 0 errors, 0 warnings, 2214 files.
+- `bun run check`: **corrected by the change review (finding 2).** At `367ac57` it reported 2 errors in 2,215 files, both in `tests/e2e/toast.spec.ts` (two `hold` functions returning `Promise<boolean>`). The builder ran `check` before that file existed and did not run it again; the line here said "0 errors" in error. Fixed in "The review's fixes" below: 0 errors, 0 warnings, 2,215 files.
 - `bun run lint`: clean.
 - The literal lint: 0 literals, 1 allowance.
 - `bun run test:unit`: 1305 tests in 43 files: 1301 pass, 2 skip, 2 fail on time alone, each under the machine's load (load average 75 to 130, from five builds at once): a `thumbnails.test.ts` hash test (5 s limit; it passes with a 60 s one, as its three siblings did) and the `highlight.test.ts` timing test (70 ms warm against 50 ms; the handoff names its sibling as flaky under load). The base, at the start, read 1254 pass and 2 skip of 1256.
@@ -1071,3 +1071,40 @@ On the final tree (Chromium; light and dark projects; the repository's config, c
 - `bun scripts/site/release-check.ts`: exit 0.
 - The scorecard: re-run at `367ac57` (`kuiper.ts`, `breadth.ts`, `site.ts --only kuiper`, `depth.ts`); its run log has the row. Row 1 reads 30 of 40 parts (was 29), score 3 held, as criterion 30 predicts; every other row holds; the total stays 32. The Button page reads 382 kB.
 
+
+### Rulings at landing
+
+- **The browser tests came after the code (the change review's finding 5).** AGENTS.md binds "tests → code"; tests 44 to 75 were written after the item, which deviates from it (deviation 19). **The design lead accepts it for this landing**, because the mutation evidence, the builder's and the reviewer's, shows the tests catch the behaviours they name. Criterion 28 is therefore met for the unit tests, and for the browser tests proven by mutation in place of failing first. The faults the suites missed, findings 1, 3 and 4 below, are named so the next build writes such cases first: a focused element larger than any toast, two holds sharing one flag, and the speech schedule's untested rules. (The design lead, 2026-11-15, recorded by the coordinator.)
+
+### The review's fixes
+
+The change review, [`../reviews/026-toast-pr-2026-11-15.md`](../reviews/026-toast-pr-2026-11-15.md), read "Land after fixes". Its findings 1 to 4, 6 and 12 are fixed on the branch in one commit, "026: the review's fixes". Findings 7 to 11 and the merge notes are answered as below.
+
+1. **High. A focused container hid every toast.** `checkAside` now exempts a focused element whose visible part (its box clipped to the viewport) is wider than the region or as tall as the viewport: `main` after a skip link, a page's container after Safari closes a dialog. The stack can never hide such an element, so nothing steps aside for it and every clock runs. Smaller elements keep decision 15a's stricter rule, any overlap. *Why these bounds, not "entirely hidden" for every element:* the criterion's own test would let a toast cover most of a field a little taller than itself; the bounds exempt only what no toast could hide. Test 63 applies the same exemption: at 390 the API tables' scroll regions are now wider than the region and exempt. New test **64g**: the skip link, Enter, focus on `#main`: the toast stays in view, unhidden, with no count line, and leaves after its 6 s. Test 57's dialog case now passes in WebKit.
+2. **High. `bun run check`.** The two `hold` functions in test 57 have block bodies. `check`: 0 errors, 0 warnings, 2,215 files. The "Checks run" line above is corrected.
+3. **Medium. One flag for two holds.** The queue keeps `focused` and `pointed` apart; a toast is held while either is true, and `hold(id, cause, on)` names its cause. New unit test **10b** (the reviewer's scenario: focus in A, the pointer over A and out, an error raised: A stays, the error waits) and browser test **53b** (the same at 390, by F8, Tab, the mouse over the toast and away).
+4. **Medium. The speech gap.** A rewrite, the polite message an error interrupted, now waits while an error is due on the assertive channel, so it is heard after the last of several errors, not interrupted by the next. New unit tests: **26b** (an error alone, then a success at 500 ms: the success is written after the error clears), **26c** (a success with two errors: heard twice, the second after the last error clears), **26d** (a rewrite is written once, even when another error interrupts it) and **8b** (a waiting toast updated by id is spoken, in its new words, when it shows). Each kills one of the mutants the review found surviving:
+
+| Mutant | Killed by |
+|---|---|
+| the rewrite-once guard removed (review's 8) | 26d |
+| polite writes do not wait while an error is held (review's 9) | 26b |
+| an updated waiting toast not marked unspoken (review's 10) | 8b |
+| this fix undone: a rewrite does not wait for a due error | 26c |
+| one hold flag (the pointer's alone) | 10, 10b |
+
+5. **Finding 12, Low. The window's focus at mount.** The toaster reads `document.hasFocus()` on mount and holds the `blur` cause if the window has no focus.
+6. **Finding 6, Low. The guide's titles.** The visible title is "Step 1" again; the region's name carries the section (deviation 3).
+7. **Finding 7, Low. Test 68 in WebKit** is skipped there, with the reason: Playwright's WebKit does not emulate forced colours. `022`'s fault ledger takes it over.
+8. **Findings 8 to 11 and the merge notes** are for the merge and the checkpoint, after `027a` lands: the page weight re-measured on the merged tree (the flag above, "about 0.4 kB left", is stale after `020a`, which lowered the Button page by about 8 kB); `PAIR_FILE` as the one pair rule; the guide page merged with `020b`'s; the counts re-derived; the scorecard re-run. Finding 10 (the extensionless import in `index.ts`) stands as deviation 5 for now; D1's smoke run is the first install of `toast` into an app.
+
+**Seen failing first.** The new tests were run against the unfixed item, its toaster and queue as committed at `367ac57`, built in place and then restored: 53b and 64g failed in Chromium and WebKit (64g on `data-aside`, 53b on the toast's kind), and test 57's dialog case failed in WebKit. The new unit tests each failed for their mutant, as the table shows.
+
+**Checks run on the fixes** (a private copy of the Playwright config, served on port 5242, deleted after):
+
+- `bun run check`: 0 errors, 0 warnings, 2,215 files.
+- `bun run lint`: clean. The literal lint: 0 literals, 1 allowance.
+- The five toast unit files: 52 pass, 0 fail. The whole unit suite, with a 120 s timeout: 1,308 pass, 2 skip, 0 fail.
+- `tests/e2e/toast.spec.ts` in Chromium light and dark, Firefox and WebKit: 175 passed, 1 skipped (test 68 in WebKit).
+- `upgrade.spec.ts` and `axe.spec.ts` on the guide and the toast page, light and dark: 32 passed.
+- The toast's thumbnail hash moved with its files; the manifest was rewritten with `--hash-only`, since the pictures, the specimens, do not change.

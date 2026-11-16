@@ -114,9 +114,9 @@
       : null;
     const id = li?.dataset.toastId ?? null;
     if (id === focusedId) return;
-    if (focusedId) queue.hold(focusedId, false);
+    if (focusedId) queue.hold(focusedId, "focus", false);
     focusedId = id;
-    if (id) queue.hold(id, true);
+    if (id) queue.hold(id, "focus", true);
   }
 
   /** Back where focus was: the remembered element, else `#main`, else nowhere. */
@@ -262,8 +262,25 @@
     } catch {
       visible = false;
     }
+    // SC 2.4.11 asks that focus not be entirely hidden. A focused element
+    // whose visible part is wider than the region, or as tall as the
+    // viewport, such as `main` after a skip link or a page's container, can
+    // never be hidden by the stack: nothing steps aside for it.
+    const big = (() => {
+      if (!active) return false;
+      const b = active.getBoundingClientRect();
+      const width = Math.min(b.right, innerWidth) - Math.max(b.left, 0);
+      const height = Math.min(b.bottom, innerHeight) - Math.max(b.top, 0);
+      return (
+        width > region!.getBoundingClientRect().width || height >= innerHeight
+      );
+    })();
     const outside =
-      !!active && active !== document.body && !inRegion(active) && visible;
+      !!active &&
+      active !== document.body &&
+      !inRegion(active) &&
+      visible &&
+      !big;
     const items = region.querySelectorAll<HTMLElement>(
       "li[data-toast-id]:not([data-state=closed])",
     );
@@ -419,6 +436,8 @@
     checkModal();
 
     if (document.visibilityState === "hidden") q.pause("hidden");
+    // A window mounted without focus sends no `blur`: read it now.
+    if (!document.hasFocus()) q.pause("blur");
 
     // In development, name an ancestor that would trap the fixed layer.
     if (import.meta.env?.DEV) {
@@ -547,8 +566,8 @@
               "pointer-events-auto animate-enter data-[state=closed]:animate-exit",
               t.aside && !t.closing && "invisible",
             )}
-            onpointerenter={() => queue?.hold(t.id, true)}
-            onpointerleave={() => queue?.hold(t.id, false)}
+            onpointerenter={() => queue?.hold(t.id, "pointer", true)}
+            onpointerleave={() => queue?.hold(t.id, "pointer", false)}
             onanimationend={(e: AnimationEvent) => ended(e, t)}
           />
         {/each}
