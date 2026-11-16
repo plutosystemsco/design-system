@@ -116,9 +116,9 @@
     "outputHash": "67b6685c60a3cfc6a165e21ebdbabcdbfffdf61cd4008a2903e4f22b98e3ad55"
   },
   "catalogue": {
-    "js": 379202,
-    "css": 16795,
-    "sumOfAlone": { "js": 1126047, "css": 64030 }
+    "js": 379331,
+    "css": 16798,
+    "sumOfAlone": { "js": 1126326, "css": 64035 }
   },
   "items": {
     "utils": {
@@ -1218,16 +1218,16 @@
       "cases": {}
     },
     "code-editor": {
-      "hash": "40c2e0ce98cb07099dbd75c5434958bffc997eba12ca124c3174b65342818ab3",
+      "hash": "2cf9828dec1083338fbbd78e4566c83f5246c904f6bd945ce7314c95b0514f69",
       "runtimeHash": "3bbeba0799f8a4899d0d56998f8a7eb61254b29e0060080e4c307da36e14536d",
-      "outputHash": "3d43c3c85878be92b699a6f08bcf0bffcdb3e154dfbc45483b6182a5acc3d334",
+      "outputHash": "8040584133902c47b91efb58aa95855f22faf3de20716af66cfd872aa789543c",
       "run": "2026-11-16T06:27:03.737Z",
       "size": {
-        "js": 130841,
+        "js": 131114,
         "css": 587,
         "lazy": 382311,
         "assets": 2147405,
-        "brotli": { "js": 111729, "css": 468 }
+        "brotli": { "js": 111941, "css": 468 }
       },
       "hydrate": { "ms": 118.3, "spread": [109.7, 129.9], "settledMs": 403.6 },
       "interaction": {
@@ -1242,21 +1242,21 @@
       },
       "route": "/",
       "breakdown": [
-        { "source": "package:@codemirror/view", "js": 52900 },
-        { "source": "package:@codemirror/state", "js": 16424 },
-        { "source": "item:highlighter", "js": 10116 },
-        { "source": "package:@codemirror/commands", "js": 8978 },
-        { "source": "package:@lezer/lr", "js": 8574 },
-        { "source": "package:@lezer/python", "js": 8494 },
-        { "source": "package:@lezer/common", "js": 7297 },
-        { "source": "package:@codemirror/language", "js": 6243 },
-        { "source": "runtime", "js": 4336 },
-        { "source": "package:@lezer/highlight", "js": 1694 },
-        { "source": "package:@codemirror/autocomplete", "js": 1684 },
-        { "source": "own", "js": 1559 },
-        { "source": "package:style-mod", "js": 738 },
-        { "source": "package:@marijn/find-cluster-break", "js": 697 },
-        { "source": "package:@codemirror/lang-python", "js": 694 },
+        { "source": "package:@codemirror/view", "js": 52988 },
+        { "source": "package:@codemirror/state", "js": 16451 },
+        { "source": "item:highlighter", "js": 10131 },
+        { "source": "package:@codemirror/commands", "js": 9028 },
+        { "source": "package:@lezer/lr", "js": 8588 },
+        { "source": "package:@lezer/python", "js": 8508 },
+        { "source": "package:@lezer/common", "js": 7309 },
+        { "source": "package:@codemirror/language", "js": 6255 },
+        { "source": "runtime", "js": 4344 },
+        { "source": "package:@lezer/highlight", "js": 1697 },
+        { "source": "package:@codemirror/autocomplete", "js": 1687 },
+        { "source": "own", "js": 1583 },
+        { "source": "package:style-mod", "js": 739 },
+        { "source": "package:@marijn/find-cluster-break", "js": 698 },
+        { "source": "package:@codemirror/lang-python", "js": 695 },
         { "source": "package:w3c-keyname", "js": 413 }
       ],
       "cases": {}
@@ -1305,7 +1305,7 @@
       "cases": {}
     },
     "code-languages": {
-      "hash": "7cfbb4e64c18581274baa836284ad871e1bdc2e7f6be3cc0fe17f0d191ec07ce",
+      "hash": "dbd4a1f4c175e8305b4aaa0f7b03ae5b0ff2e7cc1e769631e21836111a6bfed2",
       "runtimeHash": "55c9e9018cc7d3dbe4d7974a2dee1c49e99e6089d185da15c464bec700a32f49",
       "outputHash": "8b5132f06f26738a608599f66cfd9a7612dcd00762db3d9224ae611db3ad2061",
       "run": "2026-11-16T06:27:03.737Z",
@@ -2527,16 +2527,16 @@
       "cases": {}
     },
     "search-field": {
-      "hash": "6bf0bbcc883826f5706b09a89bd4f9bcaed46cbf06220f6377acc3fe135b13ee",
+      "hash": "707079e0e0afe96f9ce1ab35c0de5c0b046337788fc71431b6459e4adae3a1f5",
       "runtimeHash": "4e8b59e329390f651f0aaaabda86e3e1b58f3cf5ae06af2607e9b7d91757655c",
-      "outputHash": "067260cfddf94142df2a4d3d9c1014c2821441f2c148d0cf8ed9291a1de51b37",
+      "outputHash": "da3bc75a0a6c404675ec7dcc7a7767e222c4311d1c1b6f5e80801683c6d18af7",
       "run": "2026-11-16T10:13:18.680Z",
       "size": {
-        "js": 13411,
-        "css": 1695,
+        "js": 13417,
+        "css": 1700,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 11902, "css": 1476 }
+        "brotli": { "js": 11912, "css": 1478 }
       },
       "hydrate": { "ms": 27, "spread": [25.9, 29.9], "settledMs": null },
       "interaction": {
@@ -2551,9 +2551,9 @@
       },
       "route": "/",
       "breakdown": [
-        { "source": "package:tailwind-variants", "js": 4178 },
-        { "source": "runtime", "js": 4156 },
-        { "source": "package:phosphor-svelte", "js": 2222 },
+        { "source": "package:tailwind-variants", "js": 4181 },
+        { "source": "runtime", "js": 4158 },
+        { "source": "package:phosphor-svelte", "js": 2223 },
         { "source": "own", "js": 853 },
         { "source": "item:input-group", "js": 754 },
         { "source": "item:button", "js": 563 },

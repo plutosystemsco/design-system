@@ -316,14 +316,17 @@ test.describe(
         expect(bare.equals(item), "the bare input's cancel button shows").toBe(
           false,
         );
+        // 022n: the reference hides the button with display: none. Linux
+        // WebKit's Adwaita sheet draws the glyph as a mask under
+        // appearance: none, so an appearance rule would hide nothing there.
         await page.addStyleTag({
           content:
-            'input[type="search"]::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; } input[type="search"]::-webkit-search-decoration { -webkit-appearance: none; appearance: none; }',
+            'input[type="search"]::-webkit-search-cancel-button { display: none; } input[type="search"]::-webkit-search-decoration { -webkit-appearance: none; appearance: none; }',
         });
         const styled = await end();
         expect(
           styled.equals(item),
-          "the class draws what -webkit-appearance: none draws",
+          "the class draws what display: none draws",
         ).toBe(true);
       },
     );

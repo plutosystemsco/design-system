@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import { insertNewline } from "@codemirror/commands";
   import {
     Compartment,
     EditorState,
@@ -81,6 +82,15 @@
           keymap.of([
             { key: "Mod-Enter", run },
             { key: "Ctrl-Enter", run },
+          ]),
+        ),
+        // 022m: Enter and Shift Enter, at the lowest precedence, so a setup's
+        // own binding (pythonSetup's defaultKeymap) or an app's still wins.
+        // Left to the browser, Linux WebKit writes two line breaks at a
+        // line's end, and CodeMirror drops the extra one only in Chrome.
+        Prec.lowest(
+          keymap.of([
+            { key: "Enter", run: insertNewline, shift: insertNewline },
           ]),
         ),
         EditorView.updateListener.of((update) => {
