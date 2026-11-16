@@ -19,7 +19,7 @@ const registry = withListedItems(
 };
 
 describe("015: files you own, and what an item brings", () => {
-  test("for 78 of 78 items, the list is registry.json's files through the alias map", () => {
+  test("for 79 of 79 items, the list is registry.json's files through the alias map", () => {
     let n = 0;
     for (const item of registry.items) {
       const list = filesYouOwn(item);
@@ -32,7 +32,7 @@ describe("015: files you own, and what an item brings", () => {
       }
       n++;
     }
-    expect(n).toBe(78);
+    expect(n).toBe(79);
   });
 
   test("the alias map: ui, components, hooks and lib", () => {

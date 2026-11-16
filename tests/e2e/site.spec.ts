@@ -104,7 +104,7 @@ test.describe("015 criterion 13: nothing required is lost", () => {
     expect(missing).toEqual([]);
   });
 
-  test("61 of 61 item pages render at least 1 frame, the first with its code open; the 17 blocks and compositions render their viewer", async ({
+  test("62 of 62 item pages render at least 1 frame, the first with its code open; the 17 blocks and compositions render their viewer", async ({
     request,
   }) => {
     const registry = withListedItems(
@@ -143,7 +143,7 @@ test.describe("015 criterion 13: nothing required is lost", () => {
       else framed.push(item.name);
     }
     expect(wrong).toEqual([]);
-    expect(framed).toHaveLength(61);
+    expect(framed).toHaveLength(62);
     expect(viewers).toHaveLength(17);
   });
 
@@ -493,7 +493,7 @@ test.describe("018 criterion 6: the part comes first", () => {
 });
 
 test.describe("018 criterion 7: Updated", () => {
-  test("78 of 78 component pages show one Updated <version>, linked to its release; Since is unchanged; no Changed in", async ({
+  test("79 of 79 component pages show one Updated <version>, linked to its release; Since is unchanged; no Changed in", async ({
     page,
   }) => {
     test.setTimeout(600_000);
@@ -805,7 +805,7 @@ test.describe("018 criteria 12 to 14: the measure, one h3, smoothing", () => {
 // the busiest content.
 
 test.describe("018 criterion 18: the Components index", () => {
-  test("78 tiles, each image sized, lazy and alt-less; no other-scheme images fetched; the filter narrows and counts", async ({
+  test("79 tiles, each image sized, lazy and alt-less; no other-scheme images fetched; the filter narrows and counts", async ({
     page,
   }, info) => {
     const other = info.project.name === "dark" ? "light" : "dark";
@@ -816,7 +816,7 @@ test.describe("018 criterion 18: the Components index", () => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await open(page, "/components/");
     const tiles = page.locator('[data-slot="component-tile"]');
-    await expect(tiles).toHaveCount(78);
+    await expect(tiles).toHaveCount(79);
     const imgs = await page
       .locator('[data-slot="component-tile"] img')
       .evaluateAll((is) =>
@@ -829,13 +829,13 @@ test.describe("018 criterion 18: the Components index", () => {
         })),
       );
     // The first row's 3 pictures are CSS backgrounds, aria-hidden; the
-    // other 75 tiles hold an <img> per scheme.
+    // other 76 tiles hold an <img> per scheme.
     await expect(
       page.locator(
         '[data-slot="component-tile"] [data-slot="tile-picture"][aria-hidden="true"]',
       ),
     ).toHaveCount(3);
-    expect(imgs).toHaveLength(150);
+    expect(imgs).toHaveLength(152);
     for (const i of imgs)
       expect([i.w, i.h, i.alt, i.lazy]).toEqual(["480", "300", "", "lazy"]);
     await page.mouse.wheel(0, 4000);
@@ -845,10 +845,10 @@ test.describe("018 criterion 18: the Components index", () => {
         .locator(`[data-slot="component-tile"] img[data-scheme="${other}"]`)
         .all()
     ).length;
-    expect(shown).toBe(75);
+    expect(shown).toBe(76);
     expect(fetched.filter((u) => u.includes(`-${other}.`))).toEqual([]);
     await page.getByLabel("Filter components").first().fill("dia");
-    await expect(tiles.filter({ visible: true })).not.toHaveCount(78);
+    await expect(tiles.filter({ visible: true })).not.toHaveCount(79);
     await expect(page.locator('main p[role="status"]')).toContainText(
       "component",
     );

@@ -34,7 +34,7 @@ describe("015: the search index", () => {
     const pages = index.filter((e) => !e.path.includes("#")).map((e) => e.path);
     expect(pages).toEqual(SITEMAP.map((p) => p.path));
     expect(new Set(index.map((e) => e.path)).size).toBe(index.length);
-    expect(SITEMAP.filter((p) => p.spec === "015")).toHaveLength(84);
+    expect(SITEMAP.filter((p) => p.spec === "015")).toHaveLength(85);
   });
 
   test('"dial" ranks Dialog first, and "but" ranks Button first', () => {
@@ -175,10 +175,11 @@ describe("018 decision 8: search that finds what was meant", () => {
 
   // 018 checkpoint 2 drops "select": it starts a word of Native select.
   // 020 adds the old name of the renamed theme item. 027a adds hyperlink
-  // and anchor, for the link.
-  test("the aliases equal their fixture list of 7", async () => {
+  // and anchor, for the link; 026 test 42, snackbar and notification, for
+  // the toast.
+  test("the aliases equal their fixture list of 9", async () => {
     const { ALIASES } = await aliases();
-    expect(fixture).toHaveLength(7);
+    expect(fixture).toHaveLength(9);
     expect(ALIASES.map(({ alias, path }) => ({ alias, path }))).toEqual(
       fixture.map(({ alias, path }) => ({ alias, path })),
     );

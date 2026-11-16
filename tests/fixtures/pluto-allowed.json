@@ -25,7 +25,7 @@
     {
       "files": "**",
       "pattern": "Pluto Systems",
-      "count": 321,
+      "count": 324,
       "class": "brand",
       "reason": "The company's name (decision 2).",
       "byFile": {
@@ -33,7 +33,7 @@
         "LICENSE": 1,
         "README.md": 3,
         "package.json": 1,
-        "registry.json": 80,
+        "registry.json": 81,
         "scripts/rename-kuiper.ts": 5,
         "src/lib/registry/blocks/app-shell/+layout.svelte": 2,
         "src/lib/registry/blocks/product-home/+page.svelte": 1,
@@ -86,7 +86,7 @@
         "static/r/styles/maia/four-dot.json": 3,
         "static/r/styles/maia/hero.json": 1,
         "static/r/styles/maia/highlighter.json": 1,
-        "static/r/styles/maia/index.json": 80,
+        "static/r/styles/maia/index.json": 81,
         "static/r/styles/maia/input-group.json": 1,
         "static/r/styles/maia/input-otp.json": 1,
         "static/r/styles/maia/input.json": 1,
@@ -131,6 +131,7 @@
         "static/r/styles/maia/tabs.json": 1,
         "static/r/styles/maia/textarea.json": 1,
         "static/r/styles/maia/theme.json": 1,
+        "static/r/styles/maia/toast.json": 1,
         "static/r/styles/maia/toggle-group.json": 1,
         "static/r/styles/maia/toggle.json": 1,
         "static/r/styles/maia/tooltip.json": 1,
@@ -152,7 +153,7 @@
     {
       "files": "**",
       "pattern": "plutosystemsco",
-      "count": 259,
+      "count": 263,
       "class": "brand",
       "reason": "The company's GitHub organisation, in every source and install URL."
     },
@@ -165,6 +166,13 @@
     },
     {
       "files": "**",
+      "pattern": "co\\.plutosystems\\.kuiper",
+      "count": 1152,
+      "class": "brand",
+      "reason": "021 decision 4: the DTCG vendor key, the company's domain reversed with the system's name. Permanent once 0.13.0 ships."
+    },
+    {
+      "files": "**",
       "pattern": "\\bplutosystems\\b",
       "count": 6,
       "class": "brand",
@@ -173,7 +181,7 @@
     {
       "files": "**",
       "pattern": "pluto-sandbox",
-      "count": 10,
+      "count": 14,
       "class": "brand",
       "reason": "Sample content: the example project's name."
     },
@@ -408,6 +416,13 @@
       "count": 1,
       "class": "record",
       "reason": "The living documents and the install guide state the rename and point to the upgrade guide (decision 14)."
+    },
+    {
+      "files": "tests/unit/tokens-lifecycle.test.ts",
+      "pattern": "pluto-theme\\.json",
+      "count": 1,
+      "class": "history",
+      "reason": "021 decision 10: the record's test reads every shipped theme item, under its old name before 0.13.0."
     }
   ]
 }

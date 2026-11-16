@@ -240,7 +240,7 @@ export const PAGES_011 = ITEMS_011.map(componentPath);
 export const PAGES_027A = ITEMS_027A.map(componentPath);
 /** Every page of the site, from the one list (015 decision 1). */
 export const PAGES = SITEMAP.map((p) => p.path);
-/** The 78 component pages. */
+/** The 79 component pages. */
 export const COMPONENT_PAGES = ITEMS.map(componentPath);
 /** 002's 32 component pages. */
 export const PAGES_002 = COMPONENT_PAGES.filter(
@@ -612,7 +612,7 @@ export const BAR_STOPS = [
 
 /**
  * The footer's stops: one link per door's landing and the door's pages (the
- * Components door lists its landing; its 78 pages are on it), the registry
+ * Components door lists its landing; its 79 pages are on it), the registry
  * group, then the source link.
  */
 export const FOOTER_STOPS = [

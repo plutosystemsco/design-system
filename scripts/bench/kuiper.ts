@@ -47,22 +47,102 @@ const grepFiles = (files: string[], re: RegExp) =>
   files.reduce((n, f) => n + count(read(f), re), 0);
 
 // Tokens
-// 020 decision 13: a commit before the rename holds the old path, so it
-// still scores the same.
-const tokens = JSON.parse(
-  read("tokens/kuiper.tokens.json") || read("tokens/pluto.tokens.json") || "{}",
-);
-const roles = Object.keys(tokens.themes?.light ?? {});
-const words = read("src/lib/site/foundations/words.ts");
-const described = roles.filter(
-  (r) => words.includes(`"${r}":`) || words.includes(`  ${r}:`),
-);
-const tokenText = JSON.stringify(tokens);
-const contrastPairs = Object.values(tokens.contrast ?? {}).reduce(
-  (n: number, v) =>
-    n + (Array.isArray(v) ? v.length : Object.keys(v as object).length),
-  0,
-);
+// 021 decision 14: from 021 the source is DTCG, a resolver and the files it
+// names; before it, one file of Kuiper's own shape, at `tokens/kuiper.tokens.json`
+// or, before 020's rename (020 decision 13), at its old name, with
+// the role words in `words.ts`. Each commit is scored in its own shape.
+type TokenJson = Record<string, unknown>;
+const tokenGroups = (tree: TokenJson) =>
+  Object.keys(tree).filter((k) => !k.startsWith("$"));
+const tokensIn = (group: unknown): TokenJson[] =>
+  Object.entries((group ?? {}) as TokenJson)
+    .filter(([k, v]) => !k.startsWith("$") && typeof v === "object" && v)
+    .map(([, v]) => v as TokenJson)
+    .filter((v) => "$value" in v);
+const countContrast = (rules: unknown) =>
+  Object.entries((rules ?? {}) as TokenJson)
+    .filter(([k]) => !k.startsWith("$"))
+    .reduce(
+      (n: number, [, v]) =>
+        n + (Array.isArray(v) ? v.length : Object.keys(v as object).length),
+      0,
+    );
+const resolverText = read("tokens/kuiper.resolver.json");
+let tokenShape: {
+  file: string;
+  primitives: number;
+  themes: string[];
+  roles: number;
+  described: number;
+  groups: number;
+  text: string;
+  contrastPairs: number;
+  expressive: boolean;
+};
+if (resolverText) {
+  const resolver = JSON.parse(resolverText);
+  const contexts = (resolver.modifiers?.scheme?.contexts ?? {}) as Record<
+    string,
+    { $ref: string }[]
+  >;
+  const tokenFile = (ref: string | undefined) =>
+    JSON.parse((ref && read(`tokens/${ref}`)) || "{}") as TokenJson;
+  const base = tokenFile(resolver.sets?.base?.sources?.[0]?.$ref);
+  const light = tokenFile(contexts.light?.at(-1)?.$ref);
+  const dark = tokenFile(contexts.dark?.at(-1)?.$ref);
+  const roleTokens = tokensIn(light.role);
+  tokenShape = {
+    file: "tokens/kuiper.resolver.json",
+    primitives: tokensIn(base.primitive).length,
+    themes: Object.keys(contexts),
+    roles: roleTokens.length,
+    described: roleTokens.filter(
+      (t) => typeof t.$description === "string" && t.$description,
+    ).length,
+    groups: new Set([...tokenGroups(base), ...tokenGroups(light)]).size,
+    text: [base, light, dark].map((t) => JSON.stringify(t)).join("\n"),
+    contrastPairs: countContrast(
+      JSON.parse(read("tokens/kuiper.contrast.json") || "{}"),
+    ),
+    expressive: "expressive" in base,
+  };
+} else {
+  const oldText =
+    read("tokens/kuiper.tokens.json") || read("tokens/pluto.tokens.json");
+  const tokens = JSON.parse(oldText || "{}");
+  const roles = Object.keys(tokens.themes?.light ?? {});
+  const words = read("src/lib/site/foundations/words.ts");
+  tokenShape = {
+    file: oldText ? "the one token file" : "",
+    primitives: Object.keys(tokens.primitives ?? {}).length,
+    themes: Object.keys(tokens.themes ?? {}),
+    roles: roles.length,
+    described: roles.filter(
+      (r) => words.includes(`"${r}":`) || words.includes(`  ${r}:`),
+    ).length,
+    groups: Object.keys(tokens).length,
+    text: JSON.stringify(tokens),
+    contrastPairs: countContrast(tokens.contrast),
+    expressive: Boolean(tokens.expressive),
+  };
+}
+// No count may read 0 silently (021 decision 14).
+if (
+  !tokenShape.file ||
+  !tokenShape.primitives ||
+  !tokenShape.roles ||
+  !tokenShape.contrastPairs
+) {
+  console.error(
+    `kuiper.ts: at ${rev ?? "the working tree"}, no token source was read: ${
+      tokenShape.file
+        ? `${tokenShape.file} gave ${tokenShape.primitives} primitives, ${tokenShape.roles} roles, ${tokenShape.contrastPairs} contrast pairs`
+        : "no resolver, and no token file under either name, is there"
+    }`,
+  );
+  process.exit(1);
+}
+const tokenText = tokenShape.text;
 
 // Theming and accessibility in the theme
 const appCss = read("src/app.css");
@@ -154,16 +234,16 @@ const report = {
     : null,
   breadth: { items: registry.items.length, byType },
   tokens: {
-    primitives: Object.keys(tokens.primitives ?? {}).length,
-    themes: Object.keys(tokens.themes ?? {}),
-    rolesPerTheme: roles.length,
-    rolesWithWords: described.length,
-    groups: Object.keys(tokens).length,
+    primitives: tokenShape.primitives,
+    themes: tokenShape.themes,
+    rolesPerTheme: tokenShape.roles,
+    rolesWithWords: tokenShape.described,
+    groups: tokenShape.groups,
     dtcgValueKeys: count(tokenText, /"\$value"/g),
     dtcgTypeKeys: count(tokenText, /"\$type"/g),
     descriptionsInFile: count(tokenText, /"\$?description"/g),
-    contrastPairs,
-    modes: ["productive", tokens.expressive ? "expressive" : null].filter(
+    contrastPairs: tokenShape.contrastPairs,
+    modes: ["productive", tokenShape.expressive ? "expressive" : null].filter(
       Boolean,
     ),
   },
