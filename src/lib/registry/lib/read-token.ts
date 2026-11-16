@@ -78,8 +78,14 @@ export function readEase(
   };
 }
 
+/**
+ * What `tween` animates: a number from `from` to `to`, over a duration and an
+ * easing named by their tokens.
+ */
 export type TweenOptions = {
+  /** The value at the start. */
   from: number;
+  /** The value at the end, which `onFrame` always receives last. */
   to: number;
   /** A duration token's name, such as `motion-fill`. */
   duration: string;
@@ -87,6 +93,10 @@ export type TweenOptions = {
   ease: string;
   /** Where the tokens are read; the root when omitted. */
   element?: Element;
+  /**
+   * Called on each frame with the value, and once with `to` when motion is
+   * reduced.
+   */
   onFrame: (value: number) => void;
 };
 

@@ -11,7 +11,14 @@
     size,
     variant,
     ...restProps
-  }: ToggleGroupPrimitive.ItemProps & ToggleVariants = $props();
+  }: (ToggleGroupPrimitive.ItemProps & ToggleVariants) & {
+    /** The value the group records when this item is pressed. */
+    value?: ToggleGroupPrimitive.ItemProps["value"];
+    /** The item's own size, used only when the group sets none. */
+    size?: ToggleVariants["size"];
+    /** The item's own look, used only when the group sets none. */
+    variant?: ToggleVariants["variant"];
+  } = $props();
 
   const ctx = getToggleGroupCtx();
 </script>

@@ -42,8 +42,21 @@
     label?: string;
     /** The description under the textarea. Without it, the keys are shown with Kbd. */
     hint?: string;
+    /**
+     * Shows the label above the textarea. It is visually hidden by default,
+     * since a chat's composer is plain to see.
+     */
     labelVisible?: boolean;
+    /**
+     * A hint inside the empty textarea. Never the only name: `label` is still
+     * read.
+     */
     placeholder?: string;
+    /**
+     * Called when the form is submitted, before Kuiper sends the draft. Kuiper
+     * always prevents the browser's own submit.
+     */
+    onsubmit?: HTMLFormAttributes["onsubmit"];
   } = $props();
 
   let textarea: HTMLTextAreaElement | null = $state(null);

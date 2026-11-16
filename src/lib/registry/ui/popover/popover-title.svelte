@@ -13,6 +13,19 @@
   }: WithElementRef<HTMLAttributes<HTMLHeadingElement>> & {
     /** The heading level: a title that looks like a heading is one. Default 2. */
     level?: 1 | 2 | 3 | 4 | 5 | 6;
+    /**
+     * The rendered heading, of the tag `level` sets. Bind it with `bind:ref`.
+     */
+    ref?: WithElementRef<HTMLAttributes<HTMLHeadingElement>>["ref"];
+    /** Classes for the heading, added after Kuiper's by `cn`. */
+    class?: HTMLAttributes<HTMLHeadingElement>["class"];
+    /**
+     * The heading's id. Without it, the title takes the one the popover names
+     * itself by.
+     */
+    id?: HTMLAttributes<HTMLHeadingElement>["id"];
+    /** The title's text, which names the popover. */
+    children?: HTMLAttributes<HTMLHeadingElement>["children"];
   } = $props();
 
   const context = getPopoverContext();

@@ -17,6 +17,70 @@ The system's code names now say Kuiper, as the system does. Before you update, r
 - `toast`: new, a `registry:ui`. `toast("Saved")`, `toast.success`, `toast.info`, `toast.caution`, `toast.error`, `toast.loading` and `toast.promise` raise a short message at the top end of the page, under a declared sticky bar; `toast.dismiss` closes one or all. Mount `<Toaster />` once, in the root layout. Two hidden announcers, present from the first render and on one schedule, speak each toast: errors interrupt, the rest wait their turn, and a success raised beside an error is spoken after it. The visible stack is never live, and no toast is a tab stop; F8 moves focus to the list and back, and Escape in a toast dismisses it. A toast never covers the element that has keyboard focus: it steps aside until focus moves, and the stack's count line says "1 hidden". Success and info leave after at least 6 s, longer for longer text, and pause on hover, on focus, while the window is in the background and while a modal is open; errors, cautions, loading toasts and any toast with an action wait to be dismissed. `duration: Infinity` keeps a toast. `timers="off"` turns timing off: to meet WCAG 2.2.1, bind it to a setting the person can reach first, or keep every timed message on the page too. Three show at once (one below 640 px); errors go first. A success or info toast survives one navigation; call `toast.navigating()` and `toast.navigated()` from your root layout's `beforeNavigate` and `afterNavigate`. A toast raised while a modal is open shows when it closes. Text only: no custom components. It depends on `status`, `button` and `spinner`, and on `phosphor-svelte`.
 - `kuiper-theme`: not an interface change. The token source is now DTCG 2025.10, the W3C Design Tokens format: a resolver, `tokens/kuiper.resolver.json`, combines the tokens both schemes share with the light or the dark scheme's file, and every role's job is in it, as its `$description`. The CSS an app gets is unchanged, byte for byte.
 - **New:** the tokens are published as plain CSS variables and as DTCG files. Each file is on the design site at `/v0.13.0/r/tokens/<name>` (`/r/tokens/<name>` for the latest release), and from GitHub at the release's tag. `kuiper.css` is every token as a custom property, for a stack without Tailwind. `kuiper.resolver.json` combines `kuiper.tokens.json` with `kuiper.light.tokens.json` or `kuiper.dark.tokens.json`. `kuiper.flat-light.tokens.json` and `kuiper.flat-dark.tokens.json` are each scheme in one file, for a tool that cannot read a resolver. `kuiper.removed.json` records every name that shipped and is gone, with what replaces it. Copy a file into your app; never link to it at run time. From 0.13.0 the DTCG token paths, the 48 primitives included, are an interface: a path renamed or removed is listed in `kuiper.removed.json` (constitution §6).
+- **Every prop described:** every component page's API table now says what each prop does, and shows a prop's default under its description. The words are doc comments in each item's source, so your editor shows them on hover too; `class`, `ref` and `children` are described on the design site, from each part's markup, not in the source.
+- `utils`: doc comments on every prop; no interface change.
+- `four-dot`: doc comments on every prop; no interface change.
+- `theme`: doc comments on every prop; no interface change.
+- `read-token`: doc comments on every prop; no interface change.
+- `liquid-glass`: doc comments on every prop; no interface change.
+- `button`: doc comments on every prop; no interface change.
+- `tooltip`: doc comments on every prop; no interface change.
+- `toggle`: doc comments on every prop; no interface change.
+- `toggle-group`: doc comments on every prop; no interface change; `ToggleGroup`'s `value` accepts the same values, and an editor now shows its type as `string[] | (string[] & string) | undefined` in the multiple form.
+- `card`: doc comments on every prop; no interface change.
+- `separator`: doc comments on every prop; no interface change.
+- `item`: doc comments on every prop; no interface change.
+- `tabs`: doc comments on every prop; no interface change.
+- `collapsible`: doc comments on every prop; no interface change.
+- `avatar`: doc comments on every prop; no interface change.
+- `popover`: doc comments on every prop; no interface change.
+- `accordion`: doc comments on every prop; no interface change; `Accordion`'s `value` accepts the same values, and an editor now shows its type as `string[] | (string[] & string) | undefined` in the multiple form.
+- `alert`: doc comments on every prop; no interface change.
+- `alert-dialog`: doc comments on every prop; no interface change.
+- `badge`: doc comments on every prop; no interface change.
+- `empty`: doc comments on every prop; no interface change.
+- `spinner`: doc comments on every prop; no interface change.
+- `field`: doc comments on every prop; no interface change.
+- `input`: doc comments on every prop; no interface change.
+- `textarea`: doc comments on every prop; no interface change.
+- `input-group`: doc comments on every prop; no interface change.
+- `native-select`: doc comments on every prop; no interface change.
+- `checkbox`: doc comments on every prop; no interface change.
+- `radio-group`: doc comments on every prop; no interface change.
+- `switch`: doc comments on every prop; no interface change.
+- `input-otp`: doc comments on every prop; no interface change.
+- `code-block`: doc comments on every prop; no interface change.
+- `code-editor`: doc comments on every prop; no interface change.
+- `highlighter`: doc comments on every prop; no interface change.
+- `use-highlighted-code`: doc comments on every prop; no interface change.
+- `code-languages`: doc comments on every prop; no interface change.
+- `chart`: doc comments on every prop; no interface change.
+- `dropdown-menu`: doc comments on every prop; no interface change.
+- `sheet`: doc comments on every prop; no interface change.
+- `dialog`: doc comments on every prop; no interface change.
+- `breadcrumb`: doc comments on every prop; no interface change.
+- `sidebar`: doc comments on every prop; no interface change.
+- `is-mobile`: doc comments on every prop; no interface change.
+- `message-log`: doc comments on every prop; no interface change.
+- `message`: doc comments on every prop; no interface change.
+- `marker`: doc comments on every prop; no interface change.
+- `composer`: doc comments on every prop; no interface change.
+- `stage`: doc comments on every prop; no interface change.
+- `stage-card`: doc comments on every prop; no interface change.
+- `marketing-bar`: doc comments on every prop; no interface change.
+- `stage-hero`: doc comments on every prop; no interface change.
+- `proof-band`: doc comments on every prop; no interface change.
+- `live-console`: doc comments on every prop; no interface change.
+- `name-strip`: doc comments on every prop; no interface change.
+- `cta-band`: doc comments on every prop; no interface change.
+- `marketing-footer`: doc comments on every prop; no interface change.
+- `hero`: doc comments on every prop; no interface change.
+- `sign-in`: doc comments on every prop; no interface change.
+- `sign-up`: doc comments on every prop; no interface change.
+- `page-states`: doc comments on every prop; no interface change.
+- `settings`: doc comments on every prop; no interface change.
+- `app-shell`: doc comments on every prop; no interface change.
+- `chat`: doc comments on every prop; no interface change.
 
 ## 0.12.0 — 2026-11-15
 

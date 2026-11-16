@@ -11,6 +11,7 @@
     children,
     ...restProps
   }: WithElementRef<HTMLAttributes<HTMLElement>> & {
+    /** Shows an icon's placeholder before the text's. */
     showIcon?: boolean;
     /** The row's place in its list: it picks one of four widths, the same on the server and the client. */
     index?: number;

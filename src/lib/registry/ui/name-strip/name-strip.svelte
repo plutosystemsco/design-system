@@ -11,6 +11,9 @@
   }: WithElementRef<HTMLAttributes<HTMLUListElement>> & {
     /** The list's accessible name: what the names are. */
     label: string;
+    /**
+     * The names to list, in order: customers, partners or the like, as text.
+     */
     names: string[];
   } = $props();
 </script>

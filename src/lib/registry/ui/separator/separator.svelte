@@ -9,7 +9,19 @@
     decorative = true,
     "data-slot": dataSlot = "separator",
     ...restProps
-  }: SeparatorPrimitive.RootProps = $props();
+  }: SeparatorPrimitive.RootProps & {
+    /**
+     * Kuiper's separator is decorative and hidden from assistive technology.
+     * Set it to `false` when the line divides content a reader should know
+     * about.
+     */
+    decorative?: SeparatorPrimitive.RootProps["decorative"];
+    /**
+     * The `data-slot` the line carries, so a part that wraps it, such as a
+     * field separator, can name itself.
+     */
+    "data-slot"?: SeparatorPrimitive.RootProps["data-slot"];
+  } = $props();
 </script>
 
 <SeparatorPrimitive.Root

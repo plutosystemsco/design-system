@@ -195,11 +195,16 @@ if (existsSync(compDir)) {
       return m ?? "";
     };
     const api = section("API");
+    // Cells split on unescaped pipes; a union type holds `\|`.
+    const cells = (l: string) => l.split(/(?<!\\)\|/).map((c) => c.trim());
     const rows = api
       .split("\n")
       .filter((l) => l.startsWith("| `"))
-      // Cells split on unescaped pipes; a union type holds `\|`.
-      .map((l) => l.split(/(?<!\\)\|/).map((c) => c.trim()));
+      .map(cells);
+    // The description's column, by its header: the fourth cell until 023,
+    // the third since (a row's default moved under its description).
+    const head = api.split("\n").find((l) => l.startsWith("| Name"));
+    const di = head ? cells(head).indexOf("What it does") : 4;
     const a11y = section("Accessibility");
     const prose = md.replace(/```[\s\S]*?```/g, "");
     twins.push({
@@ -212,7 +217,8 @@ if (existsSync(compDir)) {
       content: /^##+ (Content|Writing|Wording)/m.test(md),
       a11yBullets: count(a11y, /^- /gm),
       props: rows.length,
-      propsDescribed: rows.filter((r) => (r[4] ?? "").length > 0).length,
+      propsDescribed:
+        di < 0 ? 0 : rows.filter((r) => (r[di] ?? "").length > 0).length,
       updated: /\*\*Updated\*\*/.test(md),
       words: prose.split(/\s+/).filter(Boolean).length,
     });

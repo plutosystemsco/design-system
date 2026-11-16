@@ -10,7 +10,16 @@
     class: className,
     ...restProps
   }: WithElementRef<HTMLAttributes<HTMLElement>> & {
+    /**
+     * Renders your own element in place of the `<div>`. Spread the `props` it
+     * is given on that element.
+     */
     child?: Snippet<[{ props: Record<string, unknown> }]>;
+    /**
+     * Classes for the `<div>`, or for the element `child` renders, added after
+     * Kuiper's by `cn`.
+     */
+    class?: HTMLAttributes<HTMLElement>["class"];
   } = $props();
 
   // Mono furniture: a caption, lowercase, in the muted ink. As

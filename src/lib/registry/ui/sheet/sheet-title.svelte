@@ -7,7 +7,13 @@
     class: className,
     level = 2,
     ...restProps
-  }: SheetPrimitive.TitleProps = $props();
+  }: SheetPrimitive.TitleProps & {
+    /**
+     * The title's heading level. Kuiper's default makes it a second-level
+     * heading, below the page's one first-level heading.
+     */
+    level?: SheetPrimitive.TitleProps["level"];
+  } = $props();
 </script>
 
 <!-- A heading in the heading face; bits-ui renders role="heading" aria-level and names the dialog by it. -->

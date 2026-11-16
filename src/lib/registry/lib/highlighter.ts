@@ -60,7 +60,9 @@ export type {
 
 /** A loaded language: its engine, a one-shot highlight and an incremental session. */
 export type Highlighter = {
+  /** The language's id. */
   id: string;
+  /** Which engine paints it. */
   engine: "tree-sitter" | "shiki";
   /** Every line's tokens, once every grammar the code embeds has loaded. */
   highlight(code: string): Promise<HighlightedLine[]>;

@@ -20,7 +20,27 @@
     "aria-invalid": invalid,
     "aria-labelledby": labelledBy,
     ...restProps
-  }: RadioGroupPrimitive.RootProps = $props();
+  }: RadioGroupPrimitive.RootProps & {
+    /** The value of the chosen radio. Bind it to read or set it. */
+    value?: RadioGroupPrimitive.RootProps["value"];
+    /** The group's id. Inside a `FieldSet` it defaults to the set's. */
+    id?: RadioGroupPrimitive.RootProps["id"];
+    /**
+     * The ids of the text that describes the group. Inside a `FieldSet` it
+     * defaults to the set's description and error.
+     */
+    "aria-describedby"?: RadioGroupPrimitive.RootProps["aria-describedby"];
+    /**
+     * Marks the group invalid. Inside a `FieldSet` it follows the set's `error`
+     * or `invalid`.
+     */
+    "aria-invalid"?: RadioGroupPrimitive.RootProps["aria-invalid"];
+    /**
+     * The id of what names the group. Inside a `FieldSet` it defaults to the
+     * set's `FieldLegend`.
+     */
+    "aria-labelledby"?: RadioGroupPrimitive.RootProps["aria-labelledby"];
+  } = $props();
 
   // A radio group is a group control: it takes its set's wiring and its legend's name.
   // A field set from before 0.13.0 sets only its old key, read until 0.14.0.

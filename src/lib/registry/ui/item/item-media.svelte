@@ -32,6 +32,10 @@
     variant = "default",
     ...restProps
   }: WithElementRef<HTMLAttributes<HTMLDivElement>> & {
+    /**
+     * `icon` sizes an icon to the text. `image` crops a picture to a rounded
+     * square. `default` shows the media as it is.
+     */
     variant?: ItemMediaVariant;
   } = $props();
 </script>

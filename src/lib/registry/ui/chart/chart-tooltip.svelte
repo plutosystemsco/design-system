@@ -27,16 +27,39 @@
     nameKey,
     ...restProps
   }: WithoutChildren<WithElementRef<HTMLAttributes<HTMLDivElement>>> & {
+    /** Hides the tooltip's first line, the hovered value's label. */
     hideLabel?: boolean;
+    /**
+     * A config key or a fixed text for the tooltip's first line, used when
+     * `labelKey` is not set.
+     */
     label?: string;
+    /**
+     * The key of the config entry that names each row. Without it, the series'
+     * own key does.
+     */
     nameKey?: string;
+    /**
+     * The key of the config entry, or of the datum's field, whose label heads
+     * the tooltip. Without it, the hovered x value does.
+     */
     labelKey?: string;
+    /** Hides the swatch beside each series, for a chart with one series. */
     hideIndicator?: boolean;
+    /** Classes for the label's line, added after Kuiper's by `cn`. */
     labelClassName?: string;
+    /**
+     * Turns the label's value into what the first line shows: text, a number or
+     * a snippet. `null` shows the value as it is.
+     */
     labelFormatter?:
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       | ((value: any, payload: TooltipPayload[]) => string | number | Snippet)
       | null;
+    /**
+     * Renders each series' row in place of Kuiper's swatch, name and value,
+     * given the row's value, name, series and index.
+     */
     formatter?: Snippet<
       [
         {

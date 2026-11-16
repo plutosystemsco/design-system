@@ -10,6 +10,9 @@
     children,
     ...restProps
   }: DropdownMenuPrimitive.SubTriggerProps & {
+    /**
+     * Starts the text where a checked item's does, so a mixed menu lines up.
+     */
     inset?: boolean;
   } = $props();
 </script>

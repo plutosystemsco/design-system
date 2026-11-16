@@ -44,7 +44,20 @@
   }: PopoverPrimitive.ContentProps & {
     /** The dialog's name when it holds no `PopoverTitle`. One of the two is required. */
     label?: string;
+    /**
+     * Props for the `PopoverPortal` that holds the popover, such as `to`, the
+     * element it renders into.
+     */
     portalProps?: WithoutChildrenOrChild<ComponentProps<typeof PopoverPortal>>;
+    /**
+     * The gap between the trigger and the popover. Kuiper's default is the
+     * small spacing step.
+     */
+    sideOffset?: PopoverPrimitive.ContentProps["sideOffset"];
+    /**
+     * Where the popover lines up along its trigger's side. Kuiper centres it.
+     */
+    align?: PopoverPrimitive.ContentProps["align"];
   } = $props();
 
   const uid = $props.id();

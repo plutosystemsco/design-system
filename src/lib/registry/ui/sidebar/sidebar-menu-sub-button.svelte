@@ -12,10 +12,20 @@
     isActive = false,
     ...restProps
   }: WithElementRef<HTMLAnchorAttributes> & {
+    /**
+     * Renders your own element in place of the `<a>`, such as a framework link.
+     * Spread the `props` it is given on that element.
+     */
     child?: Snippet<[{ props: Record<string, unknown> }]>;
+    /** `sm` sets the text one step smaller, for a long nested list. */
     size?: "sm" | "md";
     /** The current page: sets aria-current="page" and the inset. */
     isActive?: boolean;
+    /**
+     * Classes for the `<a>`, or for the element `child` renders, added after
+     * Kuiper's by `cn`.
+     */
+    class?: HTMLAnchorAttributes["class"];
   } = $props();
 
   // A 32 px sub-row; gone as icons.

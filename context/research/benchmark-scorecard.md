@@ -9,12 +9,12 @@
 
 ## In short
 
-Kuiper 0.13 as built at `c5df65b`, `021`'s merge with `release/0.13.0` at `a30ffa7` (re-scored after `020`, `027a`, `026` and `021`; only `021` moved a score; the first run was Pluto 0.12 at `ea1f9bd`, in the run log). Each score is 0 to 4 (§2).
+Kuiper 0.13 as built on `023`'s landing tree, on `release/0.13.0` at `506cfc1` (re-scored after `020`, `027a`, `026`, `021`, `024` and `023`; `021` and `023` moved a score; the first run was Pluto 0.12 at `ea1f9bd`, in the run log). Each score is 0 to 4 (§2).
 
 | # | Dimension | Pluto | Carbon | Material 3 | Spectrum 2 | Atlassian | Primer | Radix Themes | GOV.UK |
 |---|---|---|---|---|---|---|---|---|---|
 | 1 | Component breadth | 3 | 3 | 2 | **4** | 3 | 3 | 2 | 1 |
-| 2 | Guidance depth | 2 | **3** | **3** | **3** | 2 | **3** | 0 | 1 |
+| 2 | Guidance depth | **3** | **3** | **3** | **3** | 2 | **3** | 0 | 1 |
 | 3 | Accessibility evidence | 1 | **3** | 1 | 0 | 0 | 2 | 0 | 2 |
 | 4 | Theming | 2 | 3 | **4** | 2 | 2 | **4** | **4** | 0 |
 | 5 | Tokens | **4** | 3 | 1 | 2 | 3 | **4** | 1 | 1 |
@@ -27,7 +27,7 @@ Kuiper 0.13 as built at `c5df65b`, `021`'s merge with `release/0.13.0` at `a30ff
 | 12 | Design tooling | 0 | 2 | 2 | 2 | 2 | **4** | 1 | 1 |
 | 13 | Reach | 1 | **3** | **3** | **3** | 0 | 1 | 0 | 2 |
 | 14 | Governance | 3 | **4** | 0 | 1 | 2 | **4** | 1 | 3 |
-| | **Total, of 56** | **35** | 37 | 28 | 32 | 30 | 41 | 25 | 31 |
+| | **Total, of 56** | **36** | 37 | 28 | 32 | 30 | 41 | 25 | 31 |
 
 Bold marks the best score in a row. The total is a summary, not a target: the rows weigh differently for Pluto's apps.
 
@@ -134,7 +134,7 @@ Pluto's 69 include 9 compositions and 8 blocks, which match none of the 40. Afte
 
 | | Button, of 10 | Overlay, of 10 | Words (Button + overlay) | Score |
 |---|---|---|---|---|
-| Pluto | 5 | 5 | 727 + 909 | 2 |
+| Pluto | 6 | 6 | 895 + 1,143 | 3 |
 | Carbon | 8 | 7 | 11,036 + 6,039 | 3 |
 | Material 3 | 6 | 6 | 3,189 + 2,895 | 3 |
 | Spectrum 2 | 7 | 5 | 2,148 + 1,013 | 3 |
@@ -143,7 +143,7 @@ Pluto's 69 include 9 compositions and 8 blocks, which match none of the 40. Afte
 | Radix Themes | 0 | 0 | 764 + 645 | 0 |
 | GOV.UK | 4 | 3 | 1,855 + 1,417 | 1 |
 
-- **Pluto has:** usage, do and don't, accessibility, changes (the "Updated" fact), evidence ("Firefox, Safari and screen readers are not checked yet"). **It lacks:** anatomy, a keyboard table, content rules, described props (Button 4 of 10 rows, Dialog 10 of 23), states.
+- **Pluto has:** usage, do and don't, accessibility, described props (every row since `023`), changes (the "Updated" fact), evidence ("Firefox, Safari and screen readers are not checked yet"). **It lacks:** anatomy, a keyboard table, content rules, states.
 - **Corrected by eye:** Radix's Dialog "content" mark is its `Dialog.Content` API heading, not writing guidance; removed (0 for that page).
 - **The check rewards structure, not reasoning.** GOV.UK's reasons, research and real example content (READ, *GOV.UK* §1) score low here. Its words-per-page are still twice Pluto's.
 
@@ -352,7 +352,7 @@ READ: *enterprise* §3–4, *developer* §4–5, *product* §3–5, *Carbon* §3
 | 7 | The part first | 2 | 4 | Material, Radix, GOV.UK | −2 | The specimen at y ≈ 290–330, inside the first phone screen. |
 | 13 | Reach | 1 | 3 | Carbon, Material, Spectrum | −2 | Several platforms, RTL styles, translatable strings. |
 | 1 | Breadth | 3 | 4 | Spectrum | −1 | 37 of the 40 parts. |
-| 2 | Guidance depth | 2 | 3 | Carbon, Material, Spectrum, Primer | −1 | Anatomy, keyboard, described props on the same pages. |
+| 2 | Guidance depth | 3 | 3 | Carbon, Material, Spectrum, Primer | 0 | Closed by `023`. The best add anatomy and a keyboard table on the same pages. |
 | 10 | Install and adoption | 3 | 4 | five systems | −1 | A designer's way in. |
 | 14 | Governance | 3 | 4 | Carbon, Primer | −1 | Statuses and a written breaking-change rule; Kuiper names the replacement since `020`. |
 | 11 | Change communication | 3 | 3 | Carbon, Primer, GOV.UK | 0 | Kuiper has a migration guide since `020`; the best also generate notes or a feed. |
@@ -365,7 +365,7 @@ READ: *enterprise* §3–4, *developer* §4–5, *product* §3–5, *Carbon* §3
 Each line names the smallest change that moves the row by one, and what is already planned. Constitution §4.2 still holds: a part is added when an app needs it.
 
 1. **Breadth 3 → 4:** 5 more of the 11 missing parts (toast, pagination, combobox, date picker, tag are the commonest). Only by need.
-2. **Depth 2 → 3:** one more element on both pages. Prop doc comments, so 80% of rows are described, are already placed after `018` (READ, *synthesis* §1). A keyboard table from data the tests read, and an anatomy figure, would reach 4.
+2. **Depth 3, met by `023`** (every prop row described). **3 → 4:** two more elements on both pages: a keyboard table from data the tests read, and an anatomy figure.
 3. **Accessibility evidence 1 → 2:** two more criteria. Planned for 0.13.0: the status generated from the test report (d) and a forced-colours pass over items (e) (READ, `handoff.md`, "Next"). Six criteria make 3: add the `019` VoiceOver run, recorded (h), and hover, pressed, disabled and invalid states driven in the axe pass (b).
 4. **Theming 2 → 3:** scoped schemes both ways, option B of *scoped* §6 (`light-dark()` and `data-scheme`). The high-contrast scheme after it makes 4.
 5. **Tokens 4:** hold, since `021`. The fixtures under `tests/fixtures/021-before/`, the record's test and the validator guard it.
@@ -423,6 +423,7 @@ Use any `<out>` folder outside the repository, such as the session scratchpad. W
 | 2026-11-15 | `b37dcf4` (`021`, committed on its build branch) | the same tree | a builder | 3 2 1 2 4 4 2 4 3 3 3 0 1 3 | 35 | After `021`. `kuiper.ts --rev b37dcf4`: tokens in the new shape: 48 primitives, light and dark, 61 roles, 61 described, `groups` 15 (was 13 top-level keys in the old file, a changed meaning), 317 `$value`, 317 `$type`, 286 descriptions, 129 contrast rows. Row 5 (c), (d), (f) and (g) are met: 3 → 7 criteria, 1 → 4. Row 12 holds at 0: decision 16 (c)'s Penpot import was not run in the build, so (b) has no evidence yet. `kuiper.ts --rev ea1f9bd` prints the first run's token counts unchanged. No page's layout changed but `/foundations/tokens/`, so `site.ts` was not re-run; rows 6, 7 and 8 hold. References not re-checked. |
 | 2026-11-16 | `c5df65b` (`021`'s merge of `release/0.13.0` at `a30ffa7`, after `027a` and `026`) | 2026-11-16 05:45 UTC, that tree | a builder | 3 2 1 2 4 4 2 4 3 3 3 0 1 3 | 35 | After `021` on `027a` and `026`. `kuiper.ts --rev c5df65b`: 80 registry entries (61 ui), 12 releases, 34 interface marks, 2 migration pages, 9 versioned registries; tokens in the DTCG shape as at `b37dcf4` (48 primitives, light and dark, 61 roles, 61 described, `groups` 15, 317 `$value`, 317 `$type`, 286 descriptions, 129 contrast rows). `site.ts --only kuiper`: Button 375 kB, LCP 868 ms (3 runs: 892, 868, 864), the part at 572 (1440) and 661 (390), 80 nav links, search and theme present; rows 6, 7 and 8 hold. Row 5 is 4 and row 12 0, as at `b37dcf4`; rows 1 and 2 as at `445d663` (`breadth.ts` and `depth.ts` not re-run: `021` adds no part and changes neither Button nor Dialog). This row replaces the `b37dcf4` row for the merged tree. References not re-checked. |
 | 2026-11-16 | `35c37e4` (`024`, committed on its build branch, on `release/0.13.0` at `874c5da`) | 2026-11-16, at that commit | a builder | 3 2 1 2 1 4 2 4 3 3 3 0 1 3 | 32 | After `024` (budgets per template; tests only). `kuiper.ts --rev 35c37e4`: every count as at `874c5da`. `site.ts --only kuiper`: Button 374 kB, LCP 888 ms, CLS 0, the part at 572 (1440) and 661 (390), 79 nav links, search and theme present; rows 6, 7 and 8 hold. Button's page budget is now `component`'s, 445 kB and 1,270 ms (`024`'s landing notes), inside row 8's band 4. `breadth.ts` and `depth.ts` not run: no item or page changed. References not re-checked. |
+| 2026-11-16 | `023`'s landing tree, on `release/0.13.0` at `506cfc1`, before its commit | 2026-11-16, the same tree | a builder | 3 3 1 2 4 4 2 4 3 3 3 0 1 3 | 36 | After `023` (prop doc comments; the API table's default moved under its description). `depth.ts --only kuiper`: Button **6 of 10** (895 words), Dialog **6 of 10** (1,143 words); "props described" is now met on both; mean 6, so row 2 is **2 → 3**, as predicted, tying Carbon, Material 3, Spectrum 2 and Primer. `kuiper.ts` (working tree): **100% of 1,127 prop rows described** (was 25% of 1,062); every other count as at `c5df65b`, but `interfaceChangeMarks` 97, of which 63 are the new "no interface change" bullets (the count reads the phrase, not the mark). The instrument changed: `kuiper.ts` found a twin's description by position (the fourth cell); it now finds the "What it does" header, since the table has three columns. `site.ts --only kuiper`: Button 376 kB, LCP 920 ms (944, 920, 900), CLS 0, the part at 572 (1440) and 661 (390), 80 nav links, search and theme present; rows 6, 7 and 8 hold. `breadth.ts` not run: no part added. References not re-checked. |
 
 ## 9. Limits
 

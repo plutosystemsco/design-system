@@ -21,7 +21,30 @@
     "aria-describedby": describedBy,
     "aria-invalid": invalid,
     ...restProps
-  }: WithoutChildrenOrChild<CheckboxPrimitive.RootProps> = $props();
+  }: WithoutChildrenOrChild<CheckboxPrimitive.RootProps> & {
+    /** Whether the box is checked. Bind it to read or set it. */
+    checked?: CheckboxPrimitive.RootProps["checked"];
+    /**
+     * Shows a dash in place of the check, for a box that stands for a mixed
+     * set. Checking it clears this.
+     */
+    indeterminate?: CheckboxPrimitive.RootProps["indeterminate"];
+    /**
+     * The control's id. Inside a `Field` it defaults to the field's, so the
+     * field's label points here.
+     */
+    id?: CheckboxPrimitive.RootProps["id"];
+    /**
+     * The ids of the text that describes the control. Inside a `Field` it
+     * defaults to the field's description and error.
+     */
+    "aria-describedby"?: CheckboxPrimitive.RootProps["aria-describedby"];
+    /**
+     * Marks the control invalid and turns its border red. Inside a `Field` it
+     * follows the field's `error` or `invalid`.
+     */
+    "aria-invalid"?: CheckboxPrimitive.RootProps["aria-invalid"];
+  } = $props();
 
   // A field from before 0.13.0 sets only its old key, read until 0.14.0.
   const field =

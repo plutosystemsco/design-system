@@ -15,6 +15,15 @@
     element?: "main" | "div";
     /** The region's name, when `element` is `div`. */
     label?: string;
+    /**
+     * The rendered `<main>` or `<div>`, as `element` sets. Bind it with
+     * `bind:ref`.
+     */
+    ref?: WithElementRef<HTMLAttributes<HTMLElement>>["ref"];
+    /** Classes for the `<main>` or `<div>`, added after Kuiper's by `cn`. */
+    class?: HTMLAttributes<HTMLElement>["class"];
+    /** The page beside the sidebar. */
+    children?: HTMLAttributes<HTMLElement>["children"];
   } = $props();
 
   // The groove is drawn only while a sidebar is beside the page: not when it

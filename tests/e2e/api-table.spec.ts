@@ -99,7 +99,7 @@ test.describe("023a: type names break only between words", () => {
       test.setTimeout(600_000);
       const cdp = await page.context().newCDPSession(page);
       const selector =
-        'section[aria-labelledby="api"] tbody td:nth-child(2), section[aria-labelledby="api"] tbody td:nth-child(4)';
+        'section[aria-labelledby="api"] tbody td:nth-child(2), section[aria-labelledby="api"] tbody td:nth-child(3)';
       const squash = (s: string) => s.replace(/\s+/g, " ").trim();
       // Chromium drops the space between `@internal` and the code after it
       // in one Highlighter description. It did so before 023a, with no
@@ -138,48 +138,18 @@ test.describe("023a: type names break only between words", () => {
   });
 
   /**
-   * The tables that still scroll sideways at 1440, accepted by the second
-   * ruling at landing: in each, the columns' minimum widths (each its
-   * longest unbreakable piece: a name, a type piece, a code span in "What
-   * it does") plus the cells' padding add up to more than the 606 px
-   * column. No type name causes it. The table's own scroller is the
-   * designed fallback (015 criterion 26); `023` re-plans the layout.
-   * Each holds its measured scrollWidth. A table not listed fails; so does
-   * a listed one that no longer overflows, or grows by more than 8 px.
+   * The tables that still scroll sideways at 1440, each with its measured
+   * scrollWidth. 023 emptied the list: a row's default moved under its
+   * description, so every table has three columns and fits the 606 px text
+   * column. A table that scrolls now fails; one added here must say why,
+   * and fails once it no longer overflows or grows by more than 8 px.
    */
-  const WIDE_AT_1440: Record<string, { width: number; why: string }> = {
-    "/components/popover/ PopoverContent": {
-      width: 608,
-      why: 'portalProps, WithoutChildrenOrChild< and "center"',
-    },
-    "/components/toast/ ToastQueue": {
-      width: 634,
-      why: "TOAST_PROMISE_GRACE_MS, ToastQueueDeps) and createToastQueue",
-    },
-    "/components/highlighter/ Languages": {
-      width: 677,
-      why: "findHighlightLanguage, HighlightLanguage[] and highlight/queries/",
-    },
-    "/components/highlighter/ Shiki": {
-      width: 653,
-      why: "loadShikiLanguage, ThemeRegistrationRaw and GrammarState",
-    },
-    "/components/code-languages/ CodeLanguages": {
-      width: 609,
-      why: "CodeLanguageKind, LanguageSupport and its description's code",
-    },
-    "/components/chart/ ChartUtils": {
-      width: 626,
-      why: "getPayloadConfigFromPayload and ChartContextValue)",
-    },
-    "/components/sidebar/ SidebarMenuButton": {
-      width: 665,
-      why: 'tooltipContentProps, WithoutChildrenOrChild< and "default"',
-    },
-  };
+  const WIDE_AT_1440: Record<string, { width: number; why: string }> = {};
 
   // The landing's ruling: every component page's tables, at both widths.
-  for (const width of [1440, 390])
+  // 023 adds 1024, where the text column is widest but the page's chrome
+  // leaves the table least room beside a description.
+  for (const width of [1440, 1024, 390])
     test.describe(`at ${width}`, () => {
       test.use({ viewport: { width, height: 900 } });
       test("on every component page, no API table scrolls sideways", async ({
@@ -220,5 +190,52 @@ test.describe("023a: type names break only between words", () => {
           expect(got, `${key} grew`).toBeLessThanOrEqual(w + 8);
         }
       });
+    });
+});
+
+/**
+ * 023 test 7: the two pages the scorecard reads describe every row. Each
+ * API table has a "What it does" column, and each body row's cell in it
+ * holds text, but the closing row, which spans the table.
+ */
+test.describe("023: Button and Dialog: every API table is described", () => {
+  test.use({ viewport: { width: 1440, height: 900 } });
+  for (const name of ["button", "dialog"])
+    test(`on ${componentPath(name)}, every row says what it does`, async ({
+      page,
+    }) => {
+      await open(page, componentPath(name));
+      const tables = await page
+        .locator('section[aria-labelledby="api"] table')
+        .evaluateAll((ts) =>
+          ts.map((t) => {
+            const head = [...t.querySelectorAll("thead th")].map(
+              (th) => th.textContent?.trim() ?? "",
+            );
+            const at = head.indexOf("What it does");
+            // The closing row spans the table; it is the only one-cell row.
+            const rows = [...t.querySelectorAll("tbody tr")].filter(
+              (tr) => tr.children.length > 1,
+            );
+            const empty = rows
+              .filter((tr) => !(tr.children[at]?.textContent ?? "").trim())
+              .map((tr) => tr.children[0]?.textContent?.trim() ?? "");
+            return {
+              part: t.querySelector("caption")?.textContent?.trim() ?? "",
+              rows: rows.length,
+              at,
+              empty,
+            };
+          }),
+        );
+      expect(tables.length).toBeGreaterThan(0);
+      // A part that only passes its source's props on (DialogPortal) has
+      // no row of its own, so nothing to describe: only its closing row.
+      expect(
+        tables.filter((t) => t.rows > 0 && t.at < 0).map((t) => t.part),
+      ).toEqual([]);
+      expect(
+        tables.flatMap((t) => t.empty.map((r) => `${t.part}.${r}`)),
+      ).toEqual([]);
     });
 });

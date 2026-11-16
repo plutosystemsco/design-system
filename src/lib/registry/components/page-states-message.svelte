@@ -17,9 +17,14 @@
     reference,
     class: className,
   }: {
+    /** The message's heading. */
     title: string;
     /** One or two sentences: what happened, and what to do. */
     description: string;
+    /**
+     * The title's heading level. On a full page the title is its one
+     * first-level heading.
+     */
     level?: 1 | 2 | 3 | 4 | 5 | 6;
     /** "start" on a full page; "center" in a tile. */
     align?: "start" | "center";

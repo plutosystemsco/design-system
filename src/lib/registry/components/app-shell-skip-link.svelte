@@ -6,7 +6,12 @@
     href = "#main",
     class: className,
     ...restProps
-  }: HTMLAnchorAttributes = $props();
+  }: HTMLAnchorAttributes & {
+    /**
+     * Where the link sends focus. Kuiper's default is the shell's main region.
+     */
+    href?: HTMLAnchorAttributes["href"];
+  } = $props();
 </script>
 
 <!--

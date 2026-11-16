@@ -19,7 +19,30 @@
     "aria-invalid": invalid,
     "data-slot": dataSlot = "textarea",
     ...restProps
-  }: WithoutChildren<WithElementRef<HTMLTextareaAttributes>> = $props();
+  }: WithoutChildren<WithElementRef<HTMLTextareaAttributes>> & {
+    /** The text in the box. Bind it to read or set it. */
+    value?: HTMLTextareaAttributes["value"];
+    /**
+     * The control's id. Inside a `Field` it defaults to the field's, so the
+     * field's label points here.
+     */
+    id?: HTMLTextareaAttributes["id"];
+    /**
+     * The ids of the text that describes the control. Inside a `Field` it
+     * defaults to the field's description and error.
+     */
+    "aria-describedby"?: HTMLTextareaAttributes["aria-describedby"];
+    /**
+     * Marks the control invalid and turns its border red. Inside a `Field` it
+     * follows the field's `error` or `invalid`.
+     */
+    "aria-invalid"?: HTMLTextareaAttributes["aria-invalid"];
+    /**
+     * The `data-slot` the box carries, so a part that wraps it, such as an
+     * input group's control, can name itself.
+     */
+    "data-slot"?: HTMLTextareaAttributes["data-slot"];
+  } = $props();
 
   // A field from before 0.13.0 sets only its old key, read until 0.14.0.
   const field =

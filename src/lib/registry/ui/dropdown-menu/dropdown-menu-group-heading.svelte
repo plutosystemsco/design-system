@@ -9,6 +9,10 @@
     inset,
     ...restProps
   }: ComponentProps<typeof DropdownMenuPrimitive.GroupHeading> & {
+    /**
+     * Starts the text where a checked item's does, so a heading over checkbox
+     * or radio items lines up with them.
+     */
     inset?: boolean;
   } = $props();
 </script>

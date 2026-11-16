@@ -11,7 +11,12 @@ import { readStoredTheme, THEME_KEY } from "./stored.js";
 
 export { THEME_KEY };
 
+/**
+ * What the person chose: `light`, `dark`, or `system` to follow the operating
+ * system.
+ */
 export type ThemePreference = "light" | "dark" | "system";
+/** The theme in force, once `system` is resolved. */
 export type ResolvedTheme = "light" | "dark";
 
 const browser = typeof document !== "undefined";
@@ -85,4 +90,8 @@ class Theme {
   }
 }
 
+/**
+ * The app's one theme store: read `preference` and `resolved`, call `set` or
+ * `toggle`.
+ */
 export const theme = new Theme();

@@ -9,6 +9,7 @@
     size = "default",
     ...restProps
   }: WithElementRef<HTMLAttributes<HTMLDivElement>> & {
+    /** `sm` tightens the card's padding and gaps, for a grid of small cards. */
     size?: "default" | "sm";
   } = $props();
 </script>

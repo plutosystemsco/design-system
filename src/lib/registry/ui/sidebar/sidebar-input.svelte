@@ -8,7 +8,10 @@
     value = $bindable(""),
     class: className,
     ...restProps
-  }: ComponentProps<typeof Input> = $props();
+  }: ComponentProps<typeof Input> & {
+    /** The text in the input. Bind it to read or set it. */
+    value?: ComponentProps<typeof Input>["value"];
+  } = $props();
 </script>
 
 <!-- The registry's input as it is: 48 px on the card ground. Gone as icons. -->

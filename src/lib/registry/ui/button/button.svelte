@@ -41,13 +41,40 @@
 
   export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
     WithElementRef<HTMLAnchorAttributes> & {
+      /**
+       * The look: `default` for the main action, `secondary` beside it, `ghost`
+       * in toolbars and menus, `destructive` for one that deletes, `link` for
+       * an action that reads as text.
+       */
       variant?: ButtonVariant;
+      /**
+       * `default` meets the touch target. `sm` is the compact height, for dense
+       * rows. The `icon` sizes are square, for a button that shows only an icon
+       * and is named by `aria-label`.
+       */
       size?: ButtonSize;
       /**
-       * Busy: the button shows a spinner, sets `aria-busy`, stays enabled and
-       * focused, and ignores clicks, so a form is not submitted twice.
+       * Shows a spinner, sets `aria-busy`, and ignores clicks while the
+       * button stays enabled and focused, so a form is not sent twice.
        */
       busy?: boolean;
+      /**
+       * Renders an `<a>` in place of the `<button>`, with the same look. A
+       * disabled link loses its `href` and leaves the tab order.
+       */
+      href?: HTMLAnchorAttributes["href"];
+      /**
+       * Kuiper's default is `"button"`, so a button inside a form does not submit
+       * it. Set `"submit"` on the form's own button.
+       */
+      type?: HTMLButtonAttributes["type"];
+      /**
+       * On a link, sets `aria-disabled` and removes the `href` and the tab stop,
+       * since an `<a>` has no disabled state.
+       */
+      disabled?: HTMLButtonAttributes["disabled"];
+      /** Called when the button is pressed. Not called while `busy`. */
+      onclick?: HTMLButtonAttributes["onclick"];
     };
 </script>
 

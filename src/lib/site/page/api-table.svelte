@@ -5,8 +5,11 @@
   let { tables }: { tables: ApiTable[] } = $props();
 
   // 018 decision 7: a table whose rows have no description leaves the
-  // column out, header and cells; it returns when doc comments land.
-  const described = (t: ApiTable) => t.rows.some((r) => r.doc.trim());
+  // column out, header and cells. 023: a row's default sits under its
+  // description, in the same cell, so three columns fit the text column
+  // at every width; the column shows when any row has either.
+  const described = (t: ApiTable) =>
+    t.rows.some((r) => r.doc.trim() || r.default);
 
   // Inline code in a doc comment, as the reader sees it.
   // An element named bare, such as <time>, reads as code too.
@@ -15,13 +18,17 @@
       .split(/(`[^`]+`|<[a-z][a-z0-9-]*>)/)
       .filter(Boolean)
       .map((p) => (p.startsWith("<") ? `\`${p}\`` : p));
+
+  // An element's name, such as `<button>`, is one word: it never breaks.
+  const pieces = (text: string) =>
+    /^<[a-z][a-z0-9-]*>$/.test(text) ? [text] : typePieces(text);
 </script>
 
 <!-- 023a: code that may break only at its punctuation (type-pieces.ts).
      Each piece is text, so the Markdown twin and a copy are unchanged. The
      <wbr> is hidden, so Chromium's accessible name gains no space at it. -->
 {#snippet code(text: string)}<code
-    >{#each typePieces(text) as p, i (i)}{#if i}<wbr
+    >{#each pieces(text) as p, i (i)}{#if i}<wbr
           aria-hidden="true"
         />{/if}{p}{/each}</code
   >{/snippet}
@@ -61,7 +68,6 @@
           <tr class="groove-b text-muted-foreground">
             <th scope="col">Name</th>
             <th scope="col">Type</th>
-            <th scope="col">Default</th>
             {#if described(table)}<th scope="col">What it does</th>{/if}
           </tr>
         </thead>
@@ -74,19 +80,17 @@
                     class="text-muted-foreground">inherited</span
                   >{/if}</td
               >
-              <td
-                >{#if row.default}<span
-                    data-md="skip"
-                    class="text-muted-foreground md:hidden"
-                    >Default
-                  </span><code>{row.default}</code>{/if}</td
-              >
-              {#if described(table)}<td>{@render prose(row.doc)}</td>{/if}
+              {#if described(table)}<td
+                  >{@render prose(row.doc)}{#if row.default}{" "}<span
+                      class="mt-1 block text-muted-foreground"
+                      >Default <code>{row.default}</code></span
+                    >{/if}</td
+                >{/if}
             </tr>
           {/each}
           {#if table.inherits}
             <tr>
-              <td colspan={described(table) ? 4 : 3}
+              <td colspan={described(table) ? 3 : 2}
                 >{@render prose(table.inherits)}</td
               >
             </tr>
