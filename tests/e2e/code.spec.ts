@@ -1139,6 +1139,38 @@ test.describe("the code editor", () => {
       .toMatch(/^ +y$/);
   });
 
+  // 022m, the change review's finding 1: the item's Enter must not edit a
+  // read-only or disabled editor, with or without a setup's own Enter.
+  test("022m. read-only and disabled: Enter, Shift+Enter, and End then Enter leave the document unchanged", async ({
+    page,
+  }) => {
+    await open(page, EDITOR_PAGE);
+    for (const id of ["editor-readonly", "editor-disabled"]) {
+      const c = page.getByTestId(id).locator(".cm-content");
+      const text = () =>
+        c.evaluate((el) =>
+          [...el.querySelectorAll(".cm-line")]
+            .map((l) => l.textContent)
+            .join("\n"),
+        );
+      const before = await text();
+      expect(before.split("\n").length, id).toBeGreaterThan(1);
+      // The disabled editor is out of the tab order; a click still focuses it.
+      if (id === "editor-disabled") await c.click();
+      else await c.focus();
+      await expect(c, id).toBeFocused();
+      for (const key of ["Enter", "Shift+Enter", "End", "Enter"])
+        await page.keyboard.press(key);
+      await page.evaluate(
+        () =>
+          new Promise((done) =>
+            requestAnimationFrame(() => requestAnimationFrame(done)),
+          ),
+      );
+      expect.soft(await text(), `${id}: unchanged`).toBe(before);
+    }
+  });
+
   test("E4. editing and run: typing updates the bound value; Reset clears history; 2 of 2 run keys; readonly", async ({
     page,
   }) => {

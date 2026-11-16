@@ -1,7 +1,7 @@
 # Review of 022m and 022n — the code editor's Enter, and the search field's cancel button
 
 - **Date:** 2026-11-16
-- **Status:** in review
+- **Status:** dispositioned; both land
 - **Reviewer:** a reviewer; not the author
 - **Reviewed:** the uncommitted diff in the worktree `lane-i-webkit`, on `0933f1b`: [022m](../specifications/022m-the-code-editor-binds-enter.md) and [022n](../specifications/022n-the-search-field-hides-webkits-cancel-button.md), with [WebKit on Linux](../research/2026-11-16-webkit-on-linux.md) §2.2 and §4.
 - **Re-ran:** all with `E2E_PREBUILT=1`, one worker, `chromium-light` and `webkit-light`, on the builder's build and again after a rebuild.
@@ -77,3 +77,15 @@
 - **022n:** Lands.
 
 ## Disposition
+
+By the design lead, 2026-11-16, with the builder's fixes. The design lead did not write `022m` or `022n`, and re-checked the fixes.
+
+1. **Fixed** by the builder. Both keys run `const newline: Command = (view) => !view.state.readOnly && insertNewline(view)`, so a read-only or disabled editor leaves the key to the browser, as before. A new test, "022m. read-only and disabled: Enter, Shift+Enter, and End then Enter leave the document unchanged", failed first on the earlier build in both projects (each editor gained 3 lines) and passes after.
+2. **Fixed.** The changelog's `code-editor` bullet takes this review's replacement text.
+3. **Fixed.** The lowest-precedence keymap now comes after `extra.of(extensions)`, with a comment saying why. No browser test holds the order; it rests on this review's reading of facet order.
+4. **Fixed.** The component page's accessibility list names Enter and Shift+Enter.
+5. `022n`: no findings.
+
+EXECUTED by the design lead after the fixes: `code.spec.ts` and `search-field.spec.ts`, `-g "022m|E4|E6|28."`, `chromium-light` and `webkit-light`, 14 passed. The builder's: `bun run check` 0 errors; lint clean; 0 literals; `registry`, `cost`, `thumbnails` and `blocks` unit tests, 198 of 198.
+
+Closing verdict: both land.

@@ -116,9 +116,9 @@
     "outputHash": "67b6685c60a3cfc6a165e21ebdbabcdbfffdf61cd4008a2903e4f22b98e3ad55"
   },
   "catalogue": {
-    "js": 379331,
-    "css": 16798,
-    "sumOfAlone": { "js": 1126326, "css": 64035 }
+    "js": 379344,
+    "css": 16795,
+    "sumOfAlone": { "js": 1126346, "css": 64035 }
   },
   "items": {
     "utils": {
@@ -1218,16 +1218,16 @@
       "cases": {}
     },
     "code-editor": {
-      "hash": "2cf9828dec1083338fbbd78e4566c83f5246c904f6bd945ce7314c95b0514f69",
+      "hash": "6ebc18ded22692e2406cb244afb2b05ee2bb32ac1f4e2371eac15b6f719c8f26",
       "runtimeHash": "3bbeba0799f8a4899d0d56998f8a7eb61254b29e0060080e4c307da36e14536d",
-      "outputHash": "8040584133902c47b91efb58aa95855f22faf3de20716af66cfd872aa789543c",
+      "outputHash": "6156f9230b49c07891a23e8084a9739eaae0614cdc25f4d182187750dc380e73",
       "run": "2026-11-16T06:27:03.737Z",
       "size": {
-        "js": 131114,
+        "js": 131134,
         "css": 587,
         "lazy": 382311,
         "assets": 2147405,
-        "brotli": { "js": 111941, "css": 468 }
+        "brotli": { "js": 111892, "css": 468 }
       },
       "hydrate": { "ms": 118.3, "spread": [109.7, 129.9], "settledMs": 403.6 },
       "interaction": {
@@ -1242,19 +1242,19 @@
       },
       "route": "/",
       "breakdown": [
-        { "source": "package:@codemirror/view", "js": 52988 },
-        { "source": "package:@codemirror/state", "js": 16451 },
-        { "source": "item:highlighter", "js": 10131 },
-        { "source": "package:@codemirror/commands", "js": 9028 },
-        { "source": "package:@lezer/lr", "js": 8588 },
+        { "source": "package:@codemirror/view", "js": 52991 },
+        { "source": "package:@codemirror/state", "js": 16452 },
+        { "source": "item:highlighter", "js": 10132 },
+        { "source": "package:@codemirror/commands", "js": 9029 },
+        { "source": "package:@lezer/lr", "js": 8589 },
         { "source": "package:@lezer/python", "js": 8508 },
         { "source": "package:@lezer/common", "js": 7309 },
         { "source": "package:@codemirror/language", "js": 6255 },
         { "source": "runtime", "js": 4344 },
         { "source": "package:@lezer/highlight", "js": 1697 },
         { "source": "package:@codemirror/autocomplete", "js": 1687 },
-        { "source": "own", "js": 1583 },
-        { "source": "package:style-mod", "js": 739 },
+        { "source": "own", "js": 1595 },
+        { "source": "package:style-mod", "js": 740 },
         { "source": "package:@marijn/find-cluster-break", "js": 698 },
         { "source": "package:@codemirror/lang-python", "js": 695 },
         { "source": "package:w3c-keyname", "js": 413 }
@@ -1305,7 +1305,7 @@
       "cases": {}
     },
     "code-languages": {
-      "hash": "dbd4a1f4c175e8305b4aaa0f7b03ae5b0ff2e7cc1e769631e21836111a6bfed2",
+      "hash": "8bd508eac323d6bdb44d5f3b49bb03af5cd835402a69307cd207e08f710fb689",
       "runtimeHash": "55c9e9018cc7d3dbe4d7974a2dee1c49e99e6089d185da15c464bec700a32f49",
       "outputHash": "8b5132f06f26738a608599f66cfd9a7612dcd00762db3d9224ae611db3ad2061",
       "run": "2026-11-16T06:27:03.737Z",

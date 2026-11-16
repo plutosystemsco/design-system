@@ -1,6 +1,6 @@
 # 022m — The code editor binds Enter
 
-- **Status:** built 2026-11-16; waits for its change review. Lane I.
+- **Status:** built 2026-11-16; its change review (`reviews/022mn-the-code-editors-enter-and-the-search-fields-cancel-button-pr-2026-11-16.md`) did not land it, for findings 1 and 2; all four findings are fixed in the worktree, and it waits for the review's disposition. Lane I.
 - **Date:** 2026-11-16
 - **Author:** a lane-I builder
 - **Kind:** small change (`context/README.md`: a fix with no interface change, no new token or dependency, in one item). No research memo of its own and no spec review. Its check is seen failing first, and the built change is reviewed by someone who did not write it (constitution §5).
@@ -15,18 +15,21 @@ An app that renders `CodeEditor` without a setup that binds Enter gets two lines
 
 ## The fix
 
-`code-editor.svelte` adds one keymap to its state, at `Prec.lowest`: `{ key: "Enter", run: insertNewline, shift: insertNewline }`, with `insertNewline` from `@codemirror/commands`. Every editor then handles the key itself, so the browser writes nothing. At the lowest precedence, a setup's own Enter (`pythonSetup()`'s `insertNewlineAndIndent`) and an app's keymap still win.
+`code-editor.svelte` adds one keymap to its state, at `Prec.lowest` and after `extra.of(extensions)`: `{ key: "Enter", run: newline, shift: newline }`, where `newline` is `(view) => !view.state.readOnly && insertNewline(view)`, with `insertNewline` from `@codemirror/commands`. Every editable editor then handles the key itself, so the browser writes nothing. At the lowest precedence, a setup's own Enter (`pythonSetup()`'s `insertNewlineAndIndent`) and an app's keymap still win. Placed after the app's extensions, an app's own `Prec.lowest` Enter wins too, since bindings of one precedence run in the order they appear (the change review's finding 3).
 
-- **`insertNewline`, not `insertNewlineAndIndent`** (INFERRED): the browser's line break carried no indent, so the bare editor keeps that behaviour and needs no language's indent service. It returns `false` on a read-only state, so `readonly` is unchanged.
+- **`insertNewline`, not `insertNewlineAndIndent`** (INFERRED): the browser's line break carried no indent, so the bare editor keeps that behaviour and needs no language's indent service.
+- **The read-only guard** (the change review's finding 1): `insertNewline` does not check `state.readOnly` (READ, `@codemirror/commands/dist/index.js:1496`). `readonly` and `disabled` both set `EditorState.readOnly`. On a read-only state `newline` returns `false`, so the key goes on to the browser, and CodeMirror ignores the DOM change there, as before.
+- **Enter's keydown, in every browser:** the item now takes Enter's keydown and prevents its default in every browser, not only in Linux WebKit. An app's own `domEventHandlers` keydown for Enter no longer runs, and a listener on the root sees `defaultPrevented` (the change review's finding 2, EXECUTED there). No prop or type changes, so it stays a small change; the changelog says so, with the remedy: bind Enter in a keymap of the app's own, which still wins.
 - **Shift+Enter too, a builder's ruling** (EXECUTED): `defaultKeymap` binds both, CodeMirror's comment names Shift+Enter, and the new check showed Shift+Enter doubles as well in Linux WebKit.
 - **No new dependency** (EXECUTED): `@codemirror/commands` is already in the item's built `devDependencies` (`static/r/styles/maia/code-editor.json`), through `code-editor-python.ts`.
-- No prop, slot or class changes. The changelog's 0.13.0 entry has a `code-editor` bullet.
+- No prop, slot or class changes. The changelog's 0.13.0 entry has a `code-editor` bullet, in the change review's words for the keydown. The component page's accessibility list gains one item: Enter and Shift Enter insert a line break, a setup's own binding takes precedence, and a read-only editor ignores them (finding 4).
 
 ## The check
 
 1. **New, seen failing first:** `code.spec.ts`, "the code editor › 022m. with no extensions, Enter at the end of a line and of the text, and Shift+Enter, each add exactly one line". A third editor on `/view/code-agreement/` (`data-editor="bare"`, the text `first\nlast`, no `extensions` prop), read through `agreement.view('bare')`. Three cases: Enter at the end of line 1, Enter at the end of the text, Shift+Enter at the end of line 1. Each place is read from the text as it stands; after the edit and two frames, the text must equal the old text with one `\n` at that place.
 2. **E6 at full height**, failing first in `webkit-light`, passes there and in `chromium-light`.
 3. **New, written after the fix, proven by mutation:** "the code editor › 022m. a setup's own Enter still wins: in the Python example, Enter after a colon indents the new line". On the code editor's page, `if x:` then Enter then `y`; the bound value's last line must be `y` after one or more spaces.
+4. **New, from the change review's finding 1, seen failing first on the first build:** "the code editor › 022m. read-only and disabled: Enter, Shift+Enter, and End then Enter leave the document unchanged". On the code editor's States example (`pythonSetup()`), the read-only editor focused and the disabled one clicked; the four keys pressed; after two frames, each editor's lines must equal what they were.
 
 ## Landing notes
 
@@ -52,6 +55,23 @@ The test view gains one editor and one branch of `agreement.view`. It is a test 
 - `static/r/` and `static/v0.13.0/r/` regenerated by the build (`code-editor.json`). The thumbnails' manifest rewritten with `--hash-only` (`code-editor`, `code-languages`; no picture changed).
 - `bun run check`: 0 errors, 0 warnings. `bun run lint`: clean. `bun scripts/lint-literals.ts`: 0 literals. `registry`, `cost` and `thumbnails` unit tests: 160 passed, 0 failed.
 - **The scorecard** is not re-run for this change alone; it follows the batch's re-run when these land.
+
+### The change review's findings (2026-11-16)
+
+The review found four. All four are fixed; the review file is not edited.
+
+1. **High: Enter and Shift+Enter edited read-only and disabled editors.** The first build's note "It returns `false` on a read-only state" was wrong; it is struck above. `pythonSetup()`'s `insertNewlineAndIndent` returns `false` on a read-only state, so the key fell through to the item's `insertNewline`, which has no check. Fixed by the guarded `newline`. Check 4 holds it.
+2. **Medium: the changelog said an editor built on a setup "behaves as before".** Replaced with the review's text: the editor handles Enter's keydown itself in every browser, an app that watched Enter binds it in a keymap of its own, and read-only and disabled editors still ignore it.
+3. **Low: an app's own lowest-precedence Enter was shadowed.** The keymap moves after `extra.of(extensions)`. No browser check holds the order; the review read it from the facet order (EXECUTED there), and the comment in the source names it.
+4. **Low: the component page did not name the key.** One item added to its accessibility list, in the review's words.
+
+**Seen failing first (EXECUTED):** check 4, on the first build (unguarded, keymap before the extensions), failed in `chromium-light` and `webkit-light`: the read-only and the disabled editor each gained 3 lines ("Received + 3"), 2 of 2 editors in both projects.
+
+**After the fixes (EXECUTED),** rebuilt, one worker, `chromium-light` and `webkit-light`: the three `022m` tests, E4 and both E6 tests, **12 of 12 passed.** Check 1 still passes, so an editable editor still gains exactly one line.
+
+- `bun run check`: 0 errors, 0 warnings. `bun run lint`: clean. `bun scripts/lint-literals.ts`: 0 literals, 1 allowance.
+- **The cost:** the cost unit test named `code-editor` and `code-languages` size-stale again. `bun run cost --sizes-only` rewrote them: `code-editor` 131,114 → 131,134 B of JS since the first build (brotli 111,941 → 111,892); from `0933f1b`, 130,841 → 131,134 (brotli 111,729 → 111,892). CSS unchanged. `code-languages` unchanged in size. The thumbnails' manifest rewritten with `--hash-only` (2 hashes; no picture changed).
+- `registry`, `cost`, `thumbnails` and `blocks` unit tests: 198 passed, 0 failed. The whole unit suite, before the cost and thumbnail rewrite: 4 failed, those two and `highlight-session.test.ts`'s two timing budgets. That file failed its streaming budget in 1 of 3 later runs alone. This change touches no highlighter source.
 
 ### Not settled
 
