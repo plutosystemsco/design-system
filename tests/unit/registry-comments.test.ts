@@ -60,12 +60,12 @@ function items(raw: unknown): ItemJson | null {
 }
 
 describe("published item files cite no internal document", () => {
-  // 020 decision 3: the 79 items (027a's three and 026's toast among them) and the one alias entry.
-  test("static/r holds the 80 entries' JSON", () => {
+  // 020 decision 3: the 82 items (027a's three, 026's toast and 027b's three among them) and the one alias entry.
+  test("static/r holds the 83 entries' JSON", () => {
     const named = FILES.map((f) =>
       items(JSON.parse(readFileSync(f, "utf8"))),
     ).filter(Boolean);
-    expect(named.length).toBe(80);
+    expect(named.length).toBe(83);
   });
 
   test("0 decoded lines and 0 joined comment blocks match a citation pattern, but the fixture's kept lines", () => {
@@ -358,5 +358,32 @@ describe("027a test 3: batch A has 0 empty API rows", () => {
     }));
     expect(members.map((m) => m.name)).toEqual(["newTab"]);
     expect(members.filter((m) => m.doc === 0)).toEqual([]);
+  });
+});
+
+/**
+ * 027b test 3: what each part inherits. `023`'s suite holds every prop and
+ * every `Strings` member to one doc comment, and the variant unions to
+ * their values; this keeps the one fact it does not check, each table's
+ * closing row.
+ */
+describe("027b test 3: what batch A's interactive parts inherit", () => {
+  type Item = { name: string; files: { path: string; type: string }[] };
+  const registry = JSON.parse(
+    readFileSync(path.join(ROOT, "registry.json"), "utf8"),
+  ) as { items: Item[] };
+
+  test.each([
+    ["pagination", "Pagination", "every attribute of an element"],
+    ["search-field", "SearchField", "every attribute of `<input>`"],
+    ["tag", "TagGroup", "every attribute of `<ul>`"],
+    ["tag", "Tag", "every attribute of an element"],
+  ] as const)("%s: %s inherits %s", async (name, part, inherits) => {
+    const { apiTables } = await import("../../src/lib/site/api.server.ts");
+    const item = registry.items.find((i) => i.name === name);
+    expect(item, name).toBeDefined();
+    const table = apiTables(item!).find((t) => t.part === part);
+    expect(table, part).toBeDefined();
+    expect(table!.inherits).toBe(`and ${inherits}`);
   });
 });

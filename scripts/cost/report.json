@@ -31,6 +31,37 @@
       },
       "noisy": false,
       "seconds": 2546
+    },
+    "2026-11-16T10:13:18.680Z": {
+      "commit": "ab15732+dirty",
+      "full": false,
+      "machine": {
+        "model": "MacBookPro18,3 (Apple M1 Pro)",
+        "cores": 10,
+        "os": "darwin 25.5.0"
+      },
+      "tools": {
+        "bun": "1.4.4",
+        "chromium": "156.0.8078.4",
+        "playwright": "1.64.1",
+        "cli": "1.7.1",
+        "zlib": "12731092979c6d07f42da27da673a9f6c7b13586"
+      },
+      "settings": {
+        "cpu": 4,
+        "launches": 6,
+        "block": "FIFIFIF",
+        "warmups": 1,
+        "gzipLevel": 9
+      },
+      "load": { "median": 17.3, "max": 22.8 },
+      "instrument": {
+        "floorHydrateMs": 119.9,
+        "noopMs": 44.3,
+        "calibrateMs": 82.6
+      },
+      "noisy": false,
+      "seconds": 327
     }
   },
   "empty": { "js": 31383, "css": 1444 },
@@ -48,15 +79,15 @@
   "floor": {
     "js": 42840,
     "css": 7525,
-    "run": "2026-11-16T06:27:03.737Z",
-    "hydrateMs": 121.9,
-    "noopMs": 43.8,
+    "run": "2026-11-16T10:13:18.680Z",
+    "hydrateMs": 119.9,
+    "noopMs": 44.3,
     "outputHash": "67b6685c60a3cfc6a165e21ebdbabcdbfffdf61cd4008a2903e4f22b98e3ad55"
   },
   "catalogue": {
-    "js": 373777,
-    "css": 16584,
-    "sumOfAlone": { "js": 1085672, "css": 59980 }
+    "js": 379006,
+    "css": 16791,
+    "sumOfAlone": { "js": 1125739, "css": 64030 }
   },
   "items": {
     "utils": {
@@ -2425,6 +2456,111 @@
         { "source": "runtime", "js": 4038 },
         { "source": "package:phosphor-svelte", "js": 874 },
         { "source": "own", "js": 542 }
+      ],
+      "cases": {}
+    },
+    "tag": {
+      "hash": "22adc98fd3e243fb71c59605cf79c619bc6fac3a5a1d495b6392554d6d6ff5de",
+      "runtimeHash": "3d24a4b2fdd78d81ca2f46cfa954db7d5fe1af470306bccd8b3311b95c56de20",
+      "outputHash": "8bac7d157c7ff8708cccb067bd6e7e2cd8d2cc8c9c061a935571b96e79c269c2",
+      "run": "2026-11-16T10:13:18.680Z",
+      "size": {
+        "js": 14076,
+        "css": 1093,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 12405, "css": 962 }
+      },
+      "hydrate": { "ms": 28.3, "spread": [22.8, 31.8], "settledMs": null },
+      "interaction": {
+        "kind": "click",
+        "start": "click",
+        "says": "updates",
+        "ms": 43.5,
+        "spread": [41.9, 44.4],
+        "ownMs": -0.8,
+        "pressGapMs": 0,
+        "eventTimingMs": 32
+      },
+      "route": "/",
+      "breakdown": [
+        { "source": "runtime", "js": 5659 },
+        { "source": "package:tailwind-variants", "js": 4002 },
+        { "source": "package:phosphor-svelte", "js": 2676 },
+        { "source": "own", "js": 1001 },
+        { "source": "item:button", "js": 539 },
+        { "source": "item:spinner", "js": 199 }
+      ],
+      "cases": {}
+    },
+    "search-field": {
+      "hash": "6bf0bbcc883826f5706b09a89bd4f9bcaed46cbf06220f6377acc3fe135b13ee",
+      "runtimeHash": "4e8b59e329390f651f0aaaabda86e3e1b58f3cf5ae06af2607e9b7d91757655c",
+      "outputHash": "067260cfddf94142df2a4d3d9c1014c2821441f2c148d0cf8ed9291a1de51b37",
+      "run": "2026-11-16T10:13:18.680Z",
+      "size": {
+        "js": 13411,
+        "css": 1695,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 11902, "css": 1476 }
+      },
+      "hydrate": { "ms": 27, "spread": [25.9, 29.9], "settledMs": null },
+      "interaction": {
+        "kind": "key",
+        "start": "keydown",
+        "says": "updates",
+        "ms": 47.4,
+        "spread": [39.8, 50.4],
+        "ownMs": 3.1,
+        "pressGapMs": null,
+        "eventTimingMs": 16
+      },
+      "route": "/",
+      "breakdown": [
+        { "source": "package:tailwind-variants", "js": 4178 },
+        { "source": "runtime", "js": 4156 },
+        { "source": "package:phosphor-svelte", "js": 2222 },
+        { "source": "own", "js": 853 },
+        { "source": "item:input-group", "js": 754 },
+        { "source": "item:button", "js": 563 },
+        { "source": "item:input", "js": 348 },
+        { "source": "item:spinner", "js": 208 },
+        { "source": "item:status", "js": 129 }
+      ],
+      "cases": {}
+    },
+    "pagination": {
+      "hash": "0684b6b23950dc256ef0e250fd1bb124684604e44e9a723241a66b5ff622fd45",
+      "runtimeHash": "0307e487095336f7753513f83cefc4c9c828be478d8bd5a7e2346dfa4bb2db01",
+      "outputHash": "43cff93823c9bda9e5714f7f980475eb7ddbf2a6de87e8c10284989be18f24d3",
+      "run": "2026-11-16T10:13:18.680Z",
+      "size": {
+        "js": 12580,
+        "css": 1262,
+        "lazy": 0,
+        "assets": 0,
+        "brotli": { "js": 11251, "css": 1108 }
+      },
+      "hydrate": { "ms": 45.9, "spread": [39.6, 57.9], "settledMs": null },
+      "interaction": {
+        "kind": "click",
+        "start": "click",
+        "says": "selects",
+        "ms": 44.2,
+        "spread": [43.7, 44.8],
+        "ownMs": -0.1,
+        "pressGapMs": 0,
+        "eventTimingMs": 32
+      },
+      "route": "/",
+      "breakdown": [
+        { "source": "runtime", "js": 5086 },
+        { "source": "package:tailwind-variants", "js": 4106 },
+        { "source": "own", "js": 1924 },
+        { "source": "package:phosphor-svelte", "js": 1133 },
+        { "source": "item:button", "js": 204 },
+        { "source": "item:status", "js": 127 }
       ],
       "cases": {}
     }

@@ -43,5 +43,25 @@
     "alias": "notification",
     "path": "/components/toast/",
     "title": "Toast"
+  },
+  {
+    "alias": "pager",
+    "path": "/components/pagination/",
+    "title": "Pagination"
+  },
+  {
+    "alias": "searchbox",
+    "path": "/components/search-field/",
+    "title": "Search field"
+  },
+  {
+    "alias": "chip",
+    "path": "/components/tag/",
+    "title": "Tag"
+  },
+  {
+    "alias": "pill",
+    "path": "/components/tag/",
+    "title": "Tag"
   }
 ]

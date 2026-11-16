@@ -15,7 +15,7 @@ import { RULE_IDS } from "../sr/rules.ts";
 const TESTS = declaredTests();
 
 describe("022 test 5: the scripted set", () => {
-  test("SR_ITEMS holds the 28 items of decision 11, and 026's toast", () => {
+  test("SR_ITEMS holds the 28 items of decision 11, 026's toast, and 027b's three", () => {
     expect(Object.keys(SR_ITEMS).sort()).toEqual(
       [
         "status",
@@ -47,6 +47,10 @@ describe("022 test 5: the scripted set", () => {
         "chat",
         "product-home",
         "toast",
+        // 027 decision 11.
+        "pagination",
+        "search-field",
+        "tag",
       ].sort(),
     );
   });
@@ -60,6 +64,26 @@ describe("022 test 5: the scripted set", () => {
     expect(candidates().get("alert")).toContain("role map");
   });
 
+  // 027 test 54: batch A's three interactive items join with decision 11's
+  // kinds, each a candidate by its own source; its quiet three are none.
+  test("pagination, search-field and tag join with their kinds; link, button-group and progress are not candidates", () => {
+    expect(SR_ITEMS.pagination).toEqual(["live", "focus"]);
+    expect(SR_ITEMS["search-field"]).toEqual(["live", "focus"]);
+    expect(SR_ITEMS.tag).toEqual(["focus"]);
+    const found = candidates();
+    expect(found.get("pagination")).toEqual(
+      expect.arrayContaining(["Status import", ".focus("]),
+    );
+    expect(found.get("search-field")).toEqual(
+      expect.arrayContaining(["Status import", ".focus("]),
+    );
+    expect(found.get("tag")).toEqual(
+      expect.arrayContaining([".focus(", 'tabindex="-1"']),
+    );
+    for (const quiet of ["link", "button-group", "progress"])
+      expect(found.has(quiet), quiet).toBe(false);
+  });
+
   test("breadcrumb and input-group are excluded, with reasons; no item is in both lists", () => {
     expect(SR_EXCLUDED.breadcrumb).toBeTruthy();
     expect(SR_EXCLUDED["input-group"]).toBeTruthy();
@@ -68,7 +92,7 @@ describe("022 test 5: the scripted set", () => {
 });
 
 describe("022 test 5: one file per item, a test per kind", () => {
-  test("29 files, one per item in SR_ITEMS, and no other", () => {
+  test("32 files, one per item in SR_ITEMS, and no other", () => {
     const files = [...new Set(TESTS.map((t) => t.file))].sort();
     expect(files).toEqual(
       Object.keys(SR_ITEMS)

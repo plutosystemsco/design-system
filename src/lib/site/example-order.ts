@@ -101,6 +101,17 @@ export const EXAMPLE_ORDER: Record<string, string[]> = {
   link: ["inline", "standalone", "new-tab", "visited", "inherit"],
   "button-group": ["attached", "with-menu", "vertical", "spaced"],
   progress: ["upload", "states", "in-a-card"],
+  // 027b decision 12: batch A's interactive items.
+  pagination: ["links", "buttons", "in-a-footer", "ends", "narrow", "small"],
+  "search-field": [
+    "filter",
+    "from-a-server",
+    "site",
+    "in-a-field",
+    "in-a-dialog",
+    "disabled",
+  ],
+  tag: ["removable", "pressable", "mixed", "fallback", "static"],
 };
 
 /** An item's example ids, in page order; empty for a block or a composition. */

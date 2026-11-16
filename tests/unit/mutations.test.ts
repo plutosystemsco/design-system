@@ -49,8 +49,8 @@ describe("022 test 6: the patches apply", () => {
     expect(files).toEqual(PATCHES.map((p) => `${p.set}/${p.patch}`).sort());
   });
 
-  test("the main set has eight patches (022's seven and 026's); no two patches in a set touch the same file", () => {
-    expect(PATCHES.filter((p) => p.set === "main")).toHaveLength(8); // 022's seven, and 026's toast-alert
+  test("the main set has ten patches (022's seven, 026's and 027b's two); no two patches in a set touch the same file", () => {
+    expect(PATCHES.filter((p) => p.set === "main")).toHaveLength(10); // 022's seven, 026's toast-alert, and 027b's pagination-status and tag-focus
     for (const set of SETS) {
       const seen = new Map<string, string>();
       for (const p of PATCHES.filter((x) => x.set === set))
@@ -72,6 +72,44 @@ describe("022 test 6: the patches apply", () => {
       for (const f of files)
         expect(f.startsWith("src/lib/registry/")).toBe(true);
     }
+  });
+});
+
+// 027 decision 11, test 54: batch A's two patches each derive exactly the
+// tests that hear their part with their fault, under every pair.
+describe("027b test 54: the pagination-status and tag-focus patches", () => {
+  const derived = derive("main", PATCHES, TESTS, []);
+  const titles = (patch: string) =>
+    [
+      ...new Set(
+        derived.expected
+          .filter((e) => e.patch === patch)
+          .map((e) => `${e.file} › ${e.title}`),
+      ),
+    ].sort();
+
+  test("pagination-status derives exactly P1, under four pairs", () => {
+    const p = PATCHES.find((x) => x.target === "pagination:status")!;
+    expect(p.fault).toBe("L1");
+    expect(titles(p.patch)).toEqual([`pagination.sr.ts › ${p.witness.title}`]);
+    expect(p.witness.title).toStartWith("P1 ");
+    expect(derived.expected.filter((e) => e.patch === p.patch)).toHaveLength(4);
+  });
+
+  test("tag-focus derives exactly T1, T2 and T3, under four pairs", () => {
+    const p = PATCHES.find((x) => x.target === "tag:group")!;
+    expect(p.fault).toBe("F1");
+    const got = titles(p.patch);
+    expect(got).toHaveLength(3);
+    expect(got.map((t) => t.split(" › ")[1]!.slice(0, 2))).toEqual([
+      "T1",
+      "T2",
+      "T3",
+    ]);
+    expect(p.witness.title).toStartWith("T1 ");
+    expect(derived.expected.filter((e) => e.patch === p.patch)).toHaveLength(
+      12,
+    );
   });
 });
 

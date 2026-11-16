@@ -323,6 +323,26 @@
 		"relativeUrl": "button-group.json"
 	},
 	{
+		"name": "tag",
+		"title": "Tag",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+		"description": "A short label you can remove or press, in a named list that moves focus to its neighbour when a tag is removed.",
+		"registryDependencies": [
+			"utils",
+			"kuiper-theme",
+			"button"
+		],
+		"meta": {
+			"since": "0.13.0",
+			"group": "actions",
+			"modes": [
+				"productive"
+			]
+		},
+		"relativeUrl": "tag.json"
+	},
+	{
 		"name": "card",
 		"title": "Card",
 		"type": "registry:ui",
@@ -1060,6 +1080,27 @@
 		"relativeUrl": "input-otp.json"
 	},
 	{
+		"name": "search-field",
+		"title": "Search field",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+		"description": "A search input with a magnifier, a clear button and Escape to clear, that can speak the result count for what is typed now.",
+		"registryDependencies": [
+			"utils",
+			"kuiper-theme",
+			"input-group",
+			"status"
+		],
+		"meta": {
+			"since": "0.13.0",
+			"group": "forms",
+			"modes": [
+				"productive"
+			]
+		},
+		"relativeUrl": "search-field.json"
+	},
+	{
 		"name": "code-block",
 		"title": "Code block",
 		"type": "registry:ui",
@@ -1435,6 +1476,27 @@
 			]
 		},
 		"relativeUrl": "link.json"
+	},
+	{
+		"name": "pagination",
+		"title": "Pagination",
+		"type": "registry:ui",
+		"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+		"description": "A named nav of page links, or page buttons for a list paged in place, with the current page marked and Previous and Next omitted at the ends.",
+		"registryDependencies": [
+			"utils",
+			"kuiper-theme",
+			"button",
+			"status"
+		],
+		"meta": {
+			"since": "0.13.0",
+			"group": "navigation",
+			"modes": [
+				"productive"
+			]
+		},
+		"relativeUrl": "pagination.json"
 	},
 	{
 		"name": "message-log",

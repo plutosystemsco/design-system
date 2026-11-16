@@ -1086,6 +1086,33 @@
       }
     },
     {
+      "name": "tag",
+      "type": "registry:ui",
+      "title": "Tag",
+      "description": "A short label you can remove or press, in a named list that moves focus to its neighbour when a tag is removed.",
+      "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+      "registryDependencies": ["utils", "kuiper-theme", "button"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/tag/tag-group.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/tag/tag.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/tag/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.13.0",
+        "group": "actions",
+        "modes": ["productive"]
+      }
+    },
+    {
       "name": "card",
       "type": "registry:ui",
       "title": "Card",
@@ -2284,6 +2311,34 @@
       }
     },
     {
+      "name": "search-field",
+      "type": "registry:ui",
+      "title": "Search field",
+      "description": "A search input with a magnifier, a clear button and Escape to clear, that can speak the result count for what is typed now.",
+      "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+      "registryDependencies": [
+        "utils",
+        "kuiper-theme",
+        "input-group",
+        "status"
+      ],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/search-field/search-field.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/search-field/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.13.0",
+        "group": "forms",
+        "modes": ["productive"]
+      }
+    },
+    {
       "name": "code-block",
       "type": "registry:ui",
       "title": "Code block",
@@ -3125,6 +3180,33 @@
         },
         {
           "path": "src/lib/registry/ui/link/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.13.0",
+        "group": "navigation",
+        "modes": ["productive"]
+      }
+    },
+    {
+      "name": "pagination",
+      "type": "registry:ui",
+      "title": "Pagination",
+      "description": "A named nav of page links, or page buttons for a list paged in place, with the current page marked and Previous and Next omitted at the ends.",
+      "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+      "registryDependencies": ["utils", "kuiper-theme", "button", "status"],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/pagination/pagination.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/pagination/pagination-pages.ts",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/pagination/index.ts",
           "type": "registry:ui"
         }
       ],

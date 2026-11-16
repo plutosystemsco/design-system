@@ -1,0 +1,11 @@
+--- a/src/lib/registry/ui/tag/tag-group.svelte
++++ b/src/lib/registry/ui/tag/tag-group.svelte
+@@ -53,7 +53,7 @@
+           list.querySelectorAll<HTMLElement>("[data-tag-control]");
+         const next =
+           controls[index] ?? controls[index - 1] ?? fallback?.() ?? list;
+-        next.focus();
++        void next;
+       });
+     },
+   });
