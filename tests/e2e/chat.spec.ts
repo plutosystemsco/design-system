@@ -10,6 +10,7 @@ import type {
   Page,
 } from "@playwright/test";
 import { expect, test } from "../test.ts";
+import { adaptsIn } from "./engines.ts";
 import {
   cssVar,
   hexToRgb,
@@ -71,6 +72,10 @@ test.describe("L1. the message log", () => {
     await expect(log).toHaveAttribute("aria-relevant", "additions");
     expect(await log.getAttribute("aria-live")).toBeNull();
     expect(await computed(region, "overflow-y")).toBe("auto");
+    adaptsIn(
+      "firefox",
+      "scrollbar-width: Playwright's Firefox computes none for every element, so the value is read from the author's rules",
+    );
     expect(await scrollbarWidth(region)).toBe("thin");
     expect(await computed(region, "overscroll-behavior-y")).toBe("contain");
     expect(await computed(region, "scroll-padding-bottom")).toBe("96px");

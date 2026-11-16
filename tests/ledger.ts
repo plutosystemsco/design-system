@@ -96,9 +96,18 @@ export function mismatch(
   const ex = line.expect;
   if ("error" in ex) {
     const bad = errors.find((e) => !strip(e.message ?? "").includes(ex.error));
-    return bad
-      ? `an error does not contain ${JSON.stringify(ex.error)}: ${strip(bad.message ?? "").split("\n")[0]}`
-      : null;
+    if (bad)
+      return `an error does not contain ${JSON.stringify(ex.error)}: ${strip(bad.message ?? "").split("\n")[0]}`;
+    // The review's finding 3: a list compared with toEqual holds the named
+    // failure and maybe a new one. Every received entry must be the named one.
+    for (const e of errors) {
+      const extra = receivedEntries(e.message ?? "").filter(
+        (r) => !r.includes(ex.error),
+      );
+      if (extra.length)
+        return `the failure also holds ${extra.map((r) => JSON.stringify(r)).join(", ")}`;
+    }
+    return null;
   }
   if ("axeRule" in ex) {
     const ids = errors.flatMap((e) => axeRules(e.message ?? ""));
@@ -110,8 +119,31 @@ export function mismatch(
   const rules = [...new Set(faults.map((f) => f.rule))];
   if (!rules.includes(ex.fault))
     return `no ${ex.fault} fault${rules.length ? `; the faults were ${rules.join(", ")}` : "; the test failed before its rules ran"}`;
-  const other = rules.filter((r) => r !== ex.fault);
+  // X0 beside the named fault is its consequence (L3 has nothing to judge
+  // once L1 fails); alone it is a set-up failure, caught above.
+  const other = rules.filter((r) => r !== ex.fault && r !== "X0");
   return other.length ? `other faults too: ${other.join(", ")}` : null;
+}
+
+/**
+ * The entries of a string list a failed `toEqual` received, read from its
+ * diff (`+   "…",`) or its `Received: [...]` line. Empty for any other
+ * failure.
+ */
+export function receivedEntries(message: string): string[] {
+  const m = strip(message);
+  const diff = [...m.matchAll(/^\+\s+"((?:\\.|[^"\\])*)",?\s*$/gm)].map((x) =>
+    JSON.parse(`"${x[1]}"`),
+  );
+  if (diff.length) return diff;
+  const line = m.match(/^Received:\s+(\[.*\])\s*$/m);
+  if (!line) return [];
+  try {
+    const list = JSON.parse(line[1]!);
+    return Array.isArray(list) ? list.filter((x) => typeof x === "string") : [];
+  } catch {
+    return [];
+  }
 }
 
 /** A screen-reader test's faults, from its `faults.json` attachment. */

@@ -1,6 +1,6 @@
 import type { Page } from "@playwright/test";
 import { expect, test } from "../test.ts";
-import { onlyProjects } from "./engines.ts";
+import { adaptsIn, onlyProjects } from "./engines.ts";
 import { scheme } from "./scheme.ts";
 import {
   GROUND,
@@ -225,6 +225,10 @@ test.describe("tokens in the browser", () => {
         ];
       });
     // 022: Playwright's Firefox computes every scrollbar-width as none.
+    adaptsIn(
+      "firefox",
+      "scrollbar-width: Playwright's Firefox computes none for every element, so the value is read from the author's rules",
+    );
     const width = await scrollbarWidth(page.locator(token("scrollbar")));
     expect(width).toBe("thin");
     expect(holdsColour(colour, input), `${colour} holds ${input}`).toBe(true);

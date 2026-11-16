@@ -1,7 +1,7 @@
 import type { Page } from "@playwright/test";
 import { expect, test } from "../test.ts";
-import { notIn } from "./engines.ts";
 import {
+  activate,
   BAR_STOPS,
   BLOCKS,
   COMPONENTS_STOPS,
@@ -16,7 +16,7 @@ import {
   componentPath,
   tabOut,
   clipboard,
-  NO_CLIPBOARD_READ,
+  readClipboard,
 } from "./pages.ts";
 import { BLOCK_VIEWS } from "../../src/lib/preview/blocks.ts";
 
@@ -871,10 +871,12 @@ test.describe("behaviours", () => {
     await expect(count).toHaveText("0");
     await busy.focus();
     await page.keyboard.press("Enter");
+    // Focus stays after Enter. (A click does not focus a button in macOS
+    // WebKit, so focus is checked before the clicks: 022's review, finding 4.)
+    await expect(busy).toBeFocused();
     await busy.click();
     await busy.click();
     await expect(count).toHaveText("0");
-    await expect(busy).toBeFocused();
     await expect(busy).toHaveAttribute("aria-busy", "true");
     await expect(busy.locator('[data-slot="spinner"]')).toHaveCount(1);
     // The positive control: once not busy, the same button submits.
@@ -1463,7 +1465,6 @@ test.describe("017: the token page by keyboard", () => {
   test("criterion 4: Tab reaches the first 3 copy buttons in order, and Enter on the first says Copied", async ({
     page,
   }) => {
-    notIn("firefox", NO_CLIPBOARD_READ);
     await open(page, "/foundations/tokens/");
     const buttons = page.locator('[data-slot="token-copy"]');
     const names = await buttons.evaluateAll((els) =>
@@ -1484,9 +1485,7 @@ test.describe("017: the token page by keyboard", () => {
     await buttons.first().focus();
     await page.keyboard.press("Enter");
     await expect(buttons.first()).toHaveAttribute("aria-label", "Copied");
-    expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(
-      "--background",
-    );
+    expect(await readClipboard(page)).toBe("--background");
   });
 });
 

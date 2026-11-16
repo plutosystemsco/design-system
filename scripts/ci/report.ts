@@ -111,8 +111,12 @@ export function summary(rs: Record_[]): string {
   ];
   for (const [c, list] of [...by].sort()) {
     const n = (s: string) => list.filter((r) => r.status === s).length;
-    const ledgered = list.filter((r) =>
-      r.annotations.some((a) => a.type === "ledger"),
+    // A ledgered test that failed as its line says is "expected"; one that
+    // did not is "unexpected" and counts as failed (the review's write-in 5).
+    const ledgered = list.filter(
+      (r) =>
+        r.status === "expected" &&
+        r.annotations.some((a) => a.type === "ledger"),
     ).length;
     const minutes = (list.reduce((m, r) => m + r.duration, 0) / 60_000).toFixed(
       1,
@@ -179,6 +183,9 @@ export function srLogs(rs: Record_[]) {
       file: r.file,
       title: r.title,
       status: r.status,
+      // The last attempt's own result: on a mutation run an expected
+      // failure is ledgered, so its status reads "expected" (finding 1).
+      result: r.last?.status ?? "",
       phrases: attachment(r.last, "phrases.json") ?? null,
       faults:
         (attachment(r.last, "faults.json") as { rule: string }[] | undefined) ??
@@ -227,7 +234,7 @@ if (import.meta.main) {
       browser: l.browser,
       file: l.file,
       title: l.title,
-      ok: l.status === "expected" || l.status === "flaky",
+      ok: l.result === "passed",
       faults: l.faults.map((f) => f.rule).filter((f) => f !== "X0"),
     }));
     const diff = verdict(expected, results);

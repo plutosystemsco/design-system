@@ -158,16 +158,11 @@ test("the changelog's badge has a visible border", async ({ page }) => {
   expect(b).not.toBe("0px");
 });
 
-test("axe finds 0 violations on Button, Colour and the changelog", async ({
-  page,
-}) => {
-  for (const p of [
-    "/components/button/",
-    "/foundations/colour/",
-    "/changelog/",
-  ]) {
+// 022's review, finding 3: one test per page, so a ledger line names one
+// page and the others are still scanned.
+for (const p of ["/components/button/", "/foundations/colour/", "/changelog/"])
+  test(`axe finds 0 violations on ${p}`, async ({ page }) => {
     await open(page, p);
     const r = await new AxeBuilder({ page }).analyze();
     expect(r.violations.map((v) => `${p}: ${v.id}`)).toEqual([]);
-  }
-});
+  });

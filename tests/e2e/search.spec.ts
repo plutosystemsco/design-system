@@ -4,10 +4,9 @@ import { readFileSync } from "node:fs";
  */
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "../test.ts";
-import { notIn } from "./engines.ts";
 import { DOORS } from "../../src/lib/site/doors.ts";
 import { addCommand } from "../../src/lib/site/site.ts";
-import { clipboard, NO_CLIPBOARD_READ, open } from "./pages.ts";
+import { clipboard, readClipboard, open, writeClipboard } from "./pages.ts";
 
 test.describe("015: search", () => {
   test("no request for /search.json before the palette opens; Control-K opens it with focus in the input", async ({
@@ -266,9 +265,8 @@ test.describe("018 decision 8, criterion 11: search that finds what was meant", 
     test("with Button active and nothing selected, Command-C (Control-C) copies its add command and says so", async ({
       page,
     }) => {
-      notIn("firefox", NO_CLIPBOARD_READ);
       const input = await palette(page, "butt");
-      await page.evaluate(() => navigator.clipboard.writeText(""));
+      await writeClipboard(page, "");
       await expect(
         page
           .getByRole("option", { selected: true })
@@ -278,21 +276,16 @@ test.describe("018 decision 8, criterion 11: search that finds what was meant", 
       await expect(page.getByRole("dialog").getByRole("status")).toHaveText(
         "Copied the command for Button",
       );
-      expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(
-        addCommand("button"),
-      );
+      expect(await readClipboard(page)).toBe(addCommand("button"));
       await expect(input).toHaveValue("butt");
     });
 
     test("with text selected, it copies the text", async ({ page }) => {
-      notIn("firefox", NO_CLIPBOARD_READ);
       const input = await palette(page, "butt");
-      await page.evaluate(() => navigator.clipboard.writeText(""));
+      await writeClipboard(page, "");
       await input.selectText();
       await input.press("ControlOrMeta+c");
-      await expect
-        .poll(() => page.evaluate(() => navigator.clipboard.readText()))
-        .toBe("butt");
+      await expect.poll(() => readClipboard(page)).toBe("butt");
       await expect(page.getByRole("dialog").getByRole("status")).toHaveText(
         /^\d+ results?$/,
       );

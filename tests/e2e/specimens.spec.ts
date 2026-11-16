@@ -5,6 +5,7 @@
  */
 import type { Locator, Page } from "@playwright/test";
 import { expect, test } from "../test.ts";
+import { adaptsIn } from "./engines.ts";
 import { contrastTable } from "../../scripts/contrast.ts";
 import { readTokens, resolveColor } from "../../scripts/tokens.ts";
 import { open } from "./pages.ts";
@@ -141,6 +142,10 @@ test.describe("018 criterion 17: Colour", () => {
   test("each role row shows 2 swatches of at least 56 px, in the token file's light and dark values, each with its value", async ({
     page,
   }) => {
+    adaptsIn(
+      "webkit",
+      "forced-color-adjust: WebKit has no forced-colours mode and no such property, so a swatch's none holds there vacuously",
+    );
     await open(page, "/foundations/colour/");
     for (const role of roles) {
       const { row, sw } = await rowSwatches(page, role);
@@ -207,6 +212,10 @@ test.describe("018 criterion 17: Colour", () => {
         ]),
       );
     expect(chips.length).toBeGreaterThan(100);
+    adaptsIn(
+      "webkit",
+      "forced-color-adjust: WebKit has no forced-colours mode and no such property, so a swatch's none holds there vacuously",
+    );
     for (const [adjust, border] of chips) {
       expect(adjust).toMatch(/^none/);
       expect(border).toBe("1px");

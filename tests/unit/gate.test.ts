@@ -62,6 +62,28 @@ describe("022 test 8: a mutation run", () => {
       }).ok,
     ).toBe(true);
   });
+  test("the review's finding 1: the conclusions a perfect mutation run yields pass it", () => {
+    // Under MUTATE=true the set's expected failures are ledgered in the
+    // reader jobs (fixtures.ts), so those jobs succeed; build and report
+    // succeed; browsers, checks and perf are skipped by their `if`.
+    const real: Needs = {
+      build: { result: "success" },
+      checks: { result: "skipped" },
+      browsers: { result: "skipped" },
+      perf: { result: "skipped" },
+      voiceover: { result: "success" },
+      nvda: { result: "success" },
+      report: { result: "success" },
+    };
+    expect(
+      decide({ needs: real, mutate: "true", sameRepoPr: "false" }).ok,
+    ).toBe(true);
+    // An expected test that passed (a patch that did nothing) fails its job.
+    const missed = { ...real, nvda: { result: "failure" as const } };
+    expect(
+      decide({ needs: missed, mutate: "true", sameRepoPr: "false" }).ok,
+    ).toBe(false);
+  });
   test("a failed report fails it", () => {
     expect(
       decide({

@@ -11,9 +11,10 @@ import type {
   Page,
 } from "@playwright/test";
 import { expect, test } from "../test.ts";
-import { notIn } from "./engines.ts";
+import { adaptsIn } from "./engines.ts";
 import { scheme } from "./scheme.ts";
 import {
+  activate,
   cssVar,
   hexToRgb,
   open,
@@ -22,7 +23,7 @@ import {
   componentPath,
   scrollbarWidth,
   clipboard,
-  NO_CLIPBOARD_READ,
+  readClipboard,
 } from "./pages.ts";
 
 /**
@@ -352,6 +353,10 @@ test.describe("the code block", () => {
       const block = python(page);
       const pre = block.locator('[data-slot="code-block-content"]');
       await expect(pre).toHaveAttribute("tabindex", "0");
+      adaptsIn(
+        "firefox",
+        "scrollbar-width: Playwright's Firefox computes none for every element, so the value is read from the author's rules",
+      );
       expect(await scrollbarWidth(pre)).toBe("thin");
       // 014 decision 5: the track is the code ground.
       expect(await computed(pre, "scrollbar-color")).toBe(
@@ -448,7 +453,6 @@ test.describe("the code block", () => {
     test("C4. the copy button: its name and size; Enter writes the code, says Copied, and resets after 2 s", async ({
       page,
     }) => {
-      notIn("firefox", NO_CLIPBOARD_READ);
       await open(page, PAGE);
       const block = python(page);
       // Located by its slot: its name changes on success.
@@ -473,11 +477,9 @@ test.describe("the code block", () => {
       await page.keyboard.press("Enter");
       await expect(button).toHaveAccessibleName("Copied");
       await expect(block.getByRole("status")).toHaveText("Copied");
-      const clipboard = await page.evaluate(() =>
-        navigator.clipboard.readText(),
-      );
-      expect(clipboard.split("\n")).toHaveLength(25);
-      expect(clipboard).toBe(code);
+      const pasted = await readClipboard(page);
+      expect(pasted.split("\n")).toHaveLength(25);
+      expect(pasted).toBe(code);
       await expect(button).toHaveAccessibleName("Copy code", { timeout: 3000 });
     });
   });
@@ -741,7 +743,7 @@ test.describe("the ink surface", () => {
     expect(await computed(s, "color-scheme")).toBe("dark");
 
     // The popover opens inside the surface, in the surface's theme.
-    await page.getByTestId("surface-popover").click();
+    await activate(page.getByTestId("surface-popover"));
     const popover = page.locator('[data-slot="popover-content"]');
     await expect(popover).toBeVisible();
     expect(await popover.evaluate((el) => !!el.closest(".surface-ink"))).toBe(
@@ -910,6 +912,10 @@ test.describe("the code editor", () => {
     expect(await computed(scroller, "font-family")).toContain("JetBrains Mono");
     expect(await computed(scroller, "font-size")).toBe("13.5px");
     expect(await computed(scroller, "font-variant-ligatures")).toBe("none");
+    adaptsIn(
+      "firefox",
+      "scrollbar-width: Playwright's Firefox computes none for every element, so the value is read from the author's rules",
+    );
     expect(await scrollbarWidth(scroller)).toBe("thin");
     expect(await computed(scroller, "scrollbar-color")).toBe(
       `${hexToRgb(await cssVar(page, "--input"))} ${codeGround}`,

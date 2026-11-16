@@ -18,8 +18,10 @@ export type Engine = "chromium" | "firefox" | "webkit";
 export type EngineOnly = {
   file: string;
   title: string;
-  helper: "onlyIn" | "notIn" | "onlyProjects";
-  /** For `onlyIn` and `notIn`: the engine the call names. */
+  /** `adaptsIn` (022's review, finding 10): the test runs everywhere, and
+   * checks less, or differently, in the named engine. */
+  helper: "onlyIn" | "notIn" | "onlyProjects" | "adaptsIn";
+  /** For `onlyIn`, `notIn` and `adaptsIn`: the engine the call names. */
   engine?: Engine;
   /** For `onlyProjects`: the projects the test runs in. */
   projects?: string[];
@@ -53,44 +55,6 @@ export const ENGINE_ONLY: EngineOnly[] = [
     // entries (022 decision 2).
     ruling: "context/specifications/022-the-test-matrix.md",
   },
-  // Six tests that read what the page wrote to the clipboard. Writing needs
-  // no grant in Firefox, so the copy tests that only check the status still
-  // run there (tests/e2e/pages.ts, `clipboard`).
-  ...(
-    [
-      [
-        "code.spec.ts",
-        "the code block › with the clipboard granted › C4. the copy button: its name and size; Enter writes the code, says Copied, and resets after 2 s",
-      ],
-      [
-        "keyboard.spec.ts",
-        "017: the token page by keyboard › criterion 4: Tab reaches the first 3 copy buttons in order, and Enter on the first says Copied",
-      ],
-      [
-        "nav.spec.ts",
-        "018 criterion 10: page tools, previous and next › on Button, Copy page puts the twin's text on the clipboard and says Copied",
-      ],
-      [
-        "nav.spec.ts",
-        "018 criterion 10: page tools, previous and next › with the twin's request delayed by 1 s, it copies through one ClipboardItem written inside the click",
-      ],
-      [
-        "search.spec.ts",
-        "018 decision 8, criterion 11: search that finds what was meant › with the clipboard granted › with Button active and nothing selected, Command-C (Control-C) copies its add command and says so",
-      ],
-      [
-        "search.spec.ts",
-        "018 decision 8, criterion 11: search that finds what was meant › with the clipboard granted › with text selected, it copies the text",
-      ],
-    ] as const
-  ).map(([file, title]): EngineOnly => ({
-    file,
-    title,
-    helper: "notIn",
-    engine: "firefox",
-    reason:
-      "clipboard: Playwright's Firefox has no clipboard-read permission, so a page cannot read what it wrote",
-  })),
   {
     file: "bar-glass.spec.ts",
     // The call is in the body of the blur tests the loop makes.
@@ -100,16 +64,64 @@ export const ENGINE_ONLY: EngineOnly[] = [
     reason:
       "screenshots: Playwright's Firefox and WebKit capture a page without compositing its backdrop filters",
   },
-  {
-    file: "primitives.spec.ts",
-    // The call is in the body of the three paste tests the loop makes.
-    title: "the code input",
-    helper: "notIn",
+  // 022's review, finding 10: checks that run everywhere and check less in
+  // one engine. Firefox's scrollbar-width is read from the author's rules
+  // (`scrollbarWidth()` in pages.ts), not from the engine.
+  ...(
+    [
+      [
+        "chat.spec.ts",
+        "L1. the message log › a region named Messages with a stop, holding a log named Conversation with aria-relevant additions; it opens at its end with the button hidden; scroll-padding-bottom is 96",
+      ],
+      [
+        "code.spec.ts",
+        "the code block › at 1280 › C3. the chrome: the pre's stop, scrollbar and overflow; the ring on the root, unclipped; the groove; 3 of 3 emphasised lines",
+      ],
+      [
+        "code.spec.ts",
+        "the code editor › E3. the theme from tokens: the ring on the editor, unclipped; 5 of 5 computed values; the keyword; 5 role readings, the role span innermost; .cm-content and its caret in --code-text; 12 rules of ours in the emitted sheet, 0 literals",
+      ],
+      // One call in the body of the rename dialog's test, at 360 and 1280.
+      ["navigation.spec.ts", "N3. the dialog"],
+      [
+        "navigation.spec.ts",
+        "N5. the sidebar › the first shell: a sticky nav 256 px wide on the sidebar ground, the trigger a disclosure that controls it, collapsed to 0 and inert on a press and restored on the next, the cookie written; the icon shell is 48 px",
+      ],
+      [
+        "tokens.spec.ts",
+        "tokens in the browser › scrollbar computes scrollbar-color holding --input and --muted, thin",
+      ],
+    ] as const
+  ).map(([file, title]): EngineOnly => ({
+    file,
+    title,
+    helper: "adaptsIn",
     engine: "firefox",
-    // Firefox's DataTransfer is protected for an untrusted event: getData
-    // returns "" to the page. A real paste needs clipboard-read.
     reason:
-      "synthetic paste: Firefox keeps an untrusted paste event's DataTransfer empty, and Playwright's Firefox has no clipboard permission for a real one",
+      "scrollbar-width: Playwright's Firefox computes none for every element, so the value is read from the author's rules",
+  })),
+  ...(
+    [
+      "018 criterion 17: Colour › each role row shows 2 swatches of at least 56 px, in the token file's light and dark values, each with its value",
+      "018 criterion 17: Colour › the 16 px chips on Tokens are swatches too: forced-color-adjust none and a 1 px border",
+    ] as const
+  ).map((title): EngineOnly => ({
+    file: "specimens.spec.ts",
+    title,
+    helper: "adaptsIn",
+    engine: "webkit",
+    reason:
+      "forced-color-adjust: WebKit has no forced-colours mode and no such property, so a swatch's none holds there vacuously",
+    // 028 decides how 030 reads WebKit's forced-colours gap.
+  })),
+  {
+    file: "blocks.spec.ts",
+    // One call in the body of A2, at 360 and 1280.
+    title: "the app shell",
+    helper: "adaptsIn",
+    engine: "webkit",
+    reason:
+      "pixels: WebKit blends the translucent hairline up to 2 steps a channel off Chromium's exact values",
   },
   {
     file: "spacing.spec.ts",

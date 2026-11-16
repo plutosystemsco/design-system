@@ -10,8 +10,10 @@ import type {
   Page,
 } from "@playwright/test";
 import { expect, test } from "../test.ts";
+import { adaptsIn } from "./engines.ts";
 import { scheme } from "./scheme.ts";
 import {
+  activate,
   cssVar,
   hexToRgb,
   PAGES_003,
@@ -390,7 +392,7 @@ test.describe("settings", () => {
   }) => {
     await openView(page, "/view/settings/");
     const trigger = page.getByRole("button", { name: "Delete account" });
-    await trigger.click();
+    await activate(trigger);
     const dialog = page.getByRole("alertdialog");
     await expect(dialog).toBeVisible();
     await expect(
@@ -1005,14 +1007,20 @@ test.describe("the app shell", () => {
       const dark = scheme(info) === "dark";
       const ground = dark ? "#16140f" : "#f3f0e8";
       const want = [ground, dark ? "#2c2925" : "#dbd9d2", ground, ground];
-      // 022: within 2 steps a channel. Each engine rounds the blend of a
-      // translucent ink its own way (WebKit one step off Chromium's).
+      // 022: exact in Chromium and Firefox; WebKit rounds the blend of a
+      // translucent ink its own way, so there within 2 steps a channel.
+      const slack = adaptsIn(
+        "webkit",
+        "pixels: WebKit blends the translucent hairline up to 2 steps a channel off Chromium's exact values",
+      )
+        ? 2
+        : 0;
       const near = (a: string, b: string) =>
         [1, 3, 5].every(
           (i) =>
             Math.abs(
               parseInt(a.slice(i, i + 2), 16) - parseInt(b.slice(i, i + 2), 16),
-            ) <= 2,
+            ) <= slack,
         );
       const got = [px(0), px(1), px(2), px(3)];
       expect(

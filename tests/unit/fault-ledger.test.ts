@@ -7,7 +7,67 @@ import { describe, expect, test } from "bun:test";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { LEDGER } from "../fault-ledger.ts";
-import type { LedgerLine } from "../ledger.ts";
+import { mismatch, receivedEntries, type LedgerLine } from "../ledger.ts";
+
+describe("the ledger's matcher (the review's finding 3)", () => {
+  const line = (expect: LedgerLine["expect"]): LedgerLine => ({
+    file: "x.spec.ts",
+    title: "t",
+    where: { project: "firefox-light" },
+    expect,
+    finding: "f",
+    change: "022b",
+  });
+  // The diff Playwright prints for a failed toEqual of a string list.
+  const diff = (...received: string[]) =>
+    [
+      "expect(received).toEqual(expected) // deep equality",
+      "",
+      "- Expected  - 1",
+      `+ Received  + ${received.length + 2}`,
+      "",
+      "- Array []",
+      "+ Array [",
+      ...received.map((r) => `+   ${JSON.stringify(r)},`),
+      "+ ]",
+    ].join("\n");
+
+  test("a list holding only the named failure matches", () => {
+    const l = line({ error: "/components/button/: color-contrast" });
+    expect(
+      receivedEntries(diff("/components/button/: color-contrast")),
+    ).toEqual(["/components/button/: color-contrast"]);
+    expect(
+      mismatch(l, [{ message: diff("/components/button/: color-contrast") }]),
+    ).toBeNull();
+  });
+
+  test("a list holding the named failure and a new one does not", () => {
+    const l = line({ error: "/components/button/: color-contrast" });
+    const why = mismatch(l, [
+      {
+        message: diff(
+          "/components/button/: color-contrast",
+          "/components/button/: link-name",
+        ),
+      },
+    ]);
+    expect(why).toContain("link-name");
+  });
+
+  test("a fault line accepts X0 beside its fault, and not alone", () => {
+    const l = line({ fault: "L1" });
+    expect(
+      mismatch(l, [{ message: "e" }], [{ rule: "L1" }, { rule: "X0" }]),
+    ).toBeNull();
+    expect(mismatch(l, [{ message: "e" }], [{ rule: "X0" }])).toContain(
+      "no L1",
+    );
+    expect(
+      mismatch(l, [{ message: "e" }], [{ rule: "L1" }, { rule: "O2" }]),
+    ).toContain("O2");
+  });
+});
 
 const SPECS = "context/specifications";
 const BROWSER_PROJECTS = [
@@ -107,6 +167,13 @@ function listed(config: string, project: string): Set<string> {
 describe("022 test 7: the fault ledger", () => {
   test("every line has a small change, one where, a non-empty expect, a finding and a file", () => {
     expect(LEDGER.flatMap(lineFaults)).toEqual([]);
+  });
+
+  test("no two lines name one test in one place (the review's write-in 7)", () => {
+    const keys = LEDGER.map(
+      (l) => `${l.file} › ${l.title} @ ${JSON.stringify(l.where)}`,
+    );
+    expect(keys.filter((k, i) => keys.indexOf(k) !== i)).toEqual([]);
   });
 
   test("every line's test exists in the listing of its project or browser", () => {

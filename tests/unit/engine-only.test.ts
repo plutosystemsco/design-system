@@ -14,7 +14,7 @@ import { ENGINE_ONLY, type EngineOnly } from "../e2e/engine-only.ts";
 import { check } from "./engine-only-check.ts";
 
 const E2E = "tests/e2e";
-const HELPERS = ["onlyIn", "notIn", "onlyProjects"] as const;
+const HELPERS = ["onlyIn", "notIn", "onlyProjects", "adaptsIn"] as const;
 
 function e2eSources(): Record<string, string> {
   const out: Record<string, string> = {};

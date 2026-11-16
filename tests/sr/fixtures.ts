@@ -19,7 +19,11 @@ import {
 import { orcaKeyCodeCommands } from "@guidepup/guidepup";
 import type { Locator, Page, TestDetails, TestInfo } from "@playwright/test";
 import { expect } from "@playwright/test";
-import { ledgerFixture } from "../ledger.ts";
+import { readFileSync } from "node:fs";
+import path from "node:path";
+import { LEDGER } from "../fault-ledger.ts";
+import { ledgerFixture, type LedgerLine } from "../ledger.ts";
+import { mutationLines, PAIRS, type Expected } from "./mutations/derive.ts";
 import { reader } from "./reader.ts";
 import { AFTER_MS, BEFORE_MS, type Fault, type RuleId } from "./rules.ts";
 
@@ -244,6 +248,33 @@ function silent(): ScreenReaderPlaywright {
 const READER = reader();
 
 /**
+ * The review's finding 1: on a `mutate` dispatch (`MUTATE=true`), the set's
+ * expected failures join the ledger, so a perfect mutation run's reader
+ * jobs succeed and `gate` can pass. `report` still compares every test's
+ * faults with `expected.json`.
+ */
+const MUTATION_LINES: LedgerLine[] =
+  process.env.MUTATE === "true"
+    ? PAIRS.filter((p) => p.reader === READER).flatMap((p) =>
+        mutationLines(
+          JSON.parse(
+            readFileSync(
+              path.join(
+                import.meta.dir,
+                "mutations",
+                process.env.MUTATION_SET || "main",
+                "expected.json",
+              ),
+              "utf8",
+            ),
+          ) as Expected,
+          p.reader,
+          p.browser,
+        ),
+      )
+    : [];
+
+/**
  * Orca only, for the container rehearsal (022 Q9), never evidence:
  * `@guidepup/playwright` 0.21.0 reads Orca's commands flat
  * (`orcaKeyCodeCommands.PresentTitle`), and guidepup 0.40.0 groups them by
@@ -269,10 +300,10 @@ export const test = screenReaderTest.extend<{ ledger: void; sr: Sr }>({
         ) => use(silent()),
       }
     : {}),
-  ledger: ledgerFixture((info) => ({
-    reader: READER,
-    browser: info.project.name,
-  })),
+  ledger: ledgerFixture(
+    (info) => ({ reader: READER, browser: info.project.name }),
+    [...LEDGER, ...MUTATION_LINES],
+  ),
   sr: async ({ page, screenReader }, use, info) => {
     const sr = new Sr(page, screenReader, info);
     await use(sr);

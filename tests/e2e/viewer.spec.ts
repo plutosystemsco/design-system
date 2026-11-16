@@ -225,7 +225,15 @@ for (const block of BLOCKS) {
       });
       await openBlock(page, block);
       const states: boolean[] = [];
-      await expect.poll(() => frameIsDark(page)).toBe(await parentIsDark(page));
+      // 022's review, finding 3: the frame checks carry their own messages,
+      // so 022c's ledger line names them ("the frame's theme is the
+      // page's") and no other toBe can pass for them. In Firefox the copy
+      // loses at load or after a toggle, by turns.
+      await expect
+        .poll(() => frameIsDark(page), {
+          message: "at load, the frame's theme is the page's",
+        })
+        .toBe(await parentIsDark(page));
       // The frame's own choice was the other theme: the copy did this.
       const own = await frame(page).evaluate(
         (f) =>
@@ -240,7 +248,11 @@ for (const block of BLOCKS) {
         await toggle.click();
         const dark = await parentIsDark(page);
         states.push(dark);
-        await expect.poll(() => frameIsDark(page)).toBe(dark);
+        await expect
+          .poll(() => frameIsDark(page), {
+            message: `after toggle ${i + 1}, the frame's theme is the page's`,
+          })
+          .toBe(dark);
       }
       expect(states).toHaveLength(3);
       expect(states[1]).toBe(!states[0]);

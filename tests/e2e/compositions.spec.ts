@@ -8,6 +8,7 @@ import type { Page } from "@playwright/test";
 import { expect, test } from "../test.ts";
 import { scheme } from "./scheme.ts";
 import {
+  activate,
   COMPOSITION_VIEW_LIST,
   COMPOSITIONS,
   GROUND,
@@ -157,7 +158,7 @@ test.describe("5. the stage card", () => {
     await recordText(page, '[data-stage-card="status"]', "card");
     const run = card.getByRole("button", { name: "Run" });
 
-    await run.click();
+    await activate(run);
     await expect(
       page.locator('[data-slot="stage-card"][data-busy]'),
     ).toHaveCount(1);

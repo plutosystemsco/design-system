@@ -82,6 +82,21 @@ export function notIn(engine: Engine, reason: string): void {
   skipUnless("notIn", engine, reason, (i) => engineOf(i) !== engine);
 }
 
+/**
+ * 022's review, finding 10: the test runs in every engine, but in `engine`
+ * it checks less, or another way (`reason` says how). It never skips. It
+ * is listed in `ENGINE_ONLY` like the others, and in that engine the test
+ * carries an `adapts` annotation, so `030` reads its pass as partial there.
+ * Returns whether the test is running in `engine`. Call it in the body.
+ */
+export function adaptsIn(engine: Engine, reason: string): boolean {
+  const info = test.info();
+  requireListed(info, "adaptsIn", engine, reason);
+  const here = engineOf(info) === engine;
+  if (here) info.annotations.push({ type: "adapts", description: reason });
+  return here;
+}
+
 /** The test runs only in the named projects, for a skip by scheme or project. */
 export function onlyProjects(projects: string[], reason: string): void {
   skipUnless("onlyProjects", projects, reason, (i) =>

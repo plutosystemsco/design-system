@@ -16,7 +16,7 @@ const PROJECTS = [
   "webkit-dark",
   "perf",
 ];
-const HELPERS = ["onlyIn", "notIn", "onlyProjects"] as const;
+const HELPERS = ["onlyIn", "notIn", "onlyProjects", "adaptsIn"] as const;
 
 /** One call found in source, its arguments read where they are literals. */
 type Call = {
@@ -72,7 +72,7 @@ export function findCalls(sources: Record<string, string>): Call[] {
     const src = raw
       .replace(/\/\*[\s\S]*?\*\//g, (c) => c.replace(/[^\n]/g, " "))
       .replace(/(^|[^:"'`])\/\/.*$/gm, "$1");
-    const re = /\b(onlyIn|notIn|onlyProjects)\s*\(/g;
+    const re = /\b(onlyIn|notIn|onlyProjects|adaptsIn)\s*\(/g;
     for (const m of src.matchAll(re)) {
       // Skip the declarations and the imports.
       const before = src.slice(Math.max(0, m.index! - 20), m.index!);

@@ -101,17 +101,29 @@ describe("the site's address", () => {
     expect(re.test(`${SITE_ORIGIN}/components/button/`)).toBe(true);
   });
 
-  // From 022 the release check also needs a green matrix run of HEAD, which
-  // no local run has, so it exits 1 here by design (022 decision 19). Its
-  // address step still passes.
-  test("scripts/site/release-check.ts passes its address step", () => {
+  // From 022 the full release check also needs an empty ledger and a green
+  // matrix run of HEAD, read through `gh`, so it exits 1 before push B by
+  // design. The address step is checked as a pure function, and the script
+  // only with `--before-ci`, which makes no network call (022's review,
+  // finding 9).
+  test("the release check's address step passes", async () => {
+    const { addressCheck } =
+      await import("../../scripts/site/release-check.ts");
+    const { SITE_ORIGIN } = await import("../../src/lib/site/site.ts");
+    expect(addressCheck(SITE_ORIGIN).ok).toBe(true);
+    expect(addressCheck("https://<account>.workers.dev").ok).toBe(false);
+  });
+
+  test("scripts/site/release-check.ts --before-ci exits 0 and names what it skipped", () => {
     const r = Bun.spawnSync([
       process.execPath,
       "scripts/site/release-check.ts",
+      "--before-ci",
     ]);
-    expect(r.stdout.toString()).toContain(
-      `release-check: SITE_ORIGIN is https://`,
-    );
-    expect(r.stderr.toString()).not.toContain("SITE_ORIGIN is still");
+    const out = r.stdout.toString();
+    expect(r.exitCode).toBe(0);
+    expect(out).toContain("release-check: SITE_ORIGIN is https://");
+    expect(out).toContain("skipped (--before-ci): the fault ledger");
+    expect(out).toContain("skipped (--before-ci): a green matrix push run");
   });
 });

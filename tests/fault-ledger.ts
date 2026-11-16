@@ -47,7 +47,7 @@ export const LEDGER: LedgerLine[] = [
   // runs in light projects only (onlyProjects).
   {
     file: "forced-colors.spec.ts",
-    title: "axe finds 0 violations on Button, Colour and the changelog",
+    title: "axe finds 0 violations on /components/button/",
     where: { project: "firefox-light" },
     expect: { error: "/components/button/: color-contrast" },
     finding:
@@ -60,7 +60,7 @@ export const LEDGER: LedgerLine[] = [
       {
         file: "viewer.spec.ts",
         title: `${block} › 4. the frame's <html> is dark exactly when the page's is: at load, after the toggle, and back`,
-        expect: { error: "Object.is equality" },
+        expect: { error: "the frame's theme is the page's" },
         finding:
           "In Firefox the frame keeps its own theme: the viewer's copy runs before the frame's own theme code.",
         change: "022c",

@@ -6,6 +6,7 @@ import type { Locator, Page } from "@playwright/test";
 import { expect, test } from "../test.ts";
 import { scheme } from "./scheme.ts";
 import {
+  activate,
   componentPath,
   GROUND,
   hexToRgb,
@@ -33,7 +34,7 @@ async function pick(page: Page, frame: Locator, theme: ThemeName) {
     name: theme === "dark" ? "Dark" : "Light",
     exact: true,
   });
-  await option.click();
+  await activate(option);
   await expect(option).toBeFocused();
   await expect(option).toHaveAttribute("aria-pressed", "true");
 }

@@ -9,6 +9,7 @@ import path from "node:path";
 import { declaredTests, type Declared } from "../sr/declared.ts";
 import {
   derive,
+  mutationLines,
   patchFiles,
   PAIRS,
   witnessFaults,
@@ -98,6 +99,37 @@ describe("022 test 6: expected.json is derived", () => {
         expect(n.run).toMatch(/^\d+$/);
       }
     }
+  });
+});
+
+describe("the review's finding 1: a mutation run's expected failures are ledger lines", () => {
+  for (const set of SETS)
+    test(`${set}: one line per expected test and pair, each naming its fault`, () => {
+      const file = JSON.parse(
+        readFileSync(path.join(DIR, set, "expected.json"), "utf8"),
+      ) as Expected;
+      const lines = PAIRS.flatMap((p) =>
+        mutationLines(file, p.reader, p.browser),
+      );
+      expect(lines).toHaveLength(file.expected.length);
+      for (const l of lines) {
+        expect(l.expect.fault).toMatch(/^(L|F|O|T|C)/);
+        expect(file.expected).toContainEqual(
+          expect.objectContaining({
+            file: l.file,
+            title: l.title,
+            reader: l.where.reader,
+            browser: l.where.browser,
+            fault: l.expect.fault,
+          }),
+        );
+      }
+    });
+
+  test("fixtures.ts hands them to the ledger fixture under MUTATE=true", () => {
+    const src = readFileSync("tests/sr/fixtures.ts", "utf8");
+    expect(src).toContain('process.env.MUTATE === "true"');
+    expect(src).toContain("[...LEDGER, ...MUTATION_LINES]");
   });
 });
 

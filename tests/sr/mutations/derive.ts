@@ -154,6 +154,49 @@ export function witnessFaults(
   return faults;
 }
 
+/**
+ * A mutation run's expected failures as ledger lines, for one reader and
+ * browser pair (the review's finding 1). On a `mutate` dispatch the
+ * screen-reader jobs hand these to the ledger fixture: each expected test
+ * is marked to fail with its patch's fault, so a perfect mutation run's
+ * jobs succeed and `gate` can pass. A test expected to fail that passes,
+ * or fails on another rule, still turns its job red; `report` keeps the
+ * exact comparison with `expected.json`.
+ */
+export function mutationLines(
+  expected: Expected,
+  reader: string,
+  browser: string,
+): {
+  file: string;
+  title: string;
+  where: { reader: "voiceover" | "nvda"; browser: string };
+  expect: { fault: string };
+  finding: string;
+  change: string;
+}[] {
+  const mine = expected.expected.filter(
+    (e) => e.reader === reader && e.browser === browser,
+  );
+  const seen = new Set<string>();
+  for (const e of mine) {
+    const k = `${e.file} › ${e.title}`;
+    if (seen.has(k))
+      throw new Error(
+        `${k} is expected by two patches in set ${expected.set}; a ledger line names one fault`,
+      );
+    seen.add(k);
+  }
+  return mine.map((e) => ({
+    file: e.file,
+    title: e.title,
+    where: { reader: e.reader, browser: e.browser },
+    expect: { fault: e.fault },
+    finding: `mutation ${expected.set}: ${e.patch}`,
+    change: `mutation-${expected.set}`,
+  }));
+}
+
 /** The files a unified diff touches. */
 export function patchFiles(diff: string): string[] {
   return [...diff.matchAll(/^\+\+\+ b\/(.+)$/gm)].map((m) => m[1]!);

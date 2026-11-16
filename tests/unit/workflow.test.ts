@@ -48,6 +48,28 @@ describe("022 test 3: matrix.yml", () => {
       expect(r).toBe("bun install --frozen-lockfile --ignore-scripts");
   });
 
+  test("checks checks out full history with tags (the review's finding 2)", () => {
+    const co = steps(wf.jobs.checks!).find((s) =>
+      s.uses?.startsWith("actions/checkout@"),
+    )!;
+    expect(co.with).toMatchObject({ "fetch-depth": 0, "fetch-tags": true });
+  });
+
+  test("on a mutation run, the reader jobs pass MUTATE and the set to the suite (the review's finding 1)", () => {
+    for (const job of ["voiceover", "nvda"]) {
+      const s = steps(wf.jobs[job]!).find((x) =>
+        (x.run ?? "").includes("test:sr"),
+      )!;
+      expect(s.env?.MUTATE).toBe("${{ inputs.mutate }}");
+      expect(s.env?.MUTATION_SET).toBe("${{ inputs.set }}");
+      // No continue-on-error: the ledger, not the step, absorbs the
+      // expected failures, so an unexpected one still fails the job.
+      expect(
+        (s as Record<string, unknown>)["continue-on-error"],
+      ).toBeUndefined();
+    }
+  });
+
   test("every runs-on is one of the three exact labels", () => {
     for (const [, j] of all(wf)) expect(LABELS).toContain(j["runs-on"]);
   });

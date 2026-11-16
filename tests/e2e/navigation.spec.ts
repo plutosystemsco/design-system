@@ -10,8 +10,10 @@ import type {
   Page,
 } from "@playwright/test";
 import { expect, test } from "../test.ts";
+import { adaptsIn } from "./engines.ts";
 import { scheme } from "./scheme.ts";
 import {
+  activate,
   cssVar,
   hexToRgb,
   open,
@@ -320,7 +322,7 @@ test.describe("N2. the sheet", () => {
     await open(page, PAGE);
     const trigger = page.getByTestId("sheet-end");
     await expect(trigger).toHaveAttribute("aria-haspopup", "dialog");
-    await trigger.click();
+    await activate(trigger);
     const content = page.locator('[data-slot="sheet-content"]');
     await expect(content).toBeVisible();
     await settled(page);
@@ -430,7 +432,7 @@ test.describe("N3. the dialog", () => {
       }, info) => {
         await open(page, PAGE);
         const trigger = page.getByTestId("dialog-rename");
-        await trigger.click();
+        await activate(trigger);
         const content = page.locator('[data-slot="dialog-content"]');
         await expect(content).toBeVisible();
         await settled(page);
@@ -475,6 +477,10 @@ test.describe("N3. the dialog", () => {
         ]);
         expect(scroll[0]).toBeGreaterThan(scroll[1]);
         expect(scroll[2]).toBe(868);
+        adaptsIn(
+          "firefox",
+          "scrollbar-width: Playwright's Firefox computes none for every element, so the value is read from the author's rules",
+        );
         expect(await scrollbarWidth(long)).toBe("thin");
         await page.keyboard.press("Escape");
         await expect(long).toHaveCount(0);
@@ -646,6 +652,10 @@ test.describe("N5. the sidebar", () => {
     // The content box: a scroller with no stop of its own.
     const content = nav.locator('[data-slot="sidebar-content"]');
     expect(await computed(content, "overflow-y")).toBe("auto");
+    adaptsIn(
+      "firefox",
+      "scrollbar-width: Playwright's Firefox computes none for every element, so the value is read from the author's rules",
+    );
     expect(await scrollbarWidth(content)).toBe("thin");
     expect(await content.getAttribute("tabindex")).toBeNull();
 

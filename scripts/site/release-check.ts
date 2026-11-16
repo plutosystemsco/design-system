@@ -10,6 +10,11 @@
  *    `matrix.yml` declares at HEAD. Without `gh`, or signed out, it refuses:
  *    it never passes on missing evidence.
  *
+ * `--before-ci` (the design lead's ruling at 022's landing, 2026-11-15)
+ * runs every check but the two that only CI's evidence can satisfy, the
+ * ledger and the matrix run, names what it skipped, and exits 0 if the rest
+ * pass. Landing gates use it until push B; the tag uses the full check.
+ *
  * A script, not a test, so a clean clone's test run never depends on these.
  * Every check runs, so one refusal names every reason.
  */
@@ -19,10 +24,21 @@ import { SITE_ORIGIN } from "../../src/lib/site/site.ts";
 import { matrixCheck } from "../ci/qualify.ts";
 import { jobNames, readWorkflow } from "../ci/workflow.ts";
 
-export function ledgerCheck(ledger: LedgerLine[]): {
-  ok: boolean;
-  lines: string[];
-} {
+type Check = { ok: boolean; lines: string[] };
+
+/** 1. The site's address holds no placeholder. Pure, so a unit test calls it. */
+export function addressCheck(origin: string): Check {
+  return origin.includes("<account>")
+    ? {
+        ok: false,
+        lines: [
+          `release-check: SITE_ORIGIN is still ${origin}. Set the account in src/lib/site/site.ts before tagging.`,
+        ],
+      }
+    : { ok: true, lines: [`release-check: SITE_ORIGIN is ${origin}.`] };
+}
+
+export function ledgerCheck(ledger: LedgerLine[]): Check {
   if (!ledger.length)
     return { ok: true, lines: ["release-check: the fault ledger is empty."] };
   return {
@@ -37,26 +53,37 @@ export function ledgerCheck(ledger: LedgerLine[]): {
   };
 }
 
+/** What `--before-ci` leaves out, named in its output. */
+export const SKIPPED_BEFORE_CI = [
+  "release-check: skipped (--before-ci): the fault ledger, which waits on the small changes and push B's run (022 Q3).",
+  "release-check: skipped (--before-ci): a green matrix push run of HEAD, which only CI can give (022 decision 19).",
+];
+
+function print(c: Check): void {
+  (c.ok ? console.log : console.error)(c.lines.join("\n"));
+}
+
 if (import.meta.main) {
-  let ok = true;
-  if (SITE_ORIGIN.includes("<account>")) {
-    console.error(
-      `release-check: SITE_ORIGIN is still ${SITE_ORIGIN}. Set the account in src/lib/site/site.ts before tagging.`,
-    );
-    ok = false;
-  } else console.log(`release-check: SITE_ORIGIN is ${SITE_ORIGIN}.`);
+  const beforeCi = process.argv.includes("--before-ci");
+  const address = addressCheck(SITE_ORIGIN);
+  print(address);
+  let ok = address.ok;
 
-  const ledger = ledgerCheck(LEDGER);
-  (ledger.ok ? console.log : console.error)(ledger.lines.join("\n"));
-  ok &&= ledger.ok;
+  if (beforeCi) {
+    for (const l of SKIPPED_BEFORE_CI) console.log(l);
+  } else {
+    const ledger = ledgerCheck(LEDGER);
+    print(ledger);
+    ok &&= ledger.ok;
 
-  const head = Bun.spawnSync(["git", "rev-parse", "HEAD"])
-    .stdout.toString()
-    .trim();
-  const expected = jobNames(readWorkflow(".github/workflows/matrix.yml"));
-  const matrix = await matrixCheck(head, expected);
-  (matrix.ok ? console.log : console.error)(matrix.lines.join("\n"));
-  ok &&= matrix.ok;
+    const head = Bun.spawnSync(["git", "rev-parse", "HEAD"])
+      .stdout.toString()
+      .trim();
+    const expected = jobNames(readWorkflow(".github/workflows/matrix.yml"));
+    const matrix = await matrixCheck(head, expected);
+    print(matrix);
+    ok &&= matrix.ok;
+  }
 
   process.exit(ok ? 0 : 1);
 }

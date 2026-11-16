@@ -9,7 +9,10 @@
  *   and report succeeded, and browsers, checks and perf were skipped.
  * - a pull request from this repository (`SAME_REPO_PR` is "true"): every
  *   other job was skipped by design; gate mirrors the newest push run of the
- *   pull request's head commit, waiting for it up to 90 minutes.
+ *   pull request's head commit, waiting for it up to 95 minutes, the most
+ *   its 100-minute job allows. A first full push run can take longer (30
+ *   jobs against 20 slots, macOS queueing); then this gate fails while the
+ *   push run is fine, and re-running it reads the finished run.
  * - `MUTATE` empty (every push) means false.
  */
 
@@ -145,7 +148,7 @@ if (import.meta.main) {
     };
     const m = await mirror(e.HEAD_SHA!, api, {
       sleep: (ms) => new Promise((r) => setTimeout(r, ms)),
-      polls: 90,
+      polls: 95,
     });
     ok = m.ok;
     reasons = m.reasons;

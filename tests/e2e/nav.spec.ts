@@ -6,7 +6,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import type { Page } from "@playwright/test";
 import { expect, test } from "../test.ts";
-import { notIn } from "./engines.ts";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { DOORS } from "../../src/lib/site/doors.ts";
@@ -15,7 +14,7 @@ import {
   clipboard,
   cssVar,
   hexToRgb,
-  NO_CLIPBOARD_READ,
+  readClipboard,
   open,
   SITEMAP,
 } from "./pages.ts";
@@ -272,7 +271,6 @@ test.describe("018 criterion 10: page tools, previous and next", () => {
   test("on Button, Copy page puts the twin's text on the clipboard and says Copied", async ({
     page,
   }) => {
-    notIn("firefox", NO_CLIPBOARD_READ);
     await serveTwins(page);
     await open(page, "/components/button/");
     const button = page.getByRole("button", { name: "Copy page" });
@@ -280,7 +278,7 @@ test.describe("018 criterion 10: page tools, previous and next", () => {
     await expect(
       page.locator('[data-slot="page-tools"] [role="status"]'),
     ).toHaveText("Copied");
-    expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(
+    expect(await readClipboard(page)).toBe(
       await twin(page, "/components/button/"),
     );
   });
@@ -291,7 +289,6 @@ test.describe("018 criterion 10: page tools, previous and next", () => {
   test("with the twin's request delayed by 1 s, it copies through one ClipboardItem written inside the click", async ({
     page,
   }) => {
-    notIn("firefox", NO_CLIPBOARD_READ);
     await page.addInitScript(() => {
       const w = window as unknown as {
         writes: { items: number; at: number }[];
@@ -331,7 +328,7 @@ test.describe("018 criterion 10: page tools, previous and next", () => {
     expect(spied.writes[0].items).toBe(1);
     // Called before the delayed twin could have arrived.
     expect(spied.writes[0].at - clicked).toBeLessThan(900);
-    expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(
+    expect(await readClipboard(page)).toBe(
       await twin(page, "/components/button/"),
     );
   });

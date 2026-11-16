@@ -548,9 +548,56 @@ export const clipboard = [
   { scope: "test" },
 ] as never;
 
-/** The reason a test that reads the clipboard gives for skipping Firefox. */
-export const NO_CLIPBOARD_READ =
-  "clipboard: Playwright's Firefox has no clipboard-read permission, so a page cannot read what it wrote";
+/**
+ * 022's review, finding 5: what the clipboard holds, read the way a user
+ * reads it, by pasting, in every engine. A scratch textarea goes beside the
+ * focused element (inside an open dialog's focus trap, if there is one),
+ * takes Control+V or Meta+V, gives back its text, and is removed; focus goes
+ * back where it was. A keyboard paste needs no permission, so Firefox, which
+ * has no `clipboard-read`, reads too.
+ */
+export async function readClipboard(page: Page): Promise<string> {
+  await page.evaluate(() => {
+    const w = window as unknown as { __clipFrom: HTMLElement | null };
+    const from = document.activeElement as HTMLElement | null;
+    w.__clipFrom = from;
+    const box = document.createElement("textarea");
+    box.setAttribute("data-clipboard-probe", "");
+    box.setAttribute("aria-hidden", "true");
+    box.style.cssText = "position:fixed;inset-block-start:0;opacity:0";
+    const host =
+      from?.closest('[role="dialog"], [role="alertdialog"]') ?? document.body;
+    host.append(box);
+    box.focus();
+  });
+  await page.keyboard.press("ControlOrMeta+V");
+  return page.evaluate(() => {
+    const w = window as unknown as { __clipFrom: HTMLElement | null };
+    const box = document.querySelector<HTMLTextAreaElement>(
+      "textarea[data-clipboard-probe]",
+    )!;
+    const text = box.value;
+    box.remove();
+    w.__clipFrom?.focus({ preventScroll: true });
+    return text;
+  });
+}
+
+/**
+ * 022's review, finding 4: press a control by keyboard (focus, then Enter),
+ * where a test then asserts focus. A click does not focus a button in
+ * macOS WebKit (Safari's platform default), so a click-then-focus check
+ * tests the platform there; the keyboard path is the one focus is about.
+ */
+export async function activate(control: Locator): Promise<void> {
+  await control.focus();
+  await control.press("Enter");
+}
+
+/** Put text on the clipboard as a page does, before a keyboard paste. */
+export function writeClipboard(page: Page, text: string): Promise<void> {
+  return page.evaluate((t) => navigator.clipboard.writeText(t), text);
+}
 
 /**
  * 022: an element's `scrollbar-width`. Playwright's Firefox computes `none`
