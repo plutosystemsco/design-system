@@ -190,6 +190,9 @@ test.describe("020b: the guide fits its column", () => {
     }) => {
       await page.setViewportSize({ width, height: 900 });
       await page.goto(GUIDE);
+      // 020c: measured in the page's own fonts, as the reader sees it, not
+      // in the fallback the first paint may use.
+      await page.evaluate(() => document.fonts.ready);
       const found = await page.evaluate(
         ({ renames }) => {
           const column = document.querySelector("main h1")!.parentElement!;
@@ -215,11 +218,20 @@ test.describe("020b: the guide fits its column", () => {
             let up = el.parentElement;
             while (up && up !== column && !clips(up)) up = up.parentElement;
             if (up !== column) continue;
-            const r = el.getBoundingClientRect();
-            if (r.left < box.left - 1 || r.right > box.right + 1)
-              wide.push(
-                `${name(el)}: ${Math.round(r.width)} wide, past the column`,
-              );
+            // 020c: each line's fragment, not their union: a wrapped inline
+            // element's outer box spans every line it is on. A line's last
+            // fragment may overhang by 2 px: Chromium's headless shell breaks
+            // the line on one glyph width and paints another (a monospace
+            // run ended at 306 in a 304 column there, at 298 in Chrome), and
+            // the overhang lies in the page's gutter, read whole.
+            const slack = getComputedStyle(el).display === "inline" ? 2 : 1;
+            for (const r of el.getClientRects())
+              if (r.left < box.left - slack || r.right > box.right + slack) {
+                wide.push(
+                  `${name(el)}: ${Math.round(r.width)} wide, past the column`,
+                );
+                break;
+              }
           }
           const sideways =
             root.scrollWidth > root.clientWidth

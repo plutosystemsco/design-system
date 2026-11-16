@@ -59,11 +59,12 @@ async function expectRingOutline(
     // Only 001's theme toggle fades its outline in; every item's focus is instant.
     if (el.matches("button[aria-pressed]"))
       await Promise.all(el.getAnimations().map((a) => a.finished));
-    // CodeMirror marks the editor focused on its next measure frame.
-    if (el.matches(".cm-editor") && !el.classList.contains("cm-focused"))
-      await new Promise((resolve) =>
-        requestAnimationFrame(() => requestAnimationFrame(resolve)),
-      );
+    // CodeMirror marks the editor focused on a later measure frame, which
+    // can be more than two frames after focus (022p): wait for the mark, up
+    // to 60 frames. An editor never marked focused still fails the ring.
+    if (el.matches(".cm-editor"))
+      for (let f = 0; f < 60 && !el.classList.contains("cm-focused"); f++)
+        await new Promise((resolve) => requestAnimationFrame(resolve));
     const style = getComputedStyle(el);
     // The ring where the element sits (012 decision 1): read on its nearest
     // ground, never on the element itself, which draws from the same variable
