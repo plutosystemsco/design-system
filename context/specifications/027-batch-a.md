@@ -1,6 +1,6 @@
 # 027 — Batch A: pagination, search field, button group, tag, link and progress bar
 
-- **Status:** Ready to build after `020`: owner answers recorded, review approved with changes, all applied (2026-11-15). `027b` also waits on `022`, `025` and `026`. The review, [`../reviews/027-batch-a-spec-2026-11-15.md`](../reviews/027-batch-a-spec-2026-11-15.md), raised 22 findings (3 High, 8 Medium, 11 Low). Its re-review approved with changes R1 to R6 (1 Medium, 5 Low). Every one is answered under "Review". The owner answered Q1 to Q7 on 2026-11-15 (Landing notes). **`027a` landed (2026-11-15; its change review and rulings in the Landing notes). `027b` built and committed on its build branch (2026-11-16), waiting on the design lead's checkpoint, its change review and the owner's push for the screen-reader runs; see the Landing notes.**
+- **Status:** Ready to build after `020`: owner answers recorded, review approved with changes, all applied (2026-11-15). `027b` also waits on `022`, `025` and `026`. The review, [`../reviews/027-batch-a-spec-2026-11-15.md`](../reviews/027-batch-a-spec-2026-11-15.md), raised 22 findings (3 High, 8 Medium, 11 Low). Its re-review approved with changes R1 to R6 (1 Medium, 5 Low). Every one is answered under "Review". The owner answered Q1 to Q7 on 2026-11-15 (Landing notes). **`027a` landed (2026-11-15; its change review and rulings in the Landing notes). `027b` built, change-reviewed, checkpointed by the design lead and fixed on its build branch (2026-11-16), merged with `release/0.13.0` at `62eda90`; it waits on the owner's push for the screen-reader runs (criterion 16); see the Landing notes.**
 - **Date:** 2026-11-15
 - **Author:** the spec author for `027`, for the design lead
 - **Kind:** six new registry items (lane N: each item's own folder, examples and page). Some edits fall outside the lane. Each lands after the spec that owns its lane (decision 14):
@@ -1403,7 +1403,21 @@ The change review ([`../reviews/027a-batch-a-quiet-items-pr-2026-11-15.md`](../r
   - A pressable tag never reflows: a plus shows while it is off, and a check while it is on, each 16 px in one place (Carbon's selectable tag). Test 40a checks that pressing changes neither the tag's width nor its neighbour's place.
 - **Finding 12.** Notes; no change.
 
-@@MERGE@@
+**The merge, `a172965`.** `release/0.13.0` at `62eda90` (`023`, `024c`, and later context) merged in, by the review's merge notes: four conflicts. The scorecard keeps both run-log rows, and "In short" takes `023`'s row 2 and `027b`'s row 1 (37 of 56). `report.json` is the release's, then `bun run cost --only pagination,search-field,tag` (run `2026-11-16T10:13:18.680Z`, 327 s, load median 17.3, 0 over budget) and `bun run cost --sizes-only` ("every figure is fresh"). The thumbnails' manifest by `--hash-only`. `component-data.test.ts` in `023`'s form at 82 items. Then `bun run build:registry` and `bun install --frozen-lockfile` (no changes). `027b`'s test 3 is trimmed to its `inherits` assertions, which `023`'s suite does not make; with finding 4 fixed, `023`'s `api-described.test.ts` passes on the three items.
+
+The cost after the fixes, alone, gzipped, each under its first budget: `pagination` 12.6 kB JS, 1.3 kB CSS, hydration 45.9 ms, selects in 44.2 ms; `search-field` 13.4 kB, 1.7 kB, 27.0 ms, updates in 47.4 ms; `tag` 14.1 kB (the plus icon: +0.3 kB), 1.1 kB, 28.3 ms, updates in 43.5 ms. No budget moved.
+
+**The checks at the merge** (the machine at a load of 10 to 54):
+
+- `bun run check`: 2,428 files, 0 errors, 0 warnings. `bun run lint`: clean.
+- `bun run test:unit` (120 s timeout): 1,849 pass, 2 skip, 0 fail.
+- The three spec files, `batch-a.spec.ts` and `keyboard.spec.ts`' 027b rows, in `chromium-light`, `chromium-dark`, `firefox-light` and `webkit-dark`: 610 passed, 0 failed, 6 skipped (each an `ENGINE_ONLY` entry).
+- `api-table.spec.ts` and `build-output.spec.ts`, Chromium both schemes: 62 of 62. Axe on the three pages at 360, 768 and 1280, in the same four projects: 36 of 36.
+- The screen-reader dry run, the three files in three browsers: 30 of 30.
+- The perf project (`--no-deps`): 28 of 28. `pagination` 348.1 kB, `search-field` 352.2 kB, `tag` 338.6 kB, Button 365.6 kB, all in `component` (445 kB).
+- `bun scripts/site/release-check.ts --before-ci`: exits 0.
+
+**The scorecard at the merge** (run-log row at `a172965`): `breadth.ts --rev a172965` 35 of 40, row 1 at 4; rows 1 to 14 total **37** with `023`'s row 2. `site.ts --only kuiper`: Button 366 kB, LCP 1,012 ms at a load of 14 to 44, the part at 572 and 661, 83 nav links; rows 6, 7 and 8 hold.
 
 ### The owner's answers, 2026-11-15
 
