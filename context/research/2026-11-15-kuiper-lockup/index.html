@@ -1,0 +1,538 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kuiper lockup options</title>
+<!--
+  The Kuiper lockup mock-ups: an exhibit for the owner, 2026-11-15.
+  Memo: ../2026-11-15-kuiper-lockup.md
+
+  Every colour and size below is a value of tokens/pluto.tokens.json, as
+  src/app.css generates it at 0.12.0 (copied by name, not invented). The
+  bar is drawn from src/lib/site/chrome/bar.svelte, search.svelte,
+  door-link.svelte and the button and theme-toggle items: the same
+  heights, paddings, gaps and breakpoints. The lockup is drawn from
+  src/lib/registry/ui/four-dot/lockup.svelte with the same CSS, so the
+  mark rises exactly as it does on the site. Letter spacing is 0 (019a).
+
+  Views:
+    index.html                         the exhibit
+    index.html?plate=a&w=390&scheme=dark  one bar at true size, for PNGs
+    index.html?large=a                 one option's large-size sheet
+    index.html?compare=390&scheme=light   every option's bar, stacked
+-->
+<style>
+  @font-face {
+    font-family: "IBM Plex Sans Variable";
+    font-style: normal;
+    font-weight: 100 700;
+    font-display: block;
+    src: url("fonts/ibm-plex-sans-latin-wght-normal.woff2") format("woff2-variations");
+  }
+  @font-face {
+    font-family: "Geist Variable";
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: block;
+    src: url("fonts/geist-latin-wght-normal.woff2") format("woff2-variations");
+  }
+
+  /* tokens/pluto.tokens.json at 0.12.0, light (src/app.css :root) */
+  :root {
+    --radius: 0.5rem;
+    --background: #f3f0e8;
+    --foreground: #0b0f17;
+    --card: #ffffff;
+    --muted: #e9e5db;
+    --muted-foreground: #505661;
+    --accent: #e9e5db;
+    --border: #0b0f171a;
+    --input: #857e70;
+    --primary: #2d48d4;
+    --mark-1: #2d48d4;
+    --mark-2: #c92035;
+    --mark-3: #e2b000;
+    --mark-4: #008058;
+    --field-1: #2d48d4; --field-1-foreground: #ffffff;
+    --field-2: #c92035; --field-2-foreground: #ffffff;
+    --field-3: #e2b000; --field-3-foreground: #0b0f17;
+    --field-4: #008058; --field-4-foreground: #ffffff;
+    --code-background: #ffffff;
+    --mark-dot: 0.3em;
+    --mark-gap: 0.08em;
+    --mark-rise: 0.36em;
+    --mark-lockup-gap: 0.1em;
+    --mark-lockup-scale: 0.87;
+    --mark-lockup-size: calc(var(--mark-lockup-scale) * 1em);
+    --mark-lift: calc(var(--mark-rise) + var(--mark-dot) + var(--mark-gap));
+    --line-width: 1px;
+    --size-bar: 4.5rem;
+    --spacing: 0.25rem;
+    --glass-tint: #f3f0e8db;
+    --glass-rim: #ffffffcc;
+    --glass-edge: #0b0f1714;
+    --glass-light: #ffffff8c;
+    --glass-shadow: 0 1px 0 #0b0f170f, 0 16px 32px -16px #0b0f1747;
+    --glass-blur: 16px;
+    --font-sans: "Geist Variable", system-ui, sans-serif;
+    --font-heading: "IBM Plex Sans Variable", system-ui, sans-serif;
+    --font-mono: ui-monospace, monospace;
+    --text-sm: 0.84375rem;
+    --text-xs: 0.75rem;
+    --text-2xl: 1.75rem;
+    --type-poster-leading: 0.9;
+    color-scheme: light;
+  }
+  /* the dark scheme (src/app.css .dark) */
+  .dark {
+    --background: #16140f;
+    --foreground: #f3f0e8;
+    --card: #221f19;
+    --muted: #2c2821;
+    --muted-foreground: #a39d90;
+    --accent: #2c2821;
+    --border: #f3f0e81a;
+    --input: #7a7366;
+    --primary: #93b0ff;
+    --mark-1: #f3f0e8; --mark-2: #f3f0e8; --mark-3: #f3f0e8; --mark-4: #f3f0e8;
+    --field-1: #93b0ff; --field-1-foreground: #16140f;
+    --field-2: #ff9491; --field-2-foreground: #16140f;
+    --field-3: #f8d874; --field-3-foreground: #16140f;
+    --field-4: #60c498; --field-4-foreground: #16140f;
+    --code-background: #2c2821;
+    --glass-tint: #16140fd6;
+    --glass-rim: #ffffff1f;
+    --glass-edge: #ffffff14;
+    --glass-light: #ffffff33;
+    --glass-shadow: 0 1px 0 #00000000, 0 16px 32px -16px #000000b3;
+    color-scheme: dark;
+  }
+  /* the expressive mode lifts the four colours in dark (the bar and the home page carry it) */
+  .dark [data-mode="expressive"], [data-mode="expressive"].dark {
+    --mark-1: #93b0ff; --mark-2: #ff9491; --mark-3: #f8d874; --mark-4: #60c498;
+  }
+
+  * { box-sizing: border-box; letter-spacing: 0; }
+  html, body { margin: 0; }
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  /* ---------- the lockup, as lockup.svelte and four-dot.svelte draw it ---------- */
+  .lockup {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--mark-lockup-gap);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    line-height: 1;
+    white-space: nowrap;
+  }
+  .mark {
+    display: inline-grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--mark-gap);
+    font-size: var(--mark-lockup-size);
+    transform: translateY(calc(var(--mark-lift) * -1));
+  }
+  .mark > i, .belt > i { display: block; width: var(--mark-dot); height: var(--mark-dot); border-radius: 9999px; }
+  .mark > i:nth-child(1), .belt > i:nth-child(1) { background: var(--mark-1); }
+  .mark > i:nth-child(2), .belt > i:nth-child(2) { background: var(--mark-2); }
+  .mark > i:nth-child(3), .belt > i:nth-child(3) { background: var(--mark-3); }
+  .mark > i:nth-child(4), .belt > i:nth-child(4) { background: var(--mark-4); }
+  .mono > i { background: currentColor !important; }
+  /* E, the belt: the same dots in a row, centred where the mark's centre sits */
+  .belt {
+    display: inline-grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--mark-gap);
+    font-size: var(--mark-lockup-size);
+    transform: translateY(calc((var(--mark-rise) + var(--mark-dot) / 2 + var(--mark-gap) / 2) * -1));
+  }
+
+  /* the options' own parts */
+  .row { display: inline-flex; align-items: baseline; font-family: var(--font-heading); line-height: 1; white-space: nowrap; }
+  .name { font-family: var(--font-heading); }
+  .w700 { font-weight: 700; }
+  .w400 { font-weight: 400; }
+  /* A: Kuiper after the lockup's clear space, one dot-pair high (Brand, "Clear space") */
+  .a-name { margin-inline-start: calc(var(--mark-lockup-scale) * (2 * var(--mark-dot) + var(--mark-gap))); font-weight: 400; }
+  /* C: a solid rule (019a: nothing translucent inside the bar), then the endorsing lockup */
+  .c-rule { align-self: center; width: var(--line-width); height: 0.9em; background: var(--input); margin-inline: 0.4em; }
+  .on-field .c-rule { background: currentColor; }
+  .c-endorse { font-size: 0.8em; }
+  .mark-alone { display: inline-grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--mark-gap); font-size: var(--mark-lockup-size); align-self: center; }
+  .mark-alone > i { display: block; width: var(--mark-dot); height: var(--mark-dot); border-radius: 9999px; }
+  .mark-alone > i:nth-child(1) { background: var(--mark-1); }
+  .mark-alone > i:nth-child(2) { background: var(--mark-2); }
+  .mark-alone > i:nth-child(3) { background: var(--mark-3); }
+  .mark-alone > i:nth-child(4) { background: var(--mark-4); }
+
+  /* ---------- the bar, as bar.svelte draws it ---------- */
+  .frame { position: relative; overflow: hidden; background: var(--background); color: var(--foreground); font-family: var(--font-sans); }
+  .bar { position: absolute; inset: 0 0 auto 0; padding-top: calc(var(--spacing) * 2); z-index: 2; }
+  .measure { margin: 0 auto; max-width: 80rem; padding-inline: var(--gutter); }
+  .glass {
+    position: relative; isolation: isolate;
+    display: flex; align-items: center; height: var(--size-bar);
+    gap: var(--bar-gap); padding-inline: 0.75rem 0.5rem;
+    background-color: var(--glass-tint);
+    -webkit-backdrop-filter: blur(var(--glass-blur)); backdrop-filter: blur(var(--glass-blur));
+    border: var(--line-width) solid var(--glass-edge);
+    border-radius: var(--radius);
+    box-shadow: inset 0 1px 0 var(--glass-rim), var(--glass-shadow);
+  }
+  .glass::after {
+    content: ""; position: absolute; inset: calc(-1 * var(--line-width)); padding: var(--line-width);
+    border-radius: inherit; pointer-events: none;
+    background: radial-gradient(160px circle at 50% 0%, var(--glass-light), transparent 70%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+  }
+  .bar header { display: flex; flex-shrink: 0; }
+  .home {
+    display: inline-flex; align-items: baseline; border-radius: var(--radius);
+    padding: 0.5rem; font-size: var(--text-2xl); color: var(--foreground); text-decoration: none;
+  }
+  .bar nav { display: flex; flex: 1; min-width: 0; align-items: center; gap: 0.25rem; }
+  .doors { display: flex; align-items: center; gap: 0.25rem; list-style: none; margin: 0; padding: 0; }
+  .door {
+    display: inline-flex; min-height: 2.5rem; align-items: center; gap: 0.5rem; border-radius: var(--radius);
+    padding-inline: 0.75rem; font-size: var(--text-sm); font-weight: 500; color: var(--foreground); white-space: nowrap;
+  }
+  .door .dot { display: inline-block; width: 0.5em; height: 0.5em; border-radius: 50%; flex: none; }
+  .tools { margin-inline-start: auto; display: flex; align-items: center; gap: 0.25rem; }
+  .search {
+    display: inline-flex; height: 2.5rem; align-items: center; justify-content: center; gap: 0.75rem;
+    border: var(--line-width) solid var(--input); border-radius: var(--radius); padding-inline: 0.5rem;
+    font-size: var(--text-sm); color: var(--foreground);
+  }
+  .search.wide { width: 8rem; justify-content: flex-start; padding-inline: 0.75rem; }
+  .search.narrow { width: 2.5rem; }
+  .kbd { margin-inline-start: auto; border-radius: var(--radius); background: var(--code-background); padding-inline: 0.375rem; font-size: var(--text-xs); }
+  .iconbtn { display: inline-flex; align-items: center; justify-content: center; border-radius: var(--radius); color: var(--foreground); }
+  .icon-48 { width: 3rem; height: 3rem; }
+  .icon-32 { width: 2rem; height: 2rem; }
+  svg.ph { width: 1rem; height: 1rem; fill: currentColor; flex: none; }
+
+  /* the page under the bar: a sketch of the home page's first screen */
+  .hero { position: relative; z-index: 1; margin: 0 auto; max-width: 80rem; padding-inline: var(--gutter); display: grid; gap: 2rem; }
+  .hero h1 { margin: 0; font-family: var(--font-heading); font-weight: 600; line-height: var(--type-poster-leading); }
+  .hero h1 span { display: block; }
+  .hero p { margin: 0; color: var(--muted-foreground); font-size: 1.25rem; line-height: 1.5; max-width: 36rem; }
+  .discs { display: grid; grid-template-columns: repeat(2, var(--disc)); gap: calc(var(--disc) * 0.12); }
+  .disc { width: var(--disc); height: var(--disc); border-radius: 50%; display: grid; place-items: center; font-family: var(--font-heading); font-weight: 600; font-size: 1.25rem; }
+
+  /* ---------- the exhibit's own page ---------- */
+  .page { max-width: 80rem; margin: 0 auto; padding: 3rem 1rem 6rem; }
+  @media (min-width: 768px) { .page { padding-inline: 2.5rem; } }
+  .page h1 { font-family: var(--font-heading); font-weight: 600; font-size: clamp(2.25rem, 4vw, 3.5rem); line-height: 1.05; margin: 0 0 1rem; }
+  .page h2 { font-family: var(--font-heading); font-weight: 600; font-size: 1.75rem; line-height: 1.2; margin: 0 0 0.5rem; }
+  .page h3 { font-family: var(--font-heading); font-weight: 600; font-size: 1rem; margin: 1.5rem 0 0.5rem; }
+  .lede { font-size: 1.125rem; color: var(--muted-foreground); max-width: 44rem; margin: 0 0 1rem; }
+  .prose { max-width: 44rem; }
+  .prose p { margin: 0 0 0.75rem; }
+  .eyebrow { font-family: var(--font-heading); font-weight: 600; font-size: 0.8125rem; color: var(--muted-foreground); margin: 0 0 0.5rem; }
+  section.opt { border-top: var(--line-width) solid var(--input); padding-top: 2.5rem; margin-top: 3.5rem; }
+  .tag { display: inline-block; font-size: 0.75rem; font-weight: 600; padding: 0.125rem 0.5rem; border-radius: var(--radius); border: var(--line-width) solid var(--input); margin-inline-start: 0.5rem; vertical-align: middle; }
+  .tag.rec { background: var(--foreground); color: var(--background); border-color: var(--foreground); }
+  .tag.out { color: var(--field-2); border-color: var(--field-2); }
+  .scaled { width: 100%; overflow: hidden; border-radius: var(--radius); outline: var(--line-width) solid var(--input); }
+  .scaled > .frame { transform-origin: 0 0; }
+  .pair { display: flex; flex-wrap: wrap; gap: 1rem; }
+  .pair > .frame { border-radius: var(--radius); outline: var(--line-width) solid var(--input); }
+  .cap { font-size: var(--text-sm); color: var(--muted-foreground); margin: 0.375rem 0 1rem; }
+  .facts { display: grid; grid-template-columns: max-content 1fr; gap: 0.25rem 1rem; font-size: 0.9375rem; margin: 1rem 0; max-width: 56rem; }
+  .facts dt { font-weight: 600; }
+  .facts dd { margin: 0; }
+  .large { display: grid; gap: 0.75rem; }
+  .tile { border-radius: var(--radius); padding: 2rem 1.5rem; display: flex; align-items: center; min-height: 9rem; overflow: hidden; }
+  .tile.paper { background: #f3f0e8; color: #0b0f17; outline: var(--line-width) solid var(--input); }
+  .tile.white { background: #ffffff; color: #0b0f17; outline: var(--line-width) solid var(--input); }
+  .fields { display: grid; grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); gap: 0.75rem; }
+  .fields .tile { min-height: 6.5rem; padding: 1.25rem; font-size: 2.25rem; }
+  .f1 { background: var(--field-1); color: var(--field-1-foreground); }
+  .f2 { background: var(--field-2); color: var(--field-2-foreground); }
+  .f3 { background: var(--field-3); color: var(--field-3-foreground); }
+  .f4 { background: var(--field-4); color: var(--field-4-foreground); }
+  table.w { border-collapse: collapse; font-size: 0.9375rem; margin: 1rem 0; width: 100%; max-width: 64rem; }
+  table.w th, table.w td { text-align: start; padding: 0.375rem 0.75rem 0.375rem 0; border-bottom: var(--line-width) solid var(--input); vertical-align: top; }
+  table.w td.num { font-variant-numeric: tabular-nums; }
+  .ok { color: var(--mark-4); font-weight: 600; }
+  .no { color: var(--field-2); font-weight: 600; }
+  .footer-sketch { display: inline-flex; align-items: center; gap: 0.5rem; font-size: var(--text-sm); }
+  .footer-sketch .mark { font-size: 1em; transform: none; }
+  code { font-family: var(--font-mono); font-size: 0.875em; }
+  .plate-only body, body.plate { background: transparent; }
+</style>
+</head>
+<body>
+<main id="root"></main>
+<script>
+/* Phosphor regular paths, as phosphor-svelte ships them (the bar's icons) */
+const ICONS = {"MagnifyingGlass": "M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z", "Sun": "M120,40V16a8,8,0,0,1,16,0V40a8,8,0,0,1-16,0Zm72,88a64,64,0,1,1-64-64A64.07,64.07,0,0,1,192,128Zm-16,0a48,48,0,1,0-48,48A48.05,48.05,0,0,0,176,128ZM58.34,69.66A8,8,0,0,0,69.66,58.34l-16-16A8,8,0,0,0,42.34,53.66Zm0,116.68-16,16a8,8,0,0,0,11.32,11.32l16-16a8,8,0,0,0-11.32-11.32ZM192,72a8,8,0,0,0,5.66-2.34l16-16a8,8,0,0,0-11.32-11.32l-16,16A8,8,0,0,0,192,72Zm5.66,114.34a8,8,0,0,0-11.32,11.32l16,16a8,8,0,0,0,11.32-11.32ZM48,128a8,8,0,0,0-8-8H16a8,8,0,0,0,0,16H40A8,8,0,0,0,48,128Zm80,80a8,8,0,0,0-8,8v24a8,8,0,0,0,16,0V216A8,8,0,0,0,128,208Zm112-88H216a8,8,0,0,0,0,16h24a8,8,0,0,0,0-16Z", "Moon": "M233.54,142.23a8,8,0,0,0-8-2,88.08,88.08,0,0,1-109.8-109.8,8,8,0,0,0-10-10,104.84,104.84,0,0,0-52.91,37A104,104,0,0,0,136,224a103.09,103.09,0,0,0,62.52-20.88,104.84,104.84,0,0,0,37-52.91A8,8,0,0,0,233.54,142.23ZM188.9,190.34A88,88,0,0,1,65.66,67.11a89,89,0,0,1,31.4-26A106,106,0,0,0,96,56,104.11,104.11,0,0,0,200,160a106,106,0,0,0,14.92-1.06A89,89,0,0,1,188.9,190.34Z", "List": "M224,128a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,128ZM40,72H216a8,8,0,0,0,0-16H40a8,8,0,0,0,0,16ZM216,184H40a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Z"};
+
+const svg = (n) => `<svg class="ph" viewBox="0 0 256 256" aria-hidden="true"><path d="${ICONS[n]}"/></svg>`;
+const dots = (cls, tone) => `<span class="${cls}${tone === "mono" ? " mono" : ""}" aria-hidden="true"><i></i><i></i><i></i><i></i></span>`;
+const lockup = (word, tone) => `<span class="lockup">${word}${dots("mark", tone)}</span>`;
+
+/* The options. `draw(ctx)` returns the lockup's markup; ctx = { tone, phone }. */
+const OPTIONS = [
+  {
+    id: "today", letter: "0", name: "Today",
+    line: "The company lockup, “pluto” with the risen mark. Kuiper appears only in the link’s hidden name.",
+    status: "baseline",
+    label: "pluto, Kuiper Design System",
+    draw: ({ tone }) => lockup("pluto", tone),
+  },
+  {
+    id: "a", letter: "A", name: "The lockup, then Kuiper",
+    line: "The company lockup untouched, its clear space, then “Kuiper” in the heading face, regular weight. The risen mark reads as a colon: pluto: Kuiper.",
+    status: "within",
+    label: "pluto Kuiper Design System",
+    phoneNote: "Below 768 px the name drops and the lockup stands alone: the full form needs 203 px, 1 more than the bar leaves at 390.",
+    draw: ({ tone, phone }) => phone ? lockup("pluto", tone) : `<span class="row">${lockup("pluto", tone)}<span class="name a-name">Kuiper</span></span>`,
+  },
+  {
+    id: "b", letter: "B", name: "Kuiper in the lockup’s form",
+    line: "“kuiper” takes the word’s place in the lockup: lowercase, bold, the mark risen after it. The system’s name leads, in the company’s shape.",
+    status: "rec",
+    label: "Kuiper Design System",
+    draw: ({ tone }) => lockup("kuiper", tone),
+  },
+  {
+    id: "c", letter: "C", name: "Kuiper, endorsed by pluto",
+    line: "“Kuiper” leads in bold, a solid rule, then the company lockup smaller: a product with its maker’s mark, as Radix carries “Made by WorkOS”.",
+    status: "within",
+    label: "Kuiper Design System (the endorsement: “by Pluto Systems”, outside the link)",
+    phoneNote: "Three forms. The full form needs 197 px: it fits 390 by 5 but not 360. Below 768 px the endorsement becomes the mark alone (the brand’s own small form), 144 px; that fits 360 but is 12 px over at 320, so below 360 “Kuiper” stands alone.",
+    draw: ({ tone, phone, w }) => phone
+      ? (w < 360 ? `<span class="row"><span class="name w700">Kuiper</span></span>` : `<span class="row"><span class="name w700">Kuiper</span><span class="c-rule" aria-hidden="true"></span>${dots("mark-alone", tone)}</span>`)
+      : `<span class="row"><span class="name w700">Kuiper</span><span class="c-rule" aria-hidden="true"></span><span class="c-endorse">${lockup("pluto", tone)}</span></span>`,
+  },
+  {
+    id: "d", letter: "D", name: "Kuiper in type alone",
+    line: "No mark in the bar. “Kuiper Design System” in the heading face (“Kuiper” alone on a phone), as Carbon sets its name. The company lockup stays only in the site’s footer, where it is today.",
+    status: "within",
+    label: "Kuiper Design System",
+    phoneNote: "Below 768 px “Design System” drops; the page’s title keeps it.",
+    draw: ({ phone }) => `<span class="row"><span class="name w700">Kuiper</span>${phone ? "" : `<span class="name w400">&nbsp;Design System</span>`}</span>`,
+  },
+  {
+    id: "e", letter: "E", name: "The belt",
+    line: "The four dots pulled into a row after “kuiper”, for the belt beyond Pluto. Drawn to rule out: it breaks the mark’s square, and four dots in a row in these colours is Google’s.",
+    status: "out",
+    label: "Kuiper Design System",
+    draw: ({ tone }) => `<span class="lockup">kuiper${dots("belt", tone)}</span>`,
+  },
+];
+const byId = Object.fromEntries(OPTIONS.map((o) => [o.id, o]));
+
+const DOORS = [
+  { n: 1, name: "Start" }, { n: 2, name: "Components" }, { n: 3, name: "Brand" }, { n: 4, name: "Foundations" },
+];
+
+/* The bar at a given width: breakpoints and the gutter follow the frame, as they follow the viewport on the site. */
+function frameVars(w) {
+  const gutter = Math.min(56, Math.max(16, 0.04 * w));
+  const barGap = w >= 1024 ? 24 : w >= 768 ? 16 : 8;
+  const poster = Math.min(160, Math.max(56, 0.12 * w));
+  return { gutter, barGap, poster };
+}
+
+function bar(o, w, scheme, { hero = true, height, form } = {}) {
+  const { gutter, barGap, poster } = frameVars(w);
+  const phone = w < 768;
+  const phoneForm = form ? form === "phone" : phone;
+  const doors = phone ? "" : `<ul class="doors">${DOORS.map((d) =>
+    `<li><span class="door"><span class="dot" style="background:var(--field-${d.n})"></span>${d.name}</span></li>`).join("")}</ul>`;
+  const search = phone
+    ? `<span class="search narrow">${svg("MagnifyingGlass")}</span>`
+    : `<span class="search wide">${svg("MagnifyingGlass")}<span>Search</span><span class="kbd">⌘K</span></span>`;
+  const menu = phone ? `<span class="iconbtn icon-32">${svg("List")}</span>` : "";
+  const theme = `<span class="iconbtn icon-48">${svg(scheme === "dark" ? "Moon" : "Sun")}</span>`;
+  const disc = w >= 1024 ? 168 : Math.min(0.4 * w, 160);
+  const heroHtml = !hero ? "" : `
+    <div class="hero" style="padding-top:${72 + 16 + 48}px;${w >= 1024 ? "grid-template-columns:minmax(0,1fr) auto;" : ""}">
+      <h1 style="font-size:${poster}px"><span>Design</span><span>with</span><span>Kuiper</span></h1>
+      ${w >= 1024 ? `<div class="discs" style="--disc:${disc}px;grid-row:1 / span 2;grid-column:2">${DOORS.map((d) =>
+        `<span class="disc" style="background:var(--field-${d.n});color:var(--field-${d.n}-foreground)">${d.name}</span>`).join("")}</div>` : ""}
+      <p>The tokens, components and brand behind every Pluto Systems product. Copy in what you need, and own what you copy.</p>
+    </div>`;
+  const h = height ?? (hero ? (phone ? 300 : 380) : 88);
+  return `<div class="frame ${scheme === "dark" ? "dark" : ""}" data-mode="expressive" data-opt="${o.id}" data-w="${w}" data-form="${phoneForm ? "phone" : "wide"}"
+      style="width:${w}px;height:${h}px;--gutter:${gutter}px;--bar-gap:${barGap}px">
+    <div class="bar"><div class="measure"><div class="glass">
+      <header><span class="home" data-home title="${o.label}">${o.draw({ tone: "brand", phone: phoneForm, w })}</span></header>
+      <nav>${doors}<div class="tools">${search}${theme}${menu}</div></nav>
+    </div></div></div>
+    ${heroHtml}
+  </div>`;
+}
+
+function large(o) {
+  const big = (bg, scheme) => `<div class="tile ${bg} ${scheme === "dark" ? "dark" : ""}" data-mode="expressive" style="font-size:${o.id === "d" ? 44 : 72}px;${scheme === "dark" ? "background:var(--background);color:var(--foreground)" : ""}">${o.draw({ tone: "brand", phone: false })}</div>`;
+  const field = (n, scheme) => `<div class="tile on-field f${n} ${scheme === "dark" ? "dark" : ""}">${o.draw({ tone: "mono", phone: o.id === "d" })}</div>`;
+  const variant = o.id === "b" ? `
+    <h3>A sub-choice: lowercase, as the lockup is set, or capitalised, as the hero sets the name</h3>
+    <div class="pair" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(22rem,1fr));gap:.75rem">
+      <div class="tile paper" style="font-size:56px">${lockup("kuiper", "brand")}</div>
+      <div class="tile paper" style="font-size:56px">${lockup("Kuiper", "brand")}</div>
+    </div>
+    <p class="cap">Left, recommended: lowercase, the lockup’s own grammar (“pluto”). Right: capitalised, as the hero and prose set the name. The capital reads as a title beside the lowercase company lockup, and the two marks stop looking like one family.</p>` : "";
+  const footer = o.id === "d" ? `
+    <h3>Where the mark stays in D: the site’s footer, which carries the company lockup today (footer.svelte)</h3>
+    <div class="tile paper" style="min-height:4rem;padding:1rem 1.5rem;font-size:28px;gap:1rem">${lockup("pluto", "brand")}<span style="font-family:var(--font-sans);font-size:var(--text-sm)">Work runs on data.</span></div>` : "";
+  return `
+    <div class="large">
+      <div class="pair" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(22rem,1fr));gap:.75rem">
+        ${big("paper", "light")}${big("paper", "dark")}
+      </div>
+      <p class="cap">At 72 px. Paper, four colours; ink in dark, the expressive mode’s lifted four.</p>
+      <div class="fields">${[1, 2, 3, 4].map((n) => field(n, "light")).join("")}</div>
+      <div class="fields">${[1, 2, 3, 4].map((n) => field(n, "dark")).join("")}</div>
+      <p class="cap">At 36 px on the four fields, light then dark: one colour, the field’s own legend (the Brand page: never the four colours on a field).</p>
+      ${variant}${footer}
+    </div>`;
+}
+
+/* ---------- measurement ---------- */
+const BUDGET_W = [1440, "390w", 390, 360, 320];
+function budget(w) {
+  w = parseInt(w);
+  // the space the header may take: panel width, less the panel's padding, the bar's gap and the tools
+  const { gutter, barGap } = frameVars(w);
+  const panel = Math.min(w, 1280) - 2 * gutter;
+  const tools = w < 768 ? 40 + 4 + 48 + 4 + 32 : 128 + 4 + 48;
+  return panel - 12 - 8 - barGap - tools - (w < 768 ? 0 : 0);
+}
+function measure() {
+  const out = {};
+  document.querySelectorAll(".frame[data-measure]").forEach((f) => {
+    const home = f.querySelector("[data-home]");
+    const tools = f.querySelector(".tools");
+    const glass = f.querySelector(".glass");
+    const hr = home.getBoundingClientRect(), tr = tools.getBoundingClientRect(), gr = glass.getBoundingClientRect();
+    const w = Number(f.dataset.w);
+    const k = `${f.dataset.opt}@${w}${f.dataset.form === "wide" && w < 768 ? "w" : ""}`;
+    const s = f.getBoundingClientRect().width / w;
+    const doors = f.querySelector(".doors");
+    // room for the header: the bar's budget, less the four doors where they show (and their gap)
+    const room = budget(w) - (doors ? doors.getBoundingClientRect().width / s + 4 : 0);
+    out[k] = {
+      home: +(hr.width / s).toFixed(1),
+      room: +room.toFixed(1),
+      spare: +(room - hr.width / s).toFixed(1),
+      overflow: tr.right > gr.right + 0.5,
+    };
+  });
+  return out;
+}
+
+/* ---------- views ---------- */
+const q = new URLSearchParams(location.search);
+const root = document.getElementById("root");
+
+if (q.get("plate")) {
+  document.body.classList.add("plate");
+  const w = Number(q.get("w") || 1440);
+  root.innerHTML = bar(byId[q.get("plate")], w, q.get("scheme") || "light", { hero: q.get("hero") !== "0" });
+} else if (q.get("large")) {
+  document.body.classList.add("plate");
+  const o = byId[q.get("large")];
+  root.innerHTML = `<div class="page" style="padding:1.5rem;max-width:72rem"><p class="eyebrow">${o.letter} · ${o.name}</p>${large(o)}</div>`;
+} else if (q.get("compare")) {
+  document.body.classList.add("plate");
+  const w = Number(q.get("compare")), scheme = q.get("scheme") || "light";
+  const crop = w >= 768 ? Math.min(w, 760) : w;
+  root.innerHTML = `<div style="display:grid;gap:12px;padding:12px;width:${crop + 24}px" class="${scheme === "dark" ? "dark" : ""}">${OPTIONS.map((o) =>
+    `<div><div style="font:600 13px/1.4 var(--font-heading);color:var(--foreground);margin:0 0 4px">${o.letter} · ${o.name}${o.status === "out" ? " (ruled out)" : ""}</div>
+     <div style="width:${crop}px;overflow:hidden;border-radius:8px;outline:1px solid var(--input)">${bar(o, w, scheme, { hero: false, height: 88 })}</div></div>`).join("")}</div>`;
+  if (scheme === "dark") document.body.style.background = "#16140f";
+} else {
+  root.innerHTML = exhibit();
+  fit();
+  addEventListener("resize", fit);
+}
+
+function exhibit() {
+  const rows = OPTIONS.map((o) => `<tr data-row="${o.id}"><td><strong>${o.letter}</strong></td><td>${o.name}${o.status === "rec" ? ' <span class="tag rec">recommended</span>' : o.status === "out" ? ' <span class="tag out">ruled out</span>' : ""}</td>
+    ${BUDGET_W.map((w) => `<td class="num" data-cell="${o.id}@${w}">…</td>`).join("")}</tr>`).join("");
+  return `
+  <div class="page">
+    <p class="eyebrow">Research exhibit · 2026-11-15 · for the owner’s approval</p>
+    <h1>The Kuiper lockup</h1>
+    <p class="lede">How should the design site’s bar, and Kuiper’s own identity, show the Kuiper name beside the Pluto Systems mark? Five ways, each drawn in the real bar at 1440 and 390 px, in light and dark, at large size and on the four fields.</p>
+    <div class="prose">
+      <p>Everything here is drawn from the token file and the bar’s own source: the mark’s dots and gap, its rise, the bar’s heights and gaps, Kuiper’s faces and letter spacing 0. The page under each bar is a sketch of the home page’s first screen. The memo beside this file, <code>2026-11-15-kuiper-lockup.md</code>, gives the prior art, each option’s case and the question.</p>
+    </div>
+
+    <h2 style="margin-top:2.5rem">The widths</h2>
+    <p class="prose">The header’s width at 28 px (the bar’s <code>text-2xl</code>), its padding included, against the room the bar leaves it. At 390 the bar holds search (40), the theme switch (48) and the menu (32): the header has 202 px. At 1440 the room is what the four doors, search and the theme switch leave. Measured live in this page in its fonts; the figure after the slash is what is left over, red where the header would push the tools out of the bar. A “phone form” is the option’s own shape below 768 px, where the doors fold into the menu.</p>
+    <table class="w">
+      <thead><tr><th></th><th>Option</th>${BUDGET_W.map((w) => `<th>${w === "390w" ? "full form at 390" : w === 1440 ? "full form at 1440" : `phone form at ${w}`} (room ${w === 1440 ? "beside the doors, 545.5" : budget(w)})</th>`).join("")}</tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+
+    ${OPTIONS.map(section).join("")}
+  </div>`;
+}
+
+function section(o) {
+  const tag = o.status === "rec" ? '<span class="tag rec">recommended</span>' : o.status === "out" ? '<span class="tag out">ruled out</span>' : o.status === "baseline" ? '<span class="tag">baseline</span>' : "";
+  return `
+  <section class="opt" id="opt-${o.id}">
+    <p class="eyebrow">Option ${o.letter}</p>
+    <h2>${o.name}${tag}</h2>
+    <p class="lede">${o.line}</p>
+    <h3>The bar at 1440, light and dark (scaled to fit)</h3>
+    <div class="scaled" data-scale="1440">${bar(o, 1440, "light").replace('class="frame', 'data-measure class="frame')}</div>
+    <div class="scaled" data-scale="1440" style="margin-top:.75rem">${bar(o, 1440, "dark")}</div>
+    <h3>The bar at 390, light and dark (true size)</h3>
+    <div class="pair">${bar(o, 390, "light").replace('class="frame', 'data-measure class="frame')}${bar(o, 390, "dark")}</div>
+    <div style="display:none">${[360, 320].map((w) => bar(o, w, "light", { hero: false }).replace('class="frame', 'data-measure class="frame')).join("")}${bar(o, 390, "light", { hero: false, form: "wide" }).replace('class="frame', 'data-measure class="frame')}</div>
+    ${o.phoneNote ? `<p class="cap">${o.phoneNote}</p>` : ""}
+    <dl class="facts">
+      <dt>Link’s name</dt><dd>${o.label}</dd>
+      <dt>Width</dt><dd data-width="${o.id}">…</dd>
+    </dl>
+    <h3>Large, and on the brand fields</h3>
+    ${large(o)}
+  </section>`;
+}
+
+function fit() {
+  document.querySelectorAll(".scaled").forEach((s) => {
+    const f = s.firstElementChild;
+    const k = s.clientWidth / 1440;
+    f.style.transform = `scale(${k})`;
+    s.style.height = `${f.offsetHeight * k}px`;
+  });
+}
+
+document.fonts.ready.then(() => {
+  requestAnimationFrame(() => {
+    // the hidden 360 and 320 frames need a box to measure: show them off-screen
+    document.querySelectorAll('div[style="display:none"]').forEach((d) => { d.style.cssText = "position:absolute;left:-10000px;top:0"; });
+    const m = measure();
+    window.__measure = m;
+    for (const [k, v] of Object.entries(m)) {
+      const cell = document.querySelector(`[data-cell="${k}"]`);
+      if (cell) cell.innerHTML = `${v.home} / <span class="${v.spare >= 0 && !v.overflow ? "ok" : "no"}">${v.spare >= 0 && !v.overflow ? "+" : ""}${v.spare}</span>`;
+    }
+    document.querySelectorAll("[data-width]").forEach((dd) => {
+      const id = dd.dataset.width;
+      const say = (k, what) => { const v = m[k]; return v ? `${what}: ${v.home} px, ${v.spare >= 0 ? v.spare + " px to spare" : -v.spare + " px over"}` : ""; };
+      dd.textContent = [say(`${id}@1440`, "at 1440"), say(`${id}@390w`, "full form at 390"), say(`${id}@390`, "phone form at 390"), say(`${id}@360`, "at 360"), say(`${id}@320`, "at 320")].filter(Boolean).join("; ");
+    });
+    document.body.dataset.ready = "1";
+  });
+});
+</script>
+</body>
+</html>

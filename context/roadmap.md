@@ -81,7 +81,7 @@ The new name in code. Evidence across three engines and two screen readers. Toke
 | `031a` the index card redesign | The Components index card is redrawn: the owner found its thumbnail on the page's own paper, inside a white card on that paper, reads as background on background, and white examples sit white on white (the owner, 2026-11-15). Research how Carbon, Atlassian, Spectrum and Radix frame previews; a stage ground that differs from both the page and the card in every scheme; the thumbnails regenerated | S (index, thumbnails) | `029` (scheme grounds) | 6: held; 7: held |
 | `031b` transparency signifies depth | Every item and site surface audited against the owner's rule: only a layer above other content (the bar, overlays, the scrim) is translucent; everything inside a layer is solid or unfilled. A lint forbids alpha fills, borders, `backdrop-filter` and container opacity outside the declared layers | I, S | `029` | 4: held |
 
-Not a spec: **the Kuiper lockup mock-ups.** They are drawn in `research/` as an exhibit and put to the owner. They run beside everything. Once approved, a small spec changes the header (lane S) in whichever release is open.
+Not a spec: **the Kuiper lockup mock-ups.** Drawn and put to the owner on 2026-11-15 ([`research/2026-11-15-kuiper-lockup.md`](research/2026-11-15-kuiper-lockup.md)). The owner's answer: the bar keeps the "pluto" lockup. Kuiper is Pluto's system, not a product with its own branding, so it gets no logo or wordmark; its name appears in the tab title and in text. Nothing is built.
 
 ### 0.14.0: The page standard, and choosing from lists
 

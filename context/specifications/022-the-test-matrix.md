@@ -1,6 +1,6 @@
 # 022 — The test matrix
 
-- **Status:** Ready for owner answers: review approved with changes, all applied (2026-11-15). The review, [`../reviews/022-the-test-matrix-spec-2026-11-15.md`](../reviews/022-the-test-matrix-spec-2026-11-15.md), raised 16 findings (2 High, 7 Medium, 7 Low) and, on re-review, R1 to R6 (1 Medium, 5 Low). Each is answered under "Review". The owner answered Q1 to Q9 on 2026-11-15, each with the recommended option (see Landing notes). Ready to build after `020`.
+- **Status:** Ready to build after `020`: review approved with changes, all applied (2026-11-15). The review, [`../reviews/022-the-test-matrix-spec-2026-11-15.md`](../reviews/022-the-test-matrix-spec-2026-11-15.md), raised 16 findings (2 High, 7 Medium, 7 Low) and, on re-review, R1 to R6 (1 Medium, 5 Low). Each is answered under "Review". The owner answered Q1 to Q9 on 2026-11-15, each with the recommended option (see Landing notes). Ready to build after `020`.
 - **Date:** 2026-11-15
 - **Author:** the design lead
 - **Kind:** test harness (lane E). No registry item changes. No token changes. **Interface changes:** none for an installed app. Two dev-only packages are added and pinned (decision 17). The repository gains its first CI workflow.
@@ -62,20 +62,44 @@ Seven projects: `chromium-light`, `chromium-dark`, `firefox-light`, `firefox-dar
 
 So no spec file reads `info.project.name` itself. `code.spec.ts:1461` already reads `info.project.use.colorScheme`, and keeps working. Reason: the name now carries the engine too; the scheme already lives in `use`, so nothing parses names.
 
-`forced-colors.spec.ts`'s "light project only" skip becomes "light schemes only": it runs in each engine's light project.
+`forced-colors.spec.ts:11`'s "light project only" skip (from `018`) becomes `onlyProjects(["chromium-light", "firefox-light", "webkit-light"], "light schemes only")` (decision 3): it runs in each engine's light project. Where WebKit cannot draw forced colours, its draw assertions are carried by `028`'s own `no-user` gap, not by narrowing this skip.
 
 ### 3. An engine-only test says why, and is counted
 
-A test that one engine cannot run calls `onlyIn(engine, reason)` from `tests/e2e/engines.ts`. It skips elsewhere with that reason. The reason names the missing API, for example `"CDP: Emulation.setEmulatedMedia for prefers-reduced-transparency"`.
+`tests/e2e/engines.ts` declares three skip helpers. Each skips the test where it does not apply, with a reason. They are the only ways a browser test may skip by engine or project.
 
-Before using it, the builder tries the engine-neutral API. For example, `page.emulateMedia({ forcedColors })` replaces CDP for forced colours where Playwright supports it.
+- **`onlyIn(engine, reason)`:** the test runs in one engine only. The reason names the API the others lack, for example `"CDP: Emulation.setEmulatedMedia for prefers-reduced-transparency"`.
+- **`notIn(engine, reason)`:** the test runs in every engine but one. The reason names what that engine lacks or does differently. `notIn` is `022`'s own, in the helper set from the start, so `026`, `027` and `028` can use it when they land after `022`.
+- **`onlyProjects(projects, reason)`:** the test runs only in the named projects, for a skip by project or scheme rather than by engine alone. Each name must be one of decision 2's seven projects. The settled example is `018`'s forced-colours skip (decision 2), whose entry is below.
 
-`ENGINE_ONLY`, in the same file, lists every such test: its file, its title, the engine and the reason. A unit test holds the list and the calls in step. The landing notes give the count. Reason: an exception the suite can count is a finding; one it cannot count is a silent limit (constitution §4.4).
+Before using any of them, the builder tries the engine-neutral API. For example, `page.emulateMedia({ forcedColors })` replaces CDP for forced colours where Playwright supports it.
+
+**`ENGINE_ONLY`** lists every such test, whichever helper it calls. Its data lives in its own file, **`tests/e2e/engine-only.ts`**, which imports nothing. So `030`'s report code can read the list without loading Playwright's `test`. `engines.ts` imports the data from there. Each entry holds:
+
+- `file`, `title`, `helper` (`onlyIn`, `notIn` or `onlyProjects`), and the `engine` or `projects` it names;
+- `reason`;
+- optional `gap` and `shown`, which `030` defines and reads;
+- optional `ruling`, a repository path to the owner's or a specification's ruling that allows the skip.
+
+The example entry, as `engine-only.ts` holds it:
+
+```ts
+{
+  file: "forced-colors.spec.ts",
+  title: "…", // each test the file's light-only skip covers, one entry per call
+  helper: "onlyProjects",
+  projects: ["chromium-light", "firefox-light", "webkit-light"],
+  reason: "light schemes only",
+  // WebKit's draw assertions are carried by 028's `no-user` gap, on 028's entries.
+}
+```
+
+**`tests/unit/engine-only.test.ts`** holds the list and the calls in step: every call to any of the three helpers in `tests/e2e/` has exactly one entry with the same helper and arguments, and every entry has one call. It also checks that `engine-only.ts` has no `import`, that each `projects` name is a declared project, that `notIn` and `onlyIn` name one of the three engines, and that a `ruling` path, when given, exists. The landing notes give the count per helper. Reason: an exception the suite can count is a finding; one it cannot count is a silent limit (constitution §4.4).
 
 The first cases to examine (memo §4):
 
 - `brand.spec.ts:75`, which opens a CDP session with no guard;
-- the five clipboard grants, in `code.spec.ts:442`, `nav.spec.ts:245`, `keyboard.spec.ts:1039` and `1463`, and `search.spec.ts:263`. If an engine refuses the permission, the test either reads the clipboard another way or takes `onlyIn`.
+- the five clipboard grants, in `code.spec.ts:442`, `nav.spec.ts:245`, `keyboard.spec.ts:1039` and `1463`, and `search.spec.ts:263`. If an engine refuses the permission, the test either reads the clipboard another way or takes `onlyIn` or `notIn`.
 
 The `perf` project and `build-output.spec.ts` (decision 1) are project-level and are not listed here.
 
@@ -176,7 +200,9 @@ Reasons: VoiceOver's users are on Safari, and Playwright's WebKit is the nearest
 
 The macOS job runs `bun run sr:setup --macos-record`. A `package.json` script resolves the binary from `node_modules/.bin` and never downloads one. That matters: `bun x guidepup` would fetch any package named `guidepup` from npm if the local binary were missing, and none exists today, but anyone could publish one (review finding 13). Not the retired action.
 
-The screen-reader suite is `tests/sr/`, with its own config, `playwright.sr.config.ts`, wrapped in `withGuidepup` (serial, headed). It runs under Bun's runtime like the rest. If guidepup fails under `bun --bun` on a runner, that job alone runs Playwright under Node, and the landing notes say so (memo §7).
+The screen-reader suite is `tests/sr/`, with its own config, `playwright.sr.config.ts`, wrapped in `withGuidepup` (serial, headed). It runs under Bun's runtime like the rest.
+
+**The reader is a tag.** The config sets Playwright's config-level `tag` from the job's `SR_READER`: `@reader-voiceover` or `@reader-nvda`. Playwright prepends it to every test, so every record in the merged `report.json` names its reader beside its `projectName` (the browser). Playwright requires a tag to start with `@` (READ, `node_modules/playwright/lib/common/index.js:2150`). The `voiceover` jobs set `SR_READER: voiceover` and the `nvda` jobs `SR_READER: nvda`. In CI the config throws if `SR_READER` is unset or holds any other value; locally it defaults to the platform's reader. If guidepup fails under `bun --bun` on a runner, that job alone runs Playwright under Node, and the landing notes say so (memo §7).
 
 ### 11. The 28 items, derived and tested
 
@@ -245,7 +271,7 @@ A **focus move** here means focus going where the user did not Tab or arrow to: 
 - T1, T2: `tooltip`. A tooltip never takes focus, so O3 does not apply.
 - C1, C2: `chart`.
 
-**What each test declares.** Each test carries three annotations: `item` (a registry name), `rules` (the ids it applies) and `hears` (what those rules judge, by default its own item). A `hears` entry is either a whole item, `toast`, or **an item and one named part,** `toast:assertive`. A part names one region or element an item renders, such as a toast's assertive or polite announcer; the item's test file declares its parts in one list, and each part name is a plain lowercase word. A unit test checks that each `hears` entry's item is the test's item or one of its transitive `registryDependencies`, and that each part is declared for that item. Decision 15 reads `hears` to know which tests a mutation must fail.
+**What each test declares.** Each test carries three annotations, declared statically (decision 13a): `item` (a registry name), `rules` (the ids it applies) and `hears` (what those rules judge, by default its own item). A `hears` entry is either a whole item, `toast`, or **an item and one named part,** `toast:assertive`. A part names one region or element an item renders, such as a toast's assertive or polite announcer; the item's test file declares its parts in one list, and each part name is a plain lowercase word. A unit test checks that each `hears` entry's item is the test's item or one of its transitive `registryDependencies`, and that each part is declared for that item. Decision 15 reads `hears` to know which tests a mutation must fail.
 
 Rules match normalised text, never a whole log. Logs are never snapshot. VoiceOver and NVDA word the same thing differently (memo §2).
 
@@ -264,7 +290,9 @@ Two files still refer to `019`'s gap or script. Both are edited **at landing**, 
 
 ### 13a. Each test names its item and its check
 
-Every screen-reader test carries `item`, `rules` and `hears` (decision 12). Browser tests written or moved by this spec carry `item` and `check` (`axe`, `keyboard` and so on) where their file maps to one item already; the rest is `030`'s work. Reason: `030` builds the per-item status from these.
+Every screen-reader test carries `item`, `rules` and `hears` (decision 12).
+
+**They are static.** Every `item`, `check`, `rules` and `hears` annotation on a screen-reader test is declared in the test's details, `test(title, { annotation: [...] }, body)`, or on its `test.describe`. None is added at run time. So `030` can read them all from `playwright test --list --reporter=json`, without running a reader. Run-time facts (phrases, faults) go in attachments, never annotations. `tests/unit/sr-static.test.ts` fails on any `testInfo.annotations.push`, `test.info().annotations.push` or other write to `annotations` in `tests/sr/`. Browser tests written or moved by this spec carry `item` and `check` (`axe`, `keyboard` and so on) where their file maps to one item already; the rest is `030`'s work. Reason: `030` builds the per-item status from these.
 
 ### 14. The run's evidence
 
@@ -499,7 +527,7 @@ export default defineConfig({
 });
 ```
 
-`playwright.sr.config.ts`: `withGuidepup({...})` around `testDir: "tests/sr"`, `testMatch: /\.sr\.ts$/`, a 5-minute timeout, `retries: CI ? 2 : 0`, the blob reporter in CI, the same `server()`, a 1440 × 900 viewport, and three projects, `webkit`, `chromium` and `firefox`. The workflow picks two per reader. The `.sr.ts` suffix keeps Bun's own test runner from collecting these files.
+`playwright.sr.config.ts`: `withGuidepup({...})` around `testDir: "tests/sr"`, `testMatch: /\.sr\.ts$/`, ``tag: `@reader-${reader()}` `` from `SR_READER` (decision 10), a 5-minute timeout, `retries: CI ? 2 : 0`, the blob reporter in CI, the same `server()`, a 1440 × 900 viewport, and three projects, `webkit`, `chromium` and `firefox`. The workflow picks two per reader. The `.sr.ts` suffix keeps Bun's own test runner from collecting these files.
 
 `package.json` scripts gain:
 
@@ -631,6 +659,7 @@ jobs:
         env:
           CI: "true"
           E2E_PREBUILT: "1"
+          SR_READER: voiceover # nvda in the nvda job
       - if: ${{ always() }}
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
@@ -697,7 +726,8 @@ Each `<item>.sr.ts` opens the item's example page (`/example/<item>/<example>/`)
 - `tests/test.ts`: `test` and `expect` for every browser spec, with the ledger fixture.
 - `tests/ledger.ts`: the ledger fixture itself, shared by both suites.
 - `tests/fault-ledger.ts`: open faults, each with its `where`, `expect` and small change (decision 16).
-- `tests/e2e/engines.ts`: `onlyIn()` and `ENGINE_ONLY` (decision 3).
+- `tests/e2e/engines.ts`: `onlyIn()`, `notIn()` and `onlyProjects()` (decision 3).
+- `tests/e2e/engine-only.ts`: `ENGINE_ONLY`'s data, import-free, for `030`'s report code (decision 3).
 - `tests/e2e/scheme.ts`: `scheme()` and `projectLabel()` (decision 2).
 - `tests/server.ts`: the `webServer` both configs share (decision 6).
 
@@ -707,13 +737,13 @@ Each `<item>.sr.ts` opens the item's example page (`/example/<item>/<example>/`)
 
 - `playwright.config.ts`, `playwright.sr.config.ts`, `playwright.merge.config.ts`, `tests/server.ts`.
 - `tests/test.ts`, `tests/ledger.ts`, `tests/fault-ledger.ts`.
-- `tests/e2e/scheme.ts` and `tests/e2e/engines.ts`.
+- `tests/e2e/scheme.ts`, `tests/e2e/engines.ts` (the three skip helpers) and `tests/e2e/engine-only.ts` (`ENGINE_ONLY`'s data, import-free).
 - **Every `tests/e2e/*.spec.ts`** (28 files): its `test` import moves to `tests/test.ts`. In 15 of them, the 42 `project.name` reads move to `scheme()` (39) or `projectLabel()` (3). Engine guards or rewrites where decision 3 needs them, starting with `brand.spec.ts:75` and the five clipboard grants.
 - `tests/sr/` (28 test files, rules, items, fixtures, seven mutation patches and `expected.json`).
 - `.github/workflows/matrix.yml`, and the bootstrap version for `main` as a file the owner pushes (decision 15).
 - `scripts/ci/gate.ts`; `scripts/ci/workflow.ts` (the shared parser and matrix expansion); `scripts/site/release-check.ts`'s two new checks.
 - `package.json` scripts and two devDependencies; `bun.lock`.
-- Unit tests: `matrix.test.ts`, `workflow.test.ts`, `sr-rules.test.ts`, `sr-items.test.ts`, `mutations.test.ts`, `fault-ledger.test.ts`, `gate.test.ts`, `release-check.test.ts`, and `deps.test.ts`'s `PACKAGES_022`.
+- Unit tests: `matrix.test.ts`, `workflow.test.ts`, `sr-rules.test.ts`, `sr-items.test.ts`, `mutations.test.ts`, `fault-ledger.test.ts`, `engine-only.test.ts`, `sr-static.test.ts`, `gate.test.ts`, `release-check.test.ts`, and `deps.test.ts`'s `PACKAGES_022`.
 - Deleting `scripts/a11y/voiceover-error-summary.ts`.
 - **At landing:** `context/handoff.md:30` and `tests/unit/registry.test.ts:1913–1915`, as decision 13 says.
 
@@ -730,7 +760,7 @@ Each `<item>.sr.ts` opens the item's example page (`/example/<item>/<example>/`)
 
 Each is written and seen failing before the code it checks. The landing notes say how each failed.
 
-1. **`tests/unit/matrix.test.ts`** imports `playwright.config.ts` and checks: exactly the seven project names; each engine has a light and a dark project whose `use.colorScheme` matches; `perf` is Chromium only; `build-output` runs only in `chromium-light`; CI turns on `retries: 1` and `failOnFlakyTests`. Fails today: three projects named `light`, `dark`, `perf`.
+1. **`tests/unit/matrix.test.ts`** imports `playwright.config.ts` and checks: exactly the seven project names; each engine has a light and a dark project whose `use.colorScheme` matches; `perf` is Chromium only; `build-output` runs only in `chromium-light`; CI turns on `retries: 1` and `failOnFlakyTests`. It also imports `playwright.sr.config.ts` with `CI=1` and `SR_READER` set to `voiceover`, then `nvda`, and checks the tag is `@reader-voiceover`, then `@reader-nvda`; with `SR_READER` unset or `orca`, the import throws. Fails today: three projects named `light`, `dark`, `perf`; no screen-reader config.
 2. **Project reads and imports** (in `matrix.test.ts`): no file in `tests/e2e/` but `scheme.ts` matches `/\.project\.name\b/`; no `*.spec.ts` or `*.sr.ts` imports `test` from `@playwright/test` or `@guidepup/playwright`. Fails today: 42 reads in 15 files; 28 direct imports.
 3. **`tests/unit/workflow.test.ts`** parses `matrix.yml` with `Bun.YAML.parse` (present in Bun 1.4.4, EXECUTED; confirmed on 1.3.14 in build step 1, else plain-text checks). It checks:
    - every `uses:` is a 40-hex SHA with a `# v` comment;
@@ -744,6 +774,7 @@ Each is written and seen failing before the code it checks. The landing notes sa
    - the shard list is 1 to 8 and the `--shard` divisor is 8; `browsers` has `timeout-minutes: 45`;
    - no `run:` step contains `${{ toJSON(` or `${{ inputs.`; such values reach scripts through `env`;
    - no step runs `bun x` or `npx`;
+   - every `voiceover` job's test step sets `SR_READER: voiceover`, and every `nvda` job's `SR_READER: nvda`;
    - `gate` needs every other job and runs `if: always()`.
    The fallback bootstrap file is checked too: only `workflow_dispatch`, the same inputs, no `push`. Fails today: no files.
 4. **`tests/unit/sr-rules.test.ts`** feeds `rules.ts` fixture windows:
@@ -759,8 +790,10 @@ Each is written and seen failing before the code it checks. The landing notes sa
    - the same phrases worded as VoiceOver and as NVDA (both pass).
    Fails today: no module.
 5. **`tests/unit/sr-items.test.ts`** re-derives candidates from `src/lib/registry/`, including role-map values, and checks each is in `SR_ITEMS` or `SR_EXCLUDED` with a reason. Each `SR_ITEMS` entry has a `tests/sr/<item>.sr.ts` with at least one test per declared kind, each carrying `item`, `rules` and `hears`; each `hears` entry is the item or one of its transitive dependencies. Fails today: no module.
+5a. **`tests/unit/sr-static.test.ts`** reads every file in `tests/sr/` and fails on a write to `annotations` (`testInfo.annotations.push`, `test.info().annotations.push`, or an assignment). A fixture file containing one shows it failing. It also checks that each test's `item`, `rules` and `hears` appear in its details or its `describe`. Fails today: no module.
 6. **`tests/unit/mutations.test.ts`**: `git apply --check` on each patch and on each set together; no two in a set share a file; each set's `expected.json` equals its derivation; every patch has a witness under every pair; `notProvable` entries carry a pair and a run id. Two fixture tables check the derivation itself: one where patches 1 and 4 have only the form blocks in common shows the witness rule failing; and one with a part-qualified patch, `toast:assertive` with fault L1, over three fixture tests that hear `toast:assertive`, `toast:polite` and `toast`, expects the first and third to fail and the second not. A `hears` part not declared for its item fails the test. Fails today: no patches.
-7. **`tests/unit/fault-ledger.test.ts`**: each line names an existing small-change spec and an existing test, one `where`, a non-empty `expect`; and `engines.ts`'s `ENGINE_ONLY` matches its `onlyIn()` calls. Fails today: no module.
+7. **`tests/unit/fault-ledger.test.ts`**: each line names an existing small-change spec and an existing test, one `where`, a non-empty `expect`. Fails today: no module.
+7a. **`tests/unit/engine-only.test.ts`**: every `onlyIn()`, `notIn()` and `onlyProjects()` call in `tests/e2e/` matches exactly one `ENGINE_ONLY` entry, and each entry one call; `engine-only.ts` has no import; project and engine names are declared ones; a `ruling` path exists. Fixtures show it failing on an unlisted `notIn` call, an `onlyProjects` naming an unknown project, and an import added to `engine-only.ts`. Fails today: no modules.
 8. **`tests/unit/gate.test.ts`**: `gate.ts`'s table: all success passes a full run; any failure, cancellation or skip fails it; a mutation run passes only with `report` successful and `browsers`, `checks` and `perf` skipped; an empty `MUTATE` is a full run. A same-repository pull request, over recorded `gh api` JSON: **a green push run** for the head commit passes; **a red push run** fails; **no push run** fails with its message; a push run still in progress is waited for, and one that never completes within the limit fails. Fails today: no module.
 9. **`tests/unit/release-check.test.ts`**: the two checks as pure functions, over recorded `gh` JSON, with the expected job names taken from `scripts/ci/workflow.ts`'s parse of `matrix.yml` (and, in one case, of a fixture workflow with a different shard count, to show the list follows the file): no run; a failed run; a pull-request run on the same commit; a mutation run whose `gate` succeeded; a run for another commit; a run with a skipped job; a green run on attempt 2 (qualifies, attempt printed); a green run; a non-empty ledger; `gh` missing. Fails today: no functions.
 10. **`deps.test.ts` `PACKAGES_022`**: `@guidepup/playwright` 0.21.0 and `@guidepup/setup` 0.29.2, exact. Fails today: not installed.
@@ -772,11 +805,11 @@ Each is written and seen failing before the code it checks. The landing notes sa
 2. **Project reads and imports.** No file in `tests/e2e/` but `scheme.ts` reads `.project.name`; every spec file imports the shared `test`. (unit)
 3. **Chromium unchanged.** `bun run test:e2e` lists 2,981 tests (or the count at build start, plus only the tests this spec adds) and passes. (e2e, local)
 4. **All engines listed.** `bun run test:e2e:engines --list` lists the Chromium count plus four times the dark project's count: 8,881 at today's 2,981. `build-output` is only in `chromium-light`. (e2e, local)
-5. **Engine-only tests counted.** Every `onlyIn()` call is in `ENGINE_ONLY` with an API-naming reason. `brand.spec.ts:75` and the five clipboard grants are each guarded, rewritten or shown to pass in all engines. The landing notes give the count. (unit; e2e)
+5. **Engine-only tests counted.** Every `onlyIn()`, `notIn()` and `onlyProjects()` call is in `ENGINE_ONLY`, whose data is in the import-free `tests/e2e/engine-only.ts`, with a reason naming what the excluded engines or projects lack. `brand.spec.ts:75` and the five clipboard grants are each guarded, rewritten or shown to pass in all engines. The landing notes give the count per helper. (unit; e2e)
 6. **The workflow.** `workflow.test.ts` passes on `matrix.yml` and the bootstrap. (unit)
 7. **Both trees travel.** `site` is one `site.tar` holding `build/` and `.svelte-kit/output/`. Every test job extracts it and checks `build/index.html` and `.svelte-kit/output/server/manifest.js` before testing; none builds. In the first run, every test job's server starts. (unit; CI)
 8. **The scripted set.** `SR_ITEMS` holds the 28 items of decision 11; every derived candidate, role maps included, is listed or excluded with a reason; `breadcrumb` and `input-group` are excluded. (unit)
-9. **One file per item.** 28 `tests/sr/*.sr.ts` files, each with a test per declared kind, each annotated with `item`, `rules` and `hears`. (unit)
+9. **One file per item.** 28 `tests/sr/*.sr.ts` files, each with a test per declared kind, each annotated statically with `item`, `rules` and `hears`; no annotation is added at run time; every `report.json` record carries `@reader-voiceover` or `@reader-nvda`. (unit)
 10. **The rules.** `sr-rules.test.ts` passes on every fixture of test 4; `fixtures.ts` starts every reader with `capture: true`. (unit)
 11. **`019`'s script moved.** `tests/sr/error-summary.sr.ts` holds `019` decision 12's steps and rule; `scripts/a11y/voiceover-error-summary.ts` is gone. (unit, review)
 12. **The first full run.** A `matrix` push run on a commit of this spec completes. Its `gate` is green, with every fault found listed in the ledger, each with a small-change number and an `expect`. Its run id is in the landing notes. (CI)
@@ -902,6 +935,10 @@ The re-review closed the 16 findings above, approved with changes, and raised R1
 - **R6, accepted (Low).** The release check derives its expected job names from `matrix.yml`, through the parser `workflow.test.ts` also uses (decision 19; test 9).
 
 **From `026`'s re-review (its R4).** The derivation was too coarse for an item with several live parts: every toast test hears `toast`, so a patch to the assertive announcer alone would predict every toast test failing. A `hears` entry, and a patch, may now name an item and one part (`toast:assertive`). The derivation matches on the part when one is given, and on the whole item otherwise (decisions 12 and 15; test 6's example).
+
+**From `028` and `030` (`030`'s re-review, R1 and R7).** Decision 3 now declares three skip helpers: `onlyIn`, `notIn` (`022`'s own from the start, for `026`, `027` and `028` to use) and `onlyProjects`, for skips by project or scheme. `ENGINE_ONLY`'s data moves to the import-free `tests/e2e/engine-only.ts`, with optional `gap`, `shown` and `ruling` fields, so `030`'s report code can import it without Playwright's `test`. `engine-only.test.ts` (test 7a) counts all three helpers (decision 3; Scope; criterion 5).
+
+**From `030`'s re-review (its R8 and build step 1).** The screen-reader config tags every test with its reader, `@reader-voiceover` or `@reader-nvda`, from `SR_READER` (decision 10; test 1; test 3). Annotations on screen-reader tests are static, so `030` reads them from `--list`; `sr-static.test.ts` enforces it (decision 13a; test 5a). `018`'s forced-colours skip is settled as `onlyProjects(["chromium-light", "firefox-light", "webkit-light"], "light schemes only")`, with WebKit's draw assertions carried by `028`'s `no-user` gap; it is decision 3's example entry.
 
 ## Landing notes
 
