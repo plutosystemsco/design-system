@@ -10,6 +10,11 @@
      * label is announced from a status region.
      */
     label?: string;
+    /**
+     * Classes for the spinning icon, added after Kuiper's by `cn`. Set its size
+     * here.
+     */
+    class?: ComponentProps<typeof SpinnerIcon>["class"];
   };
 
   let { class: className, label, ...restProps }: SpinnerProps = $props();

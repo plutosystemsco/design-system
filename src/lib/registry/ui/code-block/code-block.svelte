@@ -40,7 +40,15 @@
     children,
     ...restProps
   }: WithElementRef<HTMLAttributes<HTMLDivElement>> & {
+    /**
+     * `destructive` sets the code in the error colour, for error output. Name
+     * it in a visible label too, such as the block's header.
+     */
     variant?: CodeBlockVariant;
+    /**
+     * `sm` sets smaller text and padding, for a block inside a dense surface
+     * such as a chat message.
+     */
     size?: CodeBlockSize;
   } = $props();
 </script>

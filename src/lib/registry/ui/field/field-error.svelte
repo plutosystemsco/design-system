@@ -11,6 +11,10 @@
     ...restProps
   }: WithElementRef<HTMLAttributes<HTMLDivElement>> & {
     children?: Snippet;
+    /**
+     * The messages to show when no `children` are given: one as text, several
+     * as a list. Entries with no `message` are skipped.
+     */
     errors?: { message?: string }[];
   } = $props();
 

@@ -16,7 +16,21 @@
     size = "sm",
     ...restProps
   }: Omit<ComponentProps<typeof Button>, "href" | "size"> & {
+    /**
+     * `sm` for a button with text, `icon-sm` for one with only an icon, named
+     * by `aria-label`. Both fit inside the group's frame.
+     */
     size?: InputGroupButtonSize;
+    /**
+     * Kuiper's default is `"button"`, so the button does not submit the form
+     * the group is in.
+     */
+    type?: ComponentProps<typeof Button>["type"];
+    /**
+     * The button's look, as `Button`'s. Kuiper's default is quiet, so the
+     * control stays the focus.
+     */
+    variant?: ComponentProps<typeof Button>["variant"];
   } = $props();
 </script>
 

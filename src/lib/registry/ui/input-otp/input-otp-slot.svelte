@@ -7,7 +7,13 @@
     cell,
     class: className,
     ...restProps
-  }: InputOTPPrimitive.CellProps = $props();
+  }: InputOTPPrimitive.CellProps & {
+    /**
+     * The cell to render: one of the cells the `InputOTP` gives its `children`
+     * snippet.
+     */
+    cell: InputOTPPrimitive.CellProps["cell"];
+  } = $props();
 </script>
 
 <!-- A 48 px square; the active cell's border is blue, and its caret is static. -->

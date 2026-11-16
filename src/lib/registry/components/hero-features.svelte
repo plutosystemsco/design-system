@@ -19,6 +19,7 @@
     title: string;
     /** The section's id, for a link to it. */
     id?: string;
+    /** The features, each a title, a description and an optional icon. */
     features: Feature[];
     class?: string;
   } = $props();

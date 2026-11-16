@@ -15,7 +15,12 @@
     requested = "Account deletion requested.",
     class: className,
   }: {
+    /**
+     * Called when the person confirms. The status says `requested` once it
+     * resolves.
+     */
     ondelete: () => Promise<void>;
+    /** The section's heading level, so it fits the settings page's outline. */
     level?: 1 | 2 | 3 | 4 | 5 | 6;
     /** What the status says once `ondelete` resolves. Say what your app did. */
     requested?: string;

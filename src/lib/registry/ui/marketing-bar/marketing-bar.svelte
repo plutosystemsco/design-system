@@ -1,6 +1,11 @@
 <script lang="ts" module>
   /** A link or a link-styled action: its visible label and its href. */
-  export type MarketingLink = { label: string; href: string };
+  export type MarketingLink = {
+    /** The link's text. */
+    label: string;
+    /** Where the link goes. */
+    href: string;
+  };
 </script>
 
 <script lang="ts">
@@ -25,6 +30,10 @@
     logo: Snippet<[place: "header" | "footer"]>;
     /** The home link's accessible name. It contains any words the logo shows. */
     homeLabel: string;
+    /**
+     * The bar's links, in order. From md they sit in the bar; below it, in the
+     * sheet the menu button opens.
+     */
     links?: MarketingLink[];
     /** The quieter action, beside the primary from md; in the sheet below it. */
     secondary?: MarketingLink;

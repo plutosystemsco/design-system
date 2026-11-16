@@ -18,7 +18,25 @@
     "aria-describedby": describedBy,
     "aria-invalid": invalid,
     ...restProps
-  }: WithoutChildrenOrChild<SwitchPrimitive.RootProps> = $props();
+  }: WithoutChildrenOrChild<SwitchPrimitive.RootProps> & {
+    /** Whether the switch is on. Bind it to read or set it. */
+    checked?: SwitchPrimitive.RootProps["checked"];
+    /**
+     * The control's id. Inside a `Field` it defaults to the field's, so the
+     * field's label points here.
+     */
+    id?: SwitchPrimitive.RootProps["id"];
+    /**
+     * The ids of the text that describes the control. Inside a `Field` it
+     * defaults to the field's description and error.
+     */
+    "aria-describedby"?: SwitchPrimitive.RootProps["aria-describedby"];
+    /**
+     * Marks the control invalid. Inside a `Field` it follows the field's
+     * `error` or `invalid`.
+     */
+    "aria-invalid"?: SwitchPrimitive.RootProps["aria-invalid"];
+  } = $props();
 
   // A field from before 0.13.0 sets only its old key, read until 0.14.0.
   const field =

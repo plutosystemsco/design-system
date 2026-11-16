@@ -17,10 +17,19 @@
     homeHref = "/",
     level = 1,
   }: {
+    /**
+     * The HTTP status. A 404 says the page is not there; a status from 500 says
+     * it failed; another names the status.
+     */
     status: number;
     /** A request id or build hash; never a stack trace. */
     reference?: string;
+    /** Your home route, for the way out. */
     homeHref?: string;
+    /**
+     * The title's heading level. On an error page the title is its one
+     * first-level heading.
+     */
     level?: 1 | 2 | 3 | 4 | 5 | 6;
   } = $props();
 

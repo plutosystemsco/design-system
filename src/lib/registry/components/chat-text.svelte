@@ -1,8 +1,20 @@
 <script lang="ts" module>
   /** A run of prose, or one fenced block of code. */
   export type ChatSegment =
-    | { kind: "prose"; text: string }
-    | { kind: "code"; language: string; code: string };
+    | {
+        /** `prose`, a run of plain text. */
+        kind: "prose";
+        /** The prose, as written. */
+        text: string;
+      }
+    | {
+        /** `code`, a fenced block. */
+        kind: "code";
+        /** The fence's language, or "" when it names none. */
+        language: string;
+        /** The code between the fences. */
+        code: string;
+      };
 
   /**
    * Splits text on fence lines. An opener is three backticks and any info
@@ -57,7 +69,15 @@
 <script lang="ts">
   import * as CodeBlock from "#lib/registry/ui/code-block";
 
-  let { text }: { text: string } = $props();
+  let {
+    text,
+  }: {
+    /**
+     * The message's text. Fenced code becomes a code block; the rest renders as
+     * plain paragraphs.
+     */
+    text: string;
+  } = $props();
 
   const segments = $derived(splitFences(text));
 </script>

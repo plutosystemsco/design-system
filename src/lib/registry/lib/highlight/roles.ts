@@ -24,6 +24,7 @@ export const CODE_ROLES = [
   "changed",
 ] as const;
 
+/** One of the highlight roles a token takes, each with its own colour token. */
 export type CodeRole = (typeof CODE_ROLES)[number];
 
 /**
@@ -73,6 +74,7 @@ export function roleAt(index: number): CodeRole {
 
 /** One highlighted token. Render it as a `<span>` with this class. */
 export type HighlightedToken = {
+  /** The token's text. */
   content: string;
   /** The token's classes, or "" for a body token. */
   class: string;
@@ -87,14 +89,25 @@ export type HighlightedLine = string | HighlightedToken[];
  * `iterChanges`.
  */
 export type HighlightChange = {
+  /** Where the replaced range starts in the old document. */
   fromA: number;
+  /** Where the replaced range ends in the old document. */
   toA: number;
+  /** Where the new text starts in the new document. */
   fromB: number;
+  /** Where the new text ends in the new document. */
   toB: number;
 };
 
 /** A run of one role, in UTF-16 offsets of the document. */
-export type HighlightRange = { from: number; to: number; role: CodeRole };
+export type HighlightRange = {
+  /** Where the run starts. */
+  from: number;
+  /** Where the run ends. */
+  to: number;
+  /** The run's highlight role. */
+  role: CodeRole;
+};
 
 /**
  * The highlighter's state for one changing document. `update` applies every
@@ -103,11 +116,20 @@ export type HighlightRange = { from: number; to: number; role: CodeRole };
  * arrives; `settled` is true when nothing is loading.
  */
 export type HighlightSession = {
+  /** Applies one transaction's changes to the document and parses it once. */
   update(code: string, changes: HighlightChange[]): void;
+  /** Every line's tokens, as the document now stands. */
   lines(): HighlightedLine[];
+  /** The role runs between two offsets, for an editor to paint. */
   ranges(from: number, to: number): HighlightRange[];
+  /**
+   * Calls the listener when a grammar the text embeds arrives. Returns the
+   * function that stops it.
+   */
   onChange(listener: () => void): () => void;
+  /** True when no grammar is loading. */
   readonly settled: boolean;
+  /** Frees the session's parse tree. Call it when the document goes. */
   dispose(): void;
 };
 

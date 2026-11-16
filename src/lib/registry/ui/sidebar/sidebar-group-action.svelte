@@ -10,7 +10,16 @@
     child,
     ...restProps
   }: WithElementRef<HTMLButtonAttributes> & {
+    /**
+     * Renders your own element in place of the `<button>`. Spread the `props`
+     * it is given on that element.
+     */
     child?: Snippet<[{ props: Record<string, unknown> }]>;
+    /**
+     * Classes for the `<button>`, or for the element `child` renders, added
+     * after Kuiper's by `cn`.
+     */
+    class?: HTMLButtonAttributes["class"];
   } = $props();
 
   // A 32 px target on the group label's row; it names itself with aria-label.

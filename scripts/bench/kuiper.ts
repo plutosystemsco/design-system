@@ -195,11 +195,16 @@ if (existsSync(compDir)) {
       return m ?? "";
     };
     const api = section("API");
+    // Cells split on unescaped pipes; a union type holds `\|`.
+    const cells = (l: string) => l.split(/(?<!\\)\|/).map((c) => c.trim());
     const rows = api
       .split("\n")
       .filter((l) => l.startsWith("| `"))
-      // Cells split on unescaped pipes; a union type holds `\|`.
-      .map((l) => l.split(/(?<!\\)\|/).map((c) => c.trim()));
+      .map(cells);
+    // The description's column, by its header: the fourth cell until 023,
+    // the third since (a row's default moved under its description).
+    const head = api.split("\n").find((l) => l.startsWith("| Name"));
+    const di = head ? cells(head).indexOf("What it does") : 4;
     const a11y = section("Accessibility");
     const prose = md.replace(/```[\s\S]*?```/g, "");
     twins.push({
@@ -212,7 +217,15 @@ if (existsSync(compDir)) {
       content: /^##+ (Content|Writing|Wording)/m.test(md),
       a11yBullets: count(a11y, /^- /gm),
       props: rows.length,
-      propsDescribed: rows.filter((r) => (r[4] ?? "").length > 0).length,
+      // A row's default ends its cell since 023 ("Default `x`"); it is not
+      // a description, so it is dropped before the cell is read.
+      propsDescribed:
+        di < 0
+          ? 0
+          : rows.filter(
+              (r) =>
+                (r[di] ?? "").replace(/\s*Default `[^`]*`$/, "").length > 0,
+            ).length,
       updated: /\*\*Updated\*\*/.test(md),
       words: prose.split(/\s+/).filter(Boolean).length,
     });
@@ -302,7 +315,9 @@ const report = {
   },
   change: {
     releases: count(changelog, /^## /gm),
-    interfaceChangeMarks: count(changelog, /interface change/gi),
+    // The bold mark, as the changelog's legend writes it; the bare phrase
+    // also matches "no interface change" (the change review of 023, finding 4).
+    interfaceChangeMarks: count(changelog, /\*\*interface change\.?\*\*/gi),
     migrationPages: routes.filter((r) => /migrat|upgrade/i.test(r)).length,
     versionedRegistries: new Set(
       list("static")

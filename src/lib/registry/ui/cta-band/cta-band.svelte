@@ -3,8 +3,14 @@
 
   /** A call to action: a link styled as a button. The first is filled by default. */
   export type CtaBandAction = {
+    /** The link's text. */
     label: string;
+    /** Where the link goes. */
     href: string;
+    /**
+     * The link's look, as `Button`'s. Without it, the first is filled and the
+     * rest are secondary.
+     */
     variant?: ButtonVariant;
   };
 </script>
@@ -23,10 +29,13 @@
     class: className,
     ...restProps
   }: WithElementRef<Omit<HTMLAttributes<HTMLElement>, "title" | "children">> & {
+    /** The band's heading, which names it. */
     title: string;
+    /** A line under the heading. */
     description?: string;
     /** One or two. */
     actions: CtaBandAction[];
+    /** The heading's level, so the band fits the page's outline. */
     headingLevel?: 2 | 3;
   } = $props();
 

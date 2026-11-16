@@ -22,10 +22,22 @@
     children,
     ...restProps
   }: WithoutChildrenOrChild<SheetPrimitive.ContentProps> & {
+    /**
+     * Props for the `SheetPortal` that holds the sheet, such as `to`, the
+     * element it renders into.
+     */
     portalProps?: WithoutChildrenOrChild<ComponentProps<typeof SheetPortal>>;
+    /**
+     * The edge the sheet slides from. `start` and `end` follow the writing
+     * direction.
+     */
     side?: SheetSide;
     /** The sheet's name when it holds no `SheetTitle`. One of the two is required. */
     label?: string;
+    /**
+     * Shows the close button, the last tab stop, in the top end corner. Turn it
+     * off only when the sheet has its own close action.
+     */
     showCloseButton?: boolean;
     children: Snippet;
   } = $props();

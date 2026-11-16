@@ -11,6 +11,14 @@
   }: WithElementRef<HTMLAttributes<HTMLHeadingElement>> & {
     /** The heading level, so a reader can walk the turns. Default 3. */
     level?: 1 | 2 | 3 | 4 | 5 | 6;
+    /**
+     * The rendered heading, of the tag `level` sets. Bind it with `bind:ref`.
+     */
+    ref?: WithElementRef<HTMLAttributes<HTMLHeadingElement>>["ref"];
+    /** Classes for the heading, added after Kuiper's by `cn`. */
+    class?: HTMLAttributes<HTMLHeadingElement>["class"];
+    /** The heading's text, such as the speaker's name. */
+    children?: HTMLAttributes<HTMLHeadingElement>["children"];
   } = $props();
 </script>
 

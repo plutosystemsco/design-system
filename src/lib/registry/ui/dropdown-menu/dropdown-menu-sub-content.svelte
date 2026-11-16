@@ -13,9 +13,20 @@
     portalProps,
     ...restProps
   }: DropdownMenuPrimitive.SubContentProps & {
+    /**
+     * Props for the `DropdownMenuPortal` that holds the submenu, which always
+     * renders in a portal.
+     */
     portalProps?: WithoutChildrenOrChild<
       ComponentProps<typeof DropdownMenuPortal>
     >;
+    /** Kuiper lines the submenu up with the start of its trigger row. */
+    align?: DropdownMenuPrimitive.SubContentProps["align"];
+    /**
+     * Kuiper's default offsets the panel's padding, so the submenu's first item
+     * lines up with its trigger.
+     */
+    alignOffset?: DropdownMenuPrimitive.SubContentProps["alignOffset"];
   } = $props();
 </script>
 

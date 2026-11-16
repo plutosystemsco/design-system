@@ -13,6 +13,13 @@
   }: WithElementRef<HTMLAnchorAttributes> & {
     /** Renders a framework link in place of the anchor, with these props. */
     child?: Snippet<[{ props: HTMLAnchorAttributes }]>;
+    /**
+     * Classes for the `<a>`, or for the element `child` renders, added after
+     * Kuiper's by `cn`.
+     */
+    class?: HTMLAnchorAttributes["class"];
+    /** Where the crumb links to. */
+    href?: HTMLAnchorAttributes["href"];
   } = $props();
 
   // At least 24 px tall, a target. The colour alone transitions: a

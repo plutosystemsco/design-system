@@ -1,6 +1,11 @@
 <script lang="ts" module>
   /** The signed-in person, as the menu shows them. */
-  export type AppShellUser = { name: string; email: string };
+  export type AppShellUser = {
+    /** The person's name. */
+    name: string;
+    /** The person's email address. */
+    email: string;
+  };
 
   /** The avatar's fallback: the first letter of the first two words of the name. */
   export function initials(name: string): string {
@@ -27,6 +32,10 @@
     signOutHref = "/",
     trigger,
   }: {
+    /**
+     * The person signed in: the avatar's initials, and the name and email at
+     * the top of the menu.
+     */
     user: AppShellUser;
     /** Your settings route. */
     settingsHref?: string;

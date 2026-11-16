@@ -6,9 +6,21 @@
     Pick<HTMLAnchorAttributes, "href" | "target" | "rel"> & {
       /** The link's accessible name, when `href` makes the lockup a link. It contains the visible word. */
       label?: string;
+      /**
+       * `brand` colours the mark's dots. `mono` draws them in the text's
+       * colour, for a single-colour surface.
+       */
       tone?: FourDotTone;
       /** Passed to the mark: the page's one entrance. */
       entrance?: boolean;
+      /** Makes the lockup a link, named by `label`. */
+      href?: HTMLAnchorAttributes["href"];
+      /** Where the link opens, when `href` is set. */
+      target?: HTMLAnchorAttributes["target"];
+      /** The link's relation, when `href` is set. */
+      rel?: HTMLAnchorAttributes["rel"];
+      /** Classes for the `<a>` or `<span>`, added after Kuiper's by `cn`. */
+      class?: HTMLAttributes<HTMLElement>["class"];
     };
 </script>
 

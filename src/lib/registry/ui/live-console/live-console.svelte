@@ -1,11 +1,25 @@
 <script lang="ts" module>
   /** A command the console offers, under its tab's label. */
-  export type LiveConsoleExample = { label: string; command: string };
+  export type LiveConsoleExample = {
+    /** The example's tab label. */
+    label: string;
+    /** The command the example runs, shown and passed to `run`. */
+    command: string;
+  };
   /** One measurement of a run, shown as a meter with its numbers. */
-  export type LiveConsoleMeter = { label: string; value: number; max: number };
+  export type LiveConsoleMeter = {
+    /** What the meter measures. */
+    label: string;
+    /** The measured value. */
+    value: number;
+    /** The value a full meter stands for. */
+    max: number;
+  };
   /** What a run resolves to. */
   export type LiveConsoleResult = {
+    /** The meters to show, filled from zero. */
     meters: LiveConsoleMeter[];
+    /** The run's output, one line each. */
     lines: string[];
   };
 </script>

@@ -42,8 +42,21 @@
     variant = "default",
     ...restProps
   }: TogglePrimitive.RootProps & {
+    /**
+     * The default has no border. The other look draws one, for a toggle that
+     * stands alone on a busy surface.
+     */
     variant?: ToggleVariant;
+    /**
+     * `default` meets the touch target. `sm` is the compact height, for
+     * toolbars.
+     */
     size?: ToggleSize;
+    /**
+     * Whether the toggle is on. A pressed toggle is inverted, so its state
+     * reads at a glance.
+     */
+    pressed?: TogglePrimitive.RootProps["pressed"];
   } = $props();
 </script>
 
