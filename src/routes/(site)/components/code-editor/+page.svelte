@@ -65,6 +65,11 @@
       <code>onrun</code>, in place of the default "insert blank line".
     </li>
     <li>
+      Enter and Shift Enter insert a line break. A setup's own binding, such as
+      <code>pythonSetup()</code>'s indenting Enter, takes precedence. A
+      read-only editor ignores them.
+    </li>
+    <li>
       The theme reads <code>:root</code> names wherever one exists, and four
       names that live only in <code>@theme inline</code>:
       <code>--spacing</code>, <code>--text-sm</code>,

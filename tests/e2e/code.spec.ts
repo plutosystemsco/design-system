@@ -1075,6 +1075,102 @@ test.describe("the code editor", () => {
     expect(await lines()).toBe(before);
   });
 
+  // 022m: with no setup, nothing in the editor bound Enter, so the browser
+  // wrote the line break; Linux WebKit writes two at a line's end, and
+  // CodeMirror drops the extra one only in Chrome. The item binds Enter.
+  test("022m. with no extensions, Enter at the end of a line and of the text, and Shift+Enter, each add exactly one line", async ({
+    page,
+  }) => {
+    await openView(page, "/view/code-agreement/");
+    const view = "window.agreement.view('bare')";
+    const doc = () =>
+      page.evaluate(`${view}.state.doc.toString()`) as Promise<string>;
+    await expect.poll(doc).toBe("first\nlast");
+    // Each place is read from the text as it stands, so a doubled first
+    // Enter does not move the second.
+    const cases = [
+      ["the end of a line", "v.state.doc.line(1).to", "Enter"],
+      ["the end of the text", "v.state.doc.length", "Enter"],
+      [
+        "Shift+Enter at the end of a line",
+        "v.state.doc.line(1).to",
+        "Shift+Enter",
+      ],
+    ] as const;
+    for (const [where, place, key] of cases) {
+      const before = await doc();
+      const at = (await page.evaluate(
+        `(() => { const v = ${view}; const at = ${place}; v.focus(); v.dispatch({ selection: { anchor: at } }); return at; })()`,
+      )) as number;
+      const want = `${before.slice(0, at)}\n${before.slice(at)}`;
+      await expect(
+        page.locator('[data-editor="bare"] .cm-content'),
+      ).toBeFocused();
+      await page.keyboard.press(key);
+      await expect
+        .poll(doc, { message: `${where}: the edit` })
+        .not.toBe(before);
+      // Two frames, so a late DOM read could still add to the edit.
+      await page.evaluate(
+        () =>
+          new Promise((done) =>
+            requestAnimationFrame(() => requestAnimationFrame(done)),
+          ),
+      );
+      expect.soft(await doc(), `${where}: one line added`).toBe(want);
+    }
+  });
+
+  // 022m: the item's Enter is the lowest precedence, so pythonSetup()'s own
+  // (insertNewlineAndIndent) still wins.
+  test("022m. a setup's own Enter still wins: in the Python example, Enter after a colon indents the new line", async ({
+    page,
+  }) => {
+    await open(page, EDITOR_PAGE);
+    const last = page.getByTestId("bound-value").locator("code");
+    await content(page).focus();
+    await page.keyboard.press("ControlOrMeta+End");
+    await page.keyboard.type("\nif x:");
+    await expect(last).toHaveText("if x:");
+    await page.keyboard.press("Enter");
+    await page.keyboard.type("y");
+    await expect
+      .poll(() => last.evaluate((el) => el.textContent))
+      .toMatch(/^ +y$/);
+  });
+
+  // 022m, the change review's finding 1: the item's Enter must not edit a
+  // read-only or disabled editor, with or without a setup's own Enter.
+  test("022m. read-only and disabled: Enter, Shift+Enter, and End then Enter leave the document unchanged", async ({
+    page,
+  }) => {
+    await open(page, EDITOR_PAGE);
+    for (const id of ["editor-readonly", "editor-disabled"]) {
+      const c = page.getByTestId(id).locator(".cm-content");
+      const text = () =>
+        c.evaluate((el) =>
+          [...el.querySelectorAll(".cm-line")]
+            .map((l) => l.textContent)
+            .join("\n"),
+        );
+      const before = await text();
+      expect(before.split("\n").length, id).toBeGreaterThan(1);
+      // The disabled editor is out of the tab order; a click still focuses it.
+      if (id === "editor-disabled") await c.click();
+      else await c.focus();
+      await expect(c, id).toBeFocused();
+      for (const key of ["Enter", "Shift+Enter", "End", "Enter"])
+        await page.keyboard.press(key);
+      await page.evaluate(
+        () =>
+          new Promise((done) =>
+            requestAnimationFrame(() => requestAnimationFrame(done)),
+          ),
+      );
+      expect.soft(await text(), `${id}: unchanged`).toBe(before);
+    }
+  });
+
   test("E4. editing and run: typing updates the bound value; Reset clears history; 2 of 2 run keys; readonly", async ({
     page,
   }) => {

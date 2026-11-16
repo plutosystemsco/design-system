@@ -52,6 +52,8 @@
     extensions: base,
     editor: undefined,
   });
+  // 022m: an editor with no setup at all, the item's default `extensions`.
+  let bare: CodeEditor | undefined = $state();
   let ready = $state(false);
   // The mirror blocks render only when a test asks for them, so E7's typing
   // times the editor alone.
@@ -72,7 +74,8 @@
     (window as unknown as { agreement: unknown }).agreement = {
       set: (which: "full" | "windowed", language: string, code: string) =>
         set(panes[which], language, code),
-      view: (which: "full" | "windowed") => panes[which].editor?.getView(),
+      view: (which: "full" | "windowed" | "bare") =>
+        (which === "bare" ? bare : panes[which].editor)?.getView(),
       mirror: (on: boolean) => (mirror = on),
     };
     void set(windowed, "ruby", RUBY).then(() => (ready = true));
@@ -162,6 +165,12 @@
         {/key}
       {/if}
     </div>
+    <CodeEditor
+      bind:this={bare}
+      value={"first\nlast"}
+      label="The editor with no setup"
+      data-editor="bare"
+    />
   </section>
 
   <section aria-labelledby="specimens" class="grid gap-6">

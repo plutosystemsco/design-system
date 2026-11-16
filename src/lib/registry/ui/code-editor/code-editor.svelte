@@ -1,12 +1,13 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import { insertNewline } from "@codemirror/commands";
   import {
     Compartment,
     EditorState,
     Prec,
     type Extension,
   } from "@codemirror/state";
-  import { EditorView, keymap } from "@codemirror/view";
+  import { EditorView, keymap, type Command } from "@codemirror/view";
   import { cn, type WithElementRef } from "#lib/utils";
   import type { HTMLAttributes } from "svelte/elements";
   import { codeTheme } from "./code-editor-theme";
@@ -72,6 +73,11 @@
     return true;
   }
 
+  // insertNewline does not check the state: a read-only or disabled editor
+  // returns false, and the key goes on to the browser as before.
+  const newline: Command = (view) =>
+    !view.state.readOnly && insertNewline(view);
+
   function makeState(doc: string): EditorState {
     return EditorState.create({
       doc,
@@ -89,6 +95,14 @@
         editable.of(editableOf(readonly, disabled)),
         attributes.of(attributesOf(label, describedby, disabled)),
         extra.of(extensions),
+        // 022m: Enter and Shift Enter, at the lowest precedence and after the
+        // app's extensions, so a setup's own binding (pythonSetup's
+        // defaultKeymap) or an app's, at any precedence, still wins. Left to
+        // the browser, Linux WebKit writes two line breaks at a line's end,
+        // and CodeMirror drops the extra one only in Chrome.
+        Prec.lowest(
+          keymap.of([{ key: "Enter", run: newline, shift: newline }]),
+        ),
       ],
     });
   }

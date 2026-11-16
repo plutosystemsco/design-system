@@ -150,7 +150,9 @@
   is text, is a Tab stop, and returns focus to the input. Escape clears a
   filled, editable field and stops there; otherwise it passes on. A hidden
   status, present from the first render, speaks the result count once
-  typing pauses, for what is typed now.
+  typing pauses, for what is typed now. WebKit's own cancel button is hidden
+  with display: none: Linux WebKit draws it as a mask that appearance: none
+  leaves in place (022n).
 -->
 <InputGroup.Root data-search-field="" class={className}>
   <InputGroup.Addon align="inline-start">
@@ -162,7 +164,7 @@
     bind:value
     id={inputId}
     type="search"
-    class="[&::-webkit-search-cancel-button]:appearance-none [&::-webkit-search-decoration]:appearance-none"
+    class="[&::-webkit-search-cancel-button]:hidden [&::-webkit-search-decoration]:appearance-none"
     {oninput}
     {onkeydown}
   />
