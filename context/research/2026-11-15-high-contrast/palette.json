@@ -1,0 +1,2908 @@
+{
+  "date": "2026-11-15",
+  "targets": {
+    "text": 7,
+    "nonText": 4.5
+  },
+  "swatches": [
+    {
+      "name": "ink-soft-more",
+      "scheme": "light",
+      "from": "ink-soft",
+      "fromHex": "#505661",
+      "hex": "#444A55",
+      "why": "muted text, 7:1 on wash",
+      "on": {
+        "background": 7.82,
+        "card": 8.91,
+        "muted": 7.08
+      },
+      "fromOn": {
+        "background": 6.48,
+        "card": 7.38,
+        "muted": 5.86
+      },
+      "oklch": {
+        "L": 0.408,
+        "C": 0.02,
+        "h": 262.6
+      },
+      "fromOklch": {
+        "L": 0.452,
+        "C": 0.02,
+        "h": 262.7
+      }
+    },
+    {
+      "name": "blue-more",
+      "scheme": "light",
+      "from": "blue",
+      "fromHex": "#2D48D4",
+      "hex": "#2236C3",
+      "why": "primary, link, ring, chart-1, field-1: 7:1 on wash",
+      "on": {
+        "background": 7.73,
+        "card": 8.8,
+        "muted": 7
+      },
+      "fromOn": {
+        "background": 6.16,
+        "card": 7.02,
+        "muted": 5.58
+      },
+      "oklch": {
+        "L": 0.429,
+        "C": 0.216,
+        "h": 268
+      },
+      "fromOklch": {
+        "L": 0.479,
+        "C": 0.215,
+        "h": 268
+      }
+    },
+    {
+      "name": "red-more",
+      "scheme": "light",
+      "from": "red-text",
+      "fromHex": "#C11E31",
+      "hex": "#99011F",
+      "why": "destructive text and fill, chart-2, field-2: 7:1 on wash and on its tint",
+      "on": {
+        "background": 7.75,
+        "card": 8.82,
+        "muted": 7.01
+      },
+      "fromOn": {
+        "background": 5.27,
+        "card": 6,
+        "muted": 4.77
+      },
+      "oklch": {
+        "L": 0.432,
+        "C": 0.173,
+        "h": 22.19999999999999
+      },
+      "fromOklch": {
+        "L": 0.524,
+        "C": 0.195,
+        "h": 22.30000000000001
+      }
+    },
+    {
+      "name": "green-more",
+      "scheme": "light",
+      "from": "green-text",
+      "fromHex": "#007351",
+      "hex": "#01553B",
+      "why": "success text and fill, chart-4, field-4: 7:1 on wash and on its tint",
+      "on": {
+        "background": 7.8,
+        "card": 8.88,
+        "muted": 7.06
+      },
+      "fromOn": {
+        "background": 5.16,
+        "card": 5.88,
+        "muted": 4.67
+      },
+      "oklch": {
+        "L": 0.398,
+        "C": 0.084,
+        "h": 164.29999999999995
+      },
+      "fromOklch": {
+        "L": 0.492,
+        "C": 0.104,
+        "h": 164.29999999999995
+      }
+    },
+    {
+      "name": "yellow-more",
+      "scheme": "light",
+      "from": "yellow-text",
+      "fromHex": "#806200",
+      "hex": "#5E4701",
+      "why": "caution text, chart-3: 7:1 on wash",
+      "on": {
+        "background": 7.75,
+        "card": 8.83,
+        "muted": 7.02
+      },
+      "fromOn": {
+        "background": 5.03,
+        "card": 5.73,
+        "muted": 4.55
+      },
+      "oklch": {
+        "L": 0.411,
+        "C": 0.084,
+        "h": 87.19999999999999
+      },
+      "fromOklch": {
+        "L": 0.512,
+        "C": 0.105,
+        "h": 87.60000000000002
+      }
+    },
+    {
+      "name": "line-more",
+      "scheme": "light",
+      "from": "line-input",
+      "fromHex": "#857E70",
+      "hex": "#6D6659",
+      "why": "input, border, groove, elevation line, glass edge: 4.5:1 on wash",
+      "on": {
+        "background": 4.99,
+        "card": 5.68,
+        "muted": 4.51
+      },
+      "fromOn": {
+        "background": 3.53,
+        "card": 4.02,
+        "muted": 3.2
+      },
+      "oklch": {
+        "L": 0.513,
+        "C": 0.022,
+        "h": 83
+      },
+      "fromOklch": {
+        "L": 0.595,
+        "C": 0.022,
+        "h": 84.60000000000002
+      }
+    },
+    {
+      "name": "red-tint-more",
+      "scheme": "light",
+      "from": "red-more over raised, 10%",
+      "fromHex": null,
+      "hex": "#F5E6E9",
+      "why": "destructive alert ground",
+      "on": {
+        "background": 1.06,
+        "card": 1.2,
+        "muted": 1.04
+      },
+      "fromOn": null,
+      "oklch": {
+        "L": 0.938,
+        "C": 0.017,
+        "h": 3.6999999999999886
+      },
+      "fromOklch": null
+    },
+    {
+      "name": "green-tint-more",
+      "scheme": "light",
+      "from": "green-more over raised, 10%",
+      "fromHex": null,
+      "hex": "#E6EEEB",
+      "why": "success alert ground",
+      "on": {
+        "background": 1.03,
+        "card": 1.18,
+        "muted": 1.06
+      },
+      "fromOn": null,
+      "oklch": {
+        "L": 0.942,
+        "C": 0.009,
+        "h": 171.79999999999995
+      },
+      "fromOklch": null
+    },
+    {
+      "name": "paper-soft-more",
+      "scheme": "dark",
+      "from": "paper-soft",
+      "fromHex": "#A39D90",
+      "hex": "#B9B3A5",
+      "why": "muted text, 7:1 on ink-wash",
+      "on": {
+        "background": 8.81,
+        "card": 7.86,
+        "muted": 7.01
+      },
+      "fromOn": {
+        "background": 6.82,
+        "card": 6.08,
+        "muted": 5.43
+      },
+      "oklch": {
+        "L": 0.768,
+        "C": 0.021,
+        "h": 87.5
+      },
+      "fromOklch": {
+        "L": 0.697,
+        "C": 0.02,
+        "h": 86.19999999999999
+      }
+    },
+    {
+      "name": "blue-lifted-more",
+      "scheme": "dark",
+      "from": "blue-lifted",
+      "fromHex": "#93B0FF",
+      "hex": "#95B2FF",
+      "why": "primary, link, ring, chart-1, field-1: 7:1 on ink-wash",
+      "on": {
+        "background": 8.84,
+        "card": 7.89,
+        "muted": 7.04
+      },
+      "fromOn": {
+        "background": 8.67,
+        "card": 7.74,
+        "muted": 6.9
+      },
+      "oklch": {
+        "L": 0.772,
+        "C": 0.115,
+        "h": 267.9
+      },
+      "fromOklch": {
+        "L": 0.767,
+        "C": 0.118,
+        "h": 268.2
+      }
+    },
+    {
+      "name": "red-lifted-more",
+      "scheme": "dark",
+      "from": "red-lifted",
+      "fromHex": "#FF9491",
+      "hex": "#FFA29F",
+      "why": "destructive: 7:1 on ink-wash and on its tint",
+      "on": {
+        "background": 9.57,
+        "card": 8.54,
+        "muted": 7.62
+      },
+      "fromOn": {
+        "background": 8.67,
+        "card": 7.74,
+        "muted": 6.9
+      },
+      "oklch": {
+        "L": 0.805,
+        "C": 0.111,
+        "h": 21.80000000000001
+      },
+      "fromOklch": {
+        "L": 0.779,
+        "C": 0.129,
+        "h": 22.19999999999999
+      }
+    },
+    {
+      "name": "green-lifted-more",
+      "scheme": "dark",
+      "from": "green-lifted",
+      "fromHex": "#60C498",
+      "hex": "#69CDA0",
+      "why": "success: 7:1 on ink-wash and on its tint",
+      "on": {
+        "background": 9.5,
+        "card": 8.48,
+        "muted": 7.56
+      },
+      "fromOn": {
+        "background": 8.62,
+        "card": 7.7,
+        "muted": 6.87
+      },
+      "oklch": {
+        "L": 0.775,
+        "C": 0.116,
+        "h": 162.5
+      },
+      "fromOklch": {
+        "L": 0.748,
+        "C": 0.115,
+        "h": 162.79999999999995
+      }
+    },
+    {
+      "name": "paper-line-more",
+      "scheme": "dark",
+      "from": "paper-line-input",
+      "fromHex": "#7A7366",
+      "hex": "#958E80",
+      "why": "input, border, groove, elevation line, glass edge: 4.5:1 on ink-wash",
+      "on": {
+        "background": 5.66,
+        "card": 5.05,
+        "muted": 4.5
+      },
+      "fromOn": {
+        "background": 3.91,
+        "card": 3.49,
+        "muted": 3.12
+      },
+      "oklch": {
+        "L": 0.649,
+        "C": 0.022,
+        "h": 84.60000000000002
+      },
+      "fromOklch": {
+        "L": 0.558,
+        "C": 0.021,
+        "h": 83
+      }
+    },
+    {
+      "name": "red-tint-lifted-more",
+      "scheme": "dark",
+      "from": "red-lifted-more over ink-raised, 10%",
+      "fromHex": null,
+      "hex": "#382C26",
+      "why": "destructive alert ground",
+      "on": {
+        "background": 1.36,
+        "card": 1.21,
+        "muted": 1.08
+      },
+      "fromOn": null,
+      "oklch": {
+        "L": 0.305,
+        "C": 0.021,
+        "h": 48
+      },
+      "fromOklch": null
+    },
+    {
+      "name": "green-tint-lifted-more",
+      "scheme": "dark",
+      "from": "green-lifted-more over ink-raised, 10%",
+      "fromHex": null,
+      "hex": "#293027",
+      "why": "success alert ground",
+      "on": {
+        "background": 1.35,
+        "card": 1.2,
+        "muted": 1.07
+      },
+      "fromOn": null,
+      "oklch": {
+        "L": 0.299,
+        "C": 0.019,
+        "h": 138.7
+      },
+      "fromOklch": null
+    },
+    {
+      "name": "code-violet-more",
+      "scheme": "light",
+      "from": "code-violet",
+      "fromHex": "#7032B9",
+      "hex": "#6B2BB3",
+      "why": "code text: 7:1 on raised and paper",
+      "on": {
+        "background": 7.03,
+        "card": 8.01,
+        "muted": 6.36
+      },
+      "fromOn": {
+        "background": 6.47,
+        "card": 7.37,
+        "muted": 5.86
+      },
+      "oklch": {
+        "L": 0.457,
+        "C": 0.2,
+        "h": 299.7
+      },
+      "fromOklch": {
+        "L": 0.476,
+        "C": 0.199,
+        "h": 299.6
+      }
+    },
+    {
+      "name": "code-blue-more",
+      "scheme": "light",
+      "from": "code-blue",
+      "fromHex": "#3350CB",
+      "hex": "#2943BD",
+      "why": "code text: 7:1 on raised and paper",
+      "on": {
+        "background": 7,
+        "card": 7.97,
+        "muted": 6.34
+      },
+      "fromOn": {
+        "background": 5.85,
+        "card": 6.66,
+        "muted": 5.29
+      },
+      "oklch": {
+        "L": 0.447,
+        "C": 0.193,
+        "h": 267.9
+      },
+      "fromOklch": {
+        "L": 0.488,
+        "C": 0.193,
+        "h": 268.1
+      }
+    },
+    {
+      "name": "code-green-more",
+      "scheme": "light",
+      "from": "code-green",
+      "fromHex": "#007150",
+      "hex": "#015C41",
+      "why": "code text: 7:1 on raised and paper",
+      "on": {
+        "background": 7.06,
+        "card": 8.05,
+        "muted": 6.4
+      },
+      "fromOn": {
+        "background": 5.3,
+        "card": 6.03,
+        "muted": 4.8
+      },
+      "oklch": {
+        "L": 0.421,
+        "C": 0.088,
+        "h": 165
+      },
+      "fromOklch": {
+        "L": 0.486,
+        "C": 0.103,
+        "h": 164.60000000000002
+      }
+    },
+    {
+      "name": "code-yellow-more",
+      "scheme": "light",
+      "from": "code-yellow",
+      "fromHex": "#6C5A00",
+      "hex": "#5F4F02",
+      "why": "code text: 7:1 on raised and paper",
+      "on": {
+        "background": 7.07,
+        "card": 8.05,
+        "muted": 6.4
+      },
+      "fromOn": {
+        "background": 5.94,
+        "card": 6.77,
+        "muted": 5.38
+      },
+      "oklch": {
+        "L": 0.431,
+        "C": 0.088,
+        "h": 95.39999999999998
+      },
+      "fromOklch": {
+        "L": 0.471,
+        "C": 0.097,
+        "h": 95.5
+      }
+    },
+    {
+      "name": "code-orange-more",
+      "scheme": "light",
+      "from": "code-orange",
+      "fromHex": "#A34D15",
+      "hex": "#863A01",
+      "why": "code text: 7:1 on raised and paper",
+      "on": {
+        "background": 7.04,
+        "card": 8.01,
+        "muted": 6.37
+      },
+      "fromOn": {
+        "background": 5.08,
+        "card": 5.78,
+        "muted": 4.59
+      },
+      "oklch": {
+        "L": 0.444,
+        "C": 0.12,
+        "h": 48.39999999999998
+      },
+      "fromOklch": {
+        "L": 0.521,
+        "C": 0.131,
+        "h": 48.19999999999999
+      }
+    },
+    {
+      "name": "code-plum-more",
+      "scheme": "light",
+      "from": "code-plum",
+      "fromHex": "#922F6E",
+      "hex": "#8B2968",
+      "why": "code text: 7:1 on raised and paper",
+      "on": {
+        "background": 7.05,
+        "card": 8.03,
+        "muted": 6.38
+      },
+      "fromOn": {
+        "background": 6.46,
+        "card": 7.35,
+        "muted": 5.84
+      },
+      "oklch": {
+        "L": 0.452,
+        "C": 0.149,
+        "h": 345.2
+      },
+      "fromOklch": {
+        "L": 0.472,
+        "C": 0.15,
+        "h": 345.2
+      }
+    },
+    {
+      "name": "code-red-more",
+      "scheme": "light",
+      "from": "code-red",
+      "fromHex": "#B81C2E",
+      "hex": "#A50021",
+      "why": "code text: 7:1 on raised and paper",
+      "on": {
+        "background": 7.03,
+        "card": 8,
+        "muted": 6.36
+      },
+      "fromOn": {
+        "background": 5.68,
+        "card": 6.47,
+        "muted": 5.14
+      },
+      "oklch": {
+        "L": 0.456,
+        "C": 0.184,
+        "h": 22.5
+      },
+      "fromOklch": {
+        "L": 0.506,
+        "C": 0.188,
+        "h": 22.399999999999977
+      }
+    },
+    {
+      "name": "code-red-lifted-more",
+      "scheme": "dark",
+      "from": "code-red-lifted",
+      "fromHex": "#FC8D8A",
+      "hex": "#FF9692",
+      "why": "code text: 7:1 on ink-wash, ink-raised and graphite",
+      "on": {
+        "background": 8.78,
+        "card": 7.84,
+        "muted": 7
+      },
+      "fromOn": {
+        "background": 8.16,
+        "card": 7.28,
+        "muted": 6.5
+      },
+      "oklch": {
+        "L": 0.782,
+        "C": 0.127,
+        "h": 22.69999999999999
+      },
+      "fromOklch": {
+        "L": 0.762,
+        "C": 0.135,
+        "h": 22.399999999999977
+      }
+    },
+    {
+      "name": "code-grey-more",
+      "scheme": "light",
+      "from": "code-grey",
+      "fromHex": "#636972",
+      "hex": "#4C515A",
+      "why": "code text: 7:1 on raised and paper",
+      "on": {
+        "background": 7,
+        "card": 7.97,
+        "muted": 6.34
+      },
+      "fromOn": {
+        "background": 4.86,
+        "card": 5.53,
+        "muted": 4.4
+      },
+      "oklch": {
+        "L": 0.434,
+        "C": 0.016,
+        "h": 262.3
+      },
+      "fromOklch": {
+        "L": 0.519,
+        "C": 0.016,
+        "h": 258.4
+      }
+    },
+    {
+      "name": "code-grey-lifted-more",
+      "scheme": "dark",
+      "from": "code-grey-lifted",
+      "fromHex": "#9EA4AE",
+      "hex": "#AEB4BE",
+      "why": "code text: 7:1 on ink-wash, ink-raised and graphite",
+      "on": {
+        "background": 8.82,
+        "card": 7.88,
+        "muted": 7.03
+      },
+      "fromOn": {
+        "background": 7.33,
+        "card": 6.55,
+        "muted": 5.84
+      },
+      "oklch": {
+        "L": 0.768,
+        "C": 0.016,
+        "h": 260.7
+      },
+      "fromOklch": {
+        "L": 0.717,
+        "C": 0.016,
+        "h": 260.7
+      }
+    }
+  ],
+  "roles": {
+    "light": {
+      "muted-foreground": "ink-soft-more",
+      "primary": "blue-more",
+      "ring": "blue-more",
+      "sidebar-primary": "blue-more",
+      "sidebar-ring": "blue-more",
+      "chart-1": "blue",
+      "destructive": "red-more",
+      "destructive-fill": "red",
+      "chart-2": "red",
+      "success": "green-more",
+      "success-fill": "green-text",
+      "chart-4": "green-text",
+      "caution-text": "yellow-more",
+      "chart-3": "yellow-text",
+      "chart-5": "ink-soft",
+      "input": "line-more",
+      "border": "line-more",
+      "sidebar-border": "line-more",
+      "groove-line": "line-more",
+      "elevation-line": "line-more",
+      "destructive-tint": "red-tint-more",
+      "success-tint": "green-tint-more",
+      "scrim": "ink-scrim-deep",
+      "syntax-violet": "code-violet-more",
+      "syntax-blue": "code-blue-more",
+      "syntax-navy": "code-navy",
+      "syntax-green": "code-green-more",
+      "syntax-yellow": "code-yellow-more",
+      "syntax-orange": "code-orange-more",
+      "syntax-plum": "code-plum-more",
+      "syntax-red": "code-red-more",
+      "syntax-grey": "code-grey-more",
+      "syntax-ink": "code-ink"
+    },
+    "dark": {
+      "muted-foreground": "paper-soft-more",
+      "primary": "blue-lifted-more",
+      "ring": "blue-lifted-more",
+      "sidebar-primary": "blue-lifted-more",
+      "sidebar-ring": "blue-lifted-more",
+      "chart-1": "blue-lifted",
+      "destructive": "red-lifted-more",
+      "destructive-fill": "red-lifted",
+      "chart-2": "red-lifted",
+      "success": "green-lifted-more",
+      "success-fill": "green-lifted",
+      "chart-4": "green-lifted",
+      "caution-text": "yellow-lifted",
+      "chart-3": "yellow-lifted",
+      "chart-5": "paper-soft",
+      "input": "paper-line-more",
+      "border": "paper-line-more",
+      "sidebar-border": "paper-line-more",
+      "groove-line": "paper-line-more",
+      "elevation-line": "paper-line-more",
+      "destructive-tint": "red-tint-lifted-more",
+      "success-tint": "green-tint-lifted-more",
+      "syntax-violet": "code-violet-lifted",
+      "syntax-blue": "blue-lifted-more",
+      "syntax-navy": "code-navy-lifted",
+      "syntax-green": "code-green-lifted",
+      "syntax-yellow": "code-yellow-lifted",
+      "syntax-orange": "code-orange-lifted",
+      "syntax-plum": "code-plum-lifted",
+      "syntax-red": "code-red-lifted-more",
+      "syntax-grey": "code-grey-lifted-more",
+      "syntax-ink": "code-ink-lifted"
+    }
+  },
+  "rows": [
+    {
+      "set": "light",
+      "kind": "text",
+      "label": "foreground on background",
+      "fg": "#0B0F17",
+      "bg": "#F3F0E8",
+      "std": 16.84,
+      "hc": 16.84,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "text",
+      "label": "card-foreground on card",
+      "fg": "#0B0F17",
+      "bg": "#FFFFFF",
+      "std": 19.17,
+      "hc": 19.17,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "text",
+      "label": "popover-foreground on popover",
+      "fg": "#0B0F17",
+      "bg": "#FFFFFF",
+      "std": 19.17,
+      "hc": 19.17,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "text",
+      "label": "secondary-foreground on secondary",
+      "fg": "#0B0F17",
+      "bg": "#FFFFFF",
+      "std": 19.17,
+      "hc": 19.17,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "text",
+      "label": "foreground on muted",
+      "fg": "#0B0F17",
+      "bg": "#E9E5DB",
+      "std": 15.24,
+      "hc": 15.24,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "text",
+      "label": "accent-foreground on accent",
+      "fg": "#0B0F17",
+      "bg": "#E9E5DB",
+      "std": 15.24,
+      "hc": 15.24,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "text",
+      "label": "muted-foreground on background",
+      "fg": "#444A55",
+      "bg": "#F3F0E8",
+      "std": 6.48,
+      "hc": 7.82,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "text",
+      "label": "muted-foreground on card",
+      "fg": "#444A55",
+      "bg": "#FFFFFF",
+      "std": 7.38,
+      "hc": 8.91,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "text",
+      "label": "muted-foreground on muted",
+      "fg": "#444A55",
+      "bg": "#E9E5DB",
+      "std": 5.86,
+      "hc": 7.08,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "text",
+      "label": "primary-foreground on primary",
+      "fg": "#FFFFFF",
+      "bg": "#2236C3",
+      "std": 7.02,
+      "hc": 8.8,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "text",
+      "label": "primary on background",
+      "fg": "#2236C3",
+      "bg": "#F3F0E8",
+      "std": 6.16,
+      "hc": 7.73,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "text",
+      "label": "primary on card",
+      "fg": "#2236C3",
+      "bg": "#FFFFFF",
+      "std": 7.02,
+      "hc": 8.8,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "text",
+      "label": "primary on muted",
+      "fg": "#2236C3",
+      "bg": "#E9E5DB",
+      "std": 5.58,
+      "hc": 7,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "text",
+      "label": "destructive on background",
+      "fg": "#99011F",
+      "bg": "#F3F0E8",
+      "std": 5.27,
+      "hc": 7.75,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "text",
+      "label": "destructive on card",
+      "fg": "#99011F",
+      "bg": "#FFFFFF",
+      "std": 6,
+      "hc": 8.82,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "text",
+      "label": "destructive on muted",
+      "fg": "#99011F",
+      "bg": "#E9E5DB",
+      "std": 4.77,
+      "hc": 7.01,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "text",
+      "label": "destructive-foreground on destructive",
+      "fg": "#FFFFFF",
+      "bg": "#99011F",
+      "std": 6,
+      "hc": 8.82,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "text",
+      "label": "success on background",
+      "fg": "#01553B",
+      "bg": "#F3F0E8",
+      "std": 5.16,
+      "hc": 7.8,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "text",
+      "label": "success on card",
+      "fg": "#01553B",
+      "bg": "#FFFFFF",
+      "std": 5.88,
+      "hc": 8.88,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "text",
+      "label": "success on muted",
+      "fg": "#01553B",
+      "bg": "#E9E5DB",
+      "std": 4.67,
+      "hc": 7.06,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "text",
+      "label": "success-foreground on success",
+      "fg": "#FFFFFF",
+      "bg": "#01553B",
+      "std": 5.88,
+      "hc": 8.88,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "text",
+      "label": "caution-foreground on caution",
+      "fg": "#0B0F17",
+      "bg": "#E2B000",
+      "std": 9.53,
+      "hc": 9.53,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "text",
+      "label": "sidebar-foreground on sidebar",
+      "fg": "#0B0F17",
+      "bg": "#F3F0E8",
+      "std": 16.84,
+      "hc": 16.84,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "text",
+      "label": "sidebar-primary-foreground on sidebar-primary",
+      "fg": "#FFFFFF",
+      "bg": "#2236C3",
+      "std": 7.02,
+      "hc": 8.8,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "text",
+      "label": "sidebar-accent-foreground on sidebar-accent",
+      "fg": "#0B0F17",
+      "bg": "#E9E5DB",
+      "std": 15.24,
+      "hc": 15.24,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "text",
+      "label": "sidebar-primary on sidebar",
+      "fg": "#2236C3",
+      "bg": "#F3F0E8",
+      "std": 6.16,
+      "hc": 7.73,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "text",
+      "label": "muted-foreground on syntax-ground",
+      "fg": "#444A55",
+      "bg": "#FFFFFF",
+      "std": 7.38,
+      "hc": 8.91,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "text",
+      "label": "muted-foreground on syntax-active-line",
+      "fg": "#444A55",
+      "bg": "#F3F0E8",
+      "std": 6.48,
+      "hc": 7.82,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "text",
+      "label": "success on syntax-active-line",
+      "fg": "#01553B",
+      "bg": "#F3F0E8",
+      "std": 5.16,
+      "hc": 7.8,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "text",
+      "label": "destructive on syntax-active-line",
+      "fg": "#99011F",
+      "bg": "#F3F0E8",
+      "std": 5.27,
+      "hc": 7.75,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "text",
+      "label": "caution-text on background",
+      "fg": "#5E4701",
+      "bg": "#F3F0E8",
+      "std": 5.03,
+      "hc": 7.75,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "text",
+      "label": "caution-text on card",
+      "fg": "#5E4701",
+      "bg": "#FFFFFF",
+      "std": 5.73,
+      "hc": 8.83,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "text",
+      "label": "caution-text on muted",
+      "fg": "#5E4701",
+      "bg": "#E9E5DB",
+      "std": 4.55,
+      "hc": 7.02,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "text",
+      "label": "destructive on destructive-tint",
+      "fg": "#99011F",
+      "bg": "#F5E6E9",
+      "std": 5.1,
+      "hc": 7.3,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "text",
+      "label": "success on success-tint",
+      "fg": "#01553B",
+      "bg": "#E6EEEB",
+      "std": 5.09,
+      "hc": 7.52,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "non-text",
+      "label": "input on background",
+      "fg": "#6D6659",
+      "bg": "#F3F0E8",
+      "std": 3.53,
+      "hc": 4.99,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "non-text",
+      "label": "input on card",
+      "fg": "#6D6659",
+      "bg": "#FFFFFF",
+      "std": 4.02,
+      "hc": 5.68,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "non-text",
+      "label": "input on muted",
+      "fg": "#6D6659",
+      "bg": "#E9E5DB",
+      "std": 3.2,
+      "hc": 4.51,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "non-text",
+      "label": "ring on background",
+      "fg": "#2236C3",
+      "bg": "#F3F0E8",
+      "std": 6.16,
+      "hc": 7.73,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "non-text",
+      "label": "ring on card",
+      "fg": "#2236C3",
+      "bg": "#FFFFFF",
+      "std": 7.02,
+      "hc": 8.8,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "non-text",
+      "label": "sidebar-ring on sidebar",
+      "fg": "#2236C3",
+      "bg": "#F3F0E8",
+      "std": 6.16,
+      "hc": 7.73,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "non-text",
+      "label": "destructive-fill on background",
+      "fg": "#C92035",
+      "bg": "#F3F0E8",
+      "std": 4.92,
+      "hc": 4.92,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "non-text",
+      "label": "destructive-fill on card",
+      "fg": "#C92035",
+      "bg": "#FFFFFF",
+      "std": 5.61,
+      "hc": 5.61,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "non-text",
+      "label": "success-fill on background",
+      "fg": "#007351",
+      "bg": "#F3F0E8",
+      "std": 4.36,
+      "hc": 5.16,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "non-text",
+      "label": "success-fill on card",
+      "fg": "#007351",
+      "bg": "#FFFFFF",
+      "std": 4.96,
+      "hc": 5.88,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "non-text",
+      "label": "chart-1 on background",
+      "fg": "#2D48D4",
+      "bg": "#F3F0E8",
+      "std": 6.16,
+      "hc": 6.16,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "non-text",
+      "label": "chart-1 on card",
+      "fg": "#2D48D4",
+      "bg": "#FFFFFF",
+      "std": 7.02,
+      "hc": 7.02,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "non-text",
+      "label": "chart-2 on background",
+      "fg": "#C92035",
+      "bg": "#F3F0E8",
+      "std": 4.92,
+      "hc": 4.92,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "non-text",
+      "label": "chart-2 on card",
+      "fg": "#C92035",
+      "bg": "#FFFFFF",
+      "std": 5.61,
+      "hc": 5.61,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "non-text",
+      "label": "chart-3 on background",
+      "fg": "#806200",
+      "bg": "#F3F0E8",
+      "std": 1.76,
+      "hc": 5.03,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "non-text",
+      "label": "chart-3 on card",
+      "fg": "#806200",
+      "bg": "#FFFFFF",
+      "std": 2.01,
+      "hc": 5.73,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "non-text",
+      "label": "chart-4 on background",
+      "fg": "#007351",
+      "bg": "#F3F0E8",
+      "std": 4.36,
+      "hc": 5.16,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "non-text",
+      "label": "chart-4 on card",
+      "fg": "#007351",
+      "bg": "#FFFFFF",
+      "std": 4.96,
+      "hc": 5.88,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "non-text",
+      "label": "chart-5 on background",
+      "fg": "#505661",
+      "bg": "#F3F0E8",
+      "std": 6.48,
+      "hc": 6.48,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "non-text",
+      "label": "chart-5 on card",
+      "fg": "#505661",
+      "bg": "#FFFFFF",
+      "std": 7.38,
+      "hc": 7.38,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "non-text",
+      "label": "primary on syntax-active-line",
+      "fg": "#2236C3",
+      "bg": "#F3F0E8",
+      "std": 6.16,
+      "hc": 7.73,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "non-text",
+      "label": "border on background",
+      "fg": "#6D6659",
+      "bg": "#F3F0E8",
+      "std": 1.23,
+      "hc": 4.99,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "non-text",
+      "label": "border on card",
+      "fg": "#6D6659",
+      "bg": "#FFFFFF",
+      "std": 1.23,
+      "hc": 5.68,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "non-text",
+      "label": "border on muted",
+      "fg": "#6D6659",
+      "bg": "#E9E5DB",
+      "std": 1.23,
+      "hc": 4.51,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "field",
+      "label": "field-1 legend on fill",
+      "fg": "#FFFFFF",
+      "bg": "#2236C3",
+      "std": 7.02,
+      "hc": 8.8,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "field",
+      "label": "field-2 legend on fill",
+      "fg": "#FFFFFF",
+      "bg": "#99011F",
+      "std": 5.61,
+      "hc": 8.82,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "field",
+      "label": "field-3 legend on fill",
+      "fg": "#0B0F17",
+      "bg": "#E2B000",
+      "std": 9.53,
+      "hc": 9.53,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "field",
+      "label": "field-4 legend on fill",
+      "fg": "#FFFFFF",
+      "bg": "#01553B",
+      "std": 4.96,
+      "hc": 8.88,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "glass",
+      "label": "foreground on solid glass",
+      "fg": "#0B0F17",
+      "bg": "#FBFAF6",
+      "std": null,
+      "hc": 18.36,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "glass",
+      "label": "muted-foreground on solid glass",
+      "fg": "#444A55",
+      "bg": "#FBFAF6",
+      "std": null,
+      "hc": 8.53,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "glass",
+      "label": "primary on solid glass",
+      "fg": "#2236C3",
+      "bg": "#FBFAF6",
+      "std": null,
+      "hc": 8.43,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "non-text",
+      "label": "glass edge (line-more) on #F3F0E8",
+      "fg": "#6D6659",
+      "bg": "#F3F0E8",
+      "std": null,
+      "hc": 4.99,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "non-text",
+      "label": "glass edge (line-more) on #FFFFFF",
+      "fg": "#6D6659",
+      "bg": "#FFFFFF",
+      "std": null,
+      "hc": 5.68,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "non-text",
+      "label": "glass edge (line-more) on #E9E5DB",
+      "fg": "#6D6659",
+      "bg": "#E9E5DB",
+      "std": null,
+      "hc": 4.51,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "scrim",
+      "label": "popover edge over background under the scrim",
+      "fg": "#FFFFFF",
+      "bg": "#68696B",
+      "std": 4,
+      "hc": 5.49,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "scrim",
+      "label": "popover edge over card under the scrim",
+      "fg": "#FFFFFF",
+      "bg": "#6D6F74",
+      "std": 3.59,
+      "hc": 5.02,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "scrim",
+      "label": "popover edge over muted under the scrim",
+      "fg": "#FFFFFF",
+      "bg": "#646565",
+      "std": 4.29,
+      "hc": 5.84,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "code",
+      "label": "syntax-violet on syntax-ground",
+      "fg": "#6B2BB3",
+      "bg": "#FFFFFF",
+      "std": 7.37,
+      "hc": 8.01,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "code",
+      "label": "syntax-violet on syntax-active-line",
+      "fg": "#6B2BB3",
+      "bg": "#F3F0E8",
+      "std": 6.47,
+      "hc": 7.03,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "code",
+      "label": "syntax-blue on syntax-ground",
+      "fg": "#2943BD",
+      "bg": "#FFFFFF",
+      "std": 6.66,
+      "hc": 7.97,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "code",
+      "label": "syntax-blue on syntax-active-line",
+      "fg": "#2943BD",
+      "bg": "#F3F0E8",
+      "std": 5.85,
+      "hc": 7,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "code",
+      "label": "syntax-navy on syntax-ground",
+      "fg": "#243B7A",
+      "bg": "#FFFFFF",
+      "std": 10.59,
+      "hc": 10.59,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "code",
+      "label": "syntax-navy on syntax-active-line",
+      "fg": "#243B7A",
+      "bg": "#F3F0E8",
+      "std": 9.3,
+      "hc": 9.3,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "code",
+      "label": "syntax-green on syntax-ground",
+      "fg": "#015C41",
+      "bg": "#FFFFFF",
+      "std": 6.03,
+      "hc": 8.05,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "code",
+      "label": "syntax-green on syntax-active-line",
+      "fg": "#015C41",
+      "bg": "#F3F0E8",
+      "std": 5.3,
+      "hc": 7.06,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "code",
+      "label": "syntax-yellow on syntax-ground",
+      "fg": "#5F4F02",
+      "bg": "#FFFFFF",
+      "std": 6.77,
+      "hc": 8.05,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "code",
+      "label": "syntax-yellow on syntax-active-line",
+      "fg": "#5F4F02",
+      "bg": "#F3F0E8",
+      "std": 5.94,
+      "hc": 7.07,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "code",
+      "label": "syntax-orange on syntax-ground",
+      "fg": "#863A01",
+      "bg": "#FFFFFF",
+      "std": 5.78,
+      "hc": 8.01,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "code",
+      "label": "syntax-orange on syntax-active-line",
+      "fg": "#863A01",
+      "bg": "#F3F0E8",
+      "std": 5.08,
+      "hc": 7.04,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "code",
+      "label": "syntax-plum on syntax-ground",
+      "fg": "#8B2968",
+      "bg": "#FFFFFF",
+      "std": 7.35,
+      "hc": 8.03,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "code",
+      "label": "syntax-plum on syntax-active-line",
+      "fg": "#8B2968",
+      "bg": "#F3F0E8",
+      "std": 6.46,
+      "hc": 7.05,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "code",
+      "label": "syntax-red on syntax-ground",
+      "fg": "#A50021",
+      "bg": "#FFFFFF",
+      "std": 6.47,
+      "hc": 8,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "code",
+      "label": "syntax-red on syntax-active-line",
+      "fg": "#A50021",
+      "bg": "#F3F0E8",
+      "std": 5.68,
+      "hc": 7.03,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "code",
+      "label": "syntax-grey on syntax-ground",
+      "fg": "#4C515A",
+      "bg": "#FFFFFF",
+      "std": 5.53,
+      "hc": 7.97,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "code",
+      "label": "syntax-grey on syntax-active-line",
+      "fg": "#4C515A",
+      "bg": "#F3F0E8",
+      "std": 4.86,
+      "hc": 7,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "code",
+      "label": "syntax-ink on syntax-ground",
+      "fg": "#25292F",
+      "bg": "#FFFFFF",
+      "std": 14.61,
+      "hc": 14.61,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "code",
+      "label": "syntax-ink on syntax-active-line",
+      "fg": "#25292F",
+      "bg": "#F3F0E8",
+      "std": 12.83,
+      "hc": 12.83,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "light",
+      "kind": "text",
+      "label": "caution-foreground on caution",
+      "fg": "#0B0F17",
+      "bg": "#E2B000",
+      "std": 9.53,
+      "hc": 9.53,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "text",
+      "label": "foreground on background",
+      "fg": "#F3F0E8",
+      "bg": "#16140F",
+      "std": 16.16,
+      "hc": 16.16,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "text",
+      "label": "card-foreground on card",
+      "fg": "#F3F0E8",
+      "bg": "#221F19",
+      "std": 14.42,
+      "hc": 14.42,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "text",
+      "label": "popover-foreground on popover",
+      "fg": "#F3F0E8",
+      "bg": "#221F19",
+      "std": 14.42,
+      "hc": 14.42,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "text",
+      "label": "secondary-foreground on secondary",
+      "fg": "#F3F0E8",
+      "bg": "#221F19",
+      "std": 14.42,
+      "hc": 14.42,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "text",
+      "label": "foreground on muted",
+      "fg": "#F3F0E8",
+      "bg": "#2C2821",
+      "std": 12.87,
+      "hc": 12.87,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "text",
+      "label": "accent-foreground on accent",
+      "fg": "#F3F0E8",
+      "bg": "#2C2821",
+      "std": 12.87,
+      "hc": 12.87,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "text",
+      "label": "muted-foreground on background",
+      "fg": "#B9B3A5",
+      "bg": "#16140F",
+      "std": 6.82,
+      "hc": 8.81,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "text",
+      "label": "muted-foreground on card",
+      "fg": "#B9B3A5",
+      "bg": "#221F19",
+      "std": 6.08,
+      "hc": 7.86,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "text",
+      "label": "muted-foreground on muted",
+      "fg": "#B9B3A5",
+      "bg": "#2C2821",
+      "std": 5.43,
+      "hc": 7.01,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "text",
+      "label": "primary-foreground on primary",
+      "fg": "#0B0F17",
+      "bg": "#95B2FF",
+      "std": 9.03,
+      "hc": 9.21,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "text",
+      "label": "primary on background",
+      "fg": "#95B2FF",
+      "bg": "#16140F",
+      "std": 8.67,
+      "hc": 8.84,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "text",
+      "label": "primary on card",
+      "fg": "#95B2FF",
+      "bg": "#221F19",
+      "std": 7.74,
+      "hc": 7.89,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "text",
+      "label": "primary on muted",
+      "fg": "#95B2FF",
+      "bg": "#2C2821",
+      "std": 6.9,
+      "hc": 7.04,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "text",
+      "label": "destructive on background",
+      "fg": "#FFA29F",
+      "bg": "#16140F",
+      "std": 8.67,
+      "hc": 9.57,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "text",
+      "label": "destructive on card",
+      "fg": "#FFA29F",
+      "bg": "#221F19",
+      "std": 7.74,
+      "hc": 8.54,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "text",
+      "label": "destructive on muted",
+      "fg": "#FFA29F",
+      "bg": "#2C2821",
+      "std": 6.9,
+      "hc": 7.62,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "text",
+      "label": "destructive-foreground on destructive",
+      "fg": "#0B0F17",
+      "bg": "#FFA29F",
+      "std": 9.03,
+      "hc": 9.97,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "text",
+      "label": "success on background",
+      "fg": "#69CDA0",
+      "bg": "#16140F",
+      "std": 8.62,
+      "hc": 9.5,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "text",
+      "label": "success on card",
+      "fg": "#69CDA0",
+      "bg": "#221F19",
+      "std": 7.7,
+      "hc": 8.48,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "text",
+      "label": "success on muted",
+      "fg": "#69CDA0",
+      "bg": "#2C2821",
+      "std": 6.87,
+      "hc": 7.56,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "text",
+      "label": "success-foreground on success",
+      "fg": "#0B0F17",
+      "bg": "#69CDA0",
+      "std": 8.99,
+      "hc": 9.9,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "text",
+      "label": "caution-foreground on caution",
+      "fg": "#0B0F17",
+      "bg": "#F8D874",
+      "std": 13.75,
+      "hc": 13.75,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "text",
+      "label": "sidebar-foreground on sidebar",
+      "fg": "#F3F0E8",
+      "bg": "#16140F",
+      "std": 16.16,
+      "hc": 16.16,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "text",
+      "label": "sidebar-primary-foreground on sidebar-primary",
+      "fg": "#0B0F17",
+      "bg": "#95B2FF",
+      "std": 9.03,
+      "hc": 9.21,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "text",
+      "label": "sidebar-accent-foreground on sidebar-accent",
+      "fg": "#F3F0E8",
+      "bg": "#2C2821",
+      "std": 12.87,
+      "hc": 12.87,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "text",
+      "label": "sidebar-primary on sidebar",
+      "fg": "#95B2FF",
+      "bg": "#16140F",
+      "std": 8.67,
+      "hc": 8.84,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "text",
+      "label": "muted-foreground on syntax-ground",
+      "fg": "#B9B3A5",
+      "bg": "#2C2821",
+      "std": 5.43,
+      "hc": 7.01,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "text",
+      "label": "muted-foreground on syntax-active-line",
+      "fg": "#B9B3A5",
+      "bg": "#221F19",
+      "std": 6.08,
+      "hc": 7.86,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "text",
+      "label": "success on syntax-active-line",
+      "fg": "#69CDA0",
+      "bg": "#221F19",
+      "std": 7.7,
+      "hc": 8.48,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "text",
+      "label": "destructive on syntax-active-line",
+      "fg": "#FFA29F",
+      "bg": "#221F19",
+      "std": 7.74,
+      "hc": 8.54,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "text",
+      "label": "caution-text on background",
+      "fg": "#F8D874",
+      "bg": "#16140F",
+      "std": 13.2,
+      "hc": 13.2,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "text",
+      "label": "caution-text on card",
+      "fg": "#F8D874",
+      "bg": "#221F19",
+      "std": 11.78,
+      "hc": 11.78,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "text",
+      "label": "caution-text on muted",
+      "fg": "#F8D874",
+      "bg": "#2C2821",
+      "std": 10.51,
+      "hc": 10.51,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "text",
+      "label": "destructive on destructive-tint",
+      "fg": "#FFA29F",
+      "bg": "#382C26",
+      "std": 5.21,
+      "hc": 7.01,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "text",
+      "label": "success on success-tint",
+      "fg": "#69CDA0",
+      "bg": "#293027",
+      "std": 5.19,
+      "hc": 7.01,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "non-text",
+      "label": "input on background",
+      "fg": "#958E80",
+      "bg": "#16140F",
+      "std": 3.91,
+      "hc": 5.66,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "non-text",
+      "label": "input on card",
+      "fg": "#958E80",
+      "bg": "#221F19",
+      "std": 3.49,
+      "hc": 5.05,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "non-text",
+      "label": "input on muted",
+      "fg": "#958E80",
+      "bg": "#2C2821",
+      "std": 3.12,
+      "hc": 4.5,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "non-text",
+      "label": "ring on background",
+      "fg": "#95B2FF",
+      "bg": "#16140F",
+      "std": 8.67,
+      "hc": 8.84,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "non-text",
+      "label": "ring on card",
+      "fg": "#95B2FF",
+      "bg": "#221F19",
+      "std": 7.74,
+      "hc": 7.89,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "non-text",
+      "label": "sidebar-ring on sidebar",
+      "fg": "#95B2FF",
+      "bg": "#16140F",
+      "std": 8.67,
+      "hc": 8.84,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "non-text",
+      "label": "destructive-fill on background",
+      "fg": "#FF9491",
+      "bg": "#16140F",
+      "std": 8.67,
+      "hc": 8.67,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "non-text",
+      "label": "destructive-fill on card",
+      "fg": "#FF9491",
+      "bg": "#221F19",
+      "std": 7.74,
+      "hc": 7.74,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "non-text",
+      "label": "success-fill on background",
+      "fg": "#60C498",
+      "bg": "#16140F",
+      "std": 8.62,
+      "hc": 8.62,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "non-text",
+      "label": "success-fill on card",
+      "fg": "#60C498",
+      "bg": "#221F19",
+      "std": 7.7,
+      "hc": 7.7,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "non-text",
+      "label": "chart-1 on background",
+      "fg": "#93B0FF",
+      "bg": "#16140F",
+      "std": 8.67,
+      "hc": 8.67,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "non-text",
+      "label": "chart-1 on card",
+      "fg": "#93B0FF",
+      "bg": "#221F19",
+      "std": 7.74,
+      "hc": 7.74,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "non-text",
+      "label": "chart-2 on background",
+      "fg": "#FF9491",
+      "bg": "#16140F",
+      "std": 8.67,
+      "hc": 8.67,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "non-text",
+      "label": "chart-2 on card",
+      "fg": "#FF9491",
+      "bg": "#221F19",
+      "std": 7.74,
+      "hc": 7.74,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "non-text",
+      "label": "chart-3 on background",
+      "fg": "#F8D874",
+      "bg": "#16140F",
+      "std": 13.2,
+      "hc": 13.2,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "non-text",
+      "label": "chart-3 on card",
+      "fg": "#F8D874",
+      "bg": "#221F19",
+      "std": 11.78,
+      "hc": 11.78,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "non-text",
+      "label": "chart-4 on background",
+      "fg": "#60C498",
+      "bg": "#16140F",
+      "std": 8.62,
+      "hc": 8.62,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "non-text",
+      "label": "chart-4 on card",
+      "fg": "#60C498",
+      "bg": "#221F19",
+      "std": 7.7,
+      "hc": 7.7,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "non-text",
+      "label": "chart-5 on background",
+      "fg": "#A39D90",
+      "bg": "#16140F",
+      "std": 6.82,
+      "hc": 6.82,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "non-text",
+      "label": "chart-5 on card",
+      "fg": "#A39D90",
+      "bg": "#221F19",
+      "std": 6.08,
+      "hc": 6.08,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "non-text",
+      "label": "primary on syntax-active-line",
+      "fg": "#95B2FF",
+      "bg": "#221F19",
+      "std": 7.74,
+      "hc": 7.89,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "non-text",
+      "label": "border on background",
+      "fg": "#958E80",
+      "bg": "#16140F",
+      "std": 1.28,
+      "hc": 5.66,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "non-text",
+      "label": "border on card",
+      "fg": "#958E80",
+      "bg": "#221F19",
+      "std": 1.32,
+      "hc": 5.05,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "non-text",
+      "label": "border on muted",
+      "fg": "#958E80",
+      "bg": "#2C2821",
+      "std": 1.33,
+      "hc": 4.5,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "field",
+      "label": "field-1 legend on fill",
+      "fg": "#16140F",
+      "bg": "#95B2FF",
+      "std": 8.67,
+      "hc": 8.84,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "field",
+      "label": "field-2 legend on fill",
+      "fg": "#16140F",
+      "bg": "#FFA29F",
+      "std": 8.67,
+      "hc": 9.57,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "field",
+      "label": "field-3 legend on fill",
+      "fg": "#16140F",
+      "bg": "#F8D874",
+      "std": 13.2,
+      "hc": 13.2,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "field",
+      "label": "field-4 legend on fill",
+      "fg": "#16140F",
+      "bg": "#69CDA0",
+      "std": 8.62,
+      "hc": 9.5,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "glass",
+      "label": "foreground on solid glass",
+      "fg": "#F3F0E8",
+      "bg": "#221F19",
+      "std": null,
+      "hc": 14.42,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "glass",
+      "label": "muted-foreground on solid glass",
+      "fg": "#B9B3A5",
+      "bg": "#221F19",
+      "std": null,
+      "hc": 7.86,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "glass",
+      "label": "primary on solid glass",
+      "fg": "#95B2FF",
+      "bg": "#221F19",
+      "std": null,
+      "hc": 7.89,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "non-text",
+      "label": "glass edge (paper-line-more) on #16140F",
+      "fg": "#958E80",
+      "bg": "#16140F",
+      "std": null,
+      "hc": 5.66,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "non-text",
+      "label": "glass edge (paper-line-more) on #221F19",
+      "fg": "#958E80",
+      "bg": "#221F19",
+      "std": null,
+      "hc": 5.05,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "non-text",
+      "label": "glass edge (paper-line-more) on #2C2821",
+      "fg": "#958E80",
+      "bg": "#2C2821",
+      "std": null,
+      "hc": 4.5,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "scrim",
+      "label": "elevation-line edge over background under the scrim",
+      "fg": "#958E80",
+      "bg": "#0F1114",
+      "std": 4.02,
+      "hc": 5.81,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "scrim",
+      "label": "elevation-line edge over card under the scrim",
+      "fg": "#958E80",
+      "bg": "#141518",
+      "std": 3.88,
+      "hc": 5.61,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "scrim",
+      "label": "elevation-line edge over muted under the scrim",
+      "fg": "#958E80",
+      "bg": "#18191B",
+      "std": 3.74,
+      "hc": 5.41,
+      "min": 4.5,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "code",
+      "label": "syntax-violet on syntax-ground",
+      "fg": "#C4A4FE",
+      "bg": "#2C2821",
+      "std": 7.04,
+      "hc": 7.04,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "code",
+      "label": "syntax-violet on syntax-active-line",
+      "fg": "#C4A4FE",
+      "bg": "#221F19",
+      "std": 7.89,
+      "hc": 7.89,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "code",
+      "label": "syntax-violet on background",
+      "fg": "#C4A4FE",
+      "bg": "#16140F",
+      "std": 8.84,
+      "hc": 8.84,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "code",
+      "label": "syntax-blue on syntax-ground",
+      "fg": "#95B2FF",
+      "bg": "#2C2821",
+      "std": 6.75,
+      "hc": 7.04,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "code",
+      "label": "syntax-blue on syntax-active-line",
+      "fg": "#95B2FF",
+      "bg": "#221F19",
+      "std": 7.57,
+      "hc": 7.89,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "code",
+      "label": "syntax-blue on background",
+      "fg": "#95B2FF",
+      "bg": "#16140F",
+      "std": 8.48,
+      "hc": 8.84,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "code",
+      "label": "syntax-navy on syntax-ground",
+      "fg": "#A8C0D8",
+      "bg": "#2C2821",
+      "std": 7.81,
+      "hc": 7.81,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "code",
+      "label": "syntax-navy on syntax-active-line",
+      "fg": "#A8C0D8",
+      "bg": "#221F19",
+      "std": 8.76,
+      "hc": 8.76,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "code",
+      "label": "syntax-navy on background",
+      "fg": "#A8C0D8",
+      "bg": "#16140F",
+      "std": 9.81,
+      "hc": 9.81,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "code",
+      "label": "syntax-green on syntax-ground",
+      "fg": "#5CC89A",
+      "bg": "#2C2821",
+      "std": 7.1,
+      "hc": 7.1,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "code",
+      "label": "syntax-green on syntax-active-line",
+      "fg": "#5CC89A",
+      "bg": "#221F19",
+      "std": 7.96,
+      "hc": 7.96,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "code",
+      "label": "syntax-green on background",
+      "fg": "#5CC89A",
+      "bg": "#16140F",
+      "std": 8.92,
+      "hc": 8.92,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "code",
+      "label": "syntax-yellow on syntax-ground",
+      "fg": "#E5CD72",
+      "bg": "#2C2821",
+      "std": 9.28,
+      "hc": 9.28,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "code",
+      "label": "syntax-yellow on syntax-active-line",
+      "fg": "#E5CD72",
+      "bg": "#221F19",
+      "std": 10.41,
+      "hc": 10.41,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "code",
+      "label": "syntax-yellow on background",
+      "fg": "#E5CD72",
+      "bg": "#16140F",
+      "std": 11.66,
+      "hc": 11.66,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "code",
+      "label": "syntax-orange on syntax-ground",
+      "fg": "#FFA373",
+      "bg": "#2C2821",
+      "std": 7.49,
+      "hc": 7.49,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "code",
+      "label": "syntax-orange on syntax-active-line",
+      "fg": "#FFA373",
+      "bg": "#221F19",
+      "std": 8.4,
+      "hc": 8.4,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "code",
+      "label": "syntax-orange on background",
+      "fg": "#FFA373",
+      "bg": "#16140F",
+      "std": 9.41,
+      "hc": 9.41,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "code",
+      "label": "syntax-plum on syntax-ground",
+      "fg": "#EB9BC8",
+      "bg": "#2C2821",
+      "std": 7.01,
+      "hc": 7.01,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "code",
+      "label": "syntax-plum on syntax-active-line",
+      "fg": "#EB9BC8",
+      "bg": "#221F19",
+      "std": 7.86,
+      "hc": 7.86,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "code",
+      "label": "syntax-plum on background",
+      "fg": "#EB9BC8",
+      "bg": "#16140F",
+      "std": 8.81,
+      "hc": 8.81,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "code",
+      "label": "syntax-red on syntax-ground",
+      "fg": "#FF9692",
+      "bg": "#2C2821",
+      "std": 6.5,
+      "hc": 7,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "code",
+      "label": "syntax-red on syntax-active-line",
+      "fg": "#FF9692",
+      "bg": "#221F19",
+      "std": 7.28,
+      "hc": 7.84,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "code",
+      "label": "syntax-red on background",
+      "fg": "#FF9692",
+      "bg": "#16140F",
+      "std": 8.16,
+      "hc": 8.78,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "code",
+      "label": "syntax-grey on syntax-ground",
+      "fg": "#AEB4BE",
+      "bg": "#2C2821",
+      "std": 5.84,
+      "hc": 7.03,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "code",
+      "label": "syntax-grey on syntax-active-line",
+      "fg": "#AEB4BE",
+      "bg": "#221F19",
+      "std": 6.55,
+      "hc": 7.88,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "code",
+      "label": "syntax-grey on background",
+      "fg": "#AEB4BE",
+      "bg": "#16140F",
+      "std": 7.33,
+      "hc": 8.82,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "code",
+      "label": "syntax-ink on syntax-ground",
+      "fg": "#D9DFE8",
+      "bg": "#2C2821",
+      "std": 10.93,
+      "hc": 10.93,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "code",
+      "label": "syntax-ink on syntax-active-line",
+      "fg": "#D9DFE8",
+      "bg": "#221F19",
+      "std": 12.26,
+      "hc": 12.26,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "code",
+      "label": "syntax-ink on background",
+      "fg": "#D9DFE8",
+      "bg": "#16140F",
+      "std": 13.73,
+      "hc": 13.73,
+      "min": 7,
+      "pass": true
+    },
+    {
+      "set": "dark",
+      "kind": "text",
+      "label": "caution-foreground on caution",
+      "fg": "#0B0F17",
+      "bg": "#F8D874",
+      "std": 13.75,
+      "hc": 13.75,
+      "min": 7,
+      "pass": true
+    }
+  ],
+  "fails": 0,
+  "total": 196
+}

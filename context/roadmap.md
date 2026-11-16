@@ -66,6 +66,7 @@ The new name in code. Evidence across three engines and two screen readers. Toke
 | Spec | Scope, in one line | Lanes | Depends on | Moves |
 |---|---|---|---|---|
 | `020` the Kuiper rename | `pluto` → `kuiper` in the registry name, the theme item, context keys, the token file, the storage key and the package; one "Upgrade to 0.13.0" guide page; a redirect for each moved URL | all | the `v0.12.0` tag | 11: 2 → 3 (migration page) |
+| `020a` the site's CSS reads only code | Small change: `@source not "../context"` in `src/app.css`, so prose and exhibits never add rules to the site's CSS | T (one line) | `020`; lands before `021`, whose CSS check is byte-identical | 8: held |
 | `021` tokens for everyone | The token file becomes DTCG with a `$description` per role (from `words.ts`), a record of renamed and removed names, and a plain CSS-variables file published beside the theme. Built CSS is byte-identical | T | `020` | 5: 1 → 4; 12: 0 → 1 |
 | `022` the test matrix | Firefox and WebKit projects for every browser suite; scripted VoiceOver and NVDA runs, built on `019`'s script, for items with a live region, a focus move or an overlay; a tag waits on a green run | E | `020` | 3: row (h) recorded |
 | `023` prop doc comments | A doc comment on every prop of every item; a unit test that the described list has no empty row; the undefined-`var()` test | I | `020`, `024` (Button's headroom) | 2: 2 → 3 |

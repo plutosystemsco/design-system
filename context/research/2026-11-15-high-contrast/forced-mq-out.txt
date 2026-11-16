@@ -1,0 +1,6 @@
+chromium forced none contrast emulated no-preference -> {"more":false,"less":false,"custom":false,"no-preference":true}
+chromium forced active contrast emulated no-preference -> {"more":false,"less":false,"custom":false,"no-preference":true}
+firefox forced none contrast emulated no-preference -> {"more":false,"less":false,"custom":false,"no-preference":true}
+firefox forced active contrast emulated no-preference -> {"more":false,"less":false,"custom":false,"no-preference":true}
+webkit forced none contrast emulated no-preference -> {"more":false,"less":false,"custom":false,"no-preference":true}
+webkit forced active contrast emulated no-preference -> {"more":false,"less":false,"custom":false,"no-preference":true}

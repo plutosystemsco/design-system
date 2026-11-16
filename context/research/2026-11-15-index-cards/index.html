@@ -1,0 +1,176 @@
+<!doctype html>
+<!--
+  031a exhibit: the Components index card, three ways, against today's.
+  Open from disk; no server needed. Query: ?view=today|a|b|c|grounds
+  &scheme=light|dark &w=1440|390 renders one panel alone (the PNGs in png/
+  were made that way). With no query, every panel shows in both schemes.
+
+  Colours are Kuiper's roles, written as 029 writes them (one light-dark()
+  pair per role, data-scheme sets the scheme). One role is new and marked
+  PROPOSED: --sunken. Spacing is multiples of --spacing; the one radius.
+  The pictures in img/ are real first examples from the 0.12.0 build,
+  photographed by the 031a probe with the stage's ground set to the ground
+  named in the file (background = today's, muted, sunken).
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Index cards</title>
+<style>
+  @font-face {
+    font-family: "Geist Variable";
+    font-style: normal;
+    font-display: block;
+    font-weight: 100 900;
+    src: url("../2026-11-15-kuiper-lockup/fonts/geist-latin-wght-normal.woff2") format("woff2-variations");
+  }
+  @font-face {
+    font-family: "IBM Plex Sans Variable";
+    font-style: normal;
+    font-display: block;
+    font-weight: 100 700;
+    src: url("../2026-11-15-kuiper-lockup/fonts/ibm-plex-sans-latin-wght-normal.woff2") format("woff2-variations");
+  }
+  :root {
+    color-scheme: light dark;
+    /* Kuiper roles, light and dark, as 029 writes them. */
+    --background: light-dark(#f3f0e8, #16140f);
+    --foreground: light-dark(#0b0f17, #f3f0e8);
+    --card: light-dark(#ffffff, #221f19);
+    --muted: light-dark(#e9e5db, #2c2821);
+    --muted-foreground: light-dark(#505661, #a39d90);
+    --border: light-dark(#0b0f171a, #f3f0e81a);
+    --ring: light-dark(#2d48d4, #93b0ff);
+    /* PROPOSED (031a): the ground an example is shown on, below the page.
+       Primitives paper-sunken #DCD7CA and ink-sunken #0B0A07. */
+    --sunken: light-dark(#dcd7ca, #0b0a07);
+    --radius: 0.5rem;
+    --spacing: 0.25rem;
+    --focus-width: 2px;
+    --font-sans: "Geist Variable", system-ui, sans-serif;
+    --font-heading: "IBM Plex Sans Variable", system-ui, sans-serif;
+  }
+  [data-scheme="light"] { color-scheme: light; }
+  [data-scheme="dark"] { color-scheme: dark; }
+  [data-scheme] { color: var(--foreground); background-color: var(--background); }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { font-family: var(--font-sans); background: var(--background); color: var(--foreground); -webkit-font-smoothing: antialiased; }
+
+  .panel { padding: calc(var(--spacing) * 10) calc(var(--spacing) * 11); }
+  .panel[data-w="390"] { width: 390px; padding: calc(var(--spacing) * 6) calc(var(--spacing) * 4); }
+  .cap { font-size: 0.8125rem; color: var(--muted-foreground); margin: 0 0 calc(var(--spacing) * 6); }
+  .cap b { color: var(--foreground); font-weight: 500; }
+  h2 { font-family: var(--font-heading); font-size: 1.5rem; font-weight: 600; margin: 0 0 calc(var(--spacing) * 4); display: flex; gap: calc(var(--spacing) * 3); align-items: baseline; }
+  h2 span { font-family: var(--font-sans); font-size: 0.875rem; font-weight: 400; color: var(--muted-foreground); }
+  ul { list-style: none; margin: 0; padding: 0; }
+  .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: calc(var(--spacing) * 4); width: 912px; }
+  a { color: inherit; text-decoration: none; }
+  a:focus-visible { outline: var(--focus-width) solid var(--ring); outline-offset: 2px; border-radius: var(--radius); }
+  .pic { display: block; width: 100%; aspect-ratio: 16 / 10; height: auto; }
+  .words { display: grid; gap: var(--spacing); }
+  .t { font-weight: 500; }
+  .d { font-size: 0.875rem; line-height: 1.45; color: var(--muted-foreground); }
+  .m { font-size: 0.75rem; color: var(--muted-foreground); }
+  a:hover .t, a.hover .t { text-decoration: underline; text-underline-offset: calc(var(--spacing) * 1); }
+
+  /* Today (018 as built): a card on the page; the picture on the page's own ground. */
+  [data-view="today"] .tile { display: grid; height: 100%; overflow: hidden; border-radius: var(--radius); border: 1px solid var(--border); background: var(--card); }
+  [data-view="today"] .stage { background: var(--background); border-bottom: 1px solid var(--border); }
+  [data-view="today"] .words { padding: calc(var(--spacing) * 4); }
+
+  /* A, the sunken band: the card keeps its fill; the stage is a band across its top. */
+  [data-view="a"] .tile { display: grid; grid-template-rows: auto 1fr; height: 100%; overflow: hidden; border-radius: var(--radius); border: 1px solid transparent; background: var(--card); }
+  [data-view="a"] .stage { background: var(--sunken); }
+  [data-view="a"] .words { padding: calc(var(--spacing) * 4); align-content: start; }
+
+  /* B, the matted well: the card is a mat; the stage is set into it. */
+  [data-view="b"] .tile { display: grid; grid-template-rows: auto 1fr; height: 100%; padding: calc(var(--spacing) * 2); border-radius: var(--radius); border: 1px solid transparent; background: var(--card); }
+  [data-view="b"] .stage { background: var(--sunken); border-radius: var(--radius); overflow: hidden; }
+  [data-view="b"] .words { padding: calc(var(--spacing) * 3) calc(var(--spacing) * 2) calc(var(--spacing) * 2); align-content: start; }
+
+  /* C, the open stage: no card; the stage sits on the page, the words below it. */
+  [data-view="c"] .tile { display: grid; grid-template-rows: auto 1fr; height: 100%; }
+  [data-view="c"] .stage { background: var(--sunken); border-radius: var(--radius); overflow: hidden; border: 1px solid transparent; }
+  [data-view="c"] .words { padding: calc(var(--spacing) * 3) 0 0; align-content: start; }
+  [data-view="c"] .grid { row-gap: calc(var(--spacing) * 8); }
+
+  /* Phone rows, below md: a 96 x 60 picture at the row's start. */
+  .rows li { border-bottom: 1px solid var(--border); }
+  .rows a { display: grid; grid-template-columns: 6rem minmax(0, 1fr); gap: calc(var(--spacing) * 4); padding: calc(var(--spacing) * 3) 0; align-items: start; }
+  .rows .stage { border-radius: var(--radius); overflow: hidden; }
+  [data-view="today"] .rows .stage { border: 1px solid var(--border); background: var(--background); }
+  [data-view="a"] .rows .stage, [data-view="b"] .rows .stage, [data-view="c"] .rows .stage { background: var(--sunken); border: 1px solid transparent; }
+
+  /* The grounds panel: the same tile (A) on three grounds. */
+  .gtable { display: grid; grid-template-columns: 6rem repeat(3, 1fr); gap: calc(var(--spacing) * 3) calc(var(--spacing) * 4); width: 912px; align-items: center; }
+  .gtable .h { font-size: 0.8125rem; color: var(--muted-foreground); }
+  .gtable .stage { border-radius: var(--radius); overflow: hidden; border: calc(var(--spacing) * 2) solid var(--card); background: var(--card); }
+
+  .both { display: grid; grid-template-columns: max-content max-content; }
+  section + section { margin-top: 0; }
+</style>
+</head>
+<body>
+<main id="root"></main>
+<script>
+  const ITEMS = [
+    { n: "card", t: "Card", d: "A raised surface with a header, content, footer and an action, whose title is a real heading.", m: "productive. Since 0.2.0" },
+    { n: "utils", t: "Utils", d: "The cn class-merging helper and the prop-type helpers that components import.", m: "productive, expressive. Since 0.1.0" },
+    { n: "collapsible", t: "Collapsible", d: "A button that shows and hides a region, with its state in aria-expanded.", m: "productive. Since 0.2.0" },
+    { n: "tabs", t: "Tabs", d: "Tabbed panels as a pill strip on an inset or as underlined triggers, moved by the arrow keys.", m: "productive. Since 0.2.0" },
+    { n: "skeleton", t: "Skeleton", d: "A static, hidden placeholder on an inset where content is loading.", m: "productive. Since 0.2.0" },
+    { n: "avatar", t: "Avatar", d: "A person's image or initials at the case radius, alone or in an overlapping group.", m: "productive. Since 0.2.0" },
+  ];
+  const NAMES = {
+    today: "Today, 018 as built: the picture on the page's own ground, in a card on the page",
+    a: "A, the sunken band: the card keeps its fill, the stage is a sunken band across its top",
+    b: "B, the matted well: the card is a mat, the sunken stage is set into it",
+    c: "C, the open stage: no card, a sunken stage on the page, the words below it",
+    grounds: "Why a new role: the same picture on today's ground, on muted, and on the proposed sunken",
+  };
+  const q = new URLSearchParams(location.search);
+  const ground = (v) => (v === "today" ? "background" : "sunken");
+  const tile = (v, s, i, hover) => `
+    <li><a href="#" class="tile${hover ? " hover" : ""}">
+      <span class="stage"><img class="pic" alt="" width="480" height="300" src="img/${i.n}-${s}-${ground(v)}.webp"></span>
+      <span class="words"><span class="t">${i.t}</span><span class="d">${i.d}</span><span class="m">${i.m}</span></span>
+    </a></li>`;
+  const row = (v, s, i) => `
+    <li><a href="#">
+      <span class="stage"><img class="pic" alt="" width="480" height="300" src="img/${i.n}-${s}-${ground(v)}.webp"></span>
+      <span class="words"><span class="t">${i.t}</span><span class="d">${i.d}</span><span class="m">${i.m}</span></span>
+    </a></li>`;
+  function panel(v, s, w) {
+    if (v === "grounds") {
+      const cells = ["tabs", "skeleton", "avatar", "table"].map((n) => `
+        <span class="h">${n}</span>
+        ${["background", "muted", "sunken"].map((g) => `<span class="stage"><img class="pic" alt="" width="480" height="300" src="img/${n}-${s}-${g}.webp"></span>`).join("")}`).join("");
+      return `<section class="panel" data-scheme="${s}" data-view="grounds" data-w="1440">
+        <p class="cap"><b>${NAMES.grounds}</b> · ${s}</p>
+        <div class="gtable"><span></span><span class="h">background (today)</span><span class="h">muted (existing role)</span><span class="h">sunken (proposed)</span>${cells}</div>
+      </section>`;
+    }
+    if (w === "390")
+      return `<section class="panel" data-scheme="${s}" data-view="${v}" data-w="390">
+        <p class="cap"><b>${v === "today" ? "Today" : "A, B and C"}</b>, below md · ${s}</p>
+        <h2>Surfaces <span>9</span></h2>
+        <ul class="rows">${ITEMS.map((i) => row(v, s, i)).join("")}</ul></section>`;
+    return `<section class="panel" data-scheme="${s}" data-view="${v}" data-w="1440">
+      <p class="cap"><b>${NAMES[v]}</b> · ${s}</p>
+      <h2>Surfaces <span>9</span></h2>
+      <ul class="grid">${ITEMS.map((i, k) => tile(v, s, i, k === 1)).join("")}</ul></section>`;
+  }
+  const root = document.getElementById("root");
+  if (q.get("view")) {
+    root.innerHTML = panel(q.get("view"), q.get("scheme") || "light", q.get("w") || "1440");
+    document.body.style.background = "var(--background)";
+    document.documentElement.setAttribute("data-scheme", q.get("scheme") || "light");
+  } else {
+    root.innerHTML = ["today", "a", "b", "c", "grounds"].map((v) => `<div class="both">${panel(v, "light", "1440")}${panel(v, "dark", "1440")}</div>`).join("")
+      + `<div class="both">${panel("today", "light", "390")}${panel("a", "light", "390")}${panel("today", "dark", "390")}${panel("a", "dark", "390")}</div>`;
+  }
+</script>
+</body>
+</html>

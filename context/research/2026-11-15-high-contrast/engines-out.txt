@@ -1,0 +1,35 @@
+chromium modern | no attr, no preference | ok | mq more: false | root bg rgba(243, 240, 232, 0.86)
+chromium modern | no attr, system more (scripts off) | ok | mq more: true | root bg rgb(251, 250, 246)
+chromium modern | standard beats system more | ok | mq more: true | root bg rgba(243, 240, 232, 0.86)
+chromium modern | more by hand, no preference | ok | mq more: false | root bg rgb(251, 250, 246)
+chromium modern | more by hand, dark root | ok | mq more: false | root bg rgb(34, 31, 25)
+chromium modern system more, forced colours {"root":"rgb(0, 0, 0)","dscope":"rgb(0, 0, 0)","lind":"rgb(0, 0, 0)","alias":"rgb(0, 0, 0)","lalias":"rgb(0, 0, 0)","fieldd":"rgb(0, 0, 0)","mqMore":true,"forced":true,"rootBg":"rgb(255, 255, 255)"}
+chromium fallback | no attr, no preference | ok | mq more: false | root bg rgba(243, 240, 232, 0.86)
+chromium fallback | standard beats system more | ok | mq more: true | root bg rgba(243, 240, 232, 0.86)
+chromium fallback | more by hand, no preference | ok | mq more: false | root bg rgb(251, 250, 246)
+chromium fallback | more by hand, dark root | ok | mq more: false | root bg rgb(34, 31, 25)
+chromium fallback system more, forced colours {"root":"rgb(0, 0, 0)","dscope":"rgb(0, 0, 0)","lind":"rgb(0, 0, 0)","alias":"rgb(0, 0, 0)","lalias":"rgb(0, 0, 0)","fieldd":"rgb(0, 0, 0)","mqMore":true,"forced":true,"rootBg":"rgb(255, 255, 255)"}
+firefox modern | no attr, no preference | ok | mq more: false | root bg rgba(243, 240, 232, 0.86)
+firefox modern | no attr, system more (scripts off) | ok | mq more: true | root bg rgb(251, 250, 246)
+firefox modern | standard beats system more | ok | mq more: true | root bg rgba(243, 240, 232, 0.86)
+firefox modern | more by hand, no preference | ok | mq more: false | root bg rgb(251, 250, 246)
+firefox modern | more by hand, dark root | ok | mq more: false | root bg rgb(34, 31, 25)
+firefox modern system more, forced colours {"root":"rgb(0, 0, 0)","dscope":"rgb(0, 0, 0)","lind":"rgb(0, 0, 0)","alias":"rgb(0, 0, 0)","lalias":"rgb(0, 0, 0)","fieldd":"rgb(0, 0, 0)","mqMore":true,"forced":true,"rootBg":"rgb(255, 255, 255)"}
+firefox fallback | no attr, no preference | ok | mq more: false | root bg rgba(243, 240, 232, 0.86)
+firefox fallback | standard beats system more | ok | mq more: true | root bg rgba(243, 240, 232, 0.86)
+firefox fallback | more by hand, no preference | ok | mq more: false | root bg rgb(251, 250, 246)
+firefox fallback | more by hand, dark root | ok | mq more: false | root bg rgb(34, 31, 25)
+firefox fallback system more, forced colours {"root":"rgb(0, 0, 0)","dscope":"rgb(0, 0, 0)","lind":"rgb(0, 0, 0)","alias":"rgb(0, 0, 0)","lalias":"rgb(0, 0, 0)","fieldd":"rgb(0, 0, 0)","mqMore":true,"forced":true,"rootBg":"rgb(255, 255, 255)"}
+webkit modern | no attr, no preference | ok | mq more: false | root bg rgba(243, 240, 232, 0.86)
+webkit modern | no attr, system more (scripts off) | ok | mq more: true | root bg rgb(251, 250, 246)
+webkit modern | standard beats system more | ok | mq more: true | root bg rgba(243, 240, 232, 0.86)
+webkit modern | more by hand, no preference | ok | mq more: false | root bg rgb(251, 250, 246)
+webkit modern | more by hand, dark root | ok | mq more: false | root bg rgb(34, 31, 25)
+webkit modern system more, forced colours {"root":"rgb(68, 74, 85)","dscope":"rgb(185, 179, 165)","lind":"rgb(68, 74, 85)","alias":"rgb(185, 179, 165)","lalias":"rgb(68, 74, 85)","fieldd":"rgb(185, 179, 165)","mqMore":true,"forced":true,"rootBg":"rgb(251, 250, 246)"}
+webkit fallback | no attr, no preference | ok | mq more: false | root bg rgba(243, 240, 232, 0.86)
+webkit fallback | standard beats system more | ok | mq more: true | root bg rgba(243, 240, 232, 0.86)
+webkit fallback | more by hand, no preference | ok | mq more: false | root bg rgb(251, 250, 246)
+webkit fallback | more by hand, dark root | ok | mq more: false | root bg rgb(34, 31, 25)
+webkit fallback system more, forced colours {"root":"rgb(68, 74, 85)","dscope":"rgb(185, 179, 165)","lind":"rgb(68, 74, 85)","alias":"rgb(185, 179, 165)","lalias":"rgb(68, 74, 85)","fieldd":"rgb(185, 179, 165)","mqMore":true,"forced":true,"rootBg":"rgb(251, 250, 246)"}
+
+33 runs, 0 with a mismatch
