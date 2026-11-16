@@ -3,7 +3,7 @@
 Reviews [`specifications/022t-the-error-summary-speaks-again-on-an-unchanged-submit.md`](../specifications/022t-the-error-summary-speaks-again-on-an-unchanged-submit.md) before it is built. Its research is [the error summary's re-announcement](../research/2026-11-16-error-summary-re-announcement.md) (*the memo*) and the error-summary row of [the first speech verdicts](../research/2026-11-16-the-first-speech-verdicts.md) (*the speech memo*). This reviewer wrote neither the specification nor its research (constitution §5).
 
 - **Date:** 2026-11-16
-- **Status:** in review
+- **Status:** dispositioned; does not land yet (finding 9 stands; see the closing verdict)
 - **Reviewer:** a reviewer; not the author
 - **Reviewed:** the specification as drafted (204 lines, untracked), on `release/0.13.0` at `c5cdd65`. Checked against:
   - `src/lib/registry/ui/error-summary/error-summary.svelte`, the item's page, both examples;
@@ -111,3 +111,40 @@ Reviews [`specifications/022t-the-error-summary-speaks-again-on-an-unchanged-sub
 Does not land yet: finding 1 (High), criterion 5's guard passing under its own mutation with no order check in criterion 4, and findings 2 to 4 (Medium), criterion 14's outcome, patch 7b's effect and regeneration, and the test view reading Notes.
 
 ## Disposition
+
+The specification was revised on 2026-11-16 to answer all eight findings, with a "Review" section that maps each to its fix. This re-check reads the revision (251 lines, untracked) against each finding, on `release/0.13.0` at `b01e754`, where `022q` has landed. Nothing in the repository was written but this file. Nothing new was run in a browser; the readings below are READ against the code, and against the EXECUTED probes above.
+
+1. **Closed.** Criteria 4 and 5 are one ordered count over seven block paths: from the second submit or confirm until 500 ms after the root's `focusin`, exactly one content node added, its callback before the `focusin`. The review's mutation is named for each of the four forms, and the same mutation for `settings-delete`'s `catch`. INFERRED from the probes above: the client paths then add their node after the `focusin`, and the server paths add two in the span, so both shapes fail. One new fault in how it watches: finding 9.
+2. **Closed, with a write-in.** Criterion 14 now states when `022t` is done, and what the Status reads until then. A failure is a finding: the row stays failing and a research memo opens, with the mechanism not changed by guess. Both risks are stated in advance. Risk 1's flake rule is `022`'s (READ, `022` decision 18 and Q2: a release-run flake takes a ledger line unless recorded as reader timing). Decision 2 names the gap: "Alike, not identical". "In each VoiceOver pair that reaches it" is one outcome only if not reaching it is not a pass. The specification does not say so: finding 10.
+3. **Closed.** The procedure is buildable as written. Staging the built item first makes `git diff` compare against it, and `git checkout --` then restores the built file from the index (READ, git's semantics). The writer's claim about `notProvable` holds (READ):
+   - `NotProvable` is `Pair & { patch; run }`, with no test (`tests/sr/mutations/derive.ts:43`).
+   - `derive()` skips every entry of that patch under that pair (`derive.ts:88–98`).
+   - `witnessFaults()` skips the patch's witness under that pair too (`derive.ts:129–137`).
+   - So a pair-wide entry for 7b would drop its insertion witness there, and the witness rule would no longer prove L3 under that pair. `022` decision 15 step 2 meant that for patch 7, whose every entry fails together; it does not fit one test of 7b's.
+   - The added lane-E small change is sound and in scope: it is conditional on a dispatch result ("only if the dispatch needs it"), comes before any entry moves, and is out of lane I. It needs three more lines to build safely: finding 11.
+4. **Closed.** Decision 10 has one `validate({ name, notes })` that reads every field, and empty errors until the first submit. Criterion 3's mutation must record at least 5 mutations in A. EXECUTED above: 10 under `{#key errors}`, 0 with a blind derivation. So the count tells the two apart.
+5. **Closed.** Decision 1 takes the 37 words, opening with a noun phrase. Decision 12's bullet now says "when it appears or its text changes".
+6. **Closed, with a slip.** Criterion 1 counts records in any order and states how the base item fails: an attribute write, and no content node. Decision 11 takes an `ElementHandle` and records "the old content node is disconnected". But criterion 8 still names the fact "the content node is new": finding 12.
+7. **Closed.** Decision 9 adds both sentences to "Your part". Criterion 9 adds a unit check in `registry.test.ts`, seen failing on today's files, for three lines and the header comment.
+8. **Closed.** Open question 3 asks whether `022t` stays landed if criterion 14 fails: (a) keep it (recommended), or (b) revert. The three owner questions are framed with options, the recommended first, and none blocks the build.
+
+**New findings from the revision**
+
+9. **Medium: criterion 4 watches the summary root, which the three server paths remove and re-create** (criterion 4, "watches the block's summary root with a `MutationObserver` and a `focusin` listener"; `error-summary.svelte:131`).
+   The whole item, root included, sits in `{#if errors.length > 0 || message}`. Each block clears its errors before awaiting its server (decision 7). So on a server path the root is removed while the server runs, and a new root, with its content, is added to the form. An observer on the old root sees none of this: its own removal is recorded on its parent, and the new content arrives inside a new root. A `focusin` listener on the old root never fires.
+   Failure: INFERRED, from READ code and the EXECUTED event logs above (`remove,add,focus` on the refused sign-in, the failed save and the failed delete, seen by an observer on the block's form, not on the root). On a correct build, the three server paths count 0 content nodes added and see no `focusin`. Criterion 4 fails on correct code. The client paths are not affected: there the root stays.
+   Fix: observe the block's scope with `subtree: true`: the form for the four forms, `[data-slot="settings-delete"]` for the delete. Count each added element that is, or holds, `[data-slot="error-summary-content"]`. Listen for `focusin` on that scope, and match `[data-slot="error-summary"]`. Read "the new node" and "the root" fresh from the scope after the span. Criteria 1, 3 and 6 can keep watching the root: there it stays.
+
+10. **Low: "a VoiceOver pair that reaches it" needs a definition and a consequence** (criterion 14).
+    As written, a VoiceOver pair that times out, stops at the shard deadline, or ends on X0 can be read as "not reached", and the criterion then passes with no VoiceOver evidence.
+    Fix: define "reaches": the test ran to its `judge`, and its `faults.json` holds no X0. Say that a pair which does not reach it is not a pass. The landing notes name the pair and the run. The release check still needs the item heard in both VoiceOver browsers (`022` criterion 13: logs for all 28 items in each). So the gap stays open on the release path, not closed by this criterion.
+
+11. **Low: the lane-E small change needs three lines** (decision 11, the `notProvable` bullet; `derive.ts:210–242`).
+    - A titled entry must never name a patch's witness test, and must never exempt the witness rule for its pair. `mutations.test.ts` should refuse both.
+    - It amends `022` decision 15 step 2 ("each naming the pair and the run id"). Say so in the small change, and give it a roadmap row when it is raised.
+    - INFERRED: `verdict()` treats a failing test with no expected entry as a difference ("failed, and no patch expects it"). If 7b's second submit faults L3 on some runs and not on others, removing its entries makes every later `double-read` dispatch red when it does fault. Say what such a test is: kept expected and ledgered as reader timing under `022` decision 18, or allowed either outcome. Do not leave that to the build.
+
+12. **Low: one name for the dry fact** (criterion 8; decision 11).
+    Fix: in criterion 8, write "the old content node is disconnected", as decision 11 records it.
+
+**Closing verdict.** Does not land yet: finding 9 (Medium) stands, since criterion 4's observer on the summary root cannot see the three server paths' new root; findings 1 to 8 are closed, and findings 10 to 12 are Low write-ins, each given with its fix.
