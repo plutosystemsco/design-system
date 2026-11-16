@@ -8,7 +8,8 @@
  * - every file the item and its registry dependencies list;
  * - the stage: `frame.svelte` and `site.css`, and the block viewer's files
  *   for a block or a composition;
- * - the theme, `src/app.css`;
+ * - the theme, `src/app.css`, and the site's root stylesheet that imports
+ *   it, `src/routes/layout.css` (020a);
  * - the locked versions of the three font packages and of
  *   `@playwright/test`, which pins its Chromium;
  * - the thumbnails script itself.
@@ -123,6 +124,8 @@ export function thumbnailInputs(root: string, name: string): string[] {
     "src/lib/site/page/frame.svelte",
     "src/lib/site/site.css",
     "src/app.css",
+    // 020a: the site's root stylesheet, the theme and the site's sources.
+    "src/routes/layout.css",
     SCRIPT,
     "scripts/site/thumbnail-hash.ts",
     "src/lib/site/example-order.ts",
