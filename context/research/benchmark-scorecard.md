@@ -9,7 +9,7 @@
 
 ## In short
 
-Kuiper 0.13 as built from `020`'s landing tree (re-scored after `020` and after `027a`, whose scores are the same; the first run was Pluto 0.12 at `ea1f9bd`, in the run log). Each score is 0 to 4 (§2).
+Kuiper 0.13 as built from `026`'s merge with `release/0.13.0` at `445d663` (re-scored after `020`, `027a` and `026`, whose scores are the same; the first run was Pluto 0.12 at `ea1f9bd`, in the run log). Each score is 0 to 4 (§2).
 
 | # | Dimension | Pluto | Carbon | Material 3 | Spectrum 2 | Atlassian | Primer | Radix Themes | GOV.UK |
 |---|---|---|---|---|---|---|---|---|---|
@@ -119,7 +119,7 @@ The table is in "In short". Pluto's raw numbers for this run (EXECUTED, `pluto.t
 
 | | Documented | Of 40 | Score | Missing |
 |---|---|---|---|---|
-| Pluto | 68 (ui and blocks) | 31 | 3 | combobox, date picker, file upload, pagination, search, slider, number input, toast, tag |
+| Pluto | 69 (ui and blocks) | 32 | 3 | combobox, date picker, file upload, pagination, search, slider, number input, tag |
 | Carbon | 42 | 33 | 3 | avatar, badge, combobox, empty state, separator, skeleton, textarea (some live inside other pages) |
 | Material 3 | 37 | 24 | 2 | accordion, alert, avatar, breadcrumbs, combobox, empty state, file upload, form field, link, pagination, popover, select, skeleton, number input, table, textarea |
 | Spectrum 2 | 68 | 37 | 4 | drawer, pagination, skeleton |
@@ -128,7 +128,7 @@ The table is in "In short". Pluto's raw numbers for this run (EXECUTED, `pluto.t
 | Radix Themes | 56 | 25 | 2 | accordion, breadcrumbs, button group, combobox, date picker, drawer, empty state, file upload, form field, side nav, pagination, search, number input, toast, tag |
 | GOV.UK | 37 | 17 | 1 | 23, by design: no dialog, menu, popover, tooltip, switch … |
 
-Pluto's 68 include 9 compositions and 8 blocks, which match none of the 40. After `027a` (`9395b46`): `link` and `button-group` each add a part; `progress` matches "progress / meter", which `meter` already held. GOV.UK's 30 patterns are not counted (READ, *GOV.UK* §3).
+Pluto's 69 include 9 compositions and 8 blocks, which match none of the 40. After `027a` (`9395b46`): `link` and `button-group` each add a part; `progress` matches "progress / meter", which `meter` already held. After `026` (merged at `445d663`): `toast` matches "toast / snackbar". GOV.UK's 30 patterns are not counted (READ, *GOV.UK* §3).
 
 ### Row 2. Guidance depth (EXECUTED, `depth.ts`)
 
@@ -419,6 +419,7 @@ Use any `<out>` folder outside the repository, such as the session scratchpad. W
 | 2026-11-15 | `9395b46` (`027a`, committed on its build branch, on `release/0.13.0` from `0372323`) | 2026-11-16 03:21 UTC, at that commit | a builder | 3 2 1 2 1 4 2 4 3 3 3 0 1 3 | 32 | After `027a` (link, button group, progress). `breadth.ts --only kuiper --rev 9395b46`: 68 documented, **31 of 40** (29 before; `link` and `button group` hit), score 3 held (34 or more is 4); with `026`'s toast it would read 32, and `027b` brings 35. `kuiper.ts --rev 9395b46`: 79 entries, 60 `registry:ui`; tokens, theming and every other count as at `6c00a12`. `site.ts --only kuiper`: Button 383 kB (was 381), LCP 1,020 ms, the part at 572 (1440) and 661 (390), 79 nav links, search and theme present; rows 6, 7 and 8 hold. Every page grew by about 0.9 kB, of which 0.67 kB is `registry.json` in the shared chunk; the Button page's 382 kB budget was already exceeded at `0372323` (382.5 kB), see `027`'s landing notes. `depth.ts` not run: it reads the Button and Dialog pages, which `027a` did not change. References not re-checked. |
 | 2026-11-15 | `027a`'s landing tree: the commit "027a: the review's fixes", on the merge of `release/0.13.0` at `421cea7` | 2026-11-16, that tree | a builder | 3 2 1 2 1 4 2 4 3 3 3 0 1 3 | 32 | Supersedes the row above for `027a`'s movement (the review's finding 6). `site.ts --only kuiper`: Button **374 kB** of its 382 kB budget (`020a`'s CSS that reads only code is in it), LCP 912 ms, the part at 572 (1440) and 661 (390), 79 nav links, search and theme present; rows 6, 7 and 8 hold. `breadth.ts --only kuiper`: 68 documented, 31 of 40, score 3 held. Tokens and every other count as at `9395b46`. `depth.ts` not run: Button and Dialog unchanged. References not re-checked. |
 | 2026-11-15 | `367ac57` (`026`, the toast, on its build branch from `44cec73`; its `app-shell` edit deferred) | 2026-11-16 03:26 UTC, the commit's tree | a builder | 3 2 1 2 1 4 2 4 3 3 3 0 1 3 | 32 | After `026`. `breadth.ts --rev 367ac57`: Kuiper documents 66 and covers 30 of 40 (was 29): "toast / snackbar" is no longer missing; row 1 holds at 3 (4 needs 34). `kuiper.ts --rev 367ac57`: 77 registry entries (58 ui, the alias among the 77), 76 pages, 32 e2e specs, forced-colours rules in items 0, tokens unchanged (48 primitives, 61 roles, 129 contrast rows), 12 releases, 33 interface marks. `site.ts --only kuiper`: Button 382 kB (base 381.5 kB, now 382.1 kB by byte count; the `026` Landing notes give each page's change), LCP 1,056 ms, the part at 572 (1440) and 661 (390), 77 nav links, search and theme present; rows 6, 7 and 8 hold. `depth.ts`: Button 5 of 10 (728 words), Dialog 5 of 10 (909 words); row 2 holds. The machine ran under heavy load (load average 75 to 130); LCP is from 3 throttled runs. References not re-checked (only `breadth.ts` and `depth.ts` re-read them; no reference count changed). |
+| 2026-11-16 | `445d663` (`026`'s merge of `release/0.13.0` at `874c5da`, after `027a`) | 2026-11-16, that tree | a builder | 3 2 1 2 1 4 2 4 3 3 3 0 1 3 | 32 | After `026` on `027a`. `breadth.ts --rev 445d663`: Kuiper documents 69 and covers 32 of 40 (`027a`'s 31 and the toast); missing combobox, date picker, file upload, pagination, search, slider, number input, tag; row 1 holds at 3 (4 needs 34). `kuiper.ts --rev 445d663`: 80 registry entries (61 ui, the alias among the 80), 79 pages, 36 e2e specs, forced-colours rules in items 0, tokens unchanged (48 primitives, 61 roles, 129 contrast rows), 12 releases, 33 interface marks. `site.ts --only kuiper`: Button 375 kB, LCP 892 ms, the part at 572 (1440) and 661 (390), 80 nav links, search and theme present; rows 6, 7 and 8 hold. `depth.ts`: Button 5 of 10 (730 words), Dialog 5 of 10 (909 words); row 2 holds. This row replaces the `367ac57` row above for the merged tree, which held 30 of 40 before `027a`. References not re-checked. |
 
 ## 9. Limits
 

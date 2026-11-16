@@ -1120,3 +1120,23 @@ The change review, [`../reviews/026-toast-pr-2026-11-15.md`](../reviews/026-toas
 - **Regenerated, not merged:** `static/r/` and `static/v0.13.0/r/` (`build:registry`), the thumbnails' manifest (`--hash-only`; every hash moved, no picture), and `text-sizes.json` (all eight new pictures present).
 - **The counts, each read from its test:** registry items 79 (types 1, 3, 4, 2, 61, 8), `registry:ui` 61, the literal lint's `FILE_COUNT` 365, items with examples 62, component pages and twins 79, `r/styles/maia` 81 files, `registry-comments` 80 entries, the sitemap's own entries 85 and components 80, the left nav's links 80, the index's lazy tiles 76, framed pages 62, thumbnails 79 items and 158 text sizes.
 - **The roadmap.** Row `036` no longer lists `toast.info`, which `026` ships; it keeps the `info` tone, which the toast's `info` kind then takes. The design lead's ruling, 2026-11-15, at this landing (Q2).
+
+**Figures on the merged tree (`445d663`).** These replace the page-weight flag above, which was stale after `020a` (the review's finding 8). Transfer, counted as `perf.spec.ts` counts it, unthrottled:
+
+| Page | Transfer | Budget |
+|---|---|---|
+| `/components/button/` | 383,791 B (374.8 kB) | 382 kB |
+| `/` | 308,683 B (301.4 kB) | 355 kB |
+| `/components/` | 358,823 B (350.4 kB) | 395 kB |
+| `/components/toast/` | 392,283 B (383.1 kB) | — (the component template's budget waits for `024`) |
+
+The perf project, on one worker: the Button page, home, the components index, the code block page and the Colour page pass their transfer, LCP and CLS budgets, 5 of 5. `site.ts`: Button 375 kB, LCP 892 ms. Every page still pays for every item through the sitemap's import of `registry.json`; a lane-S small change should trim it (finding 8).
+
+**Checks on the merged tree:**
+
+- `bun run check`: 0 errors, 0 warnings, 2,259 files. `bun run lint`: clean. The literal lint: 0 literals, 1 allowance, 365 files.
+- The unit suite, with a 120 s timeout: 1,345 pass, 2 skip, 0 fail. A later run, under load, failed the two highlighter speed budgets alone; the handoff and the review name both as flaky under load.
+- The browser suite, light and dark: 3,258 passed, 49 failed, 118 skipped. 48 of the 49 were `027a`'s test 52 on the pair views this merge had dropped; with the views restored, the specs that read examples (`batch-a`, `toast`, `build-output`, `site`, `upgrade`, `frames`) passed, 393 of 393. The 49th, a `bar-glass` test at 1440, timed out at 30 s under load and passed with its siblings on one worker, 11 of 11.
+- `bun run test:smoke`: 138 pass, 1 fail; the failure, the dev loop's 5 s rewrite under load, passed alone (2 of 2).
+- `bun scripts/site/release-check.ts`: exit 0.
+- The scorecard at `445d663` (`kuiper.ts`, `breadth.ts`, `site.ts --only kuiper`, `depth.ts`): row 1 reads 32 of 40 parts, score 3 held; every other row holds; the total stays 32. The run log has the row.
