@@ -1,7 +1,9 @@
 <script lang="ts" module>
   /** A group of links: its title names its navigation landmark. */
   export type MarketingFooterGroup = {
+    /** The group's heading. */
     title: string;
+    /** The group's links, in order, each with its text and where it goes. */
     links: { label: string; href: string }[];
   };
 </script>
@@ -26,6 +28,7 @@
     logo: Snippet<[place: "header" | "footer"]>;
     /** The product's name: the logo's accessible name. */
     appName: string;
+    /** The footer's link groups, each a titled list. */
     groups: MarketingFooterGroup[];
     /** The product's own line under its logo. */
     tagline?: string;

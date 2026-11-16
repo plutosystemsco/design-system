@@ -8,7 +8,10 @@
     value = $bindable(),
     class: className,
     ...props
-  }: ComponentProps<typeof Input> = $props();
+  }: ComponentProps<typeof Input> & {
+    /** The text in the input. Bind it to read or set it. */
+    value?: ComponentProps<typeof Input>["value"];
+  } = $props();
 </script>
 
 <!-- The group draws the focus indicator and the border; the control drops both. -->

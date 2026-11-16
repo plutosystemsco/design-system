@@ -7,7 +7,6 @@
  * A later specification appends its pages to `SITEMAP`; `spec` names which
  * specification added an entry, for the tests alone, and is never shown.
  */
-import registry from "../../../registry.json";
 import { DOORS, type DoorId } from "./doors.ts";
 import { listedItems } from "./items.ts";
 
@@ -23,13 +22,6 @@ export type SitePage = {
   spec: "015" | "017" | "020";
   /** A component page's registry group. */
   group?: string;
-};
-
-type RegistryItem = {
-  name: string;
-  title: string;
-  description: string;
-  meta: { group: string };
 };
 
 /** The registry's groups, in its order, with the names a reader sees. */
@@ -52,8 +44,10 @@ export function componentPath(name: string): string {
   return `/components/${name}/`;
 }
 
-// 020 decision 3: a deprecated entry (an alias) has no page.
-const items = listedItems(registry.items as RegistryItem[]);
+// 020 decision 3: a deprecated entry (an alias) has no page. 024b: the
+// list is the generated `LISTED_ITEMS`, not `registry.json`, because this
+// module runs in the browser.
+const items = listedItems();
 
 export const SITEMAP: SitePage[] = [
   {

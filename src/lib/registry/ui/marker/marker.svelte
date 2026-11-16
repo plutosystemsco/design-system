@@ -38,8 +38,21 @@
     child,
     ...restProps
   }: WithElementRef<HTMLAttributes<HTMLDivElement>> & {
+    /**
+     * `separator` draws a hairline either side of the text. `border` underlines
+     * it. `default` is the text alone.
+     */
     variant?: MarkerVariant;
+    /**
+     * Renders your own element in place of the `<div>`. Spread the `props` it
+     * is given on that element.
+     */
     child?: Snippet<[{ props: Record<string, unknown> }]>;
+    /**
+     * Classes for the marker, added after Kuiper's by `cn`: on the `<div>`, or
+     * on the element `child` renders.
+     */
+    class?: HTMLAttributes<HTMLDivElement>["class"];
   } = $props();
 
   const mergedProps = $derived({

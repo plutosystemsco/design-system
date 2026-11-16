@@ -8,12 +8,14 @@
  * workers.dev address until the owner sets `design.<domain>`;
  * `scripts/site/release-check.ts` keeps a placeholder from reaching a tag.
  */
-import pkg from "../../../package.json";
+// 024b: a root field by name, so the rest of package.json stays out of the
+// browser's chunks.
+import { version } from "../../../package.json";
 
 export const SITE_NAME = "Kuiper Design System";
 export const SITE_ORIGIN =
   "https://pluto-systems-design.claygendron.workers.dev";
-export const VERSION: string = pkg.version;
+export const VERSION: string = version;
 export const SOURCE = "https://github.com/plutosystemsco/design-system";
 export const CLI = "bunx --bun shadcn-svelte@1.7.1";
 

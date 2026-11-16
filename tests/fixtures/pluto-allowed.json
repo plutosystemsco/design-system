@@ -25,7 +25,7 @@
     {
       "files": "**",
       "pattern": "Pluto Systems",
-      "count": 328,
+      "count": 329,
       "class": "brand",
       "reason": "The company's name (decision 2).",
       "byFile": {
@@ -43,6 +43,7 @@
         "src/lib/site/chrome/footer.svelte": 1,
         "src/lib/site/examples/four-dot/lockup.svelte": 2,
         "src/lib/site/examples/kuiper-theme/type.svelte": 1,
+        "src/lib/site/listed-items.ts": 1,
         "src/lib/site/sitemap.ts": 1,
         "src/lib/site/upgrade/0.13.0.ts": 1,
         "src/routes/(shell)/view/app-shell/lockup/+page.svelte": 2,
@@ -369,6 +370,13 @@
       "count": 25,
       "class": "history",
       "reason": "The tests that read the changelog's entries before 0.13.0, which name the theme pluto-theme, as released."
+    },
+    {
+      "files": "tests/unit/api-described.test.ts",
+      "pattern": "pluto-theme",
+      "count": 1,
+      "class": "alias",
+      "reason": "023 test 2: the alias entry is one of the items with no table, until 0.14.0 removes it."
     },
     {
       "files": "tests/unit/rename.test.ts",

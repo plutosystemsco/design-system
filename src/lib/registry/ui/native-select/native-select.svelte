@@ -14,7 +14,25 @@
   type NativeSelectProps = Omit<
     WithElementRef<HTMLSelectAttributes, HTMLSelectElement>,
     "size"
-  >;
+  > & {
+    /** The chosen option's value. Bind it to read or set it. */
+    value?: HTMLSelectAttributes["value"];
+    /**
+     * The control's id. Inside a `Field` it defaults to the field's, so the
+     * field's label points here.
+     */
+    id?: HTMLSelectAttributes["id"];
+    /**
+     * The ids of the text that describes the control. Inside a `Field` it
+     * defaults to the field's description and error.
+     */
+    "aria-describedby"?: HTMLSelectAttributes["aria-describedby"];
+    /**
+     * Marks the control invalid and draws its border in the destructive colour.
+     * Inside a `Field` it follows the field's `error` or `invalid`.
+     */
+    "aria-invalid"?: HTMLSelectAttributes["aria-invalid"];
+  };
 
   let {
     ref = $bindable(null),

@@ -6,7 +6,18 @@
     open = $bindable(false),
     onOpenChange,
     ...restProps
-  }: TooltipPrimitive.RootProps<T> = $props();
+  }: TooltipPrimitive.RootProps<T> & {
+    /**
+     * Whether the tooltip shows. Kuiper opens it again if a scroll closes it
+     * while its trigger keeps keyboard focus.
+     */
+    open?: TooltipPrimitive.RootProps<T>["open"];
+    /**
+     * Called when the tooltip opens or closes, before Kuiper's own handler
+     * reopens it for a focused trigger.
+     */
+    onOpenChange?: TooltipPrimitive.RootProps<T>["onOpenChange"];
+  } = $props();
 
   /**
    * Shared with `TooltipTrigger`: its element, and whether the person

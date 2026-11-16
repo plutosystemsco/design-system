@@ -15,5 +15,9 @@ export type WithoutChildrenOrChild<T> = WithoutChildren<WithoutChild<T>>;
 
 /** `T` plus an optional, bindable reference to the element it renders. */
 export type WithElementRef<T, U extends HTMLElement = HTMLElement> = T & {
+  /**
+   * The rendered element. Bind it with `bind:ref` to reach the element itself,
+   * such as to focus it.
+   */
   ref?: U | null;
 };

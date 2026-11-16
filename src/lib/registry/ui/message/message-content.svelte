@@ -36,6 +36,10 @@
     children,
     ...restProps
   }: WithElementRef<HTMLAttributes<HTMLDivElement>> & {
+    /**
+     * `plain` is the assistant's prose, full width. `bubble` is a person's
+     * turn: on the muted inset, at the end of its column.
+     */
     variant?: MessageContentVariant;
   } = $props();
 </script>

@@ -24,6 +24,26 @@
     logLabel?: string;
     /** Set while a reply streams, for readers that honour aria-busy. */
     busy?: boolean;
+    /**
+     * Called when the box scrolls, after Kuiper checks whether the reader has
+     * left the end. A scroll back to the end follows the log again.
+     */
+    onscroll?: HTMLAttributes<HTMLDivElement>["onscroll"];
+    /**
+     * Called on a wheel over the box, after Kuiper stops following the end if
+     * the wheel turned up.
+     */
+    onwheel?: HTMLAttributes<HTMLDivElement>["onwheel"];
+    /**
+     * Called on a touch drag in the box, after Kuiper stops following the end,
+     * unless the box is already there.
+     */
+    ontouchmove?: HTMLAttributes<HTMLDivElement>["ontouchmove"];
+    /**
+     * Called on each key press in the box, after Kuiper stops following the end
+     * on Arrow Up, Page Up or Home.
+     */
+    onkeydown?: HTMLAttributes<HTMLDivElement>["onkeydown"];
   } = $props();
 
   const follow = new FollowBottom();

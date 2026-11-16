@@ -36,9 +36,20 @@
     size,
     ...restProps
   }: WithElementRef<HTMLAttributes<HTMLDivElement>> & {
+    /**
+     * Renders your own element in place of the `<div>`, such as an `<a>` for a
+     * whole item that links. Spread the `props` it is given on that element.
+     */
     child?: Snippet<[{ props: Record<string, unknown> }]>;
+    /** The default has no border. The other look draws one, for an item that stands alone. */
     variant?: ItemVariant;
+    /** `sm` tightens the padding and gaps, for a dense list. */
     size?: ItemSize;
+    /**
+     * Classes for the item, added after Kuiper's by `cn`: on the `<div>`, or on
+     * the element `child` renders.
+     */
+    class?: HTMLAttributes<HTMLDivElement>["class"];
   } = $props();
 
   const inGroup = getContext<boolean | undefined>("kuiper:item-group") ?? false;

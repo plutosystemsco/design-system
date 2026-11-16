@@ -128,3 +128,18 @@ At the re-base sweep after `024b`, `024c`, `024d` and `024e`: `component`'s wors
 - A third try of the two highlighter timing tests at load 36: 10 ms per chunk and 1.95 s, still over. They fall with the load each time (21 → 10 ms; 9.2 → 1.95 s).
 - Not run: Firefox and WebKit, smoke, the screen-reader suite. The change is one `<link>` in the head of component pages, in a different place.
 - **The scorecard** was not re-run by the builder: no item, no count and no page's text changed, and row 8 reads Button, whose LCP (about 1,010 to 1,025 ms) stays in band 4 (≤ 1.5 s). The landing re-runs it (AGENTS.md).
+
+### The merge of `release/0.13.0` at `5971a1a` (`024b`, `023`, and context)
+
+The coordinator named `1a116a4`. The release had moved one context commit on, to `5971a1a` (this change's review and two roadmap lines), and the merge took the tip. The change review's merge notes, followed:
+
+- **`src/lib/site/thumbnails/manifest.json`** conflicted. I took the release's copy, then ran `bun scripts/site/thumbnails.ts --hash-only`: 62 hashes, the component pages' example thumbnails. `bun scripts/site/thumbnails.ts label native-select`, with a fresh build, re-took four pictures **byte for byte the same** (`git status` showed nothing new), and left the manifest as `--hash-only` wrote it.
+- **`tests/e2e/build-output.spec.ts`** conflicted, where both sides had appended a block after `020a`'s. I kept both: `024b`'s block, then `024c`'s.
+- `bun install --frozen-lockfile`: no changes.
+
+The checks on the merged tree:
+
+- `bun run check`: **0 errors, 0 warnings**, 2,379 files.
+- `bun test tests/unit/budgets.test.ts tests/unit/thumbnails.test.ts --timeout 120000`: **70 pass, 0 fail**.
+- `E2E_PORT=5766 bun --bun playwright test --project=chromium-light tests/e2e/build-output.spec.ts tests/e2e/site.spec.ts`: **70 passed** (1.2 min). That includes both `024c` tests.
+- `E2E_PORT=5767 bun --bun playwright test --project=perf --no-deps`: **28 passed** (6.4 min with the build). The five `component` probes read **CLS 0 in every run**. LCP medians: `sidebar` 1,148, `button` 984, `label` 896, `native-select` 940, `empty` 896 ms (budget 1,270). Transfer after `024b`: `sidebar` 395.2, `button` 364.6, `label` 323.4, `native-select` 331.7, `empty` 319.8 kB.

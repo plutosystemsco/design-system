@@ -15,7 +15,21 @@
     portalProps,
     ...restProps
   }: TooltipPrimitive.ContentProps & {
+    /**
+     * Props for the `TooltipPortal` that holds the tooltip, such as `to`, the
+     * element it renders into.
+     */
     portalProps?: WithoutChildrenOrChild<ComponentProps<typeof TooltipPortal>>;
+    /**
+     * The gap between the trigger and the tooltip. Kuiper's default is the
+     * small spacing step.
+     */
+    sideOffset?: TooltipPrimitive.ContentProps["sideOffset"];
+    /**
+     * Kuiper sets `top` itself, so the side holds if bits-ui's default changes.
+     * It flips when there is no room.
+     */
+    side?: TooltipPrimitive.ContentProps["side"];
   } = $props();
 </script>
 

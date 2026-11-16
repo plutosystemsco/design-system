@@ -32,7 +32,20 @@
     ...restProps
   }: ToggleGroupPrimitive.RootProps &
     ToggleVariants & {
+      /** The direction of the row. The arrow keys follow it, and the joined corners round at its ends. */
       orientation?: "horizontal" | "vertical";
+      /**
+       * The pressed item's value, or with `type="multiple"`, every pressed
+       * item's. Bind it to read or set them.
+       */
+      value?: ToggleGroupPrimitive.RootProps["value"];
+      /** The size of every item in the group, as `Toggle`'s. */
+      size?: ToggleVariants["size"];
+      /**
+       * The look of every item in the group, as `Toggle`'s. In the bordered
+       * look, neighbours share one border.
+       */
+      variant?: ToggleVariants["variant"];
     } = $props();
 
   setToggleGroupCtx({

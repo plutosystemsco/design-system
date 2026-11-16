@@ -11,7 +11,16 @@
     children,
     ...restProps
   }: WithElementRef<HTMLAttributes<HTMLLegendElement>> & {
+    /**
+     * Sets `data-variant` on the legend, for an app's own styles. Kuiper styles
+     * both values the same.
+     */
     variant?: "legend" | "label";
+    /**
+     * The legend's id. Without it, the legend takes its `FieldSet`'s, so a
+     * radio group in the set is named by it.
+     */
+    id?: HTMLAttributes<HTMLLegendElement>["id"];
   } = $props();
 
   // Record this legend's id in the set, before the group control renders, so

@@ -8,6 +8,7 @@
     message,
     names = { user: "you", assistant: "assistant" },
   }: {
+    /** The message this turn shows. */
     message: ChatMessage;
     /** The mono headings over the turns; an app may pass the agent's name. */
     names?: { user: string; assistant: string };

@@ -1,18 +1,30 @@
 <script lang="ts" module>
   export type SettingsField = "name" | "email";
   export type SettingsValues = {
+    /** The person's name. */
     name: string;
+    /** The person's email address. */
     email: string;
+    /** The chosen time zone, as an IANA name. */
     timeZone: string;
+    /** Whether to email the person when a run fails. */
     notifyFailures: boolean;
+    /** Whether to email the person a summary. */
     notifySummary: boolean;
+    /** The chosen theme, or `system` to follow the device. */
     theme: "system" | "light" | "dark";
   };
   export type SettingsResult =
-    | { ok: true }
     | {
+        /** The values were saved. */
+        ok: true;
+      }
+    | {
+        /** The values were not saved; say why. */
         ok: false;
+        /** Each field's error, shown at the field and in the summary. */
         errors?: Partial<Record<SettingsField, string>>;
+        /** An error for the whole form, shown in the summary. */
         formError?: string;
       };
 
@@ -69,15 +81,35 @@
     values: SettingsValues;
     /** The fields' starting values; default `values`. */
     draft?: SettingsValues;
+    /**
+     * Called with the values when the person saves. It resolves to say whether
+     * they were saved, or why not.
+     */
     onsave: (values: SettingsValues) => Promise<SettingsResult>;
+    /**
+     * Each field's error, set by a failed save or by you. Bind it to read or
+     * set them.
+     */
     errors?: Partial<Record<SettingsField, string>>;
+    /**
+     * An error for the whole form, shown in the summary. Bind it to read or set
+     * it.
+     */
     formError?: string;
+    /**
+     * True while `onsave` runs. The Save button shows a spinner and ignores
+     * presses.
+     */
     busy?: boolean;
     /** Shows "Saved". */
     saved?: boolean;
     /** Read-only to the app: the fields differ from the saved copy. */
     dirty?: boolean;
+    /**
+     * The time zones to offer. Kuiper's default is a short list; pass your own.
+     */
     timeZones?: { value: string; label: string }[];
+    /** Starts every field's id, so two forms on a page never share one. */
     idPrefix?: string;
     class?: string;
   } = $props();

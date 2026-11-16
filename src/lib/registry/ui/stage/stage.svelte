@@ -42,6 +42,13 @@
      * on the field itself.
      */
     ground?: StageGround;
+    /**
+     * The rendered `<section>` or `<div>`, as `element` sets. Bind it with
+     * `bind:ref`.
+     */
+    ref?: WithElementRef<HTMLAttributes<HTMLElement>>["ref"];
+    /** Classes for the `<section>` or `<div>`, added after Kuiper's by `cn`. */
+    class?: HTMLAttributes<HTMLElement>["class"];
   } = $props();
 </script>
 

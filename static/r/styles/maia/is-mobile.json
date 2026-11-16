@@ -26,7 +26,7 @@
 	},
 	"files": [
 		{
-			"content": "import { MediaQuery } from \"svelte/reactivity\";\n\nconst DEFAULT_MOBILE_BREAKPOINT = 768;\n\nexport class IsMobile extends MediaQuery {\n  constructor(breakpoint: number = DEFAULT_MOBILE_BREAKPOINT) {\n    super(`max-width: ${breakpoint - 1}px`);\n  }\n}\n",
+			"content": "import { MediaQuery } from \"svelte/reactivity\";\n\nconst DEFAULT_MOBILE_BREAKPOINT = 768;\n\n/**\n * A media query that is true below the breakpoint, Kuiper's `md` by default.\n * Read `current`; it follows the window.\n */\nexport class IsMobile extends MediaQuery {\n  constructor(breakpoint: number = DEFAULT_MOBILE_BREAKPOINT) {\n    super(`max-width: ${breakpoint - 1}px`);\n  }\n}\n",
 			"type": "registry:hook",
 			"target": "is-mobile.svelte.ts"
 		}

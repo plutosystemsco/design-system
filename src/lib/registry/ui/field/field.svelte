@@ -47,6 +47,11 @@
     children,
     ...restProps
   }: Omit<WithElementRef<HTMLAttributes<HTMLDivElement>>, "id"> & {
+    /**
+     * `vertical` stacks the label above the control. `horizontal` puts the
+     * control first, with the label, description and error beside it.
+     * `responsive` stacks until its `FieldGroup` is wide enough.
+     */
     orientation?: FieldOrientation;
     /** The control's id. Without it, the field makes one. */
     id?: string;

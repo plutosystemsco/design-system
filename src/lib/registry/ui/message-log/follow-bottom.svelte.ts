@@ -19,6 +19,11 @@ const AWAY_KEYS = new Set(["ArrowUp", "PageUp", "Home"]);
 /** Within this many pixels of the end, the box counts as at its end. */
 const EDGE = 8;
 
+/**
+ * Keeps a scroll box's end in view as content arrives, until the reader scrolls
+ * away; reaching the end again follows once more. `MessageLog` uses it; it
+ * suits any growing box.
+ */
 export class FollowBottom {
   /** True while the box keeps its end in view as content arrives. */
   following = $state(true);

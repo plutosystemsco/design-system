@@ -5,7 +5,12 @@
     ref = $bindable(null),
     value = $bindable(),
     ...restProps
-  }: DropdownMenuPrimitive.RadioGroupProps = $props();
+  }: DropdownMenuPrimitive.RadioGroupProps & {
+    /**
+     * The value of the checked item in the group. Bind it to read or set it.
+     */
+    value?: DropdownMenuPrimitive.RadioGroupProps["value"];
+  } = $props();
 </script>
 
 <DropdownMenuPrimitive.RadioGroup

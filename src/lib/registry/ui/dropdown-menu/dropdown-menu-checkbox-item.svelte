@@ -14,7 +14,20 @@
     closeOnSelect = false,
     ...restProps
   }: WithoutChildrenOrChild<DropdownMenuPrimitive.CheckboxItemProps> & {
+    /** The item's text, after the check. */
     children?: Snippet;
+    /** Whether the item is checked. A check shows at the start of the row. */
+    checked?: DropdownMenuPrimitive.CheckboxItemProps["checked"];
+    /**
+     * Shows a dash in place of the check, for an item that stands for a mixed
+     * set.
+     */
+    indeterminate?: DropdownMenuPrimitive.CheckboxItemProps["indeterminate"];
+    /**
+     * Kuiper keeps the menu open when the item is toggled, so several can be
+     * set in one visit. Set it to close the menu.
+     */
+    closeOnSelect?: DropdownMenuPrimitive.CheckboxItemProps["closeOnSelect"];
   } = $props();
 </script>
 

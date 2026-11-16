@@ -419,6 +419,10 @@ The review, [`../reviews/028-forced-colours-spec-2026-11-15.md`](../reviews/028-
 
 ## Landing notes
 
+### From `022b`'s build (2026-11-16): `Highlight` in Firefox's forced palette
+
+`022b`'s builder probed Firefox's default forced-colours palette: `Highlight` and `SelectedItem` are the same blue (#3399FF), and with `HighlightText` (white) on it the pair reads 2.94:1, below 4.5:1. So decision 4's `Highlight`/`HighlightText` pair for a selected or pressed state fails in Firefox, as the frame's theme switch did (`022b`, fixed there with `CanvasText` on `Canvas` plus its own non-colour cue). This build re-reads decision 4 against Firefox's palette before it lands: where a selected state rests on `Highlight`, it carries a second, non-colour cue (a border in `CanvasText`, a check, an underline) and its text stays `CanvasText`-on-`Canvas` legible, so the state never depends on a 2.94:1 pair. `022b`'s change review records the evidence.
+
 ### From `024d`'s change review (2026-11-16): code blocks under forced colours
 
 [`../reviews/024d-the-theme-page-loads-no-editor-pr-2026-11-16.md`](../reviews/024d-the-theme-page-loads-no-editor-pr-2026-11-16.md), finding 4, measured: under `forced-colors: active`, every `code-block` line's transparent marker paints as `CanvasText` (all 893 lines on the theme page, all 217 on the code-block page). A highlighted line then looks like any other, and no forced-colours test covers code blocks. The design lead adds `code-block` to this build's scope, as one more item in its per-item table though it is not interactive: under forced colours, `forced-color-adjust: none` on the line marker, `Canvas` on default lines and `Highlight` on emphasised ones, with a `forced-colors.spec.ts` case that a highlighted line differs from its neighbours. Constitution §4.4 ("every item … under forced colours") is the reason it belongs here rather than waiting.
