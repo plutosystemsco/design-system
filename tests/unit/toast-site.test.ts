@@ -167,6 +167,7 @@ describe("026: the changelog", () => {
       "`sonner`",
       "`timers`",
       "`add app-shell`",
+      "the two imports",
     ])
       expect(shell[0], phrase).toContain(phrase);
     // In landing order: right after the toast's own bullet.
