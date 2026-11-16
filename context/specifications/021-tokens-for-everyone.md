@@ -652,6 +652,27 @@ The change review ([`../reviews/021-tokens-for-everyone-pr-2026-11-15.md`](../re
 
 Re-run after the fixes: `bun run check` 0 errors; lint clean; the token unit files with `registry`, `rename`, `search` and `tokens-pages`, 226 pass, 0 fail (one 5 s timeout in T9 at load average 98, passing alone); `tokens.spec.ts` and `tokens-files.spec.ts` in light and dark, 96 passed, 4 skipped; `build:tokens` reports no changes.
 
+### The merge of `release/0.13.0` (2026-11-16)
+
+`release/0.13.0` at `a30ffa7`, after `027a` and `026`, is merged into this branch as `c5df65b`, following the change review's merge notes. Five files conflicted:
+
+- `tests/unit/registry.test.ts`: the release's file kept whole; `021`'s narrowed amber skip applied to its 016 test; `021`'s criterion 18 block appended after it.
+- `CHANGELOG.md`: `027a`'s three bullets and `026`'s, then `021`'s two, in landing order.
+- `tests/fixtures/pluto-allowed.json`: counts derived from the rename test after `git add`. `plutosystemsco` is 263: the release's 262 and `kuiper.css`'s source line. The vendor key holds at 1,152; the lifecycle test's entry at 1.
+- `src/lib/site/thumbnails/manifest.json`: the release's side, then `thumbnails.ts --hash-only`, which rewrote the same four hashes (`kuiper-theme` and the three font items).
+- `context/research/benchmark-scorecard.md`: every run-log row kept, in landing order; the "In short" line names `020`, `027a`, `026` and `021`.
+
+After the merge, `build:tokens` reports no changes, and `build:registry` keeps `static/r/tokens/` and `static/v0.13.0/r/tokens/` (8 files each).
+
+On the merged tree:
+
+- `bun run check`: 0 errors, 0 warnings (2,267 files). `bun run lint`: clean. Literal lint: 0 violations, 1 allowance.
+- Unit: 1,401 pass, 2 skip, 4 fail (1,407 tests, 49 files). The 4 were `thumbnails.test.ts` hash tests at the 5 s timeout; run alone, 10 of 10 pass at the default timeout.
+- `tokens.spec.ts`, `tokens-files.spec.ts` and `build-output.spec.ts`, light and dark: 119 passed, 4 skipped.
+- The perf project: 5 passed (home, the components index, Button, code block, the Colour page).
+- Smoke: 139 pass, 0 fail. The release check exits 0.
+- The scorecard at `c5df65b`: rows 3 2 1 2 4 4 2 4 3 3 3 0 1 3, total 35. Row 5 is 4, row 12 0. `site.ts --only kuiper`: Button 375 kB, LCP 868 ms, the part at 572 (1440) and 661 (390). `kuiper.ts --rev c5df65b`: tokens as at `b37dcf4`, 80 registry entries, 34 interface marks.
+
 ### The suites
 
 On the final tree, 2026-11-15, on a machine shared with other builds (load average 35 to 70):
