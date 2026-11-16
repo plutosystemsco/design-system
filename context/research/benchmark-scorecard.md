@@ -9,7 +9,7 @@
 
 ## In short
 
-Kuiper 0.13 as built from `020`'s landing tree (re-scored after `020`; the first run was Pluto 0.12 at `ea1f9bd`, in the run log). Each score is 0 to 4 (§2).
+Kuiper 0.13 as built at `b37dcf4` (`021`; re-scored after `020` and `021`; the first run was Pluto 0.12 at `ea1f9bd`, in the run log). Each score is 0 to 4 (§2).
 
 | # | Dimension | Pluto | Carbon | Material 3 | Spectrum 2 | Atlassian | Primer | Radix Themes | GOV.UK |
 |---|---|---|---|---|---|---|---|---|---|
@@ -17,7 +17,7 @@ Kuiper 0.13 as built from `020`'s landing tree (re-scored after `020`; the first
 | 2 | Guidance depth | 2 | **3** | **3** | **3** | 2 | **3** | 0 | 1 |
 | 3 | Accessibility evidence | 1 | **3** | 1 | 0 | 0 | 2 | 0 | 2 |
 | 4 | Theming | 2 | 3 | **4** | 2 | 2 | **4** | **4** | 0 |
-| 5 | Tokens | 1 | 3 | 1 | 2 | 3 | **4** | 1 | 1 |
+| 5 | Tokens | **4** | 3 | 1 | 2 | 3 | **4** | 1 | 1 |
 | 6 | Navigation and search | **4** | 2 | 3 | 3 | 3 | 3 | 2 | 3 |
 | 7 | The part first | 2 | 1 | **4** | 3 | 2 | 2 | **4** | **4** |
 | 8 | Page weight and paint | **4** | 0 | 0 | 2 | 2 | 1 | 2 | **4** |
@@ -27,14 +27,14 @@ Kuiper 0.13 as built from `020`'s landing tree (re-scored after `020`; the first
 | 12 | Design tooling | 0 | 2 | 2 | 2 | 2 | **4** | 1 | 1 |
 | 13 | Reach | 1 | **3** | **3** | **3** | 0 | 1 | 0 | 2 |
 | 14 | Governance | 3 | **4** | 0 | 1 | 2 | **4** | 1 | 3 |
-| | **Total, of 56** | **32** | 37 | 28 | 32 | 30 | 41 | 25 | 31 |
+| | **Total, of 56** | **35** | 37 | 28 | 32 | 30 | 41 | 25 | 31 |
 
 Bold marks the best score in a row. The total is a summary, not a target: the rows weigh differently for Pluto's apps.
 
-**The five biggest gaps** (Pluto against the best reference, §5):
+**The biggest gaps** (Pluto against the best reference, §5). Tokens, the second, closed with `021`: DTCG 2025.10 with every role's job in the source, a removed-names record checked against every release, and two targets, CSS variables and DTCG JSON (4, tying Primer).
 
 1. **Design tooling, 0 against 4 (Primer).** No design-tool library, no tokens as design variables, no designer path.
-2. **Tokens, 1 against 4 (Primer).** The file is not DTCG, the role words live in the site, not the token file, and nothing records a removed or renamed name.
+2. ~~Tokens, 1 against 4 (Primer).~~ Closed by `021`: 4 against 4.
 3. **Accessibility evidence, 1 against 3 (Carbon).** axe in both themes and measured contrast, but no per-component status, no forced-colours pass over items, no high-contrast scheme, no keyboard table, no screen-reader record.
 4. **Theming, 2 against 4 (Material, Primer, Radix).** Light and dark and the expressive mode, but a light island cannot sit in a dark page, and there is no contrast scheme.
 5. **The part first, 2 against 4 (Material, Radix, GOV.UK).** The first frame starts at y = 419, but the part's own pixels start at y = 572 at 1440 and y = 661 at 390. The frame's header takes 150 px.
@@ -189,7 +189,7 @@ Pluto's 65 include 9 compositions and 8 blocks, which match none of the 40. GOV.
 
 | | a one source | b jobs written | c in the source | d DTCG | e pairs tested | f lifecycle | g targets | Count | Score |
 |---|---|---|---|---|---|---|---|---|---|
-| Pluto | ✓ | ✓ | – | – | ✓ | – | – | 3 | 1 |
+| Pluto | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | 7 | 4 |
 | Carbon | ✓ | ✓ | ✓ | ✓ | – | ✓ | ✓ | 6 | 3 |
 | Material 3 | ✓ | ✓ | ? | – | ? | – | ✓ | 3 | 1 |
 | Spectrum 2 | ✓ | – | – | ✓ | – | ✓ | ✓ | 4 | 2 |
@@ -198,7 +198,7 @@ Pluto's 65 include 9 compositions and 8 blocks, which match none of the 40. GOV.
 | Radix Themes | ✓ | ✓ | – | – | – | – | ✓ | 3 | 1 |
 | GOV.UK | ✓ | ✓ | – | – | – | ✓ | – | 3 | 1 |
 
-- **Pluto:** one file, bespoke shape; words in the site; 129 pairs tested; no rename record; CSS only (EXECUTED; READ, *Primer* §1, *Spectrum* §3).
+- **Pluto** (since `021`, `b37dcf4`): DTCG 2025.10, a resolver over a base file and one file per scheme, valid against the published schemas (Ajv 8.17.1) and read by Terrazzo 2.10.0 (`tz check`, no errors); 61 of 61 roles and 16 of 16 code slots described in the source (c); `tokens/kuiper.removed.json` lists the 24 removed names and a test checks it against every release under `static/` (f), with `since` on every token; published as `kuiper.css` and as DTCG JSON, the source and each scheme flattened, at `/r/tokens/` (g); 129 pairs tested (EXECUTED, `kuiper.ts`, the unit suite). Before `021`: one file, bespoke shape; words in the site; no rename record; CSS only.
 - **Carbon:** DTCG 2025.10 with a resolver; a test fails a token without a description; deprecation in the description (READ, *Carbon* §1.1). **Spectrum:** UUIDs, lifecycle, semantic diff, DTCG and Figma exporters; 106 of 2,523 rows described (READ and EXECUTED, *Spectrum* §1, §3). **Atlassian:** every token listed with its job and "Introduced v …" (EXECUTED, `/components/tokens/all-tokens`). **Primer:** DTCG JSON5, `$description` and LLM rules, `removed.json`, contrast CI, Figma variables (READ, *Primer* §1, §4). **Radix:** twelve-step scales with step jobs, no contrast test (READ, *Radix* §1). **GOV.UK:** Sass settings, named colour uses, deprecation warnings (READ, *GOV.UK* §5).
 
 ### Row 6. Navigation and search
@@ -346,7 +346,7 @@ READ: *enterprise* §3–4, *developer* §4–5, *product* §3–5, *Carbon* §3
 | # | Dimension | Pluto | Best | Who | Gap | What the best does |
 |---|---|---|---|---|---|---|
 | 12 | Design tooling | 0 | 4 | Primer | **−4** | Figma library, tokens as Figma variables, a contribution path for the library, an LLM guide. |
-| 5 | Tokens | 1 | 4 | Primer | **−3** | DTCG with descriptions and pairing rules in the token, `removed.json` checked in CI, contrast CI, several outputs. |
+| 5 | Tokens | 4 | 4 | Primer | 0 | Closed by `021`. Primer also keeps pairing rules in each token and an LLM guide. |
 | 3 | Accessibility evidence | 1 | 3 | Carbon | −2 | Tagged automated checks per state, a generated status page, forced-colours rules in 30 components, manual screen-reader passes. |
 | 4 | Theming | 2 | 4 | Material, Primer, Radix | −2 | Either scheme on any subtree; a contrast scheme or a scale. |
 | 7 | The part first | 2 | 4 | Material, Radix, GOV.UK | −2 | The specimen at y ≈ 290–330, inside the first phone screen. |
@@ -368,7 +368,7 @@ Each line names the smallest change that moves the row by one, and what is alrea
 2. **Depth 2 → 3:** one more element on both pages. Prop doc comments, so 80% of rows are described, are already placed after `018` (READ, *synthesis* §1). A keyboard table from data the tests read, and an anatomy figure, would reach 4.
 3. **Accessibility evidence 1 → 2:** two more criteria. Planned for 0.13.0: the status generated from the test report (d) and a forced-colours pass over items (e) (READ, `handoff.md`, "Next"). Six criteria make 3: add the `019` VoiceOver run, recorded (h), and hover, pressed, disabled and invalid states driven in the axe pass (b).
 4. **Theming 2 → 3:** scoped schemes both ways, option B of *scoped* §6 (`light-dark()` and `data-scheme`). The high-contrast scheme after it makes 4.
-5. **Tokens 1 → 2:** role words moved from `words.ts` into the token file (c). Add the removed-names record (f) for 3 (*Primer* idea 1, *Spectrum* idea 2).
+5. **Tokens 4:** hold, since `021`. The fixtures under `tests/fixtures/021-before/`, the record's test and the validator guard it.
 6. **Navigation and search 4:** hold. Keep `nav.spec.ts` and `search.spec.ts` guarding it.
 7. **The part first 2 → 3:** the stage above y = 500 at 1440 and inside the phone's first screen: about 80 px to find. Put the frame's title and the Light | Dark switch on one row, or move the first frame's description below its stage.
 8. **Weight 4:** hold under `perf.spec.ts`'s budgets.
@@ -416,6 +416,7 @@ Use any `<out>` folder outside the repository, such as the session scratchpad. W
 | 2026-11-15 | `ea1f9bd` (0.12.0, after `018`) | 2026-11-15 13:53, working tree with `019` in progress | a researcher | 3 2 1 2 1 4 2 4 3 3 2 0 1 2 | 30 | First run. References live on 2026-11-15. Carbon's URLs now sit under `/building-blocks/core/components/`; Spectrum 2's under `/web/rsp/components/`. |
 | 2026-11-15 | `020`'s landing tree, on `release/0.13.0` from `f9e1c1a`, before its commit | 2026-11-15, the same tree | a builder | 3 2 1 2 1 4 2 4 3 3 3 0 1 3 | 32 | After `020`. `kuiper.ts` (working tree): `migrationPages` 0 → 2 (the guide's two route files), so row 11 (d) is met, 2 → 3; `deprecatedItems` 0 → 1 (`pluto-theme`, naming `kuiper-theme`), so row 14 (c) is met, 2 → 3. `breadth.items` reads 76: the count includes the alias entry; row 1 reads `breadth.ts`, which matches parts, and holds. `site.ts --only kuiper`: Button 381 kB, LCP 992 ms, the part at 572 (1440) and 661 (390), 76 nav links, search and theme present; rows 6, 7 and 8 hold. Tokens and every other count as at `ea1f9bd`. References not re-checked. |
 | 2026-11-15 | `6c00a12` (`020`, committed on its build branch) | the same tree as the row above | a builder | 3 2 1 2 1 4 2 4 3 3 3 0 1 3 | 32 | `kuiper.ts --rev 6c00a12`: `migrationPages` 2, `deprecatedItems` 1, 12 releases, 33 interface marks, 9 versioned registries; tokens 48 primitives, 61 roles, 61 described, 129 contrast rows. The scores of the row above stand. |
+| 2026-11-15 | `b37dcf4` (`021`, committed on its build branch) | the same tree | a builder | 3 2 1 2 4 4 2 4 3 3 3 0 1 3 | 35 | After `021`. `kuiper.ts --rev b37dcf4`: tokens in the new shape: 48 primitives, light and dark, 61 roles, 61 described, `groups` 15 (was 13 top-level keys in the old file, a changed meaning), 317 `$value`, 317 `$type`, 286 descriptions, 129 contrast rows. Row 5 (c), (d), (f) and (g) are met: 3 → 7 criteria, 1 → 4. Row 12 holds at 0: decision 16 (c)'s Penpot import was not run in the build, so (b) has no evidence yet. `kuiper.ts --rev ea1f9bd` prints the first run's token counts unchanged. No page's layout changed but `/foundations/tokens/`, so `site.ts` was not re-run; rows 6, 7 and 8 hold. References not re-checked. |
 
 ## 9. Limits
 

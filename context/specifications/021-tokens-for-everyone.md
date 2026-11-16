@@ -652,6 +652,8 @@ On the final tree, 2026-11-15, on a machine shared with other builds (load avera
 - `bun run test:smoke`: 139 pass, 0 fail (`dev-loop.test.ts` on the DTCG file included).
 - `scripts/site/release-check.ts`: exits 0.
 
+**The scorecard** (criterion 21), run at `b37dcf4` (`kuiper.ts --rev b37dcf4`; run log row of 2026-11-15): row 5, Tokens, 1 → 4 ((c), (d), (f) and (g) join (a), (b) and (e): 7 of 7), tying Primer; row 12 holds at 0, since the Penpot import was not run (deviation 12). Total 32 → 35. Every other row holds. `roadmap.md` is the design lead's to re-rank.
+
 Ledger files touched, each append-only: `CHANGELOG.md` (two bullets at the end of 0.13.0), `static/r/tokens/` and `static/v0.13.0/r/tokens/` (new folders, written by `build:tokens`). `registry.json`, the sitemap and the upgrade guide are untouched. Two shared fixtures also change and may conflict at merge: `tests/fixtures/pluto-allowed.json` (deviation 6) and `src/lib/site/thumbnails/manifest.json` (deviation 9); regenerate the second with `thumbnails.ts --hash-only` after merging.
 
 ### The owner's answers (2026-11-15)
