@@ -61,11 +61,12 @@ test(
     await sr.open("/example/toast/action/");
     await ready(page, "Delete message");
     const after = await sr.after(() => press(page));
+    // 022q decision 6: the example's whole text, title, description and
+    // hint (026 decision 10), as spoken forms (decision 5): NVDA says "F 8".
+    const words = (key: string) =>
+      `Message deleted. "Launch window moved" is in Trash. Press ${key}, or go to Notifications, to reach Undo`;
     await sr.judge(
-      L1(
-        after,
-        "Message deleted. Press F8, or go to Notifications, to reach Undo",
-      ),
+      L1(after, [words("F8"), words("F 8")]),
       U1(after, "Dismiss"),
     );
   },
@@ -98,17 +99,49 @@ test(
   },
 );
 
+/**
+ * 022q decision 6: the success toast leaves after at least 6 s (026), so
+ * S6 waits, at most 10 s, until it is gone, and records that. Then only
+ * the action toast is left, and the Escape after F8 and Tab closes it and
+ * returns focus: that Escape's window is judged.
+ */
+const GONE_MS = 10_000;
+
 test(
-  "S6 Escape: F8, Tab, Escape twice returns to the trigger, which is spoken",
+  "S6 Escape: once the success toast is gone, F8, Tab, Escape returns to the trigger, which is spoken",
   declared("toast", ["F1"], ["toast:focus"]),
   async ({ page, sr }) => {
     await sr.open("/example/toast/keyboard/");
     await ready(page, "Raise two");
-    await sr.after(() => press(page), "raise");
+    const success = page.locator('[data-slot="toast"][data-kind="success"]');
+    // The change review, finding 8: a locator that matches nothing is
+    // "detached" at once, so first record that the success toast appeared.
+    // It is read inside the raise action, before its own 6 s can run out.
+    let appeared = false;
+    await sr.after(async () => {
+      await press(page);
+      appeared = await success
+        .first()
+        .waitFor({ state: "attached", timeout: 2_000 })
+        .then(
+          () => true,
+          () => false,
+        );
+    }, "raise");
+    sr.fact("the success toast appeared on the raise", appeared);
+    sr.fact(
+      "the success toast is gone before F8",
+      await success
+        .first()
+        .waitFor({ state: "detached", timeout: GONE_MS })
+        .then(
+          () => true,
+          () => false,
+        ),
+    );
     await sr.after(async () => {
       await page.keyboard.press("F8");
       await page.keyboard.press("Tab");
-      await page.keyboard.press("Escape");
     }, "into");
     const after = await sr.after(() => page.keyboard.press("Escape"), "escape");
     await sr.focused(button(page, "Raise two"));

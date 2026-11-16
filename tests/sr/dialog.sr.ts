@@ -9,11 +9,11 @@ import { O1, O2, O3 } from "./rules.ts";
 
 const PATH = "/example/dialog/keyboard/";
 const TITLE = "Rename project";
+/** The trigger bears the dialog's title. */
+const TRIGGER = "Rename project";
 
 const trigger = (page: Page) =>
-  page
-    .getByTestId("keyboard-fixture")
-    .getByRole("button", { name: "Rename project" });
+  page.getByTestId("keyboard-fixture").getByRole("button", { name: TRIGGER });
 
 /**
  * The trigger is focused before the window, so the window's action is the
@@ -42,9 +42,9 @@ test(
     await sr.open(PATH);
     const sentinel = await sr.sentinel();
     await sr.after(() => trigger(page).focus(), "focus");
-    await sr.after(() => open(page), "open");
-    const steps = await sr.steps(10);
-    await sr.judge(O2(steps, sentinel, TITLE, sr.inside));
+    const opened = await sr.after(() => open(page), "open");
+    const steps = await sr.steps(10, { trigger: TRIGGER, title: TITLE });
+    await sr.judge(O2(opened, steps, sentinel, TITLE, sr.overlay, sr.back));
   },
 );
 

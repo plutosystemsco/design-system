@@ -4,7 +4,7 @@
  * `scripts/ci/workflow.ts`, the parser the release check also uses.
  */
 import { describe, expect, test } from "bun:test";
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import {
   jobNames,
   readWorkflow,
@@ -240,17 +240,19 @@ describe("022 test 3: matrix.yml", () => {
     ]);
   });
 
-  test("022l: each reader job runs in three shards, with a deadline inside its limit", () => {
-    for (const [job, reader] of [
-      ["voiceover", "voiceover"],
-      ["nvda", "nvda"],
+  test("022l, 022q: VoiceOver runs in five shards and NVDA in three, each with a deadline inside its limit", () => {
+    for (const [job, reader, shards] of [
+      ["voiceover", "voiceover", 5],
+      ["nvda", "nvda", 3],
     ] as const) {
       const j = wf.jobs[job]!;
       expect(Object.keys(j.strategy!.matrix)).toEqual(["browser", "shard"]);
-      expect(j.strategy!.matrix.shard).toEqual([1, 2, 3]);
+      expect(j.strategy!.matrix.shard).toEqual(
+        Array.from({ length: shards }, (_, i) => i + 1),
+      );
       expect(j["timeout-minutes"]).toBe(45);
       const test = steps(j).find((x) => (x.run ?? "").includes("test:sr"))!;
-      expect(test.run).toContain("--shard=${{ matrix.shard }}/3");
+      expect(test.run).toContain(`--shard=\${{ matrix.shard }}/${shards}`);
       expect(test.run).toContain("--global-timeout=2400000");
       expect(test.env?.PLAYWRIGHT_BLOB_OUTPUT_NAME).toBe(
         `report-${reader}-\${{ matrix.browser }}-\${{ matrix.shard }}.zip`,
@@ -296,13 +298,15 @@ describe("022 test 3: matrix.yml", () => {
     );
   });
 
-  test("the expanded job names: 5 plain jobs, 24 browsers, 6 voiceover, 6 nvda (022l)", () => {
+  test("the expanded job names: 5 plain jobs, 24 browsers, 10 voiceover, 6 nvda (022l, 022q)", () => {
     const names = jobNames(wf);
-    expect(names).toHaveLength(41);
+    expect(names).toHaveLength(45);
     expect(names).toContain("browsers (firefox, 3)");
     expect(names).toContain("voiceover (webkit, 1)");
+    expect(names).toContain("voiceover (chromium, 5)");
     expect(names).toContain("nvda (firefox, 3)");
-    expect(names.filter((n) => n.startsWith("voiceover ("))).toHaveLength(6);
+    expect(names).not.toContain("nvda (firefox, 4)");
+    expect(names.filter((n) => n.startsWith("voiceover ("))).toHaveLength(10);
     expect(names.filter((n) => n.startsWith("nvda ("))).toHaveLength(6);
     expect(names.filter((n) => !n.includes("("))).toEqual([
       "build",
@@ -311,6 +315,18 @@ describe("022 test 3: matrix.yml", () => {
       "report",
       "gate",
     ]);
+  });
+
+  test("022q: the six CI fixtures hold the workflow's 45 job names, in its order", () => {
+    const names = jobNames(wf);
+    for (const f of readdirSync("tests/fixtures/ci").sort()) {
+      const fixture = JSON.parse(
+        readFileSync(`tests/fixtures/ci/${f}`, "utf8"),
+      ) as { total_count?: number; jobs: { name: string }[] };
+      expect(fixture.jobs.map((j) => j.name)).toEqual(names);
+      if (fixture.total_count !== undefined)
+        expect(fixture.total_count).toBe(45);
+    }
   });
 });
 

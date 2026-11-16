@@ -71,6 +71,12 @@ test(
       "focus resend",
     );
     const after = await sr.after(() => page.keyboard.press("Enter"));
-    await sr.judge(L1(after, `We sent a new code to ${EMAIL}`));
+    // 022q decision 5: NVDA says the address aloud.
+    await sr.judge(
+      L1(after, [
+        `We sent a new code to ${EMAIL}`,
+        "We sent a new code to ada at example dot com",
+      ]),
+    );
   },
 );
