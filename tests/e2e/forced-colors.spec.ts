@@ -158,6 +158,62 @@ test("the changelog's badge has a visible border", async ({ page }) => {
   expect(b).not.toBe("0px");
 });
 
+// 022b's review, finding 1: what is painted, not what is computed. Chromium
+// draws a Canvas backplate behind forced text, so a label whose colour is
+// Canvas vanishes while its computed pair reads 21:1, and axe passes it.
+// Each scheme's forced palette, from this light project.
+for (const colorScheme of ["light", "dark"] as const)
+  test(`the pressed theme segment's label is drawn, ${colorScheme} palette`, async ({
+    page,
+  }) => {
+    await page.emulateMedia({ colorScheme, forcedColors: "active" });
+    await open(page, "/components/button/");
+    const pressed = page
+      .getByRole("group", { name: /: theme$/ })
+      .first()
+      .locator('button[aria-pressed="true"]');
+    await pressed.waitFor();
+    // The label's own text box, once the colour transition has ended, cut
+    // to whole pixels inside it, so no edge of the fill around it counts.
+    const box = await pressed.evaluate(async (el) => {
+      await Promise.all(el.getAnimations().map((a) => a.finished));
+      const range = document.createRange();
+      range.selectNodeContents(el);
+      const r = range.getBoundingClientRect();
+      const x = Math.ceil(r.left) + 1;
+      const y = Math.ceil(r.top) + 1;
+      const right = Math.floor(r.right) - 1;
+      const bottom = Math.floor(r.bottom) - 1;
+      return { x, y, width: right - x, height: bottom - y };
+    });
+    expect(box.width * box.height).toBeGreaterThan(0);
+    const png = await page.screenshot({ clip: box });
+    const scratch = await page.context().newPage();
+    const share = await scratch.evaluate(async (b64) => {
+      const img = new Image();
+      img.src = `data:image/png;base64,${b64}`;
+      await img.decode();
+      const c = document.createElement("canvas");
+      c.width = img.naturalWidth;
+      c.height = img.naturalHeight;
+      const g = c.getContext("2d")!;
+      g.drawImage(img, 0, 0);
+      const d = g.getImageData(0, 0, c.width, c.height).data;
+      const counts = new Map<string, number>();
+      for (let i = 0; i < d.length; i += 4) {
+        const k = `${d[i]},${d[i + 1]},${d[i + 2]}`;
+        counts.set(k, (counts.get(k) ?? 0) + 1);
+      }
+      return Math.max(...counts.values()) / (d.length / 4);
+    }, png.toString("base64"));
+    await scratch.close();
+    // Glyphs on a fill: no one colour covers the whole box.
+    expect(
+      share,
+      "the most common colour's share of the label's box",
+    ).toBeLessThanOrEqual(0.95);
+  });
+
 // 022's review, finding 3: one test per page, so a ledger line names one
 // page and the others are still scanned.
 for (const p of ["/components/button/", "/foundations/colour/", "/changelog/"])

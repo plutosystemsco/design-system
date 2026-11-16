@@ -1,7 +1,8 @@
 /**
  * 022's review, finding 4: the record of macOS WebKit's platform failures
  * stays in step with the suite. Each entry names a test that exists, once,
- * with one of the two causes, and the harness carries the answer to each.
+ * with one of the three causes. The harness carries the answer to the first
+ * two; `key-after-focus` has none, and Linux WebKit decides it.
  */
 import { describe, expect, test } from "bun:test";
 import { readFileSync } from "node:fs";
@@ -43,7 +44,9 @@ describe("the macOS WebKit record", () => {
     expect(keys.filter((k) => !tests.has(k))).toEqual([]);
     expect(keys.filter((k, i) => keys.indexOf(k) !== i)).toEqual([]);
     for (const e of MACOS_WEBKIT)
-      expect(["tab-to-links", "click-focus"]).toContain(e.cause);
+      expect(["tab-to-links", "click-focus", "key-after-focus"]).toContain(
+        e.cause,
+      );
     expect(MACOS_WEBKIT.length).toBeGreaterThan(0);
   }, 120_000);
 
