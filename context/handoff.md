@@ -29,6 +29,7 @@ The tree holds 75 items. The last runs, on `019`'s build: unit 1206 pass; e2e 27
 
 - **`019`'s VoiceOver listen** passed by hand (`d8d658d`). Its script is retired by `022`: the scripted VoiceOver and NVDA runs are in every `matrix` run (`tests/sr/error-summary.sr.ts`).
 - **The release check, from `022`** (the design lead's ruling, 2026-11-15). The full check, `bun scripts/site/release-check.ts`, also needs an empty fault ledger and a green `matrix` push run of HEAD, so it exits 1 until push B's run and the small changes `022a` to `022f`. **A landing gate runs `bun scripts/site/release-check.ts --before-ci`**, which skips those two, names them, and exits 0 when the rest pass. The tag uses the full check.
+- **`022`, the test matrix,** is built, reviewed, fixed and merged with `release/0.13.0` at `ba8694d` (020a, 020b, 027a, 026, 021) on its branch, and waits for push B: the first `matrix` run on GitHub (the owner pushes; agents never do). Its ledger and small changes `022a` onward are in `tests/fault-ledger.ts` and `context/specifications/022*.md`. `026`'s screen-reader files (its D2) were built at that merge; its A1 waits for the `app-shell` mount (D1).
 
 The order to the tag: `019`'s fixes, its commit, the owner's listen, then the local `v0.12.0` tag.
 

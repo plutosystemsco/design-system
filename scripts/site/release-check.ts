@@ -83,6 +83,9 @@ if (import.meta.main) {
     const matrix = await matrixCheck(head, expected);
     print(matrix);
     ok &&= matrix.ok;
+
+    // 025's cost step goes here, after the matrix step, when 025 lands;
+    // 030's status step follows it (030's release-check ordering).
   }
 
   process.exit(ok ? 0 : 1);

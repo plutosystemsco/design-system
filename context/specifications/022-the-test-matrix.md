@@ -1140,3 +1140,19 @@ Committed as "022: the review's fixes". By finding:
 - The per-page forced-colours tests: Button fails in `firefox-light` as `022b`'s line says; Colour and the changelog pass there, and all three pass in Chromium.
 - The release check: `--before-ci` exits 0, naming the two steps it skipped; the full check still exits 1 (the ledger's 27 lines and no matrix run), as the tag's gate should.
 - **At landing:** `roadmap.md` §5's sizes read 2,981 and 8,881; at this build's start they are 3,095 and 9,223.
+
+### The merge with `release/0.13.0` (2026-11-16)
+
+`release/0.13.0` at `ba8694d` (`020a`, `020b`, `027a`, `026` and `021` landed) was merged into this branch with a merge commit, "022: merge release/0.13.0", by the review's merge notes and the coordinator's list.
+
+- **Conflicts:** two. The thumbnail manifest was taken from either side and regenerated (`bun scripts/site/thumbnails.ts --hash-only`, 80 items). The pluto allow-list's two counts were re-derived as the other side's plus `022`'s own (Pluto Systems 324 + 4 = 328; `pluto-sandbox` 14 + 1 = 15), and `rename.test.ts` passes on the merged tree.
+- **The new spec files** (`027a`'s `link`, `button-group`, `progress` and `batch-a` specs, `026`'s `toast.spec.ts`, `021`'s `tokens-files.spec.ts`) import the shared `test`; `020b`'s additions to `upgrade.spec.ts` merged into the converted file. `batch-a.ts`'s `schemeOf` now returns `scheme(info)`. `023a`'s `api-table.spec.ts` has not landed.
+- **WebKit's forced colours:** `progress.spec.ts` test 48 checks the bar's own colours in every engine and its forced half everywhere but WebKit, through `adaptsIn("webkit", "forced colours: Playwright's WebKit does not emulate forcedColors")`; `toast.spec.ts` test 68 is wholly about forced colours, so it takes `notIn("webkit", …)` with the same reason. Both have `ENGINE_ONLY` entries: harness limits, not faults, so no ledger lines. `028` marks WebKit's forced-colours gap on them.
+- **`021`'s T17** launched Firefox and WebKit itself because the engine projects did not exist. Now it uses the project's `browser`, with its contexts asking for the light scheme, and runs in each engine's light project through `onlyProjects(["chromium-light", "firefox-light", "webkit-light"], "the page sets its own scheme, so each engine's light project covers it")`. One test, three engines, no launches of its own.
+- **Toast under screen readers** (the review's finding 7, `026`'s D2): `toast` joins `SR_ITEMS` (`live`, `focus`); `tests/sr/toast.sr.ts` holds S1 to S10 with its parts `assertive`, `polite` and `focus`; `U1` (`unspoken`) and `B1` (`before`) join `rules.ts` with their unit tests; the `toast-alert` patch joins the `main` set as `8-toast.patch` (target `toast:assertive`, L1, witness S2). Recorded in `026`'s Landing notes too. A1 waits for `026`'s D1 (the `app-shell` mount).
+- **The mutation sets, re-derived:** `main` 68 expected failures (8 patches; 026's adds exactly S2 and S10 × 4 pairs), `double-read` 20. Both apply together on the merged tree.
+- **The Components landing's walk** is 201 stops now (193 before), so `022d`'s lines and the macOS WebKit record name the new title.
+- **The release check** leaves room for `025`'s cost step after the matrix step (a comment where it goes); `025` has not landed.
+- **Counts on the merged tree:** the browser suite lists **10,256** tests (`chromium-light` 1,731, `chromium-dark` 1,704, each Firefox and WebKit project 1,704, `perf` 5): Chromium's `test:e2e` is 3,440. The screen-reader suite lists 228 (76 tests × 3 browsers). `ENGINE_ONLY`: onlyIn 2, notIn 1, onlyProjects 4, adaptsIn 10.
+
+MERGE-RESULTS-PLACEHOLDER
