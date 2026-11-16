@@ -1,6 +1,6 @@
 # 024b — The site stops shipping the whole registry
 
-- **Status:** built on `release/0.13.0` at `467a0e8` (after `022`, `024` and `025`). Change-reviewed (`reviews/024b-the-site-stops-shipping-the-whole-registry-pr-2026-11-16.md`): land after fixes. The fixes are made and `release/0.13.0` at `1f9a1df` is merged in (Landing notes). Awaiting the landing.
+- **Status:** built on `release/0.13.0` at `467a0e8` (after `022`, `024` and `025`). Change-reviewed (`reviews/024b-the-site-stops-shipping-the-whole-registry-pr-2026-11-16.md`): land after fixes. The fixes are made and `release/0.13.0` at `cc278db` is merged in (Landing notes). Awaiting the landing.
 - **Date:** 2026-11-16
 - **Author:** the design lead
 - **Kind:** small change (AGENTS.md: a fix with no interface change, no new token or dependency, in one place). Its check is seen failing first, and a reviewer who did not write it reviews the built change (constitution §5). It needs no research memo and no spec review. Its measurements are in one anyway: [`research/2026-11-16-registry-in-the-client.md`](../research/2026-11-16-registry-in-the-client.md). "Why a small change" below gives the reasons.
@@ -204,7 +204,7 @@ On the final rebase onto `467a0e8`, with a fresh `bun run build`:
 
 ### The review's fixes
 
-The change review (`reviews/024b-the-site-stops-shipping-the-whole-registry-pr-2026-11-16.md`) said "land after fixes". These were made on the branch, in the commit "024b: the review's fixes", before the merge of `release/0.13.0` at `1f9a1df`.
+The change review (`reviews/024b-the-site-stops-shipping-the-whole-registry-pr-2026-11-16.md`) said "land after fixes". These were made on the branch, in the commit "024b: the review's fixes", before the merge of `release/0.13.0` (below).
 
 - **Finding 1 (must): the bootstrap cycle is broken.**
   - `isListed` and `Deprecation` move to `src/lib/site/listed.ts`, a module that imports nothing. `items.ts` re-exports both, so no reader changes. `scripts/build-registry.ts` imports `isListed` from the leaf. `lint-literals.ts` and `thumbnails.ts` keep importing from `items.ts`: they read `registry.json` themselves, and moving `thumbnails.ts`'s import would move every thumbnail hash.
@@ -224,6 +224,36 @@ The change review (`reviews/024b-the-site-stops-shipping-the-whole-registry-pr-2
   - **The alias test.** `registry.test.ts`'s "020 test 5" now passes the full registry: `listedItems(registryRaw.items)` returns 79 of the 80, without `pluto-theme`. It shows the drop again, rather than reading a list the generator had already filtered.
   - **`--out static`.** `buildRegistry()` now writes the list whenever `<out>` resolves to the root's `static`, whether by default or by an explicit `--out static`. In the scratch copy, `--out static` with the file deleted wrote it again, byte-identical. `--out ../other` built the registry and wrote no list.
 - **Finding 5** (a note) needs no change. Finding 6's "for later", renaming `start/install.ts` to `install.server.ts`, is not done here.
+
+### The merge of `release/0.13.0`
+
+The coordinator named `1f9a1df`. By the time of the merge the release was at `cc278db`, which adds `024d`'s landing (`7a47948`) and this change's review. The commit "024b: merge release/0.13.0" takes `cc278db`. The one conflict was `src/lib/site/thumbnails/manifest.json`. I took the release's side, then ran `thumbnails.ts --hash-only`, and 62 hashes moved, as before. `bun install --frozen-lockfile` changed nothing. `tests/unit/cost.test.ts` passed with no stale sizes, so `bun run cost --sizes-only` was not needed.
+
+On the merged tree, with a fresh `bun run build`:
+
+- `bun run check`: 0 errors and 0 warnings over 2,359 files.
+- `generated`, `build-registry`, `registry`, `sitemap` and `rename` unit files: 277 pass, 0 fail. `cost` and `thumbnails`: 50 pass.
+- `build-output.spec.ts`, chromium-light: 28 passed. Check A finds none of its 410 sentinels over 756 files.
+- The shared chunk is `chunks/B7zBWic5.js`: 15,613 B raw and 5,268 B at gzip 6.
+- The perf project, `--no-deps`: **26 passed** in 5.8 min, under a load average of 9 to 25. `024d` added the `kuiper-theme` template's test. Unthrottled transfer and throttled LCP medians:
+  - `/` 290.2 kB, 780 ms
+  - `/components/` 339.1 kB, 2,448 ms
+  - `/start/` 290.0 kB, 824 ms
+  - `/brand/` 275.9 kB, 936 ms
+  - `/components/sidebar/` 393.6 kB, 1,076 ms
+  - `/components/button/` 363.8 kB, 912 ms
+  - `/components/label/` 323.3 kB, 876 ms
+  - `/components/code-editor/` 645.6 kB, 908 ms
+  - `/components/code-languages/` 643.3 kB, 884 ms
+  - `/components/highlighter/` 531.9 kB, 1,164 ms
+  - `/components/use-highlighted-code/` 429.1 kB, 900 ms
+  - `/components/chart/` 469.6 kB, 884 ms
+  - `/components/kuiper-theme/` **450.7 kB**, 0 `.wasm`, 1,412 ms
+  - `/changelog/` 324.1 kB, 1,012 ms
+  - `/brand/downloads/` 289.0 kB, 760 ms
+  - `/brand/type/` 286.8 kB, 804 ms
+- `kuiper-theme`'s 450.7 kB is `024d` and `024b` stacked, as the review inferred: 760.9 kB before both.
+- `bun scripts/site/release-check.ts --before-ci`: exit 0. It names the four steps it skips.
 
 ### For the design lead, at landing
 
