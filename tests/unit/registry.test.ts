@@ -1962,8 +1962,10 @@ describe("019: no screen-reader claim without its record", () => {
     else expect(page).toContain("Not yet heard with a screen reader.");
   });
 
-  test("the page says NVDA and JAWS are not tested", () => {
-    expect(page).toContain("NVDA and JAWS are not tested.");
+  // 022 decision 13: NVDA is scripted from 022, so only JAWS must be named
+  // untested. The page keeps its line until 030 generates the status.
+  test("the page names JAWS as not tested", () => {
+    expect(page).toMatch(/JAWS (is|are) not tested/);
   });
 });
 

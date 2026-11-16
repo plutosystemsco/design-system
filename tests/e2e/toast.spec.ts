@@ -6,7 +6,9 @@
  * announcers, logged by a MutationObserver with the page's own clock.
  */
 import AxeBuilder from "@axe-core/playwright";
-import { expect, test, type Locator, type Page } from "@playwright/test";
+import type { Locator, Page } from "@playwright/test";
+import { expect, test } from "../test.ts";
+import { notIn } from "./engines.ts";
 import { contrastRatio } from "../../scripts/contrast.ts";
 import { open, VIEW_READY } from "./pages.ts";
 
@@ -1179,13 +1181,13 @@ test.describe("026: forced colours", () => {
   test(
     "68. forced colours draw the edge, and the icons differ",
     tag("forced-colors"),
-    async ({ page, browserName }) => {
+    async ({ page }) => {
       // The change review, finding 7: Playwright's WebKit does not emulate
-      // forced colours, so every border stays transparent there. `022`'s
-      // fault ledger takes it over when its engine projects land.
-      test.skip(
-        browserName === "webkit",
-        "Playwright's WebKit does not emulate forcedColors",
+      // forced colours, so every border stays transparent there. A harness
+      // limit, not a fault: counted in ENGINE_ONLY, not in the ledger.
+      notIn(
+        "webkit",
+        "forced colours: Playwright's WebKit does not emulate forcedColors",
       );
       await open(page, PAGE);
       const rows = await example(page, "kinds")

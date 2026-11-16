@@ -1,0 +1,13 @@
+diff --git a/src/lib/registry/ui/sheet/sheet-content.svelte b/src/lib/registry/ui/sheet/sheet-content.svelte
+index de514bb..3631768 100644
+--- a/src/lib/registry/ui/sheet/sheet-content.svelte
++++ b/src/lib/registry/ui/sheet/sheet-content.svelte
+@@ -52,6 +52,8 @@
+       className,
+     )}
+     {...restProps}
++    aria-modal="false"
++    trapFocus={false}
+   >
+     {@render children?.()}
+     {#if showCloseButton}

@@ -101,10 +101,13 @@ describe("the site's address", () => {
     expect(re.test(`${SITE_ORIGIN}/components/button/`)).toBe(true);
   });
 
-  // 025's change review, finding 3: the tag's own checks (the cost run) are
-  // left out by name with `--before-ci`, never by an ambient variable. The
-  // address check is pure and is called directly.
-  test("addressCheck passes on SITE_ORIGIN and fails on the placeholder", async () => {
+  // From 022 the full release check also needs an empty ledger and a green
+  // matrix run of HEAD, read through `gh`, so it exits 1 before push B by
+  // design. The address step is checked as a pure function, and the script
+  // only with `--before-ci`, which makes no network call (022's review,
+  // finding 9). 025's cost step is skipped by name too, never by an ambient
+  // variable (025's change review, finding 3).
+  test("the release check's address step passes", async () => {
     const { addressCheck } =
       await import("../../scripts/site/release-check.ts");
     const { SITE_ORIGIN } = await import("../../src/lib/site/site.ts");
@@ -121,6 +124,8 @@ describe("the site's address", () => {
     const out = r.stdout.toString();
     expect(r.exitCode).toBe(0);
     expect(out).toContain("release-check: SITE_ORIGIN is https://");
+    expect(out).toContain("skipped (--before-ci): the fault ledger");
+    expect(out).toContain("skipped (--before-ci): a green matrix push run");
     expect(out).toContain("skipped (--before-ci): the cost run");
   });
 });

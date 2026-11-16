@@ -1,37 +1,50 @@
 import { defineConfig, devices } from "@playwright/test";
+import { BASE_URL, server } from "./tests/server.ts";
+
+/**
+ * 022 decisions 1 and 2: every browser suite in Chromium, Firefox and
+ * WebKit, in light and dark. Projects are `<engine>-<scheme>`; a test reads
+ * its scheme through `tests/e2e/scheme.ts`, never from the project's name.
+ */
+const ENGINES = {
+  chromium: devices["Desktop Chrome"],
+  firefox: devices["Desktop Firefox"],
+  webkit: devices["Desktop Safari"],
+} as const;
+const SCHEMES = ["light", "dark"] as const;
+const CI = !!process.env.CI;
 
 export default defineConfig({
   testDir: "tests/e2e",
-  reporter: "list",
   fullyParallel: true,
-  webServer: {
-    command: "bun run build && bun --bun vite preview --port 4173 --strictPort",
-    url: "http://localhost:4173/",
-    reuseExistingServer: false,
-    timeout: 180_000,
-  },
-  use: { baseURL: "http://localhost:4173" },
+  // 022 decision 18: a flaky browser test fails the run in CI.
+  retries: CI ? 1 : 0,
+  failOnFlakyTests: CI,
+  reporter: CI ? [["blob"], ["dot"]] : "list",
+  webServer: server(),
+  use: { baseURL: BASE_URL },
   projects: [
-    {
-      name: "light",
-      use: { ...devices["Desktop Chrome"], colorScheme: "light" },
-      testIgnore: /perf/,
-    },
-    {
-      name: "dark",
-      use: { ...devices["Desktop Chrome"], colorScheme: "dark" },
-      // 015 decision 24: the build's output and the budgets are read once,
-      // in the light project.
-      testIgnore: /build-output|perf/,
-    },
-    // 015 decision 23: the budgets, in the light theme, alone: this project
-    // starts once the others have finished, so CPU throttling shares the
-    // machine with no other test.
+    ...Object.entries(ENGINES).flatMap(([engine, device]) =>
+      SCHEMES.map((scheme) => ({
+        name: `${engine}-${scheme}`,
+        use: { ...device, colorScheme: scheme },
+        // 015 decision 24, 022 decision 1: the build's output is read once,
+        // in chromium-light. The budgets run in their own project.
+        testIgnore:
+          engine === "chromium" && scheme === "light"
+            ? /perf/
+            : /build-output|perf/,
+      })),
+    ),
+    // 015 decision 23: the budgets, Chromium only (they throttle through
+    // CDP), light, alone. Locally the project starts once Chromium's two
+    // have finished, so CPU throttling shares the machine with no other
+    // test. In CI it is a job on its own runner (022 decision 8).
     {
       name: "perf",
-      use: { ...devices["Desktop Chrome"], colorScheme: "light" },
+      use: { ...ENGINES.chromium, colorScheme: "light" },
       testMatch: /perf\.spec\.ts/,
-      dependencies: ["light", "dark"],
+      dependencies: CI ? [] : ["chromium-light", "chromium-dark"],
       fullyParallel: false,
     },
   ],

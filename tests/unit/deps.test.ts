@@ -318,3 +318,23 @@ describe("019: the screen-reader check's package", () => {
     },
   );
 });
+
+// 022 decision 17: the screen-reader suite's two packages, dev-only, exact.
+// They ship in no item. `@guidepup/setup` is 0.29.2, the version guidepup's
+// own green VoiceOver and NVDA runs pair with guidepup 0.40.0.
+const PACKAGES_022: [name: string, version: string, specifier: string][] = [
+  ["@guidepup/playwright", "0.21.0", "0.21.0"],
+  ["@guidepup/setup", "0.29.2", "0.29.2"],
+];
+PACKAGES.push(...PACKAGES_022);
+
+describe("022: the screen-reader suite's packages", () => {
+  test.each(PACKAGES_022)(
+    "%s: bun.lock resolves %s; package.json says %s, exact, in devDependencies",
+    (name, version, spec) => {
+      expect(pkg.devDependencies[name]).toBe(spec);
+      expect(lock.workspaces[""].devDependencies[name]).toBe(spec);
+      expect(lock.packages[name][0]).toBe(`${name}@${version}`);
+    },
+  );
+});

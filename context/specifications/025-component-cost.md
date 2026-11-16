@@ -756,3 +756,21 @@ Merged at `a6fc673` (`ba8694d` plus the context commit holding this change's rev
 - **After the merge:** the catalogue, now 66 items, costs 373.8 kB of JS over the floor, against 1,085.7 kB summed (34%). `table` at 1,000 rows hydrates in 448.8 ms. The heaviest: `chart` 142.7 kB, `code-editor` 131.4, `app-shell` 80.7, `code-languages` 67.1, `product-home` 59.6 (JS and CSS). The slowest responses: `dropdown-menu` 115.3 ms, `toast` 111.1, `sidebar` 110.7, `popover` 109.3.
 - **The thumbnails' manifest** was taken from the base and rewritten with `bun scripts/site/thumbnails.ts --hash-only` (80 items, no picture changed). `roadmap.md` §2 now lists `report.json` and `budgets.json` as ledger files.
 - **Checks on the merged tree:** `tests/unit/cost.test.ts` 40 pass; `bun run test:unit` 1,446 pass, 0 fail, of 1,448; `scripts/site/release-check.ts` exit 0, its cost step "one full, quiet run on the release machine, fresh and within budget".
+
+### The second merge, with `022` and `024` (2026-11-16)
+
+Merged `release/0.13.0` at `506cfc1` (`022` the test matrix, `023a`, `024` budgets per template).
+
+- **`scripts/site/release-check.ts` keeps `022`'s `Check` shape and its single `SKIPPED_BEFORE_CI` list.** The steps run as its comment orders them: the address, `022`'s fault ledger and matrix run, `024`'s `ciLcpCheck`, then `025`'s `costCheck`. `SKIPPED_COST` joins the one list, so `--before-ci` names four skips. The local shape from the fixes commit is gone. `headers.test.ts` keeps `022`'s tests and also expects the cost skip's line.
+- **QB, done in `022`'s CI:** all 8 `oven-sh/setup-bun` steps in `.github/workflows/matrix.yml` read `bun-version: 1.4.4`, and `tests/unit/workflow.test.ts` ("bun-version equals packageManager's") holds them to `package.json`. `scripts/ci/` names no Bun version. A comment in `tests/unit/rename.test.ts` that called 1.3.14 "the version CI pins" now says "pinned until 025's QB".
+- **Nothing measured went stale.** `022` and `024` changed nothing under `static/r/styles/`, nor the locked versions of Playwright (1.64.1) or the CLI (1.7.1). `tests/unit/cost.test.ts` passes with every size hash and runtime key fresh, and the cost step passes, so the full run of the first merge stands. `bun install --frozen-lockfile` added `022`'s 42 packages. `025` changed no e2e spec, so none moved to the shared `../test.ts` import.
+- **The thumbnails' manifest** was taken from the base and rewritten with `--hash-only` (80 items, no picture changed).
+
+**Checks on the second merge's tree:**
+
+- `bun run check`: 2,357 files, 0 errors, 0 warnings. `bun run lint`: clean.
+- `bun run test:unit` (120 s timeout): 1,667 pass, 0 fail, of 1,669. `tests/unit/cost.test.ts`: 40 pass.
+- `bun run test:smoke`: 151 pass, 0 fail, 10 files, 356 s. The cost smoke test at a load of 9: A/A hydration −0.1 ms (launches −4.4 to 5.3), the no-op click 44.2 ms, calibration 78.8 ms, an offline `add` 2.1 s.
+- The perf project, alone (`E2E_PORT=5273 bun --bun playwright test --project=perf --no-deps`): 25 passed, 6.7 min.
+- `scripts/site/release-check.ts --before-ci`: exit 0, naming four skips (the fault ledger, the matrix run, the runner's LCP figures, the cost run).
+- `scripts/site/release-check.ts` (the tag's mode): exit 1, as `022` and `024` intend before CI. The fault ledger holds 27 open faults (`022a` to `022f`); GitHub has no `matrix.yml` run yet; the 8 templates have no CI LCP figure. Its cost step passes: "one full, quiet run on the release machine, fresh and within budget".

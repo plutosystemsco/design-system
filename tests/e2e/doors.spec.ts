@@ -2,7 +2,9 @@
  * 015 decisions 6 to 9: the doors against the Google echo, the red door
  * against the error reading, the landings and the mark, and motion.
  */
-import { expect, test, type Page } from "@playwright/test";
+import type { Page } from "@playwright/test";
+import { expect, test } from "../test.ts";
+import { projectLabel } from "./scheme.ts";
 import { contrastRatio } from "../../scripts/contrast.ts";
 import { DOORS } from "../../src/lib/site/doors.ts";
 import { COMPONENT_PAGES, hexToRgb, open, settled, SITEMAP } from "./pages.ts";
@@ -571,10 +573,10 @@ test.describe("017: the Colour page's bands", () => {
     const ratio = contrastRatio(rgbToHex(text), hex(ground));
     info.annotations.push({
       type: "ratio",
-      description: `${info.project.name}: ${ratio.toFixed(2)}:1, ${rgbToHex(text)} on ${hex(ground)}`,
+      description: `${projectLabel(info)}: ${ratio.toFixed(2)}:1, ${rgbToHex(text)} on ${hex(ground)}`,
     });
     console.log(
-      `yellow glass, ${info.project.name}: ${ratio.toFixed(2)}:1 (${rgbToHex(text)} on ${hex(ground)})`,
+      `yellow glass, ${projectLabel(info)}: ${ratio.toFixed(2)}:1 (${rgbToHex(text)} on ${hex(ground)})`,
     );
     expect(ratio).toBeGreaterThanOrEqual(4.5);
   });

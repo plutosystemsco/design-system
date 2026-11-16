@@ -4,8 +4,11 @@
  * Criteria 4 to 9, the item pages' frames, and the compositions' own views.
  */
 import AxeBuilder from "@axe-core/playwright";
-import { expect, test, type Page } from "@playwright/test";
+import type { Page } from "@playwright/test";
+import { expect, test } from "../test.ts";
+import { scheme } from "./scheme.ts";
 import {
+  activate,
   COMPOSITION_VIEW_LIST,
   COMPOSITIONS,
   GROUND,
@@ -21,6 +24,7 @@ import {
   waitForHighlight,
   type ThemeName,
   componentPath,
+  tabOut,
 } from "./pages.ts";
 
 const HOME = "/view/product-home/";
@@ -154,7 +158,7 @@ test.describe("5. the stage card", () => {
     await recordText(page, '[data-stage-card="status"]', "card");
     const run = card.getByRole("button", { name: "Run" });
 
-    await run.click();
+    await activate(run);
     await expect(
       page.locator('[data-slot="stage-card"][data-busy]'),
     ).toHaveCount(1);
@@ -611,10 +615,11 @@ test.describe("9. the keyboard walk", () => {
       }
       expect(forward).toEqual(stops);
       // DOM order: each stop follows the one before it.
-      await page.keyboard.press("Tab");
-      expect(await signature(page)).toBeNull();
+      const out = await tabOut(page);
+      expect(out.other).toBeNull();
       // Back up: focus moving upward is never hidden under the sticky bar.
-      await page.keyboard.press("Shift+Tab");
+      // (In Firefox focus stayed on the last stop: the walk starts there.)
+      if (!out.stayed) await page.keyboard.press("Shift+Tab");
       for (let i = stops.length - 1; i >= 0; i--) {
         expect(await signature(page), `back to stop ${i + 1}`).toBe(stops[i]);
         expect(await focusProblem(page), `back to stop ${i + 1}`).toBeNull();
@@ -758,7 +763,7 @@ test.describe("the composition views' theme", () => {
       request,
     }, info) => {
       await openView(page, view.path);
-      const theme = info.project.name as ThemeName;
+      const theme = scheme(info);
       await expect(page.locator("body")).toHaveCSS(
         "background-color",
         GROUND[theme],

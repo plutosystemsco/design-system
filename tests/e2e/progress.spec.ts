@@ -3,7 +3,8 @@
  * project's scheme. Test 48 runs in every engine; its forced-colours half
  * runs where Playwright emulates forced colours, Chromium and Firefox.
  */
-import { expect, test } from "@playwright/test";
+import { expect, test } from "../test.ts";
+import { adaptsIn } from "./engines.ts";
 import { contrastRatio } from "../../scripts/contrast.ts";
 import { near, openExample, pixelOf, token } from "./batch-a.ts";
 
@@ -60,7 +61,7 @@ test.describe(
           { type: "check", description: "forced-colors" },
         ],
       },
-      async ({ page, browserName }, info) => {
+      async ({ page }, info) => {
         await openExample(page, info, ITEM, "states");
         const bar = page.getByTestId("progress-40").locator("progress");
         const failed = page.getByTestId("progress-failed").locator("progress");
@@ -75,13 +76,15 @@ test.describe(
         const bad = await pixelOf(page, failed, 0.1);
         expect(near(bad, destructive), `${bad} vs ${destructive}`).toBe(true);
 
-        if (browserName === "webkit") {
-          info.annotations.push({
-            type: "not emulated",
-            description: "Playwright does not emulate forced colours in WebKit",
-          });
+        // 022: WebKit checks the bar's own colours only; its forced half
+        // is counted in ENGINE_ONLY (adaptsIn), for 028's WebKit gap.
+        if (
+          adaptsIn(
+            "webkit",
+            "forced colours: Playwright's WebKit does not emulate forcedColors",
+          )
+        )
           return;
-        }
         await page.emulateMedia({ forcedColors: "active" });
         // The bar keeps its own colours: the system does not repaint it.
         const f10 = await pixelOf(page, bar, 0.1);

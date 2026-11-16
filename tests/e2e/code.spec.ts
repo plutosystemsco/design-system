@@ -4,21 +4,26 @@
  * the accordion (A1) and the toggles (T1). Runs in both projects, light and
  * dark.
  */
-import {
-  expect,
-  test,
-  type APIRequestContext,
-  type Browser,
-  type Locator,
-  type Page,
+import type {
+  APIRequestContext,
+  Browser,
+  Locator,
+  Page,
 } from "@playwright/test";
+import { expect, test } from "../test.ts";
+import { adaptsIn } from "./engines.ts";
+import { scheme } from "./scheme.ts";
 import {
+  activate,
   cssVar,
   hexToRgb,
   open,
   openView,
   settled,
   componentPath,
+  scrollbarWidth,
+  clipboard,
+  readClipboard,
 } from "./pages.ts";
 
 /**
@@ -348,7 +353,11 @@ test.describe("the code block", () => {
       const block = python(page);
       const pre = block.locator('[data-slot="code-block-content"]');
       await expect(pre).toHaveAttribute("tabindex", "0");
-      expect(await computed(pre, "scrollbar-width")).toBe("thin");
+      adaptsIn(
+        "firefox",
+        "scrollbar-width: Playwright's Firefox computes none for every element, so the value is read from the author's rules",
+      );
+      expect(await scrollbarWidth(pre)).toBe("thin");
       // 014 decision 5: the track is the code ground.
       expect(await computed(pre, "scrollbar-color")).toBe(
         `${hexToRgb(await cssVar(page, "--input"))} ${hexToRgb(await cssVar(page, "--syntax-ground"))}`,
@@ -439,7 +448,7 @@ test.describe("the code block", () => {
   });
 
   test.describe("with the clipboard granted", () => {
-    test.use({ permissions: ["clipboard-read", "clipboard-write"] });
+    test.use({ permissions: clipboard });
 
     test("C4. the copy button: its name and size; Enter writes the code, says Copied, and resets after 2 s", async ({
       page,
@@ -468,11 +477,9 @@ test.describe("the code block", () => {
       await page.keyboard.press("Enter");
       await expect(button).toHaveAccessibleName("Copied");
       await expect(block.getByRole("status")).toHaveText("Copied");
-      const clipboard = await page.evaluate(() =>
-        navigator.clipboard.readText(),
-      );
-      expect(clipboard.split("\n")).toHaveLength(25);
-      expect(clipboard).toBe(code);
+      const pasted = await readClipboard(page);
+      expect(pasted.split("\n")).toHaveLength(25);
+      expect(pasted).toBe(code);
       await expect(button).toHaveAccessibleName("Copy code", { timeout: 3000 });
     });
   });
@@ -697,7 +704,7 @@ test.describe("the ink surface", () => {
   test("S1. the surface's grounds, its overlays' placement and theme", async ({
     page,
   }, info) => {
-    const light = info.project.name === "light";
+    const light = scheme(info) === "light";
     await open(page, PAGE);
     const s = surface(page);
     await expect(s).toHaveClass(/\bdark\b/);
@@ -736,7 +743,7 @@ test.describe("the ink surface", () => {
     expect(await computed(s, "color-scheme")).toBe("dark");
 
     // The popover opens inside the surface, in the surface's theme.
-    await page.getByTestId("surface-popover").click();
+    await activate(page.getByTestId("surface-popover"));
     const popover = page.locator('[data-slot="popover-content"]');
     await expect(popover).toBeVisible();
     expect(await popover.evaluate((el) => !!el.closest(".surface-ink"))).toBe(
@@ -905,7 +912,11 @@ test.describe("the code editor", () => {
     expect(await computed(scroller, "font-family")).toContain("JetBrains Mono");
     expect(await computed(scroller, "font-size")).toBe("13.5px");
     expect(await computed(scroller, "font-variant-ligatures")).toBe("none");
-    expect(await computed(scroller, "scrollbar-width")).toBe("thin");
+    adaptsIn(
+      "firefox",
+      "scrollbar-width: Playwright's Firefox computes none for every element, so the value is read from the author's rules",
+    );
+    expect(await scrollbarWidth(scroller)).toBe("thin");
     expect(await computed(scroller, "scrollbar-color")).toBe(
       `${hexToRgb(await cssVar(page, "--input"))} ${codeGround}`,
     );
@@ -1524,7 +1535,7 @@ test.describe("the popover", () => {
     expect(holdsColour(layers[0], line), `first layer ${layers[0]}`).toBe(true);
     expect(layers[0]).toMatch(/\b0px 0px 0px 1px$/);
     expect(layers[1]).toMatch(/\b0px 12px 32px 0px$/);
-    if (info.project.name === "light") {
+    if (scheme(info) === "light") {
       expect(
         holdsColour(layers[1], await cssVar(page, "--elevation-shadow")),
         `second layer ${layers[1]}`,
@@ -1780,7 +1791,7 @@ test.describe("the code ground and its edge (014)", () => {
   test("G1. code-block: the root on the code ground with the hairline on 4 sides; 3 emphasised lines on the active line; the track on the code ground", async ({
     page,
   }, info) => {
-    const theme = info.project.name as "light" | "dark";
+    const theme = scheme(info);
     await open(page, PAGE);
     const block = python(page);
     expect(await computed(block, "background-color")).toBe(CODE_GROUND[theme]);
@@ -1800,7 +1811,7 @@ test.describe("the code ground and its edge (014)", () => {
   test("G2. code-editor: the root and .cm-editor on the code ground, the root with the hairline; the active line; the track; the ring 3 px out", async ({
     page,
   }, info) => {
-    const theme = info.project.name as "light" | "dark";
+    const theme = scheme(info);
     await open(page, EDITOR_PAGE);
     const host = page.getByTestId("editor-main");
     const root = host.locator('[data-slot="code-editor"]');
@@ -1828,7 +1839,7 @@ test.describe("the code ground and its edge (014)", () => {
   test("G3. product-home: each stage-card's block and live-console's block on the code ground with the hairline", async ({
     page,
   }, info) => {
-    const theme = info.project.name as "light" | "dark";
+    const theme = scheme(info);
     await openView(page, "/view/product-home/");
     const blocks = page.locator(
       '[data-slot="stage-card"] [data-slot="code-block"], [data-slot="live-console"] [data-slot="code-block"]',
@@ -1852,7 +1863,7 @@ test.describe("the code ground and its edge (014)", () => {
   test("G4. the chat thread: the block in m3's user bubble on the code ground with the hairline", async ({
     page,
   }, info) => {
-    const theme = info.project.name as "light" | "dark";
+    const theme = scheme(info);
     await openView(page, "/view/chat/thread/");
     const turn = page
       .locator('[data-slot="message"][data-align="end"]')
@@ -1882,7 +1893,7 @@ test.describe("inline code (014)", () => {
   test("I1. the chip: ground, hairline, code colour, 4 px side padding and none above, the case radius, cloned on a wrap", async ({
     page,
   }, info) => {
-    const theme = info.project.name as "light" | "dark";
+    const theme = scheme(info);
     await open(page, THEME_PAGE);
     const chip = page.getByTestId("inline-p").locator("code").first();
     expect(await computed(chip, "background-color")).toBe(CODE_GROUND[theme]);
@@ -1905,7 +1916,11 @@ test.describe("inline code (014)", () => {
     });
     expect(radius).toBe("8px");
     expect(await computed(chip, "border-top-left-radius")).toBe(radius);
-    expect(await computed(chip, "box-decoration-break")).toBe("clone");
+    // 022: WebKit knows only the prefixed property; the theme writes both.
+    expect(
+      (await computed(chip, "box-decoration-break")) ||
+        (await computed(chip, "-webkit-box-decoration-break")),
+    ).toBe("clone");
   });
 
   test("I2. rendered line heights: a one-line paragraph with a chip is as tall as its twin with a mono span, in text-xs, text-sm and text-base", async ({
@@ -1931,7 +1946,7 @@ test.describe("inline code (014)", () => {
   test("I3. in a link the code colour is the link's; in a card the same chip; in an h3 no chip; in the ink surface flush with the surface", async ({
     page,
   }, info) => {
-    const theme = info.project.name as "light" | "dark";
+    const theme = scheme(info);
     await open(page, THEME_PAGE);
     const link = page.getByTestId("inline-link").locator("code");
     await expect(page.getByTestId("inline-link")).toHaveAttribute(
@@ -1966,7 +1981,7 @@ test.describe("inline code (014)", () => {
   test("I4. the install line on an item page takes the code ground, the hairline and the code colour", async ({
     page,
   }, info) => {
-    const theme = info.project.name as "light" | "dark";
+    const theme = scheme(info);
     await open(page, componentPath("button"));
     // 015 decision 16: the install line is a code block; 018 decision 3
     // moves it from the facts card to the Install section.
@@ -1985,7 +2000,7 @@ test.describe("inline code (014)", () => {
   test("I5. a block's pre code takes no chip; kbd sits on the code ground, with its hairline and muted text", async ({
     page,
   }, info) => {
-    const theme = info.project.name as "light" | "dark";
+    const theme = scheme(info);
     await open(page, PAGE);
     const inner = python(page).locator("pre code").first();
     expect(await computed(inner, "background-color")).toBe("rgba(0, 0, 0, 0)");

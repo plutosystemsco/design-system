@@ -1,4 +1,7 @@
-import { expect, test, type Page } from "@playwright/test";
+import type { Page } from "@playwright/test";
+import { expect, test } from "../test.ts";
+import { adaptsIn, onlyProjects } from "./engines.ts";
+import { scheme } from "./scheme.ts";
 import {
   GROUND,
   open,
@@ -6,6 +9,7 @@ import {
   settled,
   type ThemeName,
   componentPath,
+  scrollbarWidth,
 } from "./pages.ts";
 
 const PAGE = componentPath("kuiper-theme");
@@ -209,18 +213,23 @@ test.describe("tokens in the browser", () => {
   test("scrollbar computes scrollbar-color holding --input and --muted, thin", async ({
     page,
   }) => {
-    const [colour, width, input, muted] = await page
+    const [colour, input, muted] = await page
       .locator(token("scrollbar"))
       .evaluate((el) => {
         const root = getComputedStyle(document.documentElement);
         const s = getComputedStyle(el);
         return [
           s.getPropertyValue("scrollbar-color"),
-          s.getPropertyValue("scrollbar-width"),
           root.getPropertyValue("--input").trim(),
           root.getPropertyValue("--muted").trim(),
         ];
       });
+    // 022: Playwright's Firefox computes every scrollbar-width as none.
+    adaptsIn(
+      "firefox",
+      "scrollbar-width: Playwright's Firefox computes none for every element, so the value is read from the author's rules",
+    );
+    const width = await scrollbarWidth(page.locator(token("scrollbar")));
     expect(width).toBe("thin");
     expect(holdsColour(colour, input), `${colour} holds ${input}`).toBe(true);
     expect(holdsColour(colour, muted), `${colour} holds ${muted}`).toBe(true);
@@ -279,7 +288,7 @@ test.describe("under reduced motion", () => {
   });
 
   test("the ground is unchanged", async ({ page }, info) => {
-    const theme = info.project.name as ThemeName;
+    const theme = scheme(info);
     await expect(page.locator("body")).toHaveCSS(
       "background-color",
       GROUND[theme],
@@ -294,7 +303,11 @@ test.describe("under reduced motion", () => {
  * draws the hairline alone.
  */
 test.describe("flat product screens in the light theme (011 criterion 4)", () => {
-  test.skip(({ colorScheme }) => colorScheme !== "light", "light theme only");
+  // 022 decision 3: a skip by scheme is counted in ENGINE_ONLY.
+  onlyProjects(
+    ["chromium-light", "firefox-light", "webkit-light"],
+    "light theme only",
+  );
 
   /** The drawn layers of a box-shadow: Tailwind's empty ring and inset layers dropped. */
   const layers = (shadow: string) =>
