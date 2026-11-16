@@ -36,7 +36,9 @@ const config = withGuidepup({
   // 022 decision 18: speech timing on shared runners. A retried pass is
   // listed as flaky; on a release run it is ledgered (Q2).
   retries: CI ? 2 : 0,
-  reporter: CI ? [["blob"], ["dot"]] : "list",
+  // 022l: `list` prints each test and its time as it ends, so even a
+  // cancelled shard's log shows its pace.
+  reporter: CI ? [["blob"], ["list"]] : "list",
   webServer: server(),
   use: { baseURL: BASE_URL, viewport: VIEWPORT },
   projects: [
