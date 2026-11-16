@@ -25,7 +25,7 @@
     {
       "files": "**",
       "pattern": "Pluto Systems",
-      "count": 312,
+      "count": 315,
       "class": "brand",
       "reason": "The company's name (decision 2).",
       "byFile": {
@@ -33,7 +33,7 @@
         "LICENSE": 1,
         "README.md": 3,
         "package.json": 1,
-        "registry.json": 77,
+        "registry.json": 78,
         "scripts/rename-kuiper.ts": 5,
         "src/lib/registry/blocks/app-shell/+layout.svelte": 2,
         "src/lib/registry/blocks/product-home/+page.svelte": 1,
@@ -85,7 +85,7 @@
         "static/r/styles/maia/four-dot.json": 3,
         "static/r/styles/maia/hero.json": 1,
         "static/r/styles/maia/highlighter.json": 1,
-        "static/r/styles/maia/index.json": 77,
+        "static/r/styles/maia/index.json": 78,
         "static/r/styles/maia/input-group.json": 1,
         "static/r/styles/maia/input-otp.json": 1,
         "static/r/styles/maia/input.json": 1,
@@ -128,6 +128,7 @@
         "static/r/styles/maia/tabs.json": 1,
         "static/r/styles/maia/textarea.json": 1,
         "static/r/styles/maia/theme.json": 1,
+        "static/r/styles/maia/toast.json": 1,
         "static/r/styles/maia/toggle-group.json": 1,
         "static/r/styles/maia/toggle.json": 1,
         "static/r/styles/maia/tooltip.json": 1,
@@ -149,7 +150,7 @@
     {
       "files": "**",
       "pattern": "plutosystemsco",
-      "count": 249,
+      "count": 252,
       "class": "brand",
       "reason": "The company's GitHub organisation, in every source and install URL."
     },
@@ -170,7 +171,7 @@
     {
       "files": "**",
       "pattern": "pluto-sandbox",
-      "count": 10,
+      "count": 14,
       "class": "brand",
       "reason": "Sample content: the example project's name."
     },

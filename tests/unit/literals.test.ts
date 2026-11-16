@@ -17,6 +17,7 @@ const rules = loadRules();
 // a row of 002's rule table.
 
 /**
+ * 026 decision 1, test 40: 359 files, as toast adds its six.
  * 020 decision 5: 353 files, as theme gains stored.ts.
  * 013 decisions 5 and 16: 352 files, as highlighter grows from 1 file to 29
  * (its 24 query files among them) and code-editor gains its highlighting.
@@ -30,10 +31,23 @@ const rules = loadRules();
  * 006 decision 13: 300 files, 005's 286 plus the 14 of app-shell (9) and
  * chat (5).
  */
-const FILE_COUNT = 353;
+const FILE_COUNT = 359;
 
 describe("the item files", () => {
   const files = itemFiles();
+
+  // 026 test 40: the six toast files are linted.
+  test("hold toast's six files", () => {
+    for (const f of [
+      "toast-queue.ts",
+      "toast-words.ts",
+      "toast.ts",
+      "toaster.svelte",
+      "toast.svelte",
+      "index.ts",
+    ])
+      expect(files).toContain(`src/lib/registry/ui/toast/${f}`);
+  });
 
   test(`are the ${FILE_COUNT} files items carry, with no repeats`, () => {
     expect(files).toHaveLength(FILE_COUNT);

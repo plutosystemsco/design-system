@@ -95,32 +95,34 @@
     >
       <h2 id={section.id} class={h2}>{section.title}</h2>
       <p>{@render text(section.summary)}</p>
-      <Table.Root label="Renamed names">
-        <Table.Header>
-          <Table.Row>
-            <Table.Head>Old name</Table.Head>
-            <Table.Head>New name</Table.Head>
-            <Table.Head>Who sees it</Table.Head>
-            <Table.Head>What to do</Table.Head>
-            <Table.Head>Old name works until</Table.Head>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {#each section.renames as r (`${r.kind} ${r.old}`)}
+      {#if section.renames.length}
+        <Table.Root label="Renamed names">
+          <Table.Header>
             <Table.Row>
-              <Table.Cell class="align-top"><code>{r.old}</code></Table.Cell>
-              <Table.Cell class="align-top"><code>{r.new}</code></Table.Cell>
-              <Table.Cell class="min-w-48 align-top whitespace-normal"
-                >{r.kind}. {@render text(r.seenBy)}</Table.Cell
-              >
-              <Table.Cell class="min-w-48 align-top whitespace-normal"
-                >{@render text(r.todo)}</Table.Cell
-              >
-              <Table.Cell class="align-top">{until(r)}</Table.Cell>
+              <Table.Head>Old name</Table.Head>
+              <Table.Head>New name</Table.Head>
+              <Table.Head>Who sees it</Table.Head>
+              <Table.Head>What to do</Table.Head>
+              <Table.Head>Old name works until</Table.Head>
             </Table.Row>
-          {/each}
-        </Table.Body>
-      </Table.Root>
+          </Table.Header>
+          <Table.Body>
+            {#each section.renames as r (`${r.kind} ${r.old}`)}
+              <Table.Row>
+                <Table.Cell class="align-top"><code>{r.old}</code></Table.Cell>
+                <Table.Cell class="align-top"><code>{r.new}</code></Table.Cell>
+                <Table.Cell class="min-w-48 align-top whitespace-normal"
+                  >{r.kind}. {@render text(r.seenBy)}</Table.Cell
+                >
+                <Table.Cell class="min-w-48 align-top whitespace-normal"
+                  >{@render text(r.todo)}</Table.Cell
+                >
+                <Table.Cell class="align-top">{until(r)}</Table.Cell>
+              </Table.Row>
+            {/each}
+          </Table.Body>
+        </Table.Root>
+      {/if}
       <h3 class="site-h3 mt-4">The steps, in order</h3>
       <ol class="grid list-decimal gap-6 ps-6">
         {#each section.steps as step, i (i)}
@@ -132,7 +134,7 @@
                 <Snippet
                   code={command.code}
                   lines={command.lines}
-                  label={`Step ${i + 1}`}
+                  label={`${section.title}, step ${i + 1}`}
                   language={step.language ?? "bash"}
                 />
               </div>

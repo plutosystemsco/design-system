@@ -60,12 +60,12 @@ function items(raw: unknown): ItemJson | null {
 }
 
 describe("published item files cite no internal document", () => {
-  // 020 decision 3: the 75 items and the one alias entry.
-  test("static/r holds the 76 entries' JSON", () => {
+  // 020 decision 3: the 75 items and the one alias entry; 026 adds toast.
+  test("static/r holds the 77 entries' JSON", () => {
     const named = FILES.map((f) =>
       items(JSON.parse(readFileSync(f, "utf8"))),
     ).filter(Boolean);
-    expect(named.length).toBe(76);
+    expect(named.length).toBe(77);
   });
 
   test("0 decoded lines and 0 joined comment blocks match a citation pattern, but the fixture's kept lines", () => {

@@ -1799,6 +1799,51 @@
       }
     },
     {
+      "name": "toast",
+      "type": "registry:ui",
+      "title": "Toast",
+      "description": "A short message in the corner, spoken by one of two announcers, that never covers the focus; success and info leave after at least 6 s, and everything else waits to be dismissed.",
+      "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+      "registryDependencies": [
+        "utils",
+        "kuiper-theme",
+        "status",
+        "button",
+        "spinner"
+      ],
+      "files": [
+        {
+          "path": "src/lib/registry/ui/toast/toast-queue.ts",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/toast/toast-words.ts",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/toast/toast.ts",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/toast/toaster.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/toast/toast.svelte",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/toast/index.ts",
+          "type": "registry:ui"
+        }
+      ],
+      "meta": {
+        "since": "0.13.0",
+        "group": "feedback",
+        "modes": ["productive"]
+      }
+    },
+    {
       "name": "label",
       "type": "registry:ui",
       "title": "Label",

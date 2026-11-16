@@ -139,6 +139,8 @@
   "textarea-light": 9.64,
   "theme-dark": 15,
   "theme-light": 15,
+  "toast-dark": 9,
+  "toast-light": 9,
   "toggle-dark": 9,
   "toggle-group-dark": 9,
   "toggle-group-light": 9,

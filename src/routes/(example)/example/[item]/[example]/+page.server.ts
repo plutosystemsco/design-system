@@ -10,7 +10,8 @@ export const entries: EntryGenerator = () =>
     .filter((item) => item !== "theme")
     .flatMap((item) =>
       readdirSync(path.resolve(ROOT, item))
-        .filter((f) => f.endsWith(".svelte"))
+        // 026 decision 22: a pair file is no example, and has no view.
+        .filter((f) => f.endsWith(".svelte") && !/^(?:do|dont)-/.test(f))
         .map((f) => ({ item, example: f.replace(/\.svelte$/, "") })),
     );
 

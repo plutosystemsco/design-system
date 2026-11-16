@@ -18,9 +18,9 @@ const registry = withListedItems(
 describe("015: the page list", () => {
   const own = SITEMAP.filter((p) => p.spec === "015");
 
-  test("015's entries are 81: home, 4 landings, 75 components and the changelog", () => {
+  test("015's entries are 82: home, 4 landings, 76 components (026 adds toast) and the changelog", () => {
     expect(own).toHaveLength(1 + DOORS.length + registry.items.length + 1);
-    expect(own).toHaveLength(81);
+    expect(own).toHaveLength(82);
   });
 
   test("0 paths are duplicated", () => {
@@ -44,7 +44,7 @@ describe("015: the page list", () => {
     }
   });
 
-  test("75 component entries, in the registry's order, each titled and grouped as the registry says", () => {
+  test("76 component entries, in the registry's order, each titled and grouped as the registry says", () => {
     const components = SITEMAP.filter((p) => p.parent === "/components/");
     expect(components.map((p) => p.path)).toEqual(
       registry.items.map((i) => componentPath(i.name)),
@@ -121,9 +121,9 @@ describe("017: the page list", () => {
     ]);
   });
 
-  test("21 entries tagged 017, 103 in all with 020's guide, each under its door's landing", () => {
+  test("21 entries tagged 017, 104 in all with 020's guide, each under its door's landing", () => {
     expect(added).toHaveLength(21);
-    expect(SITEMAP).toHaveLength(103);
+    expect(SITEMAP).toHaveLength(104);
     for (const p of added) expect(p.parent).toBe(`/${p.door}/`);
   });
 });
@@ -133,7 +133,7 @@ describe("018 decision 1: navOrder", () => {
     const { navOrder } = await import("../../src/lib/site/sitemap.ts");
     const want: Record<string, number> = {
       start: 6,
-      components: 76,
+      components: 77,
       brand: 10,
       foundations: 8,
     };

@@ -11,7 +11,8 @@ import { PAGES, SITEMAP } from "./pages.ts";
 const GUIDE = "/changelog/0.13.0/upgrade/";
 
 test.describe("020 test 17: the guide", () => {
-  test('it is titled "Upgrade to 0.13.0", in five parts, in decision 12\'s order', async ({
+  // 026 decision 26 adds its section after 020's: six parts.
+  test('it is titled "Upgrade to 0.13.0", in six parts, in decision 12\'s order', async ({
     page,
   }) => {
     await page.goto(GUIDE);
@@ -25,6 +26,7 @@ test.describe("020 test 17: the guide", () => {
       "Who this is for",
       "Before you start",
       "020: Pluto is now Kuiper in code",
+      "026: a toast of Kuiper's own",
       "What keeps working until 0.14.0",
       "What did not change",
     ]);
@@ -141,7 +143,7 @@ test.describe("020 test 17: the guide", () => {
   });
 });
 
-// 020 test 5's half that reads a page: the components index lists the 75
+// 020 test 5's half that reads a page: the components index lists the 76
 // items, the Kuiper theme among them, and no alias.
 test("the components index links to /components/kuiper-theme/ and to no pluto-theme page", async ({
   page,

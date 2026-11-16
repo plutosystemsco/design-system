@@ -12,6 +12,7 @@ import {
   exampleMeta,
   hasSwitch,
   importGraph,
+  PAIR_FILE,
   shownSource,
 } from "../../src/lib/site/shown-source.ts";
 
@@ -30,10 +31,12 @@ const ROOT = "src/lib/site/examples";
 const WITH_EXAMPLES = registry.items.filter(
   (i) => i.type !== "registry:block" && i.meta.group !== "compositions",
 );
+// 026 decision 22: a do or don't pair file is no example (toast-site.test.ts
+// checks its meta).
 const files = (name: string) =>
   existsSync(path.join(ROOT, name))
     ? readdirSync(path.join(ROOT, name))
-        .filter((f) => f.endsWith(".svelte"))
+        .filter((f) => f.endsWith(".svelte") && !PAIR_FILE.test(f))
         .map((f) => path.join(ROOT, name, f))
     : [];
 const ALL = WITH_EXAMPLES.flatMap((i) =>
@@ -41,8 +44,8 @@ const ALL = WITH_EXAMPLES.flatMap((i) =>
 );
 
 describe("015: examples are files", () => {
-  test("each of the 58 items that are not blocks or compositions has at least 1 example file", () => {
-    expect(WITH_EXAMPLES).toHaveLength(58);
+  test("each of the 59 items that are not blocks or compositions has at least 1 example file", () => {
+    expect(WITH_EXAMPLES).toHaveLength(59);
     expect(
       WITH_EXAMPLES.filter((i) => files(i.name).length === 0).map(
         (i) => i.name,

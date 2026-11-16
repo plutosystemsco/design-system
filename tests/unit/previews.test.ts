@@ -9,8 +9,8 @@ const names: string[] = registry.items.map((i: { name: string }) => i.name);
 const page = (name: string) =>
   `src/routes/(site)/components/${name}/+page.svelte`;
 
-// 006 decision 3, 007 decision 7, 009 decision 10, 010 decision 1 and 011 decision 8: 75 items.
-const COUNT = 75;
+// 006 decision 3, 007 decision 7, 009 decision 10, 010 decision 1 and 011 decision 8: 75 items; 026 adds toast: 76.
+const COUNT = 76;
 
 test(`the registry has ${COUNT} items`, () => {
   expect(names).toHaveLength(COUNT);
