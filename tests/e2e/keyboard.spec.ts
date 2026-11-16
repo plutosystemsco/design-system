@@ -1,3 +1,4 @@
+import AxeBuilder from "@axe-core/playwright";
 import type { Page } from "@playwright/test";
 import { expect, test } from "../test.ts";
 import {
@@ -625,6 +626,39 @@ test.describe("behaviours", () => {
     await expect(trigger).toHaveAttribute("aria-expanded", "false");
   });
 
+  // 022a, the WAI-ARIA menu pattern: Escape closes the menu that holds
+  // focus and returns focus to the item that opened it. In a sub-menu, that
+  // is its parent item; a second Escape closes the menu.
+  test("022a. Escape in the sub-menu closes it alone: the menu stays open with focus on Invite users; Escape again returns to the trigger", async ({
+    page,
+  }) => {
+    await open(page, componentPath("dropdown-menu"));
+    const trigger = fixture(page).getByRole("button", { name: "Account" });
+    const menu = page.locator('[data-slot="dropdown-menu-content"]');
+    const sub = page.locator('[data-slot="dropdown-menu-sub-content"]');
+    const parent = menu.locator('[data-slot="dropdown-menu-sub-trigger"]');
+    await trigger.focus();
+    await page.keyboard.press("Enter");
+    await expect(menu).toBeVisible();
+    // The parent item, by keyboard: the last item, then one up.
+    await page.keyboard.press("End");
+    await page.keyboard.press("ArrowUp");
+    await expect(parent).toBeFocused();
+    await expect(parent).toHaveText(/Invite users/);
+    await page.keyboard.press("ArrowRight");
+    await expect(sub).toBeVisible();
+    await expect(sub.getByRole("menuitem").first()).toBeFocused();
+    await page.keyboard.press("Escape");
+    await expect(sub).toHaveCount(0);
+    await expect(menu).toBeVisible();
+    await expect(parent).toBeFocused();
+    await expect(parent).toHaveAttribute("aria-expanded", "false");
+    await expect(trigger).toHaveAttribute("aria-expanded", "true");
+    await page.keyboard.press("Escape");
+    await expect(menu).toHaveCount(0);
+    await expect(trigger).toBeFocused();
+  });
+
   // 005 decision 17, behaviours 4 and 5.
   test("Enter on the sheet trigger opens it with focus on its first link; Tab loops through the close button back to the first link", async ({
     page,
@@ -699,6 +733,57 @@ test.describe("behaviours", () => {
     await expect(trigger).toHaveAttribute("aria-expanded", "true");
     expect(await nav.getAttribute("inert")).toBeNull();
     expect(await stops()).toBe(2);
+  });
+
+  // 022e, the design lead's ruling: the content's scroll box gives up its
+  // own stop only while it holds a focusable element. With text alone it
+  // stays one stop, so the keyboard can still scroll it (WCAG 2.1.1; axe's
+  // scrollable-region-focusable).
+  test("022e. a sidebar whose content holds only text and overflows is one Tab stop, the arrow keys scroll it, and axe finds no scrollable-region-focusable", async ({
+    page,
+  }) => {
+    await open(page, componentPath("sidebar"));
+    const trigger = fixture(page).getByRole("button", {
+      name: "Toggle sidebar",
+    });
+    const content = fixture(page).locator('[data-slot="sidebar-content"]');
+    // An app's sidebar of plain text: the rows go, paragraphs take their place.
+    await content.evaluate((el) => {
+      el.replaceChildren(
+        ...Array.from({ length: 16 }, (_, i) => {
+          const p = document.createElement("p");
+          p.className = "px-2 text-sm";
+          p.textContent = `Note ${i + 1}: a line of plain text, with nothing to focus.`;
+          return p;
+        }),
+      );
+    });
+    const box = () =>
+      content.evaluate((el) => ({
+        overflows: el.scrollHeight > el.clientHeight,
+        top: el.scrollTop,
+      }));
+    expect((await box()).overflows, "the content overflows").toBe(true);
+    await expect(content).not.toHaveAttribute("tabindex", "-1");
+    await trigger.focus();
+    await page.keyboard.press("Tab");
+    await expect(content).toBeFocused();
+    // ArrowDown until the box moves: under load, WebKit can drop a first
+    // scroll key that arrives with the focus.
+    await expect(async () => {
+      await expect(content).toBeFocused();
+      await page.keyboard.press("ArrowDown");
+      expect((await box()).top).toBeGreaterThan(0);
+    }).toPass({ timeout: 10_000 });
+    expect(
+      (await tabOut(page)).other ?? "",
+      "the next Tab leaves the sidebar",
+    ).not.toMatch(/data-slot="sidebar/);
+    const axe = await new AxeBuilder({ page })
+      .include('[data-testid="keyboard-fixture"]')
+      .withRules(["scrollable-region-focusable"])
+      .analyze();
+    expect(axe.violations.map((v) => v.id)).toEqual([]);
   });
 
   test.describe("at 360", () => {

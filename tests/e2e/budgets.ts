@@ -80,15 +80,15 @@ export const MARGIN = {
  * Decision 5, split at the landing (024 landing notes, "Rulings at landing",
  * finding 1): the component pages whose **main frame** loads tree-sitter on
  * load. The template rule reads this list; `component-live`'s budget counts
- * the runtime and a grammar. `highlighter` is here pending `024e`, whose
- * re-base is a fall. `kuiper-theme` left at `024d`: its ink surface shows a
- * static specimen, so the page loads no editor and no tree-sitter.
+ * the runtime and a grammar. `kuiper-theme` left at `024d`: its ink surface
+ * shows a static specimen, so the page loads no editor and no tree-sitter.
+ * `highlighter` and `use-highlighted-code` left at `024e`: the hook loads no
+ * grammar for empty code, so their streaming examples fetch nothing until
+ * Start.
  */
 export const LIVE_HIGHLIGHT: readonly string[] = [
   "code-editor",
   "code-languages",
-  "highlighter",
-  "use-highlighted-code",
 ];
 
 /**
@@ -289,17 +289,19 @@ export const TEMPLATES: Record<TemplateId, Template> = {
   },
   "component-live": {
     // `kuiper-theme` (760 kB, 1,352 ms, 0.004) set all three until it left
-    // at `024d`. A fall, so no ruling: the next pages of the same sweep,
-    // not a re-base. The re-base sweep after `024b` to `024e` re-measures.
+    // at `024d`; `highlighter` (1,140 ms) set LCP until it left at `024e`,
+    // with `use-highlighted-code` (932 ms).
+    // Falls, so no ruling: the next pages of the same sweep, not a re-base.
+    // The re-base sweep after `024b` to `024e` re-measures.
     figures: {
       transfer: { page: "/components/code-editor/", median: 655.8 },
-      lcp: { page: "/components/highlighter/", median: 1140, margin: 0.1 },
+      lcp: { page: "/components/code-editor/", median: 912, margin: 0.1 },
       cls: { page: "/components/code-editor/", median: 0.003 },
     },
     ci: null,
     probes: LIVE_HIGHLIGHT.map(componentPath),
     layouts: COMPONENT_LAYOUTS,
-    ruling: `${SWEEP}; kuiper-theme's fall at 024d (024d landing notes)`,
+    ruling: `${SWEEP}; kuiper-theme's fall at 024d (024d landing notes); highlighter's and use-highlighted-code's at 024e (024e landing notes)`,
   },
   "component-heavy": {
     figures: {

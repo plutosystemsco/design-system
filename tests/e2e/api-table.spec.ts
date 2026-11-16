@@ -144,7 +144,12 @@ test.describe("023a: type names break only between words", () => {
    * column. A table that scrolls now fails; one added here must say why,
    * and fails once it no longer overflows or grows by more than 8 px.
    */
-  const WIDE_AT_1440: Record<string, { width: number; why: string }> = {};
+  const WIDE_AT_1440: Record<string, { width: number; why: string }> = {
+    "/components/dropdown-menu/ DropdownMenuSubContent": {
+      width: 628,
+      why: "022a re-declares escapeKeydownBehavior, a 21-character name in a cell that never breaks; 023b lets a name break between its words",
+    },
+  };
 
   // The landing's ruling: every component page's tables, at both widths.
   // 023 adds 1024, where the text column is widest but the page's chrome

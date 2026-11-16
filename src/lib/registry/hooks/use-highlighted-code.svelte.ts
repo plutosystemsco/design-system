@@ -24,7 +24,8 @@ import {
  * ```
  *
  * The code streams through one session: when the new text extends the old,
- * only the appended range is re-parsed and re-queried.
+ * only the appended range is re-parsed and re-queried. Nothing loads while
+ * the code is empty: the grammar loads with the first non-empty code.
  */
 export function useHighlightedCode(
   value: () => string,
@@ -36,9 +37,15 @@ export function useHighlightedCode(
   } | null>(null);
   // Bumped when a session's embedded grammar arrives, so the lines repaint.
   let version = $state(0);
+  // Nothing loads while the code is empty: a block that waits for its first
+  // chunk fetches its grammar at that chunk, not at mount. Derived, so the
+  // load below re-runs when the code starts or stops being empty, not at
+  // every chunk.
+  const empty = $derived(value() === "");
 
   $effect(() => {
     const lang = language();
+    if (empty) return;
     let cancelled = false;
 
     loadHighlighter(lang)
@@ -87,8 +94,12 @@ export function useHighlightedCode(
 
       if (!highlighter) {
         if (open) close();
-        // Plain until the highlighter arrives; settled once it is known there is none.
-        return { lines: code.split("\n"), settled: ready || !lang };
+        // Plain until the highlighter arrives; settled once it is known there
+        // is none, and while there is no code, since nothing then loads.
+        return {
+          lines: code.split("\n"),
+          settled: ready || !lang || raw === "",
+        };
       }
 
       if (open?.highlighter !== highlighter) {
