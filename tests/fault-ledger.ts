@@ -26,37 +26,12 @@ const inProjects = (
   projects: string[],
 ): LedgerLine[] => projects.map((project) => ({ ...line, where: { project } }));
 
-const BLOCKS = [
-  "hero",
-  "sign-in",
-  "sign-up",
-  "page-states",
-  "settings",
-  "app-shell",
-  "chat",
-  "product-home",
-];
-
 export const LEDGER: LedgerLine[] = [
   // 022a: dropdown-menu's sub-menu, under every reader and browser pair.
   { ...SUB_MENU_ESCAPE, where: { reader: "voiceover", browser: "webkit" } },
   { ...SUB_MENU_ESCAPE, where: { reader: "voiceover", browser: "chromium" } },
   { ...SUB_MENU_ESCAPE, where: { reader: "nvda", browser: "chromium" } },
   { ...SUB_MENU_ESCAPE, where: { reader: "nvda", browser: "firefox" } },
-  // 022c: the viewer's theme copy loses to the frame's own code in Firefox.
-  ...BLOCKS.flatMap((block) =>
-    inProjects(
-      {
-        file: "viewer.spec.ts",
-        title: `${block} › 4. the frame's <html> is dark exactly when the page's is: at load, after the toggle, and back`,
-        expect: { error: "the frame's theme is the page's" },
-        finding:
-          "In Firefox the frame keeps its own theme: the viewer's copy runs before the frame's own theme code.",
-        change: "022c",
-      },
-      FIREFOX,
-    ),
-  ),
   // 022d: the overflowing section nav is a Tab stop in Firefox.
   ...inProjects(
     {
