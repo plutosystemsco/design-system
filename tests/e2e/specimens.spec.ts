@@ -43,7 +43,9 @@ const style = (l: Locator) =>
       leading: s.lineHeight,
       colour: s.color,
       ground: s.backgroundColor,
-      adjust: s.forcedColorAdjust,
+      // 022: WebKit has no forced-colours mode and no such property;
+      // there nothing repaints, so the swatch keeps its colour as `none` asks.
+      adjust: s.forcedColorAdjust ?? "none (no forced colours)",
       border: s.borderTopWidth,
     };
   });
@@ -159,7 +161,7 @@ test.describe("018 criterion 17: Colour", () => {
           );
           await expect(one, `${role} ${theme}`).toHaveText("Aa");
         } else sameColour(s.ground, value, `${role} ${theme}`);
-        expect(s.adjust, `${role} ${theme}`).toBe("none");
+        expect(s.adjust, `${role} ${theme}`).toMatch(/^none/);
         expect(s.border, `${role} ${theme}`).toBe("1px");
         await expect(row, `${role} ${theme}`).toContainText(value);
       }
@@ -200,13 +202,13 @@ test.describe("018 criterion 17: Colour", () => {
       .locator('[data-slot="swatch"]')
       .evaluateAll((els) =>
         els.map((e) => [
-          getComputedStyle(e).forcedColorAdjust,
+          getComputedStyle(e).forcedColorAdjust ?? "none (no forced colours)",
           getComputedStyle(e).borderTopWidth,
         ]),
       );
     expect(chips.length).toBeGreaterThan(100);
     for (const [adjust, border] of chips) {
-      expect(adjust).toBe("none");
+      expect(adjust).toMatch(/^none/);
       expect(border).toBe("1px");
     }
   });

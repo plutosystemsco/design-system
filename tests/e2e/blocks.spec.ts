@@ -974,7 +974,13 @@ test.describe("the app shell", () => {
       // @ts-expect-error playwright-core ships no types for its bundled PNG.
       const bundle = await import("playwright-core/lib/utilsBundle");
       const PNG = bundle.PNG as {
-        sync: { read(buffer: Buffer): { data: Uint8Array } };
+        sync: {
+          read(buffer: Buffer): {
+            data: Uint8Array;
+            width: number;
+            height: number;
+          };
+        };
       };
       const edge = Math.round(
         (await box(header)).y + (await box(header)).height,
@@ -984,19 +990,35 @@ test.describe("the app shell", () => {
           clip: { x: 8, y: edge - 2, width: 1, height: 4 },
         }),
       );
-      const px = (i: number) =>
-        "#" +
-        [png.data[i * 4], png.data[i * 4 + 1], png.data[i * 4 + 2]]
-          .map((c: number) => c.toString(16).padStart(2, "0"))
-          .join("");
+      // 022: one CSS pixel is `scale` device rows: WebKit's desktop device
+      // draws at 2× (Playwright's "Desktop Safari"), Chromium's at 1×.
+      const scale = Math.max(1, Math.round(png.height / 4));
+      const px = (i: number) => {
+        const at = i * scale * png.width * 4;
+        return (
+          "#" +
+          [png.data[at], png.data[at + 1], png.data[at + 2]]
+            .map((c) => c!.toString(16).padStart(2, "0"))
+            .join("")
+        );
+      };
       const dark = scheme(info) === "dark";
       const ground = dark ? "#16140f" : "#f3f0e8";
-      expect([px(0), px(1), px(2), px(3)]).toEqual([
-        ground,
-        dark ? "#2c2925" : "#dbd9d2",
-        ground,
-        ground,
-      ]);
+      const want = [ground, dark ? "#2c2925" : "#dbd9d2", ground, ground];
+      // 022: within 2 steps a channel. Each engine rounds the blend of a
+      // translucent ink its own way (WebKit one step off Chromium's).
+      const near = (a: string, b: string) =>
+        [1, 3, 5].every(
+          (i) =>
+            Math.abs(
+              parseInt(a.slice(i, i + 2), 16) - parseInt(b.slice(i, i + 2), 16),
+            ) <= 2,
+        );
+      const got = [px(0), px(1), px(2), px(3)];
+      expect(
+        got.every((g, i) => near(g, want[i]!)),
+        `${got.join(" ")} against ${want.join(" ")}`,
+      ).toBe(true);
     });
   }
 

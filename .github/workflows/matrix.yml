@@ -265,7 +265,7 @@ jobs:
           pattern: sr-*
           path: sr
       - run: |
-          mkdir -p all-blob-reports
+          mkdir -p all-blob-reports sr
           find sr -path '*/blob-report/*.zip' -exec cp {} all-blob-reports/ \;
           ls all-blob-reports
       - run: bun --bun playwright merge-reports -c playwright.merge.config.ts all-blob-reports

@@ -203,15 +203,18 @@ for (const block of BLOCKS) {
       await page.addInitScript(() => {
         if (window === window.top) return;
         const query = "(prefers-color-scheme: dark)";
-        const dark = !window.matchMedia(query).matches;
         // The real list, with `matches` inverted: a spread copy would drop
         // the prototype's addEventListener, which the shell view's theme
-        // store needs (006).
+        // store needs (006). 022: inverted when asked, not when this script
+        // starts: WebKit applies the emulated scheme to a frame after its
+        // init scripts begin, so a reading taken here was always light.
         const real = window.matchMedia.bind(window);
         window.matchMedia = (q: string) => {
           const list = real(q);
-          if (q === query)
-            Object.defineProperty(list, "matches", { get: () => dark });
+          if (q === query) {
+            const actual = list.matches;
+            Object.defineProperty(list, "matches", { get: () => !actual });
+          }
           return list;
         };
         Object.defineProperty(window, "localStorage", {

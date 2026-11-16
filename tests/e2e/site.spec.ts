@@ -767,7 +767,10 @@ test.describe("018 criteria 12 to 14: the measure, one h3, smoothing", () => {
               )
               .map((h) => {
                 const s = getComputedStyle(h);
-                return s.fontFamily.startsWith('"IBM Plex Sans') &&
+                // 022: quotes dropped; WebKit and Firefox write the family as it is written.
+                return s.fontFamily
+                  .replace(/["']/g, "")
+                  .startsWith("IBM Plex Sans") &&
                   s.fontWeight === "600" &&
                   s.fontSize === "20px"
                   ? ""
