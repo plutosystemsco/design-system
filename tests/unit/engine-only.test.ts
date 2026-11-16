@@ -4,8 +4,9 @@
  * `tests/e2e/engines.ts` declares the only three ways a browser test may skip
  * by engine or project: `onlyIn`, `notIn` and `onlyProjects`. Each call has
  * exactly one entry in `ENGINE_ONLY` (`tests/e2e/engine-only.ts`), with the
- * same helper and arguments, and each entry has one call. The data file
- * imports nothing, so `030`'s report code can read it without Playwright.
+ * same helper and arguments (a platform too, `022o`), and each entry has one
+ * call. The data file imports nothing, so `030`'s report code can read it
+ * without Playwright.
  */
 import { describe, expect, test } from "bun:test";
 import { readdirSync, readFileSync } from "node:fs";
@@ -122,6 +123,47 @@ describe("022 test 7a: the check fails where it should (fixtures)", () => {
     );
     expect(faults.join("\n")).toContain("no onlyIn call");
     expect(faults.join("\n")).toContain("does not exist");
+  });
+
+  // 022o: a platform is the third argument, and part of the match.
+  test("a call with a platform matches only an entry with the same platform", () => {
+    const mac: EngineOnly = { ...entry, engine: "webkit", platform: "darwin" };
+    const call = `onlyIn("webkit", "CDP: Emulation.setEmulatedMedia", "darwin");`;
+    expect(check({ "x.spec.ts": call }, [mac], "")).toEqual([]);
+    const linux = check(
+      { "x.spec.ts": call },
+      [{ ...mac, platform: "linux" }],
+      "",
+    );
+    expect(linux.join("\n")).toContain("has no ENGINE_ONLY entry");
+    expect(linux.join("\n")).toContain("with no onlyIn call");
+    const none = check(
+      { "x.spec.ts": call },
+      [{ ...mac, platform: undefined }],
+      "",
+    );
+    expect(none).toHaveLength(2);
+  });
+
+  test("only onlyIn and adaptsIn take a platform, and it is darwin or linux", () => {
+    const faults = check(
+      { "x.spec.ts": `notIn("webkit", "r", "darwin");` },
+      [
+        {
+          file: "x.spec.ts",
+          title: "t",
+          helper: "notIn",
+          engine: "webkit",
+          platform: "win32" as never,
+          reason: "r",
+        },
+      ],
+      "",
+    );
+    expect(faults.join("\n")).toContain(
+      "only onlyIn and adaptsIn take a platform",
+    );
+    expect(faults.join("\n")).toContain("must be one of darwin, linux");
   });
 
   test("notIn and onlyIn must name one of the three engines", () => {

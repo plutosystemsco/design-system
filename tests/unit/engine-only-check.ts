@@ -7,6 +7,8 @@ import type { EngineOnly } from "../e2e/engine-only.ts";
 
 export const E2E = "tests/e2e";
 export const ENGINES = ["chromium", "firefox", "webkit"];
+/** 022o: the systems `onlyIn` and `adaptsIn` may name. */
+const PLATFORMS = ["darwin", "linux"];
 const PROJECTS = [
   "chromium-light",
   "chromium-dark",
@@ -118,6 +120,14 @@ export function check(
       if (e.projects)
         faults.push(`${at}: ${e.helper} takes an engine, not projects`);
     }
+    if (e.platform !== undefined) {
+      if (e.helper !== "onlyIn" && e.helper !== "adaptsIn")
+        faults.push(`${at}: only onlyIn and adaptsIn take a platform`);
+      if (!PLATFORMS.includes(e.platform))
+        faults.push(
+          `${at}: its platform must be one of ${PLATFORMS.join(", ")}`,
+        );
+    }
     if (e.ruling && !existsSync(e.ruling))
       faults.push(`${at}: its ruling ${e.ruling} does not exist`);
   }
@@ -125,10 +135,12 @@ export function check(
   // arguments wherever the call's arguments are literals.
   const calls = findCalls(sources);
   const left = [...entries];
+  // A platform, where an entry names one, is the call's third argument.
   const argsOf = (e: EngineOnly) =>
     JSON.stringify([
       e.helper === "onlyProjects" ? e.projects : e.engine,
       e.reason,
+      ...(e.platform === undefined ? [] : [e.platform]),
     ]);
   const literal = calls.filter((c) => c.args);
   const other = calls.filter((c) => !c.args);
@@ -137,7 +149,7 @@ export function check(
       (e) =>
         e.file === c.file &&
         e.helper === c.helper &&
-        (!c.args || argsOf(e) === JSON.stringify(c.args.slice(0, 2))),
+        (!c.args || argsOf(e) === JSON.stringify(c.args.slice(0, 3))),
     );
     if (i < 0)
       faults.push(

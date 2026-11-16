@@ -426,14 +426,18 @@ test.describe("motion", () => {
   test("0 infinitely looping animations outside a spinner on 002's 26 pages, 004's, 005's, 006's and 007's", async ({
     page,
   }) => {
-    const loops: string[] = [];
-    for (const item of [
+    const items = [
       ...ITEMS_002,
       ...ITEMS_004,
       ...ITEMS_005,
       ...ITEMS_006,
       ...ITEMS_007,
-    ]) {
+    ];
+    // 022o: 50 pages, about 0.4 s each in WebKit here and more on CI's two
+    // cores, so the time-out grows with the page count.
+    test.setTimeout(30_000 + 1_000 * items.length);
+    const loops: string[] = [];
+    for (const item of items) {
       await open(page, componentPath(item));
       const found = await page.evaluate(() =>
         [...document.querySelectorAll("*")]

@@ -54,6 +54,25 @@ const scrollState = (region: Locator) =>
     atEnd: el.scrollHeight - el.clientHeight - el.scrollTop <= 8,
   }));
 
+/** 022o: resolves once `scrollTop` has held still across two frames. */
+const stillScroll = (region: Locator) =>
+  expect
+    .poll(() =>
+      region.evaluate(
+        (el) =>
+          new Promise<boolean>((done) => {
+            const top = el.scrollTop;
+            requestAnimationFrame(() => {
+              const one = el.scrollTop;
+              requestAnimationFrame(() =>
+                done(one === top && el.scrollTop === top),
+              );
+            });
+          }),
+      ),
+    )
+    .toBe(true);
+
 /** 005 decision 11: the message log (L1). */
 test.describe("L1. the message log", () => {
   const PAGE = componentPath("message-log");
@@ -151,7 +170,12 @@ test.describe("L1. the message log", () => {
     expect(await computed(button, "background-color")).toBe(
       hexToRgb(await cssVar(page, "--secondary")),
     );
-    // Released: a stream does not move it.
+    // Released: a stream does not move it. 022o: Linux WebKit eases a
+    // wheel scroll out over about 200 ms, so wait until it holds still.
+    await stillScroll(region);
+    // Still released once it rests: the wheel's ease-out did not reach the end.
+    expect((await scrollState(region)).atEnd).toBe(false);
+    await expect(button).toBeVisible();
     const before = (await scrollState(region)).top;
     await page.getByTestId("log-stream").click();
     await page.waitForTimeout(700);

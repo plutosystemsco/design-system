@@ -154,8 +154,12 @@ test.describe("the bar's text over the busiest content", () => {
           const hide = await page.addStyleTag({
             content: `${PANEL} * { color: transparent !important; } ${PANEL} svg, ${PANEL} [data-slot="four-dot"] { visibility: hidden !important; }`,
           });
+          // 022o: one pixel per CSS pixel, as the boxes are measured. At
+          // WebKit's scale factor of 2 the default is twice as large each
+          // way, so a box would index the wrong pixels.
           const png = await page.locator(PANEL).first().screenshot({
             animations: "disabled",
+            scale: "css",
           });
           await hide.evaluate((s) => (s as Element).remove());
           const img = await pixels(page, png);
