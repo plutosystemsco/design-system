@@ -10,14 +10,19 @@
  * Every run (024 decision 6):
  * - `024 transfer: <template>`: each page of the template, one cold load,
  *   unthrottled; every page at or under the template's transfer budget, and
- *   no `.wasm` outside `LIVE_HIGHLIGHT`.
+ *   no `.wasm` outside `WASM_ALLOWED`.
  * - `024 paint: <template>: <page>`: each probe page, 3 cold loads under the
  *   profile; the medians against LCP (decision 8 chooses the figure) and
  *   CLS, and the throttled transfer against the unthrottled (criterion 4).
  *
  * On demand, `PERF_SWEEP=1` replaces both with the sweep: every page, 3
- * loads under the profile, one test per page, written to
- * `test-results/perf-sweep.json`.
+ * loads under the profile and one unthrottled, one test per page, written
+ * to `test-results/perf-sweep.json`. Transfer gates on the unthrottled load
+ * everywhere: a throttled load of a live page can stop before tree-sitter
+ * is asked for (024 criterion 4; the change review's finding 2).
+ *
+ * Test titles name the template and page only, so a re-base renames no
+ * test (`022`'s ledger keys on titles); the budgets are in the annotations.
  *
  * Run it alone: `bun --bun playwright test --project=perf --no-deps`.
  */
@@ -37,6 +42,7 @@ import {
   lcpBudget,
   LIVE_HIGHLIGHT,
   pagesOf,
+  WASM_ALLOWED,
   TEMPLATE_IDS,
   TEMPLATES,
   templateOf,
@@ -182,7 +188,10 @@ export async function measure(
 const median = (xs: number[]) =>
   [...xs].sort((a, b) => a - b)[Math.floor(xs.length / 2)];
 
+/** Pages whose main frame loads tree-sitter, so a throttled load may read lower. */
 const LIVE = new Set(LIVE_HIGHLIGHT.map(componentPath));
+/** Pages that may fetch `.wasm`, in any frame. */
+const WASM = new Set(WASM_ALLOWED.map(componentPath));
 
 /** Criterion 4: how far the throttled transfer may sit from the unthrottled, in kB. */
 const THROTTLE_TOLERANCE = 2;
@@ -223,13 +232,24 @@ function annotateLcp(
     });
 }
 
-/** Every budget a page's throttled runs must meet. */
-function expectWithin(id: TemplateId, page: string, runs: Run[]) {
+/**
+ * Every budget a page must meet: transfer on its unthrottled load (`free`),
+ * CLS and LCP on the throttled medians, `.wasm` on every load; and
+ * criterion 4, the throttled transfer against the unthrottled. Used by the
+ * paint tests and the sweep alike.
+ */
+function expectWithin(id: TemplateId, page: string, runs: Run[], free: Run) {
   const b = budgetOf(TEMPLATES[id]);
   const lcp = lcpBudget(TEMPLATES[id], process.env);
-  const t = median(runs.map((r) => r.transfer));
+  test.info().annotations.push({
+    type: "budget",
+    description: JSON.stringify({ page, template: id, ...b, lcp: lcp.ms }),
+  });
   expect
-    .soft(t, `${page}: transfer ${t} kB; largest: ${largest(runs[0])}`)
+    .soft(
+      free.transfer,
+      `${page}: transfer ${free.transfer} kB; largest: ${largest(free)}`,
+    )
     .toBeLessThanOrEqual(b.transfer);
   expect
     .soft(median(runs.map((r) => r.cls)), `${page}: CLS`)
@@ -238,13 +258,31 @@ function expectWithin(id: TemplateId, page: string, runs: Run[]) {
     expect
       .soft(median(runs.map((r) => r.lcp)), `${page}: LCP (${lcp.source})`)
       .toBeLessThanOrEqual(lcp.ms);
-  if (!LIVE.has(page))
+  if (!WASM.has(page))
     expect
       .soft(
-        runs.map((r) => r.wasm),
-        `${page}: .wasm outside LIVE_HIGHLIGHT`,
+        [...runs, free].map((r) => r.wasm),
+        `${page}: .wasm outside WASM_ALLOWED`,
       )
-      .toEqual(runs.map(() => 0));
+      .toEqual([...runs, free].map(() => 0));
+  // Criterion 4: bytes do not depend on the throttle. On a live page
+  // `networkidle` may fire before the grammar is asked for, so the
+  // throttled figure may be lower, never higher; a report shows when.
+  const t = median(runs.map((r) => r.transfer));
+  const message = `${page}: throttled ${t} kB, unthrottled ${free.transfer}`;
+  if (LIVE.has(page)) {
+    expect
+      .soft(t, message)
+      .toBeLessThanOrEqual(free.transfer + THROTTLE_TOLERANCE);
+    if (t < free.transfer - THROTTLE_TOLERANCE)
+      test.info().annotations.push({
+        type: "throttled-lower",
+        description: `${message}: the throttled loads stopped before tree-sitter (${runs.map((r) => r.wasm).join(", ")} .wasm); transfer gates on the unthrottled load`,
+      });
+  } else
+    expect
+      .soft(Math.abs(t - free.transfer), message)
+      .toBeLessThanOrEqual(THROTTLE_TOLERANCE);
 }
 
 const SWEEP = !!process.env.PERF_SWEEP;
@@ -254,7 +292,7 @@ const SWEEP = !!process.env.PERF_SWEEP;
  * test need not load its probe again (the project runs in one worker, in
  * order). A paint test run alone, or after a worker restart, loads it.
  */
-const unthrottled = new Map<string, number>();
+const unthrottled = new Map<string, Run>();
 const SWEEP_FILE = path.resolve("test-results/perf-sweep.json");
 
 test("024 decision 7: the server sends .wasm gzipped", async () => {
@@ -271,10 +309,7 @@ if (!SWEEP) {
     for (const id of TEMPLATE_IDS) {
       const pages = pagesOf(id);
       const b = budgetOf(TEMPLATES[id]);
-      const wasmRule = id === "component-live" ? ".wasm allowed" : "0 .wasm";
-      test(`024 transfer: ${id}: every page ≤ ${b.transfer} kB, ${wasmRule}`, async ({
-        browser,
-      }) => {
+      test(`024 transfer: ${id}`, async ({ browser }) => {
         test.setTimeout(30_000 + 5_000 * pages.length);
         const over: string[] = [];
         const wasm: string[] = [];
@@ -284,14 +319,14 @@ if (!SWEEP) {
             throttle: false,
           });
           figures[p.path] = r.transfer;
-          unthrottled.set(p.path, r.transfer);
+          unthrottled.set(p.path, r);
           console.log(`transfer ${p.path}: ${r.transfer} kB, ${r.wasm} .wasm`);
           if (r.transfer > b.transfer)
             over.push(
               `${p.path}: ${r.transfer} kB over ${b.transfer}; largest: ${largest(r)}`,
             );
-          if (r.wasm > 0 && !LIVE.has(p.path))
-            wasm.push(`${p.path}: ${r.wasm} .wasm, not in LIVE_HIGHLIGHT`);
+          if (r.wasm > 0 && !WASM.has(p.path))
+            wasm.push(`${p.path}: ${r.wasm} .wasm, not in WASM_ALLOWED`);
         }
         test.info().annotations.push({
           type: "transfer",
@@ -309,45 +344,21 @@ if (!SWEEP) {
 
   test.describe("024: paint, the probes", () => {
     for (const id of TEMPLATE_IDS) {
-      const b = budgetOf(TEMPLATES[id]);
       const lcp = lcpBudget(TEMPLATES[id], process.env);
       for (const probe of TEMPLATES[id].probes) {
-        test(`024 paint: ${id}: ${probe}: LCP ≤ ${lcp.ms ?? "reported"} ms, CLS ≤ ${b.cls}`, async ({
-          browser,
-        }) => {
+        test(`024 paint: ${id}: ${probe}`, async ({ browser }) => {
           test.setTimeout(180_000);
           const runs: Run[] = [];
           for (let i = 0; i < 3; i++)
             runs.push(await measure(browser, origin + probe));
-          const free = {
-            transfer:
-              unthrottled.get(probe) ??
-              (await measure(browser, origin + probe, { throttle: false }))
-                .transfer,
-          };
+          const free =
+            unthrottled.get(probe) ??
+            (await measure(browser, origin + probe, { throttle: false }));
           console.log(
             `perf ${probe}: ${JSON.stringify(brief(runs))}; unthrottled ${free.transfer} kB`,
           );
           annotateLcp(id, probe, runs, lcp);
-          expectWithin(id, probe, runs);
-          // Criterion 4: bytes do not depend on the throttle. On a live
-          // page `networkidle` may fire before the grammar is asked for, so
-          // the throttled figure may be lower, never higher.
-          const t = median(runs.map((r) => r.transfer));
-          if (LIVE.has(probe))
-            expect
-              .soft(
-                t,
-                `${probe}: throttled ${t} kB, unthrottled ${free.transfer}`,
-              )
-              .toBeLessThanOrEqual(free.transfer + THROTTLE_TOLERANCE);
-          else
-            expect
-              .soft(
-                Math.abs(t - free.transfer),
-                `${probe}: throttled ${t} kB, unthrottled ${free.transfer}`,
-              )
-              .toBeLessThanOrEqual(THROTTLE_TOLERANCE);
+          expectWithin(id, probe, runs, free);
         });
       }
     }
@@ -385,7 +396,7 @@ if (!SWEEP) {
         };
         writeFileSync(SWEEP_FILE, JSON.stringify(all, null, 2));
         annotateLcp(id, page.path, runs, lcpBudget(TEMPLATES[id], process.env));
-        expectWithin(id, page.path, runs);
+        expectWithin(id, page.path, runs, free);
       });
     }
   });

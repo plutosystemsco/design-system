@@ -76,12 +76,11 @@ export const MARGIN = {
 } as const;
 
 /**
- * Decision 5: the component pages that highlight code live on load, and so
- * fetch `.wasm`. No other page may fetch one, in any frame. Ruled at 024's
- * checkpoint from the sweep, which found nine (024 landing notes): the four
- * highlighting items; `kuiper-theme`, whose ink-surface example mounts a
- * `CodeEditor`; `live-console`, which streams code through the highlighter;
- * and the three that hold a live console in their views.
+ * Decision 5, split at the landing (024 landing notes, "Rulings at landing",
+ * finding 1): the component pages whose **main frame** loads tree-sitter on
+ * load. The template rule reads this list; `component-live`'s budget counts
+ * the runtime and a grammar. `kuiper-theme` and `highlighter` are here
+ * pending `024d` and `024e`, whose re-bases are falls.
  */
 export const LIVE_HIGHLIGHT: readonly string[] = [
   "code-editor",
@@ -89,6 +88,17 @@ export const LIVE_HIGHLIGHT: readonly string[] = [
   "highlighter",
   "use-highlighted-code",
   "kuiper-theme",
+];
+
+/**
+ * Decision 5's `.wasm` rule: the pages that may fetch a `.wasm` file, in any
+ * frame. Every `LIVE_HIGHLIGHT` page, and the four whose example frames
+ * stream code through a live console. Those four count no `.wasm` bytes
+ * (transfer is the main frame), so they stay in `component`. No other page
+ * may fetch one.
+ */
+export const WASM_ALLOWED: readonly string[] = [
+  ...LIVE_HIGHLIGHT,
   "live-console",
   "stage-card",
   "stage-hero",
@@ -237,8 +247,10 @@ export const TEMPLATES: Record<TemplateId, Template> = {
       transfer: { page: "/components/sidebar/", median: 403.8 },
       // Spread 10.9% on marketing-footer (844 to 936 ms): widened to 15%.
       lcp: { page: "/components/sidebar/", median: 1104, margin: 0.15 },
-      // A shift in the page header after hydration, a finding for lane S
-      // (024 landing notes); the figure falls at the re-base after its fix.
+      // A shift in the page header after hydration, small change `024c`
+      // (lane S). The budget it gives, 0.108, is above Core Web Vitals'
+      // 0.1 "good" line: accepted until `024c`, not a target. It falls to
+      // the floor at the re-base after the fix.
       cls: { page: "/components/label/", median: 0.09 },
     },
     ci: null,
@@ -286,13 +298,14 @@ export const TEMPLATES: Record<TemplateId, Template> = {
   brand: {
     figures: {
       transfer: { page: "/brand/downloads/", median: 299.6 },
-      // Spread 15.0% on imagery (772 to 888 ms): widened to 15%.
-      lcp: { page: "/brand/type/", median: 788, margin: 0.15 },
+      // Spread 15.03% on imagery (772 to 888 ms), rounded up to 5%: 20%
+      // (the change review's finding 6).
+      lcp: { page: "/brand/type/", median: 788, margin: 0.2 },
       cls: { page: "/brand/imagery/", median: 0.012 },
     },
     ci: null,
     probes: ["/brand/downloads/", "/brand/type/"],
     layouts: ["site/brand/page.svelte"],
-    ruling: SWEEP,
+    ruling: `${SWEEP}; LCP margin 20% by the design lead's ruling at landing (2026-11-16, finding 6)`,
   },
 };

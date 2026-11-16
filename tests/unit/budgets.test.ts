@@ -19,9 +19,14 @@ import {
   TEMPLATES,
   templateOf,
   templatesMatching,
+  WASM_ALLOWED,
   type Template,
 } from "../e2e/budgets.ts";
 import { componentPath, SITEMAP } from "../../src/lib/site/sitemap.ts";
+import {
+  ciLcpCheck,
+  SKIPPED_BEFORE_CI,
+} from "../../scripts/site/release-check.ts";
 
 const ROUTES = "src/routes/(site)";
 
@@ -107,9 +112,9 @@ describe("024 criterion 1: every page has one template", () => {
     expect(bad).toEqual([]);
   });
 
-  test("HEAVY and LIVE_HIGHLIGHT name only component pages in SITEMAP, and share none", () => {
+  test("HEAVY, LIVE_HIGHLIGHT and WASM_ALLOWED name only component pages in SITEMAP; HEAVY and LIVE_HIGHLIGHT share none", () => {
     const paths = new Set(SITEMAP.map((p) => p.path));
-    for (const name of [...HEAVY, ...LIVE_HIGHLIGHT]) {
+    for (const name of [...HEAVY, ...LIVE_HIGHLIGHT, ...WASM_ALLOWED]) {
       const p = SITEMAP.find((s) => s.path === componentPath(name));
       expect(paths.has(componentPath(name))).toBe(true);
       expect(p?.door).toBe("components");
@@ -118,6 +123,12 @@ describe("024 criterion 1: every page has one template", () => {
     expect(HEAVY.filter((n) => LIVE_HIGHLIGHT.includes(n))).toEqual([]);
     expect(new Set(HEAVY).size).toBe(HEAVY.length);
     expect(new Set(LIVE_HIGHLIGHT).size).toBe(LIVE_HIGHLIGHT.length);
+    expect(new Set(WASM_ALLOWED).size).toBe(WASM_ALLOWED.length);
+  });
+
+  test("LIVE_HIGHLIGHT is within WASM_ALLOWED; HEAVY is not in it (the change review's finding 1)", () => {
+    expect(LIVE_HIGHLIGHT.filter((n) => !WASM_ALLOWED.includes(n))).toEqual([]);
+    expect(HEAVY.filter((n) => WASM_ALLOWED.includes(n))).toEqual([]);
   });
 
   test("the listed pages map to their own templates", () => {
@@ -303,6 +314,12 @@ describe("024 criterion 9: the old budgets are gone", () => {
     expect(spec).not.toMatch(/toBeLessThanOrEqual\(\s*\d/);
   });
 
+  test("perf.spec.ts names its tests without figures, so a re-base renames none", () => {
+    const titles = [...spec.matchAll(/test\(\s*`([^`]*)`/g)].map((m) => m[1]);
+    expect(titles.length).toBeGreaterThanOrEqual(3);
+    for (const t of titles) expect(t).not.toMatch(/≤|\bkB\b|\bms\b|b\.|lcp\./);
+  });
+
   test("perf.spec.ts reads its budgets from budgets.ts", () => {
     expect(spec).toMatch(/from\s+"\.\/budgets\.ts"/);
     expect(spec).toMatch(/\bbudgetOf\b/);
@@ -312,6 +329,44 @@ describe("024 criterion 9: the old budgets are gone", () => {
   test("budgets.ts never imports @playwright/test", () => {
     expect(readFileSync("tests/e2e/budgets.ts", "utf8")).not.toMatch(
       /(from|import)\s+"@playwright\/test"/,
+    );
+  });
+});
+
+describe("024, the change review's finding 3: the release check waits for the runner's LCP figures", () => {
+  const nulls = Object.fromEntries(
+    TEMPLATE_IDS.map((id) => [id, { ...TEMPLATES[id], ci: null }]),
+  ) as typeof TEMPLATES;
+  const figures = Object.fromEntries(
+    TEMPLATE_IDS.map((id) => [
+      id,
+      { ...TEMPLATES[id], ci: { median: 1000, margin: 0.2, ruling: "test" } },
+    ]),
+  ) as typeof TEMPLATES;
+
+  test("fails while any template's ci is null, naming each and build step 7", () => {
+    const c = ciLcpCheck(nulls);
+    expect(c.ok).toBe(false);
+    const text = c.lines.join("\n");
+    for (const id of TEMPLATE_IDS) expect(text).toContain(id);
+    expect(text).toContain("024 build step 7");
+    const one = ciLcpCheck({ ...figures, leaf: { ...figures.leaf, ci: null } });
+    expect(one.ok).toBe(false);
+    expect(one.lines.join("\n")).toContain("leaf");
+    expect(one.lines.join("\n")).not.toContain("brand");
+  });
+
+  test("passes once every template has a runner figure", () => {
+    expect(ciLcpCheck(figures).ok).toBe(true);
+  });
+
+  test("today it fails: every ci is null until the re-base", () => {
+    expect(ciLcpCheck(TEMPLATES).ok).toBe(false);
+  });
+
+  test("--before-ci names the skip", () => {
+    expect(SKIPPED_BEFORE_CI.join("\n")).toMatch(
+      /skipped \(--before-ci\).*runner's LCP figures/,
     );
   });
 });
