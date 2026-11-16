@@ -1,10 +1,6 @@
 # The first matrix run: what failed, and why
 
-<<<<<<< HEAD
-- **Status:** complete for run 1. Run 2, on the lane-I merge, is compared in a later memo.
-=======
 - **Status:** complete for runs 1 and 2 (§4), but run 2's two NVDA jobs, still running when this was written.
->>>>>>> release/0.13.0
 - **Date:** 2026-11-16
 - **Author:** the design lead
 - **Question:** `022`'s `matrix` workflow ran for the first time on GitHub (push B). What failed, and which failures are faults in Kuiper, which are faults in the tests, and which are faults in the workflow?
@@ -52,8 +48,6 @@ Most widespread first. "Kind" says where the fix goes: **test** (the test assume
 - **INFERRED:** groups 5, 7 and 9 need a probe each. EXECUTED: group 7 passes in this container's Chromium 153 at 320, 390 and 1440; it fails only on the CI runner, which may measure before the code font has loaded, then a ledger line and a small change if they are faults in Kuiper.
 - **INFERRED:** group 4 cannot be judged until VoiceOver runs too (group 11). If NVDA's speech is empty under one runner, the harness is the suspect, not 14 items.
 - **What this memo did not see:** the `report` job's log, where ledger mismatches are printed; 19 of the 21 NVDA error lines; anything of NVDA with Firefox but its progress line.
-<<<<<<< HEAD
-=======
 
 ## 4. Run 2, on the lane-I merge
 
@@ -66,4 +60,3 @@ Run [43894126297](https://github.com/plutosystemsco/design-system/actions/runs/4
   - Flaky, so failing in CI: `compositions.spec.ts:604`, the keyboard walk at 1440 (`webkit-dark`) and at 320 (`webkit-light`); `bar-glass.spec.ts:279` at 1440 (`webkit-light`).
 - **INFERRED:** run 2 adds no fault in Kuiper's items to what run 1 showed. The WebKit shards take 6 to 10 minutes on two cores against Chromium's 4 to 6, and the new failures are timing-shaped. They are watched in run 3 before any is opened.
 
->>>>>>> release/0.13.0
