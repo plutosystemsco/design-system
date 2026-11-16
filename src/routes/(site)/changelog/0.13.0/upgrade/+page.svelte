@@ -50,12 +50,20 @@
     data.sections.find((s) => s.id === id)?.steps ?? [];
 </script>
 
-{#snippet text(source: string)}
-  {#each inlines(source) as x, i (i)}{@render inline(x)}{/each}
+{#snippet text(source: string, plain = false)}
+  {#each inlines(source) as x, i (i)}{@render inline(x, plain)}{/each}
 {/snippet}
 
-{#snippet inline(x: Inline)}
-  {#if x.kind === "code"}<code>{x.text}</code
+<!-- 020c: inline code breaks inside its own box, which holds its padding and
+     border, so a wrapped run never passes the column; the negative block
+     margin keeps the line at its height. The hidden twin table stays plain
+     (020b review, finding 1). -->
+{#snippet inline(x: Inline, plain: boolean)}
+  {#if x.kind === "code"}<code
+      class={plain
+        ? undefined
+        : "-my-(--line-width) inline-block max-w-full wrap-anywhere"}
+      >{x.text}</code
     >{:else if x.kind === "strong"}<strong>{x.text}</strong
     >{:else if x.kind === "href"}<a href={x.href} class={link}>{x.text}</a
     >{:else}{x.text}{/if}
@@ -140,8 +148,8 @@
               <tr>
                 <td><code>{r.old}</code></td>
                 <td><code>{r.new}</code></td>
-                <td>{r.kind}. {@render text(r.seenBy)}</td>
-                <td>{@render text(r.todo)}</td>
+                <td>{r.kind}. {@render text(r.seenBy, true)}</td>
+                <td>{@render text(r.todo, true)}</td>
                 <td>{until(r)}</td>
               </tr>
             {/each}

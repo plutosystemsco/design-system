@@ -190,6 +190,9 @@ test.describe("020b: the guide fits its column", () => {
     }) => {
       await page.setViewportSize({ width, height: 900 });
       await page.goto(GUIDE);
+      // 020c: measured in the page's own fonts, as the reader sees it, not
+      // in the fallback the first paint may use.
+      await page.evaluate(() => document.fonts.ready);
       const found = await page.evaluate(
         ({ renames }) => {
           const column = document.querySelector("main h1")!.parentElement!;
@@ -215,11 +218,15 @@ test.describe("020b: the guide fits its column", () => {
             let up = el.parentElement;
             while (up && up !== column && !clips(up)) up = up.parentElement;
             if (up !== column) continue;
-            const r = el.getBoundingClientRect();
-            if (r.left < box.left - 1 || r.right > box.right + 1)
-              wide.push(
-                `${name(el)}: ${Math.round(r.width)} wide, past the column`,
-              );
+            // 020c: each line's fragment, so the message names the piece
+            // past the column, not a wrapped element's whole outer box.
+            for (const r of el.getClientRects())
+              if (r.left < box.left - 1 || r.right > box.right + 1) {
+                wide.push(
+                  `${name(el)}: ${Math.round(r.width)} wide, past the column`,
+                );
+                break;
+              }
           }
           const sideways =
             root.scrollWidth > root.clientWidth
@@ -279,6 +286,42 @@ test.describe("020b: the guide fits its column", () => {
       expect(found.unread).toEqual([]);
     });
   }
+
+  // 020c review, finding 5: an inline-block chip's border would count toward
+  // its line's height; its negative block margin keeps every paragraph that
+  // holds code at whole lines of its own line height.
+  test("a paragraph that holds code keeps its line height", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto(GUIDE);
+    await page.evaluate(() => document.fonts.ready);
+    const off = await page.evaluate(() =>
+      [...document.querySelectorAll("main p")]
+        .filter((p) => p.querySelector("code") && !p.closest("table"))
+        .map((p) => {
+          const line = parseFloat(getComputedStyle(p).lineHeight);
+          const lines = p.getBoundingClientRect().height / line;
+          return Math.abs(lines - Math.round(lines)) < 0.02
+            ? null
+            : `${(p.textContent ?? "").trim().slice(0, 32)}…: ${lines.toFixed(2)} lines`;
+        })
+        .filter(Boolean),
+    );
+    expect(off).toEqual([]);
+  });
+
+  // 020c review, finding 6: the hidden twin table stays plain markup.
+  test("the hidden table's code carries no class", async ({ page }) => {
+    await page.goto(GUIDE);
+    const classed = await page
+      .locator("main table[hidden] code[class]")
+      .count();
+    expect(classed).toBe(0);
+    expect(
+      await page.locator("main table[hidden] code").count(),
+    ).toBeGreaterThan(0);
+  });
 
   test("the Markdown twin keeps the table, and only the table", () => {
     const twin = readFileSync(path.join("build", GUIDE, "index.md"), "utf8");
