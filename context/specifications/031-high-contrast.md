@@ -750,6 +750,16 @@ The review's agreements stand: the mechanism, the CLI, the builds, the weight, f
 
 ## Landing notes
 
+### From `021`'s change review (2026-11-16)
+
+`021`'s change review ([`../reviews/021-tokens-for-everyone-pr-2026-11-15.md`](../reviews/021-tokens-for-everyone-pr-2026-11-15.md), finding 4) ran the resolver with an added `light-more` context naming a missing file: `readTokens()` ignores it and passes. So this build must:
+
+- extend `contextFiles`, `readTokenFiles` and `publishedFiles` (`scripts/tokens.ts`) to read and validate the two `-more` contexts;
+- apply the scheme-file group rules only to the light and dark files;
+- add a test that a context naming a missing file fails.
+
+Decision 7's "no test needs changing" was about the second-modifier route, which this spec did not take; with extra contexts, T1 and `refs()` read the new files.
+
 Not landed.
 
 ### Owner answers, 2026-11-15
