@@ -26,8 +26,8 @@
      */
     sideOffset?: TooltipPrimitive.ContentProps["sideOffset"];
     /**
-     * The side of the trigger the tooltip prefers. It flips when there is no
-     * room there.
+     * Kuiper sets `top` itself, so the side holds if bits-ui's default changes.
+     * It flips when there is no room.
      */
     side?: TooltipPrimitive.ContentProps["side"];
   } = $props();

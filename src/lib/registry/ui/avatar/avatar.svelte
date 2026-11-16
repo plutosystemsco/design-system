@@ -15,8 +15,8 @@
      */
     size?: "default" | "sm" | "lg";
     /**
-     * Whether the image has loaded. The fallback shows until it reads
-     * `"loaded"`. Bind it to follow the image.
+     * The image's load state. The fallback shows until it reads `"loaded"`.
+     * Bind it to follow the image.
      */
     loadingStatus?: AvatarPrimitive.RootProps["loadingStatus"];
   } = $props();

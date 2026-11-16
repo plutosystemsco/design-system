@@ -256,6 +256,69 @@ describe("023 test 4: every description keeps the countable rules", () => {
   });
 });
 
+/** Every script of a file: a .ts file whole, a .svelte file's two scripts. */
+function allSources(file: string, text = readFileSync(file, "utf8")) {
+  if (file.endsWith(".ts"))
+    return [ts.createSourceFile(file, text, ts.ScriptTarget.Latest, true)];
+  if (!file.endsWith(".svelte")) return [];
+  const ast = parse(text, { modern: true }) as unknown as {
+    module?: { content: { start: number; end: number } };
+    instance?: { content: { start: number; end: number } };
+  };
+  return [ast.module, ast.instance]
+    .filter((s) => !!s)
+    .map((s) =>
+      ts.createSourceFile(
+        file + ".ts",
+        text.slice(s!.content.start, s!.content.end),
+        ts.ScriptTarget.Latest,
+        true,
+      ),
+    );
+}
+
+/**
+ * V8, the change review's finding 1: a member has one doc comment block.
+ * An editor shows only the last of two stacked blocks, so the first is lost
+ * and the second may belong to another member.
+ */
+function stackedBlocks(sources: ts.SourceFile[]): string[] {
+  const out: string[] = [];
+  for (const sf of sources) {
+    const visit = (n: ts.Node) => {
+      if (
+        (ts.isPropertySignature(n) || ts.isMethodSignature(n)) &&
+        ((n as unknown as { jsDoc?: ts.JSDoc[] }).jsDoc?.length ?? 0) > 1
+      )
+        out.push(n.name.getText(sf));
+      ts.forEachChild(n, visit);
+    };
+    visit(sf);
+  }
+  return out;
+}
+
+describe("023 test 4, V8: one doc comment block per member", () => {
+  test("0 members in any item file carry two blocks", () => {
+    const wrong: string[] = [];
+    for (const f of new Set(ITEMS.flatMap((i) => i.files.map((x) => x.path))))
+      for (const name of stackedBlocks(allSources(f)))
+        wrong.push(`${f} ${name}`);
+    expect(wrong).toEqual([]);
+  });
+
+  test("two stacked blocks fail it", () => {
+    const text =
+      "type T = {\n  /** One. */\n  /** Two. */\n  label: string;\n};";
+    expect(stackedBlocks(allSources("x.ts", text))).toEqual(["label"]);
+    expect(
+      stackedBlocks(
+        allSources("x.ts", "type T = {\n  /** One. */\n  a: 1;\n};"),
+      ),
+    ).toEqual([]);
+  });
+});
+
 type PassThrough = {
   item: string;
   file: string;

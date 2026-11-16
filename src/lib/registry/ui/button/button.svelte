@@ -54,8 +54,9 @@
        */
       size?: ButtonSize;
       /**
-       * Shows a spinner, sets `aria-busy`, and ignores clicks while the
-       * button stays enabled and focused, so a form is not sent twice.
+       * Shows a spinner, sets `aria-busy`, and ignores clicks while the button
+       * stays enabled and focused, so a form is not sent twice. It has no
+       * effect when `href` is set.
        */
       busy?: boolean;
       /**

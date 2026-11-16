@@ -47,8 +47,8 @@
      */
     "aria-describedby"?: InputOTPPrimitive.RootProps["aria-describedby"];
     /**
-     * Marks the input invalid and turns every cell's border red. Inside a
-     * `Field` it follows the field's `error` or `invalid`.
+     * Marks the input invalid and draws every cell's border in the destructive
+     * colour. Inside a `Field` it follows the field's `error` or `invalid`.
      */
     "aria-invalid"?: InputOTPPrimitive.RootProps["aria-invalid"];
   } = $props();

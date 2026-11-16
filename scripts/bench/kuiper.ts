@@ -217,8 +217,15 @@ if (existsSync(compDir)) {
       content: /^##+ (Content|Writing|Wording)/m.test(md),
       a11yBullets: count(a11y, /^- /gm),
       props: rows.length,
+      // A row's default ends its cell since 023 ("Default `x`"); it is not
+      // a description, so it is dropped before the cell is read.
       propsDescribed:
-        di < 0 ? 0 : rows.filter((r) => (r[di] ?? "").length > 0).length,
+        di < 0
+          ? 0
+          : rows.filter(
+              (r) =>
+                (r[di] ?? "").replace(/\s*Default `[^`]*`$/, "").length > 0,
+            ).length,
       updated: /\*\*Updated\*\*/.test(md),
       words: prose.split(/\s+/).filter(Boolean).length,
     });
@@ -308,7 +315,9 @@ const report = {
   },
   change: {
     releases: count(changelog, /^## /gm),
-    interfaceChangeMarks: count(changelog, /interface change/gi),
+    // The bold mark, as the changelog's legend writes it; the bare phrase
+    // also matches "no interface change" (the change review of 023, finding 4).
+    interfaceChangeMarks: count(changelog, /\*\*interface change\.?\*\*/gi),
     migrationPages: routes.filter((r) => /migrat|upgrade/i.test(r)).length,
     versionedRegistries: new Set(
       list("static")

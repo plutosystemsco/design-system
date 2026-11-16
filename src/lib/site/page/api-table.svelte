@@ -82,6 +82,7 @@
               >
               {#if described(table)}<td
                   >{@render prose(row.doc)}{#if row.default}{" "}<span
+                      data-slot="api-default"
                       class="mt-1 block text-muted-foreground"
                       >Default <code>{row.default}</code></span
                     >{/if}</td

@@ -12,7 +12,7 @@
      * The cell to render: one of the cells the `InputOTP` gives its `children`
      * snippet.
      */
-    cell?: InputOTPPrimitive.CellProps["cell"];
+    cell: InputOTPPrimitive.CellProps["cell"];
   } = $props();
 </script>
 

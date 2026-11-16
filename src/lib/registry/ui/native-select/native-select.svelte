@@ -28,8 +28,8 @@
      */
     "aria-describedby"?: HTMLSelectAttributes["aria-describedby"];
     /**
-     * Marks the control invalid and turns its border red. Inside a `Field` it
-     * follows the field's `error` or `invalid`.
+     * Marks the control invalid and draws its border in the destructive colour.
+     * Inside a `Field` it follows the field's `error` or `invalid`.
      */
     "aria-invalid"?: HTMLSelectAttributes["aria-invalid"];
   };

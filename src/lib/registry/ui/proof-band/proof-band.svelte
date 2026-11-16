@@ -8,10 +8,6 @@
     /** Text after the number, such as a percent sign or a unit. */
     suffix?: string;
     /** What the number counts. */
-    /**
-     * The band's name. With a `title`, the title names it, and this is not
-     * needed.
-     */
     label: string;
   };
 </script>

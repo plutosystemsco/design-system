@@ -196,7 +196,8 @@ test.describe("023a: type names break only between words", () => {
 /**
  * 023 test 7: the two pages the scorecard reads describe every row. Each
  * API table has a "What it does" column, and each body row's cell in it
- * holds text, but the closing row, which spans the table.
+ * holds a description, not only its default, but the closing row, which
+ * spans the table. The default's line is marked `data-slot="api-default"`.
  */
 test.describe("023: Button and Dialog: every API table is described", () => {
   test.use({ viewport: { width: 1440, height: 900 } });
@@ -217,8 +218,20 @@ test.describe("023: Button and Dialog: every API table is described", () => {
             const rows = [...t.querySelectorAll("tbody tr")].filter(
               (tr) => tr.children.length > 1,
             );
+            // The default sits in the same cell, marked; it is not a
+            // description, so a row with only a default fails (the change
+            // review, finding 3).
+            const described = (td: Element | undefined) => {
+              if (!td) return "";
+              const copy = td.cloneNode(true) as Element;
+              for (const d of copy.querySelectorAll(
+                '[data-slot="api-default"]',
+              ))
+                d.remove();
+              return (copy.textContent ?? "").trim();
+            };
             const empty = rows
-              .filter((tr) => !(tr.children[at]?.textContent ?? "").trim())
+              .filter((tr) => !described(tr.children[at]))
               .map((tr) => tr.children[0]?.textContent?.trim() ?? "");
             return {
               part: t.querySelector("caption")?.textContent?.trim() ?? "",

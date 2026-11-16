@@ -53,8 +53,9 @@
      */
     placeholder?: string;
     /**
-     * Called when the form is submitted, before Kuiper sends the draft. Kuiper
-     * always prevents the browser's own submit.
+     * Called when the form is submitted, before Kuiper sends the draft. Enter
+     * sends without a submit; use `onsend` to see every message. Kuiper always
+     * prevents the browser's own submit.
      */
     onsubmit?: HTMLFormAttributes["onsubmit"];
   } = $props();

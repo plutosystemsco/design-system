@@ -157,11 +157,17 @@ async function read(
       let filled: number | null = null;
       if (di >= 0) {
         const rows = Array.from(t.querySelectorAll("tbody tr"));
+        // Kuiper's default shares the description's cell since 023, marked
+        // data-slot="api-default"; it is not a description, so it is left out.
+        const said = (td: Element | undefined) => {
+          if (!td) return "";
+          const copy = td.cloneNode(true) as HTMLElement;
+          for (const d of copy.querySelectorAll('[data-slot="api-default"]'))
+            d.remove();
+          return (copy.textContent || "").trim();
+        };
         const full = rows.filter(
-          (tr) =>
-            (
-              (tr.children[di] as HTMLElement | undefined)?.innerText || ""
-            ).trim().length > 0,
+          (tr) => said(tr.children[di]).length > 0,
         ).length;
         filled = rows.length ? full / rows.length : null;
       }

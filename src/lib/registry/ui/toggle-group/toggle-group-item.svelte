@@ -13,10 +13,16 @@
     ...restProps
   }: (ToggleGroupPrimitive.ItemProps & ToggleVariants) & {
     /** The value the group records when this item is pressed. */
-    value?: ToggleGroupPrimitive.ItemProps["value"];
-    /** The item's own size, used only when the group sets none. */
+    value: ToggleGroupPrimitive.ItemProps["value"];
+    /**
+     * Has no effect: the group always sets its items' size, `default` unless
+     * you pass another. Set `size` on the `ToggleGroup`.
+     */
     size?: ToggleVariants["size"];
-    /** The item's own look, used only when the group sets none. */
+    /**
+     * Has no effect: the group always sets its items' look. Set `variant` on
+     * the `ToggleGroup`.
+     */
     variant?: ToggleVariants["variant"];
   } = $props();
 
