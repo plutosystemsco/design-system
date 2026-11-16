@@ -162,7 +162,7 @@ describe("the npm packages items name", () => {
   };
 
   beforeAll(async () => {
-    out = mkdtempSync(path.join(tmpdir(), "pluto-deps-"));
+    out = mkdtempSync(path.join(tmpdir(), "kuiper-deps-"));
     await buildRegistry({ out, quiet: true });
     const dir = path.join(out, "r", "styles", "maia");
     const index = JSON.parse(

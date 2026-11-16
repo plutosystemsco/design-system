@@ -248,7 +248,7 @@ test.describe("015 criterion 11: the red door, against the error reading", () =>
     // Inside example frames, fields appear only where the item is fields.
     expect(
       framed.every((p) =>
-        ["/components/pluto-theme/", "/components/liquid-glass/"].includes(p),
+        ["/components/kuiper-theme/", "/components/liquid-glass/"].includes(p),
       ),
     ).toBe(true);
   });

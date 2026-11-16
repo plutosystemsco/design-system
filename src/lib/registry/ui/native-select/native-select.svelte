@@ -4,7 +4,7 @@
   import { cn, type WithElementRef } from "#lib/utils";
   import type { HTMLSelectAttributes } from "svelte/elements";
 
-  /** The contract a `Field` sets under the key "pluto:field". */
+  /** The contract a `Field` sets under the key "kuiper:field". */
   type FieldContext = {
     readonly id: string;
     readonly invalid: boolean;
@@ -27,7 +27,10 @@
     ...restProps
   }: NativeSelectProps = $props();
 
-  const field = getContext<FieldContext | undefined>("pluto:field");
+  // A field from before 0.13.0 sets only its old key, read until 0.14.0.
+  const field =
+    getContext<FieldContext | undefined>("kuiper:field") ??
+    getContext<FieldContext | undefined>("pluto:field");
 </script>
 
 <div

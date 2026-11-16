@@ -12,6 +12,7 @@ import {
 import { apiTables, type ApiTable } from "./api.server.ts";
 import { parseChangelog, updatedIn } from "./changelog.ts";
 import { filesYouOwn, related } from "./files.ts";
+import { listedItems } from "./items.ts";
 import {
   exampleMeta,
   hasSwitch,
@@ -59,9 +60,10 @@ export async function componentData(name: string): Promise<ComponentData> {
   ) as {
     items: Item[];
   };
-  const item = registry.items.find((i) => i.name === name)!;
-  const title = (n: string) =>
-    registry.items.find((i) => i.name === n)?.title ?? n;
+  // 020 decision 3: an alias brings nothing to a page.
+  const items = listedItems(registry.items);
+  const item = items.find((i) => i.name === name)!;
+  const title = (n: string) => items.find((i) => i.name === n)?.title ?? n;
   const dir = path.resolve(EXAMPLES_DIR, name);
   const examples: Record<string, ExampleData> = {};
   if (existsSync(dir))
@@ -88,7 +90,7 @@ export async function componentData(name: string): Promise<ComponentData> {
       examples[file.replace(/\.svelte$/, "")] = {
         ...meta,
         id: file.replace(/\.svelte$/, ""),
-        switch: hasSwitch(name, meta, registry.items),
+        switch: hasSwitch(name, meta, items),
         // The page carries the code once: as its tokens when it has them.
         code: lines ? "" : code,
         lines,
@@ -96,7 +98,7 @@ export async function componentData(name: string): Promise<ComponentData> {
         samples,
       };
     }
-  const r = related(name, registry.items);
+  const r = related(name, items);
   return {
     examples,
     api: apiTables(item),

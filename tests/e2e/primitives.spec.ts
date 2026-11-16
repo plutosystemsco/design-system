@@ -226,7 +226,7 @@ test.describe("heights and targets", () => {
       "message-log",
       "composer",
       // 007 decisions 7 and 9: the ink surface's fixture and 007's item.
-      "pluto-theme",
+      "kuiper-theme",
       "code-languages",
     ]) {
       await open(page, componentPath(item));

@@ -13,9 +13,12 @@
     labelledBy: string | undefined;
   };
 
-  const KEY = "pluto:popover";
+  const KEY = "kuiper:popover";
+  /** Its key before 0.13.0, set too for an app's own code that reads it, until 0.14.0. */
+  const OLD_KEY = "pluto:popover";
 
   export function setPopoverContext(context: PopoverContext): PopoverContext {
+    setContext(OLD_KEY, context);
     return setContext(KEY, context);
   }
 

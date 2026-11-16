@@ -7,7 +7,7 @@
 	"description": "A full-bleed expressive section on the canvas or one of the four colour fields, following the page's theme.",
 	"registryDependencies": [
 		"utils",
-		"pluto-theme"
+		"kuiper-theme"
 	],
 	"meta": {
 		"since": "0.11.0",

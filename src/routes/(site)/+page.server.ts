@@ -20,7 +20,7 @@ export const load: PageServerLoad = async () => {
     readFileSync(path.resolve("registry.json"), "utf8"),
   ) as { items: Item[] };
   const button = registry.items.find((i) => i.name === "button")!;
-  const theme = addCommand("pluto-theme");
+  const theme = addCommand("kuiper-theme");
   const add = addCommand("button");
   return {
     theme: { code: theme, lines: await highlightCode(theme, "bash") },

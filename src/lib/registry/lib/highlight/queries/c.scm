@@ -1,6 +1,6 @@
 ; C, for tree-sitter-c 0.24.1 (node types read from its
-; src/node-types.json at that version). Captures are Pluto code roles.
-; written for the Pluto design system; not derived from the grammar's own queries.
+; src/node-types.json at that version). Captures are Kuiper code roles.
+; written for the Kuiper Design System; not derived from the grammar's own queries.
 
 [(comment)] @comment
 

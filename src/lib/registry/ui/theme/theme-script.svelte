@@ -2,16 +2,29 @@
   /**
    * The head script, as a constant. It reads the key
    * `theme.svelte.ts` writes, else the system's preference, and sets the
-   * `dark` class before first paint. Storage may be unavailable. The key is
-   * written here and in `theme.svelte.ts`; the two must agree.
+   * `dark` class before first paint. Storage may be unavailable. A `light`
+   * or `dark` stored under the key before 0.13.0, `pluto-theme`, is carried
+   * over when the new key holds no choice, and the old key is removed; the
+   * carry-over goes in 0.14.0. The steps are `readStoredTheme`'s in
+   * `stored.ts`; the two must agree.
    */
   export const THEME_SCRIPT = [
     "(function () {",
     '  var query = "(prefers-color-scheme: dark)";',
     "  var dark;",
     "  try {",
-    '    var stored = localStorage.getItem("pluto-theme");',
-    '    dark = stored ? stored === "dark" : matchMedia(query).matches;',
+    '    var stored = localStorage.getItem("kuiper-theme");',
+    '    if (stored !== "light" && stored !== "dark") {',
+    '      var old = localStorage.getItem("pluto-theme");',
+    '      if (old === "light" || old === "dark") {',
+    '        localStorage.setItem("kuiper-theme", old);',
+    "        stored = old;",
+    "      }",
+    "    }",
+    '    localStorage.removeItem("pluto-theme");',
+    '    dark = stored === "light" || stored === "dark"',
+    '      ? stored === "dark"',
+    "      : matchMedia(query).matches;",
     "  } catch (e) {",
     "    dark = matchMedia(query).matches;",
     "  }",

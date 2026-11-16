@@ -7,7 +7,7 @@
 	"description": "A media-query store that is true below 768 px and false on the server.",
 	"registryDependencies": [
 		"utils",
-		"pluto-theme"
+		"kuiper-theme"
 	],
 	"meta": {
 		"since": "0.5.0",

@@ -7,7 +7,7 @@
 	"description": "A product site's footer: the logo, groups of links each a named nav, and the build facts the app shell's footer shows.",
 	"registryDependencies": [
 		"utils",
-		"pluto-theme"
+		"kuiper-theme"
 	],
 	"meta": {
 		"since": "0.11.0",

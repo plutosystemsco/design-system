@@ -119,7 +119,7 @@ async function rawPage(
 const isDark = (page: Page) =>
   page.evaluate(() => document.documentElement.classList.contains("dark"));
 const storedTheme = (page: Page) =>
-  page.evaluate(() => localStorage.getItem("pluto-theme"));
+  page.evaluate(() => localStorage.getItem("kuiper-theme"));
 
 /** 005 decision 7: the menu (N1). */
 test.describe("N1. the menu", () => {
@@ -827,7 +827,7 @@ test.describe("N6. the theme", () => {
   }) => {
     const { raw, html, close } = await rawPage(browser, request, PAGE);
     const head = html.slice(0, html.indexOf("</head>"));
-    expect(head.match(/localStorage\.getItem\("pluto-theme"\)/g)).toHaveLength(
+    expect(head.match(/localStorage\.getItem\("kuiper-theme"\)/g)).toHaveLength(
       1,
     );
     const toggles = raw.getByRole("button", { name: "Dark theme" });
@@ -900,10 +900,10 @@ test.describe("N6. the theme", () => {
     });
     const other = dark ? "light" : "dark";
     await page.evaluate((value) => {
-      localStorage.setItem("pluto-theme", value);
+      localStorage.setItem("kuiper-theme", value);
       window.dispatchEvent(
         new StorageEvent("storage", {
-          key: "pluto-theme",
+          key: "kuiper-theme",
           newValue: value,
           storageArea: localStorage,
         }),
@@ -913,10 +913,10 @@ test.describe("N6. the theme", () => {
     expect(await isDark(page)).toBe(!dark);
     // The key removed elsewhere: back to the system.
     await page.evaluate(() => {
-      localStorage.removeItem("pluto-theme");
+      localStorage.removeItem("kuiper-theme");
       window.dispatchEvent(
         new StorageEvent("storage", {
-          key: "pluto-theme",
+          key: "kuiper-theme",
           newValue: null,
           storageArea: localStorage,
         }),

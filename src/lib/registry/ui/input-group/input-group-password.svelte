@@ -7,7 +7,7 @@
   import InputGroupInput from "./input-group-input.svelte";
   import InputGroup from "./input-group.svelte";
 
-  /** The id a `Field` gives its control, under the key "pluto:field". */
+  /** The id a `Field` gives its control, under the key "kuiper:field". */
   type FieldContext = { readonly id: string };
 
   let {
@@ -25,7 +25,10 @@
   } = $props();
 
   const uid = $props.id();
-  const field = getContext<FieldContext | undefined>("pluto:field");
+  // A field from before 0.13.0 sets only its old key, read until 0.14.0.
+  const field =
+    getContext<FieldContext | undefined>("kuiper:field") ??
+    getContext<FieldContext | undefined>("pluto:field");
   const inputId = $derived(id ?? field?.id ?? `${uid}-password`);
 </script>
 

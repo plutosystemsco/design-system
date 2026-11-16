@@ -8,7 +8,16 @@ import { getContext, setContext } from "svelte";
  * this file, so a control installs without `field`. The key and the shape are
  * the contract.
  */
-export const FIELD_CONTEXT_KEY = "pluto:field";
+export const FIELD_CONTEXT_KEY = "kuiper:field";
+
+/**
+ * The 0.12.0 keys. `Field` and `FieldSet` set the context under these too,
+ * so a control from before 0.13.0, or an app's own code that reads an old
+ * key, still finds its field. They go in 0.14.0.
+ */
+const OLD_FIELD_CONTEXT_KEY = "pluto:field";
+const OLD_FIELD_SET_CONTEXT_KEY = "pluto:field-set";
+const OLD_LABEL_TARGET_KEY = "pluto:field-label";
 
 export type FieldContext = {
   /** The control's id: the container's `id` prop, else an id from `$props.id()`. */
@@ -24,6 +33,7 @@ export type FieldContext = {
 };
 
 export function setFieldContext(context: FieldContext): FieldContext {
+  setContext(OLD_FIELD_CONTEXT_KEY, context);
   return setContext(FIELD_CONTEXT_KEY, context);
 }
 
@@ -36,11 +46,12 @@ export function getFieldContext(): FieldContext | undefined {
  * `FieldSet` names its group with its legend instead, so it clears this key
  * for the labels inside it that sit outside any `Field`.
  */
-const LABEL_TARGET_KEY = "pluto:field-label";
+const LABEL_TARGET_KEY = "kuiper:field-label";
 
 export function setLabelTarget(
   target: { readonly id: string } | undefined,
 ): void {
+  setContext(OLD_LABEL_TARGET_KEY, target);
   setContext(LABEL_TARGET_KEY, target);
 }
 
@@ -85,7 +96,7 @@ export function fieldContext(props: {
  * checkboxes in a set never share an id. `FieldLegend` records its id here, so
  * the group control can name itself by the legend.
  */
-export const FIELD_SET_CONTEXT_KEY = "pluto:field-set";
+export const FIELD_SET_CONTEXT_KEY = "kuiper:field-set";
 
 export type FieldSetContext = FieldContext & {
   /** `${id}-legend`, the id a `FieldLegend` takes unless the app gives one. */
@@ -97,6 +108,7 @@ export type FieldSetContext = FieldContext & {
 };
 
 export function setFieldSetContext(context: FieldSetContext): FieldSetContext {
+  setContext(OLD_FIELD_SET_CONTEXT_KEY, context);
   return setContext(FIELD_SET_CONTEXT_KEY, context);
 }
 

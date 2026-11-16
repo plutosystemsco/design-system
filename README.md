@@ -6,8 +6,8 @@ Each product brings its own identity: its logo, its name and its words. The app 
 
 ## What is here
 
-- `tokens/pluto.tokens.json`: the one source of every colour and size, light and dark.
-- `registry.json` and `src/lib/registry/`: the registry's items. Today 63, in ten groups: foundation (`pluto-theme`, `theme`, three font items, `utils`, `four-dot`), actions, surfaces, feedback, forms, code, data, navigation, chat and blocks. A block is a whole page or section (sign in, sign up, a hero, page states, a settings form, an app shell, a chat pane) that installs as a route plus its components. Every colour and size in them comes from the token file.
+- `tokens/kuiper.tokens.json`: the one source of every colour and size, light and dark.
+- `registry.json` and `src/lib/registry/`: the registry's items. Today 63, in ten groups: foundation (`kuiper-theme`, `theme`, three font items, `utils`, `four-dot`), actions, surfaces, feedback, forms, code, data, navigation, chat and blocks. A block is a whole page or section (sign in, sign up, a hero, page states, a settings form, an app shell, a chat pane) that installs as a route plus its components. Every colour and size in them comes from the token file.
 - `src/routes/`: a preview app, one page per item, in both themes. A block's page embeds it live at phone, tablet and desktop widths; the chrome-less `/view/<block>/` routes are what the frame shows. It is not a website.
 - `context/`: the research, specifications, reviews and decisions this code is built from. Read [`context/README.md`](context/README.md) first.
 
@@ -28,13 +28,15 @@ bun run lint       # prettier
 
 An app installs an item from GitHub, pinned to a release by its tag. The built JSON under `static/` is committed with each release, so no server runs.
 
+**An app that installed before 0.13.0 reads the upgrade guide before it runs any of these**, at [`/changelog/0.13.0/upgrade/`](https://pluto-systems-design.claygendron.workers.dev/changelog/0.13.0/upgrade/) on the design site: the theme is now `kuiper-theme`, and its own uses of the four old keyframe names must be renamed before the theme updates.
+
 ```
-REGISTRY_URL=https://raw.githubusercontent.com/plutosystemsco/design-system/v0.11.0/static/r bunx --bun shadcn-svelte@1.7.1 add four-dot -y -o
-REGISTRY_URL=https://raw.githubusercontent.com/plutosystemsco/design-system/v0.11.0/static/r bunx --bun shadcn-svelte@1.7.1 add button field alert-dialog -y
-REGISTRY_URL=https://raw.githubusercontent.com/plutosystemsco/design-system/v0.11.0/static/r bunx --bun shadcn-svelte@1.7.1 add app-shell code-editor -y
+REGISTRY_URL=https://raw.githubusercontent.com/plutosystemsco/design-system/v0.13.0/static/r bunx --bun shadcn-svelte@1.7.1 add kuiper-theme four-dot -y -o
+REGISTRY_URL=https://raw.githubusercontent.com/plutosystemsco/design-system/v0.13.0/static/r bunx --bun shadcn-svelte@1.7.1 add button field alert-dialog -y
+REGISTRY_URL=https://raw.githubusercontent.com/plutosystemsco/design-system/v0.13.0/static/r bunx --bun shadcn-svelte@1.7.1 add app-shell code-editor -y
 ```
 
-`main/static/r` in place of `v0.11.0/static/r` follows the latest commit. With `bun run dev` running, `REGISTRY_URL=http://localhost:5173/r` installs from this machine instead.
+`main/static/r` in place of `v0.13.0/static/r` follows the latest commit. With `bun run dev` running, `REGISTRY_URL=http://localhost:5173/r` installs from this machine instead.
 
 The first `add` brings the theme and the fonts with it. An item's dependencies, such as `field`'s `label` and `separator`, come from this registry too; nothing is fetched from shadcn-svelte's own. Leave out `-o` after the first install: without it the CLI lists the files that already exist and asks before it overwrites any, which matters for a block, since it lands a route and up to seventeen primitives you may have changed.
 

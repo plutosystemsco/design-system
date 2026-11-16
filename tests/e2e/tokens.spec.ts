@@ -8,7 +8,7 @@ import {
   componentPath,
 } from "./pages.ts";
 
-const PAGE = componentPath("pluto-theme");
+const PAGE = componentPath("kuiper-theme");
 const token = (name: string) => `[data-token="${name}"]`;
 
 /**

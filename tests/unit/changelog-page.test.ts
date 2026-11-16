@@ -5,17 +5,67 @@
  */
 import { describe, expect, test } from "bun:test";
 import { readFileSync } from "node:fs";
-import { blockText, parseChangelog } from "../../src/lib/site/changelog.ts";
+import {
+  blockText,
+  inlines,
+  parseChangelog,
+} from "../../src/lib/site/changelog.ts";
+import { SITE_ORIGIN } from "../../src/lib/site/site.ts";
 
 const FILE = readFileSync("CHANGELOG.md", "utf8");
 const page = parseChangelog(FILE);
+
+// 020 review, finding 6: a prose link is the site's or https; anything else
+// stays text, and the site's own absolute links render site-relative.
+describe("020: links in the changelog's prose", () => {
+  const hrefs = (s: string) =>
+    inlines(s)
+      .filter((i) => i.kind === "href")
+      .map((i) => (i as { href: string }).href);
+
+  test("a site path, an anchor and an https URL are links", () => {
+    expect(hrefs("[a](/changelog/)")).toEqual(["/changelog/"]);
+    expect(hrefs("[a](#v0-12-0)")).toEqual(["#v0-12-0"]);
+    expect(hrefs("[a](https://example.com/x)")).toEqual([
+      "https://example.com/x",
+    ]);
+  });
+
+  test("javascript:, http: and data: hrefs are not links, and their text stays", () => {
+    for (const href of [
+      "javascript:alert(1)",
+      "http://example.com/",
+      "data:text/html,x",
+      "//example.com/",
+    ]) {
+      expect(hrefs(`[a](${href})`), href).toEqual([]);
+      expect(
+        inlines(`[a](${href})`)
+          .map((i) => i.text)
+          .join(""),
+        href,
+      ).toBe(`[a](${href})`);
+    }
+  });
+
+  test("a link to the site's own address renders site-relative", () => {
+    expect(hrefs(`[a](${SITE_ORIGIN}/changelog/0.13.0/upgrade/)`)).toEqual([
+      "/changelog/0.13.0/upgrade/",
+    ]);
+  });
+
+  test("the 0.13.0 entry links to the guide by the site's absolute address, which works on GitHub", () => {
+    expect(FILE).toContain(`](${SITE_ORIGIN}/changelog/0.13.0/upgrade/)`);
+  });
+});
 
 describe("015: the changelog page", () => {
   test("every ## release heading is one section with an id", () => {
     const headings = [...FILE.matchAll(/^## (.+)$/gm)].map((m) => m[1].trim());
     expect(page.releases.map((r) => r.title)).toEqual(headings);
     for (const r of page.releases) expect(r.id).toMatch(/^v\d+-\d+-\d+$/);
-    expect(page.releases[0].id).toBe("v0-12-0");
+    // 020 opens 0.13.0, the newest.
+    expect(page.releases[0].id).toBe("v0-13-0");
     expect(new Set(page.releases.map((r) => r.id)).size).toBe(
       page.releases.length,
     );
@@ -29,6 +79,8 @@ describe("015: the changelog page", () => {
           .replace(/^- /, "")
           .replace(/^\d+\. /, "")
           .replace(/`([^`]*)`/g, "$1")
+          // 020 decision 16: a link in prose keeps its text.
+          .replace(/\[([^\]]+)\]\([^)\s]+\)/g, "$1")
           .replace(/\*\*([^*]+)\*\*/g, "$1"),
       )
       .join(" ")
@@ -93,11 +145,16 @@ describe("018: a changelog to scan", () => {
         expect(r.date).toEqual({ text: "Unreleased", datetime: null });
       }
     }
+    // 020 opens 0.13.0, unreleased until its tag, above 0.12.0 and 0.11.0.
     expect(view.releases[0].date).toEqual({
+      text: "Unreleased",
+      datetime: null,
+    });
+    expect(view.releases[1].date).toEqual({
       text: "2026-11-15",
       datetime: "2026-11-15",
     });
-    expect(view.releases[1].date).toEqual({
+    expect(view.releases[2].date).toEqual({
       text: "2026-11-07",
       datetime: "2026-11-07",
     });
@@ -173,11 +230,15 @@ describe("018: a changelog to scan", () => {
         // Rewrite 2: a bullet's "interface change." becomes "Interface change".
         if (/^(- |\d+\. |\s+\S)/.test(l))
           l = l.replaceAll("**interface change.**", "Interface change");
-        return l
-          .replace(/^- /, "")
-          .replace(/^\d+\. /, "")
-          .replace(/`([^`]*)`/g, "$1")
-          .replace(/\*\*([^*]+)\*\*/g, "$1");
+        return (
+          l
+            .replace(/^- /, "")
+            .replace(/^\d+\. /, "")
+            .replace(/`([^`]*)`/g, "$1")
+            // 020 decision 16: a link in prose keeps its text.
+            .replace(/\[([^\]]+)\]\([^)\s]+\)/g, "$1")
+            .replace(/\*\*([^*]+)\*\*/g, "$1")
+        );
       })
       .join(" ")
       .replace(/\s+/g, " ")

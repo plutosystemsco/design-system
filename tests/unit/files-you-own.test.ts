@@ -4,6 +4,7 @@
  */
 import { describe, expect, test } from "bun:test";
 import { readFileSync } from "node:fs";
+import { withListedItems } from "../../src/lib/site/items.ts";
 import { appPath, filesYouOwn, related } from "../../src/lib/site/files.ts";
 
 type Item = {
@@ -11,7 +12,9 @@ type Item = {
   files: { path: string; type: string; target?: string }[];
   registryDependencies?: string[];
 };
-const registry = JSON.parse(readFileSync("registry.json", "utf8")) as {
+const registry = withListedItems(
+  JSON.parse(readFileSync("registry.json", "utf8")),
+) as {
   items: Item[];
 };
 

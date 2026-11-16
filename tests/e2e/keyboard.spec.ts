@@ -214,7 +214,7 @@ test.describe("at 1280 × 900", () => {
     await walk(page, COMPONENTS_STOPS);
   });
 
-  test("Enter on the first item row opens /components/pluto-theme/", async ({
+  test("Enter on the first item row opens /components/kuiper-theme/", async ({
     page,
   }) => {
     await open(page, "/components/");
@@ -222,10 +222,10 @@ test.describe("at 1280 × 900", () => {
     await page.keyboard.press("Tab");
     await expect(page.locator(":focus")).toHaveAttribute(
       "href",
-      componentPath("pluto-theme"),
+      componentPath("kuiper-theme"),
     );
     await page.keyboard.press("Enter");
-    await expect(page).toHaveURL(/\/components\/pluto-theme\/$/);
+    await expect(page).toHaveURL(/\/components\/kuiper-theme\/$/);
   });
 
   for (const path of ["/start/", componentPath("button"), "/changelog/"]) {
@@ -391,7 +391,7 @@ const FIXTURES: [item: string, stops: string[]][] = [
   // 007 decision 9: the ink surface's 7 stops in DOM order. The ring inside
   // it is the dark ring, which the test reads where the element is.
   [
-    "pluto-theme",
+    "kuiper-theme",
     [
       "textbox:Surface example",
       "button:Copy code",
@@ -420,11 +420,11 @@ function drawnBy(
     return '[data-slot="input-group"]';
   if (item === "input-otp") return '[data-slot="input-otp"]';
   // 004 decision 8: the block's root draws the ring for its pre (the surface
-  // fixture on the pluto-theme page holds a block too, 007 decision 9).
+  // fixture on the kuiper-theme page holds a block too, 007 decision 9).
   if (focused.slot === "code-block-content") return '[data-slot="code-block"]';
   // 004 decision 9: the whole editor, gutter included, draws the ring.
   if (
-    ["code-editor", "pluto-theme", "code-languages"].includes(item) &&
+    ["code-editor", "kuiper-theme", "code-languages"].includes(item) &&
     focused.signature.startsWith("textbox:")
   )
     return ".cm-editor";
@@ -479,7 +479,7 @@ async function expectRingUnclipped(
 }
 
 // 005 decision 17: 32 fixtures and 64 stops when 005 landed. 007 adds two:
-// the ink surface's fixture of 7 stops on the pluto-theme page (007 decision 9)
+// the ink surface's fixture of 7 stops on the kuiper-theme page (007 decision 9)
 // and the code-languages page's fixture of 2 stops (007 decision 7). 019
 // decision 10 adds the error summary's radio question: one stop.
 const FIXTURE_COUNT = 34;

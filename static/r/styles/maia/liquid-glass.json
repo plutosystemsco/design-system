@@ -6,7 +6,7 @@
 	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
 	"description": "A frosted panel for expressive pages: an edge lit where the pointer moves, and an opaque ground under reduced transparency or forced colours. Needs Svelte 5.29 or later, for attachments.",
 	"registryDependencies": [
-		"pluto-theme",
+		"kuiper-theme",
 		"read-token"
 	],
 	"meta": {

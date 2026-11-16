@@ -20,6 +20,9 @@
         href={x.href}
         class="text-primary underline underline-offset-4"
         ><code>{x.text}</code></a
+      >{:else if x.kind === "href"}<a
+        href={x.href}
+        class="text-primary underline underline-offset-4">{x.text}</a
       >{:else if x.kind === "mark"}<Badge variant="default">{x.text}</Badge
       >{:else if x.kind === "strong"}<strong>{x.text}</strong
       >{:else}{x.text}{/if}{/each}

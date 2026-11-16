@@ -11,11 +11,14 @@
     readonly contentId: string;
   };
 
-  const KEY = "pluto:accordion-item";
+  const KEY = "kuiper:accordion-item";
+  /** Its key before 0.13.0, set too for an app's own code that reads it, until 0.14.0. */
+  const OLD_KEY = "pluto:accordion-item";
 
   export function setAccordionItemContext(
     context: AccordionItemContext,
   ): AccordionItemContext {
+    setContext(OLD_KEY, context);
     return setContext(KEY, context);
   }
 

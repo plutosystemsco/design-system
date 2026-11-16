@@ -9,7 +9,7 @@
 import { BLOCK_VIEWS, COMPOSITION_VIEWS } from "../preview/blocks.ts";
 
 export const EXAMPLE_ORDER: Record<string, string[]> = {
-  "pluto-theme": [
+  "kuiper-theme": [
     "colours",
     "contrast",
     "elevation",

@@ -1,0 +1,6 @@
+/components/pluto-theme /components/kuiper-theme/ 301
+/components/pluto-theme/ /components/kuiper-theme/ 301
+/components/pluto-theme/* /components/kuiper-theme/:splat 301
+/example/pluto-theme /components/kuiper-theme/ 301
+/example/pluto-theme/ /components/kuiper-theme/ 301
+/example/pluto-theme/* /example/kuiper-theme/:splat 301

@@ -2,7 +2,7 @@
  * 002 decision 23, smoke: `add field alert-dialog input-otp tabs` into each of
  * 001's two scratch apps, against this repository's `vite dev`, with the
  * locked CLI under Bun. Together the four pull label, separator, button,
- * spinner, utils, pluto-theme and the fonts, and all four of 002 decision 2's
+ * spinner, utils, kuiper-theme and the fonts, and all four of 002 decision 2's
  * packages.
  */
 import { afterAll, beforeAll, describe, expect, test } from "bun:test";
@@ -27,7 +27,7 @@ import {
 } from "./process.ts";
 
 const REPO = process.cwd();
-const scratch = mkdtempSync(path.join(tmpdir(), "pluto-smoke-primitives-"));
+const scratch = mkdtempSync(path.join(tmpdir(), "kuiper-smoke-primitives-"));
 const port = freePort();
 let server: ReturnType<typeof startDevServer> | undefined;
 

@@ -5,6 +5,7 @@
  */
 import registry from "../../../../registry.json";
 import { appPath, type ItemFile } from "../files.ts";
+import { listedItems } from "../items.ts";
 import { addCommand, CLI, SITE_REGISTRY } from "../site.ts";
 
 type Item = {
@@ -12,7 +13,7 @@ type Item = {
   files: ItemFile[];
   registryDependencies?: string[];
 };
-const items = registry.items as Item[];
+const items = listedItems(registry.items as Item[]);
 
 /** An empty SvelteKit 3 app with Tailwind. */
 export const CREATE = `bunx sv create my-app --template minimal --types ts --add tailwindcss --install bun
@@ -47,7 +48,7 @@ export const INIT = `${CLI} init`;
  * The two adds, in order. `-o` lets the command update `src/app.css`
  * without stopping to ask, so each runs unattended, as a script would.
  */
-export const ADD_THEME = `${addCommand("pluto-theme")} -o`;
+export const ADD_THEME = `${addCommand("kuiper-theme")} -o`;
 export const ADD_BUTTON = `${addCommand("button")} -o`;
 
 /** Every item an item brings, depth first, each once. */

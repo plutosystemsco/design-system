@@ -1,6 +1,6 @@
 ; C++, for tree-sitter-cpp 0.23.4 (node types read from its
-; src/node-types.json at that version). Captures are Pluto code roles.
-; written for the Pluto design system; not derived from the grammar's own queries.
+; src/node-types.json at that version). Captures are Kuiper code roles.
+; written for the Kuiper Design System; not derived from the grammar's own queries.
 ;
 ; This file stands alone: it does not load c.scm, so C's rules are stated
 ; again here in the C++ grammar's terms.

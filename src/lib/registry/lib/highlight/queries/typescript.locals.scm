@@ -1,7 +1,7 @@
 ; TypeScript and TSX locals, for tree-sitter-typescript 0.23.2 (node types
 ; read from its typescript/src/node-types.json and tsx/src/node-types.json at
 ; that version). Captures are local.* only.
-; written for the Pluto design system; not derived from the grammar's own queries.
+; written for the Kuiper Design System; not derived from the grammar's own queries.
 ;
 ; A local is a value bound here: a variable, a destructured name, a
 ; parameter or a caught error. Functions, classes and imports are not

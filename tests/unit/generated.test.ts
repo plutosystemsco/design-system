@@ -9,7 +9,7 @@ type CssTree = { [key: string]: string | CssTree };
 type Item = { name: string; cssVars?: unknown; css?: CssTree; font?: unknown };
 
 const TOKEN_ITEMS = [
-  "pluto-theme",
+  "kuiper-theme",
   "font-geist",
   "font-heading-ibm-plex-sans",
   "font-jetbrains-mono",
@@ -43,9 +43,9 @@ describe("generated files equal a fresh, prettier-formatted build:tokens run", (
   });
 });
 
-describe("pluto-theme's css", () => {
+describe("kuiper-theme's css", () => {
   const theme = () =>
-    items(readFileSync("registry.json", "utf8")).get("pluto-theme")!;
+    items(readFileSync("registry.json", "utf8")).get("kuiper-theme")!;
 
   function nestedSelectors(
     tree: CssTree,
@@ -101,9 +101,9 @@ describe("pluto-theme's css", () => {
   });
 });
 
-describe("002's additions to pluto-theme", () => {
+describe("002's additions to kuiper-theme", () => {
   const theme = () =>
-    items(readFileSync("registry.json", "utf8")).get("pluto-theme") as Item & {
+    items(readFileSync("registry.json", "utf8")).get("kuiper-theme") as Item & {
       cssVars: { theme: Record<string, string> };
       css: CssTree;
     };
@@ -117,8 +117,8 @@ describe("002's additions to pluto-theme", () => {
       },
     ],
     ["@utility focus-ring-none", { outline: "none" }],
-    ["@keyframes pluto-enter", { from: { opacity: "0" } }],
-    ["@keyframes pluto-exit", { to: { opacity: "0" } }],
+    ["@keyframes kuiper-enter", { from: { opacity: "0" } }],
+    ["@keyframes kuiper-exit", { to: { opacity: "0" } }],
   ] as const)("css holds %s", (key, value) => {
     expect(theme().css[key]).toEqual(value);
   });
@@ -130,11 +130,11 @@ describe("002's additions to pluto-theme", () => {
     ],
     [
       "animate-enter",
-      "pluto-enter var(--motion-micro) cubic-bezier(0.2, 0.7, 0.3, 1)",
+      "kuiper-enter var(--motion-micro) cubic-bezier(0.2, 0.7, 0.3, 1)",
     ],
     [
       "animate-exit",
-      "pluto-exit var(--motion-micro) cubic-bezier(0.2, 0.7, 0.3, 1) forwards",
+      "kuiper-exit var(--motion-micro) cubic-bezier(0.2, 0.7, 0.3, 1) forwards",
     ],
   ])("cssVars.theme holds %s", (key, value) => {
     expect(theme().cssVars.theme[key]).toBe(value);
@@ -142,7 +142,7 @@ describe("002's additions to pluto-theme", () => {
 });
 
 /** 004 decision 5, 007 decision 4 and 013 decision 12: the 16 code roles in both theme blocks, the scrollbar utility and the meter's rules. */
-describe("004's additions to pluto-theme", () => {
+describe("004's additions to kuiper-theme", () => {
   const SLOTS: [slot: string, semantic: string][] = [
     ["text", "syntax-ink"],
     ["comment", "syntax-grey"],
@@ -173,7 +173,7 @@ describe("004's additions to pluto-theme", () => {
     "invalid",
   ];
   const theme = () =>
-    items(readFileSync("registry.json", "utf8")).get("pluto-theme") as Item & {
+    items(readFileSync("registry.json", "utf8")).get("kuiper-theme") as Item & {
       cssVars: {
         light: Record<string, string>;
         dark: Record<string, string>;
@@ -347,7 +347,7 @@ describe("014's inline code", () => {
   const base = () =>
     (
       items(readFileSync("registry.json", "utf8")).get(
-        "pluto-theme",
+        "kuiper-theme",
       ) as Item & {
         css: CssTree;
       }
@@ -407,9 +407,9 @@ describe("014's inline code", () => {
 });
 
 /** 007 decision 8: the ink surface's two plain rules, after the theme blocks. */
-describe("007's additions to pluto-theme", () => {
+describe("007's additions to kuiper-theme", () => {
   const theme = () =>
-    items(readFileSync("registry.json", "utf8")).get("pluto-theme") as Item & {
+    items(readFileSync("registry.json", "utf8")).get("kuiper-theme") as Item & {
       css: CssTree;
     };
 
@@ -447,9 +447,9 @@ describe("007's additions to pluto-theme", () => {
 });
 
 /** 005 decision 5: the vertical groove, owned by the inset on its start edge. */
-describe("005's addition to pluto-theme", () => {
+describe("005's addition to kuiper-theme", () => {
   const theme = () =>
-    items(readFileSync("registry.json", "utf8")).get("pluto-theme") as Item & {
+    items(readFileSync("registry.json", "utf8")).get("kuiper-theme") as Item & {
       css: CssTree;
     };
 
@@ -477,9 +477,9 @@ describe("005's addition to pluto-theme", () => {
 });
 
 /** 006 decision 4: the orbit token, the entrance's three numbers, its keyframes and utility, and groove-b. */
-describe("006's additions to pluto-theme", () => {
+describe("006's additions to kuiper-theme", () => {
   const theme = () =>
-    items(readFileSync("registry.json", "utf8")).get("pluto-theme") as Item & {
+    items(readFileSync("registry.json", "utf8")).get("kuiper-theme") as Item & {
       css: CssTree;
     };
   const root = () => theme().css[":root"] as CssTree;
@@ -499,15 +499,15 @@ describe("006's additions to pluto-theme", () => {
   });
 
   // 011 decision 10: the dock carries the transform alone, so it can take the
-  // spring; the opacity is pluto-mark-fade's, on the entrance curve.
-  test("css holds @keyframes pluto-mark-dock (the transform) and pluto-mark-fade (the opacity), each a from frame and no to", () => {
-    expect(theme().css["@keyframes pluto-mark-dock"]).toEqual({
+  // spring; the opacity is kuiper-mark-fade's, on the entrance curve.
+  test("css holds @keyframes kuiper-mark-dock (the transform) and kuiper-mark-fade (the opacity), each a from frame and no to", () => {
+    expect(theme().css["@keyframes kuiper-mark-dock"]).toEqual({
       from: {
         transform:
           "translate(calc(var(--mark-orbit) * var(--_ox)), calc(var(--mark-orbit) * var(--_oy))) scale(0.4)",
       },
     });
-    expect(theme().css["@keyframes pluto-mark-fade"]).toEqual({
+    expect(theme().css["@keyframes kuiper-mark-fade"]).toEqual({
       from: { opacity: "0" },
     });
   });
@@ -522,7 +522,7 @@ describe("006's additions to pluto-theme", () => {
     // without linear() runs both on the initial ease, never none.
     const D = "calc(var(--motion-entrance) * var(--motion-entrance-dot))";
     expect(utility['& > [data-slot="four-dot-dot"]']).toEqual({
-      animation: `pluto-mark-dock ${D} both, pluto-mark-fade ${D} both`,
+      animation: `kuiper-mark-dock ${D} both, kuiper-mark-fade ${D} both`,
       "animation-timing-function": "var(--ease-spring), var(--ease-entrance)",
     });
     expect(
@@ -563,13 +563,13 @@ describe("006's additions to pluto-theme", () => {
     expect(css).toContain("--motion-entrance-dot: 0.55;");
     expect(css).toContain("--motion-entrance-start: 0.15;");
     expect(css).toContain("--motion-entrance-stagger: 0.1;");
-    expect(css.match(/@keyframes pluto-mark-dock \{/g)).toHaveLength(1);
-    expect(css.match(/@keyframes pluto-mark-fade \{/g)).toHaveLength(1);
+    expect(css.match(/@keyframes kuiper-mark-dock \{/g)).toHaveLength(1);
+    expect(css.match(/@keyframes kuiper-mark-fade \{/g)).toHaveLength(1);
     const theme = blocks(css).find((b) => b.prelude === "@theme inline")!;
     expect(theme.children.map((c) => c.prelude)).toEqual(
       expect.arrayContaining([
-        "@keyframes pluto-mark-dock",
-        "@keyframes pluto-mark-fade",
+        "@keyframes kuiper-mark-dock",
+        "@keyframes kuiper-mark-fade",
       ]),
     );
     expect(css.match(/@utility mark-entrance \{/g)).toHaveLength(1);
@@ -597,7 +597,7 @@ describe("006's additions to pluto-theme", () => {
  */
 describe("008's mark-reveal", () => {
   const theme = () =>
-    items(readFileSync("registry.json", "utf8")).get("pluto-theme") as Item & {
+    items(readFileSync("registry.json", "utf8")).get("kuiper-theme") as Item & {
       css: CssTree;
     };
   const DOT = '[data-slot="four-dot-dot"]';
@@ -640,7 +640,7 @@ describe("008's mark-reveal", () => {
 
 /**
  * 009 decision 2, criterion 1: every variable 009 adds lives in
- * `pluto-theme`'s `css[":root"]`, beside `--mark-dot`, and so in `src/app.css`'s
+ * `kuiper-theme`'s `css[":root"]`, beside `--mark-dot`, and so in `src/app.css`'s
  * `:root`. None is in `cssVars` (the CLI would make utilities of it) or in
  * `@theme inline` (a value there is not a runtime variable).
  */
@@ -678,7 +678,7 @@ const VARIABLES_009 = [
 
 describe("009's variables (criterion 1)", () => {
   const theme = () =>
-    items(readFileSync("registry.json", "utf8")).get("pluto-theme") as Item & {
+    items(readFileSync("registry.json", "utf8")).get("kuiper-theme") as Item & {
       cssVars: Record<"light" | "dark" | "theme", Record<string, string>>;
       css: CssTree;
     };
@@ -997,9 +997,9 @@ const MOVED_013: Record<":root" | ".dark", Record<string, string>> = {
   ".dark": { ...MOVED_013_CODE, "--syntax-orange": "#ffa373" },
 };
 /** 016 criterion 7: the brand yellow, emitted. */
-describe("016's yellow in pluto-theme", () => {
+describe("016's yellow in kuiper-theme", () => {
   const theme = () =>
-    items(readFileSync("registry.json", "utf8")).get("pluto-theme") as Item & {
+    items(readFileSync("registry.json", "utf8")).get("kuiper-theme") as Item & {
       cssVars: {
         light: Record<string, string>;
         dark: Record<string, string>;
@@ -1054,6 +1054,16 @@ const MOVED_019A_INLINE: Record<string, string> = {
   "--tracking-section": "0em",
   "--tracking-eyebrow": "0em",
   "--tracking-mark": "0em",
+};
+/**
+ * 020 decision 6: the two animation variables keep their names and their
+ * timing, and name the renamed keyframes.
+ */
+const MOVED_020_INLINE: Record<string, string> = {
+  "--animate-enter":
+    "kuiper-enter var(--motion-micro) cubic-bezier(0.2, 0.7, 0.3, 1)",
+  "--animate-exit":
+    "kuiper-exit var(--motion-micro) cubic-bezier(0.2, 0.7, 0.3, 1) forwards",
 };
 describe("v0.8.0's custom properties (criterion 2)", () => {
   const fixture = JSON.parse(
@@ -1129,7 +1139,7 @@ describe("v0.8.0's custom properties (criterion 2)", () => {
       const removed = REMOVED_013[block as keyof typeof REMOVED_013];
       const moved =
         block === "@theme inline"
-          ? MOVED_019A_INLINE
+          ? { ...MOVED_019A_INLINE, ...MOVED_020_INLINE }
           : {
               ...MOVED_011[block as ":root" | ".dark"],
               ...MOVED_014[block as ":root" | ".dark"],
@@ -1150,7 +1160,7 @@ describe("v0.8.0's custom properties (criterion 2)", () => {
 /** 009 decisions 3 to 6 as 012 decision 1 leaves them: the utilities, reduced motion and the sticky bar. */
 describe("009's rules and utilities", () => {
   const theme = () =>
-    items(readFileSync("registry.json", "utf8")).get("pluto-theme") as Item & {
+    items(readFileSync("registry.json", "utf8")).get("kuiper-theme") as Item & {
       css: CssTree;
     };
   const css = () => theme().css;
@@ -1254,7 +1264,7 @@ describe("009's rules and utilities", () => {
 });
 
 /**
- * 011 criterion 1: every variable decisions 6 to 10 add, in `pluto-theme`'s
+ * 011 criterion 1: every variable decisions 6 to 10 add, in `kuiper-theme`'s
  * `css` and in `src/app.css`. The per-theme ones are in `:root` and `.dark`;
  * the rest in `:root` alone.
  */
@@ -1287,7 +1297,7 @@ const ROOT_ONLY_011 = [
 
 describe("011's variables (criterion 1)", () => {
   const theme = () =>
-    items(readFileSync("registry.json", "utf8")).get("pluto-theme") as Item & {
+    items(readFileSync("registry.json", "utf8")).get("kuiper-theme") as Item & {
       css: CssTree;
     };
   const root = () => theme().css[":root"] as CssTree;
@@ -1384,7 +1394,7 @@ describe("011's variables (criterion 1)", () => {
 describe("the spring (011 criterion 6)", () => {
   const value = () =>
     (
-      items(readFileSync("registry.json", "utf8")).get("pluto-theme")!
+      items(readFileSync("registry.json", "utf8")).get("kuiper-theme")!
         .css as CssTree
     )[":root"] as CssTree;
 
@@ -1415,7 +1425,9 @@ describe("the spring (011 criterion 6)", () => {
   });
 
   test("equals the step response recomputed from the token", () => {
-    const tokens = JSON.parse(readFileSync("tokens/pluto.tokens.json", "utf8"));
+    const tokens = JSON.parse(
+      readFileSync("tokens/kuiper.tokens.json", "utf8"),
+    );
     const { dampingRatio, settle, samples } = tokens.expressive.motion.spring;
     const points = /^linear\((.*)\)$/
       .exec(value()["--ease-spring"] as string)![1]
@@ -1428,7 +1440,7 @@ describe("the spring (011 criterion 6)", () => {
 /** 011 decisions 6, 8 and 9: the fields, the plain surface, the glass and its rules. */
 describe("011's utilities and rules", () => {
   const css = () =>
-    items(readFileSync("registry.json", "utf8")).get("pluto-theme")!
+    items(readFileSync("registry.json", "utf8")).get("kuiper-theme")!
       .css as CssTree;
   const app = () => readFileSync("src/app.css", "utf8");
   const PLAIN = {
@@ -1628,5 +1640,65 @@ describe("012 criterion 1: the stage is gone", () => {
   test("the never-published snapshots static/v0.9.0 and static/v0.10.0 do not exist", () => {
     expect(existsSync("static/v0.9.0")).toBe(false);
     expect(existsSync("static/v0.10.0")).toBe(false);
+  });
+});
+
+/** 020 test 6: the keyframes are Kuiper's, and no pluto- keyframe is left. */
+describe("020: the keyframes are Kuiper's", () => {
+  const KUIPER = [
+    "kuiper-enter",
+    "kuiper-exit",
+    "kuiper-mark-dock",
+    "kuiper-mark-fade",
+  ];
+  const theme = () =>
+    (items(readFileSync("registry.json", "utf8")).get("kuiper-theme") ??
+      {}) as Item & {
+      css: CssTree;
+      cssVars: { theme: Record<string, string> };
+    };
+  const css = () => readFileSync("src/app.css", "utf8");
+
+  test("the theme's css holds exactly the four @keyframes kuiper- rules", () => {
+    expect(
+      Object.keys(theme().css ?? {})
+        .filter((k) => k.startsWith("@keyframes"))
+        .sort(),
+    ).toEqual(KUIPER.map((k) => `@keyframes ${k}`).sort());
+  });
+
+  test("no pluto- name anywhere in the theme's css and cssVars, in @theme, @layer base or at the top level", () => {
+    expect(JSON.stringify(theme().css ?? {})).not.toMatch(/pluto-/);
+    expect(JSON.stringify(theme().cssVars ?? {})).not.toMatch(/pluto-/);
+  });
+
+  test("src/app.css holds the four in @theme inline, once each, and no pluto- anywhere", () => {
+    const inline = blocks(css()).find((b) => b.prelude === "@theme inline");
+    const names = (inline?.children ?? [])
+      .map((c) => c.prelude)
+      .filter((p) => p.startsWith("@keyframes"));
+    expect(names.sort()).toEqual(KUIPER.map((k) => `@keyframes ${k}`).sort());
+    expect(css().match(/@keyframes /g)).toHaveLength(4);
+    expect(css()).not.toMatch(/pluto-/);
+  });
+
+  test("--animate-enter and --animate-exit name kuiper-enter and kuiper-exit", () => {
+    expect(theme().cssVars?.theme["animate-enter"]).toMatch(/^kuiper-enter /);
+    expect(theme().cssVars?.theme["animate-exit"]).toMatch(/^kuiper-exit /);
+    const now = topLevelMap(css(), "@theme inline");
+    expect(now.get("--animate-enter")).toMatch(/^kuiper-enter /);
+    expect(now.get("--animate-exit")).toMatch(/^kuiper-exit /);
+  });
+
+  test("the header names tokens/kuiper.tokens.json", () => {
+    expect(css().split("\n")[0]).toBe(
+      "/* Generated by scripts/build-tokens.ts from tokens/kuiper.tokens.json. Do not edit. */",
+    );
+  });
+
+  test("build:tokens run twice gives the same files", async () => {
+    const again = await generateTokenOutputs();
+    expect(again.registryJson).toBe(fresh.registryJson);
+    expect(again.appCss).toBe(fresh.appCss);
   });
 });

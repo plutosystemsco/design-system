@@ -1,7 +1,7 @@
 ; PHP, for tree-sitter-php 0.24.2, its `php` grammar with the HTML host
 ; (node types read from its php/src/node-types.json at that version).
-; Captures are Pluto code roles.
-; written for the Pluto design system; not derived from the grammar's own queries.
+; Captures are Kuiper code roles.
+; written for the Kuiper Design System; not derived from the grammar's own queries.
 ;
 ; This file paints PHP alone. The text outside `<?php … ?>` is the engine's
 ; to inject as HTML; here it stays in the body.

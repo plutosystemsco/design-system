@@ -7,7 +7,7 @@
 	"description": "One column of sections divided by grooves, saved by one button, with an inline Saved message and a confirmed delete.",
 	"registryDependencies": [
 		"utils",
-		"pluto-theme",
+		"kuiper-theme",
 		"field",
 		"input",
 		"native-select",

@@ -20,7 +20,7 @@ import path from "node:path";
 import { freePort, run, startDevServer, until, waitFor200 } from "./process.ts";
 
 const REPO = process.cwd();
-const scratch = mkdtempSync(path.join(tmpdir(), "pluto-dev-loop-"));
+const scratch = mkdtempSync(path.join(tmpdir(), "kuiper-dev-loop-"));
 const copy = path.join(scratch, "repo");
 const port = freePort();
 const built = (file: string) =>
@@ -72,14 +72,14 @@ test("touching registry.json rewrites index.json within 10 s", async () => {
   ).toBe(true);
 }, 15_000);
 
-test("a token change rewrites src/app.css and pluto-theme.json within 10 s", async () => {
+test("a token change rewrites src/app.css and kuiper-theme.json within 10 s", async () => {
   const css = () => readFileSync(path.join(copy, "src", "app.css"), "utf8");
-  const theme = () => readFileSync(built("pluto-theme.json"), "utf8");
+  const theme = () => readFileSync(built("kuiper-theme.json"), "utf8");
   const cssBefore = css();
   const themeBefore = theme();
   expect(cssBefore).toContain("--motion-micro: 200ms");
 
-  const tokensFile = path.join(copy, "tokens", "pluto.tokens.json");
+  const tokensFile = path.join(copy, "tokens", "kuiper.tokens.json");
   const tokens = JSON.parse(readFileSync(tokensFile, "utf8"));
   tokens.motion.microMs = 250;
   writeFileSync(tokensFile, JSON.stringify(tokens, null, 2));

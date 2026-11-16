@@ -5,10 +5,14 @@
  * `##` headings, paragraphs, `-` and `1.` lists, `**bold**` and `` `code` ``.
  * Pure, so the unit test calls it on the file directly.
  */
+import { SITE_ORIGIN } from "./site.ts";
+
 export type Inline =
   | { kind: "text"; text: string }
   | { kind: "code"; text: string }
-  | { kind: "strong"; text: string };
+  | { kind: "strong"; text: string }
+  /** 020 decision 16: a link in prose, `[text](href)`, as to the upgrade guide. */
+  | { kind: "href"; text: string; href: string };
 
 export type Block =
   { kind: "p"; inlines: Inline[] } | { kind: "ul" | "ol"; items: Inline[][] };
@@ -25,7 +29,19 @@ export type Release = {
 
 export type Changelog = { intro: Block[]; releases: Release[] };
 
-/** A line's inline Markdown: code spans first (nothing inside them is read), then bold. */
+/**
+ * A prose link's target, or null: a site path, an anchor, or an https URL
+ * (020 review, finding 6). The site's own absolute address, which the file
+ * uses so its links work on GitHub, renders site-relative.
+ */
+function safeHref(href: string): string | null {
+  if (href.startsWith(`${SITE_ORIGIN}/`)) return href.slice(SITE_ORIGIN.length);
+  if (/^\/(?!\/)/.test(href) || href.startsWith("#")) return href;
+  if (href.startsWith("https://")) return href;
+  return null;
+}
+
+/** A line's inline Markdown: code spans first (nothing inside them is read), then links, then bold. */
 export function inlines(text: string): Inline[] {
   const out: Inline[] = [];
   const parts = text.split(/(`[^`]*`)/);
@@ -35,12 +51,21 @@ export function inlines(text: string): Inline[] {
       out.push({ kind: "code", text: part.slice(1, -1) });
       continue;
     }
-    const bold = part.split(/(\*\*[^*]+\*\*)/);
-    for (const b of bold) {
-      if (!b) continue;
-      if (b.startsWith("**") && b.endsWith("**"))
-        out.push({ kind: "strong", text: b.slice(2, -2) });
-      else out.push({ kind: "text", text: b });
+    for (const piece of part.split(/(\[[^\]]+\]\([^)\s]+\))/)) {
+      if (!piece) continue;
+      const link = /^\[([^\]]+)\]\(([^)\s]+)\)$/.exec(piece);
+      const href = link ? safeHref(link[2]!) : null;
+      if (link && href) {
+        out.push({ kind: "href", text: link[1]!, href });
+        continue;
+      }
+      const bold = piece.split(/(\*\*[^*]+\*\*)/);
+      for (const b of bold) {
+        if (!b) continue;
+        if (b.startsWith("**") && b.endsWith("**"))
+          out.push({ kind: "strong", text: b.slice(2, -2) });
+        else out.push({ kind: "text", text: b });
+      }
     }
   }
   return out;

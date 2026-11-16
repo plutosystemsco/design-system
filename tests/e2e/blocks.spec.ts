@@ -1089,7 +1089,7 @@ test.describe("the app shell", () => {
     await expect(page.locator("h1")).toHaveText("Projects");
     const html = await (await request.get(SHELL)).text();
     const head = html.slice(0, html.indexOf("</head>"));
-    expect(head.match(/localStorage\.getItem\("pluto-theme"\)/g)).toHaveLength(
+    expect(head.match(/localStorage\.getItem\("kuiper-theme"\)/g)).toHaveLength(
       1,
     );
   });

@@ -1,9 +1,9 @@
 ; TypeScript and TSX, for tree-sitter-typescript 0.23.2 (node types read from
 ; its typescript/src/node-types.json and tsx/src/node-types.json at that
-; version). Captures are Pluto code roles. Compiles against both grammars, so
+; version). Captures are Kuiper code roles. Compiles against both grammars, so
 ; it names no JSX node and no type assertion (those live in jsx.scm and
 ; typescript-assertion.scm).
-; written for the Pluto design system; not derived from the grammar's own queries.
+; written for the Kuiper Design System; not derived from the grammar's own queries.
 
 ; ── Words of the language ───────────────────────────────────────────────
 

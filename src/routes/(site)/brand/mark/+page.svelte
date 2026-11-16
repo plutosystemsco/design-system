@@ -31,15 +31,15 @@
       </figcaption>
     </figure>
     <ul data-figure-dims="mark" class="grid gap-1 text-sm">
-      <!-- source: tokens/pluto.tokens.json, mark.dot; decisions.md, N1 -->
+      <!-- source: tokens/kuiper.tokens.json, mark.dot; decisions.md, N1 -->
       <li data-claim="settled" data-dim="dot" data-value={m.dot}>
         A. The dot: {f(m.dot)} em.
       </li>
-      <!-- source: tokens/pluto.tokens.json, mark.gap; decisions.md, N1 -->
+      <!-- source: tokens/kuiper.tokens.json, mark.gap; decisions.md, N1 -->
       <li data-claim="settled" data-dim="gap" data-value={m.gap}>
         B. The gap: {f(m.gap)} em, about a quarter of a dot.
       </li>
-      <!-- source: tokens/pluto.tokens.json, mark.dot and mark.gap; 001 decision 16 -->
+      <!-- source: tokens/kuiper.tokens.json, mark.dot and mark.gap; 001 decision 16 -->
       <li data-claim="settled" data-dim="side" data-value={2 * m.dot + m.gap}>
         C. The mark's side: two dots and a gap, {f(2 * m.dot + m.gap)} em.
       </li>
@@ -53,7 +53,7 @@
       like a colon.
     </p>
     <div class="py-4 text-7xl" aria-hidden="true"><Lockup /></div>
-    <!-- source: decisions.md, E6; tokens/pluto.tokens.json, mark -->
+    <!-- source: decisions.md, E6; tokens/kuiper.tokens.json, mark -->
     <p data-claim="settled">
       The mark is set at {f(m.lockupScale)} of the word's size, {f(m.lockupGap)} em
       from the word. It rises {f(m.rise * m.lockupScale)} em above the baseline, so
@@ -73,7 +73,7 @@
       </figcaption>
     </figure>
     <ul data-figure-dims="lockup" class="grid gap-1 text-sm">
-      <!-- source: tokens/pluto.tokens.json, mark.lockupScale; decisions.md, E6 -->
+      <!-- source: tokens/kuiper.tokens.json, mark.lockupScale; decisions.md, E6 -->
       <li
         data-claim="settled"
         data-dim="lockupScale"
@@ -81,11 +81,11 @@
       >
         D. The mark's size: {f(m.lockupScale)} of the word's.
       </li>
-      <!-- source: tokens/pluto.tokens.json, mark.lockupGap; decisions.md, E6 -->
+      <!-- source: tokens/kuiper.tokens.json, mark.lockupGap; decisions.md, E6 -->
       <li data-claim="settled" data-dim="lockupGap" data-value={m.lockupGap}>
         E. From the word: {f(m.lockupGap)} em.
       </li>
-      <!-- source: tokens/pluto.tokens.json, mark.rise; 001 decision 16 -->
+      <!-- source: tokens/kuiper.tokens.json, mark.rise; 001 decision 16 -->
       <li data-claim="settled" data-dim="rise" data-value={m.rise}>
         F. The rise: {f(m.rise)} em of the mark's own size, {f(
           m.rise * m.lockupScale,
@@ -117,7 +117,7 @@
       field, use one colour: on screen, the mark takes the field's own legend,
       as below.
     </p>
-    <!-- source: 017 decision 4, the paper colourway; tokens/pluto.tokens.json, primitives.paper -->
+    <!-- source: 017 decision 4, the paper colourway; tokens/kuiper.tokens.json, primitives.paper -->
     <p data-claim="settled">
       The paper downloads are drawn in the brand's paper, {data.canvas}, not
       white, for the colour fields and dark grounds.

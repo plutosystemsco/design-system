@@ -1,6 +1,6 @@
 {
   "$schema": "https://shadcn-svelte.com/schema/registry.json",
-  "name": "pluto",
+  "name": "kuiper",
   "homepage": "https://github.com/plutosystemsco/design-system",
   "aliases": {
     "components": "#lib/registry/components",
@@ -11,10 +11,10 @@
   },
   "items": [
     {
-      "name": "pluto-theme",
+      "name": "kuiper-theme",
       "type": "registry:theme",
-      "title": "Pluto theme",
-      "description": "The Pluto Systems tokens for light and dark: colour, radius, spacing, type, motion, focus and the groove.",
+      "title": "Kuiper theme",
+      "description": "Kuiper's tokens for light and dark: colour, radius, spacing, type, motion, focus and the groove.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
       "registryDependencies": [
         "font-geist",
@@ -220,8 +220,8 @@
           "ease-entrance": "cubic-bezier(0.2, 0.7, 0.3, 1)",
           "default-transition-duration": "200ms",
           "shadow-elevation": "0 0 0 var(--line-width) var(--elevation-line), 0 0.75rem 2rem 0 var(--elevation-shadow)",
-          "animate-enter": "pluto-enter var(--motion-micro) cubic-bezier(0.2, 0.7, 0.3, 1)",
-          "animate-exit": "pluto-exit var(--motion-micro) cubic-bezier(0.2, 0.7, 0.3, 1) forwards",
+          "animate-enter": "kuiper-enter var(--motion-micro) cubic-bezier(0.2, 0.7, 0.3, 1)",
+          "animate-exit": "kuiper-exit var(--motion-micro) cubic-bezier(0.2, 0.7, 0.3, 1) forwards",
           "color-code-text": "var(--code-text)",
           "color-code-comment": "var(--code-comment)",
           "color-code-keyword": "var(--code-keyword)",
@@ -386,7 +386,7 @@
         },
         "@utility mark-entrance": {
           "& > [data-slot=\"four-dot-dot\"]": {
-            "animation": "pluto-mark-dock calc(var(--motion-entrance) * var(--motion-entrance-dot)) both, pluto-mark-fade calc(var(--motion-entrance) * var(--motion-entrance-dot)) both",
+            "animation": "kuiper-mark-dock calc(var(--motion-entrance) * var(--motion-entrance-dot)) both, kuiper-mark-fade calc(var(--motion-entrance) * var(--motion-entrance-dot)) both",
             "animation-timing-function": "var(--ease-spring), var(--ease-entrance)"
           },
           "& > [data-slot=\"four-dot-dot\"]:nth-child(1)": {
@@ -631,22 +631,22 @@
             "box-shadow": "inset 0 0 0 calc(2 * var(--line-width)) var(--primary)"
           }
         },
-        "@keyframes pluto-enter": {
+        "@keyframes kuiper-enter": {
           "from": {
             "opacity": "0"
           }
         },
-        "@keyframes pluto-exit": {
+        "@keyframes kuiper-exit": {
           "to": {
             "opacity": "0"
           }
         },
-        "@keyframes pluto-mark-dock": {
+        "@keyframes kuiper-mark-dock": {
           "from": {
             "transform": "translate(calc(var(--mark-orbit) * var(--_ox)), calc(var(--mark-orbit) * var(--_oy))) scale(0.4)"
           }
         },
-        "@keyframes pluto-mark-fade": {
+        "@keyframes kuiper-mark-fade": {
           "from": {
             "opacity": "0"
           }
@@ -790,7 +790,7 @@
       "title": "Four-dot mark",
       "description": "The Pluto Systems four-dot mark and the wordmark lockup, sized by the text around them.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme"],
+      "registryDependencies": ["utils", "kuiper-theme"],
       "files": [
         {
           "path": "src/lib/registry/ui/four-dot/four-dot.svelte",
@@ -817,10 +817,14 @@
       "title": "Theme",
       "description": "The light and dark switch: a head script that sets the theme before paint, a store that follows the system until a choice is made, and a toggle button.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme", "button"],
+      "registryDependencies": ["utils", "kuiper-theme", "button"],
       "files": [
         {
           "path": "src/lib/registry/ui/theme/theme.svelte.ts",
+          "type": "registry:ui"
+        },
+        {
+          "path": "src/lib/registry/ui/theme/stored.ts",
           "type": "registry:ui"
         },
         {
@@ -848,7 +852,7 @@
       "title": "Read token",
       "description": "Reads the theme's runtime variables from script: a token's value, a duration in milliseconds, an easing curve, and a tween that animates a number over them.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme"],
+      "registryDependencies": ["utils", "kuiper-theme"],
       "files": [
         {
           "path": "src/lib/registry/lib/read-token.ts",
@@ -867,7 +871,7 @@
       "title": "Liquid glass",
       "description": "A frosted panel for expressive pages: an edge lit where the pointer moves, and an opaque ground under reduced transparency or forced colours. Needs Svelte 5.29 or later, for attachments.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["pluto-theme", "read-token"],
+      "registryDependencies": ["kuiper-theme", "read-token"],
       "files": [
         {
           "path": "src/lib/registry/ui/liquid-glass/pointer-light.ts",
@@ -890,7 +894,7 @@
       "title": "Button",
       "description": "An action: the surface's one blue primary, a bordered secondary, ghost, destructive or link, at 48 or 32 px, with a busy state that keeps focus.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme", "spinner"],
+      "registryDependencies": ["utils", "kuiper-theme", "spinner"],
       "files": [
         {
           "path": "src/lib/registry/ui/button/button.svelte",
@@ -920,7 +924,7 @@
       "title": "Tooltip",
       "description": "A short inverted label that opens on hover and focus, closes on Escape, and repeats an icon button's name.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme"],
+      "registryDependencies": ["utils", "kuiper-theme"],
       "files": [
         {
           "path": "src/lib/registry/ui/tooltip/tooltip-content.svelte",
@@ -966,7 +970,7 @@
       "title": "Kbd",
       "description": "A keyboard key, or a group of keys, set in the mono face on an inset.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme"],
+      "registryDependencies": ["utils", "kuiper-theme"],
       "files": [
         {
           "path": "src/lib/registry/ui/kbd/kbd-group.svelte",
@@ -1000,7 +1004,7 @@
       "title": "Toggle",
       "description": "A two-state button that says whether it is pressed, inverted when it is.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme"],
+      "registryDependencies": ["utils", "kuiper-theme"],
       "files": [
         {
           "path": "src/lib/registry/ui/toggle/toggle.svelte",
@@ -1030,7 +1034,7 @@
       "title": "Toggle group",
       "description": "A row of toggles, one stop for the row, moved by the arrow keys, for one choice or several.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme", "toggle"],
+      "registryDependencies": ["utils", "kuiper-theme", "toggle"],
       "files": [
         {
           "path": "src/lib/registry/ui/toggle-group/toggle-group.svelte",
@@ -1064,7 +1068,7 @@
       "title": "Card",
       "description": "A raised surface with a header, content, footer and an action, whose title is a real heading.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme"],
+      "registryDependencies": ["utils", "kuiper-theme"],
       "files": [
         {
           "path": "src/lib/registry/ui/card/card-action.svelte",
@@ -1118,7 +1122,7 @@
       "title": "Separator",
       "description": "The groove between sections, decorative by default, or a plain vertical hairline.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme"],
+      "registryDependencies": ["utils", "kuiper-theme"],
       "files": [
         {
           "path": "src/lib/registry/ui/separator/separator.svelte",
@@ -1148,7 +1152,7 @@
       "title": "Item",
       "description": "A row of media, content and actions, plain or outlined, that can be one link.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme", "separator"],
+      "registryDependencies": ["utils", "kuiper-theme", "separator"],
       "files": [
         {
           "path": "src/lib/registry/ui/item/item-actions.svelte",
@@ -1214,7 +1218,7 @@
       "title": "Table",
       "description": "A data table with a caption, header, selectable rows and a footer, scrolling inside itself when it must.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme"],
+      "registryDependencies": ["utils", "kuiper-theme"],
       "files": [
         {
           "path": "src/lib/registry/ui/table/table-body.svelte",
@@ -1272,7 +1276,7 @@
       "title": "Tabs",
       "description": "Tabbed panels as a pill strip on an inset or as underlined triggers, moved by the arrow keys.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme"],
+      "registryDependencies": ["utils", "kuiper-theme"],
       "files": [
         {
           "path": "src/lib/registry/ui/tabs/tabs-content.svelte",
@@ -1314,7 +1318,7 @@
       "title": "Collapsible",
       "description": "A button that shows and hides a region, with its state in aria-expanded.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme"],
+      "registryDependencies": ["utils", "kuiper-theme"],
       "files": [
         {
           "path": "src/lib/registry/ui/collapsible/collapsible-content.svelte",
@@ -1352,7 +1356,7 @@
       "title": "Avatar",
       "description": "A person's image or initials at the case radius, alone or in an overlapping group.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme"],
+      "registryDependencies": ["utils", "kuiper-theme"],
       "files": [
         {
           "path": "src/lib/registry/ui/avatar/avatar-fallback.svelte",
@@ -1398,7 +1402,7 @@
       "title": "Popover",
       "description": "A small dialog anchored to its button, raised by the elevation shadow, that returns focus when it closes.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme"],
+      "registryDependencies": ["utils", "kuiper-theme"],
       "files": [
         {
           "path": "src/lib/registry/ui/popover/popover.svelte",
@@ -1456,7 +1460,7 @@
       "title": "Accordion",
       "description": "Headings that each open a section, divided by grooves, moved by the arrow keys.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme"],
+      "registryDependencies": ["utils", "kuiper-theme"],
       "files": [
         {
           "path": "src/lib/registry/ui/accordion/accordion.svelte",
@@ -1498,7 +1502,7 @@
       "title": "Alert",
       "description": "A message in default, destructive, success or caution, whose role matches how urgent it is.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme"],
+      "registryDependencies": ["utils", "kuiper-theme"],
       "files": [
         {
           "path": "src/lib/registry/ui/alert/alert-action.svelte",
@@ -1540,7 +1544,7 @@
       "title": "Alert dialog",
       "description": "A modal confirm on the scrim that traps focus, starts on Cancel and closes on Escape.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme", "button"],
+      "registryDependencies": ["utils", "kuiper-theme", "button"],
       "files": [
         {
           "path": "src/lib/registry/ui/alert-dialog/alert-dialog-action.svelte",
@@ -1614,7 +1618,7 @@
       "title": "Badge",
       "description": "A small mono label that names a state in words, outlined in its state colour.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme"],
+      "registryDependencies": ["utils", "kuiper-theme"],
       "files": [
         {
           "path": "src/lib/registry/ui/badge/badge.svelte",
@@ -1644,7 +1648,7 @@
       "title": "Empty",
       "description": "An empty state: an icon tile, a heading, a sentence and the next action.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme"],
+      "registryDependencies": ["utils", "kuiper-theme"],
       "files": [
         {
           "path": "src/lib/registry/ui/empty/empty-content.svelte",
@@ -1694,7 +1698,7 @@
       "title": "Skeleton",
       "description": "A static, hidden placeholder on an inset where content is loading.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme"],
+      "registryDependencies": ["utils", "kuiper-theme"],
       "files": [
         {
           "path": "src/lib/registry/ui/skeleton/skeleton.svelte",
@@ -1724,7 +1728,7 @@
       "title": "Spinner",
       "description": "A turning icon for the one control that is busy, decorative by default or announced with a label.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme"],
+      "registryDependencies": ["utils", "kuiper-theme"],
       "files": [
         {
           "path": "src/lib/registry/ui/spinner/spinner.svelte",
@@ -1754,7 +1758,7 @@
       "title": "Status",
       "description": "An empty polite live region, present from the first render, whose text the app sets.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme"],
+      "registryDependencies": ["utils", "kuiper-theme"],
       "files": [
         {
           "path": "src/lib/registry/ui/status/status.svelte",
@@ -1777,7 +1781,7 @@
       "title": "Error summary",
       "description": "The box a failed submit puts at the top of a form: a heading, the form's message and a link to each invalid field, focused when it appears.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme", "alert"],
+      "registryDependencies": ["utils", "kuiper-theme", "alert"],
       "files": [
         {
           "path": "src/lib/registry/ui/error-summary/error-summary.svelte",
@@ -1800,7 +1804,7 @@
       "title": "Label",
       "description": "A form label in sentence case, dimmed with its disabled control.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme"],
+      "registryDependencies": ["utils", "kuiper-theme"],
       "files": [
         {
           "path": "src/lib/registry/ui/label/label.svelte",
@@ -1830,7 +1834,7 @@
       "title": "Field",
       "description": "A label, control, description and error, wired to the control by id, aria-describedby and aria-invalid.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme", "label", "separator"],
+      "registryDependencies": ["utils", "kuiper-theme", "label", "separator"],
       "files": [
         {
           "path": "src/lib/registry/ui/field/field-content.svelte",
@@ -1900,7 +1904,7 @@
       "title": "Input",
       "description": "A 48 px text input on the raised ground with a visible border and a red one when invalid.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme"],
+      "registryDependencies": ["utils", "kuiper-theme"],
       "files": [
         {
           "path": "src/lib/registry/ui/input/input.svelte",
@@ -1930,7 +1934,7 @@
       "title": "Textarea",
       "description": "A multi-line text input that grows with its text where the browser can.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme"],
+      "registryDependencies": ["utils", "kuiper-theme"],
       "files": [
         {
           "path": "src/lib/registry/ui/textarea/textarea.svelte",
@@ -1962,7 +1966,7 @@
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
       "registryDependencies": [
         "utils",
-        "pluto-theme",
+        "kuiper-theme",
         "button",
         "input",
         "textarea"
@@ -2020,7 +2024,7 @@
       "title": "Native select",
       "description": "The browser's own select, styled as an input, with a caret.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme"],
+      "registryDependencies": ["utils", "kuiper-theme"],
       "files": [
         {
           "path": "src/lib/registry/ui/native-select/native-select-opt-group.svelte",
@@ -2058,7 +2062,7 @@
       "title": "Checkbox",
       "description": "A 24 px checkbox that tells checked and mixed by shape as well as colour.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme"],
+      "registryDependencies": ["utils", "kuiper-theme"],
       "files": [
         {
           "path": "src/lib/registry/ui/checkbox/checkbox.svelte",
@@ -2088,7 +2092,7 @@
       "title": "Radio group",
       "description": "Round radios in a group with one stop, moved and chosen by the arrow keys.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme"],
+      "registryDependencies": ["utils", "kuiper-theme"],
       "files": [
         {
           "path": "src/lib/registry/ui/radio-group/radio-group-item.svelte",
@@ -2122,7 +2126,7 @@
       "title": "Switch",
       "description": "An on and off setting: a blue track with a thumb that moves to the end.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme"],
+      "registryDependencies": ["utils", "kuiper-theme"],
       "files": [
         {
           "path": "src/lib/registry/ui/switch/switch.svelte",
@@ -2152,7 +2156,7 @@
       "title": "Input OTP",
       "description": "A six-digit code in 48 px cells over one real input that accepts a pasted code.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme"],
+      "registryDependencies": ["utils", "kuiper-theme"],
       "files": [
         {
           "path": "src/lib/registry/ui/input-otp/input-otp-group.svelte",
@@ -2196,7 +2200,7 @@
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
       "registryDependencies": [
         "utils",
-        "pluto-theme",
+        "kuiper-theme",
         "use-highlighted-code",
         "button",
         "status"
@@ -2258,7 +2262,7 @@
       "title": "Code editor",
       "description": "A CodeMirror 6 editor themed from the tokens and coloured by the highlighter, with line numbers and Python, that prerenders as plain code and leaves Tab unbound.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme", "highlighter"],
+      "registryDependencies": ["utils", "kuiper-theme", "highlighter"],
       "files": [
         {
           "path": "src/lib/registry/ui/code-editor/code-editor.svelte",
@@ -2293,7 +2297,7 @@
       "title": "Highlighter",
       "description": "Code highlighted in Meridian's roles: tree-sitter with this system's own queries for 21 languages, Shiki for the rest and as the fallback, every colour a code token, for the server or the browser.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme"],
+      "registryDependencies": ["utils", "kuiper-theme"],
       "files": [
         {
           "path": "src/lib/registry/lib/highlighter.ts",
@@ -2476,7 +2480,7 @@
       "title": "Use highlighted code",
       "description": "A hook that highlights a changing string line by line as it grows.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme", "highlighter"],
+      "registryDependencies": ["utils", "kuiper-theme", "highlighter"],
       "files": [
         {
           "path": "src/lib/registry/hooks/use-highlighted-code.svelte.ts",
@@ -2502,7 +2506,7 @@
       "title": "Code languages",
       "description": "Any of the highlighter's twenty-six languages for the editor, loaded on demand: a table of ids, aliases and kinds, and loadLanguage.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme", "code-editor"],
+      "registryDependencies": ["utils", "kuiper-theme", "code-editor"],
       "devDependencies": [
         "@codemirror/language-data@^6.5.2",
         "@codemirror/language@^6.13.1",
@@ -2526,7 +2530,7 @@
       "title": "Chart",
       "description": "A figure for layerchart with a name and a table of its data, series coloured by token classes, and a tooltip on the elevation shadow.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme"],
+      "registryDependencies": ["utils", "kuiper-theme"],
       "files": [
         {
           "path": "src/lib/registry/ui/chart/chart-container.svelte",
@@ -2564,7 +2568,7 @@
       "title": "Meter",
       "description": "A measurement within a known range, as the native meter on the muted track with a primary fill, its numbers written beside it.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme"],
+      "registryDependencies": ["utils", "kuiper-theme"],
       "files": [
         {
           "path": "src/lib/registry/ui/meter/meter.svelte",
@@ -2587,7 +2591,7 @@
       "title": "Dropdown menu",
       "description": "A menu opened from a button, on the elevation shadow, moved by the arrow keys, with check and radio items and a shortcut written in words.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme"],
+      "registryDependencies": ["utils", "kuiper-theme"],
       "files": [
         {
           "path": "src/lib/registry/ui/dropdown-menu/dropdown-menu.svelte",
@@ -2677,7 +2681,7 @@
       "title": "Sheet",
       "description": "A modal panel fixed to one edge of the screen, named by its title, behind the scrim, that returns focus when it closes.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme", "button"],
+      "registryDependencies": ["utils", "kuiper-theme", "button"],
       "files": [
         {
           "path": "src/lib/registry/ui/sheet/sheet.svelte",
@@ -2743,7 +2747,7 @@
       "title": "Dialog",
       "description": "A modal window named by its title, behind the scrim, for a task that must finish before the page goes on.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme", "button"],
+      "registryDependencies": ["utils", "kuiper-theme", "button"],
       "files": [
         {
           "path": "src/lib/registry/ui/dialog/dialog.svelte",
@@ -2809,7 +2813,7 @@
       "title": "Breadcrumb",
       "description": "The path to the current page as a list of links, the current page marked and not a link.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme"],
+      "registryDependencies": ["utils", "kuiper-theme"],
       "files": [
         {
           "path": "src/lib/registry/ui/breadcrumb/breadcrumb.svelte",
@@ -2865,7 +2869,7 @@
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
       "registryDependencies": [
         "utils",
-        "pluto-theme",
+        "kuiper-theme",
         "is-mobile",
         "sheet",
         "input",
@@ -2996,7 +3000,7 @@
       "title": "Is mobile",
       "description": "A media-query store that is true below 768 px and false on the server.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme"],
+      "registryDependencies": ["utils", "kuiper-theme"],
       "files": [
         {
           "path": "src/lib/registry/hooks/is-mobile.svelte.ts",
@@ -3022,7 +3026,7 @@
       "title": "Message log",
       "description": "A scroll box named \"Messages\" holding a named log, that follows new content until the reader scrolls away, with a button back to the end.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme", "button"],
+      "registryDependencies": ["utils", "kuiper-theme", "button"],
       "files": [
         {
           "path": "src/lib/registry/ui/message-log/message-log.svelte",
@@ -3049,7 +3053,7 @@
       "title": "Message",
       "description": "One turn of a conversation: a heading that says who, the content as full-width prose or a bubble on the muted inset, and a footer.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme"],
+      "registryDependencies": ["utils", "kuiper-theme"],
       "files": [
         {
           "path": "src/lib/registry/ui/message/message.svelte",
@@ -3099,7 +3103,7 @@
       "title": "Marker",
       "description": "A line in a conversation that is not a turn: a status, a divider, a note.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme"],
+      "registryDependencies": ["utils", "kuiper-theme"],
       "files": [
         {
           "path": "src/lib/registry/ui/marker/marker.svelte",
@@ -3139,7 +3143,7 @@
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
       "registryDependencies": [
         "utils",
-        "pluto-theme",
+        "kuiper-theme",
         "field",
         "input-group",
         "button",
@@ -3169,7 +3173,7 @@
       "title": "Stage",
       "description": "A full-bleed expressive section on the canvas or one of the four colour fields, following the page's theme.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme"],
+      "registryDependencies": ["utils", "kuiper-theme"],
       "files": [
         {
           "path": "src/lib/registry/ui/stage/stage.svelte",
@@ -3194,7 +3198,7 @@
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
       "registryDependencies": [
         "utils",
-        "pluto-theme",
+        "kuiper-theme",
         "code-block",
         "button",
         "status"
@@ -3223,7 +3227,7 @@
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
       "registryDependencies": [
         "utils",
-        "pluto-theme",
+        "kuiper-theme",
         "button",
         "sheet",
         "liquid-glass"
@@ -3252,7 +3256,7 @@
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
       "registryDependencies": [
         "utils",
-        "pluto-theme",
+        "kuiper-theme",
         "button",
         "liquid-glass"
       ],
@@ -3278,7 +3282,7 @@
       "title": "Proof band",
       "description": "Two to four numbers in the proof step, each with what it counts, that count up once when they first come into view.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme", "read-token"],
+      "registryDependencies": ["utils", "kuiper-theme", "read-token"],
       "files": [
         {
           "path": "src/lib/registry/ui/proof-band/proof-band.svelte",
@@ -3303,7 +3307,7 @@
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
       "registryDependencies": [
         "utils",
-        "pluto-theme",
+        "kuiper-theme",
         "tabs",
         "code-block",
         "button",
@@ -3333,7 +3337,7 @@
       "title": "Name strip",
       "description": "A named list of names in mono that wraps, for the bottom of a hero.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme"],
+      "registryDependencies": ["utils", "kuiper-theme"],
       "files": [
         {
           "path": "src/lib/registry/ui/name-strip/name-strip.svelte",
@@ -3356,7 +3360,7 @@
       "title": "Call to action band",
       "description": "A closing section: a heading in the section step, an optional sentence and one or two actions.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme", "button"],
+      "registryDependencies": ["utils", "kuiper-theme", "button"],
       "files": [
         {
           "path": "src/lib/registry/ui/cta-band/cta-band.svelte",
@@ -3379,7 +3383,7 @@
       "title": "Marketing footer",
       "description": "A product site's footer: the logo, groups of links each a named nav, and the build facts the app shell's footer shows.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme"],
+      "registryDependencies": ["utils", "kuiper-theme"],
       "files": [
         {
           "path": "src/lib/registry/ui/marketing-footer/marketing-footer.svelte",
@@ -3402,7 +3406,7 @@
       "title": "Hero",
       "description": "A page's opening: an optional eyebrow, the one heading, a sentence, one call to action, and a feature grid divided by grooves.",
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
-      "registryDependencies": ["utils", "pluto-theme", "button"],
+      "registryDependencies": ["utils", "kuiper-theme", "button"],
       "files": [
         {
           "path": "src/lib/registry/blocks/hero/+page.svelte",
@@ -3431,7 +3435,7 @@
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
       "registryDependencies": [
         "utils",
-        "pluto-theme",
+        "kuiper-theme",
         "card",
         "field",
         "input",
@@ -3464,7 +3468,7 @@
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
       "registryDependencies": [
         "utils",
-        "pluto-theme",
+        "kuiper-theme",
         "card",
         "field",
         "input",
@@ -3502,7 +3506,7 @@
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
       "registryDependencies": [
         "utils",
-        "pluto-theme",
+        "kuiper-theme",
         "empty",
         "button",
         "skeleton",
@@ -3544,7 +3548,7 @@
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
       "registryDependencies": [
         "utils",
-        "pluto-theme",
+        "kuiper-theme",
         "field",
         "input",
         "native-select",
@@ -3583,7 +3587,7 @@
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
       "registryDependencies": [
         "utils",
-        "pluto-theme",
+        "kuiper-theme",
         "four-dot",
         "theme",
         "button",
@@ -3646,7 +3650,7 @@
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
       "registryDependencies": [
         "utils",
-        "pluto-theme",
+        "kuiper-theme",
         "message-log",
         "message",
         "marker",
@@ -3692,7 +3696,7 @@
       "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
       "registryDependencies": [
         "utils",
-        "pluto-theme",
+        "kuiper-theme",
         "stage",
         "stage-card",
         "marketing-bar",
@@ -3716,6 +3720,23 @@
         "since": "0.11.0",
         "group": "blocks",
         "modes": ["expressive"]
+      }
+    },
+    {
+      "name": "pluto-theme",
+      "type": "registry:theme",
+      "title": "Pluto theme (renamed)",
+      "description": "Renamed kuiper-theme in 0.13.0. Installs kuiper-theme. This alias is removed in 0.14.0.",
+      "author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+      "registryDependencies": ["kuiper-theme"],
+      "files": [],
+      "meta": {
+        "since": "0.1.0",
+        "group": "foundation",
+        "deprecated": {
+          "replacement": "kuiper-theme",
+          "removedIn": "0.14.0"
+        }
       }
     }
   ]

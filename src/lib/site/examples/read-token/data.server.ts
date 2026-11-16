@@ -8,7 +8,7 @@ type Theme = {
 };
 
 /**
- * The names `readToken` reads, from the generated `pluto-theme` item: the
+ * The names `readToken` reads, from the generated `kuiper-theme` item: the
  * theme's colours and the custom properties on `:root`. The syntax colours
  * exist for the code slots alone, so they are not listed. No generated list
  * ships with the item.
@@ -17,7 +17,7 @@ export function load() {
   const registry = JSON.parse(
     readFileSync(path.resolve("registry.json"), "utf8"),
   ) as { items: Theme[] };
-  const theme = registry.items.find((i) => i.name === "pluto-theme")!;
+  const theme = registry.items.find((i) => i.name === "kuiper-theme")!;
   const colours = Object.keys(theme.cssVars.light).filter(
     (name) => name !== "radius" && !name.startsWith("syntax-"),
   );

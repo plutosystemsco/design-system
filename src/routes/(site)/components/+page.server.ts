@@ -4,6 +4,6 @@ import type { PageServerLoad } from "./$types";
 
 /** The band's one command, highlighted at prerender. */
 export const load: PageServerLoad = async () => {
-  const code = addCommand("pluto-theme");
+  const code = addCommand("kuiper-theme");
   return { theme: { code, lines: await highlightCode(code, "bash") } };
 };

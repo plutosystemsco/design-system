@@ -4,9 +4,11 @@
  * says "Also called <alias>".
  *
  * An alias names a part this system has, and only that part: never a part
- * it lacks ("toast"), and never another item ("toggle" is Toggle). It does
- * not start a word of another page's title. `search.test.ts` checks the list
- * against a fixture copy, and each path against `SITEMAP`.
+ * it lacks ("toast"), and never another item ("toggle" is Toggle). Or it is
+ * the old name of a renamed item, which leads to the item's new page until
+ * the old name goes (020 decision 10). It does not start a word of another
+ * page's title. `search.test.ts` checks the list against a fixture
+ * copy, and each path against `SITEMAP`.
  */
 export type SearchAlias = { alias: string; path: string };
 
@@ -15,6 +17,8 @@ export const ALIASES: readonly SearchAlias[] = [
   { alias: "popup", path: "/components/popover/" },
   { alias: "loader", path: "/components/spinner/" },
   { alias: "drawer", path: "/components/sheet/" },
+  // 020 decision 10: the theme item's old name, until 0.14.0.
+  { alias: "pluto-theme", path: "/components/kuiper-theme/" },
 ];
 
 /** A page's aliases, in the list's order. */

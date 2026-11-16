@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { highlightCode } from "#lib/registry/lib/highlighter";
 import { componentData } from "#lib/site/component-data.server";
+import { listedItems } from "#lib/site/items";
 import { addCommand, GITHUB_REGISTRY, SITE_REGISTRY } from "#lib/site/site";
 import type { LayoutServerLoad } from "./$types";
 
@@ -28,7 +29,10 @@ export const load: LayoutServerLoad = async ({ route }) => {
     readFileSync(path.resolve("registry.json"), "utf8"),
   ) as { items: RegistryEntry[] };
   const entries: Record<string, RegistryEntry> = {};
-  for (const { name, type, title, description, meta } of registry.items)
+  // 020 decision 3: the landing lists no alias.
+  for (const { name, type, title, description, meta } of listedItems(
+    registry.items,
+  ))
     entries[name] = { name, type, title, description, meta };
   const name = /^\/\(site\)\/components\/([^/]+)$/.exec(route.id ?? "")?.[1];
   const install = name

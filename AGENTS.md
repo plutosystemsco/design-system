@@ -2,7 +2,7 @@
 
 ## What this is
 
-The Kuiper Design System, Pluto Systems' design system, and a public product any team may adopt: tokens, styles and Svelte components, delivered as a shadcn-svelte registry that apps copy source from. Code names (the `pluto` registry, `pluto-theme`, the `pluto:` context keys) stay `pluto` until 0.13.0's rename.
+The Kuiper Design System, Pluto Systems' design system, and a public product any team may adopt: tokens, styles and Svelte components, delivered as a shadcn-svelte registry that apps copy source from. Its code names say Kuiper since 0.13.0's rename (`020`): the `kuiper` registry, `kuiper-theme`, the `kuiper:` context keys, `tokens/kuiper.tokens.json`. The old `pluto` names keep working as aliases until 0.14.0, which removes them; the company, Pluto Systems, and its brand keep their name.
 
 Read `context/constitution.md` first. It governs this file. Then read `context/README.md`, `context/handoff.md` and `context/roadmap.md`.
 

@@ -7,7 +7,7 @@
 	"description": "A hook that highlights a changing string line by line as it grows.",
 	"registryDependencies": [
 		"utils",
-		"pluto-theme",
+		"kuiper-theme",
 		"highlighter"
 	],
 	"meta": {

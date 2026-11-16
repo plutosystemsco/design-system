@@ -7,7 +7,7 @@
 	"description": "A closing section: a heading in the section step, an optional sentence and one or two actions.",
 	"registryDependencies": [
 		"utils",
-		"pluto-theme",
+		"kuiper-theme",
 		"button"
 	],
 	"meta": {

@@ -17,6 +17,7 @@ const rules = loadRules();
 // a row of 002's rule table.
 
 /**
+ * 020 decision 5: 353 files, as theme gains stored.ts.
  * 013 decisions 5 and 16: 352 files, as highlighter grows from 1 file to 29
  * (its 24 query files among them) and code-editor gains its highlighting.
  * "Frost only, no lens" (decisions.md, 2026-11-07): 323 files, as liquid-glass
@@ -29,7 +30,7 @@ const rules = loadRules();
  * 006 decision 13: 300 files, 005's 286 plus the 14 of app-shell (9) and
  * chat (5).
  */
-const FILE_COUNT = 352;
+const FILE_COUNT = 353;
 
 describe("the item files", () => {
   const files = itemFiles();
@@ -526,7 +527,7 @@ describe("L22, expressive volume", () => {
 // 009 decision 9: an installed app has no registry.json; its files take the
 // productive profile, so the smoke tests' lint of an app holds L22.
 test("itemProfiles of a folder with no registry.json is empty, and lintFiles there holds L22", () => {
-  const app = mkdtempSync(path.join(tmpdir(), "pluto-l22-"));
+  const app = mkdtempSync(path.join(tmpdir(), "kuiper-l22-"));
   try {
     writeFileSync(path.join(app, "card.svelte"), '<div class="glass"></div>');
     expect(itemProfiles(app).size).toBe(0);
@@ -565,8 +566,8 @@ describe("L23, the spring outside the dots", () => {
     },
   );
 
-  test.each(SAMPLES)("passes %s in four-dot and in pluto-theme", (text) => {
-    for (const item of ["four-dot", "pluto-theme"])
+  test.each(SAMPLES)("passes %s in four-dot and in kuiper-theme", (text) => {
+    for (const item of ["four-dot", "kuiper-theme"])
       expect(
         lintText(text, "sample.svelte", rules, ["productive"], [item]),
       ).toEqual([]);

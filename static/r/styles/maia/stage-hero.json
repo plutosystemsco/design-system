@@ -7,7 +7,7 @@
 	"description": "A page's first screen on a stage: an eyebrow, the display heading, a sentence and actions on glass, an object on a colour field, and a strip along the bottom.",
 	"registryDependencies": [
 		"utils",
-		"pluto-theme",
+		"kuiper-theme",
 		"button",
 		"liquid-glass"
 	],

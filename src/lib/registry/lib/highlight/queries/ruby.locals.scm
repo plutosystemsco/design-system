@@ -1,6 +1,6 @@
 ; Ruby locals, for tree-sitter-ruby 0.23.1 (node types read from its
 ; src/node-types.json at that version). Captures are locals roles.
-; written for the Pluto design system; not derived from the grammar's own queries.
+; written for the Kuiper Design System; not derived from the grammar's own queries.
 ;
 ; A bare identifier is a method call unless it was assigned, or bound as a
 ; parameter, earlier in its scope. `def`, `class` and `module` bodies see no

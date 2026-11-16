@@ -764,9 +764,9 @@ test.describe("the composition views' theme", () => {
         GROUND[theme],
       );
       const html = await (await request.get(view.path)).text();
-      expect(html.split('localStorage.getItem("pluto-theme")').length - 1).toBe(
-        1,
-      );
+      expect(
+        html.split('localStorage.getItem("kuiper-theme")').length - 1,
+      ).toBe(1);
     });
   }
 });

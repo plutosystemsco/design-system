@@ -160,10 +160,24 @@ describe("018 decision 8: search that finds what was meant", () => {
     expect(Search.search(index, "MODAL")[0]?.alias).toBe("modal");
   });
 
+  // 020 test 18: a renamed item's old name finds its new page.
+  test('"pluto-theme" returns the Kuiper theme page first, with the alias "pluto-theme"', () => {
+    const r = Search.search(index, "pluto-theme");
+    expect(r[0]?.path).toBe("/components/kuiper-theme/");
+    expect(r[0]?.title).toBe("Kuiper theme");
+    expect(r[0]?.alias).toBe("pluto-theme");
+    expect(fixture).toContainEqual({
+      alias: "pluto-theme",
+      path: "/components/kuiper-theme/",
+      title: "Kuiper theme",
+    });
+  });
+
   // 018 checkpoint 2 drops "select": it starts a word of Native select.
-  test("the aliases equal their fixture list of 4", async () => {
+  // 020 adds the old name of the renamed theme item.
+  test("the aliases equal their fixture list of 5", async () => {
     const { ALIASES } = await aliases();
-    expect(fixture).toHaveLength(4);
+    expect(fixture).toHaveLength(5);
     expect(ALIASES.map(({ alias, path }) => ({ alias, path }))).toEqual(
       fixture.map(({ alias, path }) => ({ alias, path })),
     );
@@ -289,7 +303,7 @@ describe("018 review: groups in the order of their best match", () => {
     ["token", ["/foundations/tokens/"]],
     [
       "theme",
-      ["/components/pluto-theme/", "/components/theme/", "/start/theme/"],
+      ["/components/kuiper-theme/", "/components/theme/", "/start/theme/"],
     ],
   ] as const)
     test(`"${q}": the first shown hit is a best match (${want.join(" or ")})`, () => {

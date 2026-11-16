@@ -1,0 +1,410 @@
+{
+  "note": "020 test 1: every /pluto/i left in the tree after the Kuiper rename, by entry. An entry allows each pluto its pattern spans, in files its glob matches; the first entry in this order that allows a match takes it. Each count is pinned: a new pluto fails the test, and so does a lost alias. The four classes: brand (the company, its assets, sample content and brand prose, which never change); history (a frozen record of a past release); alias (keeps an old name working until 0.14.0, and the tests of the aliases); record (names an old name in order to rename, redirect or document it; permanent). static/v0.*/, context/ and this file are not read.",
+  "entries": [
+    {
+      "files": "CHANGELOG.md",
+      "pattern": "[Pp]luto",
+      "section": {
+        "from": "## 0.12.0"
+      },
+      "count": 38,
+      "class": "history",
+      "reason": "The changelog's entries before 0.13.0, as released."
+    },
+    {
+      "files": "CHANGELOG.md",
+      "pattern": "[Pp]luto",
+      "section": {
+        "from": "## 0.13.0",
+        "to": "## 0.12.0"
+      },
+      "count": 21,
+      "class": "record",
+      "reason": "The 0.13.0 entry names each old name it renames (decision 16)."
+    },
+    {
+      "files": "**",
+      "pattern": "Pluto Systems",
+      "count": 312,
+      "class": "brand",
+      "reason": "The company's name (decision 2).",
+      "byFile": {
+        "AGENTS.md": 2,
+        "LICENSE": 1,
+        "README.md": 3,
+        "package.json": 1,
+        "registry.json": 77,
+        "scripts/rename-kuiper.ts": 5,
+        "src/lib/registry/blocks/app-shell/+layout.svelte": 2,
+        "src/lib/registry/blocks/product-home/+page.svelte": 1,
+        "src/lib/registry/components/app-shell-footer.svelte": 3,
+        "src/lib/registry/ui/four-dot/lockup.svelte": 1,
+        "src/lib/site/brand/downloads.ts": 1,
+        "src/lib/site/chrome/footer.svelte": 1,
+        "src/lib/site/examples/four-dot/lockup.svelte": 2,
+        "src/lib/site/examples/kuiper-theme/type.svelte": 1,
+        "src/lib/site/sitemap.ts": 1,
+        "src/lib/site/upgrade/0.13.0.ts": 1,
+        "src/routes/(shell)/view/app-shell/lockup/+page.svelte": 2,
+        "src/routes/(shell)/view/compositions/marketing-bar/+page.svelte": 1,
+        "src/routes/(shell)/view/compositions/marketing-footer/+page.svelte": 1,
+        "src/routes/(site)/+page.svelte": 1,
+        "src/routes/(site)/brand/+page.svelte": 1,
+        "src/routes/(site)/brand/mark/+page.svelte": 1,
+        "src/routes/(site)/brand/products/+page.svelte": 2,
+        "src/routes/(site)/components/app-shell/+page.svelte": 3,
+        "src/routes/(site)/components/four-dot/+page.svelte": 1,
+        "src/routes/(site)/llms.txt/+server.ts": 1,
+        "src/routes/(site)/start/your-product/+page.svelte": 1,
+        "static/r/styles/maia/accordion.json": 1,
+        "static/r/styles/maia/alert-dialog.json": 1,
+        "static/r/styles/maia/alert.json": 1,
+        "static/r/styles/maia/app-shell.json": 6,
+        "static/r/styles/maia/avatar.json": 1,
+        "static/r/styles/maia/badge.json": 1,
+        "static/r/styles/maia/breadcrumb.json": 1,
+        "static/r/styles/maia/button.json": 1,
+        "static/r/styles/maia/card.json": 1,
+        "static/r/styles/maia/chart.json": 1,
+        "static/r/styles/maia/chat.json": 1,
+        "static/r/styles/maia/checkbox.json": 1,
+        "static/r/styles/maia/code-block.json": 1,
+        "static/r/styles/maia/code-editor.json": 1,
+        "static/r/styles/maia/code-languages.json": 1,
+        "static/r/styles/maia/collapsible.json": 1,
+        "static/r/styles/maia/composer.json": 1,
+        "static/r/styles/maia/cta-band.json": 1,
+        "static/r/styles/maia/dialog.json": 1,
+        "static/r/styles/maia/dropdown-menu.json": 1,
+        "static/r/styles/maia/empty.json": 1,
+        "static/r/styles/maia/error-summary.json": 1,
+        "static/r/styles/maia/field.json": 1,
+        "static/r/styles/maia/font-geist.json": 1,
+        "static/r/styles/maia/font-heading-ibm-plex-sans.json": 1,
+        "static/r/styles/maia/font-jetbrains-mono.json": 1,
+        "static/r/styles/maia/four-dot.json": 3,
+        "static/r/styles/maia/hero.json": 1,
+        "static/r/styles/maia/highlighter.json": 1,
+        "static/r/styles/maia/index.json": 77,
+        "static/r/styles/maia/input-group.json": 1,
+        "static/r/styles/maia/input-otp.json": 1,
+        "static/r/styles/maia/input.json": 1,
+        "static/r/styles/maia/is-mobile.json": 1,
+        "static/r/styles/maia/item.json": 1,
+        "static/r/styles/maia/kbd.json": 1,
+        "static/r/styles/maia/kuiper-theme.json": 1,
+        "static/r/styles/maia/label.json": 1,
+        "static/r/styles/maia/liquid-glass.json": 1,
+        "static/r/styles/maia/live-console.json": 1,
+        "static/r/styles/maia/marker.json": 1,
+        "static/r/styles/maia/marketing-bar.json": 1,
+        "static/r/styles/maia/marketing-footer.json": 1,
+        "static/r/styles/maia/message-log.json": 1,
+        "static/r/styles/maia/message.json": 1,
+        "static/r/styles/maia/meter.json": 1,
+        "static/r/styles/maia/name-strip.json": 1,
+        "static/r/styles/maia/native-select.json": 1,
+        "static/r/styles/maia/page-states.json": 1,
+        "static/r/styles/maia/pluto-theme.json": 1,
+        "static/r/styles/maia/popover.json": 1,
+        "static/r/styles/maia/product-home.json": 2,
+        "static/r/styles/maia/proof-band.json": 1,
+        "static/r/styles/maia/radio-group.json": 1,
+        "static/r/styles/maia/read-token.json": 1,
+        "static/r/styles/maia/separator.json": 1,
+        "static/r/styles/maia/settings.json": 1,
+        "static/r/styles/maia/sheet.json": 1,
+        "static/r/styles/maia/sidebar.json": 1,
+        "static/r/styles/maia/sign-in.json": 1,
+        "static/r/styles/maia/sign-up.json": 1,
+        "static/r/styles/maia/skeleton.json": 1,
+        "static/r/styles/maia/spinner.json": 1,
+        "static/r/styles/maia/stage-card.json": 1,
+        "static/r/styles/maia/stage-hero.json": 1,
+        "static/r/styles/maia/stage.json": 1,
+        "static/r/styles/maia/status.json": 1,
+        "static/r/styles/maia/switch.json": 1,
+        "static/r/styles/maia/table.json": 1,
+        "static/r/styles/maia/tabs.json": 1,
+        "static/r/styles/maia/textarea.json": 1,
+        "static/r/styles/maia/theme.json": 1,
+        "static/r/styles/maia/toggle-group.json": 1,
+        "static/r/styles/maia/toggle.json": 1,
+        "static/r/styles/maia/tooltip.json": 1,
+        "static/r/styles/maia/use-highlighted-code.json": 1,
+        "static/r/styles/maia/utils.json": 1,
+        "tests/e2e/compositions.spec.ts": 1,
+        "tests/e2e/four-dot.spec.ts": 4,
+        "tests/e2e/identity.spec.ts": 9,
+        "tests/e2e/pages.ts": 3,
+        "tests/e2e/site.spec.ts": 2,
+        "tests/fixtures/highlight/specimens.ts": 1,
+        "tests/smoke/registry-add.test.ts": 1,
+        "tests/unit/blocks.test.ts": 8,
+        "tests/unit/brand-assets.test.ts": 1,
+        "tests/unit/registry.test.ts": 1,
+        "tests/unit/rename.test.ts": 2
+      }
+    },
+    {
+      "files": "**",
+      "pattern": "plutosystemsco",
+      "count": 249,
+      "class": "brand",
+      "reason": "The company's GitHub organisation, in every source and install URL."
+    },
+    {
+      "files": "**",
+      "pattern": "pluto-systems-design",
+      "count": 9,
+      "class": "brand",
+      "reason": "The worker's name and the site's address, by ruling (decision 2)."
+    },
+    {
+      "files": "**",
+      "pattern": "\\bplutosystems\\b",
+      "count": 6,
+      "class": "brand",
+      "reason": "Sample content: the company's package and namespace names in code samples."
+    },
+    {
+      "files": "**",
+      "pattern": "pluto-sandbox",
+      "count": 10,
+      "class": "brand",
+      "reason": "Sample content: the example project's name."
+    },
+    {
+      "files": "**",
+      "pattern": "pluto-(mark|lockup)-(colour|paper|ink)\\.svg|pluto-\\$\\{kind\\}",
+      "count": 9,
+      "class": "brand",
+      "reason": "The brand downloads, the mark and the lockup (decision 2)."
+    },
+    {
+      "files": "**",
+      "pattern": "pluto, (\\$\\{(SITE_NAME|NAME)\\}|Kuiper Design System)",
+      "count": 5,
+      "class": "brand",
+      "reason": "The bar's lockup label, \"pluto, Kuiper Design System\", until the owner approves a Kuiper lockup (018's ruling)."
+    },
+    {
+      "files": "{src/lib/registry/ui/four-dot/lockup.svelte,static/r/styles/maia/four-dot.json,scripts/site/lockup-width.ts,src/lib/site/brand/downloads.ts,tests/fixtures/markdown/12-hidden.html}",
+      "pattern": "pluto<FourDot|<span>pluto</span>|\"pluto\"|layout\\(\"pluto\"\\)|>pluto<",
+      "count": 7,
+      "class": "brand",
+      "reason": "The lockup word \"pluto\" (decision 2)."
+    },
+    {
+      "files": "**",
+      "pattern": "Pluto (Docs|Sheets)|\"Pluto Docs\"",
+      "count": 4,
+      "class": "brand",
+      "reason": "The company's product names (decision 2)."
+    },
+    {
+      "files": "{src/lib/site/sitemap.ts,src/lib/site/doors.ts,src/routes/(site)/brand/**}",
+      "pattern": "Pluto",
+      "count": 11,
+      "class": "brand",
+      "reason": "The Brand door's prose: how Pluto looks, moves, writes and names its products (decision 11, the owner's answer to Q2)."
+    },
+    {
+      "files": "{src/routes/(site)/start/your-product/+page.svelte,src/routes/(site)/components/app-shell/+page.svelte}",
+      "pattern": "Pluto( lockup|\\b)",
+      "count": 2,
+      "class": "brand",
+      "reason": "Brand prose: the Pluto lockup an endorsed product carries, and a sample sentence about the company."
+    },
+    {
+      "files": "{src/lib/registry/blocks/product-home/+page.svelte,src/routes/(shell)/view/compositions/stage-hero/**,static/r/styles/maia/product-home.json}",
+      "pattern": "pluto workspace",
+      "count": 4,
+      "class": "brand",
+      "reason": "Sample content: a product's eyebrow."
+    },
+    {
+      "files": "{src/lib/site/examples/sidebar/*.svelte,src/routes/(site)/foundations/type/+page.svelte,tests/e2e/specimens.spec.ts}",
+      "pattern": ">Pluto<|\"Pluto\"",
+      "count": 6,
+      "class": "brand",
+      "reason": "Sample content: the company's name as a sidebar's product name and as the display specimen."
+    },
+    {
+      "files": "tests/fixtures/highlight/**",
+      "pattern": "Pluto\\.Ground|systems\\.pluto\\.mission|pluto|Pluto",
+      "count": 8,
+      "class": "brand",
+      "reason": "Sample content in the highlight specimens: a planet named Pluto, the company's namespaces."
+    },
+    {
+      "files": "tests/unit/fixtures/**",
+      "pattern": "pluto-",
+      "count": 2,
+      "class": "history",
+      "reason": "v0.8.0's recorded custom properties, as released (decision 2)."
+    },
+    {
+      "files": "tests/unit/registry-comments.test.ts",
+      "pattern": "\"`pluto-theme`\"|\"`pluto:`\"",
+      "count": 2,
+      "class": "history",
+      "reason": "The guard that the 0.12.0 changelog paragraph said code names wait for 0.13.0 (decision 2)."
+    },
+    {
+      "files": "tests/smoke/code-add.test.ts",
+      "pattern": "\"pluto-theme\"|0\\.11\\.0's name",
+      "count": 1,
+      "class": "history",
+      "reason": "code-add's upgrade case installs from v0.11.0, where the theme was pluto-theme."
+    },
+    {
+      "files": "tests/e2e/theme.spec.ts",
+      "pattern": "pluto-preview-theme",
+      "count": 1,
+      "class": "history",
+      "reason": "The guard that app.html holds no 0.4.0-era preview script (decision 2)."
+    },
+    {
+      "files": "{registry.json,static/r/styles/maia/index.json,static/r/styles/maia/pluto-theme.json}",
+      "pattern": "\"(name|title|relativeUrl)\": \"(pluto-theme|Pluto theme \\(renamed\\)|pluto-theme\\.json)\"",
+      "count": 7,
+      "class": "alias",
+      "reason": "The pluto-theme alias entry, which installs kuiper-theme until 0.14.0 (decision 3)."
+    },
+    {
+      "files": "static/r/styles/maia/pluto-theme.json",
+      "in": "path",
+      "pattern": "pluto-theme\\.json",
+      "count": 1,
+      "class": "alias",
+      "reason": "The alias entry's built file, which the CLI resolves until 0.14.0 (decision 3)."
+    },
+    {
+      "files": "{src/lib/registry/ui/**,static/r/styles/maia/*.json}",
+      "pattern": "pluto:(field-set|field-label|field|tooltip|item-group|popover|accordion-item)\\b",
+      "count": 30,
+      "class": "alias",
+      "reason": "The old context keys, set and read beside the new until 0.14.0 (decision 4)."
+    },
+    {
+      "files": "{src/lib/registry/ui/theme/**,static/r/styles/maia/theme.json}",
+      "pattern": "pluto-theme",
+      "count": 10,
+      "class": "alias",
+      "reason": "The old storage key, carried over once and removed, until 0.14.0 (decision 5)."
+    },
+    {
+      "files": "src/lib/site/search/aliases.ts",
+      "pattern": "pluto-theme",
+      "count": 1,
+      "class": "alias",
+      "reason": "The search alias for the renamed item, until 0.14.0 (decision 10)."
+    },
+    {
+      "files": "{src/lib/site/test-views/field-keys/**,src/routes/(view)/view/field-keys/**,tests/e2e/field-keys.spec.ts}",
+      "pattern": "pluto",
+      "count": 14,
+      "class": "alias",
+      "reason": "The field-keys test view and its tests: old keys meeting new items, until 0.14.0 (tests 7 and 8)."
+    },
+    {
+      "files": "scripts/rename-kuiper.ts",
+      "pattern": "pluto|Pluto|PLUTO",
+      "count": 84,
+      "class": "alias",
+      "reason": "The rename script's rules and guards; it goes in 0.14.0 with the aliases (decision 9)."
+    },
+    {
+      "files": "{tests/unit/theme-stored.test.ts,tests/smoke/upgrade.test.ts}",
+      "pattern": "pluto",
+      "count": 27,
+      "class": "alias",
+      "reason": "The tests of the aliases: the storage carry-over, and the upgrade from v0.11.0 (tests 10 to 13); they change in 0.14.0."
+    },
+    {
+      "files": "tests/e2e/theme.spec.ts",
+      "pattern": "pluto-theme|pluto/gi|only pluto",
+      "count": 13,
+      "class": "alias",
+      "reason": "Test 9: the head script carries the old key over, until 0.14.0."
+    },
+    {
+      "files": "tests/unit/registry.test.ts",
+      "section": {
+        "from": "describe(\"020 test 4"
+      },
+      "pattern": "pluto-theme|pluto- keyframe|pluto-(enter|exit|mark-dock|mark-fade)|pluto:field-label|/pluto/i",
+      "count": 21,
+      "class": "alias",
+      "reason": "Tests 4 and 5 hold the alias entry until 0.14.0; test 16 reads the changelog's record of the old names."
+    },
+    {
+      "files": "tests/unit/registry.test.ts",
+      "section": {
+        "from": "describe(\"020 test 3",
+        "to": "describe(\"020 test 4"
+      },
+      "pattern": "pluto-theme",
+      "count": 2,
+      "class": "record",
+      "reason": "Test 3: no item names the old theme."
+    },
+    {
+      "files": "tests/unit/registry.test.ts",
+      "pattern": "pluto-theme",
+      "count": 25,
+      "class": "history",
+      "reason": "The tests that read the changelog's entries before 0.13.0, which name the theme pluto-theme, as released."
+    },
+    {
+      "files": "tests/unit/rename.test.ts",
+      "pattern": "pluto|Pluto",
+      "count": 35,
+      "class": "record",
+      "reason": "Tests 1 and 2: the stray-name check, the rename table's old names, and the popover's old key (test 8)."
+    },
+    {
+      "files": "tests/unit/generated.test.ts",
+      "pattern": "pluto-",
+      "count": 6,
+      "class": "record",
+      "reason": "Test 6: no pluto- keyframe is left."
+    },
+    {
+      "files": "{src/lib/site/upgrade/**,src/routes/(site)/changelog/0.13.0/**}",
+      "pattern": "pluto|Pluto",
+      "count": 28,
+      "class": "record",
+      "reason": "The rename table's old column and the Upgrade to 0.13.0 guide, which name every old name (decisions 1 and 12)."
+    },
+    {
+      "files": "{src/lib/site/redirects.ts,static/_redirects,tests/unit/redirects.test.ts,tests/e2e/redirects.spec.ts}",
+      "pattern": "pluto-theme",
+      "count": 36,
+      "class": "record",
+      "reason": "The permanent redirects from the old theme page's addresses, and their tests (decision 10)."
+    },
+    {
+      "files": "{tests/e2e/upgrade.spec.ts,tests/unit/search.test.ts,tests/fixtures/search-aliases.json}",
+      "pattern": "[Pp]luto",
+      "count": 19,
+      "class": "record",
+      "reason": "Tests 17 and 18: the guide names the old names, and the old name finds the new page."
+    },
+    {
+      "files": "scripts/bench/kuiper.ts",
+      "pattern": "tokens/pluto\\.tokens\\.json",
+      "count": 1,
+      "class": "record",
+      "reason": "The bench reads the old token path at a commit that has no new one, so older commits still score (decision 13)."
+    },
+    {
+      "files": "{AGENTS.md,README.md,src/lib/site/start/**,src/routes/(site)/start/install/**}",
+      "pattern": "pluto|Pluto",
+      "count": 1,
+      "class": "record",
+      "reason": "The living documents and the install guide state the rename and point to the upgrade guide (decision 14)."
+    }
+  ]
+}

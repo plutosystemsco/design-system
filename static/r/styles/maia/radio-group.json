@@ -11,7 +11,7 @@
 	],
 	"registryDependencies": [
 		"utils",
-		"pluto-theme"
+		"kuiper-theme"
 	],
 	"meta": {
 		"since": "0.2.0",
@@ -34,7 +34,7 @@
 			"target": "radio-group/radio-group-item.svelte"
 		},
 		{
-			"content": "<script lang=\"ts\">\n  import { RadioGroup as RadioGroupPrimitive } from \"bits-ui\";\n  import { getContext } from \"svelte\";\n  import { cn } from \"$UTILS$\";\n\n  /** The contract a `FieldSet` sets under the key \"pluto:field-set\". */\n  type FieldSetContext = {\n    readonly id: string;\n    readonly invalid: boolean;\n    readonly describedBy: string | undefined;\n    readonly legend: string | undefined;\n  };\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    value = $bindable(\"\"),\n    id,\n    \"aria-describedby\": describedBy,\n    \"aria-invalid\": invalid,\n    \"aria-labelledby\": labelledBy,\n    ...restProps\n  }: RadioGroupPrimitive.RootProps = $props();\n\n  // A radio group is a group control: it takes its set's wiring and its legend's name.\n  const field = getContext<FieldSetContext | undefined>(\"pluto:field-set\");\n</script>\n\n<RadioGroupPrimitive.Root\n  bind:ref\n  bind:value\n  data-slot=\"radio-group\"\n  class={cn(\"group/radio-group grid w-full gap-3\", className)}\n  id={id ?? field?.id}\n  aria-describedby={describedBy ?? field?.describedBy}\n  aria-invalid={invalid ?? (field?.invalid ? true : undefined)}\n  aria-labelledby={labelledBy ?? field?.legend}\n  {...restProps}\n/>\n",
+			"content": "<script lang=\"ts\">\n  import { RadioGroup as RadioGroupPrimitive } from \"bits-ui\";\n  import { getContext } from \"svelte\";\n  import { cn } from \"$UTILS$\";\n\n  /** The contract a `FieldSet` sets under the key \"kuiper:field-set\". */\n  type FieldSetContext = {\n    readonly id: string;\n    readonly invalid: boolean;\n    readonly describedBy: string | undefined;\n    readonly legend: string | undefined;\n  };\n\n  let {\n    ref = $bindable(null),\n    class: className,\n    value = $bindable(\"\"),\n    id,\n    \"aria-describedby\": describedBy,\n    \"aria-invalid\": invalid,\n    \"aria-labelledby\": labelledBy,\n    ...restProps\n  }: RadioGroupPrimitive.RootProps = $props();\n\n  // A radio group is a group control: it takes its set's wiring and its legend's name.\n  // A field set from before 0.13.0 sets only its old key, read until 0.14.0.\n  const field =\n    getContext<FieldSetContext | undefined>(\"kuiper:field-set\") ??\n    getContext<FieldSetContext | undefined>(\"pluto:field-set\");\n</script>\n\n<RadioGroupPrimitive.Root\n  bind:ref\n  bind:value\n  data-slot=\"radio-group\"\n  class={cn(\"group/radio-group grid w-full gap-3\", className)}\n  id={id ?? field?.id}\n  aria-describedby={describedBy ?? field?.describedBy}\n  aria-invalid={invalid ?? (field?.invalid ? true : undefined)}\n  aria-labelledby={labelledBy ?? field?.legend}\n  {...restProps}\n/>\n",
 			"type": "registry:ui",
 			"target": "radio-group/radio-group.svelte"
 		},

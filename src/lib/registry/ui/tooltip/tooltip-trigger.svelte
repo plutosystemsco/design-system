@@ -13,7 +13,7 @@
 
   const keyboard = getContext<
     { trigger: HTMLElement | null; dismissed: boolean } | undefined
-  >("pluto:tooltip");
+  >("kuiper:tooltip");
 
   $effect(() => {
     if (keyboard) keyboard.trigger = ref;

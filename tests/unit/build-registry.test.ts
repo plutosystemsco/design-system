@@ -28,7 +28,7 @@ describe("packageName", () => {
 
 describe("dropShadowedDevDependencies", () => {
   test("drops a devDependency the item names as a dependency, bare or versioned, and keeps the rest and the file's form", () => {
-    const dir = mkdtempSync(path.join(tmpdir(), "pluto-shadowed-"));
+    const dir = mkdtempSync(path.join(tmpdir(), "kuiper-shadowed-"));
     try {
       const item = {
         name: "x",

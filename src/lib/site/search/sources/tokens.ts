@@ -4,7 +4,7 @@
  * name and summarised with its job.
  */
 import type { Tokens } from "../../../../../scripts/tokens.ts";
-import raw from "../../../../../tokens/pluto.tokens.json";
+import raw from "../../../../../tokens/kuiper.tokens.json";
 import { tokenRows } from "../../foundations/tables.ts";
 import type { SearchEntry } from "../types.ts";
 

@@ -1,7 +1,7 @@
 ; JavaScript, for tree-sitter-javascript 0.25.0 (node types read from its
-; src/node-types.json at that version). Captures are Pluto code roles. JSX
+; src/node-types.json at that version). Captures are Kuiper code roles. JSX
 ; tags and attributes are painted by jsx.scm, which loads after this file.
-; written for the Pluto design system; not derived from the grammar's own queries.
+; written for the Kuiper Design System; not derived from the grammar's own queries.
 
 ; Order matters: for one node the last pattern that captures it wins, so the
 ; broad rules for a bare name come first and the rules for a position follow.

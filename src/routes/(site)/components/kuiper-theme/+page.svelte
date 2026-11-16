@@ -1,27 +1,27 @@
 <script lang="ts">
-  import * as code from "#lib/site/examples/pluto-theme/code.svelte";
-  import * as colours from "#lib/site/examples/pluto-theme/colours.svelte";
-  import * as contrast from "#lib/site/examples/pluto-theme/contrast.svelte";
-  import * as display from "#lib/site/examples/pluto-theme/display.svelte";
-  import * as elevation from "#lib/site/examples/pluto-theme/elevation.svelte";
-  import * as expressiveMotion from "#lib/site/examples/pluto-theme/expressive-motion.svelte";
-  import * as fields from "#lib/site/examples/pluto-theme/fields.svelte";
-  import * as glass from "#lib/site/examples/pluto-theme/glass.svelte";
-  import * as groove from "#lib/site/examples/pluto-theme/groove.svelte";
-  import * as inlineCode from "#lib/site/examples/pluto-theme/inline-code.svelte";
-  import * as measured from "#lib/site/examples/pluto-theme/measured.svelte";
-  import * as modes from "#lib/site/examples/pluto-theme/modes.svelte";
-  import * as motion from "#lib/site/examples/pluto-theme/motion.svelte";
-  import * as radius from "#lib/site/examples/pluto-theme/radius.svelte";
-  import * as spacing from "#lib/site/examples/pluto-theme/spacing.svelte";
-  import * as spring from "#lib/site/examples/pluto-theme/spring.svelte";
-  import * as surface from "#lib/site/examples/pluto-theme/surface.svelte";
-  import * as type from "#lib/site/examples/pluto-theme/type.svelte";
+  import * as code from "#lib/site/examples/kuiper-theme/code.svelte";
+  import * as colours from "#lib/site/examples/kuiper-theme/colours.svelte";
+  import * as contrast from "#lib/site/examples/kuiper-theme/contrast.svelte";
+  import * as display from "#lib/site/examples/kuiper-theme/display.svelte";
+  import * as elevation from "#lib/site/examples/kuiper-theme/elevation.svelte";
+  import * as expressiveMotion from "#lib/site/examples/kuiper-theme/expressive-motion.svelte";
+  import * as fields from "#lib/site/examples/kuiper-theme/fields.svelte";
+  import * as glass from "#lib/site/examples/kuiper-theme/glass.svelte";
+  import * as groove from "#lib/site/examples/kuiper-theme/groove.svelte";
+  import * as inlineCode from "#lib/site/examples/kuiper-theme/inline-code.svelte";
+  import * as measured from "#lib/site/examples/kuiper-theme/measured.svelte";
+  import * as modes from "#lib/site/examples/kuiper-theme/modes.svelte";
+  import * as motion from "#lib/site/examples/kuiper-theme/motion.svelte";
+  import * as radius from "#lib/site/examples/kuiper-theme/radius.svelte";
+  import * as spacing from "#lib/site/examples/kuiper-theme/spacing.svelte";
+  import * as spring from "#lib/site/examples/kuiper-theme/spring.svelte";
+  import * as surface from "#lib/site/examples/kuiper-theme/surface.svelte";
+  import * as type from "#lib/site/examples/kuiper-theme/type.svelte";
   import Component from "#lib/site/page/component.svelte";
 </script>
 
 <Component
-  name="pluto-theme"
+  name="kuiper-theme"
   examples={{
     colours,
     contrast,

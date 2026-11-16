@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "pluto-smoke-kit3",
+      "name": "kuiper-smoke-kit3",
       "devDependencies": {
         "@sveltejs/adapter-static": "4.0.0",
         "@sveltejs/kit": "3.1.0",

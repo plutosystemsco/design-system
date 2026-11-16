@@ -32,7 +32,7 @@ import {
 } from "./process.ts";
 
 const REPO = process.cwd();
-const scratch = mkdtempSync(path.join(tmpdir(), "pluto-smoke-compositions-"));
+const scratch = mkdtempSync(path.join(tmpdir(), "kuiper-smoke-compositions-"));
 const port = freePort();
 let server: ReturnType<typeof startDevServer> | undefined;
 

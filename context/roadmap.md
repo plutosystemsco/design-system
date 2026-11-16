@@ -88,6 +88,7 @@ Not a spec: **the Kuiper lockup mock-ups.** Drawn and put to the owner on 2026-1
 
 | Spec | Scope | Lanes | Depends on | Moves |
 |---|---|---|---|---|
+| `032a` the aliases go | 0.14.0's first landing, a small change (`020` decision 15): remove the `pluto-theme` entry, the old context keys, `OLD_THEME_KEY` and its carry-over, the search alias, the `/view/field-keys/` test view and its line in `blocks.test.ts`'s view guard, and `scripts/rename-kuiper.ts`. The redirects stay. The 0.14.0 guide, at `/changelog/0.14.0/upgrade/`, lists the removals | all (small) | the `v0.13.0` tag | 14: held |
 | `032` the page standard platform | Guidance modules under `src/lib/site/guidance/`; live pairs with inert don'ts; anatomy on slots; keyboard data and its driver; "Test it" and "Your part"; a `source` field per entry; the voice checks that can be counted, as tests | S | `030` | — (machinery) |
 | `033` the pilot | Guidance for `button`, `dialog`, `field`, `dropdown-menu`, `error-summary` | site guidance and examples | `032` | 2: 3 → 4 |
 | `034` the part first | The frame's title and scheme switch on one row; the stage above y = 500 at 1440 | S (frames) | `032` | 7: 2 → 3 |

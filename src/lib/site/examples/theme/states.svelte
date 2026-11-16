@@ -38,7 +38,7 @@
   </DropdownMenu.Root>
   <p class="max-w-prose text-sm text-muted-foreground">
     Preference <code>{theme.preference}</code>, in force
-    <code>{theme.resolved}</code>. The key is <code>pluto-theme</code>: written
+    <code>{theme.resolved}</code>. The key is <code>kuiper-theme</code>: written
     on a choice, removed for system. A change in another tab is followed through
     the storage event.
   </p>

@@ -11,7 +11,7 @@
 	],
 	"registryDependencies": [
 		"utils",
-		"pluto-theme",
+		"kuiper-theme",
 		"button"
 	],
 	"meta": {

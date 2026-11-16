@@ -6,7 +6,7 @@
  *   bun scripts/bench/breadth.ts [--only carbon,primer] [--rev HEAD] [--json <file>]
  *
  * References: the component links on each system's index page, rendered.
- * Pluto: the registry items of type `registry:ui` and `registry:block` in
+ * Kuiper: the registry items of type `registry:ui` and `registry:block` in
  * `registry.json` at `--rev` (default: the working tree).
  * Slug matching is by pattern, so read the "missing" list before scoring.
  * Not part of `bun run test`.
@@ -41,7 +41,7 @@ const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
 for (const t of TARGETS) {
   if (only && !only.includes(t.id)) continue;
   let slugs: string[] = [];
-  if (t.id === "pluto") {
+  if (t.id === "kuiper") {
     const reg = registryAt(opt.rev);
     slugs = reg.items
       .filter(

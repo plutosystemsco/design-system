@@ -15,7 +15,7 @@
 	],
 	"registryDependencies": [
 		"utils",
-		"pluto-theme",
+		"kuiper-theme",
 		"highlighter"
 	],
 	"meta": {

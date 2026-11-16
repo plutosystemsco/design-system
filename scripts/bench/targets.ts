@@ -6,12 +6,12 @@
  * The reference sites move their pages. When a URL 404s or a selector finds
  * nothing, fix it here, note the date in the scorecard's run log, and re-run.
  *
- * `PLUTO` is the placeholder origin for this repository's own site. The
+ * `KUIPER` is the placeholder origin for this repository's own site. The
  * scripts swap it for a static server over `build/` (gzipped, as the perf
- * suite serves it), so Pluto is measured as built, not as the dev server.
+ * suite serves it), so Kuiper is measured as built, not as the dev server.
  */
 
-export const PLUTO = "pluto:";
+export const KUIPER = "kuiper:";
 
 export type Target = {
   /** Short id, used in output rows. */
@@ -34,12 +34,12 @@ export type Target = {
   index: { url: string; slug: RegExp; drop?: RegExp } | null;
 };
 
-const p = (path: string) => PLUTO + path;
+const p = (path: string) => KUIPER + path;
 
 export const TARGETS: Target[] = [
   {
-    id: "pluto",
-    name: "Pluto 0.12 (Kuiper)",
+    id: "kuiper",
+    name: "Kuiper 0.13",
     button: p("/components/button/"),
     example: '[data-slot="frame-stage"]',
     depth: {

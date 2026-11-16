@@ -14,7 +14,7 @@ export function GET() {
   const changelog = sitePage("/changelog/")!;
   const parts = [
     `# ${SITE_NAME}`,
-    `> The tokens, components and brand behind every Pluto Systems product, delivered as a shadcn-svelte registry: an app copies the source in and owns it. Install with \`${addCommand("pluto-theme")}\`. Start at [the home page](${twin(home)}).`,
+    `> The tokens, components and brand behind every Pluto Systems product, delivered as a shadcn-svelte registry: an app copies the source in and owns it. Install with \`${addCommand("kuiper-theme")}\`. Start at [the home page](${twin(home)}).`,
     ...DOORS.map(
       (d) =>
         `## ${d.name}\n\n` +
@@ -27,7 +27,12 @@ export function GET() {
       `- [This release's registry](${SITE_ORIGIN}/v${VERSION}/r/styles/maia/index.json): every item at ${VERSION}, the path an app installs from.`,
       `- [The latest registry](${SITE_ORIGIN}/r/styles/maia/index.json): the newest build of every item.`,
     ].join("\n"),
-    ["## Optional", line(changelog)].join("\n\n"),
+    [
+      "## Optional",
+      [changelog, ...SITEMAP.filter((p) => p.parent === "/changelog/")]
+        .map(line)
+        .join("\n"),
+    ].join("\n\n"),
   ];
   return new Response(parts.join("\n\n") + "\n", {
     headers: { "content-type": "text/markdown; charset=utf-8" },

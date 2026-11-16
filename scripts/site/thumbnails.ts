@@ -23,6 +23,7 @@ import {
 import path from "node:path";
 import { chromium } from "@playwright/test";
 import { firstStage, THUMB_STATE } from "../../src/lib/site/example-order.ts";
+import { isListed } from "../../src/lib/site/items.ts";
 import { MANIFEST, THUMBNAILS, thumbnailHash } from "./thumbnail-hash.ts";
 
 const ROOT = path.resolve(import.meta.dir, "../..");
@@ -34,9 +35,10 @@ const only = process.argv.slice(2).filter((a) => !a.startsWith("--"));
 if (process.argv.includes("--hash-only")) {
   const reg = JSON.parse(
     readFileSync(path.join(ROOT, "registry.json"), "utf8"),
-  ) as { items: { name: string }[] };
+  ) as { items: { name: string; meta?: { deprecated?: unknown } }[] };
   const m = Object.fromEntries(
     reg.items
+      .filter(isListed)
       .map((i) => [i.name, thumbnailHash(ROOT, i.name)])
       .sort(([a], [b]) => a.localeCompare(b)),
   );
@@ -74,6 +76,7 @@ const registry = JSON.parse(
   items: { name: string }[];
 };
 const names = registry.items
+  .filter(isListed)
   .map((i) => i.name)
   .filter((n) => !only.length || only.includes(n));
 mkdirSync(path.join(ROOT, THUMBNAILS), { recursive: true });

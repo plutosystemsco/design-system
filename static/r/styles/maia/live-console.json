@@ -7,7 +7,7 @@
 	"description": "A working console shown on a stage: example commands in tabs, a Run button, meters that fill to the result, and its lines.",
 	"registryDependencies": [
 		"utils",
-		"pluto-theme",
+		"kuiper-theme",
 		"tabs",
 		"code-block",
 		"button",

@@ -13,8 +13,12 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { registryItemSchema, registrySchema } from "shadcn-svelte/schema";
 import { buildRegistry } from "../../scripts/build-registry.ts";
+import { listedItems } from "../../src/lib/site/items.ts";
 
-const registry = JSON.parse(readFileSync("registry.json", "utf8"));
+// 020 decision 3: the tests below read the listed items, the 75 a person
+// meets; the alias entry is read whole in 020's own tests, at the end.
+const registryRaw = JSON.parse(readFileSync("registry.json", "utf8"));
+const registry = { ...registryRaw, items: listedItems(registryRaw.items) };
 const version = JSON.parse(readFileSync("package.json", "utf8"))
   .version as string;
 
@@ -24,7 +28,7 @@ const CLI_VERSION = JSON.parse(
 
 /** 001 decision 19's six. */
 const ITEMS_001: [string, string][] = [
-  ["pluto-theme", "registry:theme"],
+  ["kuiper-theme", "registry:theme"],
   ["font-geist", "registry:font"],
   ["font-heading-ibm-plex-sans", "registry:font"],
   ["font-jetbrains-mono", "registry:font"],
@@ -463,7 +467,7 @@ describe("registry.json", () => {
         "font-geist",
         "font-heading-ibm-plex-sans",
         "font-jetbrains-mono",
-        "pluto-theme",
+        "kuiper-theme",
         "utils",
         "spinner",
         "separator",
@@ -563,7 +567,7 @@ describe("registry.json", () => {
   test("every item carries meta.modes as 009 decision 9 and 010 decision 1 assign", () => {
     const BOTH = ["productive", "expressive"];
     const AGNOSTIC = [
-      "pluto-theme",
+      "kuiper-theme",
       "font-geist",
       "font-heading-ibm-plex-sans",
       "font-jetbrains-mono",
@@ -679,7 +683,7 @@ describe("registry.json", () => {
       expect(item.meta?.group).toBe(GROUP_OF.get(name)!);
       expect(item.registryDependencies.slice(0, 2)).toEqual([
         "utils",
-        "pluto-theme",
+        "kuiper-theme",
       ]);
       if (!STOCK_005.includes(name)) {
         expect(item.meta?.stock).toBeUndefined();
@@ -731,7 +735,7 @@ describe("registry.json", () => {
     }
   });
 
-  test("2 of 2 006 blocks carry meta.since 0.6.0, 006 decision 3's titles, the blocks group, no meta.stock, and utils then pluto-theme first", () => {
+  test("2 of 2 006 blocks carry meta.since 0.6.0, 006 decision 3's titles, the blocks group, no meta.stock, and utils then kuiper-theme first", () => {
     const byName = new Map(
       (
         registry.items as {
@@ -758,14 +762,14 @@ describe("registry.json", () => {
       ]);
       expect(item.registryDependencies.slice(0, 2)).toEqual([
         "utils",
-        "pluto-theme",
+        "kuiper-theme",
       ]);
     }
     expect(byName.get("four-dot")?.meta.since).toBe("0.1.0");
   });
 
   // 007 decision 7: the library, its three registry dependencies, no stock.
-  test("code-languages is a registry:lib since 0.7.0 in group code with utils, pluto-theme and code-editor, 1 file, no meta.stock", () => {
+  test("code-languages is a registry:lib since 0.7.0 in group code with utils, kuiper-theme and code-editor, 1 file, no meta.stock", () => {
     const item = (
       registry.items as {
         name: string;
@@ -785,7 +789,7 @@ describe("registry.json", () => {
     expect(item.title).toBe("Code languages");
     expect(item.registryDependencies).toEqual([
       "utils",
-      "pluto-theme",
+      "kuiper-theme",
       "code-editor",
     ]);
     expect(item.files).toEqual([
@@ -805,7 +809,7 @@ describe("registry.json", () => {
 
   // 009 decision 10: the library, its two registry dependencies, no stock.
   // 011 decision 14: released with 009 to 012 as 0.11.0.
-  test("read-token is a registry:lib since 0.11.0 in group foundation with utils and pluto-theme, 1 file, no package, no meta.stock", () => {
+  test("read-token is a registry:lib since 0.11.0 in group foundation with utils and kuiper-theme, 1 file, no package, no meta.stock", () => {
     const item = (
       registry.items as {
         name: string;
@@ -820,7 +824,7 @@ describe("registry.json", () => {
     ).find((i) => i.name === "read-token")!;
     expect(item.type).toBe("registry:lib");
     expect(item.title).toBe("Read token");
-    expect(item.registryDependencies).toEqual(["utils", "pluto-theme"]);
+    expect(item.registryDependencies).toEqual(["utils", "kuiper-theme"]);
     expect(item.dependencies ?? []).toEqual([]);
     expect(item.devDependencies ?? []).toEqual([]);
     expect(item.files).toEqual([
@@ -856,7 +860,7 @@ describe("registry.json", () => {
       expect(item.title).toBe(title);
       expect(item.registryDependencies).toEqual([
         "utils",
-        "pluto-theme",
+        "kuiper-theme",
         ...deps,
       ]);
       expect(item.meta).toEqual({
@@ -888,7 +892,7 @@ describe("registry.json", () => {
   });
 
   // 011 decision 8: the glass, an expressive-only foundation item.
-  test("liquid-glass is a registry:ui since 0.11.0 in group foundation, expressive-only, with pluto-theme and read-token, 2 files, no package, no meta.stock", () => {
+  test("liquid-glass is a registry:ui since 0.11.0 in group foundation, expressive-only, with kuiper-theme and read-token, 2 files, no package, no meta.stock", () => {
     const item = (
       registry.items as {
         name: string;
@@ -903,7 +907,7 @@ describe("registry.json", () => {
     ).find((i) => i.name === "liquid-glass")!;
     expect(item.type).toBe("registry:ui");
     expect(item.title).toBe("Liquid glass");
-    expect(item.registryDependencies).toEqual(["pluto-theme", "read-token"]);
+    expect(item.registryDependencies).toEqual(["kuiper-theme", "read-token"]);
     expect(item.dependencies ?? []).toEqual([]);
     expect(item.devDependencies ?? []).toEqual([]);
     expect(item.files).toEqual(
@@ -966,7 +970,7 @@ describe("the built registry", () => {
   const versioned = () => path.join(out, `v${version}`, "r", "styles", "maia");
 
   beforeAll(async () => {
-    out = mkdtempSync(path.join(tmpdir(), "pluto-registry-"));
+    out = mkdtempSync(path.join(tmpdir(), "kuiper-registry-"));
     // A stale file from an earlier build, in both folders, must not survive.
     for (const dir of [latest(), versioned()]) {
       mkdirSync(dir, { recursive: true });
@@ -979,12 +983,22 @@ describe("the built registry", () => {
     if (out) rmSync(out, { recursive: true, force: true });
   });
 
-  test("76 files under r/styles/maia and 76 byte-identical files under the versioned path", () => {
+  // 020 decision 3: the 75 items, and the one deprecated entry, which the
+  // CLI must find in the index.
+  test("77 files under r/styles/maia and 77 byte-identical files under the versioned path", () => {
     const files = readdirSync(latest()).sort();
     expect(files).toEqual(
-      ["index.json", ...ITEMS.map(([n]) => `${n}.json`)].sort(),
+      [
+        "index.json",
+        ...ITEMS.map(([n]) => `${n}.json`),
+        ...registryRaw.items
+          .filter(
+            (i: { meta?: { deprecated?: unknown } }) => i.meta?.deprecated,
+          )
+          .map((i: { name: string }) => `${i.name}.json`),
+      ].sort(),
     );
-    expect(files).toHaveLength(76);
+    expect(files).toHaveLength(77);
     expect(readdirSync(versioned()).sort()).toEqual(files);
     for (const file of files) {
       expect(readFileSync(path.join(versioned(), file))).toEqual(
@@ -1092,7 +1106,7 @@ describe("the built registry", () => {
     ]);
     expect(item.registryDependencies).toEqual([
       "utils",
-      "pluto-theme",
+      "kuiper-theme",
       "code-editor",
     ]);
     expect(item.files[0].content).toContain(
@@ -1109,7 +1123,7 @@ describe("the built registry", () => {
     ).toEqual(CODE_EDITOR_PACKAGES);
     expect(item.registryDependencies).toEqual([
       "utils",
-      "pluto-theme",
+      "kuiper-theme",
       "highlighter",
     ]);
     expect(item.files.map((f: { target: string }) => f.target)).toEqual([
@@ -1146,7 +1160,7 @@ describe("the built registry", () => {
       ]);
     expect(built("toggle-group").registryDependencies).toEqual([
       "utils",
-      "pluto-theme",
+      "kuiper-theme",
       "toggle",
     ]);
     expect(built("popover").files).toHaveLength(9);
@@ -1164,7 +1178,7 @@ describe("the built registry", () => {
         (d: string) => d.startsWith("layerchart"),
       ),
     ).toEqual(["layerchart@^2.9.2"]);
-    expect(chart.registryDependencies).toEqual(["utils", "pluto-theme"]);
+    expect(chart.registryDependencies).toEqual(["utils", "kuiper-theme"]);
     expect(chart.files.map((f: { target: string }) => f.target)).toEqual([
       "chart/chart-container.svelte",
       "chart/chart-tooltip.svelte",
@@ -1176,7 +1190,7 @@ describe("the built registry", () => {
       ...(meter.dependencies ?? []),
       ...(meter.devDependencies ?? []),
     ]).toEqual([]);
-    expect(meter.registryDependencies).toEqual(["utils", "pluto-theme"]);
+    expect(meter.registryDependencies).toEqual(["utils", "kuiper-theme"]);
     expect(meter.files.map((f: { target: string }) => f.target)).toEqual([
       "meter/meter.svelte",
       "meter/index.ts",
@@ -1325,7 +1339,7 @@ describe("the built registry", () => {
     expect(offending).toEqual([]);
   });
 
-  test("the hook is-mobile's target is is-mobile.svelte.ts; dropdown-menu has 17 files and sidebar 25, with 0 of the two dropped files; theme has 4", () => {
+  test("the hook is-mobile's target is is-mobile.svelte.ts; dropdown-menu has 17 files and sidebar 25, with 0 of the two dropped files; theme has 5", () => {
     const built = (name: string) =>
       JSON.parse(readFileSync(path.join(latest(), `${name}.json`), "utf8"));
     expect(
@@ -1337,7 +1351,8 @@ describe("the built registry", () => {
     const sidebar = built("sidebar");
     expect(sidebar.files).toHaveLength(25);
     expect(JSON.stringify(sidebar)).not.toContain("sidebar-rail.svelte");
-    expect(built("theme").files).toHaveLength(4);
+    // 020 decision 5: stored.ts joins the theme item.
+    expect(built("theme").files).toHaveLength(5);
     expect(built("message-log").files).toHaveLength(3);
     expect(built("composer").files).toHaveLength(2);
   });
@@ -1358,9 +1373,9 @@ describe("the built registry", () => {
     expect(offending).toEqual([]);
   });
 
-  test("pluto-theme's devDependencies are exactly shadcn-svelte@^1.7.1", () => {
+  test("kuiper-theme's devDependencies are exactly shadcn-svelte@^1.7.1", () => {
     const item = JSON.parse(
-      readFileSync(path.join(latest(), "pluto-theme.json"), "utf8"),
+      readFileSync(path.join(latest(), "kuiper-theme.json"), "utf8"),
     );
     expect(item.devDependencies).toEqual(["shadcn-svelte@^1.7.1"]);
   });
@@ -1399,16 +1414,18 @@ describe("CHANGELOG.md", () => {
   // 011 decision 14, criterion 14: 0.9.0 and 0.10.0 were never released;
   // their entries fold into one 0.11.0 entry, which names decision 12's five
   // visible changes, and what 009, 010 and 011 add.
-  // 014 decisions 12 and 13: 0.12.0, dated at its tag (2026-11-15), is the
-  // newest; 0.11.0 follows it.
-  test("has no 0.9.0 or 0.10.0 entry; 0.12.0 is the newest, released, and 0.11.0 is next", () => {
+  // 014 decisions 12 and 13: 0.12.0, dated at its tag (2026-11-15); 0.11.0
+  // follows it. 020, 0.13.0's first landing, opens 0.13.0 above them,
+  // unreleased until its tag.
+  test("has no 0.9.0 or 0.10.0 entry; 0.13.0 is the newest, unreleased, then 0.12.0, released, and 0.11.0", () => {
     const text = readFileSync("CHANGELOG.md", "utf8");
     expect(text).not.toMatch(/^## 0\.9\.0\b/m);
     expect(text).not.toMatch(/^## 0\.10\.0\b/m);
     const versions = [...text.matchAll(/^## (\d+\.\d+\.\d+)\b/gm)].map(
       (m) => m[1],
     );
-    expect(versions.slice(0, 2)).toEqual(["0.12.0", "0.11.0"]);
+    expect(versions.slice(0, 3)).toEqual(["0.13.0", "0.12.0", "0.11.0"]);
+    expect(text).toMatch(/^## 0\.13\.0 — unreleased$/m);
     expect(text).toMatch(/^## 0\.12\.0 — 2026-11-15$/m);
   });
 
@@ -1672,7 +1689,11 @@ describe("CHANGELOG.md", () => {
 
   test("still has a 0.1.0 entry naming each of the 6 items", () => {
     const body = entry("0.1.0");
-    for (const [name] of ITEMS_001) expect(body).toContain(`\`${name}\``);
+    // The 0.1.0 entry names the theme by its name then (020: history).
+    for (const [name] of ITEMS_001)
+      expect(body).toContain(
+        `\`${name === "kuiper-theme" ? "pluto-theme" : name}\``,
+      );
   });
 });
 
@@ -1754,10 +1775,12 @@ describe("014: the white code ground", () => {
   });
 
   // The tag is made at release (2026-11-15): when it exists, the tagged
-  // commit's package.json reads 0.12.0 and its changelog dates 0.12.0.
-  test("package.json reads 0.12.0; the registry build has written static/v0.12.0/; a v0.12.0 tag, if made, is a dated 0.12.0", () => {
-    expect(JSON.parse(read("package.json")).version).toBe("0.12.0");
+  // commit's package.json reads 0.12.0 and its changelog dates 0.12.0. 020
+  // sets 0.13.0 at the start of 0.13.0, so static/v0.12.0 is left as tagged.
+  test("package.json reads 0.13.0; the registry build has written static/v0.12.0/ and static/v0.13.0/; a v0.12.0 tag, if made, is a dated 0.12.0", () => {
+    expect(JSON.parse(read("package.json")).version).toBe("0.13.0");
     expect(existsSync("static/v0.12.0/r/styles/maia/index.json")).toBe(true);
+    expect(existsSync("static/v0.13.0/r/styles/maia/index.json")).toBe(true);
     const tags = execSync("git tag --list 'v0.12.0'", { encoding: "utf8" });
     if (tags.trim() === "") return;
     const show = (f: string) =>
@@ -1798,7 +1821,7 @@ describe("014: the white code ground", () => {
     expect(read(`${UI}/code-block/code-block.svelte`)).not.toContain(
       "muted inset",
     );
-    const theme = read(`${PAGES}/pluto-theme/+page.svelte`);
+    const theme = read(`${PAGES}/kuiper-theme/+page.svelte`);
     expect(theme).toContain("scrollbar-code");
     expect(theme).not.toContain('passes <code>class="bg-muted"</code>');
   });
@@ -1863,7 +1886,7 @@ describe("016: the brand yellow", () => {
       `${PAGES}/badge/+page.svelte`,
       `${PAGES}/chart/+page.svelte`,
       `${PAGES}/product-home/+page.svelte`,
-      `${PAGES}/pluto-theme/+page.svelte`,
+      `${PAGES}/kuiper-theme/+page.svelte`,
       "src/lib/registry/ui/badge/badge.svelte",
       "src/lib/registry/blocks/product-home/+page.svelte",
     ]) {
@@ -1871,7 +1894,7 @@ describe("016: the brand yellow", () => {
       expect(read(file), file).toMatch(/yellow/i);
     }
     const flat = (file: string) => read(file).replace(/\s+(\/\/\s+)?/g, " ");
-    expect(flat(`${PAGES}/pluto-theme/+page.svelte`)).toContain(
+    expect(flat(`${PAGES}/kuiper-theme/+page.svelte`)).toContain(
       "Yellow is the one known exception: a yellow series is labelled directly",
     );
     expect(flat("src/lib/registry/ui/badge/badge.svelte")).toContain(
@@ -2019,5 +2042,213 @@ describe("released snapshots", () => {
       { encoding: "utf8" },
     );
     expect(diff + untracked).toBe("");
+  });
+});
+
+/** 020 tests 3 to 5 and 16: the Kuiper rename in the registry and the changelog. */
+describe("020 test 3: kuiper-theme is the theme", () => {
+  const all = registryRaw.items as {
+    name: string;
+    type: string;
+    title: string;
+    cssVars?: unknown;
+    css?: unknown;
+    registryDependencies?: string[];
+    meta?: { deprecated?: unknown };
+  }[];
+
+  test("the registry's name is kuiper", () => {
+    expect(registry.name).toBe("kuiper");
+  });
+
+  test('kuiper-theme is a registry:theme titled "Kuiper theme", with the cssVars and css', () => {
+    const theme = all.find((i) => i.name === "kuiper-theme");
+    expect(theme?.type).toBe("registry:theme");
+    expect(theme?.title).toBe("Kuiper theme");
+    expect(Object.keys(theme?.cssVars ?? {}).sort()).toEqual([
+      "dark",
+      "light",
+      "theme",
+    ]);
+    expect(Object.keys(theme?.css ?? {}).length).toBeGreaterThan(10);
+  });
+
+  test("the 70 items that named the theme name kuiper-theme, and none names pluto-theme", () => {
+    const naming = all.filter((i) =>
+      (i.registryDependencies ?? []).includes("kuiper-theme"),
+    );
+    expect(naming.filter((i) => !i.meta?.deprecated)).toHaveLength(70);
+    expect(
+      all.filter((i) => (i.registryDependencies ?? []).includes("pluto-theme")),
+    ).toEqual([]);
+  });
+});
+
+describe("020 test 4: the pluto-theme alias", () => {
+  const entries = (
+    registryRaw.items as { name: string; meta?: { deprecated?: unknown } }[]
+  ).filter((i) => i.name === "pluto-theme");
+
+  test("exactly one pluto-theme entry, which installs kuiper-theme and holds nothing of its own", () => {
+    expect(entries).toHaveLength(1);
+    const alias = entries[0] as Record<string, unknown>;
+    expect(alias.type).toBe("registry:theme");
+    expect(alias.registryDependencies).toEqual(["kuiper-theme"]);
+    expect(alias.files).toEqual([]);
+    expect("cssVars" in alias).toBe(false);
+    expect("css" in alias).toBe(false);
+    expect((alias.meta as { deprecated: unknown }).deprecated).toEqual({
+      replacement: "kuiper-theme",
+      removedIn: "0.14.0",
+    });
+  });
+
+  test("no other entry is deprecated", () => {
+    expect(
+      (registryRaw.items as { name: string; meta?: { deprecated?: unknown } }[])
+        .filter((i) => i.meta?.deprecated)
+        .map((i) => i.name),
+    ).toEqual(["pluto-theme"]);
+  });
+
+  test("the built index lists it, and its own file exists", () => {
+    const index = JSON.parse(
+      readFileSync("static/r/styles/maia/index.json", "utf8"),
+    ) as { name: string }[];
+    expect(index.filter((i) => i.name === "pluto-theme")).toHaveLength(1);
+    expect(index).toHaveLength(76);
+    expect(existsSync("static/r/styles/maia/pluto-theme.json")).toBe(true);
+    expect(existsSync("static/r/styles/maia/kuiper-theme.json")).toBe(true);
+  });
+});
+
+describe("020 test 5: a deprecated item is not listed", () => {
+  test("listedItems() returns the 75 items, without pluto-theme", async () => {
+    const { listedItems } = await import("../../src/lib/site/items.ts");
+    const listed = listedItems();
+    expect(listed).toHaveLength(75);
+    expect(listed.map((i) => i.name)).not.toContain("pluto-theme");
+    expect(listed.map((i) => i.name)).toContain("kuiper-theme");
+  });
+
+  test("the sitemap, the search index, the thumbnails, the example order, the doors, the components index and the literal lint hold no pluto-theme", async () => {
+    const { SITEMAP } = await import("../../src/lib/site/sitemap.ts");
+    expect(SITEMAP.filter((p) => p.path.includes("pluto-theme"))).toEqual([]);
+    expect(
+      SITEMAP.filter((p) => p.path === "/components/kuiper-theme/"),
+    ).toHaveLength(1);
+
+    const { buildIndex } =
+      await import("../../src/lib/site/search/build-index.ts");
+    const dir = "src/lib/site/search/sources";
+    const sources = await Promise.all(
+      readdirSync(dir)
+        .filter((f) => f.endsWith(".ts"))
+        .map((f) => import(path.resolve(dir, f))),
+    );
+    const index = buildIndex(sources) as { path: string; title: string }[];
+    expect(
+      index.filter(
+        (e) => e.path.includes("pluto-theme") || /pluto/i.test(e.title),
+      ),
+    ).toEqual([]);
+
+    const manifest = JSON.parse(
+      readFileSync("src/lib/site/thumbnails/manifest.json", "utf8"),
+    );
+    expect(Object.keys(manifest)).toHaveLength(75);
+    expect(Object.keys(manifest)).not.toContain("pluto-theme");
+    expect(Object.keys(manifest)).toContain("kuiper-theme");
+
+    const { EXAMPLE_ORDER } =
+      await import("../../src/lib/site/example-order.ts");
+    expect(Object.keys(EXAMPLE_ORDER)).not.toContain("pluto-theme");
+    expect(Object.keys(EXAMPLE_ORDER)).toContain("kuiper-theme");
+
+    const { DOORS } = await import("../../src/lib/site/doors.ts");
+    expect(DOORS.find((d) => d.id === "components")?.line).toBe("75 parts");
+
+    // The components index's loader lists through listedItems; its
+    // rendered cards are counted in upgrade.spec.ts.
+    const layout = readFileSync(
+      "src/routes/(site)/components/+layout.server.ts",
+      "utf8",
+    );
+    expect(layout).toMatch(/of listedItems\(\s*registry\.items,?\s*\)\)/);
+
+    const { itemOwners } = await import("../../scripts/lint-literals.ts");
+    expect([...itemOwners().values()].flat()).not.toContain("pluto-theme");
+  });
+});
+
+describe("020 test 16: the 0.13.0 changelog", () => {
+  const log = readFileSync("CHANGELOG.md", "utf8");
+  const entry = log.includes("## 0.13.0")
+    ? log.slice(log.indexOf("## 0.13.0"), log.indexOf("\n## 0.12.0"))
+    : "";
+  const bullets = entry.split("\n").filter((l) => l.startsWith("- "));
+  const bullet = (head: string) =>
+    bullets.find((b) => b.startsWith(`- \`${head}\``)) ?? "";
+
+  test("the entry links to the guide at /changelog/0.13.0/upgrade/", () => {
+    expect(entry).toContain("workers.dev/changelog/0.13.0/upgrade/)");
+  });
+
+  test("its bullets are decision 16's five, each marked interface change", () => {
+    for (const head of [
+      "kuiper-theme",
+      "theme",
+      "field",
+      "tooltip",
+      "highlighter",
+    ])
+      expect(bullet(head), head).toContain("**interface change.**");
+  });
+
+  test("the kuiper-theme bullet says to rename the four keyframe uses before updating the theme", () => {
+    const b = bullet("kuiper-theme");
+    const rename = b.indexOf("rename your own uses");
+    expect(rename).toBeGreaterThan(-1);
+    expect(b.indexOf("before you update the theme")).toBeGreaterThan(rename);
+    for (const name of [
+      "pluto-enter",
+      "pluto-exit",
+      "pluto-mark-dock",
+      "pluto-mark-fade",
+    ])
+      expect(b.indexOf(`\`${name}\``), name).toBeGreaterThan(rename);
+  });
+
+  test("each bullet names its rows' old and new names, 0.14.0 where they have an alias, and its exported constants", async () => {
+    const { RENAMES } = await import("../../src/lib/site/upgrade/renames.ts");
+    // The field-label key is the field's, so its bullet names it.
+    const covers: Record<string, (r: (typeof RENAMES)[number]) => boolean> = {
+      "kuiper-theme": (r) =>
+        ["theme item", "keyframes", "token file"].includes(r.kind),
+      theme: (r) => r.kind === "storage key",
+      field: (r) =>
+        r.kind === "context key, across items" || r.old === "pluto:field-label",
+      tooltip: (r) =>
+        r.kind === "context key, inside an item" &&
+        r.old !== "pluto:field-label",
+      highlighter: (r) => r.kind === "Shiki theme",
+    };
+    const constants: Record<string, string[]> = {
+      theme: ["THEME_KEY", "THEME_SCRIPT"],
+      field: ["FIELD_CONTEXT_KEY", "FIELD_SET_CONTEXT_KEY"],
+      highlighter: ["shikiTheme.name"],
+    };
+    for (const [head, covered] of Object.entries(covers)) {
+      const b = bullet(head);
+      const rows = RENAMES.filter(covered);
+      expect(rows.length, head).toBeGreaterThan(0);
+      for (const r of rows) {
+        expect(b, `${head}: ${r.old}`).toContain(`\`${r.old}\``);
+        expect(b, `${head}: ${r.new}`).toContain(`\`${r.new}\``);
+        if (r.alias === "0.14.0") expect(b, head).toContain("0.14.0");
+      }
+      for (const c of constants[head] ?? [])
+        expect(b, `${head}: ${c}`).toContain(`\`${c}\``);
+    }
   });
 });

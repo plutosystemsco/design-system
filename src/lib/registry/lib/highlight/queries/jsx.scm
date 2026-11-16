@@ -1,9 +1,9 @@
 ; JSX, for tree-sitter-javascript 0.25.0 and tree-sitter-typescript 0.23.2's
 ; TSX (node types read from tree-sitter-javascript's src/node-types.json and
 ; tree-sitter-typescript's tsx/src/node-types.json at those versions).
-; Captures are Pluto code roles. Loaded after javascript.scm or
+; Captures are Kuiper code roles. Loaded after javascript.scm or
 ; typescript.scm, so these rules win over theirs for the same node.
-; written for the Pluto design system; not derived from the grammar's own queries.
+; written for the Kuiper Design System; not derived from the grammar's own queries.
 
 ; ── Tags ────────────────────────────────────────────────────────────────
 

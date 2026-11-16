@@ -80,10 +80,10 @@
       "requiredBy": "016 decision 6: product-home's copy"
     },
     {
-      "item": "pluto-theme",
-      "page": "/components/pluto-theme/",
+      "item": "kuiper-theme",
+      "page": "/components/kuiper-theme/",
       "sentence": "Yellow is the one known exception: a yellow series is labelled directly.",
-      "requiredBy": "016 decision 6: pluto-theme's copy"
+      "requiredBy": "016 decision 6: kuiper-theme's copy"
     }
   ]
 }

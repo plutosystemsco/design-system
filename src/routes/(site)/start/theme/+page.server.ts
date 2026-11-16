@@ -8,10 +8,10 @@ type Theme = {
   registryDependencies: string[];
 };
 
-/** What `pluto-theme` writes, read from registry.json at prerender. */
+/** What `kuiper-theme` writes, read from registry.json at prerender. */
 export const load: PageServerLoad = () => {
   const item = registry.items.find(
-    (i) => i.name === "pluto-theme",
+    (i) => i.name === "kuiper-theme",
   ) as unknown as Theme;
   const keys = Object.keys(item.css);
   const families = readTokens().type.families;

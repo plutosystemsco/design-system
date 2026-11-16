@@ -3,7 +3,7 @@
   import { getContext } from "svelte";
   import { cn } from "#lib/utils";
 
-  /** The contract a `FieldSet` sets under the key "pluto:field-set". */
+  /** The contract a `FieldSet` sets under the key "kuiper:field-set". */
   type FieldSetContext = {
     readonly id: string;
     readonly invalid: boolean;
@@ -23,7 +23,10 @@
   }: RadioGroupPrimitive.RootProps = $props();
 
   // A radio group is a group control: it takes its set's wiring and its legend's name.
-  const field = getContext<FieldSetContext | undefined>("pluto:field-set");
+  // A field set from before 0.13.0 sets only its old key, read until 0.14.0.
+  const field =
+    getContext<FieldSetContext | undefined>("kuiper:field-set") ??
+    getContext<FieldSetContext | undefined>("pluto:field-set");
 </script>
 
 <RadioGroupPrimitive.Root

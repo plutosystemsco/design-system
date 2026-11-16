@@ -257,7 +257,10 @@ describe("the Shiki session's convergence (decision 16)", () => {
       engine: createJavaScriptRegexEngine({ forgiving: false }),
     });
     const state = (code: string) =>
-      core.getLastGrammarState(code, { lang: "markdown", theme: "pluto-code" });
+      core.getLastGrammarState(code, {
+        lang: "markdown",
+        theme: "kuiper-code",
+      });
     const a = state("plain");
     const b = state("other plain");
     const open = state("```python\nx = 1");

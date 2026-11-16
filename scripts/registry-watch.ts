@@ -85,7 +85,7 @@ export function createRunner(root: string, logger: Logger) {
 
 export function registryWatch(): Plugin {
   return {
-    name: "pluto-registry-watch",
+    name: "kuiper-registry-watch",
     apply: "serve",
     async configureServer(server) {
       const root = server.config.root;

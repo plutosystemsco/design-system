@@ -24,7 +24,7 @@
 >
   <div class="grid gap-4">
     <p>
-      There is one token file, <code>tokens/pluto.tokens.json</code>. Every
+      There is one token file, <code>tokens/kuiper.tokens.json</code>. Every
       colour in every part comes from it. A <strong>primitive</strong> is a
       colour with a name, such as <code>ink</code> or <code>blue</code>. A
       <strong>theme role</strong> is a job, such as <code>background</code> or

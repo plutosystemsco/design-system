@@ -5,6 +5,7 @@
  */
 import { describe, expect, test } from "bun:test";
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
+import { withListedItems } from "../../src/lib/site/items.ts";
 import path from "node:path";
 import {
   bringsTheme,
@@ -20,7 +21,9 @@ type Item = {
   meta: { group: string };
   registryDependencies?: string[];
 };
-const registry = JSON.parse(readFileSync("registry.json", "utf8")) as {
+const registry = withListedItems(
+  JSON.parse(readFileSync("registry.json", "utf8")),
+) as {
   items: Item[];
 };
 const ROOT = "src/lib/site/examples";

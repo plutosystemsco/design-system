@@ -1,0 +1,20 @@
+{
+	"$schema": "https://shadcn-svelte.com/schema/registry-item.json",
+	"name": "pluto-theme",
+	"title": "Pluto theme (renamed)",
+	"type": "registry:theme",
+	"author": "Pluto Systems <https://github.com/plutosystemsco/design-system>",
+	"description": "Renamed kuiper-theme in 0.13.0. Installs kuiper-theme. This alias is removed in 0.14.0.",
+	"registryDependencies": [
+		"kuiper-theme"
+	],
+	"meta": {
+		"since": "0.1.0",
+		"group": "foundation",
+		"deprecated": {
+			"replacement": "kuiper-theme",
+			"removedIn": "0.14.0"
+		}
+	},
+	"files": []
+}

@@ -7,7 +7,7 @@
 	"description": "Code on a flat card for a stage, with a copy button and, given a run function, a Run button whose output and outcome the card shows and says.",
 	"registryDependencies": [
 		"utils",
-		"pluto-theme",
+		"kuiper-theme",
 		"code-block",
 		"button",
 		"status"
