@@ -1,6 +1,6 @@
 # 024 — Budgets per template
 
-- **Status:** Ready to build after `020`: review approved with changes, all applied; the owner answered Q1 to Q5 on 2026-11-15, each with the recommended option (see Landing notes).
+- **Status:** Built and committed on its build branch (2026-11-16), not yet change-reviewed. The checkpoint's rulings were made by the builder under the owner's delegation and wait for the design lead (Landing notes). Review approved with changes, all applied; the owner answered Q1 to Q5 on 2026-11-15, each with the recommended option.
 - **Date:** 2026-11-15
 - **Author:** the design lead
 - **Kind:** test harness, the perf suite only. Two new files and one rewritten file, all under `tests/` (see "Files"). **Interface changes:** none for an installed app. No registry item, token, page or dependency changes. **Not a small change,** although the roadmap calls it one (next section but one).
@@ -358,6 +358,218 @@ The spec review, [`../reviews/024-budgets-per-template-spec-2026-11-15.md`](../r
 - **Q4:** CI's LCP figures are set after `024` lands, from `022`'s first three green runs. `030` waits only on transfer.
 - **Q5:** the 404 page carries no budget.
 
-The owner was told that Button's transfer budget rises from 380 kB to about 430–480 kB at the checkpoint.
+The owner was told that Button's transfer budget rises from 380 kB to about 430–480 kB at the checkpoint. It rose to 445 kB (ruling 6 below).
 
-None yet.
+### The build
+
+- **Built** 2026-11-16 by a builder, in its own worktree, on `release/0.13.0` at `874c5da` (after `020a`, `020b` and `027a`), and committed on the build branch as "024: budgets per template" (commit in the report). Not yet change-reviewed. **The checkpoint (build step 3) was not walked by the design lead:** the owner and the design lead were away, and the owner had delegated the decisions. The builder ruled each item below as the spec orders it, and records every ruling, so the design lead can confirm or overturn it before the landing. That is the first thing to do.
+- **What was built.** Exactly the spec's three files.
+  - `tests/e2e/budgets.ts` (new): `TEMPLATE_IDS`, `TEMPLATES` (figures, `ci`, probes, layouts, ruling), `MARGIN`, `LIVE_HIGHLIGHT`, `HEAVY`, `templatesMatching()`, `templateOf()`, `pagesOf()`, `budgetOf()`, `lcpBudget()`. It imports `sitemap.ts` and never `@playwright/test`.
+  - `tests/e2e/perf.spec.ts` (rewritten): `BUDGETS` and `COLOUR_BUDGET` are gone. One `024 transfer: <template>` test per template, one `024 paint: <template>: <page>` test per probe, and under `PERF_SWEEP=1` one `024 sweep: <template>: <page>` test per page, writing `test-results/perf-sweep.json`. `measure()` gained `throttle` and the per-response list. The server gzips `application/wasm`; a test (`024 decision 7`) checks the header.
+  - `tests/unit/budgets.test.ts` (new): criteria 1, 2, 6 and 9, 50 tests.
+  - Nothing else in code. Not `playwright.config.ts`, not `sitemap.ts`, not any route. No edit is needed in `022`'s config: the perf project's `testMatch` already takes the file.
+
+### Tests first, each seen failing
+
+- **Step 1, the unit file before its module** (criteria 1, 2, 6, 9): `bun test tests/unit/budgets.test.ts` failed to load, "Cannot find module '../e2e/budgets.ts'": 0 pass, 1 fail, 1 error. With `budgets.ts` holding its types and functions that throw: **42 tests, 3 pass, 39 fail.** The 3 that passed hold vacuously on a stub: the two list checks over the empty `HEAVY` and `LIVE_HIGHLIGHT`, and "budgets.ts never imports `@playwright/test`". Criterion 9's two file checks failed against the old `perf.spec.ts`, which still held `BUDGETS`. The file grew to 50 tests at the checkpoint (the widened LCP margin, and the CLS page as a probe; deviations 2 and 3).
+- **Criterion 3 (a), today's defect.** `component` set to Button's old budget, 380 kB (a median of 345), with `HEAVY` and `LIVE_HIGHLIGHT` empty: `024 transfer: component` **failed, naming seven pages** (the spec inferred at least six): `kuiper-theme` 760 kB, `code-editor` 655.8, `code-languages` 653.6, `highlighter` 542, `chart` 479.9, `use-highlighted-code` 439.3, `sidebar` 403.8. `dropdown-menu` (375.4) is not among them: Button now measures 374.2, and the static estimate's ranking of the two was within its error.
+- **Criterion 3 (b), two mutations, each built and reverted.** Each string is base64 of random bytes, inserted as a hidden element; the sizes are its own gzipped bytes (level 6).
+  1. **In `component.svelte`: 92,575 B gzipped (90.4 kB; 122,180 characters).** The largest template headroom of the three is `component-live`'s, 840 − 760 = 80 kB (`component` 41.2, `component-heavy` 50.1), plus 10. All three tests failed: `component` named 68 of its 68 pages (the lightest then at 508.5 kB), `component-live` 1 of 9 (`kuiper-theme`, 943 kB), `component-heavy` 1 of 1 (`chart`, 662.3 kB). Sized from the heaviest page's headroom, the mutation is bound to fail each template's heaviest page, not every page.
+  2. **In Button's route: 83,121 B gzipped (81.2 kB; 109,692 characters).** Button's headroom is 445 − 374.2 = 70.8 kB, plus 10. `component` failed, naming Button alone, at 455.3 kB. The string reached the route's JS chunk, not its HTML (the page renders its snippets, not loose children), and still counted once.
+- **Criterion 5.** `home`'s local LCP figure set to 500 ms (budget 550): `024 paint: home: /` failed, "LCP (local), expected ≤ 550, received 784". Restored.
+- **Criterion 6, e2e.** With `CI=1` and `ci: null`, `024 paint: home: /` passed and carried both annotations, read from the JSON reporter: `lcp` `{"page":"/","template":"home","runs":[780,784,780],"median":780,"budget":null,"gated":false}` and `lcp-not-gated` "LCP reported, not gated: no runner figure (024 decision 8)". With `CI=1` and `home`'s transfer figure set to 250 kB (budget 275), it failed on transfer (300.8 kB). With `CI=1` and a runner figure of 500 ms at a 20% margin, LCP gated at 600 ms and the test failed (792 ms). Each restored. The unit half is four tests.
+- **Criterion 7.** `code-editor` and `live-console` taken out of `LIVE_HIGHLIGHT`: `024 transfer: component` failed, its `.wasm` list naming both ("2 .wasm, not in LIVE_HIGHLIGHT"). `live-console` fetches its `.wasm` only in its example frames, so the rule is seen to count every frame. Restored. The server's `content-encoding: gzip` on `.wasm` is checked by `024 decision 7` on every run.
+- After the last mutation, `git status` showed only this spec's three files, and the site was rebuilt clean before the gate runs.
+
+### The sweep (criterion 8)
+
+`PERF_SWEEP=1 bun --bun playwright test --project=perf --no-deps` (on a scratch config without the web server, against a build of this tree), 2026-11-15 23:48 to 2026-11-16 00:16 EST: **27.7 minutes, 106 pages, 3 throttled loads each and one unthrottled.** The machine's load average rose from 25 to 102 on 10 cores during it (other agents' builds). 102 passed and 5 failed against the provisional budgets the build carried before the checkpoint (`kuiper-theme` LCP, `label` and `native-select` CLS, `sidebar` and `/changelog/` transfer); the figures below set the real ones. Each page's medians and its three LCP runs:
+
+| Page | Template | Transfer, kB | LCP, ms (3 runs) | CLS | `.wasm` |
+|---|---|---|---|---|---|
+| `/` | home | 300.8 | 780 (780, 780, 788) | 0.005 | 0 |
+| `/components/` | index | 349.5 | 2472 (2472, 2412, 2488) | 0 | 0 |
+| `/start/` | landing | 300.7 | 840 (832, 844, 840) | 0 | 0 |
+| `/brand/` | landing | 286.4 | 944 (964, 844, 944) | 0 | 0 |
+| `/foundations/` | landing | 282.4 | 828 (832, 828, 816) | 0 | 0 |
+| `/components/sidebar/` | component | 403.8 | 1104 (1168, 1104, 1088) | 0 | 0 |
+| `/components/dropdown-menu/` | component | 375.4 | 948 (944, 948, 976) | 0 | 0 |
+| `/components/button/` | component | 374.2 | 924 (924, 912, 932) | 0 | 0 |
+| `/components/field/` | component | 369.2 | 1028 (1028, 1028, 1032) | 0 | 0 |
+| `/components/button-group/` | component | 369.1 | 920 (912, 992, 920) | 0 | 0 |
+| `/components/theme/` | component | 360.3 | 924 (916, 932, 924) | 0 | 0 |
+| `/components/breadcrumb/` | component | 359.2 | 892 (900, 892, 888) | 0.003 | 0 |
+| `/components/composer/` | component | 357.8 | 956 (992, 956, 952) | 0 | 0 |
+| `/components/popover/` | component | 356.7 | 900 (924, 900, 900) | 0 | 0 |
+| `/components/tooltip/` | component | 352.4 | 896 (900, 892, 896) | 0 | 0 |
+| `/components/message-log/` | component | 351.1 | 940 (940, 940, 936) | 0 | 0 |
+| `/components/error-summary/` | component | 350.5 | 920 (872, 920, 960) | 0 | 0 |
+| `/components/input-otp/` | component | 348.6 | 924 (900, 952, 924) | 0 | 0 |
+| `/components/app-shell/` | component | 348.6 | 1052 (1056, 1052, 1020) | 0 | 0 |
+| `/components/code-block/` | component | 348 | 984 (948, 988, 984) | 0.003 | 0 |
+| `/components/input-group/` | component | 345.2 | 972 (912, 972, 972) | 0 | 0 |
+| `/components/progress/` | component | 344.5 | 936 (936, 944, 928) | 0 | 0 |
+| `/components/radio-group/` | component | 344.1 | 936 (912, 936, 952) | 0 | 0 |
+| `/components/toggle-group/` | component | 343.6 | 924 (924, 924, 928) | 0 | 0 |
+| `/components/sheet/` | component | 343.4 | 940 (948, 936, 940) | 0 | 0 |
+| `/components/dialog/` | component | 342.4 | 924 (924, 948, 924) | 0 | 0 |
+| `/components/native-select/` | component | 341.5 | 872 (872, 884, 860) | 0.087 | 0 |
+| `/components/alert/` | component | 341.1 | 912 (904, 912, 916) | 0 | 0 |
+| `/components/checkbox/` | component | 340.9 | 896 (896, 892, 900) | 0 | 0 |
+| `/components/accordion/` | component | 340.5 | 924 (924, 924, 952) | 0 | 0 |
+| `/components/read-token/` | component | 339.8 | 960 (940, 968, 960) | 0.005 | 0 |
+| `/components/link/` | component | 339.8 | 908 (928, 900, 908) | 0 | 0 |
+| `/components/switch/` | component | 339.3 | 888 (892, 884, 888) | 0 | 0 |
+| `/components/item/` | component | 338.4 | 924 (920, 924, 940) | 0 | 0 |
+| `/components/input/` | component | 337.7 | 908 (852, 912, 908) | 0 | 0 |
+| `/components/table/` | component | 337.4 | 896 (880, 896, 900) | 0 | 0 |
+| `/components/four-dot/` | component | 337.2 | 952 (952, 920, 968) | 0 | 0 |
+| `/components/sign-up/` | component | 337.1 | 928 (928, 928, 956) | 0 | 0 |
+| `/components/textarea/` | component | 336.7 | 892 (932, 876, 892) | 0 | 0 |
+| `/components/alert-dialog/` | component | 336.2 | 884 (884, 904, 872) | 0 | 0 |
+| `/components/chat/` | component | 335.9 | 916 (932, 908, 916) | 0 | 0 |
+| `/components/settings/` | component | 335.2 | 928 (928, 924, 952) | 0 | 0 |
+| `/components/tabs/` | component | 334 | 896 (896, 916, 884) | 0.004 | 0 |
+| `/components/meter/` | component | 334 | 900 (908, 900, 856) | 0 | 0 |
+| `/components/label/` | component | 333.6 | 884 (892, 884, 868) | 0.09 | 0 |
+| `/components/toggle/` | component | 333.4 | 880 (928, 860, 880) | 0.004 | 0 |
+| `/components/message/` | component | 333.3 | 888 (888, 884, 932) | 0 | 0 |
+| `/components/page-states/` | component | 332.5 | 916 (924, 904, 916) | 0 | 0 |
+| `/components/badge/` | component | 331.9 | 864 (864, 844, 904) | 0 | 0 |
+| `/components/collapsible/` | component | 331.7 | 892 (904, 872, 892) | 0 | 0 |
+| `/components/sign-in/` | component | 331.7 | 888 (944, 868, 888) | 0 | 0 |
+| `/components/marker/` | component | 331.2 | 880 (872, 880, 884) | 0 | 0 |
+| `/components/card/` | component | 331.1 | 880 (840, 896, 880) | 0 | 0 |
+| `/components/hero/` | component | 330 | 884 (868, 888, 884) | 0 | 0 |
+| `/components/empty/` | component | 329.8 | 884 (884, 956, 868) | 0.018 | 0 |
+| `/components/avatar/` | component | 329.2 | 884 (868, 884, 916) | 0 | 0 |
+| `/components/status/` | component | 328.9 | 884 (884, 892, 848) | 0 | 0 |
+| `/components/liquid-glass/` | component | 328.5 | 884 (880, 884, 896) | 0 | 0 |
+| `/components/separator/` | component | 328.2 | 880 (880, 868, 892) | 0 | 0 |
+| `/components/marketing-bar/` | component | 327.8 | 876 (872, 876, 880) | 0 | 0 |
+| `/components/utils/` | component | 327.6 | 872 (872, 868, 872) | 0 | 0 |
+| `/components/stage/` | component | 327.4 | 900 (900, 924, 868) | 0 | 0 |
+| `/components/spinner/` | component | 327 | 868 (900, 864, 868) | 0.004 | 0 |
+| `/components/kbd/` | component | 326.9 | 884 (908, 884, 880) | 0 | 0 |
+| `/components/marketing-footer/` | component | 326.9 | 880 (880, 936, 844) | 0 | 0 |
+| `/components/proof-band/` | component | 326.8 | 896 (896, 892, 932) | 0 | 0 |
+| `/components/is-mobile/` | component | 326.3 | 876 (880, 868, 876) | 0 | 0 |
+| `/components/cta-band/` | component | 326.3 | 896 (900, 896, 896) | 0 | 0 |
+| `/components/name-strip/` | component | 326.2 | 884 (884, 888, 880) | 0 | 0 |
+| `/components/font-heading-ibm-plex-sans/` | component | 326 | 864 (864, 852, 868) | 0.005 | 0 |
+| `/components/skeleton/` | component | 326 | 864 (852, 864, 884) | 0 | 0 |
+| `/components/font-jetbrains-mono/` | component | 325.7 | 864 (872, 856, 864) | 0.004 | 0 |
+| `/components/font-geist/` | component | 325.6 | 876 (880, 864, 876) | 0 | 0 |
+| `/components/kuiper-theme/` | component-live | 760 | 1352 (1376, 1316, 1352) | 0.004 | 2 |
+| `/components/code-editor/` | component-live | 655.8 | 912 (912, 904, 916) | 0.003 | 2 |
+| `/components/code-languages/` | component-live | 653.6 | 904 (928, 904, 888) | 0 | 2 |
+| `/components/highlighter/` | component-live | 542 | 1140 (1116, 1140, 1164) | 0 | 2 |
+| `/components/use-highlighted-code/` | component-live | 439.3 | 932 (964, 904, 932) | 0 | 2 |
+| `/components/product-home/` | component-live | 331.4 | 924 (928, 924, 924) | 0 | 3 |
+| `/components/stage-hero/` | component-live | 328 | 900 (900, 896, 908) | 0 | 2 |
+| `/components/stage-card/` | component-live | 327.6 | 928 (880, 936, 928) | 0 | 3 |
+| `/components/live-console/` | component-live | 327.3 | 892 (912, 892, 892) | 0 | 2 |
+| `/components/chart/` | component-heavy | 479.9 | 912 (884, 912, 928) | 0 | 0 |
+| `/changelog/` | leaf | 332.3 | 1008 (1008, 996, 1052) | 0.001 | 0 |
+| `/changelog/0.13.0/upgrade/` | leaf | 317.6 | 812 (776, 832, 812) | 0 | 0 |
+| `/foundations/code/` | leaf | 315.2 | 808 (832, 796, 808) | 0 | 0 |
+| `/start/install/` | leaf | 313.9 | 800 (800, 808, 788) | 0 | 0 |
+| `/start/light-and-dark/` | leaf | 310.3 | 788 (788, 776, 792) | 0 | 0 |
+| `/start/your-product/` | leaf | 310.3 | 780 (788, 780, 776) | 0 | 0 |
+| `/foundations/tokens/` | leaf | 308.1 | 860 (864, 856, 860) | 0.001 | 0 |
+| `/foundations/colour/` | leaf | 305.7 | 876 (876, 888, 848) | 0 | 0 |
+| `/foundations/type/` | leaf | 299.3 | 820 (820, 836, 772) | 0 | 0 |
+| `/foundations/motion/` | leaf | 296.2 | 768 (768, 792, 764) | 0 | 0 |
+| `/start/theme/` | leaf | 295.4 | 772 (772, 776, 756) | 0.001 | 0 |
+| `/foundations/space-and-shape/` | leaf | 295.3 | 792 (760, 832, 792) | 0 | 0 |
+| `/start/modes/` | leaf | 294.9 | 772 (768, 772, 792) | 0 | 0 |
+| `/foundations/accessibility/` | leaf | 294.4 | 772 (772, 772, 768) | 0 | 0 |
+| `/brand/downloads/` | brand | 299.6 | 776 (776, 760, 776) | 0 | 0 |
+| `/brand/mark/` | brand | 299.1 | 772 (772, 748, 812) | 0 | 0 |
+| `/brand/imagery/` | brand | 297.4 | 780 (772, 780, 888) | 0.012 | 0 |
+| `/brand/type/` | brand | 297.3 | 788 (796, 768, 788) | 0 | 0 |
+| `/brand/colour/` | brand | 296.1 | 780 (780, 768, 780) | 0.001 | 0 |
+| `/brand/surfaces/` | brand | 295.6 | 776 (776, 776, 760) | 0 | 0 |
+| `/brand/motion/` | brand | 294.6 | 776 (776, 780, 760) | 0 | 0 |
+| `/brand/voice/` | brand | 294.3 | 772 (780, 772, 772) | 0 | 0 |
+| `/brand/products/` | brand | 293.9 | 768 (772, 764, 768) | 0 | 0 |
+
+**Criterion 4, bytes and the throttle.** On all 106 pages the throttled median equals the unthrottled figure to 0.1 kB, the nine live pages included. `networkidle` did not fire before a grammar was asked for. So the transfer test stays unthrottled. Every paint test checks it again on every run (2 kB, or for a live page, never higher than unthrottled).
+
+### The checkpoint's rulings
+
+Ruled by the builder under the owner's delegation (2026-11-16), in the spec's order. The design lead confirms or overturns each.
+
+1. **`LIVE_HIGHLIGHT`: nine pages, not the three inferred.** The sweep found nine pages that fetch `.wasm` on load, each two files (`web-tree-sitter.wasm` and the Python grammar; `stage-card` and `product-home` three):
+   - the four whose item highlights: `code-editor`, `code-languages`, `use-highlighted-code`, and **`highlighter`**, which fetches both files on load (the spec inferred that it waits for a button press);
+   - **`live-console`**, whose job is streaming code through the highlighter, and **`stage-card`, `stage-hero`, `product-home`**, which hold a live console. These four fetch `.wasm` in their example frames only; their main frames are 327 to 331 kB;
+   - **`kuiper-theme`**, whose "An ink surface" example mounts a `CodeEditor` to show the editor's ground on the surface.
+   Each highlights code live on load, which is decision 5's test. Leaving any out would fail the build on code outside this lane. Decision 5's "as today" was written knowing only the five budgeted pages, which fetch none.
+2. **`HEAVY`: `chart` alone.** With the live list ruled first, `chart` is the only page left whose median × 1.1 passes 500 kB (479.9 → 527.9). The theme page, the heaviest by far (760 kB), is a live page.
+3. **The probes: 20 pages.** Each template's heaviest and slowest page; Button; every live page; and `label`, whose CLS sets `component`'s (deviation 3). `home` `/`; `index` `/components/`; `landing` `/start/`, `/brand/`; `component` `sidebar`, `button`, `label`; `component-live` its nine; `component-heavy` `chart`; `leaf` `/changelog/`; `brand` `/brand/downloads/`, `/brand/type/`.
+4. **The figures and budgets.** Q2's margins. Q2 also says the checkpoint widens a template whose sweep spread passes 10%: `landing` (14.2%, `/brand/`), `component` (10.9%, `marketing-footer`) and `brand` (15.0%, `imagery`) each take a 15% local LCP margin, the spread rounded up to 5%.
+
+   | Template | Pages | Heaviest page | Measured | Transfer budget | Headroom | Slowest page, LCP | LCP margin | LCP budget | Worst CLS | CLS budget |
+   |---|---|---|---|---|---|---|---|---|---|---|
+   | `home` | 1 | `/` | 300.8 kB | **335 kB** | 34.2 | `/`, 780 ms | 10% | **860 ms** | 0.005 | 0.02 |
+   | `index` | 1 | `/components/` | 349.5 | **385** | 35.5 | `/components/`, 2,472 | 10% | **2,720** | 0 | 0.02 |
+   | `landing` | 3 | `/start/` | 300.7 | **335** | 34.3 | `/brand/`, 944 | 15% | **1,090** | 0 | 0.02 |
+   | `component` | 68 | `sidebar` | 403.8 | **445** | 41.2 (Button 70.8) | `sidebar`, 1,104 | 15% | **1,270** | 0.09 (`label`) | **0.108** |
+   | `component-live` | 9 | `kuiper-theme` | 760 | **840** | 80.0 | `kuiper-theme`, 1,352 | 10% | **1,490** | 0.004 | 0.02 |
+   | `component-heavy` | 1 | `chart` | 479.9 | **530** | 50.1 | `chart`, 912 | 10% | **1,010** | 0 | 0.02 |
+   | `leaf` | 14 | `/changelog/` | 332.3 | **370** | 37.7 | `/changelog/`, 1,008 | 10% | **1,110** | 0.001 | 0.02 |
+   | `brand` | 9 | `/brand/downloads/` | 299.6 | **330** | 30.4 | `/brand/type/`, 788 | 15% | **910** | 0.012 | 0.02 |
+
+   `component`'s transfer budget is under the 500 kB cap. Every `ci` figure is `null` until the re-base (Q4).
+5. **`component`'s CLS is 0.108,** from `label` (0.09 in all three runs; `native-select` 0.087). It is decision 4's arithmetic on the worst page. It is also a real shift, so it is a finding (below), and the figure falls to the floor at the re-base after its fix.
+6. **Every rise** (each a page with a budget before):
+
+   | Page | Figure | Before | After |
+   |---|---|---|---|
+   | `/components/button/` | transfer | 382 kB (`020`'s ruling) | 445 kB |
+   | `/components/code-block/` | transfer | 360 kB | 445 kB |
+   | `/components/button/` | LCP, local | 1,157 ms | 1,270 ms |
+   | `/components/code-block/` | LCP, local | 1,186 ms | 1,270 ms |
+   | `/components/button/`, `/components/code-block/` | CLS | 0.02 | 0.108 |
+
+   **The falls,** which need no ruling: `/` transfer 355 → 335 kB, LCP 1,027 → 860 ms; `/components/` transfer 395 → 385 kB, LCP 2,988 → 2,720 ms (decision 9 expected a rise; this machine measured it faster); `/brand/colour/` transfer 347 → 330 kB, LCP 984 → 910 ms.
+7. **`030`'s stated cost fits.** `030` decision 14 states 2.6 to 2.8 kB per component page. Button has 70.8 kB of headroom; the tightest `component` page, `sidebar`, 41.2. `026`'s toast (about 0.6 kB on every page) fits every template; the tightest is `brand`, 30.4 kB.
+
+**This reverses `015` decision 23**, which said the live-highlighting pages "carry no budget". From `024` they carry `component-live`'s.
+
+**The host.** Cloudflare compresses `application/wasm` by default, with Zstandard, Brotli or gzip by plan (READ, developers.cloudflare.com/speed/optimization/content/compression/, 2026-11-16). So the harness's gzip figure is the wire figure or above it.
+
+### Deviations, each with its reason
+
+1. **Nine live pages, so `component-live` is loose for its lighter members** (ruling 1). The four live-console pages sit near 330 kB under an 840 kB budget, and `use-highlighted-code` at 439. The spec's Risks accept this for small templates. If the theme page stops fetching tree-sitter (finding 3), `component-live`'s budget falls to about 725 kB at the next re-base.
+2. **A local LCP margin per template** (`figures.lcp.margin`). Q2 widens a template whose spread passes 10%, and a constant could not hold that. `MARGIN.lcp` stays 10%, the default and the floor. The unit test checks each margin is at least 10% and a multiple of 5%, and the arithmetic uses it.
+3. **The CLS figure's page is a probe** when it sets the budget above the 0.02 floor (`label`). The spec's probes are the heaviest and slowest pages, which would leave the one page that sets `component`'s CLS unchecked between sweeps. A unit test requires it.
+4. **A failure lists each page's six largest files,** not "the files that grew". The harness keeps no per-file baseline to compare with.
+5. **Under `PERF_SWEEP=1`, the sweep replaces the every-run tests** (it checks everything they check, on every page), and each sweep page also takes one unthrottled load, recorded in `perf-sweep.json`, so criterion 4 is answered for every page.
+6. **No serial mode; soft expects.** The old file ran `mode: "serial"`, where one failure skips every later test. The project still runs in one worker, in order (`fullyParallel: false`). A failing template no longer hides the others, and a test reports transfer, CLS, LCP and `.wasm` together.
+7. **A paint test reuses its probe's unthrottled figure** from the transfer test of the same run, and loads it only when run alone. It saved about a minute.
+8. **Transfer is kept to 0.1 kB,** not whole kB, so a figure and its headroom are exact to the tenth.
+9. **The spec's step 2 sweep ran on a scratch Playwright config without the web server,** to measure an already built tree without rebuilding it. The gate runs used the real command and config.
+
+### Findings for other lanes
+
+1. **A layout shift on two component pages (lane S, a small change).** `label` 0.09 and `native-select` 0.087, the same in every run; every other component page is at or under 0.018. Unthrottled, `native-select` shows one shift of 0.087 at 312 ms: the page-tools row and the section below move up 25.6 px, and one header line moves from x = 307 to x = 640, as if a header line wraps before hydration and not after. `label` shows none unthrottled, so it is timing-dependent. After the fix, the re-base lowers `component`'s CLS to the floor, without a ruling.
+2. **`024b`** (queued): `registry.json` in the shared chunk adds about 0.6–0.9 kB to every page per new item. `024`'s headroom is measured with it; `024b`'s fall needs no ruling.
+3. **The theme page fetches tree-sitter** (about 150 kB gzipped) for one example. Highlighting it on demand would move it out of `LIVE_HIGHLIGHT`, by ruling, with its measurement.
+4. **`022`:** the one overlap is `perf.spec.ts`'s `test` import line; whichever lands second takes the other's. No project change is needed in `playwright.config.ts`. **Build step 7 is still open:** after `022`'s first three green runs, the runner's LCP figures, their spread and the CI margin go into each template's `ci`, with a ruling (Q4).
+
+### The checks
+
+2026-11-16, the machine at a load average of 9 to 102 on 10 cores, from other agents' builds.
+
+- `bun run check`: 0 errors, 0 warnings (2,233 files). `bun run lint`: clean.
+- `bun test tests/unit/budgets.test.ts`: **50 pass, 0 fail.**
+- `bun run test:unit`: **1,333 pass, 8 fail, 1,343 tests across 41 files.** All 8 are timing tests under this load, in three files this spec does not touch: five thumbnail-hash tests (`thumbnails.test.ts`, 6.5 to 37 s against a 5 s limit), two tree-sitter query tests (`queries.test.ts`, 5.6 and 11.9 s), and `highlight-session.test.ts`'s 4 ms p95, flaky under load as the handoff records. Re-run alone with `--timeout 120000`: 28 of 28 pass.
+- **The perf project, the real command and config:** `bun --bun playwright test --project=perf --no-deps`: **29 passed** (1 server check, 8 transfer tests over 106 pages, 20 paint tests), 7.9 minutes with the web server's build. **The project's own tests (criterion 10): 6.2 minutes** (371 s, the sum of the tests' durations), under the 8-minute target. Before, the old file's 5 tests took **1.0 minute** (63.7 s, on the same build). A first run without deviation 7's reuse took 8.0 minutes (482.6 s) on the scratch config.
+- **The sweep, the real command and config:** `PERF_SWEEP=1 bun --bun playwright test --project=perf --no-deps`: **107 passed** (106 pages and the server check), 26.7 minutes with the build, load 12 to 52. Every page's transfer equals the first sweep's to 0.1 kB. Its LCP medians sit within −11.4% (`/brand/`, 836 against 944 ms) and +4.3% (`input-otp`, 964 against 924) of the first sweep's. Button: 374.2 kB, LCP 880 ms, CLS 0.
+- `bun scripts/site/release-check.ts`: exits 0.
+- **Not run:** the `light` and `dark` browser projects and the smoke suite. `024` changes no file they read: both projects ignore `perf.spec.ts` (`testIgnore: /perf/`), and `budgets.ts` is imported only by `perf.spec.ts` and the unit test.
+
+### The scorecard (criterion 11)
+
+SCORE_PENDING

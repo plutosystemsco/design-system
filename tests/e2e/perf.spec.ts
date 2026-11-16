@@ -1,39 +1,47 @@
 /**
- * 015 decision 23, criterion 25: the budgets, measured. Chromium at
- * 1280 × 900, a cold cache, the files served gzipped, the network at
+ * 024: every site page held to its template's budgets (`budgets.ts`).
+ *
+ * `015` decision 23's profile: Chromium at 1280 × 900, a cold cache, the
+ * files served gzipped (`.wasm` too, 024 decision 7), the network at
  * 1.6 Mbps down, 750 kbps up and 150 ms round trip, the CPU slowed 4×.
- * Light project only (playwright.config.ts), one worker, 3 runs each; the
- * median is checked and every run recorded. Transfer excludes iframes and
- * the search index.
+ * Transfer counts the main frame only, without the search index; `.wasm`
+ * requests are counted in every frame.
+ *
+ * Every run (024 decision 6):
+ * - `024 transfer: <template>`: each page of the template, one cold load,
+ *   unthrottled; every page at or under the template's transfer budget, and
+ *   no `.wasm` outside `LIVE_HIGHLIGHT`.
+ * - `024 paint: <template>: <page>`: each probe page, 3 cold loads under the
+ *   profile; the medians against LCP (decision 8 chooses the figure) and
+ *   CLS, and the throttled transfer against the unthrottled (criterion 4).
+ *
+ * On demand, `PERF_SWEEP=1` replaces both with the sweep: every page, 3
+ * loads under the profile, one test per page, written to
+ * `test-results/perf-sweep.json`.
+ *
+ * Run it alone: `bun --bun playwright test --project=perf --no-deps`.
  */
 import { expect, test, type Browser } from "@playwright/test";
-import { existsSync, readFileSync, statSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  readdirSync,
+  readFileSync,
+  statSync,
+  writeFileSync,
+} from "node:fs";
 import path from "node:path";
-
-test.describe.configure({ mode: "serial" });
-
-/** Each budget: transfer in kB (1,024 bytes), LCP in ms, CLS. Tightened after 015's step 2. */
-export const BUDGETS: Record<
-  string,
-  { transfer: number; lcp: number; cls: number }
-> = {
-  "/": { transfer: 355, lcp: 1027, cls: 0.02 },
-  // From 018 checkpoint 2, with the thumbnails: 395 kB (the median 359 plus
-  // 10%) and LCP 2,988 ms (the median 2,716 plus 10%, as ruled): a first-row
-  // picture, chosen by the theme's class in CSS, is the largest paint.
-  "/components/": { transfer: 395, lcp: 2988, cls: 0.02 },
-  // Ruled 365 kB after 015 step 3, then 370 kB after its change review, when
-  // each example view came to load only its own example (decisions.md, "The
-  // Button page's transfer budget is 365 kB", "Raised again to 370 kB").
-  // 380 kB from 018: the left nav and the page's new parts, every
-  // component page's cost (decisions.md, "018 checkpoint 1").
-  // 382 kB from 020 (the owner, 2026-11-15): the rename grows the page by
-  // about 0.75 kB (the head script's carry-over and the names in the HTML,
-  // two routes, the alias and guide entries) over a base of 379.8 kB. 024's
-  // per-template budgets replace this one (020's Landing notes).
-  "/components/button/": { transfer: 382, lcp: 1157, cls: 0.02 },
-  "/components/code-block/": { transfer: 360, lcp: 1186, cls: 0.02 },
-};
+import { componentPath, SITEMAP } from "../../src/lib/site/sitemap.ts";
+import {
+  budgetOf,
+  lcpBudget,
+  LIVE_HIGHLIGHT,
+  pagesOf,
+  TEMPLATE_IDS,
+  TEMPLATES,
+  templateOf,
+  type TemplateId,
+} from "./budgets.ts";
 
 const BUILD = path.resolve("build");
 const TYPES: Record<string, string> = {
@@ -45,6 +53,8 @@ const TYPES: Record<string, string> = {
   ".wasm": "application/wasm",
   ".svg": "image/svg+xml",
 };
+/** What the server gzips: text, and `.wasm` as `025` decision 4 does (024 decision 7). */
+const GZIP = /text|javascript|json|svg|wasm/;
 
 let server: ReturnType<typeof Bun.serve>;
 let origin = "";
@@ -58,7 +68,7 @@ test.beforeAll(() => {
       if (!existsSync(file) || !statSync(file).isFile())
         return new Response("not found", { status: 404 });
       const type = TYPES[path.extname(file)] ?? "application/octet-stream";
-      if (/text|javascript|json|svg/.test(type)) {
+      if (GZIP.test(type)) {
         const body = Bun.gzipSync(new Uint8Array(readFileSync(file)));
         return new Response(body, {
           headers: { "content-type": type, "content-encoding": "gzip" },
@@ -73,8 +83,25 @@ test.beforeAll(() => {
 });
 test.afterAll(() => server?.stop(true));
 
-/** One cold load under the profile. */
-export async function measure(browser: Browser, url: string) {
+export type Run = {
+  /** kB as sent, to 0.1 kB. */
+  transfer: number;
+  lcp: number;
+  cls: number;
+  /** `.wasm` requests, in every frame. */
+  wasm: number;
+  /** Each main-frame response, largest first: its path and kB as sent. */
+  responses: { url: string; kB: number }[];
+};
+
+const kB = (bytes: number) => Math.round(bytes / 102.4) / 10;
+
+/** One cold load, under the profile unless `throttle` is false. */
+export async function measure(
+  browser: Browser,
+  url: string,
+  { throttle = true }: { throttle?: boolean } = {},
+): Promise<Run> {
   const ctx = await browser.newContext({
     viewport: { width: 1280, height: 900 },
   });
@@ -82,15 +109,18 @@ export async function measure(browser: Browser, url: string) {
   const cdp = await ctx.newCDPSession(page);
   await cdp.send("Network.enable");
   await cdp.send("Network.setCacheDisabled", { cacheDisabled: true });
-  await cdp.send("Network.emulateNetworkConditions", {
-    offline: false,
-    latency: 150,
-    downloadThroughput: (1.6 * 1024 * 1024) / 8,
-    uploadThroughput: (750 * 1024) / 8,
-  });
-  await cdp.send("Emulation.setCPUThrottlingRate", { rate: 4 });
+  if (throttle) {
+    await cdp.send("Network.emulateNetworkConditions", {
+      offline: false,
+      latency: 150,
+      downloadThroughput: (1.6 * 1024 * 1024) / 8,
+      uploadThroughput: (750 * 1024) / 8,
+    });
+    await cdp.send("Emulation.setCPUThrottlingRate", { rate: 4 });
+  }
   const urls = new Map<string, string>();
   const frames = new Map<string, string>();
+  const sizes = new Map<string, number>();
   let transfer = 0;
   let wasm = 0;
   const tree = (await cdp.send("Page.getFrameTree")) as {
@@ -108,10 +138,12 @@ export async function measure(browser: Browser, url: string) {
     "Network.loadingFinished",
     (e: { requestId: string; encodedDataLength: number }) => {
       const u = urls.get(e.requestId) ?? "";
-      if (u.endsWith(".wasm")) wasm++;
+      if (new URL(u, origin).pathname.endsWith(".wasm")) wasm++;
       if (u.includes("/search.json") || frames.get(e.requestId) !== main)
         return;
       transfer += e.encodedDataLength;
+      const key = u.startsWith(origin) ? u.slice(origin.length) : u;
+      sizes.set(key, (sizes.get(key) ?? 0) + e.encodedDataLength);
     },
   );
   await page.addInitScript(() => {
@@ -137,60 +169,224 @@ export async function measure(browser: Browser, url: string) {
   })) as [number, number];
   await ctx.close();
   return {
-    transfer: Math.round(transfer / 1024),
+    transfer: kB(transfer),
     lcp: Math.round(lcp),
     cls: Number(cls.toFixed(3)),
     wasm,
+    responses: [...sizes]
+      .map(([url, bytes]) => ({ url, kB: kB(bytes) }))
+      .sort((a, b) => b.kB - a.kB),
   };
 }
 
 const median = (xs: number[]) =>
   [...xs].sort((a, b) => a - b)[Math.floor(xs.length / 2)];
 
-test.describe("015: the budgets", () => {
-  for (const [page, budget] of Object.entries(BUDGETS)) {
-    test(`${page}: transfer ≤ ${budget.transfer} kB, LCP ≤ ${budget.lcp} ms, CLS ≤ ${budget.cls}, 0 .wasm`, async ({
-      browser,
-    }) => {
-      test.setTimeout(180_000);
-      const runs = [];
-      for (let i = 0; i < 3; i++)
-        runs.push(await measure(browser, origin + page));
-      console.log(`perf ${page}: ${JSON.stringify(runs)}`);
-      expect(median(runs.map((r) => r.transfer))).toBeLessThanOrEqual(
-        budget.transfer,
-      );
-      expect(median(runs.map((r) => r.lcp))).toBeLessThanOrEqual(budget.lcp);
-      expect(median(runs.map((r) => r.cls))).toBeLessThanOrEqual(budget.cls);
-      for (const r of runs) expect(r.wasm).toBe(0);
-    });
-  }
-});
+const LIVE = new Set(LIVE_HIGHLIGHT.map(componentPath));
 
-// 017 decision 11: the heaviest Brand page. Its budget started as the home
-// page's, borrowed and INFERRED; measured at 017's checkpoint (3 runs,
-// medians 289 kB, LCP 820 ms, CLS 0.002), it is the median plus 20%, within
-// the home page's. CLS is max(median × 1.2, 0.02), checkpoint 1's rule.
-const COLOUR_BUDGET = { transfer: 347, lcp: 984, cls: 0.02 };
+/** Criterion 4: how far the throttled transfer may sit from the unthrottled, in kB. */
+const THROTTLE_TOLERANCE = 2;
 
-test.describe("017: the Colour page's budget", () => {
-  test(`/brand/colour/: transfer ≤ ${COLOUR_BUDGET.transfer} kB, LCP ≤ ${COLOUR_BUDGET.lcp} ms, CLS ≤ ${COLOUR_BUDGET.cls}, 0 .wasm`, async ({
-    browser,
-  }) => {
-    test.setTimeout(180_000);
-    const runs = [];
-    for (let i = 0; i < 3; i++)
-      runs.push(await measure(browser, origin + "/brand/colour/"));
-    console.log(`perf /brand/colour/: ${JSON.stringify(runs)}`);
-    expect(median(runs.map((r) => r.transfer))).toBeLessThanOrEqual(
-      COLOUR_BUDGET.transfer,
-    );
-    expect(median(runs.map((r) => r.lcp))).toBeLessThanOrEqual(
-      COLOUR_BUDGET.lcp,
-    );
-    expect(median(runs.map((r) => r.cls))).toBeLessThanOrEqual(
-      COLOUR_BUDGET.cls,
-    );
-    for (const r of runs) expect(r.wasm).toBe(0);
+/** The largest files a page loaded, for a failure message. */
+const largest = (r: Run, n = 6) =>
+  r.responses
+    .slice(0, n)
+    .map((f) => `${f.url} ${f.kB} kB`)
+    .join(", ");
+
+/** The three throttled runs, without the per-response list. */
+const brief = (runs: Run[]) =>
+  runs.map(({ transfer, lcp, cls, wasm }) => ({ transfer, lcp, cls, wasm }));
+
+/** Decision 8: the paint record, on every machine, gated or not. */
+function annotateLcp(
+  id: TemplateId,
+  page: string,
+  runs: Run[],
+  lcp: ReturnType<typeof lcpBudget>,
+) {
+  test.info().annotations.push({
+    type: "lcp",
+    description: JSON.stringify({
+      page,
+      template: id,
+      runs: runs.map((r) => r.lcp),
+      median: median(runs.map((r) => r.lcp)),
+      budget: lcp.ms,
+      gated: lcp.gated,
+    }),
   });
+  if (!lcp.gated)
+    test.info().annotations.push({
+      type: "lcp-not-gated",
+      description: "LCP reported, not gated: no runner figure (024 decision 8)",
+    });
+}
+
+/** Every budget a page's throttled runs must meet. */
+function expectWithin(id: TemplateId, page: string, runs: Run[]) {
+  const b = budgetOf(TEMPLATES[id]);
+  const lcp = lcpBudget(TEMPLATES[id], process.env);
+  const t = median(runs.map((r) => r.transfer));
+  expect
+    .soft(t, `${page}: transfer ${t} kB; largest: ${largest(runs[0])}`)
+    .toBeLessThanOrEqual(b.transfer);
+  expect
+    .soft(median(runs.map((r) => r.cls)), `${page}: CLS`)
+    .toBeLessThanOrEqual(b.cls);
+  if (lcp.gated && lcp.ms !== null)
+    expect
+      .soft(median(runs.map((r) => r.lcp)), `${page}: LCP (${lcp.source})`)
+      .toBeLessThanOrEqual(lcp.ms);
+  if (!LIVE.has(page))
+    expect
+      .soft(
+        runs.map((r) => r.wasm),
+        `${page}: .wasm outside LIVE_HIGHLIGHT`,
+      )
+      .toEqual(runs.map(() => 0));
+}
+
+const SWEEP = !!process.env.PERF_SWEEP;
+
+/**
+ * Each page's unthrottled transfer, kept by the transfer tests so a paint
+ * test need not load its probe again (the project runs in one worker, in
+ * order). A paint test run alone, or after a worker restart, loads it.
+ */
+const unthrottled = new Map<string, number>();
+const SWEEP_FILE = path.resolve("test-results/perf-sweep.json");
+
+test("024 decision 7: the server sends .wasm gzipped", async () => {
+  const dir = path.join(BUILD, "_app/immutable/assets");
+  const file = readdirSync(dir).find((f) => f.endsWith(".wasm"));
+  expect(file, "a .wasm file in the build").toBeTruthy();
+  const res = await fetch(`${origin}/_app/immutable/assets/${file}`);
+  expect(res.headers.get("content-type")).toBe("application/wasm");
+  expect(res.headers.get("content-encoding")).toBe("gzip");
 });
+
+if (!SWEEP) {
+  test.describe("024: transfer, every page", () => {
+    for (const id of TEMPLATE_IDS) {
+      const pages = pagesOf(id);
+      const b = budgetOf(TEMPLATES[id]);
+      const wasmRule = id === "component-live" ? ".wasm allowed" : "0 .wasm";
+      test(`024 transfer: ${id}: every page ≤ ${b.transfer} kB, ${wasmRule}`, async ({
+        browser,
+      }) => {
+        test.setTimeout(30_000 + 5_000 * pages.length);
+        const over: string[] = [];
+        const wasm: string[] = [];
+        const figures: Record<string, number> = {};
+        for (const p of pages) {
+          const r = await measure(browser, origin + p.path, {
+            throttle: false,
+          });
+          figures[p.path] = r.transfer;
+          unthrottled.set(p.path, r.transfer);
+          console.log(`transfer ${p.path}: ${r.transfer} kB, ${r.wasm} .wasm`);
+          if (r.transfer > b.transfer)
+            over.push(
+              `${p.path}: ${r.transfer} kB over ${b.transfer}; largest: ${largest(r)}`,
+            );
+          if (r.wasm > 0 && !LIVE.has(p.path))
+            wasm.push(`${p.path}: ${r.wasm} .wasm, not in LIVE_HIGHLIGHT`);
+        }
+        test.info().annotations.push({
+          type: "transfer",
+          description: JSON.stringify({
+            template: id,
+            budget: b.transfer,
+            figures,
+          }),
+        });
+        expect.soft(over, `pages over ${id}'s ${b.transfer} kB`).toEqual([]);
+        expect.soft(wasm, `pages that fetch .wasm`).toEqual([]);
+      });
+    }
+  });
+
+  test.describe("024: paint, the probes", () => {
+    for (const id of TEMPLATE_IDS) {
+      const b = budgetOf(TEMPLATES[id]);
+      const lcp = lcpBudget(TEMPLATES[id], process.env);
+      for (const probe of TEMPLATES[id].probes) {
+        test(`024 paint: ${id}: ${probe}: LCP ≤ ${lcp.ms ?? "reported"} ms, CLS ≤ ${b.cls}`, async ({
+          browser,
+        }) => {
+          test.setTimeout(180_000);
+          const runs: Run[] = [];
+          for (let i = 0; i < 3; i++)
+            runs.push(await measure(browser, origin + probe));
+          const free = {
+            transfer:
+              unthrottled.get(probe) ??
+              (await measure(browser, origin + probe, { throttle: false }))
+                .transfer,
+          };
+          console.log(
+            `perf ${probe}: ${JSON.stringify(brief(runs))}; unthrottled ${free.transfer} kB`,
+          );
+          annotateLcp(id, probe, runs, lcp);
+          expectWithin(id, probe, runs);
+          // Criterion 4: bytes do not depend on the throttle. On a live
+          // page `networkidle` may fire before the grammar is asked for, so
+          // the throttled figure may be lower, never higher.
+          const t = median(runs.map((r) => r.transfer));
+          if (LIVE.has(probe))
+            expect
+              .soft(
+                t,
+                `${probe}: throttled ${t} kB, unthrottled ${free.transfer}`,
+              )
+              .toBeLessThanOrEqual(free.transfer + THROTTLE_TOLERANCE);
+          else
+            expect
+              .soft(
+                Math.abs(t - free.transfer),
+                `${probe}: throttled ${t} kB, unthrottled ${free.transfer}`,
+              )
+              .toBeLessThanOrEqual(THROTTLE_TOLERANCE);
+        });
+      }
+    }
+  });
+} else {
+  test.describe("024: the sweep", () => {
+    for (const page of SITEMAP) {
+      const id = templateOf(page);
+      test(`024 sweep: ${id}: ${page.path}`, async ({ browser }) => {
+        test.setTimeout(180_000);
+        const runs: Run[] = [];
+        for (let i = 0; i < 3; i++)
+          runs.push(await measure(browser, origin + page.path));
+        const free = await measure(browser, origin + page.path, {
+          throttle: false,
+        });
+        console.log(
+          `perf ${page.path}: ${JSON.stringify(brief(runs))}; unthrottled ${free.transfer} kB`,
+        );
+        // Each test adds its page, so a failure keeps the record of the rest.
+        mkdirSync(path.dirname(SWEEP_FILE), { recursive: true });
+        const all = existsSync(SWEEP_FILE)
+          ? JSON.parse(readFileSync(SWEEP_FILE, "utf8"))
+          : {};
+        all[page.path] = {
+          template: id,
+          runs: brief(runs),
+          median: {
+            transfer: median(runs.map((r) => r.transfer)),
+            lcp: median(runs.map((r) => r.lcp)),
+            cls: median(runs.map((r) => r.cls)),
+          },
+          unthrottled: { transfer: free.transfer, wasm: free.wasm },
+          largest: runs[0].responses.slice(0, 10),
+        };
+        writeFileSync(SWEEP_FILE, JSON.stringify(all, null, 2));
+        annotateLcp(id, page.path, runs, lcpBudget(TEMPLATES[id], process.env));
+        expectWithin(id, page.path, runs);
+      });
+    }
+  });
+}
