@@ -287,6 +287,42 @@ test.describe("020b: the guide fits its column", () => {
     });
   }
 
+  // 020c review, finding 5: an inline-block chip's border would count toward
+  // its line's height; its negative block margin keeps every paragraph that
+  // holds code at whole lines of its own line height.
+  test("a paragraph that holds code keeps its line height", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto(GUIDE);
+    await page.evaluate(() => document.fonts.ready);
+    const off = await page.evaluate(() =>
+      [...document.querySelectorAll("main p")]
+        .filter((p) => p.querySelector("code") && !p.closest("table"))
+        .map((p) => {
+          const line = parseFloat(getComputedStyle(p).lineHeight);
+          const lines = p.getBoundingClientRect().height / line;
+          return Math.abs(lines - Math.round(lines)) < 0.02
+            ? null
+            : `${(p.textContent ?? "").trim().slice(0, 32)}…: ${lines.toFixed(2)} lines`;
+        })
+        .filter(Boolean),
+    );
+    expect(off).toEqual([]);
+  });
+
+  // 020c review, finding 6: the hidden twin table stays plain markup.
+  test("the hidden table's code carries no class", async ({ page }) => {
+    await page.goto(GUIDE);
+    const classed = await page
+      .locator("main table[hidden] code[class]")
+      .count();
+    expect(classed).toBe(0);
+    expect(
+      await page.locator("main table[hidden] code").count(),
+    ).toBeGreaterThan(0);
+  });
+
   test("the Markdown twin keeps the table, and only the table", () => {
     const twin = readFileSync(path.join("build", GUIDE, "index.md"), "utf8");
     expect(twin).toContain(

@@ -3,7 +3,7 @@
 Reviews two small changes: [`020c`](../specifications/020c-the-guides-measure-reads-line-fragments.md), the guide's column test, and [`022p`](../specifications/022p-the-keyboard-walk-waits-for-the-editors-focus.md), the keyboard walk's wait for the editor. Their research is [the fourth matrix run](../research/2026-11-16-the-fourth-matrix-run.md), §2. This reviewer wrote neither the specifications nor the code (constitution §5).
 
 - **Date:** 2026-11-16
-- **Status:** in review
+- **Status:** dispositioned; both land, 020c with two write-ins (findings 5 and 6, from the re-check)
 - **Reviewer:** a reviewer; not the author
 - **Reviewed:** the uncommitted working tree of the worktree `lane-small`, on `c5cdd65`. Two files, +23 −10: `tests/e2e/upgrade.spec.ts` (020c) and `tests/e2e/keyboard.spec.ts` (022p). No file under `src/` changes. The two specifications are untracked.
 - **Re-ran:** Linux, 4 cores, load average 1 to 5. Playwright 1.64.1, browsers from `/opt/pw-browsers` (Chromium 156 headless shell `156.0.8078.4`, full Chromium 156, WebKit). The worktree's `build/` as it stands; no rebuild, since no source was changed. One worker. Scratch copies of the two spec files, with absolute imports, ran from the scratchpad against a `vite preview` of the same build. "Before" means the file at `c5cdd65`.
@@ -96,8 +96,46 @@ A small change states its defect, fix and check, not counted criteria. Their cla
 
 ## Verdict
 
+As first reviewed:
+
 - **020c:** Does not land yet: finding 1 (the cause is the cloned decoration, in every engine, and a page fix removes it) and finding 2 (the slack has no margin) stand.
 - **022p:** Lands; finding 4 is a write-in to its comment and specification.
 
+As it stands after the disposition, see the closing line below.
+
 ## Disposition
 
+The author rebuilt 020c on finding 1's recommended fix and wrote finding 4 into 022p. The re-check read the new diff and the rewritten specifications, and re-ran on the rebuilt `build/` (newer than the page's source). The author's own revert run is taken as the failing-first evidence: the page at `c5cdd65`, rebuilt, fails the new test at 320 in `chromium-*`, naming `pluto:field-set` and `pluto:field-label` at 130.
+
+**Re-ran:**
+
+- `upgrade.spec.ts`, the real file, `chromium-light`, `chromium-dark`, `webkit-light` → **42 passed**.
+- A scratch copy of the new test, same three projects: as built → **9 passed**. A stand-in revert (CSS returning the guide's code to `inline`) → **3 failed**, all at 320, naming `pluto:field-set` and `pluto:field-label` at 130 in Chromium. The stand-in also reverted the `<dt>` names, so its WebKit failure (`kuiper-design-system`, 77) is 020b's own defect, not this one.
+- M1, `nowrap` plus 200 px → **6 failed** (390 and 320, three projects), as before.
+- M2, one more pixel of chip padding → **9 passed**. That is now right: an `inline-block` chip holds its padding inside its box, so more padding no longer runs past the column. The test's edge is probed by the revert instead: a 2 px overhang fails it, with the 1 px allowance.
+- Widths 320 to 440, step 2, every element: worst overhang **0.02 px** in full Chromium, **0** in the shell and WebKit.
+- Baselines and line height, 1440 and 320, the three browsers, against the stand-in revert: finding 5.
+- `axe.spec.ts` and `forced-colors.spec.ts`, `-g "upgrade|0.13.0"`, three projects → **9 passed**.
+- `keyboard.spec.ts`, code-editor and code-languages fixtures, `chromium-*`, `--repeat-each=4` → **16 passed**.
+- `bun run check` → 0 errors, 0 warnings, 2,429 files. Prettier on the page, the two tests and the two specifications → clean.
+
+**Each finding:**
+
+1. **Fixed.** The page carries the fix (`+page.svelte:58`), and the test has no slack. The specification names the cloned decoration, in every engine, and says the first version is withdrawn. EXECUTED above.
+2. **Fixed**, by finding 1's fix. No slack is left to have a margin.
+3. **Fixed.** The specification's fix says the font wait makes certain what had already happened. It says the fragment loop changes the message, not the verdict. The test's comment says the same.
+4. **Fixed.** `keyboard.spec.ts:62–65` is the replacement comment word for word. 022p's defect names the 10 ms timer.
+
+**Found in the re-check:**
+
+5. **Low. A line holding a chip is now 25 to 26 px, not 24** (`src/routes/(site)/changelog/0.13.0/upgrade/+page.svelte:58`).
+   An inline-block chip's height counts in its line: the 24 px line height plus its 1 px top and bottom border, 26 px. Inline code's border never counted. Baselines do not move: EXECUTED, a zero-size probe before and inside each chip sits on the same baseline in all three browsers, 107 of 107 chips on one line at 1440.
+   Failure: EXECUTED, the steps between lines in paragraphs with code. Before, 72 steps, all 24 px. After, at 1440, 1 of 24, 32 of 25 and 39 of 26. The spacing is uneven inside a paragraph, and `main` is 168 px taller at 1440 (8,016 to 8,184). Full Chromium and WebKit match; the shell differs by a few lines.
+   Fix: add `-my-(--line-width)` to the class, which makes it `inline-block max-w-full wrap-anywhere -my-(--line-width)`. `--line-width` is the 1 px hairline token (`src/app.css:102`). EXECUTED with `margin-block: -1px` injected: at 320, 176 of 176 steps are 24 px in full Chromium and WebKit (178 of 178 in the shell). The worst overhang over 320 to 440 stays 0.02 px. Paragraphs are still taller than before, by the lines a chip moves to whole, which is the fix's intent.
+6. **Low. The hidden twin table now carries the chip's classes** (`+page.svelte`, the `<table hidden>` loop, through `text()`).
+   020b's review finding 1 made the hidden copy plain, "no class the page never shows". The table's cells render through the same `text` snippet, so its 47 code elements now carry `inline-block max-w-full wrap-anywhere`. EXECUTED: the hidden table is 11,467 B (020b's notes: 9,305 B). The guide's HTML is 103,476 B (95,334 B as built at `c5cdd65`). The Markdown twin has no class (`grep -c inline-block index.md` → 0), and its test passes.
+   Fix: give the snippet a plain form for the table. For example, `inline(x, plain = false)` writes `class={plain ? undefined : "inline-block max-w-full wrap-anywhere -my-(--line-width)"}`, and `text(source, plain)` passes it on. The table's cells call `text(…, true)`. Check: no `class=` on a `code` inside `<table hidden>` in the built page, and the twin is byte-identical.
+
+Scorecard: no row moves (INFERRED). The page's rendered text is unchanged; only its layout changes. A run-log row for each is due at landing.
+
+Closing verdict, as it stands: **020c lands; findings 5 and 6 are write-ins, best made before the merge, since 5 changes how every paragraph with code is spaced. 022p lands.**
