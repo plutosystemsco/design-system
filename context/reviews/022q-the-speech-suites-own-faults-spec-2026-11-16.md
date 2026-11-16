@@ -3,7 +3,7 @@
 Reviews [`specifications/022q-the-speech-suites-own-faults.md`](../specifications/022q-the-speech-suites-own-faults.md) before it is built. Its research is [the first speech verdicts](../research/2026-11-16-the-first-speech-verdicts.md) (*the memo*) and [the fourth matrix run](../research/2026-11-16-the-fourth-matrix-run.md). This reviewer wrote neither the specification nor its research (constitution §5).
 
 - **Date:** 2026-11-16
-- **Status:** dispositioned; does not land yet: new findings 16 and 17 (Medium) stand
+- **Status:** dispositioned; fit to build
 - **Reviewer:** a reviewer; not the author
 - **Reviewed:** the specification as drafted (76 lines, untracked), on `release/0.13.0` at `c5cdd65`. Checked against:
   - `022` decisions 10 to 16, its criteria 13, 15 and 22, and its Q9 rehearsal notes (step 5 of its landing notes);
@@ -151,4 +151,20 @@ The specification was rewritten on 2026-11-16 to answer all fifteen findings. Th
     - Decision 6: give S6's bound, longer than `026`'s 6 s minimum plus the exit, for example 10 s.
     - Decision 5: add U1 to the rules that take a list.
 
-**Closing verdict.** Does not land yet: findings 1 to 15 are closed. New findings 16 (Medium: "got in" can be met by the title or by a text inside the trigger's name, which reopens `022` Q9's case) and 17 (Medium: the chart test's timeout and retries can push shard 1 past its 40-minute deadline) stand. Finding 18's write-ins should go in with them.
+**Second re-check (2026-11-16).** The specification was rewritten again for findings 16 to 18. Only those three were re-read, against the rewrite's decisions 1, 3, 5, 6 and 9 and its criteria 1 and 3. Nothing was run.
+
+16. **Closed.** *Inside texts* now leave out the trigger's name, the overlay's own name (its `aria-labelledby` title) and any text the trigger's name contains, all compared normalised. "Got in" needs an inside text. Criterion 1 holds the guard: an `open` window with only "Navigation", then ten "Open navigation button" steps, returns X0. INFERRED, checked against each O2 test:
+    - Each genuine walk still gets in through an element it focused or walked to: "Cancel" (alert-dialog), "Name" and "Cancel" (dialog), "Components" (sheet), the menu sheet's links (app-shell, marketing-bar, product-home, sidebar), "Keep my account" (the delete confirm).
+    - A reader stuck on "Delete project" after the title gives X0.
+    - Trigger-named texts and the title still count for "moved" and the stall. That is safe once "got in" is strict.
+17. **Closed.** Chart C1 now has a 7-minute timeout and runs once with no retry, stated as an exception to decision 10. Decision 9 counts shard 1 apart: 18 × 1.69 + 7 = 37.4 minutes, inside 40.
+    - The margin of 2.6 minutes rests on an average: shard 1 holds three O2 walks. Without retries the figure is about 24 minutes. Criterion 8 records shard 1's real time, so a miss is seen.
+    - Playwright's `test.describe.configure({ retries: 0 })` can set the per-file retry (INFERRED from its API). The builder should use it or something equivalent, not change the config.
+18. **Closed.** All four write-ins are in:
+    - criterion 1's `open` windows come from run 4's log where it prints one, or are labelled constructed;
+    - decision 3's X0 goes through `Sr.judge()` into `faults.json`, and never fires in a dry run;
+    - criterion 3 runs in all three engines;
+    - S6's wait is bounded at 10 s;
+    - U1 is in decision 5's list.
+
+**Closing verdict.** Fit to build: findings 1 to 18 are closed, and the rewrite adds nothing that stands.

@@ -1,6 +1,6 @@
 # 022q — The speech suite's own faults
 
-- **Status:** rewritten 2026-11-16 after its specification review (`reviews/022q-the-speech-suites-own-faults-spec-2026-11-16.md`, 15 findings, 5 High), and again after its re-check (findings 16 to 18); waits for a second re-check.
+- **Status:** rewritten 2026-11-16 after its specification review (`reviews/022q-the-speech-suites-own-faults-spec-2026-11-16.md`, 15 findings, 5 High), and again after its re-check (findings 16 to 18). The second re-check, 2026-11-16: fit to build. In build (lane E).
 - **Date:** 2026-11-16
 - **Author:** the design lead
 - **Kind:** a change to `022`'s screen-reader rules, fixture and tests, and to the VoiceOver jobs' shard count (lane E). No item, token or dependency changes. A specification, not a small change, because it changes rules `022` decided (decisions 12 to 15) and the owner chose to fix the suite before anything else (2026-11-16).
