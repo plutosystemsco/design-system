@@ -17,6 +17,7 @@ const rules = loadRules();
 // a row of 002's rule table.
 
 /**
+ * 027b test 4: 373 files, as pagination (3), search-field (2) and tag (3) add 8.
  * 027a test 4: 359 files, as link, button-group and progress add 2 each.
  * 026 decision 1, test 40: 365 files, merged after 027a, as toast adds its six.
  * 020 decision 5: 353 files, as theme gains stored.ts.
@@ -32,7 +33,7 @@ const rules = loadRules();
  * 006 decision 13: 300 files, 005's 286 plus the 14 of app-shell (9) and
  * chat (5).
  */
-const FILE_COUNT = 365;
+const FILE_COUNT = 373;
 
 describe("the item files", () => {
   const files = itemFiles();
@@ -66,6 +67,31 @@ describe("the item files", () => {
     expect(allowances.map((a) => [a.file, a.rule])).toEqual([
       ["src/lib/registry/ui/liquid-glass/pointer-light.ts", "L24"],
     ]);
+  });
+});
+
+// 027b test 4: batch A's interactive items' eight files are in the lint's
+// list, with 0 literals and 0 allowances.
+describe("027b test 4: batch A's interactive files", () => {
+  const BATCH_B_FILES = [
+    "src/lib/registry/ui/pagination/pagination.svelte",
+    "src/lib/registry/ui/pagination/pagination-pages.ts",
+    "src/lib/registry/ui/pagination/index.ts",
+    "src/lib/registry/ui/search-field/search-field.svelte",
+    "src/lib/registry/ui/search-field/index.ts",
+    "src/lib/registry/ui/tag/tag-group.svelte",
+    "src/lib/registry/ui/tag/tag.svelte",
+    "src/lib/registry/ui/tag/index.ts",
+  ];
+
+  test("are linted, with 0 literals and 0 allowances", () => {
+    const files = itemFiles();
+    for (const f of BATCH_B_FILES) expect(files, f).toContain(f);
+    const allowances: ReturnType<typeof lintFiles> = [];
+    expect(
+      lintFiles(BATCH_B_FILES, rules, undefined, undefined, allowances),
+    ).toEqual([]);
+    expect(allowances).toEqual([]);
   });
 });
 

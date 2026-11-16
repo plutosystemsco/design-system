@@ -25,6 +25,12 @@ export const ALIASES: readonly SearchAlias[] = [
   // 026 decision 22: Material's name for a toast, and the generic one.
   { alias: "snackbar", path: "/components/toast/" },
   { alias: "notification", path: "/components/toast/" },
+  // 027b decision 12: the other names of pagination, the search field and
+  // the tag.
+  { alias: "pager", path: "/components/pagination/" },
+  { alias: "searchbox", path: "/components/search-field/" },
+  { alias: "chip", path: "/components/tag/" },
+  { alias: "pill", path: "/components/tag/" },
 ];
 
 /** A page's aliases, in the list's order. */

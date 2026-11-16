@@ -347,6 +347,34 @@ export const INTERACTIONS: Record<string, Interaction> = {
     says: "updates",
     viewport: DEFAULT,
   },
+  // 027 decision 15: batch A's three interactive items. A fixture cannot
+  // mark a control the item draws, so pagination's and the tag's targets
+  // are the item's own slots, each matching one element.
+  pagination: {
+    kind: "click",
+    start: "click",
+    target: "[data-slot=pagination-next-control]",
+    state: `document.querySelector('[data-pagination-to="6"]')?.getAttribute("aria-current") === "page"`,
+    says: "selects",
+    viewport: DEFAULT,
+  },
+  "search-field": {
+    kind: "key",
+    start: "keydown",
+    target: TARGET,
+    key: "Escape",
+    state: `document.querySelector("[data-cost=target]")?.value === ""`,
+    says: "updates",
+    viewport: DEFAULT,
+  },
+  tag: {
+    kind: "click",
+    start: "click",
+    target: "[data-slot=tag-group] > li:first-child [data-slot=tag-remove]",
+    state: `document.querySelectorAll("[data-slot=tag-remove]").length === 2 && document.activeElement === document.querySelector("[data-slot=tag-remove]")`,
+    says: "updates",
+    viewport: DEFAULT,
+  },
 };
 
 /** An entry serialised with its keys sorted: what the runtime hash reads. */

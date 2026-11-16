@@ -116,6 +116,13 @@ export const LISTED_ITEMS: readonly ListedItem[] = [
     meta: { group: "actions" },
   },
   {
+    name: "tag",
+    title: "Tag",
+    description:
+      "A short label you can remove or press, in a named list that moves focus to its neighbour when a tag is removed.",
+    meta: { group: "actions" },
+  },
+  {
     name: "card",
     title: "Card",
     description:
@@ -318,6 +325,13 @@ export const LISTED_ITEMS: readonly ListedItem[] = [
     meta: { group: "forms" },
   },
   {
+    name: "search-field",
+    title: "Search field",
+    description:
+      "A search input with a magnifier, a clear button and Escape to clear, that can speak the result count for what is typed now.",
+    meta: { group: "forms" },
+  },
+  {
     name: "code-block",
     title: "Code block",
     description:
@@ -413,6 +427,13 @@ export const LISTED_ITEMS: readonly ListedItem[] = [
     title: "Link",
     description:
       "The inline link: always underlined, in the primary colour or the text's, with standalone, new-tab and visited forms.",
+    meta: { group: "navigation" },
+  },
+  {
+    name: "pagination",
+    title: "Pagination",
+    description:
+      "A named nav of page links, or page buttons for a list paged in place, with the current page marked and Previous and Next omitted at the ends.",
     meta: { group: "navigation" },
   },
   {

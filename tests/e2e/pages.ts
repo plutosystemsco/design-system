@@ -52,6 +52,8 @@ export const ITEMS = [
   "toggle-group",
   // actions (027a)
   "button-group",
+  // actions (027b)
+  "tag",
   // surfaces
   "card",
   "separator",
@@ -86,6 +88,8 @@ export const ITEMS = [
   "radio-group",
   "switch",
   "input-otp",
+  // forms (027b)
+  "search-field",
   // code (004)
   "code-block",
   "code-editor",
@@ -105,6 +109,8 @@ export const ITEMS = [
   "is-mobile",
   // navigation (027a)
   "link",
+  // navigation (027b)
+  "pagination",
   // chat (005)
   "message-log",
   "message",
@@ -171,6 +177,8 @@ export const ITEMS_011 = ["liquid-glass"];
 export const ITEMS_027A = ["button-group", "progress", "link"];
 /** 026's one item. */
 export const ITEMS_026 = ["toast"];
+/** 027b decision 1: batch A's interactive items. */
+export const ITEMS_027B = ["tag", "search-field", "pagination"];
 /** 010 decision 1: the nine compositions, in registry order. */
 export const COMPOSITIONS = [
   "stage",
@@ -204,7 +212,8 @@ export const ITEMS_002 = ITEMS.slice(8).filter(
     !ITEMS_010.includes(name) &&
     !ITEMS_011.includes(name) &&
     !ITEMS_027A.includes(name) &&
-    !ITEMS_026.includes(name),
+    !ITEMS_026.includes(name) &&
+    !ITEMS_027B.includes(name),
 );
 /** The 7 items 003 adds. */
 export const ITEMS_003 = [
@@ -246,6 +255,8 @@ export const PAGES_011 = ITEMS_011.map(componentPath);
 export const PAGES_027A = ITEMS_027A.map(componentPath);
 /** 026's item page. */
 export const PAGES_026 = ITEMS_026.map(componentPath);
+/** 027b's 3 item pages. */
+export const PAGES_027B = ITEMS_027B.map(componentPath);
 /** Every page of the site, from the one list (015 decision 1). */
 export const PAGES = SITEMAP.map((p) => p.path);
 /**
@@ -267,7 +278,8 @@ export const PAGES_002 = COMPONENT_PAGES.filter(
     !PAGES_010.includes(p) &&
     !PAGES_011.includes(p) &&
     !PAGES_027A.includes(p) &&
-    !PAGES_026.includes(p),
+    !PAGES_026.includes(p) &&
+    !PAGES_027B.includes(p),
 );
 
 /** The views (003 decision 16; 006 decision 12), each with its block and label. */
@@ -766,7 +778,7 @@ export const BAR_STOPS = [
 
 /**
  * The footer's stops: one link per door's landing and the door's pages (the
- * Components door lists its landing; its 79 pages are on it), the registry
+ * Components door lists its landing; its 82 pages are on it), the registry
  * group, then the source link.
  */
 export const FOOTER_STOPS = [

@@ -26,61 +26,12 @@ const inProjects = (
   projects: string[],
 ): LedgerLine[] => projects.map((project) => ({ ...line, where: { project } }));
 
-const BLOCKS = [
-  "hero",
-  "sign-in",
-  "sign-up",
-  "page-states",
-  "settings",
-  "app-shell",
-  "chat",
-  "product-home",
-];
-
 export const LEDGER: LedgerLine[] = [
   // 022a: dropdown-menu's sub-menu, under every reader and browser pair.
   { ...SUB_MENU_ESCAPE, where: { reader: "voiceover", browser: "webkit" } },
   { ...SUB_MENU_ESCAPE, where: { reader: "voiceover", browser: "chromium" } },
   { ...SUB_MENU_ESCAPE, where: { reader: "nvda", browser: "chromium" } },
   { ...SUB_MENU_ESCAPE, where: { reader: "nvda", browser: "firefox" } },
-  // 022b: the pressed theme segment in Firefox's forced palette. The test
-  // runs in light projects only (onlyProjects).
-  {
-    file: "forced-colors.spec.ts",
-    title: "axe finds 0 violations on /components/button/",
-    where: { project: "firefox-light" },
-    expect: { error: "/components/button/: color-contrast" },
-    finding:
-      "The frame's theme switch paints its pressed segment SelectedItem on SelectedItemText: 2.94:1 in Firefox's forced palette.",
-    change: "022b",
-  },
-  // 022c: the viewer's theme copy loses to the frame's own code in Firefox.
-  ...BLOCKS.flatMap((block) =>
-    inProjects(
-      {
-        file: "viewer.spec.ts",
-        title: `${block} › 4. the frame's <html> is dark exactly when the page's is: at load, after the toggle, and back`,
-        expect: { error: "the frame's theme is the page's" },
-        finding:
-          "In Firefox the frame keeps its own theme: the viewer's copy runs before the frame's own theme code.",
-        change: "022c",
-      },
-      FIREFOX,
-    ),
-  ),
-  // 022d: the overflowing section nav is a Tab stop in Firefox.
-  ...inProjects(
-    {
-      file: "keyboard.spec.ts",
-      title:
-        "at 1280 × 900 › the Components landing: Tab visits its 201 stops in order, each with the ring unclipped",
-      expect: { error: "nav:Components pages" },
-      finding:
-        "Firefox makes the overflowing section nav a Tab stop of its own, before its first link.",
-      change: "022d",
-    },
-    FIREFOX,
-  ),
   // 022f: the code editor misses 013's budgets in Firefox.
   ...inProjects(
     {

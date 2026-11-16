@@ -573,6 +573,30 @@
         "burst": { "hydrateMs": 27, "interactionMs": 146 },
         "progress": { "hydrateMs": 28, "interactionMs": 94 }
       }
+    },
+    "pagination": {
+      "js": 13600,
+      "css": 2300,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 50,
+      "interactionMs": 61
+    },
+    "search-field": {
+      "js": 14500,
+      "css": 2700,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 38,
+      "interactionMs": 59
+    },
+    "tag": {
+      "js": 14800,
+      "css": 2100,
+      "lazy": 1000,
+      "assets": 1000,
+      "hydrateMs": 35,
+      "interactionMs": 60
     }
   }
 }

@@ -34,7 +34,7 @@ describe("015: the search index", () => {
     const pages = index.filter((e) => !e.path.includes("#")).map((e) => e.path);
     expect(pages).toEqual(SITEMAP.map((p) => p.path));
     expect(new Set(index.map((e) => e.path)).size).toBe(index.length);
-    expect(SITEMAP.filter((p) => p.spec === "015")).toHaveLength(85);
+    expect(SITEMAP.filter((p) => p.spec === "015")).toHaveLength(88);
   });
 
   test('"dial" ranks Dialog first, and "but" ranks Button first', () => {
@@ -176,10 +176,10 @@ describe("018 decision 8: search that finds what was meant", () => {
   // 018 checkpoint 2 drops "select": it starts a word of Native select.
   // 020 adds the old name of the renamed theme item. 027a adds hyperlink
   // and anchor, for the link; 026 test 42, snackbar and notification, for
-  // the toast.
-  test("the aliases equal their fixture list of 9", async () => {
+  // the toast; 027b, pager, searchbox, chip and pill.
+  test("the aliases equal their fixture list of 13", async () => {
     const { ALIASES } = await aliases();
-    expect(fixture).toHaveLength(9);
+    expect(fixture).toHaveLength(13);
     expect(ALIASES.map(({ alias, path }) => ({ alias, path }))).toEqual(
       fixture.map(({ alias, path }) => ({ alias, path })),
     );
@@ -198,6 +198,20 @@ describe("018 decision 8: search that finds what was meant", () => {
         title: "Link",
       });
     }
+  });
+
+  // 027b test 7: the four aliases of pagination, search field and tag.
+  test.each([
+    ["pager", "/components/pagination/", "Pagination"],
+    ["searchbox", "/components/search-field/", "Search field"],
+    ["chip", "/components/tag/", "Tag"],
+    ["pill", "/components/tag/", "Tag"],
+  ] as const)('"%s" returns %s first, with its alias', (q, path, title) => {
+    const r = Search.search(index, q);
+    expect(r[0]?.path, q).toBe(path);
+    expect(r[0]?.title, q).toBe(title);
+    expect(r[0]?.alias, q).toBe(q);
+    expect(fixture).toContainEqual({ alias: q, path, title });
   });
 
   test("each alias's target is in SITEMAP, with the fixture's title", async () => {

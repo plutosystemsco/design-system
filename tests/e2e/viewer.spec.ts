@@ -226,9 +226,9 @@ for (const block of BLOCKS) {
       await openBlock(page, block);
       const states: boolean[] = [];
       // 022's review, finding 3: the frame checks carry their own messages,
-      // so 022c's ledger line names them ("the frame's theme is the
-      // page's") and no other toBe can pass for them. In Firefox the copy
-      // loses at load or after a toggle, by turns.
+      // so a ledger line can name them ("the frame's theme is the page's")
+      // and no other toBe can pass for them. Before 022c, Firefox's copy
+      // lost at load or after a toggle, by turns.
       await expect
         .poll(() => frameIsDark(page), {
           message: "at load, the frame's theme is the page's",

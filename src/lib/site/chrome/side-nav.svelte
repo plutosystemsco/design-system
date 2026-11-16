@@ -67,12 +67,15 @@
 <!--
   The left nav (018 decision 1): the door's pages in navOrder, the current
   one marked by weight and a start border, so forced colours keep the mark.
-  Its links scroll inside it. Not in the Markdown twin.
+  Its links scroll inside it. Not in the Markdown twin. 022d: tabindex="-1",
+  since Firefox makes a scroll box that overflows a Tab stop of its own; all
+  it holds is links and the filter, so focus moving through them scrolls it.
 -->
 <nav
   aria-label={label}
   data-slot="side-nav"
   data-md="skip"
+  tabindex="-1"
   bind:this={list}
   class={["text-sm", className]}
 >

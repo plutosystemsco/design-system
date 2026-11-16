@@ -19,17 +19,17 @@ const updated = Object.fromEntries(
 );
 
 describe("018 decision 4: Updated", () => {
-  test("79 of 79 items have a version", () => {
-    expect(registry.items).toHaveLength(79);
+  test("82 of 82 items have a version", () => {
+    expect(registry.items).toHaveLength(82);
     for (const i of registry.items)
       expect(updated[i.name], i.name).toMatch(/^\d+\.\d+\.\d+$/);
   });
 
   // 023: its doc-comment bullets name name-strip and cta-band, the two
   // that took their since; a name no bullet holds still does.
-  test("79 are named at a bullet's head; a name no bullet holds takes its since", () => {
+  test("82 are named at a bullet's head; a name no bullet holds takes its since", () => {
     const named = registry.items.filter((i) => updatedIn(i.name, null, log));
-    expect(named).toHaveLength(79);
+    expect(named).toHaveLength(82);
     expect(updatedIn("no-such-item", "0.11.0", log)).toBe("0.11.0");
     expect(updatedIn("no-such-item", null, log)).toBeNull();
   });

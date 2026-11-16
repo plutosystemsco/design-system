@@ -40,15 +40,37 @@
     );
   }
 
+  // 022c: the frame's own theme code may run after its `load`, as it does in
+  // Firefox, and set its <html> to its own reading. So once a frame loads,
+  // its <html> is watched too, and any change to its class is copied back.
+  // A copy that changes nothing records no mutation, so the two never loop.
+  let frameObserver: MutationObserver | undefined;
+
+  /** Copies the theme into the frame just loaded, and keeps it there. */
+  function watchFrame() {
+    frameObserver?.disconnect();
+    copyTheme();
+    const root = frame?.contentDocument?.documentElement;
+    if (!root) return;
+    frameObserver = new MutationObserver(copyTheme);
+    frameObserver.observe(root, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+  }
+
   onMount(() => {
     // The prerendered frame may have loaded before this handler existed.
-    if (frame?.contentDocument?.readyState === "complete") copyTheme();
+    if (frame?.contentDocument?.readyState === "complete") watchFrame();
     const observer = new MutationObserver(copyTheme);
     observer.observe(document.documentElement, {
       attributes: true,
       attributeFilter: ["class"],
     });
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      frameObserver?.disconnect();
+    };
   });
 
   // Pressed is inverted, as the tooltip chip is; hover stays the darker
@@ -122,7 +144,7 @@
       class="block h-180 border-0 {widthClass}"
       title="{title} preview"
       {src}
-      onload={copyTheme}
+      onload={watchFrame}
     ></iframe>
   </div>
 </div>

@@ -40,6 +40,16 @@
       "patch": "8-toast.patch",
       "target": "toast:assertive",
       "fault": "L1"
+    },
+    {
+      "patch": "9-pagination-status.patch",
+      "target": "pagination:status",
+      "fault": "L1"
+    },
+    {
+      "patch": "10-tag-focus.patch",
+      "target": "tag:group",
+      "fault": "F1"
     }
   ],
   "expected": [
@@ -76,6 +86,102 @@
       "fault": "L1"
     },
     {
+      "patch": "10-tag-focus.patch",
+      "file": "tag.sr.ts",
+      "title": "T1 the next: removing the middle tag speaks the next tag's remove button",
+      "reader": "nvda",
+      "browser": "chromium",
+      "fault": "F1"
+    },
+    {
+      "patch": "10-tag-focus.patch",
+      "file": "tag.sr.ts",
+      "title": "T1 the next: removing the middle tag speaks the next tag's remove button",
+      "reader": "nvda",
+      "browser": "firefox",
+      "fault": "F1"
+    },
+    {
+      "patch": "10-tag-focus.patch",
+      "file": "tag.sr.ts",
+      "title": "T1 the next: removing the middle tag speaks the next tag's remove button",
+      "reader": "voiceover",
+      "browser": "chromium",
+      "fault": "F1"
+    },
+    {
+      "patch": "10-tag-focus.patch",
+      "file": "tag.sr.ts",
+      "title": "T1 the next: removing the middle tag speaks the next tag's remove button",
+      "reader": "voiceover",
+      "browser": "webkit",
+      "fault": "F1"
+    },
+    {
+      "patch": "10-tag-focus.patch",
+      "file": "tag.sr.ts",
+      "title": "T2 the previous: removing the last tag speaks the new last tag's remove button",
+      "reader": "nvda",
+      "browser": "chromium",
+      "fault": "F1"
+    },
+    {
+      "patch": "10-tag-focus.patch",
+      "file": "tag.sr.ts",
+      "title": "T2 the previous: removing the last tag speaks the new last tag's remove button",
+      "reader": "nvda",
+      "browser": "firefox",
+      "fault": "F1"
+    },
+    {
+      "patch": "10-tag-focus.patch",
+      "file": "tag.sr.ts",
+      "title": "T2 the previous: removing the last tag speaks the new last tag's remove button",
+      "reader": "voiceover",
+      "browser": "chromium",
+      "fault": "F1"
+    },
+    {
+      "patch": "10-tag-focus.patch",
+      "file": "tag.sr.ts",
+      "title": "T2 the previous: removing the last tag speaks the new last tag's remove button",
+      "reader": "voiceover",
+      "browser": "webkit",
+      "fault": "F1"
+    },
+    {
+      "patch": "10-tag-focus.patch",
+      "file": "tag.sr.ts",
+      "title": "T3 the list: removing every tag speaks the list's name",
+      "reader": "nvda",
+      "browser": "chromium",
+      "fault": "F1"
+    },
+    {
+      "patch": "10-tag-focus.patch",
+      "file": "tag.sr.ts",
+      "title": "T3 the list: removing every tag speaks the list's name",
+      "reader": "nvda",
+      "browser": "firefox",
+      "fault": "F1"
+    },
+    {
+      "patch": "10-tag-focus.patch",
+      "file": "tag.sr.ts",
+      "title": "T3 the list: removing every tag speaks the list's name",
+      "reader": "voiceover",
+      "browser": "chromium",
+      "fault": "F1"
+    },
+    {
+      "patch": "10-tag-focus.patch",
+      "file": "tag.sr.ts",
+      "title": "T3 the list: removing every tag speaks the list's name",
+      "reader": "voiceover",
+      "browser": "webkit",
+      "fault": "F1"
+    },
+    {
       "patch": "2-dialog.patch",
       "file": "dialog.sr.ts",
       "title": "opening speaks the dialog's title",
@@ -583,6 +689,38 @@
       "patch": "8-toast.patch",
       "file": "toast.sr.ts",
       "title": "S2 assertive: the error is spoken whole",
+      "reader": "voiceover",
+      "browser": "webkit",
+      "fault": "L1"
+    },
+    {
+      "patch": "9-pagination-status.patch",
+      "file": "pagination.sr.ts",
+      "title": "P1 a page is said: Next on page 5 speaks Page 6 of 12, once, and not before",
+      "reader": "nvda",
+      "browser": "chromium",
+      "fault": "L1"
+    },
+    {
+      "patch": "9-pagination-status.patch",
+      "file": "pagination.sr.ts",
+      "title": "P1 a page is said: Next on page 5 speaks Page 6 of 12, once, and not before",
+      "reader": "nvda",
+      "browser": "firefox",
+      "fault": "L1"
+    },
+    {
+      "patch": "9-pagination-status.patch",
+      "file": "pagination.sr.ts",
+      "title": "P1 a page is said: Next on page 5 speaks Page 6 of 12, once, and not before",
+      "reader": "voiceover",
+      "browser": "chromium",
+      "fault": "L1"
+    },
+    {
+      "patch": "9-pagination-status.patch",
+      "file": "pagination.sr.ts",
+      "title": "P1 a page is said: Next on page 5 speaks Page 6 of 12, once, and not before",
       "reader": "voiceover",
       "browser": "webkit",
       "fault": "L1"

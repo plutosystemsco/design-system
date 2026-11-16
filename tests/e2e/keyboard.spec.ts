@@ -1617,3 +1617,265 @@ test.describe("027a test 53: the keyboard rows", () => {
     },
   );
 });
+
+/**
+ * 027b test 53: decision 9's rows for pagination, search-field and tag,
+ * each a test on its example view.
+ */
+test.describe("027b test 53: the keyboard rows", () => {
+  test.use({ viewport: { width: 1440, height: 900 } });
+  const view = async (page: Page, item: string, id: string) => {
+    await page.goto(`/example/${item}/${id}/`);
+    await page.locator("body[data-view-ready]").waitFor();
+  };
+  const row = (item: string) => ({
+    annotation: [
+      { type: "item", description: item },
+      { type: "check", description: "keyboard" },
+    ],
+  });
+  /** The focused element's words, or its accessible name's attribute. */
+  const focused = (page: Page) =>
+    page.evaluate(() => {
+      const a = document.activeElement as HTMLElement | null;
+      if (!a || a === document.body) return "body";
+      return (
+        a.getAttribute("aria-label") ??
+        (a.textContent ?? "").replace(/\s+/g, " ").trim()
+      );
+    });
+  const tabs = async (page: Page, n: number) => {
+    const out: string[] = [];
+    for (let i = 0; i < n; i++) {
+      await page.keyboard.press("Tab");
+      out.push(await focused(page));
+    }
+    return out;
+  };
+
+  test(
+    "pagination, Tab from before it: Previous, each page in order, then Next; no ellipsis, summary or empty end slot",
+    row("pagination"),
+    async ({ page }) => {
+      await view(page, "pagination", "links");
+      expect(await tabs(page, 7)).toEqual([
+        "Previous page",
+        "Page 1",
+        "Page 4",
+        "Page 5",
+        "Page 6",
+        "Page 12",
+        "Next page",
+      ]);
+      await view(page, "pagination", "ends");
+      expect(await tabs(page, 7)).toEqual([
+        "Page 1",
+        "Page 2",
+        "Page 3",
+        "Page 4",
+        "Page 5",
+        "Page 12",
+        "Next page",
+      ]);
+    },
+  );
+
+  test(
+    "pagination, Enter on a page link: follows it",
+    row("pagination"),
+    async ({ page }) => {
+      await view(page, "pagination", "links");
+      await page.getByRole("link", { name: "Page 6", exact: true }).focus();
+      await page.keyboard.press("Enter");
+      await page.waitForURL((u) => u.search === "?page=6");
+    },
+  );
+
+  for (const key of ["Enter", "Space"])
+    test(
+      `pagination, ${key} on a page or end button: shows that page, and focus stays, or moves when its control goes`,
+      row("pagination"),
+      async ({ page }) => {
+        await view(page, "pagination", "buttons");
+        const nav = page.locator('[data-slot="pagination"]');
+        const press = () => page.keyboard.press(key === "Space" ? " " : key);
+        await nav.getByRole("button", { name: "Page 6", exact: true }).focus();
+        await press();
+        await expect(
+          nav.getByRole("button", { name: "Page 6", exact: true }),
+        ).toHaveAttribute("aria-current", "page");
+        await expect(
+          nav.getByRole("button", { name: "Page 6", exact: true }),
+        ).toBeFocused();
+        await nav.getByRole("button", { name: "Next page" }).focus();
+        await press();
+        await expect(
+          nav.getByRole("button", { name: "Page 7", exact: true }),
+        ).toHaveAttribute("aria-current", "page");
+        await expect(
+          nav.getByRole("button", { name: "Next page" }),
+        ).toBeFocused();
+        await nav.getByRole("button", { name: "Page 12", exact: true }).focus();
+        await press();
+        await nav.getByRole("button", { name: "Page 11", exact: true }).focus();
+        await press();
+        await nav.getByRole("button", { name: "Next page" }).focus();
+        await press();
+        await expect(
+          nav.getByRole("button", { name: "Next page" }),
+        ).toHaveCount(0);
+        await expect(
+          nav.getByRole("button", { name: "Page 12", exact: true }),
+        ).toBeFocused();
+      },
+    );
+
+  test(
+    "pagination, arrow keys on any control: nothing",
+    row("pagination"),
+    async ({ page }) => {
+      await view(page, "pagination", "buttons");
+      const five = page.getByRole("button", { name: "Page 5", exact: true });
+      await five.focus();
+      for (const key of ["ArrowRight", "ArrowLeft", "ArrowDown", "ArrowUp"]) {
+        await page.keyboard.press(key);
+        await expect(five, key).toBeFocused();
+      }
+    },
+  );
+
+  test(
+    "search-field, Tab from the input with text: the clear button",
+    row("search-field"),
+    async ({ page }) => {
+      await view(page, "search-field", "filter");
+      await page.getByRole("searchbox").focus();
+      await page.keyboard.type("des");
+      await page.keyboard.press("Tab");
+      await expect(
+        page.getByRole("button", { name: "Clear search" }),
+      ).toBeFocused();
+    },
+  );
+
+  test(
+    "search-field, Escape in the input with text: empties it; focus stays; the event stops",
+    row("search-field"),
+    async ({ page }) => {
+      await view(page, "search-field", "filter");
+      await page.evaluate(() => {
+        (window as unknown as { __esc: number }).__esc = 0;
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape")
+            (window as unknown as { __esc: number }).__esc++;
+        });
+      });
+      const box = page.getByRole("searchbox");
+      await box.focus();
+      await page.keyboard.type("des");
+      await page.keyboard.press("Escape");
+      await expect(box).toHaveValue("");
+      await expect(box).toBeFocused();
+      expect(
+        await page.evaluate(
+          () => (window as unknown as { __esc: number }).__esc,
+        ),
+      ).toBe(0);
+    },
+  );
+
+  test(
+    "search-field, Escape in an empty, disabled or read-only input: nothing; the event goes on",
+    row("search-field"),
+    async ({ page }) => {
+      await view(page, "search-field", "filter");
+      await page.evaluate(() => {
+        (window as unknown as { __esc: number }).__esc = 0;
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape")
+            (window as unknown as { __esc: number }).__esc++;
+        });
+      });
+      const box = page.getByRole("searchbox");
+      await box.focus();
+      await page.keyboard.press("Escape");
+      await expect(box).toHaveValue("");
+      expect(
+        await page.evaluate(
+          () => (window as unknown as { __esc: number }).__esc,
+        ),
+      ).toBe(1);
+      await view(page, "search-field", "disabled");
+      const readonly = page.getByRole("searchbox", {
+        name: "Search your history",
+      });
+      await readonly.focus();
+      await page.keyboard.press("Escape");
+      await expect(readonly).toHaveValue("design");
+    },
+  );
+
+  for (const key of ["Enter", "Space"])
+    test(
+      `search-field, ${key} on Clear: empties the field; focus moves to the input`,
+      row("search-field"),
+      async ({ page }) => {
+        await view(page, "search-field", "filter");
+        const box = page.getByRole("searchbox");
+        await box.focus();
+        await page.keyboard.type("des");
+        await page.getByRole("button", { name: "Clear search" }).focus();
+        await page.keyboard.press(key === "Space" ? " " : key);
+        await expect(box).toHaveValue("");
+        await expect(box).toBeFocused();
+      },
+    );
+
+  test(
+    "tag, Tab from before a group: each tag control in order; static tags are not stops",
+    row("tag"),
+    async ({ page }) => {
+      await view(page, "tag", "mixed");
+      expect(await tabs(page, 2)).toEqual(["Remove Design", "Remove Research"]);
+      await view(page, "tag", "pressable");
+      expect(await tabs(page, 4)).toEqual([
+        "Archived",
+        "Starred",
+        "Shared",
+        "Drafts",
+      ]);
+    },
+  );
+
+  for (const key of ["Enter", "Space", "Delete", "Backspace"])
+    test(
+      `tag, ${key} on a remove button: the tag is removed, and focus moves to the next tag control`,
+      row("tag"),
+      async ({ page }) => {
+        await view(page, "tag", "removable");
+        await page.getByRole("button", { name: "Remove Design" }).focus();
+        await page.keyboard.press(key === "Space" ? " " : key);
+        await expect(
+          page.getByRole("button", { name: "Remove Design" }),
+        ).toHaveCount(0);
+        await expect(
+          page.getByRole("button", { name: "Remove Research" }),
+        ).toBeFocused();
+      },
+    );
+
+  for (const key of ["Enter", "Space"])
+    test(
+      `tag, ${key} on a pressable tag: it toggles, and aria-pressed follows`,
+      row("tag"),
+      async ({ page }) => {
+        await view(page, "tag", "pressable");
+        const archived = page.getByRole("button", { name: "Archived" });
+        await archived.focus();
+        await page.keyboard.press(key === "Space" ? " " : key);
+        await expect(archived).toHaveAttribute("aria-pressed", "true");
+        await page.keyboard.press(key === "Space" ? " " : key);
+        await expect(archived).toHaveAttribute("aria-pressed", "false");
+      },
+    );
+});

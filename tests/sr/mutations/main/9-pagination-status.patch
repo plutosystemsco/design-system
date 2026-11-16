@@ -1,0 +1,11 @@
+--- a/src/lib/registry/ui/pagination/pagination.svelte
++++ b/src/lib/registry/ui/pagination/pagination.svelte
+@@ -127,7 +127,7 @@
+     const text = untrack(() => s.summary(n, total));
+     said = "";
+     requestAnimationFrame(() => {
+-      if (spoken === n) said = text;
++      void text;
+     });
+   });
+ 

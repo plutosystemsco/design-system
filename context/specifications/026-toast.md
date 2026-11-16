@@ -1212,3 +1212,13 @@ Of the 9.9 kB of JS, the breakdown gives `toast` 4.6 kB (`item:toast`), `phospho
 4. **Finding 4.** The scorecard: a run-log row at this step's merge of `release/0.13.0` (`kuiper.ts`: interface marks 14 → 15; no row moves).
 5. **Finding 5, a follow-up for `025`** (kind _small change_; it adds a flag, no interface an app sees): `bun run cost --raise <item>[,<item>] --ruling <spec path>#<anchor>`, writing `budgets.json` only. It refuses an item with no budget, and one whose report entry is stale against the tree. For each metric over its budget, it sets `firstBudget(metric, figure)` and appends the `raised` record with today's date; `interactionMs` stays capped at 200 ms without the owner's paragraph; runtime metrics rise only from a quiet run on the release machine. It touches no metric within budget, exits non-zero with "nothing to raise", checks before writing that the ruling's Landing notes name `` `<item>` `` (export `landingNotes` from `budgets.ts`), and prints one line per raise for the Landing notes. Tests in `cost.test.ts`, beside the `checkRulings` fixtures. Until it exists, a raise is computed with `firstBudget` and written by hand, as deviation 6 did.
 6. **Findings 6 and 7** are notes: deviations 1 to 6 stand, and `window.kuiperToast` on the site's non-shipped shell views stays.
+
+**The merge with `release/0.13.0` at `d79ce59`** (after `022b`, `022c`, `022d` and `027b`):
+
+- **`CHANGELOG.md`:** `toast`, then `app-shell`, then `027b`'s `pagination`, `search-field` and `tag`; test 38 requires the `app-shell` bullet straight after `toast`'s. D1's edited `toast` bullet is kept; `027b` did not change it.
+- **`scripts/cost/report.json`:** every run and every item entry kept: D1's run (`2026-11-16T09:45:50.723Z`, `app-shell`) and `027b`'s (`2026-11-16T10:13:18.680Z`, its three items); `floor` and `catalogue` from the later run. `app-shell`'s size hash still equals the report's on the merged tree, so it was not re-measured; the `raised` record is unchanged.
+- **The thumbnails' manifest:** the release's, then `bun scripts/site/thumbnails.ts --no-build app-shell toast` on the merged build: the four pictures byte for byte as before, two hashes moved.
+- **Regenerated:** `static/r/` and `static/v0.13.0/r/` (`build:registry`; no diff left). `bun install --frozen-lockfile`: no changes.
+- **Counts:** `UI_COUNT` 64 (`027b`'s); named dependencies 58; `app-shell`'s `SR_ITEMS` kinds `live`, `focus` and `overlay`.
+- **The scorecard:** a run-log row at this merge: `kuiper.ts`, interface marks 14 → 15; no row moves.
+
