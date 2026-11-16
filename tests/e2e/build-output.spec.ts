@@ -608,3 +608,34 @@ test.describe("020a: the site's CSS reads only code", () => {
     expect(found).toEqual([]);
   });
 });
+
+test.describe("024c: component headers hold still", () => {
+  // Text shows in the fallback until Geist arrives. Preloaded after the 70
+  // module preloads, it came at about 2.9 s under the perf profile, and the
+  // `label` and `native-select` headers re-wrapped then (CLS 0.09, 0.087).
+  test("every component page preloads Geist's latin file once, before its first script; no other page preloads it", () => {
+    const link = /<link[^>]*geist-latin-wght-normal\.[\w-]+\.woff2[^>]*>/g;
+    const wrong: string[] = [];
+    let component = 0;
+    for (const p of SITEMAP.map((s) => s.path)) {
+      const page = readFileSync(path.join(BUILD, p, "index.html"), "utf8");
+      const preloads = [...page.matchAll(link)].filter((m) =>
+        /rel="preload"/.test(m[0]),
+      );
+      if (!/^\/components\/[^/]+\/$/.test(p)) {
+        if (preloads.length) wrong.push(`${p}: preloads it`);
+        continue;
+      }
+      component++;
+      const script = page.indexOf('rel="modulepreload"');
+      if (preloads.length !== 1)
+        wrong.push(`${p}: ${preloads.length} preloads`);
+      else if (script === -1 || preloads[0].index! > script)
+        wrong.push(`${p}: after a script`);
+      else if (!/as="font"[^>]*crossorigin/.test(preloads[0][0]))
+        wrong.push(`${p}: not a CORS font preload`);
+    }
+    expect(wrong).toEqual([]);
+    expect(component).toBeGreaterThan(70);
+  });
+});

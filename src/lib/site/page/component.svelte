@@ -22,7 +22,6 @@
 
 <script lang="ts">
   import CaretRight from "phosphor-svelte/lib/CaretRight";
-  import geist from "@fontsource-variable/geist/files/geist-latin-wght-normal.woff2?url";
   import type { Snippet } from "svelte";
   import { page } from "$app/state";
   import type { HighlightedLine } from "#lib/registry/lib/highlighter";
@@ -94,14 +93,8 @@
 
 <svelte:head>
   <title>{pageTitle(item.title)}</title>
-  <!-- The text face early, so the header does not reflow when it arrives. -->
-  <link
-    rel="preload"
-    as="font"
-    type="font/woff2"
-    crossorigin="anonymous"
-    href={geist}
-  />
+  <!-- The text face is preloaded ahead of the scripts by the server hook
+       (024c, `text-face.ts`), so the header does not reflow when it arrives. -->
 </svelte:head>
 
 {#snippet heading(id: string, title: string)}

@@ -263,20 +263,25 @@ export const TEMPLATES: Record<TemplateId, Template> = {
       transfer: { page: "/components/sidebar/", median: 403.8 },
       // Spread 10.9% on marketing-footer (844 to 936 ms): widened to 15%.
       lcp: { page: "/components/sidebar/", median: 1104, margin: 0.15 },
-      // A shift in the page header after hydration, small change `024c`
-      // (lane S). The budget it gives, 0.108, is above Core Web Vitals'
-      // 0.1 "good" line: accepted until `024c`, not a target. It falls to
-      // the floor at the re-base after the fix.
-      cls: { page: "/components/label/", median: 0.09 },
+      // `label` (0.09) and `native-select` (0.087) shifted as the text face
+      // arrived, and set 0.108, above Core Web Vitals' 0.1 "good" line.
+      // `024c` held them still; the figure is now the same sweep's next
+      // worst page, as `024c`'s check sets it. A fall, so no ruling. The
+      // re-base sweep after `024b` to `024e` re-measures.
+      cls: { page: "/components/empty/", median: 0.018 },
     },
     ci: null,
     probes: [
       "/components/sidebar/",
       "/components/button/",
+      // `024c`: the two pages that shifted stay probed, so a header that
+      // moves again fails on the next run.
       "/components/label/",
+      "/components/native-select/",
+      "/components/empty/",
     ],
     layouts: COMPONENT_LAYOUTS,
-    ruling: SWEEP,
+    ruling: `${SWEEP}; label's CLS fall at 024c (024c landing notes)`,
   },
   "component-live": {
     // `kuiper-theme` (760 kB, 1,352 ms, 0.004) set all three until it left
