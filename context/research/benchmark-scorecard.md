@@ -415,6 +415,7 @@ Use any `<out>` folder outside the repository, such as the session scratchpad. W
 |---|---|---|---|---|---|---|
 | 2026-11-15 | `ea1f9bd` (0.12.0, after `018`) | 2026-11-15 13:53, working tree with `019` in progress | a researcher | 3 2 1 2 1 4 2 4 3 3 2 0 1 2 | 30 | First run. References live on 2026-11-15. Carbon's URLs now sit under `/building-blocks/core/components/`; Spectrum 2's under `/web/rsp/components/`. |
 | 2026-11-15 | `020`'s landing tree, on `release/0.13.0` from `f9e1c1a`, before its commit | 2026-11-15, the same tree | a builder | 3 2 1 2 1 4 2 4 3 3 3 0 1 3 | 32 | After `020`. `kuiper.ts` (working tree): `migrationPages` 0 → 2 (the guide's two route files), so row 11 (d) is met, 2 → 3; `deprecatedItems` 0 → 1 (`pluto-theme`, naming `kuiper-theme`), so row 14 (c) is met, 2 → 3. `breadth.items` reads 76: the count includes the alias entry; row 1 reads `breadth.ts`, which matches parts, and holds. `site.ts --only kuiper`: Button 381 kB, LCP 992 ms, the part at 572 (1440) and 661 (390), 76 nav links, search and theme present; rows 6, 7 and 8 hold. Tokens and every other count as at `ea1f9bd`. References not re-checked. |
+| 2026-11-15 | `6c00a12` (`020`, committed on its build branch) | the same tree as the row above | a builder | 3 2 1 2 1 4 2 4 3 3 3 0 1 3 | 32 | `kuiper.ts --rev 6c00a12`: `migrationPages` 2, `deprecatedItems` 1, 12 releases, 33 interface marks, 9 versioned registries; tokens 48 primitives, 61 roles, 61 described, 129 contrast rows. The scores of the row above stand. |
 
 ## 9. Limits
 
