@@ -582,3 +582,25 @@ test.describe("018 review, finding 7: the index without scripts", () => {
     for (const src of pics) expect(src).toMatch(/-light\.[\w-]+\.webp$/);
   });
 });
+
+test.describe("020a: the site's CSS reads only code", () => {
+  // The five classes of 020a's two fixtures live only in context/ and
+  // tests/, so they are canaries: present in the built CSS (1, 1, 1, 2 and
+  // 2 times before 020a), they mean Tailwind read a folder it must not. This
+  // ties the unit test's model of the scan to the real build.
+  test("the built CSS holds none of the fixtures' five classes", () => {
+    const assets = path.join(BUILD, "_app", "immutable", "assets");
+    const css = readdirSync(assets)
+      .filter((f) => f.endsWith(".css"))
+      .map((f) => readFileSync(path.join(assets, f), "utf8"))
+      .join("\n");
+    const found = [
+      "bg-fuchsia-950",
+      "row-8",
+      "row-15",
+      "inset-shadow-red-500",
+      "text-shadow-black",
+    ].filter((c) => new RegExp(`\\.${c}(?![\\w-])`).test(css));
+    expect(found).toEqual([]);
+  });
+});
