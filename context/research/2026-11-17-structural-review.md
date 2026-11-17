@@ -316,3 +316,10 @@ Keep these. Do not change them by mistake.
 - **`static/`'s versioned snapshots**, `scripts/cost/` and `scripts/bench/` beyond their headers.
 - **The unused-code probe's reach.** It read `.ts` files only.
 - **Bun's own handling of `test.only` in CI.** Q1 covers Playwright alone.
+
+## The owner's answers (2026-11-17)
+
+- **L2, the `v0.12.0` tag:** (c) 0.12.0 was never released; the next release is 0.13.0. The roadmap, the changelog, the README and the code that name a 0.12.0 release are amended by a change of their own (the roadmap row "0.12.0 was never released").
+- **T2, unused code:** (b) ESLint with `eslint-plugin-svelte`, by a specification.
+- **Delegation:** asked two of `019b`'s questions, the owner left them to the design lead ("you are in charge of delivering value"; "be a good steward of the project"). The design lead decides such choices among a specification's options, records the ruling, and the owner may reverse it.
+
