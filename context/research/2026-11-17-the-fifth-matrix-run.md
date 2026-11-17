@@ -287,6 +287,8 @@ All figures in minutes.
 2. Yes. The four tests are ledgered under N-ff until an item change avoids the list item's own text, which would need a specification of `error-summary`.
 3. Yes, and the rule also learns VoiceOver's doubled phrase without a ". ", so both readers are judged alike. The four tests and VoiceOver's error summaries then fail until the item changes.
 
+**The owner's answer (2026-11-17): 3.** It is a double read, and the rule also learns VoiceOver's doubled phrase, so both readers are judged alike. The four tests and VoiceOver's error summaries fail until the item changes. Two specifications follow: `022z`, L3 learns VoiceOver's doubled phrase (lane E), and `019b`, the error summary's messages are read once (lane I).
+
 ## 8. What this memo did not see
 
 - Every artifact: `phrases.json`, `faults.json`, the merged report and its ledger check, the VoiceOver recordings. The blob host is refused here.
