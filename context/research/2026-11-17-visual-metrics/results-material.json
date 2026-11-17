@@ -1,0 +1,2337 @@
+{
+  "at": "2026-11-17T15:11:15.819Z",
+  "kuiperBuild": "2026-11-16T23:34:24.926Z",
+  "rows": [
+    {
+      "site": "material",
+      "kind": "home",
+      "url": "https://m3.material.io/",
+      "run": 0,
+      "dom": {
+        "docHeight": 900,
+        "type": {
+          "totalChars": 3439,
+          "sizes": {
+            "distinct": 9,
+            "cover95": 4,
+            "top": [
+              [
+                "16",
+                67.7
+              ],
+              [
+                "24",
+                16
+              ],
+              [
+                "22",
+                7.9
+              ],
+              [
+                "57",
+                4.4
+              ],
+              [
+                "12",
+                1.5
+              ],
+              [
+                "14",
+                1.4
+              ],
+              [
+                "96",
+                0.4
+              ],
+              [
+                "40",
+                0.4
+              ]
+            ]
+          },
+          "weights": {
+            "distinct": 3,
+            "cover95": 3,
+            "top": [
+              [
+                "400",
+                73.8
+              ],
+              [
+                "475",
+                18.2
+              ],
+              [
+                "500",
+                8
+              ]
+            ]
+          },
+          "lineHeights": {
+            "distinct": 8,
+            "cover95": 4,
+            "top": [
+              [
+                "24",
+                70.3
+              ],
+              [
+                "32",
+                13.4
+              ],
+              [
+                "30",
+                7.9
+              ],
+              [
+                "64",
+                4.4
+              ],
+              [
+                "20",
+                1.6
+              ],
+              [
+                "16",
+                1.5
+              ],
+              [
+                "96",
+                0.4
+              ],
+              [
+                "40",
+                0.4
+              ]
+            ]
+          },
+          "families": {
+            "distinct": 3,
+            "cover95": 2,
+            "top": [
+              [
+                "google sans text",
+                77.1
+              ],
+              [
+                "google sans",
+                19.8
+              ],
+              [
+                "google symbols",
+                3.2
+              ]
+            ]
+          },
+          "colors": {
+            "distinct": 5,
+            "cover95": 3,
+            "top": [
+              [
+                "rgb(77, 66, 86)",
+                62.8
+              ],
+              [
+                "rgb(28, 27, 29)",
+                30.2
+              ],
+              [
+                "rgb(100, 66, 214)",
+                6.1
+              ],
+              [
+                "rgb(33, 24, 43)",
+                0.6
+              ],
+              [
+                "rgb(255, 255, 255)",
+                0.3
+              ]
+            ]
+          },
+          "styles": {
+            "distinct": 17,
+            "cover95": 9,
+            "top": [
+              [
+                "16|400|google sans text|rgb(77, 66, 86)",
+                53.6
+              ],
+              [
+                "24|475|google sans|rgb(28, 27, 29)",
+                13.1
+              ],
+              [
+                "16|400|google sans text|rgb(28, 27, 29)",
+                9
+              ],
+              [
+                "16|500|google sans text|rgb(100, 66, 214)",
+                5
+              ],
+              [
+                "57|475|google sans|rgb(28, 27, 29)",
+                4.4
+              ],
+              [
+                "22|400|google sans text|rgb(77, 66, 86)",
+                4
+              ],
+              [
+                "22|400|google sans text|rgb(28, 27, 29)",
+                2.8
+              ],
+              [
+                "24|400|google symbols|rgb(77, 66, 86)",
+                2.2
+              ]
+            ]
+          }
+        },
+        "styleSet": [
+          "16|400|google sans text|rgb(77, 66, 86)",
+          "24|475|google sans|rgb(28, 27, 29)",
+          "16|400|google sans text|rgb(28, 27, 29)",
+          "16|500|google sans text|rgb(100, 66, 214)",
+          "57|475|google sans|rgb(28, 27, 29)",
+          "22|400|google sans text|rgb(77, 66, 86)",
+          "22|400|google sans text|rgb(28, 27, 29)",
+          "24|400|google symbols|rgb(77, 66, 86)",
+          "12|500|google sans|rgb(77, 66, 86)"
+        ],
+        "spacing": {
+          "values": 496,
+          "distinct": 18,
+          "on4px": 65.9,
+          "on8px": 48.6,
+          "offGrid": [
+            [
+              1,
+              108
+            ],
+            [
+              2,
+              40
+            ],
+            [
+              10,
+              14
+            ],
+            [
+              14,
+              7
+            ]
+          ]
+        },
+        "leftEdges": {
+          "items": 27,
+          "distinct": 11,
+          "perItem": 0.41,
+          "singletonShare": 22.2,
+          "shared3": 1
+        },
+        "defects": {
+          "horizontalScroll": false,
+          "spills": 3,
+          "spillEx": [
+            "div: Components",
+            "a: X",
+            "a: Web"
+          ],
+          "truncated": 0,
+          "headings": 7,
+          "headingsWrapped": 1,
+          "headingWidows": 1,
+          "paras": 45,
+          "parasMulti": 17,
+          "labels": 33,
+          "labelWraps": 7,
+          "labelWrapEx": [
+            "a: material_design Home",
+            "a: apps Get started",
+            "a: code Develop",
+            "a: book Foundations",
+            "a: palette Styles",
+            "a: add_circle Components"
+          ],
+          "paraWidowShare": 11.8,
+          "medianCharsPerLine": 42
+        },
+        "media": {
+          "count": 18,
+          "foldShare": 33.4,
+          "pageShare": 33.4
+        },
+        "h1": {
+          "top": 93,
+          "left": 152,
+          "size": 96
+        }
+      },
+      "px": {
+        "colourfulness": 44,
+        "colours95": 109,
+        "dominantShare": 0.303,
+        "edgeDensity": 0.116,
+        "whitespace": 0.74,
+        "quadtreeLeaves": 6871,
+        "balance": 0.596,
+        "symmetry": 0.266
+      }
+    },
+    {
+      "site": "material",
+      "kind": "button",
+      "url": "https://m3.material.io/components/buttons/overview",
+      "run": 0,
+      "dom": {
+        "docHeight": 900,
+        "type": {
+          "totalChars": 2687,
+          "sizes": {
+            "distinct": 9,
+            "cover95": 4,
+            "top": [
+              [
+                "16",
+                66.1
+              ],
+              [
+                "14",
+                16.6
+              ],
+              [
+                "24",
+                7.6
+              ],
+              [
+                "12",
+                4.7
+              ],
+              [
+                "57",
+                2.3
+              ],
+              [
+                "22",
+                1.3
+              ],
+              [
+                "40",
+                0.6
+              ],
+              [
+                "11",
+                0.4
+              ]
+            ]
+          },
+          "weights": {
+            "distinct": 4,
+            "cover95": 2,
+            "top": [
+              [
+                "400",
+                73.7
+              ],
+              [
+                "500",
+                21.6
+              ],
+              [
+                "475",
+                4.2
+              ],
+              [
+                "600",
+                0.5
+              ]
+            ]
+          },
+          "lineHeights": {
+            "distinct": 8,
+            "cover95": 4,
+            "top": [
+              [
+                "24",
+                75
+              ],
+              [
+                "20",
+                11.6
+              ],
+              [
+                "16",
+                7.3
+              ],
+              [
+                "64",
+                2.3
+              ],
+              [
+                "32",
+                1.6
+              ],
+              [
+                "30",
+                1.3
+              ],
+              [
+                "40",
+                0.6
+              ],
+              [
+                "96",
+                0.3
+              ]
+            ]
+          },
+          "families": {
+            "distinct": 3,
+            "cover95": 3,
+            "top": [
+              [
+                "google sans text",
+                83.4
+              ],
+              [
+                "google symbols",
+                8.6
+              ],
+              [
+                "google sans",
+                8
+              ]
+            ]
+          },
+          "colors": {
+            "distinct": 6,
+            "cover95": 3,
+            "top": [
+              [
+                "rgb(28, 27, 29)",
+                56.9
+              ],
+              [
+                "rgb(77, 66, 86)",
+                25.6
+              ],
+              [
+                "rgb(100, 66, 214)",
+                13.6
+              ],
+              [
+                "rgb(15, 82, 35)",
+                2.3
+              ],
+              [
+                "rgb(33, 24, 43)",
+                1.2
+              ],
+              [
+                "rgb(68, 71, 70)",
+                0.4
+              ]
+            ]
+          },
+          "styles": {
+            "distinct": 27,
+            "cover95": 16,
+            "top": [
+              [
+                "16|400|google sans text|rgb(28, 27, 29)",
+                49.3
+              ],
+              [
+                "14|400|google sans text|rgb(77, 66, 86)",
+                8.1
+              ],
+              [
+                "16|500|google sans text|rgb(100, 66, 214)",
+                6.4
+              ],
+              [
+                "24|400|google symbols|rgb(77, 66, 86)",
+                5.4
+              ],
+              [
+                "16|400|google sans text|rgb(77, 66, 86)",
+                5.1
+              ],
+              [
+                "14|500|google sans text|rgb(100, 66, 214)",
+                5.1
+              ],
+              [
+                "14|500|google sans text|rgb(77, 66, 86)",
+                3.1
+              ],
+              [
+                "57|475|google sans|rgb(28, 27, 29)",
+                2.3
+              ]
+            ]
+          }
+        },
+        "styleSet": [
+          "16|400|google sans text|rgb(28, 27, 29)",
+          "14|400|google sans text|rgb(77, 66, 86)",
+          "16|500|google sans text|rgb(100, 66, 214)",
+          "24|400|google symbols|rgb(77, 66, 86)",
+          "16|400|google sans text|rgb(77, 66, 86)",
+          "14|500|google sans text|rgb(100, 66, 214)",
+          "14|500|google sans text|rgb(77, 66, 86)",
+          "57|475|google sans|rgb(28, 27, 29)",
+          "12|500|google sans text|rgb(15, 82, 35)",
+          "24|475|google sans|rgb(28, 27, 29)",
+          "12|500|google sans|rgb(77, 66, 86)",
+          "22|400|google sans text|rgb(28, 27, 29)",
+          "16|400|google symbols|rgb(100, 66, 214)",
+          "16|500|google sans|rgb(77, 66, 86)",
+          "16|400|google sans text|rgb(100, 66, 214)",
+          "16|500|google sans text|rgb(77, 66, 86)"
+        ],
+        "spacing": {
+          "values": 631,
+          "distinct": 23,
+          "on4px": 69.3,
+          "on8px": 35.7,
+          "offGrid": [
+            [
+              1,
+              118
+            ],
+            [
+              2,
+              40
+            ],
+            [
+              10,
+              22
+            ],
+            [
+              14,
+              7
+            ],
+            [
+              22,
+              6
+            ],
+            [
+              9,
+              1
+            ]
+          ]
+        },
+        "leftEdges": {
+          "items": 42,
+          "distinct": 20,
+          "perItem": 0.48,
+          "singletonShare": 31,
+          "shared3": 3
+        },
+        "defects": {
+          "horizontalScroll": false,
+          "spills": 3,
+          "spillEx": [
+            "div: Components",
+            "a: X",
+            "a: Web"
+          ],
+          "truncated": 0,
+          "headings": 5,
+          "headingsWrapped": 0,
+          "headingWidows": 0,
+          "paras": 86,
+          "parasMulti": 13,
+          "labels": 40,
+          "labelWraps": 12,
+          "labelWrapEx": [
+            "a: material_design Home",
+            "a: apps Get started",
+            "a: code Develop",
+            "a: book Foundations",
+            "a: palette Styles",
+            "a: add_circle Components"
+          ],
+          "paraWidowShare": 23.1,
+          "medianCharsPerLine": 57
+        },
+        "media": {
+          "count": 5,
+          "foldShare": 27.9,
+          "pageShare": 27.9
+        },
+        "h1": {
+          "top": 179,
+          "left": 152,
+          "size": 96
+        }
+      },
+      "px": {
+        "colourfulness": 41.9,
+        "colours95": 12,
+        "dominantShare": 0.324,
+        "edgeDensity": 0.064,
+        "whitespace": 0.849,
+        "quadtreeLeaves": 4270,
+        "balance": 0.657,
+        "symmetry": 0.148
+      }
+    },
+    {
+      "site": "material",
+      "kind": "t1",
+      "url": "https://m3.material.io/components/checkbox/overview",
+      "run": 0,
+      "dom": {
+        "docHeight": 900,
+        "type": {
+          "totalChars": 1617,
+          "sizes": {
+            "distinct": 9,
+            "cover95": 5,
+            "top": [
+              [
+                "16",
+                58.5
+              ],
+              [
+                "14",
+                13
+              ],
+              [
+                "24",
+                12.4
+              ],
+              [
+                "12",
+                6.1
+              ],
+              [
+                "22",
+                5.2
+              ],
+              [
+                "57",
+                2.7
+              ],
+              [
+                "40",
+                0.9
+              ],
+              [
+                "11",
+                0.7
+              ]
+            ]
+          },
+          "weights": {
+            "distinct": 3,
+            "cover95": 3,
+            "top": [
+              [
+                "400",
+                65.2
+              ],
+              [
+                "500",
+                29.1
+              ],
+              [
+                "475",
+                5.7
+              ]
+            ]
+          },
+          "lineHeights": {
+            "distinct": 8,
+            "cover95": 5,
+            "top": [
+              [
+                "24",
+                70.4
+              ],
+              [
+                "16",
+                9
+              ],
+              [
+                "20",
+                8.7
+              ],
+              [
+                "30",
+                5.2
+              ],
+              [
+                "64",
+                2.7
+              ],
+              [
+                "32",
+                2.5
+              ],
+              [
+                "40",
+                0.9
+              ],
+              [
+                "96",
+                0.5
+              ]
+            ]
+          },
+          "families": {
+            "distinct": 3,
+            "cover95": 3,
+            "top": [
+              [
+                "google sans text",
+                75.1
+              ],
+              [
+                "google symbols",
+                13
+              ],
+              [
+                "google sans",
+                11.9
+              ]
+            ]
+          },
+          "colors": {
+            "distinct": 5,
+            "cover95": 3,
+            "top": [
+              [
+                "rgb(28, 27, 29)",
+                52
+              ],
+              [
+                "rgb(77, 66, 86)",
+                26.9
+              ],
+              [
+                "rgb(100, 66, 214)",
+                16.3
+              ],
+              [
+                "rgb(15, 82, 35)",
+                2.8
+              ],
+              [
+                "rgb(33, 24, 43)",
+                2
+              ]
+            ]
+          },
+          "styles": {
+            "distinct": 23,
+            "cover95": 16,
+            "top": [
+              [
+                "16|400|google sans text|rgb(28, 27, 29)",
+                38.7
+              ],
+              [
+                "16|500|google sans text|rgb(100, 66, 214)",
+                10.6
+              ],
+              [
+                "24|400|google symbols|rgb(77, 66, 86)",
+                9
+              ],
+              [
+                "22|400|google sans text|rgb(28, 27, 29)",
+                5.2
+              ],
+              [
+                "14|500|google sans text|rgb(100, 66, 214)",
+                4.3
+              ],
+              [
+                "14|500|google sans text|rgb(77, 66, 86)",
+                4.1
+              ],
+              [
+                "14|400|google sans text|rgb(77, 66, 86)",
+                3.9
+              ],
+              [
+                "16|400|google sans text|rgb(77, 66, 86)",
+                3.8
+              ]
+            ]
+          }
+        },
+        "styleSet": [
+          "16|400|google sans text|rgb(28, 27, 29)",
+          "16|500|google sans text|rgb(100, 66, 214)",
+          "24|400|google symbols|rgb(77, 66, 86)",
+          "22|400|google sans text|rgb(28, 27, 29)",
+          "14|500|google sans text|rgb(100, 66, 214)",
+          "14|500|google sans text|rgb(77, 66, 86)",
+          "14|400|google sans text|rgb(77, 66, 86)",
+          "16|400|google sans text|rgb(77, 66, 86)",
+          "12|500|google sans text|rgb(15, 82, 35)",
+          "12|500|google sans|rgb(77, 66, 86)",
+          "57|475|google sans|rgb(28, 27, 29)",
+          "24|475|google sans|rgb(28, 27, 29)",
+          "16|500|google sans|rgb(77, 66, 86)",
+          "16|400|google symbols|rgb(100, 66, 214)",
+          "16|500|google sans text|rgb(77, 66, 86)",
+          "40|400|google symbols|rgb(28, 27, 29)"
+        ],
+        "spacing": {
+          "values": 446,
+          "distinct": 22,
+          "on4px": 61.9,
+          "on8px": 31.2,
+          "offGrid": [
+            [
+              1,
+              100
+            ],
+            [
+              2,
+              40
+            ],
+            [
+              10,
+              20
+            ],
+            [
+              14,
+              7
+            ],
+            [
+              22,
+              2
+            ],
+            [
+              9,
+              1
+            ]
+          ]
+        },
+        "leftEdges": {
+          "items": 41,
+          "distinct": 20,
+          "perItem": 0.49,
+          "singletonShare": 31.7,
+          "shared3": 3
+        },
+        "defects": {
+          "horizontalScroll": false,
+          "spills": 3,
+          "spillEx": [
+            "div: Components",
+            "a: X",
+            "a: Web"
+          ],
+          "truncated": 0,
+          "headings": 4,
+          "headingsWrapped": 0,
+          "headingWidows": 0,
+          "paras": 36,
+          "parasMulti": 7,
+          "labels": 38,
+          "labelWraps": 11,
+          "labelWrapEx": [
+            "a: material_design Home",
+            "a: apps Get started",
+            "a: code Develop",
+            "a: book Foundations",
+            "a: palette Styles",
+            "a: add_circle Components"
+          ],
+          "paraWidowShare": 28.6,
+          "medianCharsPerLine": 76
+        },
+        "media": {
+          "count": 4,
+          "foldShare": 27.9,
+          "pageShare": 27.9
+        },
+        "h1": {
+          "top": 164,
+          "left": 152,
+          "size": 96
+        }
+      },
+      "px": {
+        "colourfulness": 45.8,
+        "colours95": 8,
+        "dominantShare": 0.321,
+        "edgeDensity": 0.066,
+        "whitespace": 0.838,
+        "quadtreeLeaves": 4123,
+        "balance": 0.796,
+        "symmetry": 0.216
+      }
+    },
+    {
+      "site": "material",
+      "kind": "t2",
+      "url": "https://m3.material.io/components/tabs/overview",
+      "run": 0,
+      "dom": {
+        "docHeight": 900,
+        "type": {
+          "totalChars": 1598,
+          "sizes": {
+            "distinct": 9,
+            "cover95": 5,
+            "top": [
+              [
+                "16",
+                59
+              ],
+              [
+                "14",
+                14.8
+              ],
+              [
+                "24",
+                11.9
+              ],
+              [
+                "12",
+                6.1
+              ],
+              [
+                "22",
+                3.5
+              ],
+              [
+                "57",
+                2.7
+              ],
+              [
+                "40",
+                0.9
+              ],
+              [
+                "11",
+                0.8
+              ]
+            ]
+          },
+          "weights": {
+            "distinct": 3,
+            "cover95": 2,
+            "top": [
+              [
+                "400",
+                65.7
+              ],
+              [
+                "500",
+                29.4
+              ],
+              [
+                "475",
+                4.9
+              ]
+            ]
+          },
+          "lineHeights": {
+            "distinct": 8,
+            "cover95": 5,
+            "top": [
+              [
+                "24",
+                71.1
+              ],
+              [
+                "20",
+                10.5
+              ],
+              [
+                "16",
+                9.1
+              ],
+              [
+                "30",
+                3.5
+              ],
+              [
+                "64",
+                2.7
+              ],
+              [
+                "32",
+                1.9
+              ],
+              [
+                "40",
+                0.9
+              ],
+              [
+                "96",
+                0.3
+              ]
+            ]
+          },
+          "families": {
+            "distinct": 3,
+            "cover95": 3,
+            "top": [
+              [
+                "google sans text",
+                75.7
+              ],
+              [
+                "google symbols",
+                13.1
+              ],
+              [
+                "google sans",
+                11.1
+              ]
+            ]
+          },
+          "colors": {
+            "distinct": 5,
+            "cover95": 3,
+            "top": [
+              [
+                "rgb(28, 27, 29)",
+                49
+              ],
+              [
+                "rgb(77, 66, 86)",
+                29.7
+              ],
+              [
+                "rgb(100, 66, 214)",
+                16.5
+              ],
+              [
+                "rgb(15, 82, 35)",
+                2.8
+              ],
+              [
+                "rgb(33, 24, 43)",
+                2
+              ]
+            ]
+          },
+          "styles": {
+            "distinct": 23,
+            "cover95": 16,
+            "top": [
+              [
+                "16|400|google sans text|rgb(28, 27, 29)",
+                38.1
+              ],
+              [
+                "16|500|google sans text|rgb(100, 66, 214)",
+                10.8
+              ],
+              [
+                "24|400|google symbols|rgb(77, 66, 86)",
+                9.1
+              ],
+              [
+                "14|400|google sans text|rgb(77, 66, 86)",
+                5.6
+              ],
+              [
+                "16|400|google sans text|rgb(77, 66, 86)",
+                4.7
+              ],
+              [
+                "14|500|google sans text|rgb(100, 66, 214)",
+                4.4
+              ],
+              [
+                "14|500|google sans text|rgb(77, 66, 86)",
+                4.2
+              ],
+              [
+                "22|400|google sans text|rgb(28, 27, 29)",
+                3.5
+              ]
+            ]
+          }
+        },
+        "styleSet": [
+          "16|400|google sans text|rgb(28, 27, 29)",
+          "16|500|google sans text|rgb(100, 66, 214)",
+          "24|400|google symbols|rgb(77, 66, 86)",
+          "14|400|google sans text|rgb(77, 66, 86)",
+          "16|400|google sans text|rgb(77, 66, 86)",
+          "14|500|google sans text|rgb(100, 66, 214)",
+          "14|500|google sans text|rgb(77, 66, 86)",
+          "22|400|google sans text|rgb(28, 27, 29)",
+          "12|500|google sans text|rgb(15, 82, 35)",
+          "12|500|google sans|rgb(77, 66, 86)",
+          "57|475|google sans|rgb(28, 27, 29)",
+          "24|475|google sans|rgb(28, 27, 29)",
+          "16|500|google sans|rgb(77, 66, 86)",
+          "16|400|google symbols|rgb(100, 66, 214)",
+          "16|500|google sans text|rgb(77, 66, 86)",
+          "40|400|google symbols|rgb(28, 27, 29)"
+        ],
+        "spacing": {
+          "values": 450,
+          "distinct": 23,
+          "on4px": 62.7,
+          "on8px": 30.9,
+          "offGrid": [
+            [
+              1,
+              100
+            ],
+            [
+              2,
+              40
+            ],
+            [
+              10,
+              18
+            ],
+            [
+              14,
+              7
+            ],
+            [
+              22,
+              2
+            ],
+            [
+              9,
+              1
+            ]
+          ]
+        },
+        "leftEdges": {
+          "items": 42,
+          "distinct": 20,
+          "perItem": 0.48,
+          "singletonShare": 31,
+          "shared3": 3
+        },
+        "defects": {
+          "horizontalScroll": false,
+          "spills": 3,
+          "spillEx": [
+            "div: Components",
+            "a: X",
+            "a: Web"
+          ],
+          "truncated": 0,
+          "headings": 4,
+          "headingsWrapped": 0,
+          "headingWidows": 0,
+          "paras": 39,
+          "parasMulti": 5,
+          "labels": 38,
+          "labelWraps": 11,
+          "labelWrapEx": [
+            "a: material_design Home",
+            "a: apps Get started",
+            "a: code Develop",
+            "a: book Foundations",
+            "a: palette Styles",
+            "a: add_circle Components"
+          ],
+          "paraWidowShare": 60,
+          "medianCharsPerLine": 57
+        },
+        "media": {
+          "count": 3,
+          "foldShare": 27.9,
+          "pageShare": 27.9
+        },
+        "h1": {
+          "top": 164,
+          "left": 152,
+          "size": 96
+        }
+      },
+      "px": {
+        "colourfulness": 40.1,
+        "colours95": 101,
+        "dominantShare": 0.327,
+        "edgeDensity": 0.064,
+        "whitespace": 0.808,
+        "quadtreeLeaves": 4456,
+        "balance": 0.653,
+        "symmetry": 0.155
+      }
+    },
+    {
+      "site": "material",
+      "kind": "t3",
+      "url": "https://m3.material.io/components/tooltips/overview",
+      "run": 0,
+      "dom": {
+        "docHeight": 900,
+        "type": {
+          "totalChars": 1718,
+          "sizes": {
+            "distinct": 9,
+            "cover95": 5,
+            "top": [
+              [
+                "16",
+                61.8
+              ],
+              [
+                "14",
+                13.6
+              ],
+              [
+                "24",
+                11.6
+              ],
+              [
+                "12",
+                6.1
+              ],
+              [
+                "57",
+                2.5
+              ],
+              [
+                "22",
+                2.4
+              ],
+              [
+                "40",
+                0.9
+              ],
+              [
+                "11",
+                0.7
+              ]
+            ]
+          },
+          "weights": {
+            "distinct": 4,
+            "cover95": 3,
+            "top": [
+              [
+                "400",
+                66.4
+              ],
+              [
+                "500",
+                27.7
+              ],
+              [
+                "475",
+                5.4
+              ],
+              [
+                "600",
+                0.6
+              ]
+            ]
+          },
+          "lineHeights": {
+            "distinct": 8,
+            "cover95": 5,
+            "top": [
+              [
+                "24",
+                71.2
+              ],
+              [
+                "20",
+                11.7
+              ],
+              [
+                "16",
+                8.4
+              ],
+              [
+                "64",
+                2.5
+              ],
+              [
+                "30",
+                2.4
+              ],
+              [
+                "32",
+                2.4
+              ],
+              [
+                "40",
+                0.9
+              ],
+              [
+                "96",
+                0.5
+              ]
+            ]
+          },
+          "families": {
+            "distinct": 3,
+            "cover95": 3,
+            "top": [
+              [
+                "google sans text",
+                77.1
+              ],
+              [
+                "google symbols",
+                11.8
+              ],
+              [
+                "google sans",
+                11.1
+              ]
+            ]
+          },
+          "colors": {
+            "distinct": 6,
+            "cover95": 3,
+            "top": [
+              [
+                "rgb(28, 27, 29)",
+                49.9
+              ],
+              [
+                "rgb(77, 66, 86)",
+                32.9
+              ],
+              [
+                "rgb(100, 66, 214)",
+                12.3
+              ],
+              [
+                "rgb(68, 71, 70)",
+                1.9
+              ],
+              [
+                "rgb(33, 24, 43)",
+                1.9
+              ],
+              [
+                "rgb(15, 82, 35)",
+                1
+              ]
+            ]
+          },
+          "styles": {
+            "distinct": 26,
+            "cover95": 17,
+            "top": [
+              [
+                "16|400|google sans text|rgb(28, 27, 29)",
+                39.8
+              ],
+              [
+                "16|500|google sans text|rgb(100, 66, 214)",
+                10
+              ],
+              [
+                "24|400|google symbols|rgb(77, 66, 86)",
+                8.4
+              ],
+              [
+                "16|400|google sans text|rgb(77, 66, 86)",
+                6.8
+              ],
+              [
+                "14|500|google sans text|rgb(77, 66, 86)",
+                6.1
+              ],
+              [
+                "14|400|google sans text|rgb(77, 66, 86)",
+                5.1
+              ],
+              [
+                "12|500|google sans|rgb(77, 66, 86)",
+                2.5
+              ],
+              [
+                "57|475|google sans|rgb(28, 27, 29)",
+                2.5
+              ]
+            ]
+          }
+        },
+        "styleSet": [
+          "16|400|google sans text|rgb(28, 27, 29)",
+          "16|500|google sans text|rgb(100, 66, 214)",
+          "24|400|google symbols|rgb(77, 66, 86)",
+          "16|400|google sans text|rgb(77, 66, 86)",
+          "14|500|google sans text|rgb(77, 66, 86)",
+          "14|400|google sans text|rgb(77, 66, 86)",
+          "12|500|google sans|rgb(77, 66, 86)",
+          "57|475|google sans|rgb(28, 27, 29)",
+          "22|400|google sans text|rgb(28, 27, 29)",
+          "24|475|google sans|rgb(28, 27, 29)",
+          "14|500|google sans text|rgb(100, 66, 214)",
+          "12|500|google sans text|rgb(68, 71, 70)",
+          "16|500|google sans|rgb(77, 66, 86)",
+          "12|500|google sans text|rgb(15, 82, 35)",
+          "16|400|google symbols|rgb(77, 66, 86)",
+          "16|500|google sans text|rgb(77, 66, 86)",
+          "40|400|google symbols|rgb(28, 27, 29)"
+        ],
+        "spacing": {
+          "values": 455,
+          "distinct": 23,
+          "on4px": 65.3,
+          "on8px": 33.2,
+          "offGrid": [
+            [
+              1,
+              88
+            ],
+            [
+              2,
+              40
+            ],
+            [
+              10,
+              20
+            ],
+            [
+              14,
+              7
+            ],
+            [
+              22,
+              2
+            ],
+            [
+              9,
+              1
+            ]
+          ]
+        },
+        "leftEdges": {
+          "items": 40,
+          "distinct": 19,
+          "perItem": 0.48,
+          "singletonShare": 32.5,
+          "shared3": 3
+        },
+        "defects": {
+          "horizontalScroll": false,
+          "spills": 3,
+          "spillEx": [
+            "div: Components",
+            "a: X",
+            "a: Web"
+          ],
+          "truncated": 0,
+          "headings": 4,
+          "headingsWrapped": 0,
+          "headingWidows": 0,
+          "paras": 44,
+          "parasMulti": 4,
+          "labels": 37,
+          "labelWraps": 11,
+          "labelWrapEx": [
+            "a: material_design Home",
+            "a: apps Get started",
+            "a: code Develop",
+            "a: book Foundations",
+            "a: palette Styles",
+            "a: add_circle Components"
+          ],
+          "paraWidowShare": 50,
+          "medianCharsPerLine": 57
+        },
+        "media": {
+          "count": 4,
+          "foldShare": 27.9,
+          "pageShare": 27.9
+        },
+        "h1": {
+          "top": 179,
+          "left": 152,
+          "size": 96
+        }
+      },
+      "px": {
+        "colourfulness": 41.7,
+        "colours95": 196,
+        "dominantShare": 0.325,
+        "edgeDensity": 0.11,
+        "whitespace": 0.773,
+        "quadtreeLeaves": 5236,
+        "balance": 0.431,
+        "symmetry": 0.148
+      }
+    },
+    {
+      "site": "material",
+      "kind": "t4",
+      "url": "https://m3.material.io/components/dialogs/overview",
+      "run": 0,
+      "dom": {
+        "docHeight": 900,
+        "type": {
+          "totalChars": 1775,
+          "sizes": {
+            "distinct": 9,
+            "cover95": 5,
+            "top": [
+              [
+                "16",
+                62.5
+              ],
+              [
+                "14",
+                13.6
+              ],
+              [
+                "24",
+                11.4
+              ],
+              [
+                "12",
+                5.5
+              ],
+              [
+                "22",
+                2.7
+              ],
+              [
+                "57",
+                2.4
+              ],
+              [
+                "40",
+                0.8
+              ],
+              [
+                "11",
+                0.7
+              ]
+            ]
+          },
+          "weights": {
+            "distinct": 3,
+            "cover95": 3,
+            "top": [
+              [
+                "400",
+                68.3
+              ],
+              [
+                "500",
+                26.5
+              ],
+              [
+                "475",
+                5.2
+              ]
+            ]
+          },
+          "lineHeights": {
+            "distinct": 8,
+            "cover95": 5,
+            "top": [
+              [
+                "24",
+                73.4
+              ],
+              [
+                "20",
+                9.6
+              ],
+              [
+                "16",
+                8.2
+              ],
+              [
+                "30",
+                2.7
+              ],
+              [
+                "32",
+                2.4
+              ],
+              [
+                "64",
+                2.4
+              ],
+              [
+                "40",
+                0.8
+              ],
+              [
+                "96",
+                0.4
+              ]
+            ]
+          },
+          "families": {
+            "distinct": 3,
+            "cover95": 3,
+            "top": [
+              [
+                "google sans text",
+                77.3
+              ],
+              [
+                "google symbols",
+                11.8
+              ],
+              [
+                "google sans",
+                10.9
+              ]
+            ]
+          },
+          "colors": {
+            "distinct": 5,
+            "cover95": 3,
+            "top": [
+              [
+                "rgb(28, 27, 29)",
+                54.6
+              ],
+              [
+                "rgb(77, 66, 86)",
+                26.1
+              ],
+              [
+                "rgb(100, 66, 214)",
+                14.9
+              ],
+              [
+                "rgb(15, 82, 35)",
+                2.5
+              ],
+              [
+                "rgb(33, 24, 43)",
+                1.8
+              ]
+            ]
+          },
+          "styles": {
+            "distinct": 23,
+            "cover95": 16,
+            "top": [
+              [
+                "16|400|google sans text|rgb(28, 27, 29)",
+                44.5
+              ],
+              [
+                "16|500|google sans text|rgb(100, 66, 214)",
+                9.7
+              ],
+              [
+                "24|400|google symbols|rgb(77, 66, 86)",
+                8.2
+              ],
+              [
+                "14|400|google sans text|rgb(77, 66, 86)",
+                5.2
+              ],
+              [
+                "14|500|google sans text|rgb(100, 66, 214)",
+                3.9
+              ],
+              [
+                "14|500|google sans text|rgb(77, 66, 86)",
+                3.8
+              ],
+              [
+                "16|400|google sans text|rgb(77, 66, 86)",
+                3.4
+              ],
+              [
+                "22|400|google sans text|rgb(28, 27, 29)",
+                2.7
+              ]
+            ]
+          }
+        },
+        "styleSet": [
+          "16|400|google sans text|rgb(28, 27, 29)",
+          "16|500|google sans text|rgb(100, 66, 214)",
+          "24|400|google symbols|rgb(77, 66, 86)",
+          "14|400|google sans text|rgb(77, 66, 86)",
+          "14|500|google sans text|rgb(100, 66, 214)",
+          "14|500|google sans text|rgb(77, 66, 86)",
+          "16|400|google sans text|rgb(77, 66, 86)",
+          "22|400|google sans text|rgb(28, 27, 29)",
+          "12|500|google sans text|rgb(15, 82, 35)",
+          "12|500|google sans|rgb(77, 66, 86)",
+          "24|475|google sans|rgb(28, 27, 29)",
+          "57|475|google sans|rgb(28, 27, 29)",
+          "16|500|google sans|rgb(77, 66, 86)",
+          "16|400|google symbols|rgb(100, 66, 214)",
+          "16|500|google sans text|rgb(77, 66, 86)",
+          "40|400|google symbols|rgb(28, 27, 29)"
+        ],
+        "spacing": {
+          "values": 456,
+          "distinct": 23,
+          "on4px": 63.2,
+          "on8px": 31.8,
+          "offGrid": [
+            [
+              1,
+              100
+            ],
+            [
+              2,
+              40
+            ],
+            [
+              10,
+              18
+            ],
+            [
+              14,
+              7
+            ],
+            [
+              22,
+              2
+            ],
+            [
+              9,
+              1
+            ]
+          ]
+        },
+        "leftEdges": {
+          "items": 42,
+          "distinct": 20,
+          "perItem": 0.48,
+          "singletonShare": 31,
+          "shared3": 3
+        },
+        "defects": {
+          "horizontalScroll": false,
+          "spills": 3,
+          "spillEx": [
+            "div: Components",
+            "a: X",
+            "a: Web"
+          ],
+          "truncated": 0,
+          "headings": 4,
+          "headingsWrapped": 0,
+          "headingWidows": 0,
+          "paras": 44,
+          "parasMulti": 7,
+          "labels": 38,
+          "labelWraps": 11,
+          "labelWrapEx": [
+            "a: material_design Home",
+            "a: apps Get started",
+            "a: code Develop",
+            "a: book Foundations",
+            "a: palette Styles",
+            "a: add_circle Components"
+          ],
+          "paraWidowShare": 42.9,
+          "medianCharsPerLine": 57
+        },
+        "media": {
+          "count": 3,
+          "foldShare": 27.9,
+          "pageShare": 27.9
+        },
+        "h1": {
+          "top": 179,
+          "left": 152,
+          "size": 96
+        }
+      },
+      "px": {
+        "colourfulness": 36.3,
+        "colours95": 8,
+        "dominantShare": 0.323,
+        "edgeDensity": 0.057,
+        "whitespace": 0.869,
+        "quadtreeLeaves": 4051,
+        "balance": 0.895,
+        "symmetry": 0.142
+      }
+    },
+    {
+      "site": "material",
+      "kind": "home",
+      "url": "https://m3.material.io/",
+      "run": 1,
+      "dom": {
+        "docHeight": 900,
+        "type": {
+          "totalChars": 3439,
+          "sizes": {
+            "distinct": 9,
+            "cover95": 4,
+            "top": [
+              [
+                "16",
+                67.7
+              ],
+              [
+                "24",
+                16
+              ],
+              [
+                "22",
+                7.9
+              ],
+              [
+                "57",
+                4.4
+              ],
+              [
+                "12",
+                1.5
+              ],
+              [
+                "14",
+                1.4
+              ],
+              [
+                "96",
+                0.4
+              ],
+              [
+                "40",
+                0.4
+              ]
+            ]
+          },
+          "weights": {
+            "distinct": 3,
+            "cover95": 3,
+            "top": [
+              [
+                "400",
+                73.8
+              ],
+              [
+                "475",
+                18.2
+              ],
+              [
+                "500",
+                8
+              ]
+            ]
+          },
+          "lineHeights": {
+            "distinct": 8,
+            "cover95": 4,
+            "top": [
+              [
+                "24",
+                70.3
+              ],
+              [
+                "32",
+                13.4
+              ],
+              [
+                "30",
+                7.9
+              ],
+              [
+                "64",
+                4.4
+              ],
+              [
+                "20",
+                1.6
+              ],
+              [
+                "16",
+                1.5
+              ],
+              [
+                "96",
+                0.4
+              ],
+              [
+                "40",
+                0.4
+              ]
+            ]
+          },
+          "families": {
+            "distinct": 3,
+            "cover95": 2,
+            "top": [
+              [
+                "google sans text",
+                77.1
+              ],
+              [
+                "google sans",
+                19.8
+              ],
+              [
+                "google symbols",
+                3.2
+              ]
+            ]
+          },
+          "colors": {
+            "distinct": 5,
+            "cover95": 3,
+            "top": [
+              [
+                "rgb(77, 66, 86)",
+                62.8
+              ],
+              [
+                "rgb(28, 27, 29)",
+                30.2
+              ],
+              [
+                "rgb(100, 66, 214)",
+                6.1
+              ],
+              [
+                "rgb(33, 24, 43)",
+                0.6
+              ],
+              [
+                "rgb(255, 255, 255)",
+                0.3
+              ]
+            ]
+          },
+          "styles": {
+            "distinct": 17,
+            "cover95": 9,
+            "top": [
+              [
+                "16|400|google sans text|rgb(77, 66, 86)",
+                53.6
+              ],
+              [
+                "24|475|google sans|rgb(28, 27, 29)",
+                13.1
+              ],
+              [
+                "16|400|google sans text|rgb(28, 27, 29)",
+                9
+              ],
+              [
+                "16|500|google sans text|rgb(100, 66, 214)",
+                5
+              ],
+              [
+                "57|475|google sans|rgb(28, 27, 29)",
+                4.4
+              ],
+              [
+                "22|400|google sans text|rgb(77, 66, 86)",
+                4
+              ],
+              [
+                "22|400|google sans text|rgb(28, 27, 29)",
+                2.8
+              ],
+              [
+                "24|400|google symbols|rgb(77, 66, 86)",
+                2.2
+              ]
+            ]
+          }
+        },
+        "styleSet": [
+          "16|400|google sans text|rgb(77, 66, 86)",
+          "24|475|google sans|rgb(28, 27, 29)",
+          "16|400|google sans text|rgb(28, 27, 29)",
+          "16|500|google sans text|rgb(100, 66, 214)",
+          "57|475|google sans|rgb(28, 27, 29)",
+          "22|400|google sans text|rgb(77, 66, 86)",
+          "22|400|google sans text|rgb(28, 27, 29)",
+          "24|400|google symbols|rgb(77, 66, 86)",
+          "12|500|google sans|rgb(77, 66, 86)"
+        ],
+        "spacing": {
+          "values": 496,
+          "distinct": 18,
+          "on4px": 65.9,
+          "on8px": 48.6,
+          "offGrid": [
+            [
+              1,
+              108
+            ],
+            [
+              2,
+              40
+            ],
+            [
+              10,
+              14
+            ],
+            [
+              14,
+              7
+            ]
+          ]
+        },
+        "leftEdges": {
+          "items": 27,
+          "distinct": 11,
+          "perItem": 0.41,
+          "singletonShare": 22.2,
+          "shared3": 1
+        },
+        "defects": {
+          "horizontalScroll": false,
+          "spills": 3,
+          "spillEx": [
+            "div: Components",
+            "a: X",
+            "a: Web"
+          ],
+          "truncated": 0,
+          "headings": 7,
+          "headingsWrapped": 1,
+          "headingWidows": 1,
+          "paras": 45,
+          "parasMulti": 17,
+          "labels": 33,
+          "labelWraps": 7,
+          "labelWrapEx": [
+            "a: material_design Home",
+            "a: apps Get started",
+            "a: code Develop",
+            "a: book Foundations",
+            "a: palette Styles",
+            "a: add_circle Components"
+          ],
+          "paraWidowShare": 11.8,
+          "medianCharsPerLine": 42
+        },
+        "media": {
+          "count": 18,
+          "foldShare": 33.4,
+          "pageShare": 33.4
+        },
+        "h1": {
+          "top": 93,
+          "left": 152,
+          "size": 96
+        }
+      },
+      "px": {
+        "colourfulness": 44,
+        "colours95": 109,
+        "dominantShare": 0.303,
+        "edgeDensity": 0.116,
+        "whitespace": 0.739,
+        "quadtreeLeaves": 6856,
+        "balance": 0.594,
+        "symmetry": 0.266
+      }
+    },
+    {
+      "site": "material",
+      "kind": "button",
+      "url": "https://m3.material.io/components/buttons/overview",
+      "run": 1,
+      "dom": {
+        "docHeight": 900,
+        "type": {
+          "totalChars": 2687,
+          "sizes": {
+            "distinct": 9,
+            "cover95": 4,
+            "top": [
+              [
+                "16",
+                66.1
+              ],
+              [
+                "14",
+                16.6
+              ],
+              [
+                "24",
+                7.6
+              ],
+              [
+                "12",
+                4.7
+              ],
+              [
+                "57",
+                2.3
+              ],
+              [
+                "22",
+                1.3
+              ],
+              [
+                "40",
+                0.6
+              ],
+              [
+                "11",
+                0.4
+              ]
+            ]
+          },
+          "weights": {
+            "distinct": 4,
+            "cover95": 2,
+            "top": [
+              [
+                "400",
+                73.7
+              ],
+              [
+                "500",
+                21.6
+              ],
+              [
+                "475",
+                4.2
+              ],
+              [
+                "600",
+                0.5
+              ]
+            ]
+          },
+          "lineHeights": {
+            "distinct": 8,
+            "cover95": 4,
+            "top": [
+              [
+                "24",
+                75
+              ],
+              [
+                "20",
+                11.6
+              ],
+              [
+                "16",
+                7.3
+              ],
+              [
+                "64",
+                2.3
+              ],
+              [
+                "32",
+                1.6
+              ],
+              [
+                "30",
+                1.3
+              ],
+              [
+                "40",
+                0.6
+              ],
+              [
+                "96",
+                0.3
+              ]
+            ]
+          },
+          "families": {
+            "distinct": 3,
+            "cover95": 3,
+            "top": [
+              [
+                "google sans text",
+                83.4
+              ],
+              [
+                "google symbols",
+                8.6
+              ],
+              [
+                "google sans",
+                8
+              ]
+            ]
+          },
+          "colors": {
+            "distinct": 6,
+            "cover95": 3,
+            "top": [
+              [
+                "rgb(28, 27, 29)",
+                56.9
+              ],
+              [
+                "rgb(77, 66, 86)",
+                25.6
+              ],
+              [
+                "rgb(100, 66, 214)",
+                13.6
+              ],
+              [
+                "rgb(15, 82, 35)",
+                2.3
+              ],
+              [
+                "rgb(33, 24, 43)",
+                1.2
+              ],
+              [
+                "rgb(68, 71, 70)",
+                0.4
+              ]
+            ]
+          },
+          "styles": {
+            "distinct": 27,
+            "cover95": 16,
+            "top": [
+              [
+                "16|400|google sans text|rgb(28, 27, 29)",
+                49.3
+              ],
+              [
+                "14|400|google sans text|rgb(77, 66, 86)",
+                8.1
+              ],
+              [
+                "16|500|google sans text|rgb(100, 66, 214)",
+                6.4
+              ],
+              [
+                "24|400|google symbols|rgb(77, 66, 86)",
+                5.4
+              ],
+              [
+                "16|400|google sans text|rgb(77, 66, 86)",
+                5.1
+              ],
+              [
+                "14|500|google sans text|rgb(100, 66, 214)",
+                5.1
+              ],
+              [
+                "14|500|google sans text|rgb(77, 66, 86)",
+                3.1
+              ],
+              [
+                "57|475|google sans|rgb(28, 27, 29)",
+                2.3
+              ]
+            ]
+          }
+        },
+        "styleSet": [
+          "16|400|google sans text|rgb(28, 27, 29)",
+          "14|400|google sans text|rgb(77, 66, 86)",
+          "16|500|google sans text|rgb(100, 66, 214)",
+          "24|400|google symbols|rgb(77, 66, 86)",
+          "16|400|google sans text|rgb(77, 66, 86)",
+          "14|500|google sans text|rgb(100, 66, 214)",
+          "14|500|google sans text|rgb(77, 66, 86)",
+          "57|475|google sans|rgb(28, 27, 29)",
+          "12|500|google sans text|rgb(15, 82, 35)",
+          "24|475|google sans|rgb(28, 27, 29)",
+          "12|500|google sans|rgb(77, 66, 86)",
+          "22|400|google sans text|rgb(28, 27, 29)",
+          "16|400|google symbols|rgb(100, 66, 214)",
+          "16|500|google sans|rgb(77, 66, 86)",
+          "16|400|google sans text|rgb(100, 66, 214)",
+          "16|500|google sans text|rgb(77, 66, 86)"
+        ],
+        "spacing": {
+          "values": 631,
+          "distinct": 23,
+          "on4px": 69.3,
+          "on8px": 35.7,
+          "offGrid": [
+            [
+              1,
+              118
+            ],
+            [
+              2,
+              40
+            ],
+            [
+              10,
+              22
+            ],
+            [
+              14,
+              7
+            ],
+            [
+              22,
+              6
+            ],
+            [
+              9,
+              1
+            ]
+          ]
+        },
+        "leftEdges": {
+          "items": 42,
+          "distinct": 20,
+          "perItem": 0.48,
+          "singletonShare": 31,
+          "shared3": 3
+        },
+        "defects": {
+          "horizontalScroll": false,
+          "spills": 3,
+          "spillEx": [
+            "div: Components",
+            "a: X",
+            "a: Web"
+          ],
+          "truncated": 0,
+          "headings": 5,
+          "headingsWrapped": 0,
+          "headingWidows": 0,
+          "paras": 86,
+          "parasMulti": 13,
+          "labels": 40,
+          "labelWraps": 12,
+          "labelWrapEx": [
+            "a: material_design Home",
+            "a: apps Get started",
+            "a: code Develop",
+            "a: book Foundations",
+            "a: palette Styles",
+            "a: add_circle Components"
+          ],
+          "paraWidowShare": 23.1,
+          "medianCharsPerLine": 57
+        },
+        "media": {
+          "count": 5,
+          "foldShare": 27.9,
+          "pageShare": 27.9
+        },
+        "h1": {
+          "top": 179,
+          "left": 152,
+          "size": 96
+        }
+      },
+      "px": {
+        "colourfulness": 41.9,
+        "colours95": 12,
+        "dominantShare": 0.324,
+        "edgeDensity": 0.064,
+        "whitespace": 0.849,
+        "quadtreeLeaves": 4270,
+        "balance": 0.657,
+        "symmetry": 0.148
+      }
+    }
+  ]
+}

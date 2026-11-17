@@ -1,0 +1,1681 @@
+{
+  "at": "2026-11-17T15:11:33.082Z",
+  "kuiperBuild": "2026-11-16T23:34:24.926Z",
+  "rows": [
+    {
+      "site": "carbon",
+      "kind": "home",
+      "url": "https://www.carbondesignsystem.com/",
+      "run": 0,
+      "dom": {
+        "docHeight": 11333,
+        "type": {
+          "totalChars": 3035,
+          "sizes": {
+            "distinct": 3,
+            "cover95": 2,
+            "top": [
+              [
+                "16",
+                90.3
+              ],
+              [
+                "13.5",
+                7.8
+              ],
+              [
+                "24",
+                1.9
+              ]
+            ]
+          },
+          "weights": {
+            "distinct": 2,
+            "cover95": 1,
+            "top": [
+              [
+                "400",
+                98.1
+              ],
+              [
+                "700",
+                1.9
+              ]
+            ]
+          },
+          "lineHeights": {
+            "distinct": 1,
+            "cover95": 1,
+            "top": [
+              [
+                "normal",
+                100
+              ]
+            ]
+          },
+          "families": {
+            "distinct": 2,
+            "cover95": 2,
+            "top": [
+              [
+                "times new roman",
+                92.2
+              ],
+              [
+                "arial",
+                7.8
+              ]
+            ]
+          },
+          "colors": {
+            "distinct": 2,
+            "cover95": 2,
+            "top": [
+              [
+                "rgb(0, 0, 238)",
+                55.6
+              ],
+              [
+                "rgb(0, 0, 0)",
+                44.4
+              ]
+            ]
+          },
+          "styles": {
+            "distinct": 4,
+            "cover95": 3,
+            "top": [
+              [
+                "16|400|times new roman|rgb(0, 0, 238)",
+                55.6
+              ],
+              [
+                "16|400|times new roman|rgb(0, 0, 0)",
+                34.7
+              ],
+              [
+                "13.5|400|arial|rgb(0, 0, 0)",
+                7.8
+              ],
+              [
+                "24|700|times new roman|rgb(0, 0, 0)",
+                1.9
+              ]
+            ]
+          }
+        },
+        "styleSet": [
+          "16|400|times new roman|rgb(0, 0, 238)",
+          "16|400|times new roman|rgb(0, 0, 0)",
+          "13.5|400|arial|rgb(0, 0, 0)"
+        ],
+        "spacing": {
+          "values": 154,
+          "distinct": 6,
+          "on4px": 33.8,
+          "on8px": 33.8,
+          "offGrid": [
+            [
+              1,
+              48
+            ],
+            [
+              6,
+              46
+            ],
+            [
+              19.92,
+              6
+            ],
+            [
+              2,
+              2
+            ]
+          ]
+        },
+        "leftEdges": {
+          "items": 52,
+          "distinct": 22,
+          "perItem": 0.42,
+          "singletonShare": 26.9,
+          "shared3": 5
+        },
+        "defects": {
+          "horizontalScroll": true,
+          "spills": 0,
+          "spillEx": [],
+          "truncated": 0,
+          "headings": 3,
+          "headingsWrapped": 0,
+          "headingWidows": 0,
+          "paras": 170,
+          "parasMulti": 21,
+          "labels": 163,
+          "labelWraps": 0,
+          "labelWrapEx": [],
+          "paraWidowShare": 33.3,
+          "medianCharsPerLine": null
+        },
+        "media": {
+          "count": 3,
+          "foldShare": 0,
+          "pageShare": 28
+        },
+        "h1": {
+          "top": 6663,
+          "left": 8,
+          "size": 16
+        }
+      },
+      "px": {
+        "colourfulness": 19,
+        "colours95": 1,
+        "dominantShare": 0.961,
+        "edgeDensity": 0.04,
+        "whitespace": 0.928,
+        "quadtreeLeaves": 1840,
+        "balance": 0.344,
+        "symmetry": 0
+      }
+    },
+    {
+      "site": "carbon",
+      "kind": "button",
+      "url": "https://www.carbondesignsystem.com/building-blocks/core/components/button/guidelines",
+      "run": 0,
+      "dom": {
+        "docHeight": 21930,
+        "type": {
+          "totalChars": 33099,
+          "sizes": {
+            "distinct": 6,
+            "cover95": 1,
+            "top": [
+              [
+                "16",
+                97.7
+              ],
+              [
+                "18.5",
+                0.9
+              ],
+              [
+                "13.5",
+                0.8
+              ],
+              [
+                "24",
+                0.5
+              ],
+              [
+                "13",
+                0.1
+              ],
+              [
+                "32",
+                0
+              ]
+            ]
+          },
+          "weights": {
+            "distinct": 2,
+            "cover95": 2,
+            "top": [
+              [
+                "400",
+                94.8
+              ],
+              [
+                "700",
+                5.2
+              ]
+            ]
+          },
+          "lineHeights": {
+            "distinct": 1,
+            "cover95": 1,
+            "top": [
+              [
+                "normal",
+                100
+              ]
+            ]
+          },
+          "families": {
+            "distinct": 3,
+            "cover95": 1,
+            "top": [
+              [
+                "times new roman",
+                99.1
+              ],
+              [
+                "arial",
+                0.8
+              ],
+              [
+                "monospace",
+                0.1
+              ]
+            ]
+          },
+          "colors": {
+            "distinct": 2,
+            "cover95": 2,
+            "top": [
+              [
+                "rgb(0, 0, 0)",
+                92.8
+              ],
+              [
+                "rgb(0, 0, 238)",
+                7.2
+              ]
+            ]
+          },
+          "styles": {
+            "distinct": 8,
+            "cover95": 3,
+            "top": [
+              [
+                "16|400|times new roman|rgb(0, 0, 0)",
+                86.7
+              ],
+              [
+                "16|400|times new roman|rgb(0, 0, 238)",
+                7.2
+              ],
+              [
+                "16|700|times new roman|rgb(0, 0, 0)",
+                3.7
+              ],
+              [
+                "18.5|700|times new roman|rgb(0, 0, 0)",
+                0.9
+              ],
+              [
+                "13.5|400|arial|rgb(0, 0, 0)",
+                0.8
+              ],
+              [
+                "24|700|times new roman|rgb(0, 0, 0)",
+                0.5
+              ],
+              [
+                "13|400|monospace|rgb(0, 0, 0)",
+                0.1
+              ],
+              [
+                "32|700|times new roman|rgb(0, 0, 0)",
+                0
+              ]
+            ]
+          }
+        },
+        "styleSet": [
+          "16|400|times new roman|rgb(0, 0, 0)",
+          "16|400|times new roman|rgb(0, 0, 238)",
+          "16|700|times new roman|rgb(0, 0, 0)"
+        ],
+        "spacing": {
+          "values": 983,
+          "distinct": 10,
+          "on4px": 54,
+          "on8px": 54,
+          "offGrid": [
+            [
+              1,
+              254
+            ],
+            [
+              21.28,
+              62
+            ],
+            [
+              6,
+              60
+            ],
+            [
+              18.72,
+              44
+            ],
+            [
+              19.92,
+              28
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              21.44,
+              2
+            ]
+          ]
+        },
+        "leftEdges": {
+          "items": 52,
+          "distinct": 22,
+          "perItem": 0.42,
+          "singletonShare": 26.9,
+          "shared3": 5
+        },
+        "defects": {
+          "horizontalScroll": false,
+          "spills": 0,
+          "spillEx": [],
+          "truncated": 0,
+          "headings": 68,
+          "headingsWrapped": 0,
+          "headingWidows": 0,
+          "paras": 286,
+          "parasMulti": 47,
+          "labels": 239,
+          "labelWraps": 0,
+          "labelWrapEx": [],
+          "paraWidowShare": 19.1,
+          "medianCharsPerLine": 169
+        },
+        "media": {
+          "count": 1,
+          "foldShare": 0,
+          "pageShare": 0.1
+        },
+        "h1": {
+          "top": 3421,
+          "left": 8,
+          "size": 32
+        }
+      },
+      "px": {
+        "colourfulness": 19,
+        "colours95": 1,
+        "dominantShare": 0.961,
+        "edgeDensity": 0.04,
+        "whitespace": 0.928,
+        "quadtreeLeaves": 1840,
+        "balance": 0.344,
+        "symmetry": 0
+      }
+    },
+    {
+      "site": "carbon",
+      "kind": "t1",
+      "url": "https://www.carbondesignsystem.com/building-blocks/core/components/checkbox/guidelines",
+      "run": 0,
+      "dom": {
+        "docHeight": 9459,
+        "type": {
+          "totalChars": 10401,
+          "sizes": {
+            "distinct": 6,
+            "cover95": 2,
+            "top": [
+              [
+                "16",
+                94.4
+              ],
+              [
+                "13.5",
+                2.5
+              ],
+              [
+                "18.5",
+                1.8
+              ],
+              [
+                "24",
+                0.8
+              ],
+              [
+                "13",
+                0.4
+              ],
+              [
+                "32",
+                0.1
+              ]
+            ]
+          },
+          "weights": {
+            "distinct": 2,
+            "cover95": 1,
+            "top": [
+              [
+                "400",
+                95.3
+              ],
+              [
+                "700",
+                4.7
+              ]
+            ]
+          },
+          "lineHeights": {
+            "distinct": 1,
+            "cover95": 1,
+            "top": [
+              [
+                "normal",
+                100
+              ]
+            ]
+          },
+          "families": {
+            "distinct": 3,
+            "cover95": 1,
+            "top": [
+              [
+                "times new roman",
+                97
+              ],
+              [
+                "arial",
+                2.5
+              ],
+              [
+                "monospace",
+                0.4
+              ]
+            ]
+          },
+          "colors": {
+            "distinct": 2,
+            "cover95": 2,
+            "top": [
+              [
+                "rgb(0, 0, 0)",
+                81.8
+              ],
+              [
+                "rgb(0, 0, 238)",
+                18.2
+              ]
+            ]
+          },
+          "styles": {
+            "distinct": 8,
+            "cover95": 4,
+            "top": [
+              [
+                "16|400|times new roman|rgb(0, 0, 0)",
+                74.1
+              ],
+              [
+                "16|400|times new roman|rgb(0, 0, 238)",
+                18.2
+              ],
+              [
+                "13.5|400|arial|rgb(0, 0, 0)",
+                2.5
+              ],
+              [
+                "16|700|times new roman|rgb(0, 0, 0)",
+                2.1
+              ],
+              [
+                "18.5|700|times new roman|rgb(0, 0, 0)",
+                1.8
+              ],
+              [
+                "24|700|times new roman|rgb(0, 0, 0)",
+                0.8
+              ],
+              [
+                "13|400|monospace|rgb(0, 0, 0)",
+                0.4
+              ],
+              [
+                "32|700|times new roman|rgb(0, 0, 0)",
+                0.1
+              ]
+            ]
+          }
+        },
+        "styleSet": [
+          "16|400|times new roman|rgb(0, 0, 0)",
+          "16|400|times new roman|rgb(0, 0, 238)",
+          "13.5|400|arial|rgb(0, 0, 0)",
+          "16|700|times new roman|rgb(0, 0, 0)"
+        ],
+        "spacing": {
+          "values": 355,
+          "distinct": 10,
+          "on4px": 47.6,
+          "on8px": 47.6,
+          "offGrid": [
+            [
+              1,
+              60
+            ],
+            [
+              6,
+              58
+            ],
+            [
+              18.72,
+              28
+            ],
+            [
+              19.92,
+              18
+            ],
+            [
+              21.28,
+              18
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              21.44,
+              2
+            ]
+          ]
+        },
+        "leftEdges": {
+          "items": 52,
+          "distinct": 22,
+          "perItem": 0.42,
+          "singletonShare": 26.9,
+          "shared3": 5
+        },
+        "defects": {
+          "horizontalScroll": false,
+          "spills": 0,
+          "spillEx": [],
+          "truncated": 0,
+          "headings": 33,
+          "headingsWrapped": 0,
+          "headingWidows": 0,
+          "paras": 245,
+          "parasMulti": 31,
+          "labels": 199,
+          "labelWraps": 0,
+          "labelWrapEx": [],
+          "paraWidowShare": 25.8,
+          "medianCharsPerLine": null
+        },
+        "media": {
+          "count": 1,
+          "foldShare": 0,
+          "pageShare": 0.3
+        },
+        "h1": {
+          "top": 3421,
+          "left": 8,
+          "size": 32
+        }
+      },
+      "px": {
+        "colourfulness": 19,
+        "colours95": 1,
+        "dominantShare": 0.961,
+        "edgeDensity": 0.04,
+        "whitespace": 0.928,
+        "quadtreeLeaves": 1840,
+        "balance": 0.344,
+        "symmetry": 0
+      }
+    },
+    {
+      "site": "carbon",
+      "kind": "t2",
+      "url": "https://www.carbondesignsystem.com/building-blocks/core/components/tabs/guidelines",
+      "run": 0,
+      "dom": {
+        "docHeight": 13627,
+        "type": {
+          "totalChars": 20063,
+          "sizes": {
+            "distinct": 6,
+            "cover95": 1,
+            "top": [
+              [
+                "16",
+                96.4
+              ],
+              [
+                "18.5",
+                1.6
+              ],
+              [
+                "13.5",
+                1.3
+              ],
+              [
+                "24",
+                0.6
+              ],
+              [
+                "13",
+                0
+              ],
+              [
+                "32",
+                0
+              ]
+            ]
+          },
+          "weights": {
+            "distinct": 2,
+            "cover95": 2,
+            "top": [
+              [
+                "400",
+                94.2
+              ],
+              [
+                "700",
+                5.8
+              ]
+            ]
+          },
+          "lineHeights": {
+            "distinct": 1,
+            "cover95": 1,
+            "top": [
+              [
+                "normal",
+                100
+              ]
+            ]
+          },
+          "families": {
+            "distinct": 3,
+            "cover95": 1,
+            "top": [
+              [
+                "times new roman",
+                98.6
+              ],
+              [
+                "arial",
+                1.3
+              ],
+              [
+                "monospace",
+                0
+              ]
+            ]
+          },
+          "colors": {
+            "distinct": 2,
+            "cover95": 2,
+            "top": [
+              [
+                "rgb(0, 0, 0)",
+                90.4
+              ],
+              [
+                "rgb(0, 0, 238)",
+                9.6
+              ]
+            ]
+          },
+          "styles": {
+            "distinct": 8,
+            "cover95": 3,
+            "top": [
+              [
+                "16|400|times new roman|rgb(0, 0, 0)",
+                83.2
+              ],
+              [
+                "16|400|times new roman|rgb(0, 0, 238)",
+                9.6
+              ],
+              [
+                "16|700|times new roman|rgb(0, 0, 0)",
+                3.6
+              ],
+              [
+                "18.5|700|times new roman|rgb(0, 0, 0)",
+                1.6
+              ],
+              [
+                "13.5|400|arial|rgb(0, 0, 0)",
+                1.3
+              ],
+              [
+                "24|700|times new roman|rgb(0, 0, 0)",
+                0.6
+              ],
+              [
+                "13|400|monospace|rgb(0, 0, 0)",
+                0
+              ],
+              [
+                "32|700|times new roman|rgb(0, 0, 0)",
+                0
+              ]
+            ]
+          }
+        },
+        "styleSet": [
+          "16|400|times new roman|rgb(0, 0, 0)",
+          "16|400|times new roman|rgb(0, 0, 238)",
+          "16|700|times new roman|rgb(0, 0, 0)"
+        ],
+        "spacing": {
+          "values": 829,
+          "distinct": 10,
+          "on4px": 43.5,
+          "on8px": 43.5,
+          "offGrid": [
+            [
+              1,
+              296
+            ],
+            [
+              6,
+              58
+            ],
+            [
+              21.28,
+              44
+            ],
+            [
+              18.72,
+              42
+            ],
+            [
+              19.92,
+              24
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              21.44,
+              2
+            ]
+          ]
+        },
+        "leftEdges": {
+          "items": 52,
+          "distinct": 22,
+          "perItem": 0.42,
+          "singletonShare": 26.9,
+          "shared3": 5
+        },
+        "defects": {
+          "horizontalScroll": false,
+          "spills": 0,
+          "spillEx": [],
+          "truncated": 0,
+          "headings": 56,
+          "headingsWrapped": 0,
+          "headingWidows": 0,
+          "paras": 288,
+          "parasMulti": 35,
+          "labels": 213,
+          "labelWraps": 0,
+          "labelWrapEx": [],
+          "paraWidowShare": 20,
+          "medianCharsPerLine": 191
+        },
+        "media": {
+          "count": 1,
+          "foldShare": 0,
+          "pageShare": 0.2
+        },
+        "h1": {
+          "top": 3421,
+          "left": 8,
+          "size": 32
+        }
+      },
+      "px": {
+        "colourfulness": 19,
+        "colours95": 1,
+        "dominantShare": 0.961,
+        "edgeDensity": 0.04,
+        "whitespace": 0.928,
+        "quadtreeLeaves": 1840,
+        "balance": 0.344,
+        "symmetry": 0
+      }
+    },
+    {
+      "site": "carbon",
+      "kind": "t3",
+      "url": "https://www.carbondesignsystem.com/building-blocks/core/components/tooltip/guidelines",
+      "run": 0,
+      "dom": {
+        "docHeight": 8491,
+        "type": {
+          "totalChars": 9881,
+          "sizes": {
+            "distinct": 6,
+            "cover95": 1,
+            "top": [
+              [
+                "16",
+                95.1
+              ],
+              [
+                "13.5",
+                2.7
+              ],
+              [
+                "18.5",
+                1.4
+              ],
+              [
+                "24",
+                0.7
+              ],
+              [
+                "32",
+                0.1
+              ],
+              [
+                "13",
+                0.1
+              ]
+            ]
+          },
+          "weights": {
+            "distinct": 2,
+            "cover95": 1,
+            "top": [
+              [
+                "400",
+                95.6
+              ],
+              [
+                "700",
+                4.4
+              ]
+            ]
+          },
+          "lineHeights": {
+            "distinct": 1,
+            "cover95": 1,
+            "top": [
+              [
+                "normal",
+                100
+              ]
+            ]
+          },
+          "families": {
+            "distinct": 3,
+            "cover95": 1,
+            "top": [
+              [
+                "times new roman",
+                97.3
+              ],
+              [
+                "arial",
+                2.7
+              ],
+              [
+                "monospace",
+                0.1
+              ]
+            ]
+          },
+          "colors": {
+            "distinct": 2,
+            "cover95": 2,
+            "top": [
+              [
+                "rgb(0, 0, 0)",
+                82.2
+              ],
+              [
+                "rgb(0, 0, 238)",
+                17.8
+              ]
+            ]
+          },
+          "styles": {
+            "distinct": 8,
+            "cover95": 3,
+            "top": [
+              [
+                "16|400|times new roman|rgb(0, 0, 0)",
+                75
+              ],
+              [
+                "16|400|times new roman|rgb(0, 0, 238)",
+                17.8
+              ],
+              [
+                "13.5|400|arial|rgb(0, 0, 0)",
+                2.7
+              ],
+              [
+                "16|700|times new roman|rgb(0, 0, 0)",
+                2.2
+              ],
+              [
+                "18.5|700|times new roman|rgb(0, 0, 0)",
+                1.4
+              ],
+              [
+                "24|700|times new roman|rgb(0, 0, 0)",
+                0.7
+              ],
+              [
+                "32|700|times new roman|rgb(0, 0, 0)",
+                0.1
+              ],
+              [
+                "13|400|monospace|rgb(0, 0, 0)",
+                0.1
+              ]
+            ]
+          }
+        },
+        "styleSet": [
+          "16|400|times new roman|rgb(0, 0, 0)",
+          "16|400|times new roman|rgb(0, 0, 238)",
+          "13.5|400|arial|rgb(0, 0, 0)"
+        ],
+        "spacing": {
+          "values": 317,
+          "distinct": 10,
+          "on4px": 43.8,
+          "on8px": 43.8,
+          "offGrid": [
+            [
+              1,
+              60
+            ],
+            [
+              6,
+              58
+            ],
+            [
+              18.72,
+              26
+            ],
+            [
+              19.92,
+              16
+            ],
+            [
+              21.28,
+              14
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              21.44,
+              2
+            ]
+          ]
+        },
+        "leftEdges": {
+          "items": 52,
+          "distinct": 22,
+          "perItem": 0.42,
+          "singletonShare": 26.9,
+          "shared3": 5
+        },
+        "defects": {
+          "horizontalScroll": false,
+          "spills": 0,
+          "spillEx": [],
+          "truncated": 0,
+          "headings": 29,
+          "headingsWrapped": 0,
+          "headingWidows": 0,
+          "paras": 225,
+          "parasMulti": 31,
+          "labels": 188,
+          "labelWraps": 1,
+          "labelWrapEx": [
+            "a: chart anatomy"
+          ],
+          "paraWidowShare": 25.8,
+          "medianCharsPerLine": 155
+        },
+        "media": {
+          "count": 1,
+          "foldShare": 0,
+          "pageShare": 0.4
+        },
+        "h1": {
+          "top": 3421,
+          "left": 8,
+          "size": 32
+        }
+      },
+      "px": {
+        "colourfulness": 19,
+        "colours95": 1,
+        "dominantShare": 0.961,
+        "edgeDensity": 0.04,
+        "whitespace": 0.928,
+        "quadtreeLeaves": 1840,
+        "balance": 0.344,
+        "symmetry": 0
+      }
+    },
+    {
+      "site": "carbon",
+      "kind": "t4",
+      "url": "https://www.carbondesignsystem.com/building-blocks/core/components/modal/guidelines",
+      "run": 0,
+      "dom": {
+        "docHeight": 10863,
+        "type": {
+          "totalChars": 17522,
+          "sizes": {
+            "distinct": 6,
+            "cover95": 1,
+            "top": [
+              [
+                "16",
+                96.1
+              ],
+              [
+                "18.5",
+                1.7
+              ],
+              [
+                "13.5",
+                1.5
+              ],
+              [
+                "24",
+                0.5
+              ],
+              [
+                "13",
+                0.2
+              ],
+              [
+                "32",
+                0
+              ]
+            ]
+          },
+          "weights": {
+            "distinct": 2,
+            "cover95": 2,
+            "top": [
+              [
+                "400",
+                94.6
+              ],
+              [
+                "700",
+                5.4
+              ]
+            ]
+          },
+          "lineHeights": {
+            "distinct": 1,
+            "cover95": 1,
+            "top": [
+              [
+                "normal",
+                100
+              ]
+            ]
+          },
+          "families": {
+            "distinct": 3,
+            "cover95": 1,
+            "top": [
+              [
+                "times new roman",
+                98.3
+              ],
+              [
+                "arial",
+                1.5
+              ],
+              [
+                "monospace",
+                0.2
+              ]
+            ]
+          },
+          "colors": {
+            "distinct": 2,
+            "cover95": 2,
+            "top": [
+              [
+                "rgb(0, 0, 0)",
+                89.1
+              ],
+              [
+                "rgb(0, 0, 238)",
+                10.9
+              ]
+            ]
+          },
+          "styles": {
+            "distinct": 8,
+            "cover95": 3,
+            "top": [
+              [
+                "16|400|times new roman|rgb(0, 0, 0)",
+                82
+              ],
+              [
+                "16|400|times new roman|rgb(0, 0, 238)",
+                10.9
+              ],
+              [
+                "16|700|times new roman|rgb(0, 0, 0)",
+                3.2
+              ],
+              [
+                "18.5|700|times new roman|rgb(0, 0, 0)",
+                1.7
+              ],
+              [
+                "13.5|400|arial|rgb(0, 0, 0)",
+                1.5
+              ],
+              [
+                "24|700|times new roman|rgb(0, 0, 0)",
+                0.5
+              ],
+              [
+                "13|400|monospace|rgb(0, 0, 0)",
+                0.2
+              ],
+              [
+                "32|700|times new roman|rgb(0, 0, 0)",
+                0
+              ]
+            ]
+          }
+        },
+        "styleSet": [
+          "16|400|times new roman|rgb(0, 0, 0)",
+          "16|400|times new roman|rgb(0, 0, 238)",
+          "16|700|times new roman|rgb(0, 0, 0)"
+        ],
+        "spacing": {
+          "values": 451,
+          "distinct": 10,
+          "on4px": 41.5,
+          "on8px": 41.5,
+          "offGrid": [
+            [
+              1,
+              108
+            ],
+            [
+              6,
+              58
+            ],
+            [
+              18.72,
+              50
+            ],
+            [
+              21.28,
+              26
+            ],
+            [
+              19.92,
+              18
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              21.44,
+              2
+            ]
+          ]
+        },
+        "leftEdges": {
+          "items": 52,
+          "distinct": 22,
+          "perItem": 0.42,
+          "singletonShare": 26.9,
+          "shared3": 5
+        },
+        "defects": {
+          "horizontalScroll": false,
+          "spills": 0,
+          "spillEx": [],
+          "truncated": 0,
+          "headings": 48,
+          "headingsWrapped": 0,
+          "headingWidows": 0,
+          "paras": 264,
+          "parasMulti": 45,
+          "labels": 207,
+          "labelWraps": 0,
+          "labelWrapEx": [],
+          "paraWidowShare": 15.6,
+          "medianCharsPerLine": 157
+        },
+        "media": {
+          "count": 1,
+          "foldShare": 0,
+          "pageShare": 0.3
+        },
+        "h1": {
+          "top": 3421,
+          "left": 8,
+          "size": 32
+        }
+      },
+      "px": {
+        "colourfulness": 19,
+        "colours95": 1,
+        "dominantShare": 0.961,
+        "edgeDensity": 0.04,
+        "whitespace": 0.928,
+        "quadtreeLeaves": 1840,
+        "balance": 0.344,
+        "symmetry": 0
+      }
+    },
+    {
+      "site": "carbon",
+      "kind": "home",
+      "url": "https://www.carbondesignsystem.com/",
+      "run": 1,
+      "dom": {
+        "docHeight": 11333,
+        "type": {
+          "totalChars": 3035,
+          "sizes": {
+            "distinct": 3,
+            "cover95": 2,
+            "top": [
+              [
+                "16",
+                90.3
+              ],
+              [
+                "13.5",
+                7.8
+              ],
+              [
+                "24",
+                1.9
+              ]
+            ]
+          },
+          "weights": {
+            "distinct": 2,
+            "cover95": 1,
+            "top": [
+              [
+                "400",
+                98.1
+              ],
+              [
+                "700",
+                1.9
+              ]
+            ]
+          },
+          "lineHeights": {
+            "distinct": 1,
+            "cover95": 1,
+            "top": [
+              [
+                "normal",
+                100
+              ]
+            ]
+          },
+          "families": {
+            "distinct": 2,
+            "cover95": 2,
+            "top": [
+              [
+                "times new roman",
+                92.2
+              ],
+              [
+                "arial",
+                7.8
+              ]
+            ]
+          },
+          "colors": {
+            "distinct": 2,
+            "cover95": 2,
+            "top": [
+              [
+                "rgb(0, 0, 238)",
+                55.6
+              ],
+              [
+                "rgb(0, 0, 0)",
+                44.4
+              ]
+            ]
+          },
+          "styles": {
+            "distinct": 4,
+            "cover95": 3,
+            "top": [
+              [
+                "16|400|times new roman|rgb(0, 0, 238)",
+                55.6
+              ],
+              [
+                "16|400|times new roman|rgb(0, 0, 0)",
+                34.7
+              ],
+              [
+                "13.5|400|arial|rgb(0, 0, 0)",
+                7.8
+              ],
+              [
+                "24|700|times new roman|rgb(0, 0, 0)",
+                1.9
+              ]
+            ]
+          }
+        },
+        "styleSet": [
+          "16|400|times new roman|rgb(0, 0, 238)",
+          "16|400|times new roman|rgb(0, 0, 0)",
+          "13.5|400|arial|rgb(0, 0, 0)"
+        ],
+        "spacing": {
+          "values": 154,
+          "distinct": 6,
+          "on4px": 33.8,
+          "on8px": 33.8,
+          "offGrid": [
+            [
+              1,
+              48
+            ],
+            [
+              6,
+              46
+            ],
+            [
+              19.92,
+              6
+            ],
+            [
+              2,
+              2
+            ]
+          ]
+        },
+        "leftEdges": {
+          "items": 52,
+          "distinct": 22,
+          "perItem": 0.42,
+          "singletonShare": 26.9,
+          "shared3": 5
+        },
+        "defects": {
+          "horizontalScroll": true,
+          "spills": 0,
+          "spillEx": [],
+          "truncated": 0,
+          "headings": 3,
+          "headingsWrapped": 0,
+          "headingWidows": 0,
+          "paras": 170,
+          "parasMulti": 21,
+          "labels": 163,
+          "labelWraps": 0,
+          "labelWrapEx": [],
+          "paraWidowShare": 33.3,
+          "medianCharsPerLine": null
+        },
+        "media": {
+          "count": 3,
+          "foldShare": 0,
+          "pageShare": 28
+        },
+        "h1": {
+          "top": 6663,
+          "left": 8,
+          "size": 16
+        }
+      },
+      "px": {
+        "colourfulness": 19,
+        "colours95": 1,
+        "dominantShare": 0.961,
+        "edgeDensity": 0.04,
+        "whitespace": 0.928,
+        "quadtreeLeaves": 1840,
+        "balance": 0.344,
+        "symmetry": 0
+      }
+    },
+    {
+      "site": "carbon",
+      "kind": "button",
+      "url": "https://www.carbondesignsystem.com/building-blocks/core/components/button/guidelines",
+      "run": 1,
+      "dom": {
+        "docHeight": 21930,
+        "type": {
+          "totalChars": 33099,
+          "sizes": {
+            "distinct": 6,
+            "cover95": 1,
+            "top": [
+              [
+                "16",
+                97.7
+              ],
+              [
+                "18.5",
+                0.9
+              ],
+              [
+                "13.5",
+                0.8
+              ],
+              [
+                "24",
+                0.5
+              ],
+              [
+                "13",
+                0.1
+              ],
+              [
+                "32",
+                0
+              ]
+            ]
+          },
+          "weights": {
+            "distinct": 2,
+            "cover95": 2,
+            "top": [
+              [
+                "400",
+                94.8
+              ],
+              [
+                "700",
+                5.2
+              ]
+            ]
+          },
+          "lineHeights": {
+            "distinct": 1,
+            "cover95": 1,
+            "top": [
+              [
+                "normal",
+                100
+              ]
+            ]
+          },
+          "families": {
+            "distinct": 3,
+            "cover95": 1,
+            "top": [
+              [
+                "times new roman",
+                99.1
+              ],
+              [
+                "arial",
+                0.8
+              ],
+              [
+                "monospace",
+                0.1
+              ]
+            ]
+          },
+          "colors": {
+            "distinct": 2,
+            "cover95": 2,
+            "top": [
+              [
+                "rgb(0, 0, 0)",
+                92.8
+              ],
+              [
+                "rgb(0, 0, 238)",
+                7.2
+              ]
+            ]
+          },
+          "styles": {
+            "distinct": 8,
+            "cover95": 3,
+            "top": [
+              [
+                "16|400|times new roman|rgb(0, 0, 0)",
+                86.7
+              ],
+              [
+                "16|400|times new roman|rgb(0, 0, 238)",
+                7.2
+              ],
+              [
+                "16|700|times new roman|rgb(0, 0, 0)",
+                3.7
+              ],
+              [
+                "18.5|700|times new roman|rgb(0, 0, 0)",
+                0.9
+              ],
+              [
+                "13.5|400|arial|rgb(0, 0, 0)",
+                0.8
+              ],
+              [
+                "24|700|times new roman|rgb(0, 0, 0)",
+                0.5
+              ],
+              [
+                "13|400|monospace|rgb(0, 0, 0)",
+                0.1
+              ],
+              [
+                "32|700|times new roman|rgb(0, 0, 0)",
+                0
+              ]
+            ]
+          }
+        },
+        "styleSet": [
+          "16|400|times new roman|rgb(0, 0, 0)",
+          "16|400|times new roman|rgb(0, 0, 238)",
+          "16|700|times new roman|rgb(0, 0, 0)"
+        ],
+        "spacing": {
+          "values": 983,
+          "distinct": 10,
+          "on4px": 54,
+          "on8px": 54,
+          "offGrid": [
+            [
+              1,
+              254
+            ],
+            [
+              21.28,
+              62
+            ],
+            [
+              6,
+              60
+            ],
+            [
+              18.72,
+              44
+            ],
+            [
+              19.92,
+              28
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              21.44,
+              2
+            ]
+          ]
+        },
+        "leftEdges": {
+          "items": 52,
+          "distinct": 22,
+          "perItem": 0.42,
+          "singletonShare": 26.9,
+          "shared3": 5
+        },
+        "defects": {
+          "horizontalScroll": false,
+          "spills": 0,
+          "spillEx": [],
+          "truncated": 0,
+          "headings": 68,
+          "headingsWrapped": 0,
+          "headingWidows": 0,
+          "paras": 286,
+          "parasMulti": 47,
+          "labels": 239,
+          "labelWraps": 0,
+          "labelWrapEx": [],
+          "paraWidowShare": 19.1,
+          "medianCharsPerLine": 169
+        },
+        "media": {
+          "count": 1,
+          "foldShare": 0,
+          "pageShare": 0.1
+        },
+        "h1": {
+          "top": 3421,
+          "left": 8,
+          "size": 32
+        }
+      },
+      "px": {
+        "colourfulness": 19,
+        "colours95": 1,
+        "dominantShare": 0.961,
+        "edgeDensity": 0.04,
+        "whitespace": 0.928,
+        "quadtreeLeaves": 1840,
+        "balance": 0.344,
+        "symmetry": 0
+      }
+    }
+  ]
+}
