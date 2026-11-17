@@ -58,7 +58,7 @@ The `webkit-light` run of the probe also failed on the box markup, but only beca
 ### Ledgers
 
 - `bun run build`: only `static/r/styles/maia/error-summary.json` and `static/v0.13.0/r/styles/maia/error-summary.json` change. Both are byte for byte their `6482736` content.
-- `bun run cost --sizes-only`: 4 entries size-stale (`error-summary`, `sign-in`, `sign-up`, `settings`), and `_catalogue` rebuilt with them; runtime figures kept. `error-summary`: JS 11,875 → 11,872 B, CSS 906 → 891 B, their pre-`019b` figures. The catalogue reads JS 379,373 B and CSS 16,839 B, against 379,356 and 16,838 at `6482736`: `017a` and `022ad` landed since.
+- `bun run cost --sizes-only`: 4 entries size-stale (`error-summary`, `sign-in`, `sign-up`, `settings`), and `_catalogue` rebuilt with them; runtime figures kept. `error-summary`: JS 11,875 → 11,872 B, CSS 906 → 891 B, their pre-`019b` figures. The catalogue reads JS 379,373 B and CSS 16,839 B, against 379,356 and 16,838 at `6482736`: the difference is run-to-run noise in the catalogue's build, not a change (three runs on one source gave JS 379,351, 379,358 and 379,364; the change review, finding 4, as `022vw`'s finding 6 found).
 - `bun scripts/site/thumbnails.ts --hash-only`: rewritten for 83 items; exactly 4 hashes move (`error-summary`, `sign-in`, `sign-up`, `settings`), each back to its `6482736` value.
 
 ### The gate (on this change alone)

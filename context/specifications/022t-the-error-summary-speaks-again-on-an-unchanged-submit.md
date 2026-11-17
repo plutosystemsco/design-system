@@ -394,3 +394,7 @@ Not built, as briefed. Its condition is not met. It is raised only if a `double-
 
 The mechanism works; the criterion is judged again in `019b`'s first run. Run 7 (`research/2026-11-17-the-seventh-matrix-run.md`): NVDA now passes L1 on the unchanged second submit in both browsers (with Firefox it speaks the whole alert again, where run 6 heard only "section"); VoiceOver with WebKit passes; VoiceOver with Chromium re-reads the alert on its first attempt and fails L3 on all three, from the list double `019b` removes. The criterion's "the insertion and the blocks pass as before" cannot hold while `022z` is in and `019b` is not.
 
+### Criterion 14, read from run 8 (2026-11-17)
+
+Not met, and not `022t`'s mechanism: in every pair the unchanged second submit is announced again, as the first is (`research/2026-11-17-the-eighth-matrix-run.md`). What fails is the summary's content under `019b`'s markup, which `019e` reverted. Judged again once `019f` finds markup every reader reads once.
+
