@@ -11,12 +11,13 @@
 
 - **Polish can be measured, but mostly by judges.** The validated instrument is the VisAWI, the Visual Aesthetics of Websites Inventory. Its four-item short form, VisAWI-S, scores four facets: simplicity, diversity, colourfulness and craftsmanship. People judge appeal within 50 ms, and visual complexity drives that judgement more than colour does (§1).
 - **Scripts measure ingredients, not quality.** They are repeatable here: across repeated loads, every DOM metric was identical, and the pixel metrics moved only on Material's animated home page, by under 1%. But most of them do not separate polished sites from Kuiper (§3, §4).
-- **Four scripted measures separate.** Each was measured on six pages per site, at 1440 × 900:
-  - **Plain ground on the home's first screen.** 77% of Kuiper's first screen is one flat colour. The references show 30–49%.
-  - **Colour richness on the home's first screen.** Kuiper's first screen needs 8 colours to cover 95% of its pixels. Primer needs 45, Radix 35 and Material 108. These sites use pictures, gradients and live parts. GOV.UK, flat by design, needs 5.
-  - **Layout balance.** Kuiper's mean is 0.48. The references range from 0.62 to 0.74, and Kuiper's best page (0.56) is below every reference's mean.
-  - **Spacing vocabulary.** Kuiper uses a median of 24 distinct spacing values per page. The references use 17–23.
-- **One more separates weakly.** Reading type: about half of Kuiper's prose is set at 13.5 px rather than its 16 px body size. Primer and GOV.UK set over 82% of their prose in one size of 16 px or more. Radix is as split as Kuiper.
+- **Four scripted measures separate.** Each was measured on six pages per site, at 1440 × 900, for Kuiper, Carbon, Primer, Material 3, Radix Themes and GOV.UK:
+  - **Plain ground on the home's first screen.** 77% of Kuiper's first screen is one flat colour. The references show 30–60% (Carbon 60%).
+  - **Layout balance.** Kuiper's mean is 0.48. The references range from 0.59 (Carbon) to 0.74, and Kuiper's best page (0.56) is below every reference's mean. Carbon's docs pages, though, overlap Kuiper's.
+  - **Spacing vocabulary.** Kuiper uses a median of 24 distinct spacing values per page. The references use 17–23 (Carbon 22). The gap is narrow.
+  - **Reading type.** About half of Kuiper's prose is set at 13.5 px rather than its 16 px body size. Carbon (78–98%), Primer (82–94%) and GOV.UK (92–99%) set most of their prose in one size of 16 px or more. Radix is as split as Kuiper.
+- **One separates only from some.** Colour richness on the home's first screen: Kuiper needs 8 colours to cover 95% of its pixels. Primer needs 45, Radix 35 and Material 108, with pictures, gradients and live parts. Carbon (5) and GOV.UK (5), whose illustrations are flat, need fewer than Kuiper.
+- **Carbon, the site the owner named, scores 12 of 20 on the scripted rows.** Its lead shows elsewhere: in judged craft, and in restraint. One text colour covers 95% of the Button page's text, against Kuiper's 7. Five to seven text styles cover 95% of each docs page, against Kuiper's 14–16. And 88–93% of its docs spacing is on an 8 px grid, against Kuiper's 44–56%. Primer, Material and Radix are not that restrained either, so restraint is Carbon's signature, not a test of polish.
 - **These do not separate:**
   - the count of font sizes, weights, line heights and text colours;
   - the share of spacing on a 4 px grid (GOV.UK, on its own 5 px scale, scores 16–30%);
@@ -28,12 +29,12 @@
   - widows, overflow and label wraps;
   - consistency across one template. Kuiper is perfectly consistent: its h1 sits at the same place on all five pages.
 - **What scripts miss, judges see.** The "Ctrl K" key cap wraps onto two lines in the header on every page for Windows and Linux readers. The home page's install command breaks mid-word. Neither shows in the DOM text the script reads (§4.3).
-- **Carbon could not be measured.** Its styles, fonts and examples come from hosts this session's network blocks. Its pages render unstyled (§6).
 - **Proposed:** five scripted rows and four judged rows (the VisAWI-S facets). The judged rows are scored blind, from screenshots, by two scorers against anchor screenshots. Agreement is reported. The owner checks the result. A model judge may be a third scorer, never the decider. The table is at the end.
 
 ## How to read this
 
 - **EXECUTED:** run in this research, on 2026-11-17, Linux 6.18 in a cloud session, Bun 1.4.4, Playwright 1.64.1 Chromium. Kuiper's site is the `build/` dated 2026-11-16 23:34 UTC, served by `scripts/bench/serve.ts`, at `bae40a8`. Numbers come from `2026-11-17-visual-metrics/results-*.json`, written by `measure.ts` in the same folder.
+- **Carbon** was measured in a second pass the same day, after its asset hosts were allowed. Its pages rendered styled, in IBM Plex.
 - **READ:** a source says so. This session could search the web but not fetch papers: arxiv.org, the VisAWI authors' site and the University of Washington's were outside the allowed network. So most papers are READ from their abstracts and from indexed summaries, with the URL given. Where a detail comes from this researcher's earlier reading and was not re-checked this run, it says "recalled".
 - **INFERRED:** this researcher's reasoning, including every provisional judged score.
 - **Terms** are defined where they first appear.
@@ -159,6 +160,7 @@ The four VisAWI-S facets are scored 0–4 against anchors, blind, on side-by-sid
 
 - **Pages.** Six per site: the home page, the Button page and four more component pages of the same template, chosen to match across sites:
   - Kuiper: checkbox, tabs, tooltip, dialog.
+  - Carbon: checkbox, tabs, tooltip, modal (the "guidelines" tab).
   - Primer: checkbox, underline-nav, tooltip, dialog.
   - Material: checkbox, tabs, tooltips, dialogs.
   - Radix Themes: checkbox, tabs, tooltip, dialog.
@@ -172,91 +174,104 @@ The four VisAWI-S facets are scored 0–4 against anchors, blind, on side-by-sid
 
 ### 3.1 Home page, first screen and whole page
 
-| Metric | Kuiper | Primer | Material 3 | Radix Themes | GOV.UK |
-|---|---|---|---|---|---|
-| Font sizes: distinct / covering 95% | 8 / 5 | 6 / 4 | 9 / 4 | 9 / 5 | 5 / 3 |
-| Text colours: distinct / 95% | 5 / 3 | 6 / 4 | 5 / 3 | 13 / 5 | 4 / 3 |
-| Text styles: distinct / 95% | 20 / 14 | 11 / 8 | 17 / 9 | 32 / 20 | 10 / 6 |
-| Spacing on 4 px, % | 89.6 | 93.6 | 65.9 | 73.5 | 16.0 |
-| Spacing vocabulary | 22 | 14 | 18 | 18 | 16 |
-| Left edges: distinct / items, first screen | 16 / 22 | 16 / 20 | 11 / 27 | 36 / 82 | 11 / 19 |
-| Media: count, first-screen share % | 0, 0 | 6, 36.9 | 18, 33.4 | 1, 100 ¹ | 1, 7.3 |
-| Colourfulness M | 52.7 | 41.2 | 44.0 | 22.8 | 89.4 |
-| **Colour richness** | **8** | 45 | 108 | 35 | 5 |
-| **Plain ground** | **0.774** | 0.477 | 0.303 | 0.478 | 0.492 |
-| White space | 0.838 | 0.821 | 0.740 | 0.755 | 0.785 |
-| Edge density | 0.058 | 0.057 | 0.116 | 0.100 | 0.101 |
-| Quadtree leaves | 4,345 | 3,013 | 6,868 | 5,425 | 5,569 |
-| **Balance** | **0.475** | 0.727 | 0.595 | 0.871 | 0.499 |
-| Symmetry | 0.363 | 0.334 | 0.266 | 0.247 | 0.411 |
-| Heading widows; paragraph widows % | 1; 10 | 0; 0 | 1; 12 | 0; 20 | 0; 0 |
+| Metric | Kuiper | Carbon | Primer | Material 3 | Radix Themes | GOV.UK |
+|---|---|---|---|---|---|---|
+| Font sizes: distinct / covering 95% | 8 / 5 | 8 / 7 | 6 / 4 | 9 / 4 | 9 / 5 | 5 / 3 |
+| Text colours: distinct / 95% | 5 / 3 | 6 / 5 | 6 / 4 | 5 / 3 | 13 / 5 | 4 / 3 |
+| Text styles: distinct / 95% | 20 / 14 | 15 / 11 | 11 / 8 | 17 / 9 | 32 / 20 | 10 / 6 |
+| Spacing on 4 px, % | 89.6 | 79.9 | 93.6 | 65.9 | 73.5 | 16.0 |
+| Spacing vocabulary | 22 | 17 | 14 | 18 | 18 | 16 |
+| Left edges: distinct / items, first screen | 16 / 22 | 26 / 43 | 16 / 20 | 11 / 27 | 36 / 82 | 11 / 19 |
+| Media: count, first-screen share % | 0, 0 | 6, 100 ¹ | 6, 36.9 | 18, 33.4 | 1, 100 ¹ | 1, 7.3 |
+| Colourfulness M | 52.7 | 48.9 | 41.2 | 44.0 | 22.8 | 89.4 |
+| **Colour richness** | **8** | 5 | 45 | 108 | 35 | 5 |
+| **Plain ground** | **0.774** | 0.600 | 0.477 | 0.303 | 0.478 | 0.492 |
+| White space | 0.838 | 0.841 | 0.821 | 0.740 | 0.755 | 0.785 |
+| Edge density | 0.058 | 0.070 | 0.057 | 0.116 | 0.100 | 0.101 |
+| Quadtree leaves | 4,345 | 4,489 | 3,013 | 6,868 | 5,425 | 5,569 |
+| **Balance** | **0.475** | 0.893 | 0.727 | 0.595 | 0.871 | 0.499 |
+| Symmetry | 0.363 | 0.288 | 0.334 | 0.266 | 0.247 | 0.411 |
+| Heading widows; paragraph widows % | 1; 10 | 0; 17 | 0; 0 | 1; 12 | 0; 20 | 0; 0 |
 
-¹ Radix's "100%" is a page-wide CSS background image. Its live example cards, which fill the right of the first screen, are DOM, not media. The media metric counts how a site is built, not what it shows.
+¹ Carbon's and Radix's "100%" come from large media boxes behind or under the hero, not from pictures filling the screen. Radix's is a page-wide CSS background image. Its live example cards, which fill the right of the first screen, are DOM, not media. The media metric counts how a site is built, not what it shows.
 
 ### 3.2 Button page
 
-| Metric | Kuiper | Primer | Material 3 | Radix Themes | GOV.UK |
-|---|---|---|---|---|---|
-| Font sizes: distinct / 95% | 6 / 2 | 10 / 5 | 9 / 4 | 9 / 4 | 6 / 2 |
-| Weights: distinct / 95% | 4 / 2 | 5 / 3 | 4 / 2 | 3 / 2 | 2 / 1 |
-| Text colours: distinct / 95% | 13 / 7 | 15 / 8 | 6 / 3 | 12 / 6 | 4 / 2 |
-| **Prose: dominant size, its share %** | **16 px, 54.6** (13.5 px, 45.4) | 16 px, 94.0 | 16 px, 66.1 ² | 16 px, 58.5 | 19 px, 94.3 |
-| Spacing on 4 px, % | 89.1 | 88.4 | 69.3 | 82.5 | 29.9 |
-| **Spacing vocabulary** | **25** | 18 | 23 | 19 | 19 |
-| Left edges: distinct / items | 30 / 78 | 34 / 79 | 20 / 42 | 34 / 88 | 14 / 43 |
-| Spills; truncated; horizontal scroll | 0; 0; no | 6; 0; no ³ | 3; 0; no | 0; 0; no | 0; 0; no |
-| Paragraph widows % | 18.8 | 28.0 | 23.1 | 0 | 25.8 |
-| Median characters per line | 71 | 47 | 57 | 80 | 46 |
-| Colourfulness M | 26.1 | 7.4 | 41.9 | 10.5 | 36.8 |
-| Colour richness | 7 | 1 | 12 | 3 | 3 |
-| Plain ground | 0.834 | 0.956 | 0.324 | 0.893 | 0.840 |
-| White space | 0.830 | 0.849 | 0.849 | 0.841 | 0.833 |
-| Edge density | 0.067 | 0.068 | 0.064 | 0.067 | 0.072 |
-| Quadtree leaves | 3,700 | 2,755 | 4,270 | 2,971 | 4,138 |
-| **Balance** | **0.417** | 0.557 | 0.657 | 0.780 | 0.674 |
+| Metric | Kuiper | Carbon | Primer | Material 3 | Radix Themes | GOV.UK |
+|---|---|---|---|---|---|---|
+| Font sizes: distinct / 95% | 6 / 2 | 6 / 2 | 10 / 5 | 9 / 4 | 9 / 4 | 6 / 2 |
+| Weights: distinct / 95% | 4 / 2 | 4 / 1 | 5 / 3 | 4 / 2 | 3 / 2 | 2 / 1 |
+| Text colours: distinct / 95% | 13 / 7 | 5 / 1 | 15 / 8 | 6 / 3 | 12 / 6 | 4 / 2 |
+| **Prose: dominant size, its share %** | **16 px, 54.6** (13.5 px, 45.4) | 16 px, 78.2 | 16 px, 94.0 | 16 px, 66.1 ² | 16 px, 58.5 | 19 px, 94.3 |
+| Spacing on 4 px, % | 89.1 | 91.9 | 88.4 | 69.3 | 82.5 | 29.9 |
+| **Spacing vocabulary** | **25** | 22 | 18 | 23 | 19 | 19 |
+| Left edges: distinct / items | 30 / 78 | 21 / 58 | 34 / 79 | 20 / 42 | 34 / 88 | 14 / 43 |
+| Spills; truncated; horizontal scroll | 0; 0; no | 0; 0; no | 6; 0; no ³ | 3; 0; no | 0; 0; no | 0; 0; no |
+| Paragraph widows % | 18.8 | 16.7 | 28.0 | 23.1 | 0 | 25.8 |
+| Median characters per line | 71 | 55 | 47 | 57 | 80 | 46 |
+| Colourfulness M | 26.1 | 8.5 | 7.4 | 41.9 | 10.5 | 36.8 |
+| Colour richness | 7 | 3 | 1 | 12 | 3 | 3 |
+| Plain ground | 0.834 | 0.760 | 0.956 | 0.324 | 0.893 | 0.840 |
+| White space | 0.830 | 0.872 | 0.849 | 0.849 | 0.841 | 0.833 |
+| Edge density | 0.067 | 0.058 | 0.068 | 0.064 | 0.067 | 0.072 |
+| Quadtree leaves | 3,700 | 3,106 | 2,755 | 4,270 | 2,971 | 4,138 |
+| **Balance** | **0.417** | 0.465 | 0.557 | 0.657 | 0.780 | 0.674 |
 
 ² Material's prose could not be isolated by the filter, so this is all its text, navigation included. ³ Primer's spills are skip links and "Loading" placeholders, which are hidden by design. Spill counts need a look before they count as defects.
 
 ### 3.3 Across one template (Button and four more component pages)
 
-| | Kuiper | Primer | Material 3 | Radix Themes | GOV.UK |
-|---|---|---|---|---|---|
-| h1 top, px (five pages) | 132 ×5 | 161 ×5 | 164–179 | 128 ×5 | 191 ×5 |
-| h1 left, px | 392 ×5 | 366 ×5 | 152 ×5 | 428 ×5 | 460 ×5 |
-| Text-style overlap (mean pairwise Jaccard) | 0.79 | 0.68 | 0.89 | 0.62 | 0.74 |
-| Prose: dominant size, share % | 16 (52–55) on 3 pages; 13.5 (52–57) on 2 | 16 (82–94) | 16 (59–66) ² | 14 (49–67) on 3; 16 (54–59) on 2 | 19 (92–99) |
-| Spacing vocabulary, six pages | 22–25, median 24 | 14–18, median 17 | 18–23, median 23 | 17–19, median 19 | 16–19, median 19 |
-| Balance, six pages: mean (range) | **0.483** (0.417–0.559) | 0.617 (0.550–0.727) | 0.671 (0.431–0.895) | 0.744 (0.648–0.871) | 0.641 (0.499–0.743) |
-| Left / top heavy, six pages | left 6, top 6 | left 5, top 5 | left 1, top 6 | left 5, top 3 | left 6, top 6 |
+| | Kuiper | Carbon | Primer | Material 3 | Radix Themes | GOV.UK |
+|---|---|---|---|---|---|---|
+| h1 top, px (five pages) | 132 ×5 | 136 ×5 | 161 ×5 | 164–179 | 128 ×5 | 191 ×5 |
+| h1 left, px | 392 ×5 | 326 ×5 | 366 ×5 | 152 ×5 | 428 ×5 | 460 ×5 |
+| Text-style overlap (mean pairwise Jaccard) | 0.79 | 0.76 | 0.68 | 0.89 | 0.62 | 0.74 |
+| Text styles covering 95% | 14–16 | 5–7 | 13–14 | 16–17 | 12–17 | 4–5 |
+| Spacing on 8 px, % | 44–56 | 88–93 | 74–85 | 31–36 | 45–52 | 1 |
+| Prose: dominant size, share % | 16 (52–55) on 3 pages; 13.5 (52–57) on 2 | 16 (78–98) | 16 (82–94) | 16 (59–66) ² | 14 (49–67) on 3; 16 (54–59) on 2 | 19 (92–99) |
+| Spacing vocabulary, six pages | 22–25, median 24 | 17–23, median 22 | 14–18, median 17 | 18–23, median 23 | 17–19, median 19 | 16–19, median 19 |
+| Balance, six pages: mean (range) | **0.483** (0.417–0.559) | 0.588 (0.428–0.893) | 0.617 (0.550–0.727) | 0.671 (0.431–0.895) | 0.744 (0.648–0.871) | 0.641 (0.499–0.743) |
+| Left / top heavy, six pages | left 6, top 6 | left 6, top 1 | left 5, top 5 | left 1, top 6 | left 5, top 3 | left 6, top 6 |
 
 The *Jaccard* overlap is the size of two sets' intersection divided by the size of their union.
 
 ## 4. Which metrics separate
 
-The polished set here is Primer, Material 3 and Radix Themes. GOV.UK is polished but deliberately plain. A metric *separates* when Kuiper falls outside the range of all three polished references in the direction the eye agrees with.
+The polished set here is Carbon, Primer, Material 3 and Radix Themes. GOV.UK is polished but deliberately plain. A metric *separates* when Kuiper falls outside the range of all four polished references in the direction the eye agrees with.
 
 ### 4.1 They separate (EXECUTED numbers; INFERRED reading)
 
-1. **Plain ground on the home's first screen.** Kuiper 0.774; references 0.303–0.492, GOV.UK included.
+1. **Plain ground on the home's first screen.** Kuiper 0.774; references 0.303–0.600, GOV.UK included.
    - Kuiper's first screen is mostly cream ground around a 160 px word and four circles.
-   - Every reference fills half or more of its first screen with something: pictures of the product (Primer, Material), live parts (Radix) or a coloured band with an illustration (GOV.UK).
+   - Every reference fills at least 40% of its first screen with something:
+     - pictures of the product (Primer, Material);
+     - live parts (Radix);
+     - an illustrated band of components (Carbon);
+     - a coloured band with an illustration (GOV.UK).
+   - Carbon's 0.600 is its hero's flat light-blue ground. That ground holds a large illustration, so the top band of the anchors was widened to 0.60 (closing table).
    - This is the clearest scripted gap.
-2. **Colour richness on the home's first screen.** Kuiper 8; Primer 45, Radix 35, Material 108; GOV.UK 5.
-   - It counts gradients, photographs, shadows and anti-aliased illustration.
-   - It does not reward GOV.UK's flat illustration, so it measures pictorial depth, not taste.
-   - On docs pages it does not separate (1–12).
-3. **Layout balance.** Kuiper has the lowest mean, 0.483. The references range from 0.617 to 0.744. Kuiper's best page, 0.559, is below every reference's mean.
+2. **Layout balance.** Kuiper has the lowest mean, 0.483. The references range from 0.588 (Carbon) to 0.744. Kuiper's best page, 0.559, is below every reference's mean.
    - The cause is left-right imbalance: 0.37–0.49 on Kuiper's pages.
+   - Carbon's docs pages are as left-heavy (left-right 0.37–0.40) and overlap Kuiper's (0.428–0.640). Its mean is lifted by its home page (0.893). So balance separates on home pages more than on docs pages.
    - Kuiper's content column and left navigation carry the weight. The right rail holds a short "On this page" list over empty ground.
    - On the home page, the display word fills the left. The circles end at about y = 590, and the lower third is empty.
-4. **Spacing vocabulary.** Kuiper uses 22–25 distinct spacing values per page, the most, or tied for the most, on every page. Primer uses 14–18 and Radix 17–19.
-   - Material reaches 23, so the gap is narrow.
+3. **Spacing vocabulary.** Kuiper uses 22–25 distinct spacing values per page, the most, or tied for the most, on every page. Primer uses 14–18 and Radix 17–19.
+   - Material and Carbon each reach 23 (medians 23 and 22), so the gap is narrow.
    - Kuiper's off-grid values include 6 px (168 uses on Button) and 1 px (28 uses).
    - It is the weakest of the four, but it can be acted on directly: the token spacing scale.
+4. **Reading type.** Kuiper splits its prose about evenly between 16 px and 13.5 px. It sets example descriptions, the left navigation and much of the guidance at 13.5 px. Carbon (78–98% at 16 px), Primer (82–94% at 16 px) and GOV.UK (92–99% at 19 px) each use one body size. Radix splits like Kuiper (14 and 16 px), and Radix looks polished. So this row is about reading comfort more than polish.
 
 ### 4.2 They separate weakly, or only from some
 
-- **Reading type.** Kuiper splits its prose about evenly between 16 px and 13.5 px. It sets example descriptions, the left navigation and much of the guidance at 13.5 px. Primer (82–94% at 16 px) and GOV.UK (92–99% at 19 px) use one body size. Radix splits like Kuiper (14 and 16 px), and Radix looks polished, so this is a reading-comfort row more than a polish row.
+- **Colour richness on the home's first screen.** Kuiper 8. Primer 45, Radix 35, Material 108. Carbon 5, GOV.UK 5.
+  - It counts gradients, photographs, shadows and anti-aliased illustration.
+  - It does not reward Carbon's or GOV.UK's flat illustration, so it measures pictorial depth, not taste.
+  - It separates Kuiper from the photographic and gradient sites only. On docs pages it does not separate at all (1–12).
+- **Restraint in type and spacing (Carbon's signature).** Carbon is the most restrained site measured:
+  - 5–7 text styles cover 95% of each docs page;
+  - one text colour covers 95% of the Button page;
+  - 88–93% of its docs spacing is on an 8 px grid.
+  Kuiper's figures are 14–16 styles, 7 colours and 44–56%. But Primer (13–14 styles), Material (16–17) and Radix (12–17) are no more restrained than Kuiper. So restraint does not separate polish in general. It is one way to be polished, and the way of the site the owner named.
 - **Media.** Kuiper has no picture or illustration on any of its six pages. Primer and Material have them on the home page, and Material also on every component page. But the metric counts how things are built: Kuiper's circles are CSS, and Radix's live cards are DOM. Leave imagery to the judged diversity facet.
 
 ### 4.3 They do not separate
@@ -278,15 +293,15 @@ The polished set here is Primer, Material 3 and Radix Themes. GOV.UK is polished
 
 **What follows** (INFERRED). The gap the owner sees is not in the countable hygiene of type and spacing. There Kuiper is level or ahead. It is in three things:
 
-- what the first screen shows (plain ground, colour richness);
+- what the first screen shows (plain ground);
 - how weight is distributed (balance);
 - finish details that only a careful eye catches (craftsmanship).
 
-The first two can be scripted. The rest must be judged.
+The first two can be scripted. The rest must be judged. Carbon's lead over Kuiper sits mostly in the judged facets and in its restraint (§4.2). On the five scripted rows it scores 12 of 20, against Kuiper's 6.
 
 ## 5. Keeping judged scores honest (INFERRED, from §1.2–1.7)
 
-1. **A fixed reference set.** Score Kuiper beside the same four references every run: Primer, Material 3, Radix Themes and GOV.UK. Add Carbon once its hosts are reachable (§6).
+1. **A fixed reference set.** Score Kuiper beside the same five references every run: Carbon, Primer, Material 3, Radix Themes and GOV.UK. Carbon needs `cdn.carbondesignsystem.com`, `1.www.s81c.com` and `react.carbondesignsystem.com` reachable, or it renders unstyled (§6).
 2. **Fixed captures, not live sites.** Use `measure.ts`'s screenshots: home and Button, 1440 × 900, device scale 1, light scheme. Recapture all sites in the same run. Store the shots in the run's folder so a later scorer sees exactly the same pixels.
 3. **Blind.**
    - Mask logos and wordmarks with a neutral block.
@@ -306,13 +321,10 @@ The first two can be scripted. The rest must be judged.
 
 ## 6. Limits
 
-- **Carbon is not in the numbers.**
-  - Its CSS, scripts and fonts come from `cdn.carbondesignsystem.com` and `1.www.s81c.com`, and its examples from `react.carbondesignsystem.com`. This session's network allows none of them.
-  - Its pages rendered as unstyled HTML, so the rows were dropped.
-  - Re-running `measure.ts` with Carbon added back to `SITES` needs those three hosts allowed. The owner named Carbon, so the first real run of these rows should include it.
-  - Spectrum's fonts (`use.typekit.net`) and Atlassian's CSS (`ds-cdn.prod-east.frontend.public.atl-paas.net`) are blocked too, so they were not used.
+- **Carbon needs its asset hosts.** Its CSS, scripts and fonts come from `cdn.carbondesignsystem.com` and `1.www.s81c.com`, and its examples from `react.carbondesignsystem.com`. Without them it renders as unstyled HTML. They were allowed for the second pass. Its analytics host (`www-api.ibm.com`) stayed blocked, which changes nothing on screen.
+- **Two references were not used.** Spectrum's fonts (`use.typekit.net`) and Atlassian's CSS (`ds-cdn.prod-east.frontend.public.atl-paas.net`) are blocked too, so they were not used.
 - **Material is under-read.** Its pages scroll inside a container, not the window, so the script's scroll did not wake lazy content. Its character counts (1,600–3,400) are low, and its prose could not be isolated.
-- **The scripted anchors rest on five sites and six pages each.** They are calibrated to today's references. A cut point set from four polished sites is a guess at the band, not a law.
+- **The scripted anchors rest on six sites and six pages each.** They are calibrated to today's references. A cut point set from five polished sites is a guess at the band, not a law. Carbon's figures already moved one: V1's top band widened from 0.50 to 0.60.
 - **The pixel metrics are crude.**
   - Balance and plain ground treat any non-flat cell as weight. A busy background would score as balanced.
   - The guards in the anchors, a ceiling on edge density and a floor on plain ground, keep "more" from winning (§1.2).
@@ -329,26 +341,23 @@ The first two can be scripted. The rest must be judged.
    - (a) **Recommended.** Two scorers from the five-agent pool who did not build the pages, blind, plus a pinned model as a third, with the owner's check.
    - (b) The owner plus one agent.
    - (c) An outside panel each release, with VisAWI-S.
-3. **May the session's network allow Carbon's three asset hosts** (`cdn.carbondesignsystem.com`, `1.www.s81c.com`, `react.carbondesignsystem.com`) so Carbon can be measured?
-   - (a) **Recommended.** Yes, for benchmark runs.
-   - (b) No. Use the four other references.
 
 ## Proposed scorecard criteria
 
-Each score is 0 to 4. "Six pages" means the home page, the Button page and the four template pages in §3. References' and Kuiper's scripted scores are EXECUTED. Judged scores are **provisional**: one unblinded scorer (INFERRED), to be replaced by the first blind panel (§5). Carbon is not scored (§6).
+Each score is 0 to 4. "Six pages" means the home page, the Button page and the four template pages in §3. References' and Kuiper's scripted scores are EXECUTED. Judged scores are **provisional**: one unblinded scorer (INFERRED), to be replaced by the first blind panel (§5).
 
-| # | Criterion | Kind | How to measure | Anchors, 0–4 | Primer | Material 3 | Radix | GOV.UK | Kuiper |
-|---|---|---|---|---|---|---|---|---|---|
-| V1 | First screen has something to show | Scripted | Home, first screen: the share of pixels in the single most common colour (`plainGround`) | 4 ≤ 0.50 (and edge density ≤ 0.12; else 3); 3 ≤ 0.60; 2 ≤ 0.70; 1 ≤ 0.80; 0 > 0.80 | 4 (0.477) | 4 (0.303) | 4 (0.478) | 4 (0.492) | **1** (0.774) |
-| V2 | Pictorial depth | Scripted | Home, first screen: the count of 15-bit colours covering 95% of pixels | 4 ≥ 32; 3 ≥ 16; 2 ≥ 8; 1 ≥ 4; 0 < 4 | 4 (45) | 4 (108) | 4 (35) | 1 (5) | **2** (8) |
-| V3 | Balance | Scripted | Mean over six pages of 1 − (left-right + top-bottom imbalance)/2, weight = non-flat 8 px cells × distance from centre | 4 ≥ 0.70; 3 ≥ 0.60; 2 ≥ 0.55; 1 ≥ 0.45; 0 < 0.45 | 3 (0.617) | 3 (0.671) | 4 (0.744) | 3 (0.641) | **1** (0.483) |
-| V4 | Spacing vocabulary | Scripted | Median over six pages of the distinct non-zero margin, padding and gap values | 4 ≤ 17; 3 ≤ 19; 2 ≤ 21; 1 ≤ 23; 0 ≥ 24 | 4 (17) | 1 (23) | 3 (19) | 3 (19) | **0** (24) |
-| V5 | Reading type | Scripted | Per template page, the dominant prose size and its share of prose. Score each page, take the median of five | 4: ≥ 16 px and ≥ 85%; 3: ≥ 16 px and ≥ 70%; 2: ≥ 16 px and ≥ 50%; 1: dominant ≥ 14 px; 0: < 14 px | 4 (16, 82–94%) | 2 (16, 59–66%, all text) | 1 (14 on 3 of 5) | 4 (19, 92–99%) | **2** (16 on 3 of 5, ≈ 53%) |
-| J1 | Simplicity | Judged | Masked home and Button shots, blind, two scorers (§5); the page scores are averaged and rounded down | 4: one focal point per screen; every element in an evident group; one alignment system. 3: clear focus and grouping; one or two elements compete or leave the grid. 2: several competing emphases, or surfaces nested three deep. 1: unclear what comes first. 0: disordered | 4 | 3 | 4 | 4 | **2** |
-| J2 | Diversity | Judged | As J1 | 4: the first screen shows the product richly (pictures, illustration or live parts across a third or more), with varied scale; docs pages carry illustration or rich specimens. 3: imagery or specimens on home; docs varied but plain. 2: a visual device (shapes, colour blocks) but no picture of the product. 1: text and flat shapes; one layout repeated. 0: monotonous text | 3 | 4 | 3 | 2 | **2** |
-| J3 | Colourfulness | Judged | As J1 | 4: a deliberate palette, one or two accents over calm neutrals, colour carries meaning, tints or gradients add depth. 3: pleasant and restrained, accents consistent, little depth. 2: hues compete at equal weight, or the ground reads dull. 1: clashing or muddy. 0: no evident palette | 4 | 4 | 4 | 3 | **2** |
-| J4 | Craftsmanship | Judged | As J1, plus a checklist read on each shot: wrapped labels or key caps, code broken mid-token, one-word last lines in a lede or heading, clipped or misaligned parts, mixed radii or borders | 4: no visible defect. 3: one minor defect. 2: two or three minor defects, or one obvious. 1: several obvious defects. 0: looks unfinished | 4 | 3 | 4 | 4 | **2** |
-| | **Total, of 36** | | | | 34 | 28 | 31 | 28 | **14** |
+| # | Criterion | Kind | How to measure | Anchors, 0–4 | Carbon | Primer | Material 3 | Radix | GOV.UK | Kuiper |
+|---|---|---|---|---|---|---|---|---|---|---|
+| V1 | First screen has something to show | Scripted | Home, first screen: the share of pixels in the single most common colour (`plainGround`) | 4 ≤ 0.60 (and edge density ≤ 0.12; else 3); 3 ≤ 0.67; 2 ≤ 0.74; 1 ≤ 0.80; 0 > 0.80. Widened from 4 ≤ 0.50 once Carbon (0.600) was measured | 4 (0.600) | 4 (0.477) | 4 (0.303) | 4 (0.478) | 4 (0.492) | **1** (0.774) |
+| V2 | Pictorial depth | Scripted | Home, first screen: the count of 15-bit colours covering 95% of pixels | 4 ≥ 32; 3 ≥ 16; 2 ≥ 8; 1 ≥ 4; 0 < 4 | 1 (5) | 4 (45) | 4 (108) | 4 (35) | 1 (5) | **2** (8) |
+| V3 | Balance | Scripted | Mean over six pages of 1 − (left-right + top-bottom imbalance)/2, weight = non-flat 8 px cells × distance from centre | 4 ≥ 0.70; 3 ≥ 0.60; 2 ≥ 0.55; 1 ≥ 0.45; 0 < 0.45 | 2 (0.588) | 3 (0.617) | 3 (0.671) | 4 (0.744) | 3 (0.641) | **1** (0.483) |
+| V4 | Spacing vocabulary | Scripted | Median over six pages of the distinct non-zero margin, padding and gap values | 4 ≤ 17; 3 ≤ 19; 2 ≤ 21; 1 ≤ 23; 0 ≥ 24 | 1 (22) | 4 (17) | 1 (23) | 3 (19) | 3 (19) | **0** (24) |
+| V5 | Reading type | Scripted | Per template page, the dominant prose size and its share of prose. Score each page, take the median of five | 4: ≥ 16 px and ≥ 85%; 3: ≥ 16 px and ≥ 70%; 2: ≥ 16 px and ≥ 50%; 1: dominant ≥ 14 px; 0: < 14 px | 4 (16, 78–98%) | 4 (16, 82–94%) | 2 (16, 59–66%, all text) | 1 (14 on 3 of 5) | 4 (19, 92–99%) | **2** (16 on 3 of 5, ≈ 53%) |
+| J1 | Simplicity | Judged | Masked home and Button shots, blind, two scorers (§5); the page scores are averaged and rounded down | 4: one focal point per screen; every element in an evident group; one alignment system. 3: clear focus and grouping; one or two elements compete or leave the grid. 2: several competing emphases, or surfaces nested three deep. 1: unclear what comes first. 0: disordered | 4 | 4 | 3 | 4 | 4 | **2** |
+| J2 | Diversity | Judged | As J1 | 4: the first screen shows the product richly (pictures, illustration or live parts across a third or more), with varied scale; docs pages carry illustration or rich specimens. 3: imagery or specimens on home; docs varied but plain. 2: a visual device (shapes, colour blocks) but no picture of the product. 1: text and flat shapes; one layout repeated. 0: monotonous text | 3 | 3 | 4 | 3 | 2 | **2** |
+| J3 | Colourfulness | Judged | As J1 | 4: a deliberate palette, one or two accents over calm neutrals, colour carries meaning, tints or gradients add depth. 3: pleasant and restrained, accents consistent, little depth. 2: hues compete at equal weight, or the ground reads dull. 1: clashing or muddy. 0: no evident palette | 4 | 4 | 4 | 4 | 3 | **2** |
+| J4 | Craftsmanship | Judged | As J1, plus a checklist read on each shot: wrapped labels or key caps, code broken mid-token, one-word last lines in a lede or heading, clipped or misaligned parts, mixed radii or borders | 4: no visible defect. 3: one minor defect. 2: two or three minor defects, or one obvious. 1: several obvious defects. 0: looks unfinished | 4 | 4 | 3 | 4 | 4 | **2** |
+| | **Total, of 36** | | | | 27 | 34 | 28 | 31 | 28 | **14** |
 
 **Anchor exemplars for the judged rows** (to be fixed by the first panel; proposed from this run's shots):
 

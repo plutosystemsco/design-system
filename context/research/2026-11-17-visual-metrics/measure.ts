@@ -633,10 +633,8 @@ await scratch.setContent("<!doctype html><body></body>");
 
 async function measure(site: string, kind: string, url: string, run: number) {
   const page = await ctx.newPage();
-  // Carbon cannot be measured from this session: its CSS, scripts and fonts
-  // sit on cdn.carbondesignsystem.com and 1.www.s81c.com, and its examples on
-  // react.carbondesignsystem.com, none of which the network allows. Its pages
-  // render unstyled, so its rows are dropped from the memo's tables.
+  // Carbon needs cdn.carbondesignsystem.com, 1.www.s81c.com and
+  // react.carbondesignsystem.com reachable, or its pages render unstyled.
   try {
     await page.goto(resolve(url), { waitUntil: "load", timeout: 90_000 });
     await settle(page);
