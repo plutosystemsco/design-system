@@ -46,8 +46,8 @@
         timeout = setTimeout(() => (copied = false), 2000);
       })
       .catch(() => {
-        // The write was refused: the outcome is said, and the name stays
-        // "Copy code" so the button can be tried again.
+        // The write was refused: the outcome is said, and the button can be
+        // tried again.
         copied = false;
         failed = true;
       });
@@ -57,9 +57,11 @@
 </script>
 
 <!--
-  A 32 px ghost button whose name says what it does, then "Copied" for two
-  seconds. The status region beside it is in the page from the first render,
-  so the announcement is heard; a refused write says "Could not copy" there.
+  A 32 px ghost button named "Copy code", which shows a check for two
+  seconds after a copy. The status region beside it is in the page from the
+  first render, so the outcome is heard: "Copied", or "Could not copy" where
+  the write is refused. The name stays "Copy code" either way, so a screen
+  reader says the outcome once, from the status.
 -->
 <Button
   bind:ref
@@ -67,7 +69,7 @@
   data-copied={copied || undefined}
   {variant}
   {size}
-  aria-label={copied ? "Copied" : "Copy code"}
+  aria-label="Copy code"
   class={cn(className)}
   onclick={(e) => {
     onclick?.(e);

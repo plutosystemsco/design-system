@@ -450,12 +450,16 @@ test.describe("the code block", () => {
   test.describe("with the clipboard granted", () => {
     test.use({ permissions: clipboard });
 
-    test("C4. the copy button: its name and size; Enter writes the code, says Copied, and resets after 2 s", async ({
+    test("C4. the copy button: its name and size; Enter writes the code, says Copied once, and resets after 2 s", async ({
       page,
     }) => {
+      // The page's clock, paused before Enter at a time far ahead, so the
+      // name is read while time stands still and the 2 s reset cannot pass
+      // the assertion by accident.
+      const t0 = new Date("2026-11-17T10:00:00Z");
+      await page.clock.install({ time: t0 });
       await open(page, PAGE);
       const block = python(page);
-      // Located by its slot: its name changes on success.
       const button = block.locator('[data-slot="code-block-copy-button"]');
       await expect(button).toHaveCount(1);
       await expect(button).toHaveAccessibleName("Copy code");
@@ -473,14 +477,24 @@ test.describe("the code block", () => {
         .evaluateAll((lines) =>
           lines.map((l) => (l.textContent ?? "").replace(/\n$/, "")).join("\n"),
         );
+      await page.clock.pauseAt(new Date(t0.getTime() + 600_000));
       await button.focus();
       await page.keyboard.press("Enter");
-      await expect(button).toHaveAccessibleName("Copied");
+      await expect(block.getByRole("status")).toHaveText("Copied");
+      // 022v: the status says "Copied", and the name stays "Copy code". A
+      // name that became "Copied" too was read twice by NVDA.
+      await expect(button).toHaveAttribute("data-copied", "true");
+      await expect(button).toHaveAccessibleName("Copy code");
       await expect(block.getByRole("status")).toHaveText("Copied");
       const pasted = await readClipboard(page);
       expect(pasted.split("\n")).toHaveLength(25);
       expect(pasted).toBe(code);
-      await expect(button).toHaveAccessibleName("Copy code", { timeout: 3000 });
+      await page.clock.runFor(1999);
+      await expect(button).toHaveAttribute("data-copied", "true");
+      await page.clock.runFor(1);
+      await expect(button).not.toHaveAttribute("data-copied", /.*/);
+      await expect(block.getByRole("status")).toHaveText("");
+      await expect(button).toHaveAccessibleName("Copy code");
     });
   });
 });
