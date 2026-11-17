@@ -33,8 +33,9 @@
 </script>
 
 <!--
-  A token's name, and a button that copies it: its name says what it copies,
-  then "Copied" for two seconds.
+  A token's name, and a button that copies it. Its name says what it copies,
+  and keeps saying so. After a copy it shows a check for two seconds, and the
+  status beside it says "Copied": the one place "Copied" is said (017a).
 -->
 <span class="inline-flex items-center gap-1">
   <code class="font-medium">{name}</code>
@@ -42,7 +43,7 @@
     variant="ghost"
     size="icon-sm"
     data-slot="token-copy"
-    aria-label={copied ? "Copied" : `Copy ${copy}`}
+    aria-label={`Copy ${copy}`}
     onclick={write}
   >
     {#if copied}<Check aria-hidden="true" />{:else}<Copy
