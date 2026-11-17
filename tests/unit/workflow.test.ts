@@ -295,13 +295,16 @@ describe("022 test 3: matrix.yml", () => {
       .run!.split("\n")
       .map((l) => l.trim())
       .filter(Boolean);
+    // The change review's finding 4: 1 is the "–" (no action) that
+    // System Settings writes; the corners are read again after the restart.
     expect(lines).toEqual([
       "defaults read com.apple.dock | grep wvous || true",
-      "defaults write com.apple.dock wvous-tl-corner -int 0",
-      "defaults write com.apple.dock wvous-tr-corner -int 0",
-      "defaults write com.apple.dock wvous-bl-corner -int 0",
-      "defaults write com.apple.dock wvous-br-corner -int 0",
+      "defaults write com.apple.dock wvous-tl-corner -int 1",
+      "defaults write com.apple.dock wvous-tr-corner -int 1",
+      "defaults write com.apple.dock wvous-bl-corner -int 1",
+      "defaults write com.apple.dock wvous-br-corner -int 1",
       "killall Dock || true",
+      "defaults read com.apple.dock | grep wvous || true",
     ]);
     const test = vo.findIndex((x) => (x.run ?? "").includes("test:sr"));
     expect(at).toBeLessThan(test);

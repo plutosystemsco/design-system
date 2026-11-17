@@ -646,6 +646,29 @@ describe("C1, C2: the chart", () => {
       },
     ]);
   });
+  // The change review's finding 2: guidepup logs "" for a step that spoke
+  // nothing, and the walk's log is kept raw.
+  for (const silent of [1, 2, 3])
+    test(`022x: ${silent} silent step(s) at the walk's start move no position`, () => {
+      const walk = [...Array<string>(silent).fill(""), ...run5];
+      expect(ids(C1(walk, chart))).toEqual([]);
+      expect(C2(walk, TOOLTIPS, chart)).toEqual([]);
+      const hovered = [...walk.slice(0, silent + 1), "Visitors 412"];
+      expect(
+        ids(C2([...hovered, ...walk.slice(silent + 1)], TOOLTIPS, chart)),
+      ).toEqual(["C2"]);
+    });
+  // The change review's finding 3: no header, no boundary.
+  test("022x: C2 with fewer than three entries in its order is X0", () => {
+    const walk = [FIGURE, "Visitors 164", "Show as table", "Day"];
+    expect(C2(walk, TOOLTIPS, [])).toEqual([
+      { rule: "X0", message: "C2: no header to bound the walk" },
+    ]);
+    expect(C2(walk, TOOLTIPS, [FIGURE])).toEqual([
+      { rule: "X0", message: "C2: no header to bound the walk" },
+    ]);
+    expect(ids(C2(walk, TOOLTIPS, [FIGURE, "Show as table"]))).toEqual(["X0"]);
+  });
 });
 
 describe("the two readers' wordings both pass", () => {

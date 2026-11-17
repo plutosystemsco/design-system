@@ -325,12 +325,29 @@ test.describe("nothing inside the bar is translucent", () => {
         for (const control of await controls.all()) {
           if (!(await control.isVisible())) continue;
           await control.hover();
-          await page.waitForTimeout(250);
-          await transitionsDone(page);
           const label =
             (await control.getAttribute("aria-label")) ??
             (await control.innerText()).trim();
-          expect(await translucent(page), `hovering ${label}`).toEqual([]);
+          // The change review's finding 5: the hover took, so the read is
+          // of the hover state, not a clear rest that passes unseen.
+          await expect
+            .poll(() => control.evaluate((el) => el.matches(":hover")), {
+              message: `${label} is hovered`,
+            })
+            .toBe(true);
+          await page.waitForTimeout(250);
+          await transitionsDone(page);
+          // 022x (c), after the change review: once in about 200 loaded
+          // runs here, a fade still read mid-way after `transitionsDone`
+          // (alpha 0.886, at 390): one that started after it looked. So the
+          // read is polled. A fade passes once it ends; a hover state that
+          // stays translucent fails after 5 s, with its value.
+          await expect
+            .poll(() => translucent(page), {
+              message: `hovering ${label}`,
+              timeout: 5_000,
+            })
+            .toEqual([]);
         }
       });
 });

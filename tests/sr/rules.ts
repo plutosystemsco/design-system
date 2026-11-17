@@ -520,10 +520,12 @@ function inOrderAt(
   const n = steps.map(normalise);
   const starts: number[] = [];
   let joined = "";
+  // Each start is taken before its phrase is appended: after the space,
+  // if one goes in. The change review's finding 2: silent steps ("") at the
+  // start add no space, so they move no position.
   for (const p of n) {
-    starts.push(joined.length);
+    starts.push(joined.length + (joined ? 1 : 0));
     joined += (joined ? " " : "") + p;
-    if (starts.length > 1) starts[starts.length - 1]! += 1;
   }
   const phraseAt = (pos: number) => {
     let i = 0;
@@ -564,7 +566,7 @@ export function C1(steps: string[], inOrder: string[]): Fault[] {
 /**
  * C2. None of the chart's tooltip texts is spoken before the table, while
  * C1 holds. `inOrder` is C1's: the figure's name, the caption, and the
- * first header last.
+ * first header last. Fewer than three entries is X0: no header bounds it.
  *
  * 022x (b): the walk reads only the speech before that header, where C1
  * found it in order. 25 steps reach the table's cells, and VoiceOver reads
@@ -576,6 +578,9 @@ export function C2(
   tooltipTexts: string[],
   inOrder: string[],
 ): Fault[] {
+  // The change review's finding 3: the boundary is the last entry, the
+  // first header; with fewer than three there is none.
+  if (inOrder.length < 3) return x0("C2: no header to bound the walk");
   const r = nonEmpty(steps) ? inOrderAt(steps, inOrder) : { missing: 0 };
   if ("missing" in r) return x0("C2: C1 does not hold");
   const header = r.found[r.found.length - 1]!;
