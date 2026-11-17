@@ -176,35 +176,72 @@ export function L2(
 }
 
 /**
- * Whether one entry holds the message, in any form, whole twice, in two of
- * its parts: two places that do not overlap, with a part boundary (the
- * ". " guidepup joins parts with) between them. Compared normalised.
+ * 022z decision 2: a word character, a Unicode letter, a digit or a hyphen.
+ * The hyphen is one so that "Enter a password" is not found inside
+ * "Re-enter a password". No message the suite judges starts or ends with a
+ * hyphen. The rule assumes words separated by spaces: combining marks and
+ * scripts written without spaces are not word characters here, and every
+ * message the suite judges is English (022z's change review, finding 2).
  */
-const heldTwice = (entry: string, message: Spoken): boolean => {
-  const n = normalise(entry);
+const WORD = /[\p{L}\p{Nd}-]/u;
+const WORD_BEFORE = new RegExp(`${WORD.source}$`, "u");
+const WORD_AFTER = new RegExp(`^${WORD.source}`, "u");
+
+/**
+ * The whole-word places of the message, in any form, in a normalised
+ * phrase: where a form starts and ends, with no word character just before
+ * it or just after it. So "Saved" has no place in "unsaved". A form is
+ * matched whole, never a word in it.
+ */
+const wholePlaces = (
+  n: string,
+  message: Spoken,
+): { start: number; end: number }[] => {
   const at: { start: number; end: number }[] = [];
   for (const form of formsOf(message)) {
     const want = normalise(form);
     if (!want) continue;
-    for (let i = n.indexOf(want); i >= 0; i = n.indexOf(want, i + 1))
-      at.push({ start: i, end: i + want.length });
+    for (let i = n.indexOf(want); i >= 0; i = n.indexOf(want, i + 1)) {
+      const end = i + want.length;
+      if (!WORD_BEFORE.test(n.slice(0, i)) && !WORD_AFTER.test(n.slice(end)))
+        at.push({ start: i, end });
+    }
   }
-  return at.some((a) =>
-    at.some((b) => a.end <= b.start && n.slice(a.end, b.start).includes(".")),
-  );
+  return at;
+};
+
+/** Whether one phrase holds the message, in any form, at a whole-word place. */
+const holdsWhole = (phrase: string, message: Spoken): boolean =>
+  wholePlaces(normalise(phrase), message).length > 0;
+
+/**
+ * 022z decision 1: whether one entry holds the message, in any form, whole
+ * twice: at two whole-word places that do not overlap, of any forms.
+ * Anything may lie between them, a part boundary or nothing. VoiceOver
+ * says a doubled message in one part, side by side, with no ". " between,
+ * where NVDA's two parts have one; one condition judges both readers.
+ * Two places that share a character are not two copies: "go back go" is
+ * not said twice in "go back go back go". Compared normalised.
+ */
+const heldTwice = (entry: string, message: Spoken): boolean => {
+  const at = wholePlaces(normalise(entry), message);
+  return at.some((a) => at.some((b) => a.end <= b.start));
 };
 
 /**
  * L3. No two adjacent phrases each contain the message, in any form, whole
- * (after). Amended after the change review (finding 2): nor does one entry
- * hold it whole twice, in two of its parts. Under NVDA's one capture every
- * window is one entry, so without this L3 could never fault there.
+ * (after), at a whole-word place (022z decision 2). Amended after the
+ * change review (finding 2): nor does one entry hold it whole twice.
+ * Under NVDA's one capture every window is one entry, so without this L3
+ * could never fault there. 022z decision 1: the two copies need no part
+ * boundary between them, so VoiceOver's doubled phrase faults as NVDA's
+ * does.
  */
 export function L3(after: string[], message: Spoken): Fault[] {
   if (!nonEmpty(after) || !spokenWhole(after, message))
     return x0("L3: L1 does not hold");
   for (let i = 1; i < after.length; i++)
-    if (holds(after[i - 1]!, message) && holds(after[i]!, message))
+    if (holdsWhole(after[i - 1]!, message) && holdsWhole(after[i]!, message))
       return fault(
         "L3",
         `${shown(message)} was read twice in a row (phrases ${i} and ${i + 1})`,

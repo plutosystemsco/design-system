@@ -229,7 +229,10 @@ describe("022q, after the change review: L3 within one entry, and the join by pa
     // guidepup joins one capture's speech with ". " (NVDA's one capture).
     expect(ids(L3(["Copied. Copied"], "Copied"))).toEqual(["L3"]);
     expect(ids(L3(["Copy, button. Copied"], "Copied"))).toEqual([]);
-    expect(ids(L3(["Copied Copied"], "Copied"))).toEqual([]);
+    // 022z decisions 1 and 2: no part boundary is needed, and there is no
+    // minimum length, so VoiceOver's "Copied Copied" faults as NVDA's
+    // "Copied. Copied" does.
+    expect(ids(L3(["Copied Copied"], "Copied"))).toEqual(["L3"]);
   });
   test("L3 within one entry, for a message that holds a full stop of its own", () => {
     const words =
@@ -257,6 +260,98 @@ describe("022q, after the change review: L3 within one entry, and the join by pa
     expect(
       joinCaptures(["Next page, button"], ["Page 6 of 12. Next page, button"]),
     ).toEqual(["Next page, button", "Page 6 of 12. Next page, button"]);
+  });
+});
+
+describe("022z: L3 learns VoiceOver's doubled phrase", () => {
+  // QUOTED, verbatim up to the quote's "…": VoiceOver with Chromium, run 5.
+  // Printed by the second-submit test's first window, not the insertion
+  // test's, and cut at the "…", so the rest of the phrase is unknown.
+  const VO_CHR = "There is a problem Enter a project name Enter a project name";
+  // QUOTED, verbatim: NVDA with Firefox, and NVDA with Chromium, run 5.
+  const NVDA_FF =
+    "list. Enter a project name, 1 of 3. Enter a project name, link, same page. Enter the owner's email address, 2 of 3.";
+  const NVDA_CHR = "list item, 1 of 3. Enter a project name, link, same page";
+  // CONSTRUCTED: VoiceOver's quoted phrase carried on to all three
+  // messages, and the blocks' summaries in the same shape. No further
+  // VoiceOver phrase is quoted.
+  const VO_ALL = [TITLE, ...ERRORS.flatMap((m) => [m, m])].join(" ");
+  const VO_SETTINGS = [TITLE, "Enter your name", "Enter your name"].join(" ");
+  const VO_SIGN_UP = [
+    TITLE,
+    "Enter your email address",
+    "Enter your email address",
+    "Enter a password",
+    "Enter a password",
+  ].join(" ");
+
+  // Criterion 1: seen failing first on 022q's rule, then passing.
+  test("VoiceOver's quoted phrase faults L3 for its first message", () => {
+    expect(L3([VO_CHR], ERRORS[0]!)).toEqual([
+      {
+        rule: "L3",
+        message: `"${ERRORS[0]}" was read twice within phrase 1`,
+      },
+    ]);
+  });
+  test("the constructed VoiceOver phrase faults L3 for each of the three messages", () => {
+    for (const m of ERRORS) expect(ids(L3([VO_ALL], m))).toEqual(["L3"]);
+  });
+  test("the blocks' constructed phrases fault L3 for Enter your name and Enter a password", () => {
+    expect(ids(L3([VO_SETTINGS], "Enter your name"))).toEqual(["L3"]);
+    expect(ids(L3([VO_SIGN_UP], "Enter a password"))).toEqual(["L3"]);
+  });
+  test("a short message said twice side by side faults: no minimum length", () => {
+    expect(ids(L3(["Copied Copied"], "Copied"))).toEqual(["L3"]);
+    expect(ids(L3(["3 results 3 results"], "3 results"))).toEqual(["L3"]);
+  });
+  test("within one entry, a message inside a longer word is not found", () => {
+    expect(ids(L3(["Saved. 2 unsaved changes"], "Saved"))).toEqual([]);
+  });
+  test("in adjacent phrases, a message inside a longer word is not found", () => {
+    expect(ids(L3(["Saved", "2 unsaved changes"], "Saved"))).toEqual([]);
+  });
+
+  // Criterion 2: guards, passing before and after.
+  test("VoiceOver's quoted phrase, cut at its quote's end, does not fault the title", () => {
+    expect(ids(L3([VO_CHR], TITLE))).toEqual([]);
+  });
+  test("NVDA with Firefox's quoted phrase faults; NVDA with Chromium's does not", () => {
+    expect(ids(L3([NVDA_FF], ERRORS[0]!))).toEqual(["L3"]);
+    expect(ids(L3([NVDA_CHR], ERRORS[0]!))).toEqual([]);
+  });
+  test("Copied, twice in two parts, faults; once after the button does not", () => {
+    expect(ids(L3(["Copied. Copied"], "Copied"))).toEqual(["L3"]);
+    expect(ids(L3(["Copy, button. Copied"], "Copied"))).toEqual([]);
+  });
+  test("the adjacent phrases Saved, Saved fault", () => {
+    expect(ids(L3(["Saved", "Saved"], "Saved"))).toEqual(["L3"]);
+  });
+  test("a message that holds a repeated word is held once", () => {
+    expect(
+      ids(L3(["Page 12 of 12 current page button"], "Page 12 of 12")),
+    ).toEqual([]);
+  });
+  test("Enter a password is not found inside Reenter or Re-enter a password", () => {
+    expect(
+      ids(L3(["Enter a password Reenter a password"], "Enter a password")),
+    ).toEqual([]);
+    expect(
+      ids(L3(["Enter a password Re-enter a password"], "Enter a password")),
+    ).toEqual([]);
+  });
+  test("two places that overlap are not said twice", () => {
+    expect(ids(L3(["go back go back go"], "go back go"))).toEqual([]);
+  });
+  test("a message followed by VoiceOver's hint is held once", () => {
+    expect(
+      ids(
+        L3(
+          ["Success: Project saved. You are currently on a button."],
+          "Success: Project saved",
+        ),
+      ),
+    ).toEqual([]);
   });
 });
 

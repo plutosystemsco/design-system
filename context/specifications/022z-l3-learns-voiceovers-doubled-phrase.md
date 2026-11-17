@@ -1,6 +1,6 @@
 # 022z — L3 learns VoiceOver's doubled phrase
 
-- **Status:** fit to build (the spec review's re-check, 2026-11-17); builds in lane E once `022x` lands, since both edit `tests/sr/rules.ts`. The re-check's write-in for the landing notes: a third mutation, dropping only the hyphen from a word, fails the "Re-enter" guard alone. The review (`reviews/022z-l3-learns-voiceovers-doubled-phrase-spec-2026-11-17.md`) raised 3 Medium and 4 Low findings; each is answered under "Review".
+- **Status:** built; its change review (`reviews/022z-l3-learns-voiceovers-doubled-phrase-pr-2026-11-17.md`): lands, five Low findings written in by the design lead. Built 2026-11-17 in lane E, on `022x` (see "Landing notes"). It was fit to build by the spec review's re-check, 2026-11-17. The re-check's write-in, a third mutation that drops only the hyphen from a word, is recorded in the landing notes. The review (`reviews/022z-l3-learns-voiceovers-doubled-phrase-spec-2026-11-17.md`) raised 3 Medium and 4 Low findings; each is answered under "Review".
 - **Date:** 2026-11-17
 - **Author:** the design lead
 - **Kind:** specification, lane E. A change to one screen-reader rule, L3, in `tests/sr/rules.ts`, and to its unit tests. No item, token, dependency, test file or workflow changes. A specification, not a small change, because it amends a rule `022q` decided (decision 7, "L3 within one entry"), and the owner chose the change from options.
@@ -189,4 +189,123 @@ The spec review, 2026-11-17, raised 7 findings (3 Medium, 4 Low). Each is answer
 
 ## Landing notes
 
-To be filled in when it lands.
+Built 2026-11-17, uncommitted, in the lane-E worktree on `47c680d`. That is `release/0.13.0` with `022t`, `022x` and `022y`. Bun 1.4.4, Playwright 1.64.1, beside other agents' runs.
+
+- `022x` changed `C1`, `C2` and their shared `inOrderAt` in `tests/sr/rules.ts`. It did not touch `normalise`, `holds`, `heldTwice`, `L3` or `joinCaptures` (READ, `git diff b01e754 47c680d`). So "today's `rules.ts`" in criterion 1 is `b01e754`'s L3.
+- Changed: `tests/sr/rules.ts` and `tests/unit/sr-rules.test.ts`, and this file. Nothing under `src/` or `static/` changed. Neither did the ledger, `expected.json`, `notProvable`, any `.sr.ts` file or the workflow.
+
+**What was built (READ, the diff).**
+
+- `WORD` is `/[\p{L}\p{Nd}-]/u`: a Unicode letter, a decimal digit or a hyphen.
+- `wholePlaces(n, message)` gives each whole-word place of each form in a normalised phrase. It tests the code point just before a place and just after it, so a letter outside the Basic Multilingual Plane counts as one.
+  - This is one private helper more than the Design names. `holdsWhole` and `heldTwice` share it, so the whole-word test is written once.
+- `holdsWhole(phrase, message)`: the phrase has a whole-word place.
+- `heldTwice(entry, message)`: two places with `a.end <= b.start`. The test for a "." between them is gone.
+- `L3`'s adjacent case uses `holdsWhole`. `holds` stays, for U1 and the O2 stall.
+- The comments say the rule, the whole-word test and its hyphen, and why no separator is needed. They cite only `022z`'s decision numbers.
+
+**Failing first (EXECUTED).** `tests/unit/sr-rules.test.ts` on the unchanged `rules.ts`: **73 pass, 7 fail**, of 80.
+
+- The new `describe` block has 14 cases. **6 fail**, all criterion 1's:
+  - VoiceOver's quoted phrase, for "Enter a project name";
+  - the constructed VoiceOver phrase, for each of the three messages;
+  - the blocks' constructed phrases, for "Enter your name" and "Enter a password";
+  - "Copied Copied" and "3 results 3 results";
+  - "Saved. 2 unsaved changes", within one entry;
+  - the adjacent phrases "Saved", "2 unsaved changes".
+- Criterion 2's **8 guards pass**.
+- The 7th fail is the existing case in "022q, after the change review": `L3(["Copied Copied"], "Copied")`, now expected `["L3"]` on purpose, with a comment citing decisions 1 and 2.
+
+**After (EXECUTED).** `sr-rules.test.ts`: **80 of 80 pass.**
+
+**The mutations (EXECUTED).** Each was applied to `rules.ts`, run against `sr-rules.test.ts`, and then restored. A `diff` against the built copy confirmed each restore.
+
+| Mutation | Fails | `sr-rules.test.ts` |
+|---|---|---|
+| Whole-word test removed: `WORD` matches no character | "within one entry, a message inside a longer word" ("Saved. 2 unsaved changes"); "in adjacent phrases, a message inside a longer word" ("Saved", "2 unsaved changes"); the "Reenter"/"Re-enter" guard | 77 pass, 3 fail |
+| Overlap test loosened: `a.end <= b.start` to `a.start < b.start` | the "go back go" guard, alone | 79 pass, 1 fail |
+| Hyphen dropped from a word: `WORD` is `/[\p{L}\p{Nd}]/u` (the re-check's write-in) | the "Reenter"/"Re-enter" guard, alone. Its failing expect is the "Re-enter" one (line 341); the "Reenter" expect before it passes | 79 pass, 1 fail |
+
+**The quoted-phrase sweep (EXECUTED).** It ran in the session's scratch folder, outside the repository. It compared the unchanged `rules.ts` with the built one.
+
+- **Method.** Every straight- or curly-double-quoted string in *the speech memo*, *run 4's memo* and *run 5's memo* is taken by line. Each string makes one window alone. Each line with two or more makes one more window, with the line's strings as adjacent phrases. There are **314 windows**.
+- **Judged.** Each window is judged for the suite's 13 L3 messages wherever L1 holds:
+  - the error summary's title and three messages;
+  - "Enter your name";
+  - "Enter your email address", "Enter your password" and "Enter a password";
+  - "Copied" and "Could not copy";
+  - "Page 6 of 12", "3 results" and "Success: Project saved".
+
+  That gives **49 cells**.
+- **Changed: 2 cells, one verdict.** VoiceOver with Chromium's error-summary phrase (run 5's memo, line 140), for "Enter a project name", from pass to L3. One cell is the phrase alone. The other is the phrase with the line's other quoted string, ". ".
+- **No other verdict moves.** No phrase of a passing test gains a fault.
+- This extraction takes more strings than the writer's (261 windows, 41 cells) or the reviewer's (263, 43). The result is the same.
+
+**The gate (EXECUTED).**
+
+- `bun run check`: 2434 files, 0 errors, 0 warnings.
+- `bun run lint`: clean.
+- `bun test ./tests/unit`: **1937 pass, 2 skip, 0 fail**, of 1939, across 68 files. The highlighter's timing tests passed in the full run.
+- Alone:
+  - `mutations.test.ts`: 29 of 29, unchanged, so `expected.json` holds.
+  - `sr-static.test.ts`: 3 of 3.
+  - `sr-harness.test.ts`: 15 of 15.
+  - `sr-items.test.ts`: 8 of 8.
+  - `release-check.test.ts`: 13 of 13.
+  - `gate.test.ts`: 17 of 17.
+  - `workflow.test.ts`: 26 of 26.
+- The dry speech run, `SR_DRY=1 bun run test:sr`: **87 of 87** in `chromium` (1.5 min), and **87 of 87** in `webkit` (1.8 min).
+- `git status` after the gate: only the two source files and this file.
+
+**The window for patches 4 and 7b, from this landing to `019b`'s (decision 5).**
+
+- **Why the window exists.** The error summary's insertion test is the witness of patches 4 and 7b. Under NVDA with Firefox it fails L3 unpatched, as it has since run 5. Once this lands, it is expected to fail unpatched under VO chr and VO wk too. A patch is proven only by a witness that passes unpatched, so in those three pairs neither patch proves anything.
+- **No `double-read` dispatch** runs in the window.
+- **A `main` dispatch** in the window is read for its other patches only.
+  - Its patch 4 result is recorded here, with the run id, as not provable under NVDA with Firefox, VO chr and VO wk.
+  - Its patch 7 result is recorded here under each VoiceOver pair. Patch 7 is provable there only if code-block's copy test passes unpatched in that pair.
+- If a `double-read` dispatch runs anyway, its 7b result is recorded here in the same way.
+- `expected.json` and `notProvable` are not touched for any of these.
+- The window closes when `019b` lands. `019b` decision 9 records patches 4 and 7b as provable again.
+- **Dispatches in the window so far: none.**
+
+**The next speech run, stated in advance (decision 4; criterion 5).**
+
+- **The run.** The first `matrix` push run that carries this change and not `019b`.
+- **Expected outcome.** The outcome that makes `022z` done is VO chr's column. Under VO chr, each of these four tests is expected to fail L3, "… was read twice within phrase N", for each message in its summary:
+  - `error-summary.sr.ts`, "the insertion";
+  - `settings.sr.ts`, "a save with an empty name";
+  - `sign-in.sr.ts`, "an empty submit";
+  - `sign-up.sr.ts`, "an empty submit".
+
+  This is read from the job log.
+- **The other pairs.**
+  - VO wk: the same four are expected to fail L3, but this is not required for done.
+  - NVDA with Firefox: fails them as in run 5.
+  - NVDA with Chromium: passes them.
+  - The title is expected not to fault (INFERRED). If it does, it is a lane-I finding about the alert and the focus move, and it does not count against this criterion.
+- **The second submit.** With `022t`, it is expected to fail as the insertion does.
+- **If VO chr does not fault them:**
+  - a research memo opens with the phrases;
+  - the Status reads "built; awaits the speech run";
+  - the rule is not changed by guess.
+- **VO wk.** Its four results are written here either way. A passing VO wk test's phrases are only in `phrases.json`, which the owner downloads.
+- **Watched, not part of done.**
+  - code-block's copy, "Copied";
+  - pagination P1;
+  - toast S1;
+  - app-shell A1.
+
+  A new fault on any of these is written here with its phrase.
+- **Run id: not yet run.**
+
+**The scorecard (criterion 7).** It is re-run after this lands. No row is expected to move.
+
+### After the change review (2026-11-17, written in by the design lead)
+
+1. **Patch 9 may fall into the window too.** P1 is patch 9's witness and applies L3. If VoiceOver says "Page 6 of 12" twice in one part, patch 9 proves nothing in that pair. The landing notes of the first dispatch in the window record patch 9 as not provable there if so. What decides the window is whether a patch's witness applies L3, not whether the patch's own faults are L3 (decision 5's reason, corrected).
+2. **Words are space-separated.** `WORD` leaves out combining marks and scripts written without spaces; a comment in `rules.ts` says so. Every message the suite judges is English.
+3. **Watched:** a double hidden by a lost space, e.g. `["Page 6 of 12current page", "Page 6 of 12"]`, faulted under the old rule and passes now. Real speech loses spaces (NVDA's "Previouspage").
+4. **The expected outcome:** for each of the four messages, an L3 fault "in a row" counts as done as well as "within phrase N"; L3 checks the in-a-row case first.
+5. **The window's close:** the first dispatch of each set after `019b` lands records patches 4 and 7b as provable again, or names the pair that still is not (`019b` decision 9).
+
