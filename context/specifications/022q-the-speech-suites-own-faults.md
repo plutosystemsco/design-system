@@ -358,3 +358,7 @@ Runs 5 (`43974619830`, on `fd18383`) and 6 (`43974717942`, on `b01e754`) carry t
 - **Criterion 7: not yet run.** No `mutate` dispatch has run since this landed. `022z` and `019b` set a window in which patches 4 and 7b are not provable; the first dispatch after `019b` records them.
 - **Criterion 8:** the shard times and per-pair counts are in the memo, §3 and §9.4: NVDA 11.5 to 18.1 minutes, VoiceOver 17.7 to 32.5 (run 5); run 6's VoiceOver jobs waited 43 to 88 minutes for macOS slots because two pushes a minute apart shared them. The scorecard row is the batch's that carries `022x`.
 
+### Criterion 6's second clause, read from run 7 (2026-11-17)
+
+Met in run 7: all 16 reader shards ended inside 40 minutes, the longest VO wk 1 at 29.5; VO chr 2 took 25.7, after `022x` bounded the dropdown wait (`research/2026-11-17-the-seventh-matrix-run.md`).
+
