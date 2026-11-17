@@ -185,7 +185,7 @@ type Run = {
   wasmRequests: string[];
 };
 
-/** The first app's stylesheet, a fresh 0.12.0 install, for the upgrade case. */
+/** The first app's stylesheet, a fresh 0.13.0 install, for the upgrade case. */
 let freshCss = "";
 
 describe.each([
@@ -542,7 +542,7 @@ export const load = async () => ({
 
 /**
  * 013 decision 21: the upgrade case. An app installs the theme and the code
- * items from v0.11.0, then the five code items from v0.12.0; its app.css then
+ * items from v0.11.0, then the five code items from v0.13.0; its app.css then
  * holds exactly the old lines the changelog tells it to delete.
  */
 describe("the upgrade from v0.11.0", () => {
@@ -599,7 +599,7 @@ describe("the upgrade from v0.11.0", () => {
     "--syntax-cyan",
   ];
 
-  test("the v0.12.0 add exits 0, and a fresh install's stylesheet is the reference", () => {
+  test("the v0.13.0 add exits 0, and a fresh install's stylesheet is the reference", () => {
     if (added.code !== 0) console.error(added.output);
     expect(added.code).toBe(0);
     expect(freshCss).toContain("--code-text");

@@ -1143,7 +1143,7 @@ describe("v0.8.0's custom properties (criterion 2)", () => {
   });
 
   test.each([":root", ".dark", "@theme inline"])(
-    "%s keeps every v0.8.0 property at its value, but for those 011, 014, 013 and 016 move, which read their 0.12.0 value, and those 013 removes, which are absent",
+    "%s keeps every v0.8.0 property at its value, but for those 011, 014, 013 and 016 move, which read today's value, and those 013 removes, which are absent",
     (block) => {
       const now = topLevelMap(css, block);
       const removed = REMOVED_013[block as keyof typeof REMOVED_013];
@@ -1659,9 +1659,11 @@ describe("012 criterion 1: the stage is gone", () => {
     expect(classTokens("box-shadow: var(--glass-rim)")).not.toContain("rim");
   });
 
-  test("the never-published snapshots static/v0.9.0 and static/v0.10.0 do not exist", () => {
+  // 020d test 5: 0.12.0 was never released either (the owner, 2026-11-17).
+  test("the never-published snapshots static/v0.9.0, static/v0.10.0 and static/v0.12.0 do not exist", () => {
     expect(existsSync("static/v0.9.0")).toBe(false);
     expect(existsSync("static/v0.10.0")).toBe(false);
+    expect(existsSync("static/v0.12.0")).toBe(false);
   });
 });
 

@@ -11,7 +11,7 @@ import { getContext, setContext } from "svelte";
 export const FIELD_CONTEXT_KEY = "kuiper:field";
 
 /**
- * The 0.12.0 keys. `Field` and `FieldSet` set the context under these too,
+ * The keys before 0.13.0. `Field` and `FieldSet` set the context under these too,
  * so a control from before 0.13.0, or an app's own code that reads an old
  * key, still finds its field. They go in 0.14.0.
  */

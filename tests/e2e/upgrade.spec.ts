@@ -12,8 +12,9 @@ import { PAGES, SITEMAP } from "./pages.ts";
 const GUIDE = "/changelog/0.13.0/upgrade/";
 
 test.describe("020 test 17: the guide", () => {
-  // 026 decision 26 adds its section after 020's: six parts.
-  test('it is titled "Upgrade to 0.13.0", in six parts, in decision 12\'s order', async ({
+  // 026 decision 26 adds its section after 020's: six parts. 020d test 13:
+  // the path from 0.11.0 follows 020's, fourth of seven.
+  test('it is titled "Upgrade to 0.13.0", in seven parts, in decision 12\'s order', async ({
     page,
   }) => {
     await page.goto(GUIDE);
@@ -27,6 +28,7 @@ test.describe("020 test 17: the guide", () => {
       "Who this is for",
       "Before you start",
       "020: Pluto is now Kuiper in code",
+      "From 0.11.0: code, the yellow and the sticky bar",
       "026: a toast of Kuiper's own",
       "What keeps working until 0.14.0",
       "What did not change",

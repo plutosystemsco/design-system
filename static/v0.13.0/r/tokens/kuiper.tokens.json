@@ -1431,7 +1431,7 @@
       "$extensions": {
         "co.plutosystems.kuiper": {
           "cssVariable": "--code-text",
-          "since": "0.12.0"
+          "since": "0.13.0"
         }
       }
     },
@@ -1519,7 +1519,7 @@
       "$extensions": {
         "co.plutosystems.kuiper": {
           "cssVariable": "--code-meta",
-          "since": "0.12.0"
+          "since": "0.13.0"
         }
       }
     },
@@ -1530,7 +1530,7 @@
       "$extensions": {
         "co.plutosystems.kuiper": {
           "cssVariable": "--code-special",
-          "since": "0.12.0"
+          "since": "0.13.0"
         }
       }
     },

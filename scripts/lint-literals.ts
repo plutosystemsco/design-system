@@ -285,7 +285,7 @@ const NAMED_COLOURS = new Set(
 );
 /**
  * 007 decision 3, L19: a syntax colour, in any form. 014 decision 9 gives one
- * pattern for 0.12.0: `v0.11.0`'s five colours, `013`'s nine and `014`'s two
+ * pattern for 0.13.0: `v0.11.0`'s five colours, `013`'s nine and `014`'s two
  * code grounds. A name absent from the token file is wrong in an item either
  * way; an item reaches the code ground through `--code-*` alone.
  */

@@ -1,5 +1,5 @@
 /**
- * 020 tests 7 and 8 (decision 4): guards. A 0.12.0 `field` sets only
+ * 020 tests 7 and 8 (decision 4): guards. A 0.11.0 `field` sets only
  * `pluto:field`; a 0.13.0 control under it still wires up. A 0.13.0 setter
  * still serves a reader of an old key. Read from the prerendered HTML of
  * `/view/field-keys/`, with scripts off, so only the server render counts.

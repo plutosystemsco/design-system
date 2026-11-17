@@ -1,5 +1,5 @@
 /**
- * 020 tests 7 and 8: the old context keys, as a 0.12.0 item set and read
+ * 020 tests 7 and 8: the old context keys, as a 0.11.0 item set and read
  * them. The view `/view/field-keys/` puts each under or over a 0.13.0 item.
  * A test fixture, never installed; it goes in 0.14.0 with the old keys.
  */
@@ -12,7 +12,7 @@ export const OLD = {
   accordionItem: "pluto:accordion-item",
 } as const;
 
-/** A field context as a 0.12.0 `Field` gave it, invalid, with both ids. */
+/** A field context as a 0.11.0 `Field` gave it, invalid, with both ids. */
 export function oldField(id: string) {
   return {
     id,
@@ -23,7 +23,7 @@ export function oldField(id: string) {
   };
 }
 
-/** A set context as a 0.12.0 `FieldSet` gave it, with its legend. */
+/** A set context as a 0.11.0 `FieldSet` gave it, with its legend. */
 export function oldFieldSet(id: string) {
   return {
     ...oldField(id),

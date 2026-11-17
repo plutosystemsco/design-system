@@ -35,10 +35,14 @@ describe("018 decision 4: Updated", () => {
   });
 
   // 020: kuiper-theme is named in the 0.13.0 entry, as renamed. 023 names
-  // button too (its doc comments), so kbd stands for an older change.
-  test("a changed item reads its newest release: kuiper-theme 0.13.0, kbd 0.12.0", () => {
+  // button too (its doc comments). 020d test 9: the 0.13.0 entry holds every
+  // change since 0.11.0, so kbd, error-summary and product-home read 0.13.0, and meter,
+  // which arrived in 0.4.0 and never changed after, stands for an older release.
+  test("a changed item reads its newest release: kuiper-theme, kbd, error-summary and product-home 0.13.0; meter 0.4.0", () => {
     expect(updated["kuiper-theme"]).toBe("0.13.0");
-    expect(updated.kbd).toBe("0.12.0");
+    for (const name of ["kbd", "error-summary", "product-home"])
+      expect(updated[name], name).toBe("0.13.0");
+    expect(updated.meter).toBe("0.4.0");
   });
 
   // 020: tooltip changed in 0.13.0 (its context key). 023 changed card's

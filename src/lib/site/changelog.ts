@@ -1,6 +1,6 @@
 /**
  * `CHANGELOG.md` as the changelog page shows it: a section per release,
- * newest first, each with an anchor (`#v0-12-0`), holding the file's
+ * newest first, each with an anchor (`#v0-13-0`), holding the file's
  * paragraphs and lists. It reads the small Markdown the file uses: `#` and
  * `##` headings, paragraphs, `-` and `1.` lists, `**bold**` and `` `code` ``.
  * Pure, so the unit test calls it on the file directly.
@@ -18,11 +18,11 @@ export type Block =
   { kind: "p"; inlines: Inline[] } | { kind: "ul" | "ol"; items: Inline[][] };
 
 export type Release = {
-  /** The heading's text, as written: "0.12.0 — unreleased". */
+  /** The heading's text, as written: "0.13.0 — unreleased". */
   title: string;
-  /** The version: "0.12.0". */
+  /** The version: "0.13.0". */
   version: string;
-  /** The anchor: "v0-12-0". */
+  /** The anchor: "v0-13-0". */
   id: string;
   blocks: Block[];
 };
@@ -199,7 +199,7 @@ export type PageBlock =
   | { kind: "ul" | "ol"; items: PageInline[][] };
 
 export type PageRelease = {
-  /** The heading: the version alone, "0.12.0". */
+  /** The heading: the version alone, "0.13.0". */
   version: string;
   id: string;
   /** The date line: the date as written, in a `<time>`, or "Unreleased". */

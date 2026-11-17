@@ -14,6 +14,13 @@ import path from "node:path";
 import { registryItemSchema, registrySchema } from "shadcn-svelte/schema";
 import { buildRegistry } from "../../scripts/build-registry.ts";
 import { listedItems } from "../../src/lib/site/items.ts";
+import {
+  bulletsOf,
+  foldedParts,
+  headOf,
+  releaseEntry,
+  SPLIT,
+} from "../helpers/changelog.ts";
 
 // 020 decision 3: the tests below read the listed items, the 78 a person
 // meets; the alias entry is read whole in 020's own tests, at the end.
@@ -1453,28 +1460,35 @@ describe("CHANGELOG.md", () => {
   // 011 decision 14, criterion 14: 0.9.0 and 0.10.0 were never released;
   // their entries fold into one 0.11.0 entry, which names decision 12's five
   // visible changes, and what 009, 010 and 011 add.
-  // 014 decisions 12 and 13: 0.12.0, dated at its tag (2026-11-15); 0.11.0
-  // follows it. 020, 0.13.0's first landing, opens 0.13.0 above them,
-  // unreleased until its tag.
-  test("has no 0.9.0 or 0.10.0 entry; 0.13.0 is the newest, unreleased, then 0.12.0, released, and 0.11.0", () => {
+  // 020, 0.13.0's first landing, opens 0.13.0 above them, unreleased until
+  // its tag. 020d test 1: 0.12.0 was never released either (the owner,
+  // 2026-11-17), so its entry folds into 0.13.0's, as 011 folded 0.9.0's
+  // and 0.10.0's into 0.11.0's.
+  test("020d test 1: has no 0.9.0, 0.10.0 or 0.12.0 entry; 0.13.0 is the newest, unreleased, then 0.11.0 and 0.8.0; 0.13.0's opens with the fold", () => {
     const text = readFileSync("CHANGELOG.md", "utf8");
     expect(text).not.toMatch(/^## 0\.9\.0\b/m);
     expect(text).not.toMatch(/^## 0\.10\.0\b/m);
+    expect(text).not.toMatch(/^## 0\.12\.0\b/m);
     const versions = [...text.matchAll(/^## (\d+\.\d+\.\d+)\b/gm)].map(
       (m) => m[1],
     );
-    expect(versions.slice(0, 3)).toEqual(["0.13.0", "0.12.0", "0.11.0"]);
+    expect(versions.slice(0, 3)).toEqual(["0.13.0", "0.11.0", "0.8.0"]);
     expect(text).toMatch(/^## 0\.13\.0 — unreleased$/m);
-    expect(text).toMatch(/^## 0\.12\.0 — 2026-11-15$/m);
+    const { first } = foldedParts(text);
+    expect(first.split("\n\n")[1]).toBe(
+      "0.12.0 was never released; its changes are folded in here, so this entry lists everything since 0.11.0.",
+    );
   });
 
-  // 014 criterion 13: one 0.12.0 entry, shared with 013; one bullet per item,
-  // each of the three marked as an interface change.
-  test("the one 0.12.0 entry marks pluto-theme, code-block and code-editor as interface changes and names the two roles, scrollbar-code and inline code", () => {
+  // 014 criterion 13: one entry, shared with 013; one bullet per item,
+  // each of the three marked as an interface change. 020d: that entry is
+  // the 0.13.0 entry's second part, below "Also since 0.11.0".
+  test("the folded part marks kuiper-theme, code-block and code-editor as interface changes and names the two roles, scrollbar-code and inline code", () => {
     const text = readFileSync("CHANGELOG.md", "utf8");
-    expect(text.match(/^## 0\.12\.0\b/gm)).toHaveLength(1);
-    const body = entry("0.12.0");
-    for (const name of ["pluto-theme", "code-block", "code-editor"]) {
+    expect(text).not.toMatch(/^## 0\.12\.0\b/m);
+    expect(text.split("\n").filter((l) => l.startsWith(SPLIT))).toHaveLength(1);
+    const body = foldedParts(text).second;
+    for (const name of ["kuiper-theme", "code-block", "code-editor"]) {
       const bullets = body
         .split("\n")
         .filter((line) => line.startsWith(`- \`${name}\`: `));
@@ -1493,8 +1507,9 @@ describe("CHANGELOG.md", () => {
 
   // 013 decision 17 and criterion 23: 013's lines in the shared entry, first
   // in each shared bullet; one bullet per item; every removed name listed.
-  test("the one 0.12.0 entry holds 013's lines: one bullet per item, highlighter's marked interface change, 013's sentences before 014's, every removed name and the update line", () => {
-    const body = entry("0.12.0");
+  // 020d: the shared entry is the folded part.
+  test("the folded part holds 013's lines: one bullet per item, highlighter's marked interface change, 013's sentences before 014's, every removed name and the update line", () => {
+    const body = foldedParts(readFileSync("CHANGELOG.md", "utf8")).second;
     const bullet = (name: string) => {
       const found = body
         .split("\n")
@@ -1503,7 +1518,7 @@ describe("CHANGELOG.md", () => {
       return found[0]!;
     };
     for (const name of [
-      "pluto-theme",
+      "kuiper-theme",
       "highlighter",
       "code-block",
       "code-editor",
@@ -1512,7 +1527,7 @@ describe("CHANGELOG.md", () => {
     ])
       bullet(name);
     expect(bullet("highlighter")).toContain("**interface change.**");
-    const theme = bullet("pluto-theme");
+    const theme = bullet("kuiper-theme");
     expect(theme.indexOf("Meridian's roles")).toBeLessThan(
       theme.indexOf("`--syntax-ground`"),
     );
@@ -1540,7 +1555,7 @@ describe("CHANGELOG.md", () => {
     ])
       expect(editor, name).toContain(name);
     expect(body).toContain(
-      "`add pluto-theme highlighter use-highlighted-code code-block code-editor`",
+      "`add kuiper-theme highlighter use-highlighted-code code-block code-editor`",
     );
     expect(body).toContain("tree-sitter");
   });
@@ -1813,19 +1828,12 @@ describe("014: the white code ground", () => {
     expect(offenders).toEqual([]);
   });
 
-  // The tag is made at release (2026-11-15): when it exists, the tagged
-  // commit's package.json reads 0.12.0 and its changelog dates 0.12.0. 020
-  // sets 0.13.0 at the start of 0.13.0, so static/v0.12.0 is left as tagged.
-  test("package.json reads 0.13.0; the registry build has written static/v0.12.0/ and static/v0.13.0/; a v0.12.0 tag, if made, is a dated 0.12.0", () => {
+  // 020 sets 0.13.0 at the start of 0.13.0. 020d: no test reads a
+  // machine's local tags, so its result is the same on every clone (the
+  // structural review, L2); the never-released snapshot is generated.test.ts's.
+  test("package.json reads 0.13.0, and the registry build has written static/v0.13.0/", () => {
     expect(JSON.parse(read("package.json")).version).toBe("0.13.0");
-    expect(existsSync("static/v0.12.0/r/styles/maia/index.json")).toBe(true);
     expect(existsSync("static/v0.13.0/r/styles/maia/index.json")).toBe(true);
-    const tags = execSync("git tag --list 'v0.12.0'", { encoding: "utf8" });
-    if (tags.trim() === "") return;
-    const show = (f: string) =>
-      execSync(`git show v0.12.0:${f}`, { encoding: "utf8" });
-    expect(JSON.parse(show("package.json")).version).toBe("0.12.0");
-    expect(show("CHANGELOG.md")).toMatch(/^## 0\.12\.0 — \d{4}-\d{2}-\d{2}$/m);
   });
 
   test("registry.json's code-block description names the code ground and the hairline, not the muted inset", () => {
@@ -1898,24 +1906,27 @@ describe("016: the brand yellow", () => {
     // 021 decision 10: the record of removed names keeps the two names that
     // shipped, --syntax-amber and its --color- form, so that it can say what
     // replaces them. Only those two names are dropped; the rest is scanned.
+    // 020d decision 8: the upgrade guide's "From 0.11.0" step names the
+    // removed name too, in its grep, so an app can find and replace its own
+    // uses; there only the name, in any of its forms, is dropped.
     const text = (f: string) =>
       f.endsWith("/kuiper.removed.json")
         ? read(f).replace(/--(color-)?syntax-amber(?![\w-])/g, "")
-        : read(f);
+        : f === "src/lib/site/upgrade/0.13.0.ts"
+          ? read(f).replace(/(--(color-)?)?syntax-amber(?![\w-])/g, "")
+          : read(f);
     const hits = files.filter((f) => /amber|#?f19e20|#?915b00/i.test(text(f)));
     expect(hits).toEqual([]);
   });
 
-  test("the one 0.12.0 entry holds 016's summary line, and its one pluto-theme bullet names the yellows and --caution-text", () => {
-    const text = read("CHANGELOG.md");
-    const at = text.indexOf("## 0.12.0");
-    const body = text.slice(at, text.indexOf("\n## ", at + 1));
+  test("the folded part holds 016's summary line, and its one kuiper-theme bullet names the yellows and --caution-text", () => {
+    const body = foldedParts(read("CHANGELOG.md")).second;
     expect(body).toContain(
       "The brand's yellow is yellower and lifted in dark: `#E2B000` in light, `#F8D874` in dark, in place of `#F19E20`.",
     );
     const bullets = body
       .split("\n")
-      .filter((line) => line.startsWith("- `pluto-theme`: "));
+      .filter((line) => line.startsWith("- `kuiper-theme`: "));
     expect(bullets).toHaveLength(1);
     for (const name of [
       "`#E2B000`",
@@ -1989,17 +2000,16 @@ describe("019: no screen-reader claim without its record", () => {
 
 /**
  * 019a decision 1 (the owner, 2026-11-15): the
- * one pluto-theme bullet says the spacing is now the font's default, and
- * what an app that wants the old tightening does.
+ * one theme bullet says the spacing is now the font's default, and
+ * what an app that wants the old tightening does. 020d: it is the folded
+ * part's code-map `kuiper-theme` bullet.
  */
-describe("0.12.0: the font's own letter spacing", () => {
-  test("the pluto-theme bullet says every tracking value is now the font's default, and how to keep the old tightening", () => {
-    const text = readFileSync("CHANGELOG.md", "utf8");
-    const at = text.indexOf("## 0.12.0");
-    const body = text.slice(at, text.indexOf("\n## ", at + 1));
+describe("019a: the font's own letter spacing", () => {
+  test("the folded kuiper-theme bullet says every tracking value is now the font's default, and how to keep the old tightening", () => {
+    const body = foldedParts(readFileSync("CHANGELOG.md", "utf8")).second;
     const bullets = body
       .split("\n")
-      .filter((l) => l.startsWith("- `pluto-theme`: "));
+      .filter((l) => l.startsWith("- `kuiper-theme`: "));
     expect(bullets).toHaveLength(1);
     const bullet = bullets[0]!;
     for (const name of [
@@ -2013,20 +2023,19 @@ describe("0.12.0: the font's own letter spacing", () => {
   });
 });
 
-/** 019 criterion 14: the error summary's and the app shell's interface lines. */
+/**
+ * 019 criterion 14: the error summary's and the app shell's interface lines.
+ * 020d: read in the 0.13.0 entry's folded part, where they keep their places.
+ */
 describe("019: the changelog", () => {
-  const body = () => {
-    const text = readFileSync("CHANGELOG.md", "utf8");
-    const at = text.indexOf("## 0.12.0");
-    return text.slice(at, text.indexOf("\n## ", at + 1));
-  };
+  const body = () => foldedParts(readFileSync("CHANGELOG.md", "utf8")).second;
   const bullets = (name: string) =>
     body()
       .split("\n")
       .filter((line) => line.startsWith(`- \`${name}\`: `));
 
-  test("the 0.12.0 entry holds 1 error-summary and 1 app-shell bullet, each an interface change, after kbd's, and still 1 pluto-theme bullet", () => {
-    for (const name of ["error-summary", "app-shell", "pluto-theme"])
+  test("the folded part holds 1 error-summary and 1 app-shell bullet, each an interface change, after kbd's, and still 1 kuiper-theme bullet", () => {
+    for (const name of ["error-summary", "app-shell", "kuiper-theme"])
       expect(bullets(name), name).toHaveLength(1);
     for (const name of ["error-summary", "app-shell"])
       expect(bullets(name)[0], name).toContain("**interface change.**");
@@ -2055,7 +2064,7 @@ describe("019: the changelog", () => {
       "`add app-shell`",
     ])
       expect(shell, name).toContain(name);
-    const theme = bullets("pluto-theme")[0]!;
+    const theme = bullets("kuiper-theme")[0]!;
     for (const name of [
       "`@layer base`",
       "`:where(html:has([data-sticky-bar]))`",
@@ -2065,6 +2074,110 @@ describe("019: the changelog", () => {
     expect(theme.trimEnd()).toMatch(
       /After updating, delete the old unlayered `html:has\(\[data-sticky-bar\]\) \{ scroll-padding-top: var\(--size-bar\); \}` from your stylesheet: the CLI does not remove it, and while it stays it overrides your own value\.$/,
     );
+  });
+});
+
+/**
+ * 020d tests 2, 3, 4 and 16: 0.12.0 was never released, so the 0.13.0 entry
+ * lists everything since 0.11.0, in two parts split at "Also since 0.11.0".
+ */
+describe("020d: the folded 0.13.0 entry", () => {
+  const log = () => readFileSync("CHANGELOG.md", "utf8");
+  const paragraphs = (part: string) => part.split("\n\n");
+
+  test("test 2: it names no 0.12.0 registry; the site's paragraph names /v0.13.0/r; the intro names the Kuiper Design System", () => {
+    const entry = releaseEntry(log(), "0.13.0");
+    expect(entry).not.toContain("v0.12.0");
+    expect(entry).not.toContain("/v0.12.0/r");
+    const { first, second } = foldedParts(log());
+    const site =
+      paragraphs(second).find((p) => p.startsWith("The design site")) ?? "";
+    expect(site).toContain("`/v0.13.0/r`");
+    expect(paragraphs(first)[2]).toStartWith(
+      "The design system is named the Kuiper Design System, and its code names now say Kuiper.",
+    );
+  });
+
+  test("test 3: the first part has no bullet headed by the old theme name; the second has one kuiper-theme bullet, the code map's", () => {
+    const { first, second } = foldedParts(log());
+    expect(bulletsOf(first).map(headOf)).not.toContain("`pluto-theme`");
+    const theme = bulletsOf(second).filter(
+      (b) => headOf(b) === "`kuiper-theme`",
+    );
+    expect(theme).toHaveLength(1);
+    expect(theme[0]).toContain("The code map is Meridian's roles");
+    expect(first + second).not.toContain("Its code names are unchanged");
+    // The change review, finding 2: the rename bullet, read first, does not
+    // say every variable keeps its name; the code map removes twelve.
+    const rename = bulletsOf(first).find((b) =>
+      b.startsWith("- `kuiper-theme`: **interface change.** Renamed"),
+    )!;
+    expect(rename).toContain(
+      "and every variable and utility, keep their names, except the twelve code colours the code-map `kuiper-theme` bullet removes.",
+    );
+  });
+
+  test("test 4: the update paragraph adds from v0.13.0, renames first, and names the twelve removed variables", () => {
+    const { second } = foldedParts(log());
+    const update =
+      paragraphs(second).find((p) => p.startsWith("An `add` from")) ?? "";
+    expect(update).toContain("`v0.13.0`");
+    const rename = update.indexOf("rename");
+    expect(rename).toBeGreaterThan(-1);
+    expect(rename).toBeLessThan(
+      update.indexOf("`add kuiper-theme highlighter"),
+    );
+    for (const name of [
+      "--code-foreground",
+      "--code-escape",
+      "--code-builtin",
+      "--code-tag",
+      "--code-property",
+      "--code-decorator",
+      "--code-self",
+      "--code-invalid",
+      "--syntax-amber",
+      "--syntax-purple",
+      "--syntax-teal",
+      "--syntax-cyan",
+    ])
+      expect(update, name).toContain(`\`${name}\``);
+  });
+
+  test("test 16: each first-part bullet whose head also heads a second-part bullet points to it", () => {
+    const { first } = foldedParts(log());
+    const ends = (head: string, sentence: string) => {
+      const found = bulletsOf(first).filter((b) => headOf(b) === head);
+      expect(found.length, head).toBeGreaterThan(0);
+      for (const b of found) expect(b, head).toEndWith(sentence);
+    };
+    for (const name of [
+      "code-block",
+      "code-editor",
+      "highlighter",
+      "use-highlighted-code",
+      "app-shell",
+      "error-summary",
+    ])
+      ends(
+        `\`${name}\``,
+        ` See also \`${name}\` under "Also since 0.11.0", below.`,
+      );
+    ends(
+      "`kuiper-theme`",
+      ' See also the code-map `kuiper-theme` bullet under "Also since 0.11.0", below.',
+    );
+    expect(
+      bulletsOf(first).filter((b) => headOf(b) === "`kuiper-theme`"),
+    ).toHaveLength(2);
+    const docs = bulletsOf(first).filter((b) => b.startsWith("- `utils`, "));
+    expect(docs).toHaveLength(1);
+    expect(docs[0]).toEndWith(
+      ' Of these, `code-block`, `code-editor`, `highlighter`, `code-languages`, `use-highlighted-code`, `liquid-glass`, `live-console`, `marketing-bar`, `marketing-footer`, `proof-band`, `stage`, `stage-card`, `stage-hero` and `app-shell` also have a bullet under "Also since 0.11.0", below.',
+    );
+    expect(
+      bulletsOf(first).find((b) => b.startsWith("- `error-summary`: ")),
+    ).toContain("nothing to change for it.");
   });
 });
 
@@ -2080,6 +2193,20 @@ describe("released snapshots", () => {
   const frozen = tags.filter((t) => existsSync(`static/${t}`));
   test("at least one released snapshot exists", () => {
     expect(frozen.length).toBeGreaterThan(0);
+  });
+  // 020d test 6: the converse. A folder no tag made is a release that never
+  // happened, unless it is the version being built.
+  test("every static/v<x>/ is a tag's, or the current version's", () => {
+    if (tags.length === 0)
+      throw new Error("this clone has no tags: run `git fetch --tags`");
+    const current = `v${JSON.parse(readFileSync("package.json", "utf8")).version}`;
+    const folders = readdirSync("static").filter((f) =>
+      /^v\d+\.\d+\.\d+$/.test(f),
+    );
+    expect(folders).toContain(current);
+    expect(folders.filter((f) => f !== current && !tags.includes(f))).toEqual(
+      [],
+    );
   });
   test.each(frozen)("static/%s matches its tag", (tag) => {
     const diff = execSync(`git diff --name-only ${tag} -- static/${tag}`, {
@@ -2234,9 +2361,7 @@ describe("020 test 5: a deprecated item is not listed", () => {
 
 describe("020 test 16: the 0.13.0 changelog", () => {
   const log = readFileSync("CHANGELOG.md", "utf8");
-  const entry = log.includes("## 0.13.0")
-    ? log.slice(log.indexOf("## 0.13.0"), log.indexOf("\n## 0.12.0"))
-    : "";
+  const entry = foldedParts(log).first;
   const bullets = entry.split("\n").filter((l) => l.startsWith("- "));
   const bullet = (head: string) =>
     bullets.find((b) => b.startsWith(`- \`${head}\``)) ?? "";
@@ -2390,9 +2515,7 @@ describe("027a test 1: batch A's items are registry:ui items", () => {
 
 describe("027a test 2: the 0.13.0 entry has one bullet per built batch A item", () => {
   const log = readFileSync("CHANGELOG.md", "utf8");
-  const entry = log.includes("## 0.13.0")
-    ? log.slice(log.indexOf("## 0.13.0"), log.indexOf("\n## 0.12.0"))
-    : "";
+  const entry = foldedParts(log).first;
   const bullets = (name: string) =>
     entry.split("\n").filter((l) => l.startsWith(`- \`${name}\`: `));
 
@@ -2486,9 +2609,7 @@ describe("027b test 1: batch A's interactive items are registry:ui items", () =>
 
 describe("027b test 2: the 0.13.0 entry has one bullet per interactive batch A item", () => {
   const log = readFileSync("CHANGELOG.md", "utf8");
-  const entry = log.includes("## 0.13.0")
-    ? log.slice(log.indexOf("## 0.13.0"), log.indexOf("\n## 0.12.0"))
-    : "";
+  const entry = foldedParts(log).first;
   const bullets = (name: string) =>
     entry.split("\n").filter((l) => l.startsWith(`- \`${name}\`: `));
 
@@ -2510,9 +2631,7 @@ describe("027b test 2: the 0.13.0 entry has one bullet per interactive batch A i
 
 describe("021 criterion 18: the 0.13.0 changelog's token bullets", () => {
   const log = readFileSync("CHANGELOG.md", "utf8");
-  const entry = log.includes("## 0.13.0")
-    ? log.slice(log.indexOf("## 0.13.0"), log.indexOf("\n## 0.12.0"))
-    : "";
+  const entry = foldedParts(log).first;
   const bullets = entry.split("\n").filter((l) => l.startsWith("- "));
 
   test("a kuiper-theme bullet says the source is DTCG and the CSS is unchanged", () => {
@@ -2585,9 +2704,7 @@ describe("022t: the page and the comment name attempt", () => {
 /** 022t criterion 12: the 0.13.0 entry's two bullets for `attempt`. */
 describe("022t: the changelog", () => {
   const log = readFileSync("CHANGELOG.md", "utf8");
-  const entry = log.includes("## 0.13.0")
-    ? log.slice(log.indexOf("## 0.13.0"), log.indexOf("\n## 0.12.0"))
-    : "";
+  const entry = foldedParts(log).first;
   const lines = entry.split("\n");
   const item = lines.filter((l) =>
     l.startsWith("- `error-summary`: a new optional prop, `attempt`"),

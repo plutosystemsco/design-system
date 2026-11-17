@@ -10,7 +10,7 @@ Two superseded readings. The inventory's toast advice ("keep it declined") and i
 
 ## 1. Where Kuiper stands
 
-The first scorecard run is at `ea1f9bd` (0.12.0, after `018`). Scores run 0 to 4. "Best" is the highest of the seven references. The 1.0 target is what this roadmap commits to.
+The first scorecard run is at `ea1f9bd` (the 0.12.0 tree, never released, after `018`). Scores run 0 to 4. "Best" is the highest of the seven references. The 1.0 target is what this roadmap commits to.
 
 | # | Dimension | Kuiper now | Best reference | 1.0 target | How the target is reached |
 |---|---|---|---|---|---|
@@ -67,7 +67,7 @@ The new name in code. Evidence across three engines and two screen readers. Toke
 
 | Spec | Scope, in one line | Lanes | Depends on | Moves |
 |---|---|---|---|---|
-| `020` the Kuiper rename | `pluto` → `kuiper` in the registry name, the theme item, context keys, the token file, the storage key and the package; one "Upgrade to 0.13.0" guide page; a redirect for each moved URL | all | the `v0.12.0` tag | 11: 2 → 3 (migration page) |
+| `020` the Kuiper rename | `pluto` → `kuiper` in the registry name, the theme item, context keys, the token file, the storage key and the package; one "Upgrade to 0.13.0" guide page; a redirect for each moved URL | all | `dad6f76`, 0.12.0's last commit, never tagged | 11: 2 → 3 (migration page) |
 | `020a` the site's CSS reads only code | Small change: `@source not "../context"` in `src/app.css`, so prose and exhibits never add rules to the site's CSS | T (one line) | `020`; lands before `021`, whose CSS check is byte-identical | 8: held |
 | `020b` the guide's renames fit the column | Small change from `020`'s checkpoint: the upgrade guide's five-column rename table (1,053 px in a 608 px column) becomes one block per rename | S (one page) | `020a` | — |
 | `023a` API types break between words | Small change from `027a`'s change review: the API table's Type cell uses `break-words`, not `wrap-anywhere`, so type names never break mid-word once `023` widens every table | S (one component) | `027a`; lands before `023` | — |
@@ -245,7 +245,7 @@ Recommended option first. Answered questions keep their answer and its source.
 
 **Q1. Where does the full matrix run?** Answered: GitHub Actions on the public repository (`decisions.md` at `beeb67e`; `022`'s landing notes hold its nine detailed answers).
 
-**Q2. When does 0.13.0's build start?** Answered by events: the owner's `019` listen passed, `v0.12.0` was tagged on `dad6f76`, and `release/0.13.0` starts from it.
+**Q2. When does 0.13.0's build start?** Answered by events: the owner's `019` listen passed, 0.12.0's work ended at `dad6f76`, never tagged; the owner ruled on 2026-11-17 that 0.12.0 was never released (`020d`); `release/0.13.0` starts from `dad6f76`.
 
 **Q3. Do old names keep working for one release?** Answered: yes, for every old name, the context keys included (`decisions.md` at `beeb67e`; `020` decision 4). The exceptions the owner chose in `020`: the token file path and the four old keyframes are not kept (`020` Q3, Q5).
 

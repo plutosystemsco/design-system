@@ -1,6 +1,6 @@
 # 020d — 0.12.0 was never released
 
-- **Status:** fit to build once the batch lands (the spec review's re-check, 2026-11-17; its two wording notes written in by the design lead). The review ([`reviews/020d-0-12-0-was-never-released-spec-2026-11-17.md`](../reviews/020d-0-12-0-was-never-released-spec-2026-11-17.md)) said "does not land yet", with 1 High, 2 Medium and 8 Low findings. "Review", below, maps each finding to its fix.
+- **Status:** built; waits for its change review (lane S, 2026-11-17, in `.claude/worktrees/lane-s-020d` on `7ec5488`, uncommitted). Fit to build after the spec review's re-check (2026-11-17; its two wording notes written in by the design lead). The review ([`reviews/020d-0-12-0-was-never-released-spec-2026-11-17.md`](../reviews/020d-0-12-0-was-never-released-spec-2026-11-17.md)) said "does not land yet", with 1 High, 2 Medium and 8 Low findings. "Review", below, maps each finding to its fix.
 - **Date:** 2026-11-17
 - **Author:** the design lead
 - **Kind:** specification. Not a small change: it touches more than one item or page (the changelog, the upgrade guide, `static/`, the token files, one item's comment and a dozen tests). It changes no item's interface, and adds no token and no dependency.
@@ -336,12 +336,145 @@ The spec review, 2026-11-17: [`reviews/020d-0-12-0-was-never-released-spec-2026-
 
 ## Landing notes
 
-_To be filled in when it lands:_
+Built by the lane-S builder, 2026-11-17, in `.claude/worktrees/lane-s-020d` (branch `lane-s-020d`), uncommitted. To be completed at landing: the change review, Q1's answer, and the owner's two git steps.
 
-- _the landed base, and every count re-taken there;_
-- _T15's line diff;_
-- _which tests were seen failing first;_
-- _the change review;_
-- _the scorecard's movement;_
+### The landed base, and every count re-taken there
+
+The base is `7ec5488` ("Context: the run-5 batch landed"): `release/0.13.0` with `022t`, `022v`, `022w`, `022x`, `022y` and `022z` landed. No lane-T build was running (`git worktree list`: only `lane-e-small` beside this one). Every figure below was EXECUTED at `7ec5488`.
+
+| Count | The specification (§10) | At `7ec5488` |
+|---|---|---|
+| `## 0.13.0`, `## 0.12.0`, the naming paragraph, 0.12.0's theme bullet | lines 5, 36, 40, 44 | the same |
+| Bullets in the 0.13.0 and the 0.12.0 entries | 26 and 18 | the same |
+| First-part bullets whose single head also heads a second-part bullet | 8 bullets, 7 heads (`kuiper-theme` twice, `highlighter`, `app-shell`, `use-highlighted-code`, `code-editor`, `code-block`, `error-summary`) | the same |
+| The doc-comment bullet's names, and those that head a second-part bullet | 61, of which 14 | the same |
+| `[Pp]luto` in the 0.13.0 entry, the 0.12.0 entry, and from `## 0.11.0` | 21, 10, 28 | the same |
+| The guard's grep (decision 11's exclusions) | 284 lines | 284; `static/v0.12.0/` holds none of them |
+| The open-ended slice in `tests/` | 16 in 3 files, 6 ending at `\n## 0.12.0` | the same: `registry.test.ts` 11, `registry-comments.test.ts` 3, `toast-site.test.ts` 1; the six at `registry.test.ts:2238`, `:2394`, `:2490`, `:2514`, `:2589` and `toast-site.test.ts:125` |
+| The retargeted tests' lines (decision 7's table, decision 9) | as listed | the same lines |
+| `"since": "0.12.0"` and `"removed": "0.12.0"` in `tokens/` | 27 and 24 | the same; 81 lines in each of `static/r/tokens/` and `static/v0.13.0/r/tokens/` |
+| Files in `static/v0.12.0/` | 76 | 76 |
+| The bench's releases and versioned registries | 12 and 9 | the same |
+| Links to `#v0-12-0` in the built site (criterion 5) | 5, at `b01e754` | **4**: `/changelog/#v0-12-0` on the `kbd`, `product-home` and upgrade pages, and `#v0-12-0` on the changelog, beside its `id`. The cause: `022t`'s `error-summary` bullet already made that page read 0.13.0. No decision changes |
+| The unit suite | 1,905 pass, 2 skip, 2 fail (§8, at `b01e754`) | 1,937 pass, 2 skip, 0 fail |
+
+The builder's choice on the re-check's write-in: `registry.test.ts`'s regex `entry()` stays for 0.11.0 and older, as decision 7 now says.
+
+Two counts moved that decision 7 does not name:
+
+- `pluto-allowed.json`'s `tests/unit/registry.test.ts` `pluto-theme` history entry, **25 → 13**. The 0.12.0 entry's tests now read the folded part, which names `kuiper-theme`; test 3 adds one absence check of the old head. Its reason says so.
+- `016`'s "no amber" test (`registry.test.ts`, "016: the brand yellow") gains one exception: in `src/lib/site/upgrade/0.13.0.ts` it drops the name `syntax-amber` in any of its forms, as it already does in `kuiper.removed.json`. Decision 8's step names the removed `--syntax-amber`, and its `grep` names `syntax-amber`, so the test could not pass with the step as written.
+
+`tests/fixtures/static-r-amendments.json` is deleted (the change review, finding 3). It was read only by the deleted 0.12.0-only release check; decision 7's "its fixture stays" means `reworded-comments.json`, which the kept tests read.
+
+### Tests seen failing first
+
+The tests were written, then run on the base tree: the changelog, `static/v0.12.0/`, the tokens and the guide as at `7ec5488`. The builder had folded the changelog before writing the tests; that file was set aside and the base's restored, byte for byte (`cmp`), before this run.
+
+- **Unit**, the nine changed and new files: **26 fail, 8 errors, 503 pass**, 529 tests (corrected to the change review's re-run; the builder's first record said 28 and 501).
+  - T1, T2, T3, T4 and T16 (`registry.test.ts`): fail.
+  - The retargeted `013`, `014`, `016`, `019a` and `019` tests (5 tests), and `018`'s rewritten test: fail, since `foldedParts` throws: the entry has no "Also since 0.11.0" line.
+  - The six first-part readers (`020` test 16, `027a` test 2, `027b` test 2, `021` criterion 18, `022t`, and `toast-site`'s `026`), and `registry-comments.test.ts`'s folded-part describe: 7 of the 8 errors. Each now throws where its slice ran to the file's end and passed.
+  - T15: the eighth error, the same throw.
+  - T5 (`static/v0.12.0` exists), T6 (`v0.12.0` has no tag), T7 (3 of 3 folders), T9 (`kbd`, `error-summary`, `product-home`), T10 (5 of 5), T11's first check ("no 0.12.0", on the base's content), T12 (the rename guard, with the fixture at 28 and 21 and the comments entry gone), and `changelog-page.test.ts`'s releases: fail.
+  - T11's second check, "no open-ended changelog slice", passes in that setup, since the new tests hold no slice. It fails only with the base's test files beside the new guard and helper: `registry.test.ts` 11 lines, `registry-comments.test.ts` 3, `toast-site.test.ts` 1 (the change review's setup B).
+  - T8 passed in that run, since the helper was already written. With the helper moved aside, `never-released.test.ts` fails to load: "Cannot find module '../helpers/changelog.ts'".
+- **e2e**, against `bun run build` of the base tree, `chromium-light`: T13 ("in seven parts") and T14 (`#v0-12-0` present) fail, 2 of 2.
+
+### The build
+
+- **`static/v0.12.0/`**: deleted, 76 files, no redirect. `build/v0.12.0/` is gone.
+- **The tokens.** 51 values in `tokens/` read `"0.13.0"`. `bun run build:tokens` rewrote the twelve copies. The diff is exactly 213 lines, each a `since` or a `removed` value: 51 in `tokens/`, 81 in each published tree.
+- **The CSS is byte-identical.** sha256 before and after `build:tokens`, `build:registry` and `bun run build`:
+  - `src/app.css`: `e72d42224b27b29d3b349f78c701647faa0bf3704887fa95fa1b0d97bc487e76`;
+  - `static/r/tokens/kuiper.css` and `static/v0.13.0/r/tokens/kuiper.css`: `3111eac47c612e4f3e9bff1dca478465d01871fe96d28f85b8ba18c129ee3bee`.
+  - Every `static/r/styles/maia/*.json` and `static/v0.13.0/r/styles/maia/*.json` keeps its sha256, but the two `field.json` files. Their only change is one content line, the comment: "The 0.12.0 keys." → "The keys before 0.13.0." (criterion 4).
+- **The built site** (criterion 5), against the base's build, with asset hashes normalised: four pages change, and their Markdown twins and data. They are the changelog, the upgrade guide, `kbd` and `product-home` (Updated 0.12.0 → 0.13.0). No other page, and no other file under `r/`, `v0.13.0/r/` or `v0.4.0/` to `v0.11.0/`, changes. No built file holds `v0-12-0` or `/v0.12.0/`. `meter` links `#v0-4-0`; `error-summary` already linked `#v0-13-0`.
+
+### T15: the fold's line diff
+
+The fold was checked in reverse. Each edit decisions 2 to 4 name was undone on the folded parts. The result equals the base's entries byte for byte (EXECUTED):
+
+- **The first part** equals the base's 0.13.0 entry once its 14 edits are undone:
+  - the fold sentence, its own paragraph;
+  - the intro's first sentence;
+  - the rename bullet's "keep their names, except the twelve code colours the code-map `kuiper-theme` bullet removes" (the change review, finding 2);
+  - "Rolled back to 0.11.0";
+  - the two `kuiper-theme` pointers;
+  - the six "See also" pointers;
+  - "nothing to change for it";
+  - the doc-comment bullet's "Of these".
+- **The second part** equals the base's 0.12.0 entry once its 7 edits are undone, with the heading and the naming paragraph put back:
+  - `/v0.13.0/r`;
+  - the theme bullet's head;
+  - "so `kuiper-theme` gives";
+  - the two "(see the code-map `kuiper-theme` bullet)";
+  - the update paragraph's first sentence;
+  - "Update `kuiper-theme`, `code-block` and `code-editor` together".
+- The rest of `CHANGELOG.md` is unchanged.
+
+Line by line (`difflib` over each part):
+
+- **The first part.** The base entry has 28 lines that are not blank. 17 are kept as they were. Nine bullets are kept with one sentence appended, and the rename bullet's "keep their names" is qualified; the `error-summary` bullet also reads "for it". The `theme` bullet reads "Rolled back to 0.11.0". The intro's first sentence is replaced, and the fold sentence's paragraph comes before it.
+- **The second part.** The base entry has 23 lines that are not blank. 16 are kept as they were. The heading and the naming paragraph go. Five lines change by decision 4's words: the site paragraph, the theme bullet, `error-summary`, `app-shell` and the update paragraph.
+- The split line stands alone, between blank lines. The builder's first fold had no blank line before it, which would have made it part of the `sign-in` bullet; that was fixed before any test ran green.
+
+`tests/fixtures/020d-fold-heads.json` was written from `7ec5488` by the helper's `headOf`, with `kuiper-theme` for `pluto-theme`: 26 and 18 heads. Its `base` field names the commit, for the change review's `git show`.
+
+### The gate
+
+- `bun run check`: 0 errors, 0 warnings, 2,436 files.
+- `bun run lint`: passes.
+- `bun scripts/lint-literals.ts`: 0 literals, 1 allowance, as before.
+- `bun test ./tests/unit`, at the first build: **1,959 pass, 1 fail, 0 skip**, 1,960 tests in 69 files.
+  - The fail is the highlighter's streaming budget (`highlight-session.test.ts`), a machine timing. Run alone, it passes.
+  - The base's 2 skips were the deleted 0.12.0-only release check.
+- `bun scripts/site/release-check.ts --before-ci`: exit 0, with its four named skips.
+- e2e, `E2E_PREBUILT=1` on the new build, `chromium-light` and `webkit-light`: `upgrade.spec.ts`, `site.spec.ts`, `tokens.spec.ts`, `tokens-files.spec.ts`, and `build-output.spec.ts` (`chromium-light` only, by the config), which reads the Markdown twins. **234 of 234 pass.**
+- The smoke test's upgrade case, `tests/smoke/code-add.test.ts`, run with app A, which writes its reference stylesheet (`-t "app A|the upgrade from v0.11.0"`): **15 of 15 pass**. That is app A's 13 and the upgrade case's 2, under their new labels: "the v0.13.0 add exits 0", and the stylesheet holds exactly the changelog's listed old lines (criterion 3). `tests/smoke/upgrade.test.ts` (`020` test 11) was not run; this specification does not touch it.
+- Ledgers:
+  - `bun run cost --sizes-only`: 6 items size-stale, by hash only: `field`, and `composer`, `sign-in`, `sign-up`, `settings` and `chat`, which hold it. No item's size moves. The catalogue, rebuilt with them, reads js 379,377 → 379,356 and css 16,842 → 16,838.
+  - The catalogue's move has no cause found: both inputs that changed are comments, and the change review's re-run reproduces the same figures.
+  - `bun scripts/site/thumbnails.ts --hash-only`: 69 of the manifest's 82 hashes move against `7ec5488`, from two comment-only inputs, `src/lib/site/changelog.ts` (65 items) and `field-context.svelte.ts` (6 items). No picture changes, so `--hash-only` wrote the manifest and the pictures stand. (The builder's first record said the manifest was unchanged; a filter hid it.)
+
+### The scorecard's movement
+
+`scripts/bench/kuiper.ts` on the working tree, against `--rev 7ec5488`: **releases 12 → 11** and **versioned registries 9 → 8**, as criterion 9 expects. Interface marks stay 15, migration pages 2, and nothing else moves. No row moves. The run log has the row, and row 11's evidence reads the 0.13.0 entry.
+
+### Where the tests live
+
+- T1 to T4, T6 and T16 are in `registry.test.ts`, beside the tests they join.
+- T7, T8, T10 and T15 are in `never-released.test.ts`, after the guard's two checks. That makes one file for what is `020d`'s alone.
+- T7 also reads `static/v0.13.0/r/tokens/`.
+- The guard reads tracked and untracked files, as the rename guard does, so a new file is caught before it is committed.
+- Its fixture has one entry per file. The slice check's helper entry counts 2: the slice, and the doc comment that names the form it replaces.
+
+### The change review
+
+[`reviews/020d-0-12-0-was-never-released-pr-2026-11-17.md`](../reviews/020d-0-12-0-was-never-released-pr-2026-11-17.md): lands once its six Low findings are dispositioned. The design lead's rulings (2026-11-17), and what the builder did:
+
+1. **Step 2's example second line goes back to `addCommand("field input")`, as decision 8 says.** The builder's reading would install the highlighter, about 350 MB of packages, and the code editor into apps that never had them. The code items, `kbd` and `error-summary` get a sentence of their own in step 2's text: name them on the same line if your app has them, and only then, since an `add` installs an item an app lacks. T10 now requires line 2 to end `add field input -y`, with no `-o`. Seen failing first: "Expected to end with: " add field input -y"".
+2. **The first `kuiper-theme` bullet** now reads "every variable and utility, keep their names, except the twelve code colours the code-map `kuiper-theme` bullet removes". T3 holds the sentence; seen failing first. T15's reverse check counts it among the first part's edits (14).
+3. **`tests/fixtures/static-r-amendments.json` is deleted.** Nothing in `tests/`, `scripts/` or `src/` reads it.
+4. **The seen-failing record is corrected**, above: 26 fail, 8 errors, 503 pass, and T11's slice check fails only with the base's test files.
+5. **The thumbnail note is corrected**, above.
+6. **Roadmap Q2** ends "`release/0.13.0` starts from `dad6f76`".
+7. **Note 8 taken:** `020`'s step 1 grep adds `-e scrollbar-code`, and its text says the command finds the class too. T10 checks the command; seen failing first: "Expected to contain: "-e scrollbar-code"". No other test pins the grep's text.
+
+Re-run after the fixes: `bun run build`; `cost --sizes-only` ("every figure is fresh"); `thumbnails --hash-only` (the manifest unchanged since the first build); `check` (0 errors), `lint`, `lint-literals` (0 literals); `bun test ./tests/unit` (**1,960 pass, 0 fail**); `release-check --before-ci` (exit 0); and the e2e specs above in `chromium-light` and `webkit-light` (**234 of 234 pass**).
+
+### Left as they are
+
+- The guide's lead paragraph ("0.13.0 renames the system's code names to Kuiper …") and the page's comment "the five parts" were not touched; decision 8 names neither.
+
+### The owner's steps, before the `v0.13.0` push (decision 13)
+
+1. On each machine you have tagged from, run `git tag -l v0.12.0`. If it prints `v0.12.0`, delete it with `git tag -d v0.12.0`: it is local and was never pushed. This session's clone has no `v0.12.0` tag (`git tag -l`: `v0.1.0` to `v0.11.0`).
+2. Push the new tag by name: `git push origin v0.13.0`. Never `git push --tags`, which would publish a `v0.12.0` that survived.
+
+Q1, the public branch `release/0.12.0`, is still open. The recommended answer is (a): delete it when you push `v0.13.0`.
+
+_Still to come at landing:_
+
 - _Q1's answer;_
-- _the owner's two git steps: whether a local `v0.12.0` tag was found and deleted, and that `v0.13.0` was pushed by name._
+- _whether a local `v0.12.0` tag was found and deleted, and that `v0.13.0` was pushed by name._

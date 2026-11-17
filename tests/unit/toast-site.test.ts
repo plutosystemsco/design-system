@@ -11,6 +11,7 @@ import ts from "typescript";
 import { apiTables } from "../../src/lib/site/api.server.ts";
 import { EXAMPLE_ORDER } from "../../src/lib/site/example-order.ts";
 import { isPairFile } from "../../src/lib/site/shown-source.ts";
+import { foldedParts } from "../helpers/changelog.ts";
 
 type Item = {
   name: string;
@@ -122,7 +123,7 @@ describe("026: the registry entry", () => {
 
 describe("026: the changelog", () => {
   const log = readFileSync("CHANGELOG.md", "utf8");
-  const entry = log.slice(log.indexOf("## 0.13.0"), log.indexOf("\n## 0.12.0"));
+  const entry = foldedParts(log).first;
   const bullets = entry.split("\n").filter((l) => l.startsWith("- `toast`"));
 
   test("38. the 0.13.0 entry has one toast bullet, naming what an app must know", () => {

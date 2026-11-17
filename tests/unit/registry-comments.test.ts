@@ -5,10 +5,10 @@
  * line with its quotes escaped, so nothing is matched in the raw JSON.
  */
 import { describe, expect, test } from "bun:test";
-import { execFileSync } from "node:child_process";
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import path from "node:path";
 import { citationsIn, commentBlocks } from "../../src/lib/site/citations.ts";
+import { foldedParts } from "../helpers/changelog.ts";
 
 const ROOT = path.resolve(import.meta.dir, "../..");
 const STATIC_R = path.join(ROOT, "static/r");
@@ -22,20 +22,6 @@ const FIXTURE = JSON.parse(
   reworded: { item: string; path: string; before: string; after: string }[];
   kept: { item: string; path: string; line: string; reason: string }[];
 };
-/** Changes the owner decided after 015, applied to the base before comparing. */
-const AMENDMENTS = JSON.parse(
-  readFileSync(
-    path.join(ROOT, "tests/fixtures/static-r-amendments.json"),
-    "utf8",
-  ),
-) as {
-  amended: { item: string; before: string; after: string; why: string }[];
-};
-
-const VERSION = JSON.parse(
-  readFileSync(path.join(ROOT, "package.json"), "utf8"),
-).version;
-
 type ItemJson = {
   name: string;
   files?: { content: string; target?: string; type: string }[];
@@ -118,122 +104,14 @@ describe("published item files cite no internal document", () => {
   });
 });
 
-describe("nothing else in static/r moved since the base (0.12.0 only)", () => {
-  const shallow = (() => {
-    try {
-      return (
-        execFileSync("git", ["rev-parse", "--is-shallow-repository"], {
-          cwd: ROOT,
-        })
-          .toString()
-          .trim() === "true"
-      );
-    } catch {
-      return true;
-    }
-  })();
-  const skip = VERSION !== "0.12.0" || shallow;
-  if (skip)
-    console.log(
-      VERSION !== "0.12.0"
-        ? `registry-comments: the release check guards 0.12.0 only; package.json reads ${VERSION}, so it skips.`
-        : "registry-comments: a shallow clone holds no base commit, so the release check skips.",
-    );
-
-  test.skipIf(skip)("the base commit is present", () => {
-    let ok = true;
-    try {
-      execFileSync("git", ["cat-file", "-e", `${FIXTURE.base}^{commit}`], {
-        cwd: ROOT,
-        stdio: "ignore",
-      });
-    } catch {
-      ok = false;
-    }
-    if (!ok)
-      throw new Error(
-        `the fixture's base ${FIXTURE.base} is not in this clone`,
-      );
-    expect(FIXTURE.base).toMatch(/^[0-9a-f]{40}$/);
-  });
-
-  test.skipIf(skip)(
-    "each file, with the fixture's rewordings applied to the base, deep-equals the file now",
-    () => {
-      const used = new Set<number>();
-      const amendedUsed = new Set<number>();
-      const moved: string[] = [];
-      for (const file of FILES) {
-        const rel = path.relative(ROOT, file);
-        const now = JSON.parse(readFileSync(file, "utf8"));
-        let before: unknown;
-        try {
-          before = JSON.parse(
-            execFileSync("git", ["show", `${FIXTURE.base}:${rel}`], {
-              cwd: ROOT,
-              maxBuffer: 1 << 28,
-            }).toString(),
-          );
-        } catch {
-          moved.push(`${rel}: not in the base`);
-          continue;
-        }
-        const item = items(before);
-        if (item?.files) {
-          for (const f of item.files) {
-            FIXTURE.reworded.forEach((r, i) => {
-              if (r.item !== item.name) return;
-              const lines = f.content.split("\n");
-              const want = r.before.split("\n");
-              for (let at = 0; at + want.length <= lines.length; at++) {
-                if (want.every((w, j) => lines[at + j] === w)) {
-                  lines.splice(at, want.length, ...r.after.split("\n"));
-                  f.content = lines.join("\n");
-                  used.add(i);
-                  return;
-                }
-              }
-            });
-          }
-        }
-        // The later amendments, as text over the base's JSON.
-        if (item) {
-          let text = JSON.stringify(before);
-          AMENDMENTS.amended.forEach((a, i) => {
-            if (a.item !== item.name) return;
-            const from = JSON.stringify(a.before).slice(1, -1);
-            const to = JSON.stringify(a.after).slice(1, -1);
-            const raw = text.includes(from) ? [from, to] : [a.before, a.after];
-            if (!text.includes(raw[0])) return;
-            text = text.split(raw[0]).join(raw[1]);
-            amendedUsed.add(i);
-          });
-          before = JSON.parse(text);
-        }
-        if (!Bun.deepEquals(before, now)) moved.push(rel);
-      }
-      expect(moved).toEqual([]);
-      expect(
-        AMENDMENTS.amended
-          .filter((_, i) => !amendedUsed.has(i))
-          .map((a) => `${a.item}: ${a.why}`),
-      ).toEqual([]);
-      expect(
-        FIXTURE.reworded
-          .filter((_, i) => !used.has(i))
-          .map((r) => `${r.item}: ${r.before}`),
-      ).toEqual([]);
-    },
-  );
-});
-
-/** 015 decision 26, criterion 30: the 0.12.0 entry names the reworded items. */
-describe("the 0.12.0 changelog entry", () => {
-  const text = readFileSync(path.join(ROOT, "CHANGELOG.md"), "utf8");
-  const entry = text.slice(
-    text.indexOf("## 0.12.0"),
-    text.indexOf("\n## 0.11.0"),
-  );
+/**
+ * 015 decision 26, criterion 30: the entry names the reworded items. 020d:
+ * that entry is the 0.13.0 entry's folded part, below "Also since 0.11.0".
+ */
+describe("the folded changelog part", () => {
+  const entry = foldedParts(
+    readFileSync(path.join(ROOT, "CHANGELOG.md"), "utf8"),
+  ).second;
 
   test("its lines for reworded comments name exactly the items in reworded-comments.json", () => {
     const named = entry
@@ -249,25 +127,23 @@ describe("the 0.12.0 changelog entry", () => {
   test("it holds the site's paragraph: its name, its /r/ path or GitHub, and the Markdown twins", () => {
     const para =
       entry.split("\n\n").find((p) => p.includes("The design site")) ?? "";
-    for (const words of ["/v0.12.0/r", "GitHub", "Markdown twin", "llms.txt"])
+    for (const words of ["/v0.13.0/r", "GitHub", "Markdown twin", "llms.txt"])
       expect(para, words).toContain(words);
   });
 });
 
-// 018 decision 17: the name changes, and the code names do not.
+// 018 decision 17: the system's name. 020d: 0.13.0's entry now tells a
+// 0.11.0 app the name, and that the code names say it too (020).
 describe("018: the Kuiper Design System", () => {
-  test("the 0.12.0 entry names the system, and says its code names wait for 0.13.0", () => {
-    const log = readFileSync(path.join(ROOT, "CHANGELOG.md"), "utf8");
-    const entry = log.slice(log.indexOf("## 0.12.0"), log.indexOf("## 0.11.0"));
-    const line =
-      entry.split("\n\n").find((p) => p.includes("Kuiper Design System")) ?? "";
-    for (const words of [
-      "`pluto-theme`",
-      "`pluto:`",
-      "0.13.0",
-      "migration guide",
-    ])
-      expect(line, words).toContain(words);
+  test("the 0.13.0 entry's intro names the system, and says its code names now say Kuiper", () => {
+    const { first } = foldedParts(
+      readFileSync(path.join(ROOT, "CHANGELOG.md"), "utf8"),
+    );
+    const intro =
+      first.split("\n\n").find((p) => p.includes("Kuiper Design System")) ?? "";
+    expect(intro).toStartWith(
+      "The design system is named the Kuiper Design System, and its code names now say Kuiper.",
+    );
   });
 });
 

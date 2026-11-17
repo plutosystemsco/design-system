@@ -5,9 +5,9 @@
       "files": "CHANGELOG.md",
       "pattern": "[Pp]luto",
       "section": {
-        "from": "## 0.12.0"
+        "from": "## 0.11.0"
       },
-      "count": 38,
+      "count": 28,
       "class": "history",
       "reason": "The changelog's entries before 0.13.0, as released."
     },
@@ -16,7 +16,7 @@
       "pattern": "[Pp]luto",
       "section": {
         "from": "## 0.13.0",
-        "to": "## 0.12.0"
+        "to": "## 0.11.0"
       },
       "count": 21,
       "class": "record",
@@ -262,13 +262,6 @@
       "reason": "v0.8.0's recorded custom properties, as released (decision 2)."
     },
     {
-      "files": "tests/unit/registry-comments.test.ts",
-      "pattern": "\"`pluto-theme`\"|\"`pluto:`\"",
-      "count": 2,
-      "class": "history",
-      "reason": "The guard that the 0.12.0 changelog paragraph said code names wait for 0.13.0 (decision 2)."
-    },
-    {
       "files": "tests/smoke/code-add.test.ts",
       "pattern": "\"pluto-theme\"|0\\.11\\.0's name",
       "count": 1,
@@ -370,9 +363,9 @@
     {
       "files": "tests/unit/registry.test.ts",
       "pattern": "pluto-theme",
-      "count": 25,
+      "count": 13,
       "class": "history",
-      "reason": "The tests that read the changelog's entries before 0.13.0, which name the theme pluto-theme, as released."
+      "reason": "The tests that read the changelog's entries before 0.13.0, which name the theme pluto-theme, as released; and 020d test 3, that no 0.13.0 bullet is headed by the old name."
     },
     {
       "files": "tests/unit/api-described.test.ts",
