@@ -4,7 +4,7 @@
  * O3 Escape returns to the trigger, which is spoken and focused.
  */
 import type { Page } from "@playwright/test";
-import { declared, test } from "./fixtures.ts";
+import { appears, declared, test } from "./fixtures.ts";
 import { O1, O2, O3 } from "./rules.ts";
 
 const PATH = "/example/alert-dialog/keyboard/";
@@ -16,7 +16,7 @@ const trigger = (page: Page) => page.getByTestId("dialog-trigger");
 /** From the focused trigger: the key alone, then the dialog by role, unnamed. */
 async function open(page: Page): Promise<void> {
   await page.keyboard.press("Enter");
-  await page.getByRole("alertdialog").waitFor();
+  await appears(page.getByRole("alertdialog"), "the alert dialog");
 }
 
 test(

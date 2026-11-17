@@ -5,7 +5,7 @@
  * region, whose name is spoken (F1).
  */
 import type { Page } from "@playwright/test";
-import { declared, test } from "./fixtures.ts";
+import { appears, declared, test } from "./fixtures.ts";
 import { F1, L1, L2 } from "./rules.ts";
 
 const PATH = "/example/message-log/keyboard/";
@@ -38,7 +38,7 @@ test(
     await region(page).hover();
     await page.mouse.wheel(0, -400);
     const button = fixture(page).getByRole("button", { name: "Scroll to end" });
-    await button.waitFor();
+    await appears(button, "the Scroll to end button");
     await button.focus();
     const after = await sr.after(() => page.keyboard.press("Enter"));
     await sr.focused(region(page));

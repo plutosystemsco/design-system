@@ -1,6 +1,7 @@
 /**
  * 022 tests 1 and 2: the seven browser projects, the screen-reader config's
- * reader tag, and the suite's project reads and imports.
+ * reader tag, and the suite's project reads and imports. 032c: neither
+ * config lets a `.only` through in CI.
  *
  * Each config is loaded in a child Bun process, so its environment
  * (`CI`, `SR_READER`) is read at import time as it is in a real run.
@@ -20,6 +21,9 @@ type Project = {
 type Loaded = {
   retries?: number;
   failOnFlakyTests?: boolean;
+  forbidOnly?: boolean;
+  use?: Record<string, unknown>;
+  expect?: { timeout?: number };
   tag?: string | string[];
   projects: Project[];
 };
@@ -35,6 +39,9 @@ function load(
     console.log(JSON.stringify({
       retries: c.retries,
       failOnFlakyTests: c.failOnFlakyTests,
+      forbidOnly: c.forbidOnly,
+      use: c.use ?? {},
+      expect: c.expect ?? {},
       tag: c.tag,
       projects: (c.projects ?? []).map((p) => ({
         name: p.name,
@@ -134,6 +141,86 @@ describe("022 test 1: playwright.config.ts", () => {
     expect(local.retries ?? 0).toBe(0);
     expect(local.failOnFlakyTests ?? false).toBe(false);
   });
+});
+
+describe("032c: no .only reaches CI", () => {
+  // A committed `test.only` would make every shard run that test alone and
+  // pass, and the gate would go green on almost nothing.
+  test("playwright.config.ts forbids .only in CI, and allows it locally", () => {
+    expect(ok(load("playwright.config.ts", { CI: "1" })).forbidOnly).toBe(true);
+    expect(ok(load("playwright.config.ts", {})).forbidOnly ?? false).toBe(
+      false,
+    );
+  });
+  test("playwright.sr.config.ts forbids .only in CI, and allows it locally", () => {
+    for (const r of ["voiceover", "nvda"])
+      expect(
+        ok(load("playwright.sr.config.ts", { CI: "1", SR_READER: r }))
+          .forbidOnly,
+      ).toBe(true);
+    expect(ok(load("playwright.sr.config.ts", {})).forbidOnly ?? false).toBe(
+      false,
+    );
+  });
+});
+
+/** `file:line` of each focused test or suite (a `.only` call) in `source`. */
+function focused(source: string, file = ""): string[] {
+  // A runner name, or a call such as `test.if(c)`, then `.only` and a call.
+  const re =
+    /\b(?:test|it|describe|suite|serial|parallel)\s*\.\s*only\s*[.(]|\)\s*\.\s*only\s*[.(]/;
+  return source
+    .split("\n")
+    .flatMap((line, i) => (re.test(line) ? [`${file}:${i + 1}`] : []));
+}
+
+describe("032c: no .only in any suite's source", () => {
+  // Bun 1.4 refuses `.only` when CI is set, and Playwright now does too; this
+  // also catches one locally, and under `CI=false`, before a push.
+  test("no file under tests/ focuses a test or a suite", () => {
+    const files = readdirSync("tests", { recursive: true })
+      .map(String)
+      .filter((f) => /\.(ts|js|svelte)$/.test(f));
+    expect(
+      files.flatMap((f) =>
+        focused(readFileSync(path.join("tests", f), "utf8"), f),
+      ),
+    ).toEqual([]);
+  });
+  test("the check sees each form (fixture)", () => {
+    const only = ".on" + "ly";
+    expect(focused(`test${only}("x", () => {});`)).toEqual([":1"]);
+    expect(focused(`\n  describe${only}("x", () => {});`)).toEqual([":2"]);
+    expect(focused(`it${only}.each([1])("x", () => {});`)).toEqual([":1"]);
+    expect(focused(`test ${only.slice(1)}`)).toEqual([]);
+    expect(focused(`parseFlags(["--only", "button"]).only`)).toEqual([]);
+    // The change review, finding 7.
+    expect(focused(`test.describe.serial${only}("x", () => {});`)).toEqual([
+      ":1",
+    ]);
+    expect(focused(`test.describe.parallel${only}("x", () => {});`)).toEqual([
+      ":1",
+    ]);
+    expect(focused(`test.if(linux)${only}("x", () => {});`)).toEqual([":1"]);
+    expect(focused(`test.skipIf(mac)${only}("x", () => {});`)).toEqual([":1"]);
+  });
+});
+
+describe("022aa: every screen-reader action and assertion has a bound", () => {
+  // `appears()` bounds the suite's waits (`sr-static.test.ts`). These bound
+  // the rest: a locator action (`focus()`, `click()`) and a navigation,
+  // which Playwright otherwise lets run to the 5-minute test timeout, and a
+  // web-first assertion, which `expect.timeout` bounds (5 s unless set).
+  for (const env of [{}, { CI: "1", SR_READER: "voiceover" }])
+    test(`actionTimeout, navigationTimeout and expect.timeout are set and finite (${"CI" in env ? "CI" : "local"})`, () => {
+      const c = ok(load("playwright.sr.config.ts", env));
+      for (const key of ["actionTimeout", "navigationTimeout"]) {
+        expect(typeof c.use?.[key], key).toBe("number");
+        expect(c.use?.[key] as number, key).toBeGreaterThan(0);
+        expect(c.use?.[key] as number, key).toBeLessThanOrEqual(60_000);
+      }
+      expect(c.expect?.timeout ?? 5000).toBeGreaterThan(0);
+    });
 });
 
 describe("022 test 1: playwright.sr.config.ts tags every test with its reader", () => {

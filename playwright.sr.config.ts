@@ -1,6 +1,7 @@
 import { withGuidepup } from "@guidepup/playwright";
 import { defineConfig, devices } from "@playwright/test";
 import { reader } from "./tests/sr/reader.ts";
+import { WAIT_MS } from "./tests/sr/sr.ts";
 import { BASE_URL, server } from "./tests/server.ts";
 
 /**
@@ -33,6 +34,8 @@ const config = withGuidepup({
   testMatch: /\.sr\.ts$/,
   tag: `@reader-${reader()}`,
   timeout: 5 * 60_000,
+  // 032c: a committed `.only` fails a CI run, never narrows it.
+  forbidOnly: CI,
   // 022 decision 18: speech timing on shared runners. A retried pass is
   // listed as flaky; on a release run it is ledgered (Q2).
   retries: CI ? 2 : 0,
@@ -40,7 +43,15 @@ const config = withGuidepup({
   // cancelled shard's log shows its pace.
   reporter: CI ? [["blob"], ["list"]] : "list",
   webServer: server(),
-  use: { baseURL: BASE_URL, viewport: VIEWPORT },
+  // 022aa: a locator action or a navigation that never ends fails with its
+  // bound, not at the test's timeout. The suite's own waits take theirs
+  // from `appears()`, which records why.
+  use: {
+    baseURL: BASE_URL,
+    viewport: VIEWPORT,
+    actionTimeout: WAIT_MS,
+    navigationTimeout: 3 * WAIT_MS,
+  },
   projects: [
     {
       name: "webkit",

@@ -295,11 +295,15 @@ describe("the Shiki session's convergence (decision 16)", () => {
 });
 
 describe("the streaming budget (decision 20)", () => {
-  // A wall-clock budget: one untimed stream first warms the session and the
-  // engine, then the best of three timed streams' p95 is held to 4 ms, so one
-  // stream slowed by a loaded machine does not fail it (019 change review,
-  // finding 6).
-  test("a 2,000-line stream in 50 chunks through one session: 4 ms or less per chunk, p95, the best of 3 after a warm-up", async () => {
+  // A wall-clock budget, judged whole stream by whole stream (022ab). One
+  // untimed stream warms the session and the engine. Then five timed streams
+  // run, each with its own p95 per chunk, and the best stream's p95 is held
+  // to 5 ms (reset from 4 ms by 022ab: CI's runners read 2.9 to 4.2 ms on
+  // the same code; 013's Landing notes). While the best is over, more
+  // streams run, up to 15: a loaded machine slows some streams, and one
+  // clean stream is enough. A stall that moves from stream to stream still
+  // raises every stream's p95, so it fails (the change review, finding 1).
+  test("a 2,000-line stream in 50 chunks through one session: 5 ms or less per chunk, p95, the best of 5 to 15 streams after a warm-up", async () => {
     const highlighter = (await loadHighlighter("python")) as Highlighter;
     const base = specimen("python");
     let text = "";
@@ -307,7 +311,7 @@ describe("the streaming budget (decision 20)", () => {
     text = text.split("\n").slice(0, 2000).join("\n");
     const size = Math.ceil(text.length / 50);
 
-    /** One stream through a new session: its per-chunk times, sorted. */
+    /** One stream through a new session: each chunk's time, in order. */
     function stream(): number[] {
       const session = highlighter.session("");
       session.lines();
@@ -329,16 +333,21 @@ describe("the streaming budget (decision 20)", () => {
         shown = next;
       }
       session.dispose();
-      return times.sort((a, b) => a - b);
+      return times;
     }
 
+    const p95 = (t: number[]) =>
+      [...t].sort((a, b) => a - b)[Math.ceil(0.95 * t.length) - 1]!;
+    const BUDGET = 5; // ms per chunk, p95
     stream(); // the warm-up, untimed
-    const runs = [stream(), stream(), stream()];
-    const p95s = runs.map((t) => t[Math.ceil(0.95 * t.length) - 1]!);
+    const p95s: number[] = [];
+    while (p95s.length < 5 || (p95s.length < 15 && Math.min(...p95s) > BUDGET))
+      p95s.push(p95(stream()));
     const best = Math.min(...p95s);
+    // The change review, finding 2: CI's `checks` log carries the figure.
     console.log(
-      `stream: p95 ${p95s.map((p) => p.toFixed(2)).join(", ")} ms per chunk; best ${best.toFixed(2)}`,
+      `stream: best p95 ${best.toFixed(2)} ms per chunk, of ${p95s.length} streams: ${p95s.map((p) => p.toFixed(2)).join(", ")}`,
     );
-    expect(best).toBeLessThanOrEqual(4);
+    expect(best).toBeLessThanOrEqual(BUDGET);
   }, 60_000);
 });

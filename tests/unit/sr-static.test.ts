@@ -70,3 +70,76 @@ describe("022 test 5a: no annotation is added at run time", () => {
     expect(bare).toEqual([]);
   });
 });
+
+/**
+ * 022aa: the waits in a source that have no bound, as `file:line`. A wait is
+ * a Playwright call that waits for the page (`waitFor`, `waitForSelector`,
+ * `waitForFunction`, `waitForURL`, `waitForEvent`, `waitForLoadState`,
+ * `waitForResponse`, `waitForRequest`), an `expect.poll` or a `toPass`. It
+ * is bounded when its arguments name a `timeout` that is not 0. A
+ * `waitForTimeout` is a bound in itself. A web-first assertion
+ * (`toBeVisible()` and the rest) is bounded by the config's `expect.timeout`
+ * (`matrix.test.ts`).
+ */
+export function unboundedWaits(source: string, file = ""): string[] {
+  const call =
+    /\.\s*(?:waitFor(?:Selector|Function|URL|Event|LoadState|Response|Request)?|toPass)\s*\(|\bexpect\s*\.\s*poll\s*\(/g;
+  const found: string[] = [];
+  for (const m of source.matchAll(call)) {
+    // The call's arguments: to the parenthesis that closes it, past strings.
+    let depth = 1;
+    let i = m.index + m[0].length;
+    const from = i;
+    for (let quote = ""; i < source.length && depth > 0; i++) {
+      const c = source[i]!;
+      if (quote) {
+        if (c === "\\") i++;
+        else if (c === quote) quote = "";
+      } else if (c === '"' || c === "'" || c === "`") quote = c;
+      else if (c === "(") depth++;
+      else if (c === ")") depth--;
+    }
+    const args = source.slice(from, i - 1);
+    if (!/\btimeout\b/.test(args) || /\btimeout\s*:\s*0\b/.test(args))
+      found.push(`${file}:${source.slice(0, m.index).split("\n").length}`);
+  }
+  return found;
+}
+
+describe("022aa: no screen-reader wait without a bound", () => {
+  test("every wait in tests/sr/ has a timeout", () => {
+    const found = FILES.flatMap((f) =>
+      unboundedWaits(readFileSync(path.join(DIR, f), "utf8"), f),
+    );
+    expect(found).toEqual([]);
+  });
+
+  test("the check sees each form (fixture)", () => {
+    expect(unboundedWaits(`await page.getByRole("dialog").waitFor();`)).toEqual(
+      [":1"],
+    );
+    expect(
+      unboundedWaits(
+        `await menu(page)\n  .first()\n  .waitFor({ state: "attached" });`,
+      ),
+    ).toEqual([":3"]);
+    expect(unboundedWaits(`await x.waitFor({ timeout: 0 });`)).toEqual([":1"]);
+    expect(unboundedWaits(`await page.waitForSelector("main");`)).toEqual([
+      ":1",
+    ]);
+    expect(unboundedWaits(`await page.waitForFunction(() => ok());`)).toEqual([
+      ":1",
+    ]);
+    expect(unboundedWaits(`await expect.poll(() => n()).toBe(1);`)).toEqual([
+      ":1",
+    ]);
+    expect(unboundedWaits(`await expect(async () => f()).toPass();`)).toEqual([
+      ":1",
+    ]);
+    expect(
+      unboundedWaits(
+        `await x.waitFor({ state: "detached", timeout: 2000 });\nawait page.waitForTimeout(900);\nawait expect.poll(() => n(), { timeout: 5_000 }).toBe(1);\nawait x.filter({ hasText: "a (b" }).waitFor({ timeout: WAIT_MS });`,
+      ),
+    ).toEqual([]);
+  });
+});

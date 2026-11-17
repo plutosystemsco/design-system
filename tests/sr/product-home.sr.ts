@@ -6,7 +6,7 @@
  * (O2, hearing `sheet`), and Escape returns to the menu button (O3).
  */
 import type { Page } from "@playwright/test";
-import { declared, test } from "./fixtures.ts";
+import { appears, declared, test } from "./fixtures.ts";
 import { L1, O1, O2, O3 } from "./rules.ts";
 
 const PATH = "/view/product-home/";
@@ -19,7 +19,7 @@ const menu = (page: Page) => page.getByRole("button", { name: "Menu" });
 
 const pressToOpen = async (page: Page) => {
   await page.keyboard.press("Enter");
-  await page.getByRole("dialog").waitFor();
+  await appears(page.getByRole("dialog"), "the navigation dialog");
 };
 
 test(

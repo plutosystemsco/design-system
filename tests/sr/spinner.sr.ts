@@ -7,7 +7,7 @@
  * no site file changes.
  */
 import type { Page } from "@playwright/test";
-import { declared, test } from "./fixtures.ts";
+import { appears, declared, test } from "./fixtures.ts";
 import { L1, L2 } from "./rules.ts";
 
 const PATH = "/example/spinner/variants/";
@@ -33,7 +33,7 @@ test(
   declared("spinner", ["L1", "L2"]),
   async ({ page, sr }) => {
     await sr.open(PATH);
-    await label(page).waitFor({ state: "attached" });
+    await appears(label(page), "the spinner's label", { state: "attached" });
     await setLabel(page, "");
     const before = await sr.before();
     const after = await sr.after(() => setLabel(page, LABEL));
