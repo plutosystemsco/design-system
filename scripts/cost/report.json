@@ -116,9 +116,9 @@
     "outputHash": "67b6685c60a3cfc6a165e21ebdbabcdbfffdf61cd4008a2903e4f22b98e3ad55"
   },
   "catalogue": {
-    "js": 379349,
-    "css": 16846,
-    "sumOfAlone": { "js": 1126392, "css": 64143 }
+    "js": 379366,
+    "css": 16851,
+    "sumOfAlone": { "js": 1126399, "css": 64163 }
   },
   "items": {
     "utils": {
@@ -856,16 +856,16 @@
       "cases": {}
     },
     "error-summary": {
-      "hash": "36ea7f7ca1a024fc7579b4097ace777be0aad40359b8eb0230bff2e742bbcc4d",
+      "hash": "ffe2ac2fd005d551c3b29bd079ff8617bf67cb32881650ecd0c0421d6520f8ca",
       "runtimeHash": "3e52b2f7dbcf31b7dfe45de85af2b3f901d6fd88d176ca16d9302879251b13b6",
-      "outputHash": "47d6106ce1b0818b1e0b6990464522b73ffcd090baf233d901cf37c63a325175",
+      "outputHash": "e7bedb7af2489810f7ec7c78efd459720c8bdc8a4b12407d29c6ff0bebf671ee",
       "run": "2026-11-16T06:27:03.737Z",
       "size": {
-        "js": 11875,
-        "css": 906,
+        "js": 11882,
+        "css": 926,
         "lazy": 0,
         "assets": 0,
-        "brotli": { "js": 10655, "css": 801 }
+        "brotli": { "js": 10688, "css": 826 }
       },
       "hydrate": { "ms": 35.3, "spread": [27.6, 46.6], "settledMs": null },
       "interaction": {
@@ -880,9 +880,9 @@
       },
       "route": "/",
       "breakdown": [
-        { "source": "runtime", "js": 5835 },
-        { "source": "package:tailwind-variants", "js": 4160 },
-        { "source": "own", "js": 943 },
+        { "source": "runtime", "js": 5838 },
+        { "source": "package:tailwind-variants", "js": 4162 },
+        { "source": "own", "js": 945 },
         { "source": "package:phosphor-svelte", "js": 665 },
         { "source": "item:alert", "js": 272 }
       ],
@@ -2016,16 +2016,16 @@
       "cases": {}
     },
     "sign-in": {
-      "hash": "b47211d584963e3e8e483c9ae3722aebf15cdd49be51eae8b01a72de19971a94",
+      "hash": "b63cc32ff9d20cc76fbfb25f4ae3079f5cda9a50fcb12f81b72b3ca9150b519e",
       "runtimeHash": "ad89d2f52126bcd6dda906dfe6b54f723195c250ca3c276f350ca3770b762f16",
-      "outputHash": "be8fbb982520741eaf55e5124d2de95dece6dbe6639292ae266bde17bfd54464",
+      "outputHash": "6cf5f23a4cb6390ed918b7bdb233b2677fe81f08e2f7096ce623ca09f45fef8c",
       "run": "2026-11-16T06:27:03.737Z",
       "size": {
-        "js": 22024,
-        "css": 3525,
+        "js": 22032,
+        "css": 3540,
         "lazy": 248,
         "assets": 0,
-        "brotli": { "js": 19680, "css": 3057 }
+        "brotli": { "js": 19633, "css": 3060 }
       },
       "hydrate": { "ms": 60.9, "spread": [54.1, 98.4], "settledMs": null },
       "interaction": {
@@ -2040,19 +2040,19 @@
       },
       "route": "/sign-in",
       "breakdown": [
-        { "source": "runtime", "js": 6584 },
-        { "source": "package:tailwind-variants", "js": 4113 },
-        { "source": "package:phosphor-svelte", "js": 1584 },
+        { "source": "runtime", "js": 6586 },
+        { "source": "package:tailwind-variants", "js": 4114 },
+        { "source": "package:phosphor-svelte", "js": 1585 },
         { "source": "own", "js": 1502 },
         { "source": "item:field", "js": 1464 },
         { "source": "package:svelte-toolbelt", "js": 1381 },
         { "source": "item:input-group", "js": 1078 },
-        { "source": "item:error-summary", "js": 866 },
-        { "source": "item:card", "js": 769 },
+        { "source": "item:error-summary", "js": 868 },
+        { "source": "item:card", "js": 770 },
         { "source": "item:button", "js": 555 },
         { "source": "package:inline-style-parser", "js": 481 },
         { "source": "package:bits-ui", "js": 471 },
-        { "source": "item:input", "js": 342 },
+        { "source": "item:input", "js": 343 },
         { "source": "item:alert", "js": 270 },
         { "source": "item:spinner", "js": 205 },
         { "source": "item:label", "js": 145 },
@@ -2062,16 +2062,16 @@
       "cases": {}
     },
     "sign-up": {
-      "hash": "8c6b71b32f5e7eb299885b71d3c62644a3d5507e506d4159eae54b3f0eb40535",
+      "hash": "65181064f9f0775295fb600ddd7b63636b2af3ec8ea1287f64f6a5b2cef1a3eb",
       "runtimeHash": "0cb64080b94998901cf2420e882231a959c395abd75b5cc9121470977f4bdd1f",
-      "outputHash": "a1a0611cc5b775f4576cf0b23649fb8ef72ef5446ff81bfa09b5e6cab42633f8",
+      "outputHash": "29dc18fa2ba274d52e56ac9913feec1601a73ca260543e2fd3142dc645fabb4e",
       "run": "2026-11-16T06:27:03.737Z",
       "size": {
-        "js": 29720,
-        "css": 3820,
+        "js": 29730,
+        "css": 3839,
         "lazy": 245,
         "assets": 0,
-        "brotli": { "js": 25876, "css": 3267 }
+        "brotli": { "js": 25874, "css": 3284 }
       },
       "hydrate": { "ms": 64, "spread": [56.8, 81.7], "settledMs": null },
       "interaction": {
@@ -2086,20 +2086,20 @@
       },
       "route": "/sign-up",
       "breakdown": [
-        { "source": "runtime", "js": 6480 },
-        { "source": "package:tailwind-variants", "js": 4013 },
-        { "source": "own", "js": 3835 },
-        { "source": "package:bits-ui", "js": 3473 },
+        { "source": "runtime", "js": 6482 },
+        { "source": "package:tailwind-variants", "js": 4014 },
+        { "source": "own", "js": 3836 },
+        { "source": "package:bits-ui", "js": 3474 },
         { "source": "package:phosphor-svelte", "js": 2069 },
         { "source": "package:svelte-toolbelt", "js": 1747 },
-        { "source": "item:field", "js": 1430 },
+        { "source": "item:field", "js": 1431 },
         { "source": "item:input-group", "js": 1053 },
         { "source": "package:runed", "js": 990 },
         { "source": "item:input-otp", "js": 870 },
-        { "source": "item:error-summary", "js": 846 },
+        { "source": "item:error-summary", "js": 849 },
         { "source": "item:card", "js": 753 },
         { "source": "item:button", "js": 542 },
-        { "source": "package:inline-style-parser", "js": 469 },
+        { "source": "package:inline-style-parser", "js": 470 },
         { "source": "item:input", "js": 335 },
         { "source": "item:alert", "js": 264 },
         { "source": "item:spinner", "js": 200 },
@@ -2136,16 +2136,16 @@
       "cases": {}
     },
     "settings": {
-      "hash": "9795ae17c53428cdf75a093d6ecadbfbd1c7fe8632834c1c2338e82fd6070fdf",
+      "hash": "49e07e20667aaf0946440b2cfdf6115b108622a6aef3f48fcc813e4a5b848dd1",
       "runtimeHash": "5abfd70dc3e1af9ebb91edf514148c4998a4a0bd832248e69ccb5f8b66d51aa1",
-      "outputHash": "7ddd2b1511e64534e1b3395afea125f18b2801454ac5809e2ec6414e0083970a",
+      "outputHash": "accd64a389de8dc910555ca109f524914d6262bd0fe70c0c9fd235172a708f45",
       "run": "2026-11-16T06:27:03.737Z",
       "size": {
-        "js": 40686,
-        "css": 4004,
+        "js": 40694,
+        "css": 4022,
         "lazy": 240,
         "assets": 0,
-        "brotli": { "js": 35634, "css": 3461 }
+        "brotli": { "js": 35635, "css": 3471 }
       },
       "hydrate": { "ms": 121.6, "spread": [99.9, 139.1], "settledMs": null },
       "interaction": {
@@ -2160,17 +2160,17 @@
       },
       "route": "/settings",
       "breakdown": [
-        { "source": "package:bits-ui", "js": 12283 },
-        { "source": "runtime", "js": 7004 },
-        { "source": "package:tailwind-variants", "js": 3642 },
+        { "source": "package:bits-ui", "js": 12285 },
+        { "source": "runtime", "js": 7005 },
+        { "source": "package:tailwind-variants", "js": 3643 },
         { "source": "own", "js": 3160 },
-        { "source": "package:phosphor-svelte", "js": 2885 },
+        { "source": "package:phosphor-svelte", "js": 2886 },
         { "source": "item:field", "js": 1954 },
-        { "source": "package:svelte-toolbelt", "js": 1880 },
+        { "source": "package:svelte-toolbelt", "js": 1881 },
         { "source": "package:tabbable", "js": 1605 },
         { "source": "item:alert-dialog", "js": 1430 },
         { "source": "package:runed", "js": 911 },
-        { "source": "item:error-summary", "js": 768 },
+        { "source": "item:error-summary", "js": 770 },
         { "source": "item:button", "js": 492 },
         { "source": "item:radio-group", "js": 438 },
         { "source": "package:inline-style-parser", "js": 426 },

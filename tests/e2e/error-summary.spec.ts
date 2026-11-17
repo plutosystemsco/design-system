@@ -828,8 +828,7 @@ test.describe("019b: the error summary's messages are read once", () => {
             links.map((a) => {
               const range = document.createRange();
               range.selectNodeContents(a);
-              // Before 019b the box was the list (the guard's before-run).
-              const box = a.closest(sel) ?? a.closest("ul");
+              const box = a.closest(sel);
               return {
                 text: a.textContent?.trim(),
                 link: a.getBoundingClientRect().width,
@@ -848,4 +847,60 @@ test.describe("019b: the error summary's messages are read once", () => {
         expect(w.link, w.text).toBeLessThan(w.box);
       }
     });
+});
+
+/**
+ * 019d: a long error message wraps at 320 px (WCAG 1.4.10, Reflow). On the
+ * keyboard example, after an empty submit, the first link and the title are
+ * given one unbreakable 64-letter word each, as an app's message might hold
+ * (a pasted token, an address). The page must not scroll sideways, and
+ * neither text may leave the summary's box.
+ */
+const UNBREAKABLE = "Unbreakable".repeat(6).slice(0, 64);
+
+test.describe("019d: a long error message wraps at 320 px", () => {
+  test("1. at 320: a link and a title holding one 64-letter word wrap inside the summary, and the page does not scroll sideways", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 320, height: 700 });
+    await openView(page, EXAMPLE);
+    await submitEmpty(page);
+    const root = summary(page);
+    await root.evaluate((el, word) => {
+      el.querySelector("a")!.textContent = word;
+      el.querySelector('[data-slot="error-summary-title"]')!.textContent = word;
+    }, UNBREAKABLE);
+    const got = await root.evaluate((el) => {
+      const box = el.getBoundingClientRect();
+      const style = getComputedStyle(el);
+      const inner = {
+        left: box.left + parseFloat(style.borderLeftWidth),
+        right: box.right - parseFloat(style.borderRightWidth),
+      };
+      const text = (node: Element) => {
+        const range = document.createRange();
+        range.selectNodeContents(node);
+        const r = range.getBoundingClientRect();
+        return { left: r.left, right: r.right };
+      };
+      return {
+        page: document.documentElement.scrollWidth,
+        viewport: document.documentElement.clientWidth,
+        box: { left: box.left, right: box.right },
+        inner,
+        overflow: el.scrollWidth - el.clientWidth,
+        link: text(el.querySelector("a")!),
+        title: text(el.querySelector('[data-slot="error-summary-title"]')!),
+      };
+    });
+    const note = `019d at 320: ${JSON.stringify(got)}`;
+    console.log(note);
+    expect(got.page, note).toBeLessThanOrEqual(got.viewport);
+    expect(got.box.right, note).toBeLessThanOrEqual(got.viewport + 0.5);
+    expect(got.overflow, note).toBeLessThanOrEqual(0);
+    for (const t of [got.link, got.title]) {
+      expect(t.left, note).toBeGreaterThanOrEqual(got.inner.left - 0.5);
+      expect(t.right, note).toBeLessThanOrEqual(got.inner.right + 0.5);
+    }
+  });
 });
