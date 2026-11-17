@@ -1,13 +1,13 @@
 diff --git a/src/lib/registry/ui/error-summary/error-summary.svelte b/src/lib/registry/ui/error-summary/error-summary.svelte
-index b634cd4..de80412 100644
+index 3bba191..f9d94d1 100644
 --- a/src/lib/registry/ui/error-summary/error-summary.svelte
 +++ b/src/lib/registry/ui/error-summary/error-summary.svelte
-@@ -151,7 +151,7 @@
+@@ -154,7 +154,7 @@
      {#key attempt}
        <div
          data-slot="error-summary-content"
 -        role={announce ? "alert" : null}
 +        role={null}
-         class="col-start-2 row-span-2 grid gap-1"
+         class="col-start-2 row-span-2 grid gap-1 wrap-anywhere"
        >
          <svelte:element

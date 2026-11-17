@@ -137,6 +137,8 @@
   new value renders the content anew, so an unchanged submit is announced
   again.
   The links are not in a list, so a reader reads each message once.
+  A long word in the title, the message or a link wraps anywhere, so the
+  summary never makes the page scroll sideways at 320 px.
 -->
 {#if errors.length > 0 || message}
   <Alert
@@ -153,7 +155,7 @@
       <div
         data-slot="error-summary-content"
         role={announce ? "alert" : null}
-        class="col-start-2 row-span-2 grid gap-1"
+        class="col-start-2 row-span-2 grid gap-1 wrap-anywhere"
       >
         <svelte:element
           this={`h${level}`}

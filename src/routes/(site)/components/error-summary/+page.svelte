@@ -76,6 +76,11 @@
       <ul class="mt-2 grid list-disc gap-1 ps-5">
         <li>Move focus to the summary's root after every failed submit.</li>
         <li>
+          Give the summary its own row, as wide as the form. A long word wraps
+          inside it; squeezed into a narrow column beside something wide, its
+          words break letter by letter.
+        </li>
+        <li>
           On each failed submit, raise <code>attempt</code> by one, in the same update
           that sets the errors, then move focus. Never raise it while the person types.
         </li>
