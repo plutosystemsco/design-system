@@ -2727,3 +2727,64 @@ describe("022t: the changelog", () => {
     expect(lines.indexOf(blocks[0]!)).toBe(lines.indexOf(item[0]!) + 1);
   });
 });
+
+/**
+ * 019b criteria 8 and 9: the links leave the list. The 0.13.0 entry's first
+ * part holds one interface-change bullet for it, after 022t's two; the page's
+ * "What Kuiper provides" says each message is read once; the item's header
+ * comment says the links are not in a list.
+ */
+describe("019b: the error summary's messages are read once", () => {
+  const log = readFileSync("CHANGELOG.md", "utf8");
+  const lines = foldedParts(log).first.split("\n");
+  const bullet = lines.filter((l) =>
+    l.startsWith(
+      "- `error-summary`: **interface change.** The links are no longer in a list.",
+    ),
+  );
+
+  test("one bullet in the 0.13.0 entry, an interface change, naming error-summary-links and add error-summary, after 022t's blocks bullet", () => {
+    expect(bullet).toHaveLength(1);
+    expect(log.split(bullet[0]!).length - 1, "once in the whole log").toBe(1);
+    for (const name of [
+      '`data-slot="error-summary-links"`',
+      "`[data-slot=error-summary-links]`",
+      "`add error-summary`",
+    ])
+      expect(bullet[0], name).toContain(name);
+    const blocks = lines.findIndex((l) =>
+      l.startsWith("- `sign-in`, `sign-up`, `settings`: no interface change."),
+    );
+    expect(blocks).toBeGreaterThan(-1);
+    expect(lines.indexOf(bullet[0]!)).toBe(blocks + 1);
+  });
+
+  test("the page's What Kuiper provides says each message is read once", () => {
+    const page = readFileSync(
+      "src/routes/(site)/components/error-summary/+page.svelte",
+      "utf8",
+    );
+    const at = page.indexOf("<strong>What Kuiper provides.</strong>");
+    expect(at).toBeGreaterThan(-1);
+    const provides = page
+      .slice(at, page.indexOf("<strong>Your part.</strong>", at))
+      .replace(/<[^>]+>/g, " ")
+      .replace(/\s+/g, " ");
+    expect(provides).toContain(
+      "The links are not in a list, so each message is read once. A reader does not say how many there are.",
+    );
+  });
+
+  test("the item's header comment says the links are not in a list", () => {
+    const item = readFileSync(
+      "src/lib/registry/ui/error-summary/error-summary.svelte",
+      "utf8",
+    );
+    const markup = item.slice(item.lastIndexOf("</script>"));
+    const comment = (/<!--([\s\S]*?)-->/.exec(markup)?.[1] ?? "").replace(
+      /\s+/g,
+      " ",
+    );
+    expect(comment).toContain("not in a list");
+  });
+});
