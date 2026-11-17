@@ -2,7 +2,7 @@
 
 Reviews two small changes, each with its own specification:
 
-- [`019d`](../specifications/019d-a-long-error-message-wraps-at-320-px.md), a long error message wraps at 320 px;
+- `019d`, a long error message wraps at 320 px (its spec as reviewed is in commit `c51b65b`; held back, to be rebuilt on the list markup);
 - [`024i`](../specifications/024i-an-all-digit-commit-hash-is-still-a-commit.md), an all-digit commit hash is still a commit.
 
 Both came from [`019b`'s change review](019b-the-error-summarys-messages-are-read-once-pr-2026-11-17.md), findings 2 and 1. This reviewer wrote neither specification and none of the code (constitution §5).
@@ -130,7 +130,7 @@ Findings 5 to 8 are records for the landing notes, and one optional space.
 
 ## Disposition
 
-By the design lead, 2026-11-17. `019d`: findings 1 and 2 written in (the page's "Your part" line, the spec's claim qualified, the roadmap row). `024i`: finding 3 ruled a small change, in its landing notes. Notes 4 and 8 fixed; 5, 6 and 7 recorded. **Closing verdicts: both land.**
+By the design lead, 2026-11-17. `019d`: findings 1 and 2 written in (the page's "Your part" line, the spec's claim qualified, the roadmap row). `024i`: finding 3 ruled a small change, in its landing notes. Notes 4 and 8 fixed; 5, 6 and 7 recorded. **Closing verdicts: both land.** Then, after run 8, `024i` landed alone and `019d` was held back (the review of `019e` and `024i`, `reviews/019e-024i-the-list-returns-and-the-digit-hash-pr-2026-11-17.md`).
 
-**Afterwards, 2026-11-17.** `c51b65b` landed both. `019e` then reverted `019b` to the list markup (the design lead's ruling, [the eighth matrix run](../research/2026-11-17-the-eighth-matrix-run.md) §11, option (a)). `019d` styled `019b`'s links box, so it was held back, to be rebuilt on the list markup; its findings 1, 2 and 5 go with it. `024i` was re-applied alone, on `019e`, with note 8's space made to hold under Prettier (`024i`'s landing notes, "Re-applied alone"). This review's `019d` verdict and figures describe the box-markup build, and do not stand for the rebuild.
+**Afterwards, 2026-11-17.** `c51b65b` committed both, on a session branch, not a release branch. `019e` then reverted `019b` to the list markup (the design lead's ruling, [the eighth matrix run](../research/2026-11-17-the-eighth-matrix-run.md) §11, option (a)). `019d` styled `019b`'s links box, so it was held back, to be rebuilt on the list markup; its findings 1, 2 and 5 go with it. `024i` was re-applied alone, on `019e`, with note 8's space made to hold under Prettier (`024i`'s landing notes, "Re-applied alone"). This review's `019d` verdict and figures describe the box-markup build, and do not stand for the rebuild.
 

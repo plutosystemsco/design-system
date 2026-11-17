@@ -181,7 +181,7 @@ Every check is written before the code. **Seen failing** means run on `022t`'s i
 
 ## Open questions
 
-**Answered, 2026-11-17.** 1 (a), the links straight in a box: the owner. 2 (a), the count is lost now, and 3 (a), `019b` stays landed if a VoiceOver pair still doubles a message: the owner left both to the design lead ("you are in charge of delivering value"; "be a good steward of the project"), who ruled so. The title already says there are errors and each link names its field, so a spoken count is a feature, not a fix: it is not queued, and returns only if a speech run shows readers need it. NVDA with Firefox is fixed either way, so a VoiceOver double opens research, not a revert.
+**Answered, 2026-11-17.** 1 (a), the links straight in a box: the owner. 2 (a), the count is lost now, and 3 (a), `019b` stays landed if a VoiceOver pair still doubles a message: the owner left both to the design lead ("you are in charge of delivering value"; "be a good steward of the project"), who ruled so. The title already says there are errors and each link names its field, so a spoken count is a feature, not a fix: it is not queued, and returns only if a speech run shows readers need it. NVDA with Firefox is fixed either way, so a VoiceOver double opens research, not a revert. *(Superseded: `019b` was reverted by `019e`, 2026-11-17.)*
 
 For the owner. The specification takes the recommended option in each.
 
@@ -211,7 +211,7 @@ The spec review, 2026-11-17, raised 7 findings (3 Medium, 4 Low). Each is answer
 
 ## Landing notes
 
-Built 2026-11-17 by the lane-I builder, in `.claude/worktrees/lane-i-019b` (branch `lane-i-019b`, at `6482736`). Not committed. It waits for its change review.
+Built 2026-11-17 by the lane-I builder, in `.claude/worktrees/lane-i-019b` (branch `lane-i-019b`, at `6482736`). Not committed. It waits for its change review. *(Superseded: `019b` was reverted by `019e`, 2026-11-17.)*
 
 ### The seen-failing run (criterion 11, "Depends on")
 
@@ -303,9 +303,11 @@ At 1440 and at 390, the same on the base and the built change:
 
 ### The change review (2026-11-17)
 
-`reviews/019b-the-error-summarys-messages-are-read-once-pr-2026-11-17.md`: lands. The design lead wrote in finding 3 (VO wk kept in decision 9's record) and finding 4 (the migration note names an app's own rule and a test by `ul` or `li`). Findings 1 and 2 are not this change's: the all-digit commit hash that fails app-shell A3, and a long unbreakable message overflowing at 320 px, both queued as small changes. Criterion 12: six `cost --only error-summary` runs were all noisy (hydrate 46.7 to 74.6 ms on the change, 39.3 and 46.1 on the base, against 53), so it is not held here; the tag's cost run on the release machine holds or clears it. The review's full unit run had one failure, the streaming p95 (3 of 3 alone), beside the builder's clean run. Criterion 4's fallback to the old `ul` stays until the next change to this item, which drops it.
+`reviews/019b-the-error-summarys-messages-are-read-once-pr-2026-11-17.md`: lands. The design lead wrote in finding 3 (VO wk kept in decision 9's record) and finding 4 (the migration note names an app's own rule and a test by `ul` or `li`). Findings 1 and 2 are not this change's: the all-digit commit hash that fails app-shell A3, and a long unbreakable message overflowing at 320 px, both queued as small changes. Criterion 12: six `cost --only error-summary` runs were all noisy (hydrate 46.7 to 74.6 ms on the change, 39.3 and 46.1 on the base, against 53), so it is not held here; the tag's cost run on the release machine holds or clears it. The review's full unit run had one failure, the streaming p95 (3 of 3 alone), beside the builder's clean run. Criterion 4's fallback to the old `ul` stays until the next change to this item, which drops it. *(Superseded: `019b` was reverted by `019e`, 2026-11-17.)*
 
 ### Waiting on others
+
+*Moot: `019b` was reverted by `019e` (2026-11-17). Decision 9's record and criteria 11 to 14 below are closed unrun.*
 
 - **Criterion 11:** the first `matrix` push run carrying this change, `022t` and `022z`. Record its run id here, with each pair's result for the five tests and the link tests, and `022t` criterion 14's result. If VoiceOver reads each message once, add "and VoiceOver" to the bullet's first sentence (decision 6). If it doubles one, amend the bullet and the page sentence with the finding (decisions 6 and 7), and open research (open question 3: it stays landed).
 - **Decision 9:** the first `main` dispatch and the first `double-read` dispatch after this lands record here whether patches 4 and 7b are provable again under NVDA with Firefox, VO chr and VO wk, as decision 9 says. Run 7 shows the witness passing unpatched under VO wk already (*run 7's memo* §3.3, INFERRED there), so VO wk is expected to be provable; the dispatch records it either way (the change review's finding 3, the design lead's ruling).

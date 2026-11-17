@@ -39,7 +39,7 @@ The app-shell page tells apps to copy the same lines. So an app's footer hides a
 
 ## Landing notes
 
-Built 2026-11-17 by a lane-I builder, in the worktree `lane-i-run8`, at `db8fb65`. Not committed. Built after `019d` in the same worktree; the gate ran once for both (see `019d`'s landing notes, "The gate"). `vite.config.ts` is lane S's file; `lane-s-run8` had not touched it (READ, its `git status`).
+Built 2026-11-17 by a lane-I builder, in the worktree `lane-i-run8`, at `db8fb65`. Not committed. Built after `019d` in the same worktree; the gate ran once for both (see `019d`'s landing notes, "The gate", as reviewed in commit `c51b65b`). `vite.config.ts` is lane S's file; `lane-s-run8` had not touched it (READ, its `git status`).
 
 ### Seen failing first (EXECUTED)
 
