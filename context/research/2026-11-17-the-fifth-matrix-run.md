@@ -296,3 +296,134 @@ All figures in minutes.
 - The 9 tests VO chr 2 did not run, so marker, marketing-bar, message-log, message and page-states under VO chr.
 - Any speech: no reader runs here. Every speech claim is READ from the logs.
 - Firefox locally, which this container has no build of. The WebKit repeats ran on this container's Linux, not CI's runner.
+
+## 9. Run 6
+
+Run 6 is [43974717942](https://github.com/plutosystemsco/design-system/actions/runs/43974717942), a push of `b01e754`. Its code is run 5's. So what changes between the two is chance, or the runners.
+
+- **READ:** the job list; the logs of every failed job, read 2026-11-17 through the GitHub connector, each at 1,500 to 2,000 lines so the `list` lines were in; the tails of `browsers (webkit, 1)`, `(webkit, 2)`, `(webkit, 6)`, `voiceover (webkit, 4)` and `nvda (chromium, 3)`; the list of `matrix.yml` runs.
+- **Not read:** the artifacts. Their blob host is still refused here.
+
+### 9.1 Jobs
+
+- **READ:** 45 jobs. 28 succeeded and 17 failed: `checks`, `perf`, five NVDA shards (all but chromium 3), nine VoiceOver shards (all but webkit 4), `gate`.
+- **READ:** against run 5's 19, WebKit shards 1, 2 and 6 now pass, and `checks` now fails. Every other failed job is run 5's.
+- **READ, `checks`:** one unit test failed: "the streaming budget (decision 20) › a 2,000-line stream in 50 chunks … 4 ms or less per chunk, p95" (`tests/unit/highlight-session.test.ts:297`); 1,906 passed. It passed in run 5 on the same code.
+  - **INFERRED:** a wall-clock budget missed on a loaded runner. A timing flake, new in run 6.
+- **READ, `gate`:** "checks is failure", "perf is failure", "voiceover is failure", "nvda is failure". `browsers` is no longer named.
+- **READ, the overlap:** run 6 was created 38 s after run 5 (22:56:10 against 22:55:32). Its first VoiceOver job started at 23:39:22, 2 s after run 5's VO wk 5 ended. Each of the next four started 2 to 4 s after a VoiceOver job of either run ended.
+  - **INFERRED:** both runs shared the same five macOS slots. Run 6's VoiceOver jobs waited 42.6 to 87.9 minutes. The run took 116.1 minutes, `build`'s start to `gate`'s end, against run 5's 62.0.
+
+### 9.2 Browsers and perf
+
+- **READ, WebKit 1, 2 and 6:** 479, 471 and 470 passed, no flaky test. Run 5 had 1 flaky in each, beside 478, 470 and 469.
+- **READ:** so the bar-glass hover (`bar-glass.spec.ts:283`) and the motion page's Replay under reduced motion (`doors.spec.ts:618`) passed first time.
+- **READ:** all 24 browser shards succeeded. **INFERRED:** with `failOnFlakyTests` on, no other browser test flaked either.
+- **READ, perf:** the same three tests failed both attempts, on CLS only; 23 passed.
+
+| Page | Budget | Median CLS, run 6 | Run 5 |
+|---|---|---|---|
+| `/start/` | ≤ 0.02 | 0.048 | 0.048 |
+| `/components/native-select/` | ≤ 0.022 | 0.088 (one run 0.109) | 0.088 |
+| `/changelog/` | ≤ 0.02 | 0.083 (one run 0.108) | 0.083 (one run 0.108) |
+
+### 9.3 Speech, per pair
+
+**READ, the counts:**
+
+| Pair | Failed | Flaky | Not run | Run 5 |
+|---|---|---|---|---|
+| N-chr | 3 | 0 | 0 | 3, 1, 0 |
+| N-ff | 7 | 0 | 0 | 7, 2, 0 |
+| VO chr | 12 | 2 | 9 | 13, 1, 9 |
+| VO wk | 11 | 4 | 0 | 10, 5, 0 |
+| All | 33 | 6 | 9 | 33, 9, 9 |
+
+**The named faults:**
+
+- **error-summary's second submit, READ:** fails 3/3 in all four pairs again. NVDA says "section". VoiceOver names the heading or the group. Repeats.
+- **code-block's "Copied", READ:** NVDA says "Copied. Copied. Copy code" in both browsers, 3/3. Repeats. VO chr passed first time; its one run 5 fault did not recur.
+- **search-field S1 and S2, READ:**
+  - VO chr S2 fails 3/3: first "s. 3 results. …" or "s. des. …", second "i. desi". Repeats.
+  - VO chr S1 failed once, then passed. It was 3/3 in run 5; now a flake.
+  - VO wk S1 and S2 both passed first time. S2 was flaky in run 5.
+- **The four L3 faults under N-ff, READ:** error-summary's insertion, settings, sign-in and sign-up fail 3/3, each message said as a list item, then as its link. Repeats.
+- **Chart C2, READ:** VO chr's walk reads the table's cells, "Visitors 412" and "Visitors 538". C2 faults. Repeats.
+- **The dropdown-menu hang, READ:** VO chr, three attempts of 10.0 minutes, "waitFor: Test ended". Repeats. NVDA and VO wk pass it.
+- **The Quick Note escape, READ:** not seen. No phrase holds "Quick Note".
+  - **READ, new:** VO wk's chart walk spoke the ticks to "Sun", then "image" for its last nine steps. It never reached "Show as table". C1 faults; C2 returns its follow-on X0.
+  - **INFERRED:** VoiceOver's cursor stopped on the plot's image in WebKit. A new way for the same walk to fail; the cause is not seen.
+- **"VoiceOver not running", READ:** three attempts, all in VO wk 3, each about 5 minutes: P3 attempt 1, and the delete confirm's opening and its page behind. The two settings tests passed on retry. None of run 5's four tests met it again.
+  - **READ, new:** P3's retry #1 threw "VoiceOver cannot be started" (`spawnSync /usr/bin/osascript ETIMEDOUT`), run 4's error, in 13.8 s.
+- **"Unable to focus the application window", READ:** in no log. Run 5's three attempts, all passed on retry, are flakes.
+- **The unknown rows, READ:** every run 5 failure repeats, with the same rule and pairs:
+  - F1: app-shell's skip link (VO chr, VO wk), marketing-bar's skip link (VO wk), composer Stop (VO chr, VO wk), P2 (VO chr; VO wk flaky again), P3 (N-chr "Previouspage", VO chr, VO wk), S3 (VO wk);
+  - L1, L4, B1: spinner (VO chr), page-states (VO wk), toast S4 (VO chr), S8 and S10 (VO chr, VO wk);
+  - T1: tooltip (N-ff).
+  - **READ:** run 5's flaky N-ff app-shell skip link and marketing-bar sheet, and N-chr's sign-in summary link, passed first time.
+
+**New in run 6, READ:**
+
+- chat, "a send: the composer's status says Response complete": VO wk fails 3/3, VO chr once then passes. L1, "Response complete" was not spoken whole. Kind: unknown.
+- dialog, "opening speaks the dialog's title": VO wk once, then passes. The overlay's name "Rename project" was not spoken; the phrase is the trigger's. Kind: unknown.
+
+**`022q`'s checks, READ:** no O2 fault, no O2 X0, none of `022q`'s new harness X0s. Every X0 printed is a follow-on X0, as in run 5.
+
+### 9.4 Shard times
+
+The deadline is 40 minutes. "Test" is Playwright's own figure; "Job" and "Waited" come from the job list. All in minutes.
+
+| Shard | Tests | Failed | Flaky | Not run | Test | Run 5 | Job | Waited |
+|---|---|---|---|---|---|---|---|---|
+| N-chr 1 | 32 | 2 | 0 | 0 | 15.5 | 16.1 | 16.9 | 0.0 |
+| N-chr 2 | 26 | 1 | 0 | 0 | 10.6 | 11.5 | 11.9 | 0.0 |
+| N-chr 3 | 29 | 0 | 0 | 0 | 11.2 | 11.8 | 12.4 | 0.0 |
+| N-ff 1 | 32 | 3 | 0 | 0 | 17.5 | 18.1 | 18.7 | 0.0 |
+| N-ff 2 | 26 | 1 | 0 | 0 | 12.6 | 12.3 | 13.9 | 0.0 |
+| N-ff 3 | 29 | 3 | 0 | 0 | 14.5 | 13.7 | 15.7 | 0.0 |
+| VO chr 1 | 19 | 3 | 1 | 0 | 25.8 | 27.1 | 26.9 | 87.9 |
+| VO chr 2 | 17 | 2 | 0 | 9 | **40.0, deadline** | 40.0, deadline | 41.4 | 68.6 |
+| VO chr 3 | 19 | 3 | 1 | 0 | 27.0 | 30.2 | 28.3 | 59.6 |
+| VO chr 4 | 16 | 1 | 0 | 0 | 18.2 | 18.6 | 19.3 | 59.9 |
+| VO chr 5 | 16 | 3 | 0 | 0 | 16.3 | 18.0 | 17.5 | 51.0 |
+| VO wk 1 | 19 | 4 | 1 | 0 | 27.9 | 32.5 | 28.9 | 53.6 |
+| VO wk 2 | 17 | 3 | 0 | 0 | 25.2 | 25.0 | 26.7 | 79.2 |
+| VO wk 3 | 19 | 2 | 3 | 0 | 38.0 | 24.6 | 39.2 | 60.1 |
+| VO wk 4 | 16 | 0 | 0 | 0 | 16.8 | 17.7 | 18.0 | 82.6 |
+| VO wk 5 | 16 | 2 | 0 | 0 | 15.9 | 22.8 | 17.2 | 42.6 |
+
+- **READ:** 15 of 16 shards ended inside the deadline. VO chr 2 did not, again: "Timed out waiting 2400s", 9 tests not run. The dropdown-menu hang took 30.0 of its minutes.
+- **READ:** VO wk 3 ended at 38.0, 2 minutes short. Its three "VoiceOver not running" attempts took about 15 of them.
+- **READ:** all six NVDA shards are under `022` criterion 22's 20-minute bar. Four VoiceOver shards are: VO chr 4, VO chr 5, VO wk 4, VO wk 5.
+
+### 9.5 Run 5's §7 rows in run 6
+
+| Row (§7) | Run 6 |
+|---|---|
+| error-summary: the second submit | repeats, all four pairs |
+| code-block: "Copied" read twice | repeats under NVDA; VO chr's fault: flake (passed in run 6) |
+| search-field S1 and S2 | S2 under VO chr repeats; S1 under VO chr: flake (failed once, passed on retry); S2 under VO wk: flake (passed in run 6) |
+| L3: a list item, then its link | repeats, N-ff, all four tests |
+| chart C2 reads the table | repeats, VO chr |
+| chart walk leaves for Quick Note | flake (passed in run 6): no Quick Note; the VO wk walk fails a new way, on "image" (new in run 6) |
+| dropdown-menu: the sub-menu hang | repeats, VO chr |
+| VO chr 2 past its deadline | repeats |
+| "VoiceOver not running" | repeats, in three other tests (VO wk 3); "VoiceOver cannot be started" once: new in run 6 |
+| "Unable to focus the application window" | flake (passed in run 6): not seen |
+| A focused element's name not in the log | repeats, every test and pair |
+| A live announcement missing | repeats, every test and pair |
+| P3 under N-chr: "Previouspage" | repeats |
+| tooltip T1 | repeats, N-ff |
+| perf: CLS on three pages | repeats, the same values |
+| motion page: Replay under reduced motion | flake (passed in run 6) |
+| bar-glass: the hover read | flake (passed in run 6) |
+| `checks`: the streaming budget | new in run 6 |
+| chat: "Response complete" (VO wk; VO chr flaky) | new in run 6 |
+| dialog: opening, VO wk, flaky | new in run 6 |
+| the two runs share five macOS slots; 116 minutes | new in run 6 |
+
+### 9.6 `022q`'s criteria 6 to 8
+
+- **Criterion 6: not met.** Clause 1 holds, as in run 5: no row fails for the speech memo's reason (READ). Row 10, the chart, still fails under VoiceOver, for reasons the landing notes must name: C2 reads the table (VO chr, as in run 5); the walk stops on "image" (VO wk, new). The other 17 rows pass in every pair that ran them; row 6 needed a retry under VO wk ("VoiceOver not running"), and row 4 did not run under VO chr (READ). Clause 2 fails: VO chr 2 hit its deadline again (READ). Clause 3 holds as far as the logs show: all 87 VoiceOver windows printed have their "item text" beside them (READ); no `phrases.json` was read.
+- **Criterion 7: not yet run.** All six `matrix.yml` runs are pushes; none is a `workflow_dispatch`, so no `mutate` dispatch exists since `022q` landed (READ).
+- **Criterion 8: not met.** The shard times (§9.4, §4) and the per-pair counts (§9.3, §3.1) are ready (READ). The landing notes do not yet record them, and the scorecard's run-log row is not written (READ, `022q`'s Landing notes).
