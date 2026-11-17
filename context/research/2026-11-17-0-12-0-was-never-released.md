@@ -4,7 +4,7 @@
 - **Date:** 2026-11-17
 - **Author:** the design lead
 - **Question:** the owner ruled on 2026-11-17 that 0.12.0 was never released, and that the next release is 0.13.0 (`research/2026-11-17-structural-review.md`, "The owner's answers", L2 (c)). What in the tree says or assumes otherwise, and what should each reference become?
-- **Read at:** `release/0.13.0`, `b01e754`, in the main checkout, read-only. `.claude/worktrees/` was not read. Probes ran on a copy in the session's scratch folder.
+- **Read at:** `release/0.13.0`, `b01e754`, in the main checkout, read-only. `.claude/worktrees/` was not read. Probes ran on a copy in the session's scratch folder. After `020d`'s spec review, the new base was read too: `71cb067` and `lane-i-run5`'s changelog (§10).
 
 Labels: **EXECUTED** (run here and seen), **READ** (a source says so, dated 2026-11-17 unless noted), **INFERRED** (reasoning).
 
@@ -122,6 +122,7 @@ Kinds: a **claim** says 0.12.0 shipped or can be installed; correct it. An **ass
 | `registry.test.ts:1817-1828` | the snapshot exists; the tag, if made | assumption | dropped; the never-published test takes the snapshot | EXECUTED (fail) |
 | `registry.test.ts:1909,1995-2030` | 016's, 019a's and 019's lines | assumption | read in the 0.13.0 entry | EXECUTED (fail) |
 | `registry.test.ts:2238,2394,2490,2514`, `toast-site.test.ts:125` | slices that end at `\n## 0.12.0` | assumption, silent | end at `\n## 0.11.0`; the helper fails if a heading is missing | EXECUTED (pass while broken) |
+| `registry.test.ts:2589`, at `71cb067` | `022t`'s slice, the sixth | assumption, silent | the helper's first part (§10) | READ |
 | `registry.test.ts:2076` "released snapshots" | a folder per tag, held to it | gap | adds the converse: every `static/v*` is a tag's or the current version's | EXECUTED (fails on `v0.12.0`) |
 | `tests/unit/generated.test.ts:1662` | "never-published snapshots" | precedent | adds `static/v0.12.0` | READ |
 | `generated.test.ts:1146` "read their 0.12.0 value" | a test title | example | "today's value" | READ |
@@ -129,6 +130,9 @@ Kinds: a **claim** says 0.12.0 shipped or can be installed; correct it. An **ass
 | `registry-comments.test.ts:230-261` | the 0.12.0 entry's site paragraph and naming paragraph | assumption | the site paragraph is read in 0.13.0's entry, at `/v0.13.0/r`; the naming test becomes "the entry names the Kuiper Design System" | EXECUTED (fail) |
 | `tests/unit/component-data.test.ts:39-41` "kbd 0.12.0" | a page's Updated fact | assumption | `kbd` reads 0.13.0; `meter` stands for an older release, 0.4.0 | EXECUTED |
 | `tests/unit/changelog-page.test.ts:148-160` | releases[1] dated 2026-11-15 | assumption | releases[1] is 0.11.0, 2026-11-07 | EXECUTED (fail) |
+| `tests/unit/changelog-page.test.ts:28` `hrefs("[a](#v0-12-0)")` | a sample anchor in a parser test | example | `#v0-13-0` | READ |
+| `tests/unit/changelog-page.test.ts:148` "above 0.12.0 and 0.11.0" | a comment | example | "above 0.11.0" | READ |
+| `scripts/bench/kuiper.ts`'s `releases` and `versionedRegistries` | the scorecard's raw counts: `^## ` headings and `static/v*/r/` folders | derived | 12 → 11 and 9 → 8; no row's rubric counts them | READ (the spec review) |
 | `tests/e2e/site.spec.ts:549,561` | `kbd` links `#v0-12-0`; the anchor exists | assumption | `meter` links `#v0-4-0`; `#v0-12-0` is absent | INFERRED (not run) |
 | `tests/fixtures/pluto-allowed.json:8,19,269` | history from `## 0.12.0`; record to `## 0.12.0`; a registry-comments guard | assumption | history from `## 0.11.0`, 28; record to `## 0.11.0`, 21; the guard entry goes | EXECUTED (counts) |
 | `tests/smoke/code-add.test.ts:188,545,602` | "a fresh 0.12.0 install", "the v0.12.0 add" | example | 0.13.0; the behaviour already is 0.11.0 → 0.13.0 | READ |
@@ -164,3 +168,17 @@ On a copy of `b01e754` in the scratch folder, with `node_modules` linked (EXECUT
 - **The owner's machine:** whether a local `v0.12.0` tag is there now.
 - **Who installed from `release/0.12.0`.** GitHub's traffic data was not read.
 - **Each history line, one by one.** The 361 lines in landed specifications, reviews and memos were classified by their folder, and sampled.
+
+## 10. The new base, after the spec review (2026-11-17)
+
+The design lead ruled that `020d` builds after the current batch lands: `022t`, `022v` and `022w` in lane I, and `022x`, `022y` and `022z` in lane E. The specification is redrawn on `71cb067` (`022t` landed) plus `lane-i-run5`'s `CHANGELOG.md`, which holds `022v` and `022w` uncommitted. The figures below are that base's. The build re-takes them on the base that lands.
+
+- **`71cb067` holds `b01e754`** (EXECUTED, `git merge-base --is-ancestor`). `022t` added two 0.13.0 bullets, `error-summary` (`attempt`) and `sign-in`, `sign-up`, `settings`, and one slice to `\n## 0.12.0`, at `registry.test.ts:2589` (READ). `lane-i-run5` adds `022v`'s `code-block` bullet and rewords `022w`'s `search-field` bullet. It adds no line naming 0.12.0 (EXECUTED, `git diff 71cb067`). `lane-e-run5` (`022x`, `022y`) touches no changelog and no 0.12.0 line (EXECUTED).
+- **The entries.** `## 0.13.0` is at line 5 and `## 0.12.0` at line 36. The naming paragraph is line 40, and 0.12.0's theme bullet line 44. The 0.13.0 entry has 26 bullets, and the 0.12.0 entry 18 (EXECUTED).
+- **Heads in both entries.** Seven single heads of the 0.13.0 entry also head a 0.12.0 bullet, once `pluto-theme` reads `kuiper-theme`: `kuiper-theme` (two bullets), `highlighter`, `app-shell`, `use-highlighted-code`, `code-editor`, `code-block` (`022v`) and `error-summary` (`022t`). The doc-comment bullet's head names 61 items, 14 of which head a 0.12.0 bullet (EXECUTED). The spec review found the same split, and that it would break the counts and positions of the 0.12.0 tests if they read the whole folded entry (the review, finding 1).
+- **The `pluto` counts hold:** 21 in the 0.13.0 entry, 10 in the 0.12.0 entry, 28 from `## 0.11.0` (EXECUTED).
+- **Live lines.** The guard's grep finds 284 at `71cb067`: the 283 of §7 and `022t`'s slice (EXECUTED).
+- **Changelog slices.** In `tests/`, the pattern `indexOf("## ` or `indexOf("\n## ` matches 16 times in 11 readers in 3 files: `registry.test.ts`, `registry-comments.test.ts` and `toast-site.test.ts` (EXECUTED, `git grep 71cb067`). Six end at `\n## 0.12.0`.
+- **The upgrade guide's trap, run.** The spec review installed `v0.11.0` into a scratch app, with a component that uses `pluto-enter`, then ran 0.12.0's notes' command against `/v0.13.0/r`. The add and the build both exit 0, and the animation is lost. Deleting the stale `--code-builtin` lines loses an app's own `text-code-builtin` class the same way, with no error (EXECUTED by the review). So the guide also needs a grep step before the deletion.
+- **The bench.** `scripts/bench/kuiper.ts` counts 12 `## ` releases and 9 `static/v*/r/` folders. The fold makes them 11 and 8 (READ, the review). Row 11's rubric counts neither (INFERRED, the review).
+- **Missed in §7, now added:** `changelog-page.test.ts:28`, `:148` and `022t`'s slice (the review, finding 9).
