@@ -1,6 +1,6 @@
 # Visual identity: the scorecard's look rows, the gates and the path
 
-- **Status:** complete. A proposal. It changes no rule, no score and no roadmap entry until the owner answers §6.
+- **Status:** complete. The owner answered §6 on 2026-11-17 (§7): the look rows join the headline total, the visual review is adopted, 0.14.0 takes visual identity as its theme, and the bar keeps "pluto" alone.
 - **Date:** 2026-11-17
 - **Author:** the design lead
 - **Question:** The owner says Carbon is "miles ahead of us in design". Five memos measured why. Which of their roughly 45 criteria should become scorecard rows? Which process gates should a team of one owner and AI agents adopt? What is Kuiper's gap, and what work closes it fastest?
@@ -112,7 +112,7 @@ Evidence (READ unless marked):
 3. **Template consistency.** *metrics* found Kuiper perfectly consistent. It read the component template only. *product* found drift across component, Foundations and Brand leaves. Row 18 (c) reads across templates.
 4. **The title's size.** *product*'s "h1 within 2–3 times the body" fails Carbon's light 53.6 px title (3.35 times). The ladder rule (b) replaces it. It fails Kuiper's missing h3 step, not Carbon's choice.
 5. **One face.** *carbon* asked for one superfamily, and *expressive* for a face the brand owns. Primer, GOV.UK and Radix separate from Kuiper on how type is used, not on who owns the face. Both clauses are dropped. Kuiper's faces are the design book's.
-6. **Who counts in the judged rows.** *practice* had the owner's ratings count. *metrics* had blind scorers count. The owner cannot be blind to his own site, and the aesthetic-usability effect biases anyone who has used it (*metrics* §1.3). So blind scorers count, and the owner checks. His five-second panel is gate G6, not the score.
+6. **Who counts in the judged rows.** *practice* had the owner's ratings count. *metrics* had blind scorers count. The owner cannot be blind to their own site, and the aesthetic-usability effect biases anyone who has used it (*metrics* §1.3). So blind scorers count, and the owner checks. Their five-second panel is gate G6, not the score.
 7. **Rounding.** Row 22 takes the mean rounded down, as row 8 does. On *metrics*' sum this costs Carbon one point (3 against its 3.75).
 
 ## 3. Process gates
@@ -184,7 +184,7 @@ Recommended option first.
 
 **Q2. Do we adopt the visual review, and who scores the judged rows?**
 1. **Gates G1, G2, G4 with G5, G6 and G7 as in §3. A designer agent who neither wrote nor built a change reviews it. Two such agents score rows 22 and 23 blind, with a pinned model as a third, never the tie-break. The owner checks the result and may send a row back.** Constitution §5 gains the visual-review step.
-2. The owner scores rows 22 and 23 himself, with one agent, and no new gate beyond G1 and G2.
+2. The owner scores rows 22 and 23 themself, with one agent, and no new gate beyond G1 and G2.
 3. No new gate. An outside panel scores rows 22 and 23 with VisAWI-S once a release.
 
 **Q3. Does 0.14.0's theme become visual identity?**
@@ -196,3 +196,13 @@ Recommended option first.
 1. **The Pluto Systems mark stays, and "Kuiper" is set in plain text beside it, as Carbon and Primer name the system beside the company.** This reads the 2026-11-15 ruling ("its name appears in the tab title and in text") without adding a logo or a wordmark.
 2. As ruled: "pluto" alone.
 3. A Kuiper lockup, reversing the ruling.
+
+## 7. The owner's answers (2026-11-17)
+
+Asked in the session, with the options of §6.
+
+- **Q1: into the headline total.** The owner chose option 2, not the recommended subtotal. Rows 16–23 join rows 1–14, and the headline total becomes 88. Row 15 stays outside it. The run log keeps the old total of 56 beside the new one, so every run still compares with the first. P0 writes the rows into the scorecard's §2 and scores them by their own methods. Until then, §2.4's scores stand as provisional.
+- **Q2: the visual review is adopted, as recommended.** Gates G1, G2, G4 with G5, G6 and G7 (§3). Two designer agents score rows 22 and 23 blind, with a pinned model as a third, never the tie-break. The owner checks the result. Constitution §5 and `AGENTS.md` carry the rule from 2026-11-17. G3, the screenshot baseline, waits as §3 says.
+- **Q3: 0.14.0 becomes "The page standard, and a look of its own", as recommended.** P0–P9, without P3, join 0.14.0 beside `032`–`035`. Batch B (`037`) and the data palette (`038`) move to 0.15.0. `039` (motion) keeps its place in 0.14.0 and now follows `036` in lane T. Target: 19 of 32 on the look rows.
+- **Q4: the bar keeps "pluto" alone, as ruled on 2026-11-15.** The owner chose option 2. P3 is dropped. The lockup is not a defect, and row 16 (iv) reads samples and text only. The Type page's "Pluto" sample word still becomes "Kuiper" in P1, because the ruling does not cover it.
+

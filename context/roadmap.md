@@ -31,6 +31,8 @@ The first scorecard run is at `ea1f9bd` (the 0.12.0 tree, never released, after 
 | 15 | Component cost (proposed) | 0 | not yet scored | **4** | Measured per item, budgeted, published (`025`) |
 | | **Total of rows 1–14** | **30** | 41 (Primer) | **51** | |
 
+**The look rows** (the owner, 2026-11-17). Rows 16–23 measure how the site looks, and join the headline total, which becomes 88. Kuiper scores 5 of 32 on them, provisionally; Carbon 28. Targets: 19 at 0.14.0, 28 at 1.0 ([synthesis](research/2026-11-17-visual-identity-synthesis.md)).
+
 Two rows are capped by the owner's rulings, not by effort. Design tooling stops at 2: there is no design-tool kit. Governance stops at 3: there is no lifecycle mark per item.
 
 The scorecard reads only Button and Dialog for rows 2, 7 and 8. So the roadmap also tracks two whole-catalogue numbers: **page-standard coverage**, the share of each page's applicable sections that pass their check (about 30% today), and the **accessibility status pass count**, items with every check green.
@@ -42,8 +44,8 @@ Five releases. Each has one theme.
 | Release | Theme | Specs | Rows 1–14 after |
 |---|---|---|---|
 | 0.13.0 | Kuiper, proven | `020`–`031` | 41 |
-| 0.14.0 | The page standard, and choosing from lists | `032`–`040` | 43 |
-| 0.15.0 | Data pages, guidance everywhere, governance | `041`–`050` | 46 |
+| 0.14.0 | The page standard, and a look of its own | `032`–`036`, `039`, `040`, P0–P9 | 43 |
+| 0.15.0 | Data pages, choosing from lists, guidance everywhere, governance | `037`, `038`, `041`–`050` | 46 |
 | 0.16.0 | Reach, and a designer's way in | `051`–`057` | 51 |
 | 1.0.0 | Stable | `058`–`061` | 51, held |
 
@@ -132,7 +134,7 @@ The new name in code. Evidence across three engines and two screen readers. Toke
 
 Not a spec: **the Kuiper lockup mock-ups.** Drawn and put to the owner on 2026-11-15 ([`research/2026-11-15-kuiper-lockup.md`](research/2026-11-15-kuiper-lockup.md)). The owner's answer: the bar keeps the "pluto" lockup. Kuiper is Pluto's system, not a product with its own branding, so it gets no logo or wordmark; its name appears in the tab title and in text. Nothing is built.
 
-### 0.14.0: The page standard, and choosing from lists
+### 0.14.0: The page standard, and a look of its own
 
 | Spec | Scope | Lanes | Depends on | Moves |
 |---|---|---|---|---|
@@ -143,15 +145,31 @@ Not a spec: **the Kuiper lockup mock-ups.** Drawn and put to the owner on 2026-1
 | `034` the part first | The frame's title and scheme switch on one row; the stage above y = 500 at 1440 | S (frames) | `032` | 7: 2 → 3 |
 | `035` states in axe | Hover, pressed, disabled, invalid and open states driven and scanned, in both schemes | E | `022` | 3: (b) |
 | `036` info, banner and count | An `info` tone (which `toast`'s `info` kind then takes; `toast.info` shipped with `026`); a page-level banner from `alert`; count and dot badges | T, then I | `031` | 1: held |
-| `037` batch B | Custom select, combobox, multi-select, slider, choice cards, toggletip, context menu. Combobox gets a 1,000-option cost case | N | `027b` (tag) | 1: 37 of 40; 15: (d) → 4 |
-| `038` the data palette | Eight categorical colours, sequential and diverging scales, each measured for contrast and colour-blind distance | T, then I (chart) | `036` | 4, 5: held |
-| `039` motion | Motion tokens by size of change; sheets, drawers and toasts slide; accordions open by height; nothing moves under reduced motion | T, then I | `038` | — |
+| `039` motion | Motion tokens by size of change; sheets, drawers and toasts slide; accordions open by height; nothing moves under reduced motion. Follows `036` in lane T since `038` moved to 0.15.0 (the owner, 2026-11-17) | T, then I | `036` | — |
 | `040` installs by npm and pnpm | The smoke test installs into one scratch app per manager (§4.5) | E (smoke) | `025` | 10: held |
+
+**A look of its own** (the owner, 2026-11-17: 0.14.0's theme gains visual identity; [synthesis](research/2026-11-17-visual-identity-synthesis.md) §4). Proposed specs, numbered when written. They move the look rows, 16–23, from 5 to 19 of 32. Every one passes the visual review.
+
+| Spec | Scope | Lanes | Depends on | Moves |
+|---|---|---|---|---|
+| P0 the look instrument | `craft.ts` scores rows 16–19; a capture script for the visual review's screenshots; a masking script for the blind panel; rows 16–23 written into the scorecard's §2 | E | — | none; it scores the rest |
+| P1 the fit-and-finish batch | Small changes, one at a time: the Foundations tables fit, "Ctrl K" on one line, the home command breaks between words, card titles share a line, one focus ring, cut code shows it continues, "Yellow" clears its card, the Type sample says "Kuiper" | S | P0 | 16: 0 → 3; 17: 0 → 2; 22: 2 → 3 |
+| P2 motion on its own curve | The default transition curve is `--ease-standard` (one line in `src/app.css`) | T (small) | — | no look row |
+| P4 one title, a ladder, a reading size | One h1 size and top across leaf templates; a real h3 step; prose at 16 px; heading weights only with the owner's yes | S, then T | P0 | 18: 0 → 3 |
+| P5 the figure system | One figure frame; do/don't as paired figures; numbered anatomy from slots; a drawn diagram per foundation page; figures follow the scheme. Rides on `032`, piloted in `033` | S, site guidance | `032` | 20: 0 → 3 |
+| P6 the home page, drawn | A first screen built from Kuiper's own parts, drawn from tokens; one message and one door per section | S | P7's first drawing | 19: 1 → 3; 21 (a) |
+| P7 art drawn from tokens | A rules page; art as Svelte or SVG in the repository; composed index pictures; a short pictogram set; a test that every drawn colour is a token | S (Brand pages) | P0 | 21: 0 → 3; 23: 2 → 3 |
+| P8 edge discipline | One left edge for the chrome's column; inline code in tables as tinted text; figures snapped to column spans | S | P1 | 17: 2 → 4 |
+| P9 the page-header system | One header for every leaf, a figure slot on Foundations and Brand leaves; the part stays above y = 500 | S (frames) | `034` | 18 (c) held; 19 (b) |
+
+P3 (a Kuiper name in the bar) is dropped: the bar keeps "pluto" alone, as ruled on 2026-11-15 (the owner, 2026-11-17).
 
 ### 0.15.0: Data pages, guidance everywhere, governance
 
 | Spec | Scope | Lanes | Depends on | Moves |
 |---|---|---|---|---|
+| `037` batch B | Custom select, combobox, multi-select, slider, choice cards, toggletip, context menu. Combobox gets a 1,000-option cost case | N | `027b` (tag) | 1: 37 of 40; 15: (d) → 4 |
+| `038` the data palette | Eight categorical colours, sequential and diverging scales, each measured for contrast and colour-blind distance | T, then I (chart) | `036` | 4, 5: held |
 | `041` density, type and section grounds | A compact control density; a 20 px title step; named section grounds for headers and toolbars | T | `039` | 4: (d) |
 | `042` batch C | Data table (TanStack Table, named), toolbar, page header, description list, tab nav, copy button, relative time. Data table gets a 10,000-row cost case | N | `041`, `027a`, `027b` | 1: held |
 | `043`–`047` the rollout | The page standard, one spec per group: forms; overlays and navigation; surfaces and feedback; actions, data and code; the reduced set for blocks, fonts and libraries. Each also completes its items' keyboard data | site guidance, one group each | `033` | 3: (c) → 4; coverage → about 90% |

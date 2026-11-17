@@ -32,6 +32,8 @@ Kuiper 0.13 as built at `027b`'s landing merge with `release/0.13.0` (re-scored 
 
 Bold marks the best score in a row. The total is a summary, not a target: the rows weigh differently for Pluto's apps. Row 15 joined with `025` and stays out of the headline total, so every run compares with the first; the run log gives the total of 60 beside it.
 
+**The look rows, 16–23** (the owner, 2026-11-17). Eight rows measure how the site looks: fit and finish, alignment, type, composition, figures, owned pictures, visual appeal, and recognisable without the logo. They join the headline total, which becomes 88. The run log keeps the total of 56 beside it. Their definitions, anchors and provisional scores are in [the visual-identity synthesis](2026-11-17-visual-identity-synthesis.md) §2. Provisionally Kuiper scores 5 of 32, Carbon 28. The proposed spec P0 writes them into §2 here and scores them by script and by blind panel. Until it lands, the table above does not carry them.
+
 **The biggest gaps** (Pluto against the best reference, §5). Tokens, the second, closed with `021`: DTCG 2025.10 with every role's job in the source, a removed-names record checked against every release, and two targets, CSS variables and DTCG JSON (4, tying Primer).
 
 1. **Design tooling, 0 against 4 (Primer).** No design-tool library, no tokens as design variables, no designer path.

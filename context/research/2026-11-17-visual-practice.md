@@ -81,7 +81,7 @@ INFERRED: a critique works because it is **regular**, it is **specific**, and **
 
 - **GOV.UK:** nothing is published until it meets the contribution criteria. The criteria are public [S30].
 - **IBM:** a pictogram is checked against the existing library for duplicates. Then the Brand and Design Systems teams review it [S4].
-- **EightShapes (Nathan Curtis):** a defined workflow lets a team agree "the scope, reviewers, tools, and the definition of done at each step" [S31]. Curtis's component workflow has a named **Visual QA** step between handoff and the design docs. His design review step runs a plugin on emerging artwork and pastes the output into FigJam for critique [S32]. He has a whole article on component QA [S33]. Only its title was readable here.
+- **EightShapes (Nathan Curtis):** a defined workflow lets a team agree "the scope, reviewers, tools, and the definition of done at each step" [S31]. Curtis's component workflow has a named **Visual QA** step between handoff and the design docs. The design review step runs a plugin on emerging artwork and pastes the output into FigJam for critique [S32]. Curtis has a whole article on component QA [S33]. Only its title was readable here.
 
 ### 2.3 Design QA and sign-off
 
