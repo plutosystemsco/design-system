@@ -389,3 +389,8 @@ Not built, as briefed. Its condition is not met. It is raised only if a `double-
 - The specification's Status line ("built; awaits the speech run") and its Landing notes. The specification is untracked in the main checkout, outside this worktree, so this build did not edit it.
 - Criterion 14, the next CI `matrix` push run, and the next `mutate` dispatch of each set.
 - Criterion 15, the scorecard re-run.
+
+### Criterion 14, read from run 7 (2026-11-17)
+
+The mechanism works; the criterion is judged again in `019b`'s first run. Run 7 (`research/2026-11-17-the-seventh-matrix-run.md`): NVDA now passes L1 on the unchanged second submit in both browsers (with Firefox it speaks the whole alert again, where run 6 heard only "section"); VoiceOver with WebKit passes; VoiceOver with Chromium re-reads the alert on its first attempt and fails L3 on all three, from the list double `019b` removes. The criterion's "the insertion and the blocks pass as before" cannot hold while `022z` is in and `019b` is not.
+

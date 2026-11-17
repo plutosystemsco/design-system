@@ -217,4 +217,17 @@ export const ENGINE_ONLY: EngineOnly[] = [
     engine: "webkit",
     reason: "forced colours: Playwright's WebKit does not emulate forcedColors",
   },
+  {
+    file: "error-summary.spec.ts",
+    title:
+      "019b: the error summary's messages are read once › 3. in Chromium's tree, each link's nearest ancestor that is not ignored is the alert",
+    helper: "onlyIn",
+    engine: "chromium",
+    // 019b criterion 3: the engine's own tree, which a reader reads. Firefox
+    // and WebKit offer no CDP; Playwright's snapshot drops ignored nodes
+    // and generic wrappers alike, so it cannot tell a wrapper apart.
+    reason: "CDP: Accessibility.getFullAXTree",
+    ruling:
+      "context/specifications/019b-the-error-summarys-messages-are-read-once.md",
+  },
 ];

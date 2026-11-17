@@ -57,7 +57,8 @@
           activating it focuses the field. If the field or its label is out of
           view or covered, it first brings the label to the top of the page, or
           a radio or checkbox's legend. No hash joins the address. Each link is
-          at least 24 px tall.
+          at least 24 px tall. The links are not in a list, so each message is
+          read once. A reader does not say how many there are.
         </li>
         <li>
           A link to a radio group's id focuses its checked radio, or its first.

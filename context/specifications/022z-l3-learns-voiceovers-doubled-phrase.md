@@ -309,3 +309,7 @@ Built 2026-11-17, uncommitted, in the lane-E worktree on `47c680d`. That is `rel
 4. **The expected outcome:** for each of the four messages, an L3 fault "in a row" counts as done as well as "within phrase N"; L3 checks the in-a-row case first.
 5. **The window's close:** the first dispatch of each set after `019b` lands records patches 4 and 7b as provable again, or names the pair that still is not (`019b` decision 9).
 
+### Criterion 5, read from run 7 (2026-11-17)
+
+Met. Run 7 (`44014551614`, on `7ec5488`, `research/2026-11-17-the-seventh-matrix-run.md`): under VoiceOver with Chromium, all four tests fail L3 "… was read twice within phrase 1" for every message (the insertion, settings and sign-in on 3 of 3 attempts; sign-up on 2 of 3, its first attempt failing L1). NVDA with Firefox fails them as before; NVDA with Chromium passes. VoiceOver with WebKit passed all four, which was expected but not required; its phrases wait on the owner's download of the `sr-voiceover-webkit` artifacts. The title faults L3 too in some VO chr attempts, the risk decision 4 named: queued as `019c`. `019b` landed after this run.
+

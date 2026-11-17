@@ -1,6 +1,6 @@
 # 019b — The error summary's messages are read once
 
-- **Status:** fit to build (the spec review's re-check, 2026-11-17; its write-in under criterion 11 made by the design lead); builds after one `matrix` push run with `022t` and `022z` and without it. The review (`reviews/019b-the-error-summarys-messages-are-read-once-spec-2026-11-17.md`) raised 3 Medium and 4 Low findings; each is answered under "Review".
+- **Status:** built; waits for its change review. Built 2026-11-17 on `6482736` (`release/0.13.0`, `7ec5488`, with `022t` and `022z`, plus `020d`), in the `lane-i-019b` worktree, after run 7 ([44014551614](https://github.com/plutosystemsco/design-system/actions/runs/44014551614)), its required run. Fit to build after the spec review's re-check (2026-11-17; its write-in under criterion 11 made by the design lead). The review (`reviews/019b-the-error-summarys-messages-are-read-once-spec-2026-11-17.md`) raised 3 Medium and 4 Low findings; each is answered under "Review".
 - **Date:** 2026-11-17
 - **Author:** the design lead
 - **Kind:** specification, lane I. A change to one item's rendered markup, `error-summary`: its links leave the list. An interface change, since an app's class or test that targets the list must change (decision 6). Three blocks install the item (`sign-in`, `sign-up`, `settings`) and change with it, with no change to their own source. No prop, token or dependency changes. A specification, not a small change: it changes an interface, and the owner is asked about the count (open question 2).
@@ -84,7 +84,7 @@ The `<ul class="grid gap-1">`, its `<li>`s, and nothing else, are replaced:
 
 The 0.13.0 entry is unreleased. `error-summary` shipped in 0.3.0. One bullet, after `022t`'s:
 
-> - `error-summary`: **interface change.** The links are no longer in a list. Each sits straight in a new box, `data-slot="error-summary-links"`, so that NVDA reads each message once. Before, NVDA with Firefox, and VoiceOver with Chrome, read each one as a list item and again as its link. A reader no longer says how many errors there are ("1 of 3"). A class passed to the summary that targeted its list (`[&_ul]`, `[&_li]`) must now target `[data-slot=error-summary-links]` or its links. A test that found the errors by `getByRole("list")` or `getByRole("listitem")` should find them as links. The box looks the same. No prop, export or class name changes. `sign-in`, `sign-up` and `settings` install it: update it with `add error-summary`.
+> - `error-summary`: **interface change.** The links are no longer in a list. Each sits straight in a new box, `data-slot="error-summary-links"`, so that NVDA reads each message once. Before, NVDA with Firefox, and VoiceOver with Chrome, read each one as a list item and again as its link. A reader no longer says how many errors there are ("1 of 3"). A class passed to the summary, or a rule of your own, that targeted its list (`ul`, `li`, `[&_ul]`, `[&_li]`) must now target `[data-slot=error-summary-links]` or its links. A test that found the errors by `ul`, `li`, `getByRole("list")` or `getByRole("listitem")` should find them as links. The box looks the same. No prop, export or class name changes. `sign-in`, `sign-up` and `settings` install it: update it with `add error-summary`.
 
 - The bullet claims one reading for NVDA, which is READ in its source (*the memo* §1). For VoiceOver it is INFERRED until criterion 11's run. If that run shows VoiceOver reading each message once, the landing adds "and VoiceOver" to the bullet's first sentence. If it shows a double, the bullet and the page's sentence (decision 7) are amended with the finding.
 - The upgrade guide gains no section. The bullet holds the migration note, as `019`'s structural change did (`019` decision 11).
@@ -211,4 +211,104 @@ The spec review, 2026-11-17, raised 7 findings (3 Medium, 4 Low). Each is answer
 
 ## Landing notes
 
-To be filled in when it lands.
+Built 2026-11-17 by the lane-I builder, in `.claude/worktrees/lane-i-019b` (branch `lane-i-019b`, at `6482736`). Not committed. It waits for its change review.
+
+### The seen-failing run (criterion 11, "Depends on")
+
+- **Run 7**, [44014551614](https://github.com/plutosystemsco/design-system/actions/runs/44014551614), a `matrix` push of `7ec5488`, carries `022t` and `022z` and not `019b` ([the seventh run's memo](../research/2026-11-17-the-seventh-matrix-run.md), cited as *run 7's memo*, "What the run carries"). It is the run this change waited for.
+- **The four tests, READ in *run 7's memo* §3.3:**
+
+  | Test | VO chr | VO wk | NVDA ff | NVDA chr |
+  |---|---|---|---|---|
+  | error-summary: the insertion | L3 within phrase, all three messages, 3/3 | pass | L3 within phrase, 3/3 | pass |
+  | settings: a save with an empty name | L3, "Enter your name", 3/3 | pass | L3, 3/3 | pass |
+  | sign-in: an empty submit | L3, both messages, 3/3 | pass | L3, 3/3 | pass |
+  | sign-up: an empty submit | L3, both messages, 2/3; attempt 1 L1 | pass | L3, 3/3 | pass |
+
+  - VO chr's phrase, the insertion: "There is a problem Enter a project name Enter a project name Enter the owner's email address Enter the owner's email address Choose who can see the project Choose who can see the project". NVDA with Firefox: "list. Enter a project name, 1 of 3. Enter a project name, link, same page. …".
+  - So criterion 11's seen-failing holds under VO chr and NVDA with Firefox. `022z` criterion 5 is met (*run 7's memo* §3.3).
+  - **VO wk passed all four** on the list markup, first attempt. `022z` expected them to fail. Passing tests print no phrases, so it is not known whether VoiceOver in WebKit reads each message once or doubles it in a way L3 does not see. The owner downloads `sr-voiceover-webkit-2`, `-3` and `-4` for their `phrases.json` entries (*run 7's memo* §3.3, §5). VO wk is therefore no seen-failing pair for this change.
+  - **The title's risk** (criterion 11) was seen in run 7 under VO chr: the title faults L3 "within phrase 1" in 2 of 3 insertion attempts, 1 of 3 second-submit attempts and 1 of 3 settings attempts. The phrase is "There is a problem and 1 more item group. There is a problem Enter …". As criterion 11 states in advance, it is a lane-I finding about the alert and the focus move (`019` decision 1). This change does not touch it.
+- **`022t` criterion 14** cannot be judged before this change lands (*run 7's memo* §3.2). It is judged in the first `matrix` push run carrying `019b`, from criterion 11's second-submit row.
+
+### The change
+
+- `error-summary.svelte`: the `<ul class="grid gap-1">` and its `<li>`s are replaced by `<div data-slot="error-summary-links" class="grid justify-items-start gap-1">`, inside `022t`'s `{#key attempt}` block. Each `<a>` keeps its `href`, classes, `onclick` and text. `focusField` and both script blocks are unchanged. The header comment gains, on a line of its own: "The links are not in a list, so a reader reads each message once."
+- The page's link bullet gains: "The links are not in a list, so each message is read once. A reader does not say how many there are." The "Heard with VoiceOver on macOS. NVDA and JAWS are not tested." line stays.
+- `CHANGELOG.md`: decision 6's bullet, in the 0.13.0 entry's first part, directly after `022t`'s blocks bullet. It ends with `020d`'s pointer, " See also `error-summary` under "Also since 0.11.0", below.", which `020d`'s test 16 requires on every first-part `error-summary` bullet. Otherwise it is decision 6's words. "And VoiceOver" is not added (decision 6): that waits for criterion 11's run.
+
+### Seen failing first, on the base (`6482736`, the item with the list)
+
+Run in `chromium-light` and `webkit-light` on a fresh build of the base, then again on the built change.
+
+| Check | Base | Built |
+|---|---|---|
+| 1. no list (new test) | fails both engines: `ul` count 1, wanted 0 | passes |
+| 2. the tree (019 criterion 1's snapshot) | fails both engines: received `list > listitem > link` | passes |
+| 3. no wrapper, CDP (new test, Chromium) | fails: each link's nearest kept ancestor is `listitem` | passes: `alert` for all 3 |
+| 4. the width (new test, both sizes) | guard: passes | passes |
+| 5. the raw HTML (019's test) | guard: passes | passes |
+| 8. the changelog bullet (new unit test) | fails: 0 bullets | passes |
+| 9. the page sentence and the header comment (2 new unit tests) | fail | pass |
+
+### The guards, proven by mutation
+
+A scratch spec, deleted after the run, applied each mutation on the built change, under `test.fail()`.
+
+- **Criterion 3:** a `<p>` around each link. The nearest kept ancestors are `paragraph`, `paragraph`, `paragraph`. The check fails (Chromium).
+- **Criterion 4:** `justify-items: stretch` on the links box. Each link is 322 px wide against a `Range` of 128, 198 and 200 px (Chromium), or 128.13, 197.09 and 198.10 (WebKit). The check fails in both.
+- **Criterion 5:** `role="none"` on the links box in the fetched HTML. The specimens hold 2 role attributes. The check fails in both engines.
+
+### Criterion 4's figures, as a record (not the test)
+
+At 1440 and at 390, the same on the base and the built change:
+
+- Chromium: links 128, 198 and 200 px; each `Range` the same. The box (the `ul` on the base, the links box after) is 322 px at 1440 and 280 px at 390.
+- WebKit: links 128.14, 197.09 and 198.11 px; `Range`s 128.13, 197.09 and 198.10. The box is 322 and 280 px.
+
+`019` criterion 12's test (each specimen's height and offsets) passes unchanged in both engines.
+
+### The mutation patches (decision 9)
+
+- `git apply --check` on the built item: each of the 11 patches alone, and each set (`main`, `double-read`) whole, exits 0 with stderr empty. Patches 4 and 7b were not re-made.
+- `mutations.test.ts`: 29 pass. `expected.json` and `notProvable` are untouched.
+
+### Ledgers
+
+- `bun run build`: only `static/r/styles/maia/error-summary.json` and `static/v0.13.0/r/styles/maia/error-summary.json` change. `registry.json` and the blocks' files do not.
+- `bun run cost --sizes-only`: 4 entries size-stale (`error-summary`, `sign-in`, `sign-up`, `settings`), and the `_catalogue` app, which holds every item, rebuilt with them. Runtime figures kept. `error-summary`: JS 11,872 → 11,875 B, CSS 891 → 906 B (`justify-items-start`), brotli JS 10,672 → 10,655 B. It stays under its 12,900 B budget. No budget changes. The change review runs `bun run cost --only error-summary` (decision 10).
+- `bun scripts/site/thumbnails.ts --hash-only`: exactly 4 hashes move: `error-summary`, `sign-in`, `sign-up` and `settings`.
+
+### The gate
+
+- `bun run check`: 0 errors, 0 warnings.
+- `bun run lint`: clean.
+- `bun scripts/lint-literals.ts`: 0 literals in item files.
+- `bun test ./tests/unit`: 1,963 pass, 0 fail. It includes `020d`'s guard and split tests (`never-released.test.ts` 18, `changelog-page.test.ts` 10), `registry.test.ts`, `registry-comments.test.ts` 17, `blocks.test.ts` 38 (0 banned words), `mutations.test.ts` 29, `thumbnails.test.ts` 10, `cost.test.ts` 40, and `engine-only.test.ts`.
+- `bun scripts/site/release-check.ts --before-ci`: exits 0.
+- e2e, `chromium-light` and `webkit-light`:
+  - `error-summary.spec.ts`: every test passes; criterion 3 skips in WebKit, as listed.
+  - `blocks.spec.ts`: everything passes except app-shell A3, in both engines. A3 is not this change's fault. The worktree's commit, `6482736`, has a short hash made only of digits, and the footer reads an all-digit version name as "no commit" (`vite.config.ts`, lines 27 to 34; `build/_app/version.json` reads `"6482736"`). So no `dd code` is rendered. It fails on any build of this commit, and stops failing once the change is committed under a hash with a letter in it.
+  - axe and keyboard, the error-summary tests: 24 pass, in both themes. That is axe at 360, 768 and 1280 on the component page, `/view/error-summary-attempt/` at 1280, the keyboard fixture's 4 stops and the Enter behaviour.
+  - `019`'s axe test (criterion 9) passes in `chromium-dark` and `webkit-dark` too.
+  - The error-summary, sign-in, sign-up and settings tests in `primitives.spec.ts`, `theme.spec.ts` and `viewer.spec.ts`: 68 pass.
+- The dry runs (`SR_DRY=1`), `chromium` and `webkit`: `error-summary.sr.ts`, `sign-in.sr.ts`, `sign-up.sr.ts` and `settings.sr.ts`, 30 pass. `022t`'s two facts are among them.
+- Not run here: the full e2e suite, and the Firefox projects. CI runs them.
+
+### Deviations
+
+- **`tests/e2e/engine-only.ts`** gains one entry, outside Scope's list. Criterion 3 runs in Chromium only, and `022` decision 3 allows that only through `onlyIn`, with an `ENGINE_ONLY` entry. Its reason is "CDP: Accessibility.getFullAXTree", and its ruling is this specification. The count per helper moves from 2 `onlyIn` calls to 3; the other counts do not change (`notIn` 4, `onlyProjects` 4, `adaptsIn` 12).
+- **Criterion 4's box on the base.** A guard must pass before and after, and the base has no links box. So the test measures against `[data-slot="error-summary-links"]`, or else the link's `ul`, the box it replaces. A comment says so. The fallback can go once the base is history.
+- **The cost run** rebuilt `_catalogue` beside the four entries named in decision 10. It is size-stale whenever an item changes.
+
+### The change review (2026-11-17)
+
+`reviews/019b-the-error-summarys-messages-are-read-once-pr-2026-11-17.md`: lands. The design lead wrote in finding 3 (VO wk kept in decision 9's record) and finding 4 (the migration note names an app's own rule and a test by `ul` or `li`). Findings 1 and 2 are not this change's: the all-digit commit hash that fails app-shell A3, and a long unbreakable message overflowing at 320 px, both queued as small changes. Criterion 12: six `cost --only error-summary` runs were all noisy (hydrate 46.7 to 74.6 ms on the change, 39.3 and 46.1 on the base, against 53), so it is not held here; the tag's cost run on the release machine holds or clears it. The review's full unit run had one failure, the streaming p95 (3 of 3 alone), beside the builder's clean run. Criterion 4's fallback to the old `ul` stays until the next change to this item, which drops it.
+
+### Waiting on others
+
+- **Criterion 11:** the first `matrix` push run carrying this change, `022t` and `022z`. Record its run id here, with each pair's result for the five tests and the link tests, and `022t` criterion 14's result. If VoiceOver reads each message once, add "and VoiceOver" to the bullet's first sentence (decision 6). If it doubles one, amend the bullet and the page sentence with the finding (decisions 6 and 7), and open research (open question 3: it stays landed).
+- **Decision 9:** the first `main` dispatch and the first `double-read` dispatch after this lands record here whether patches 4 and 7b are provable again under NVDA with Firefox, VO chr and VO wk, as decision 9 says. Run 7 shows the witness passing unpatched under VO wk already (*run 7's memo* §3.3, INFERRED there), so VO wk is expected to be provable; the dispatch records it either way (the change review's finding 3, the design lead's ruling).
+- **Criterion 12:** the change review's `bun run cost --only error-summary`.
+- **Criterion 13:** the design lead's checkpoint, on the keyboard example in both themes at both sizes.
+- **Criterion 14:** the scorecard, re-run after landing.
