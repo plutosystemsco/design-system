@@ -6,15 +6,23 @@
  *
  * Covered: the cover's two X0s (decision 3); the captures by reader and
  * VoiceOver's item text (decisions 7 and 8); the browse-mode step's three
- * outcomes (decision 2); the still-open X0 (decision 2); and the
+ * outcomes (decision 2); the still-open X0 (decision 2); the
  * `previous()` step after a walk that ends on the trigger's name alone
- * (decision 1, step 4).
+ * (decision 1, step 4); and, for `022ad`, a web-content helper that stalls
+ * or throws "VoiceOver not running".
  */
-import { describe, expect, test } from "bun:test";
+import { describe, expect, spyOn, test } from "bun:test";
 import type { ScreenReaderPlaywright } from "@guidepup/playwright";
 import type { Locator, Page, TestInfo } from "@playwright/test";
 import { layCover, liftCover } from "../sr/cover.ts";
-import { appears, readOverlay, Sr } from "../sr/sr.ts";
+import {
+  appears,
+  HELPER_MS,
+  readOverlay,
+  RESTART_MS,
+  Sr,
+  type SrOptions,
+} from "../sr/sr.ts";
 
 const ORIGIN = "http://127.0.0.1:4173";
 
@@ -106,9 +114,55 @@ class FakeReader {
     this.calls.push("previous");
     this.speak();
   }
+  /**
+   * 022ad: how each helper call ends, in turn; once none is left, as
+   * `helper` says. "hang" is guidepup's item-chooser loop, which spins until
+   * `stop()` sets guidepup's stopping flag and its next call throws "VoiceOver
+   * not running". While it spins it says `stallSays`, each with its item
+   * text, as the loop's VO-I presses do (the review, finding 1). "deaf"
+   * hangs outside guidepup's guarded calls, so `stop()` does not end it
+   * (finding 4a). A number throws "VoiceOver not running" after so many
+   * milliseconds. An Error is thrown at once.
+   */
+  ends: ("hang" | "deaf" | number | Error)[] = [];
+  stallSays: string[] = [];
+  /** 022ad: `stop()` never ends, or throws; or `start()` throws. */
+  stopHangs = false;
+  stopFails?: Error;
+  startFails?: Error;
+  started: unknown[] = [];
+  private stopping?: () => void;
   async navigateToWebContent() {
     this.calls.push("helper");
+    const end = this.ends.shift();
+    if (end === "hang" || end === "deaf") {
+      for (const p of this.stallSays) {
+        this.log.push(p);
+        this.items.push(`item: ${p}`);
+      }
+      return new Promise<void>((_, reject) => {
+        if (end === "hang")
+          this.stopping = () => reject(new Error("VoiceOver not running"));
+      });
+    }
+    if (typeof end === "number") {
+      await new Promise((r) => setTimeout(r, end));
+      throw new Error("VoiceOver not running");
+    }
+    if (end) throw end;
     if (this.page) this.helper(this.page);
+  }
+  async stop() {
+    this.calls.push("stop");
+    if (this.stopHangs) return new Promise<void>(() => undefined);
+    if (this.stopFails) throw this.stopFails;
+    this.stopping?.();
+    this.stopping = undefined;
+  }
+  async start(options: unknown) {
+    this.calls.push("start");
+    this.started.push(options);
+    if (this.startFails) throw this.startFails;
   }
   async clearSpokenPhraseLog() {
     this.log = [];
@@ -130,6 +184,7 @@ function make(
   reader: "nvda" | "voiceover",
   said: string[] = [],
   helper?: (page: FakePage) => void,
+  more: Partial<SrOptions> = {},
 ) {
   const page = new FakePage();
   const fake = new FakeReader(said, helper, page);
@@ -137,7 +192,7 @@ function make(
     page as unknown as Page,
     fake as unknown as ScreenReaderPlaywright,
     info,
-    { reader, dry: false },
+    { reader, dry: false, ...more },
   );
   return { sr, page, fake };
 }
@@ -381,5 +436,178 @@ describe("022aa: a wait with a bound", () => {
       "crash",
     );
     expect(sr.faults).toEqual([]);
+  });
+});
+
+describe("022ad: a stalled web-content helper fails fast, by name", () => {
+  /** The fixture's start options, and bounds short enough for a unit test. */
+  const START = { capture: true };
+  const FAST = { start: START, helperMs: 50, restartMs: 50 };
+  /** `open()` under VoiceOver, its helper ending as `ends` says, timed. */
+  async function opened(
+    ends: FakeReader["ends"],
+    more: Partial<SrOptions> = FAST,
+    set: (fake: FakeReader) => void = () => undefined,
+    reader: "nvda" | "voiceover" = "voiceover",
+  ) {
+    const made = make(reader, [], (p) => p.clickBody(), more);
+    made.fake.ends = ends;
+    set(made.fake);
+    const t0 = Date.now();
+    const result = await made.sr.open("/example/chart/variants/").then(
+      () => "opened",
+      (e: Error) => e.message,
+    );
+    return { ...made, result, ms: Date.now() - t0 };
+  }
+
+  test("the helper stalls, and the restarted helper ends: VoiceOver is restarted once, with the fixture's options, and the test goes on", async () => {
+    const { sr, fake, page, result } = await opened(["hang"]);
+    expect(result).toBe("opened");
+    expect(fake.calls).toEqual(["helper", "stop", "start", "helper"]);
+    expect(fake.started).toEqual([START]);
+    expect(sr.faults).toEqual([]);
+    expect(page.covered).toBe(false);
+    expect(sr.windows["open: restart"]).toEqual([
+      expect.stringContaining("did not end within 0.05 s"),
+    ]);
+  });
+  test("it stalls again after the restart: X0 within the bounds, naming both", async () => {
+    const { sr, fake, page, result, ms } = await opened(["hang", "hang"]);
+    expect(result).toContain("rule faults");
+    expect(ms).toBeLessThan(2000);
+    expect(fake.calls).toEqual(["helper", "stop", "start", "helper"]);
+    expect(page.covered).toBe(false);
+    expect(x0s(sr)).toEqual([
+      expect.stringMatching(
+        /^open: navigateToWebContent\(\) did not end within 0\.05 s, and again after VoiceOver was restarted: did not end within 0\.05 s/,
+      ),
+    ]);
+  });
+  test('it throws "VoiceOver not running" after a delay: restarted, and it recovers', async () => {
+    const { sr, fake, result } = await opened([20]);
+    expect(result).toBe("opened");
+    expect(fake.calls).toEqual(["helper", "stop", "start", "helper"]);
+    expect(sr.windows["open: restart"]).toEqual([
+      expect.stringContaining('threw "VoiceOver not running" after'),
+    ]);
+  });
+  test('it throws "VoiceOver not running" twice: X0 names the cause', async () => {
+    const { sr, result } = await opened([20, 20]);
+    expect(result).toContain("rule faults");
+    expect(x0s(sr)).toEqual([
+      expect.stringMatching(
+        /^open: navigateToWebContent\(\) threw "VoiceOver not running" after .* s, and again after VoiceOver was restarted: threw "VoiceOver not running"/,
+      ),
+    ]);
+  });
+  test("the restart's start() fails: X0 names the stall and the restart", async () => {
+    const { sr, fake, result } = await opened(["hang"], FAST, (f) => {
+      f.startFails = new Error("VoiceOver cannot be started");
+    });
+    expect(result).toContain("rule faults");
+    expect(fake.calls).toEqual(["helper", "stop", "start"]);
+    expect(x0s(sr)).toEqual([
+      expect.stringMatching(
+        /^open: navigateToWebContent\(\) did not end within 0\.05 s; VoiceOver's restart failed: VoiceOver cannot be started/,
+      ),
+    ]);
+  });
+  test("the restart's stop() never ends: X0 within its bound, and no start()", async () => {
+    const { sr, fake, result, ms } = await opened(["hang"], FAST, (f) => {
+      f.stopHangs = true;
+    });
+    expect(result).toContain("rule faults");
+    expect(ms).toBeLessThan(2000);
+    expect(fake.calls).toEqual(["helper", "stop"]);
+    expect(x0s(sr)).toEqual([
+      expect.stringContaining("VoiceOver's restart did not end within 0.05 s"),
+    ]);
+  });
+  // The review, finding 1: what VoiceOver said while the helper stalled is kept.
+  test("what VoiceOver said in the stall is kept: the open: stalled window, the last phrase in the X0, and the times on the [sr] line", async () => {
+    const log = spyOn(console, "log").mockImplementation(() => undefined);
+    try {
+      const { sr, result } = await opened(["hang", "hang"], FAST, (f) => {
+        f.stallSays = ["Safari", "Notification Centre", "Safari"];
+      });
+      expect(result).toContain("rule faults");
+      expect(sr.windows["open: stalled"]).toEqual([
+        "Notification Centre",
+        "Safari",
+      ]);
+      expect(sr.windows["open: stalled: item text"]).toEqual([
+        "item: Notification Centre",
+        "item: Safari",
+      ]);
+      expect(x0s(sr)).toEqual([
+        expect.stringContaining('; VoiceOver last said "Safari"'),
+      ]);
+      const line = log.mock.calls.map((c) => String(c[0])).join("\n");
+      expect(line).toMatch(
+        /\[sr\] .*stall \d+\.\d s, restart \d+\.\d s, helper again \d+\.\d s/,
+      );
+    } finally {
+      log.mockRestore();
+    }
+  });
+  // The review, finding 4a: no second helper, and no start, while the first lives.
+  test("the stalled helper does not end on stop(): no start(), and X0 names the restart's bound", async () => {
+    const { sr, fake, result, ms } = await opened(["deaf"]);
+    expect(result).toContain("rule faults");
+    expect(ms).toBeLessThan(2000);
+    expect(fake.calls).toEqual(["helper", "stop"]);
+    expect(x0s(sr)).toEqual([
+      expect.stringContaining("VoiceOver's restart did not end within 0.05 s"),
+    ]);
+  });
+  // The review, finding 4b: a failed stop() starts nothing.
+  test("the restart's stop() throws: X0 names it, and no start()", async () => {
+    const { sr, fake, result } = await opened(["hang"], FAST, (f) => {
+      f.stopFails = new Error(
+        "Timed out waiting for VoiceOver to not be running",
+      );
+    });
+    expect(result).toContain("rule faults");
+    expect(fake.calls).toEqual(["helper", "stop"]);
+    expect(x0s(sr)).toEqual([
+      expect.stringContaining(
+        "VoiceOver's restart failed: Timed out waiting for VoiceOver to not be running",
+      ),
+    ]);
+  });
+  test("NVDA: a stalled helper is X0 at its bound, with no restart, and the cover is lifted", async () => {
+    const { sr, fake, page, result, ms } = await opened(
+      ["hang"],
+      FAST,
+      undefined,
+      "nvda",
+    );
+    expect(result).toContain("rule faults");
+    expect(ms).toBeLessThan(2000);
+    expect(fake.calls).toEqual(["helper"]);
+    expect(page.covered).toBe(false);
+    expect(x0s(sr)).toEqual([
+      "open: navigateToWebContent() did not end within 0.05 s",
+    ]);
+  });
+  test("any other helper error is thrown on, unchanged, with no restart", async () => {
+    const { sr, fake, result } = await opened([
+      new Error("Unable to focus the application window"),
+    ]);
+    expect(result).toBe("Unable to focus the application window");
+    expect(fake.calls).toEqual(["helper"]);
+    expect(sr.faults).toEqual([]);
+  });
+  test("a helper that ends in time is called once, as before", async () => {
+    const { sr, fake, result } = await opened([]);
+    expect(result).toBe("opened");
+    expect(fake.calls).toEqual(["helper"]);
+    expect(sr.windows).toEqual({});
+  });
+  test("the bounds: a whole stall, restart and second stall fit inside the suite's 5-minute timeout", () => {
+    expect(HELPER_MS).toBe(60_000);
+    expect(RESTART_MS).toBe(60_000);
+    expect(2 * HELPER_MS + RESTART_MS).toBeLessThan(5 * 60_000);
   });
 });
