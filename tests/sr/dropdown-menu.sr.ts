@@ -5,7 +5,7 @@
  * item, which has focus.
  */
 import type { Page } from "@playwright/test";
-import { declared, test } from "./fixtures.ts";
+import { appears, declared, test } from "./fixtures.ts";
 import { O1, O3, O3s } from "./rules.ts";
 
 const PATH = "/example/dropdown-menu/keyboard/";
@@ -42,7 +42,7 @@ async function focusIs(
 /** From the focused trigger: the key alone, then the menu by its slot. */
 async function open(page: Page): Promise<void> {
   await page.keyboard.press("Enter");
-  await menu(page).waitFor();
+  await appears(menu(page), "the menu");
 }
 
 test(

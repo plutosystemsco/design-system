@@ -26,9 +26,9 @@ import { ledgerFixture, type LedgerLine } from "../ledger.ts";
 import { mutationLines, PAIRS, type Expected } from "./mutations/derive.ts";
 import { reader } from "./reader.ts";
 import type { RuleId } from "./rules.ts";
-import { READY, Sr } from "./sr.ts";
+import { appears, READY, Sr } from "./sr.ts";
 
-export { expect, READY, Sr };
+export { appears, expect, READY, Sr };
 
 /** Local only: drive the steps with no reader. Nothing is judged. */
 export const DRY = !process.env.CI && !!process.env.SR_DRY;

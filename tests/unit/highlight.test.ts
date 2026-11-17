@@ -373,12 +373,20 @@ describe("the carried fault", () => {
 });
 
 describe("timings (decision 20)", () => {
-  test("the 18 specimens in a fresh process: 1.5 s or less first pass, 50 ms or less warm", async () => {
-    const { first, warm } = await fresh("timings.ts");
+  // 022ab: timed in the main thread's CPU time, not the wall clock, so a
+  // loaded machine, which only makes the process wait, does not fail it. A
+  // real regression costs CPU, so it still does. The clock may tick in
+  // steps of a few ms; that is small beside these budgets. CPU time cannot
+  // see the main thread wait, for a file or a compile on another thread, so
+  // the first pass also has a loose wall-clock ceiling, 3 × 1.5 s, which
+  // load does not reach (the change review, finding 3).
+  test("the 18 specimens in a fresh process: 1.5 s or less first pass, 50 ms or less warm (the best of 5), in the main thread's CPU time; the first pass 4.5 s or less on the wall clock", async () => {
+    const { first, warm, firstWall, warmWall } = await fresh("timings.ts");
     console.log(
-      `timings: first pass ${(first / 1000).toFixed(2)} s, warm ${warm.toFixed(1)} ms (tree-sitter and Shiki, mixed)`,
+      `timings, CPU: first pass ${(first / 1000).toFixed(2)} s, warm ${warm.toFixed(1)} ms; wall: ${(firstWall / 1000).toFixed(2)} s, ${warmWall.toFixed(1)} ms (tree-sitter and Shiki, mixed)`,
     );
     expect(first).toBeLessThanOrEqual(1500);
     expect(warm).toBeLessThanOrEqual(50);
+    expect(firstWall).toBeLessThanOrEqual(4500);
   }, 60_000);
 });

@@ -12,9 +12,9 @@
  */
 import { describe, expect, test } from "bun:test";
 import type { ScreenReaderPlaywright } from "@guidepup/playwright";
-import type { Page, TestInfo } from "@playwright/test";
+import type { Locator, Page, TestInfo } from "@playwright/test";
 import { layCover, liftCover } from "../sr/cover.ts";
-import { readOverlay, Sr } from "../sr/sr.ts";
+import { appears, readOverlay, Sr } from "../sr/sr.ts";
 
 const ORIGIN = "http://127.0.0.1:4173";
 
@@ -290,5 +290,96 @@ describe("022q decision 1, step 4: one previous() step after a walk that ends on
     await sr.steps(2, { trigger: "Delete project" });
     expect(fake.calls).toEqual(["perform", "next", "next"]);
     expect(sr.back).toEqual([]);
+  });
+});
+
+describe("022aa: a wait with a bound", () => {
+  /** A locator on `page` whose wait ends as `ends` says. */
+  const waiting = (page: FakePage, ends: "came" | "timeout" | "crash") =>
+    ({
+      page: () => page,
+      waitFor: async (o: { timeout?: number }) => {
+        if (!o.timeout) throw new Error("waited without a bound");
+        if (ends === "came") return;
+        const e = new Error(ends === "timeout" ? "Timeout exceeded" : "crash");
+        if (ends === "timeout") e.name = "TimeoutError";
+        throw e;
+      },
+    }) as unknown as Locator;
+
+  test("it comes: true, and the fact holds", async () => {
+    const { sr, page } = make("voiceover");
+    expect(await appears(waiting(page, "came"), "the dialog")).toBe(true);
+    expect(sr.faults).toEqual([]);
+  });
+  test("a timeout inside a window: the window is recorded first, then X0 names what and where focus was", async () => {
+    const { sr, page } = make("voiceover", ["Dialog"]);
+    let ran = false;
+    await expect(
+      sr.after(async () => {
+        await appears(waiting(page, "timeout"), "the dialog");
+        ran = true;
+      }, "open"),
+    ).rejects.toThrow();
+    expect(ran).toBe(true);
+    expect(Object.keys(sr.windows)).toEqual(["open", "open: item text"]);
+    expect(x0s(sr)).toEqual([
+      expect.stringMatching(
+        /^the dialog was not visible within 10 s; focus was on /,
+      ),
+    ]);
+  });
+  test("a timeout inside a window, and then a throw: the X0 is kept and attached (the change review, finding 5)", async () => {
+    const page = new FakePage();
+    const attached: string[] = [];
+    const sr = new Sr(
+      page as unknown as Page,
+      new FakeReader([], undefined, page) as unknown as ScreenReaderPlaywright,
+      {
+        attach: async (name: string, o: { body: string }) => {
+          attached.push(`${name}: ${o.body}`);
+        },
+      } as unknown as TestInfo,
+      { reader: "voiceover", dry: false },
+    );
+    await expect(
+      sr.after(async () => {
+        await appears(waiting(page, "timeout"), "the dialog");
+        throw new Error("click: Timeout 10000ms exceeded");
+      }, "open"),
+    ).rejects.toThrow("click: Timeout 10000ms exceeded");
+    expect(x0s(sr)).toEqual([
+      expect.stringMatching(/^the dialog was not visible within 10 s/),
+    ]);
+    expect(attached.at(-1)).toContain("faults.json");
+    expect(attached.at(-1)).toContain("the dialog was not visible");
+  });
+  test("a timeout outside a window fails at once; its own bound is named", async () => {
+    const { sr, page } = make("nvda");
+    await expect(
+      appears(waiting(page, "timeout"), "the summary", { timeout: 2000 }),
+    ).rejects.toThrow();
+    expect(x0s(sr)).toEqual([
+      expect.stringContaining("the summary was not visible within 2 s"),
+    ]);
+  });
+  test("a dry run fails on the fact", async () => {
+    const page = new FakePage();
+    const sr = new Sr(
+      page as unknown as Page,
+      new FakeReader() as unknown as ScreenReaderPlaywright,
+      info,
+      { reader: "dry", dry: true },
+    );
+    await expect(
+      appears(waiting(page, "timeout"), "the menu", { state: "attached" }),
+    ).rejects.toThrow(/the menu is attached within 10 s/);
+  });
+  test("any error but a timeout is thrown on, unchanged", async () => {
+    const { sr, page } = make("voiceover");
+    await expect(appears(waiting(page, "crash"), "the menu")).rejects.toThrow(
+      "crash",
+    );
+    expect(sr.faults).toEqual([]);
   });
 });

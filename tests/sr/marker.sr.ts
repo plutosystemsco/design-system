@@ -11,7 +11,7 @@
  * send, with no before window between them.
  */
 import type { Page } from "@playwright/test";
-import { declared, test } from "./fixtures.ts";
+import { appears, declared, test } from "./fixtures.ts";
 import { L1 } from "./rules.ts";
 
 const PATH = "/view/chat/";
@@ -27,12 +27,16 @@ test(
     await textbox(page).focus();
     await page.keyboard.type("Add two numbers for me.");
     await page.keyboard.press("Enter");
-    await page
-      .locator('[data-slot="chat-pane"][data-status="submitted"]')
-      .waitFor();
+    await appears(
+      page.locator('[data-slot="chat-pane"][data-status="submitted"]'),
+      "the chat pane, submitted",
+    );
     const after = await sr.after(async () => {
       await page.keyboard.press("Escape");
-      await page.locator('[data-chat="marker"]', { hasText: MARKER }).waitFor();
+      await appears(
+        page.locator('[data-chat="marker"]', { hasText: MARKER }),
+        `the "${MARKER}" marker`,
+      );
     });
     await sr.judge(L1(after, MARKER));
   },

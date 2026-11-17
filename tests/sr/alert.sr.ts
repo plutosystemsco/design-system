@@ -10,7 +10,7 @@
  * fail the rule, not time out the set-up.
  */
 import type { Page } from "@playwright/test";
-import { declared, test } from "./fixtures.ts";
+import { appears, declared, test } from "./fixtures.ts";
 import { L1, L2 } from "./rules.ts";
 
 const PATH = "/example/alert/roles/";
@@ -27,10 +27,12 @@ test(
     const before = await sr.before();
     const after = await sr.after(async () => {
       await page.keyboard.press("Enter");
-      await page
-        .getByTestId("inserted-alerts")
-        .locator('[data-slot="alert"]', { hasText: DESTRUCTIVE })
-        .waitFor();
+      await appears(
+        page
+          .getByTestId("inserted-alerts")
+          .locator('[data-slot="alert"]', { hasText: DESTRUCTIVE }),
+        "the inserted destructive alert",
+      );
     });
     await sr.judge(L1(after, DESTRUCTIVE), L2(before, after, DESTRUCTIVE));
   },

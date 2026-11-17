@@ -8,7 +8,7 @@
  * `role={null}` to `Alert` and sets its own inner `role="alert"`.
  */
 import type { Page } from "@playwright/test";
-import { declared, test } from "./fixtures.ts";
+import { appears, declared, test } from "./fixtures.ts";
 import { F1, L1, L3 } from "./rules.ts";
 
 const PATH = "/view/sign-in/";
@@ -38,7 +38,7 @@ test(
     await sr.open(PATH);
     await sr.after(() => signIn(page).focus(), "focus");
     await sr.after(() => page.keyboard.press("Enter"), "insertion");
-    await summary(page).waitFor();
+    await appears(summary(page), "the error summary");
     await sr.after(
       () => summary(page).getByRole("link", { name: ERRORS[0] }).focus(),
       "link",

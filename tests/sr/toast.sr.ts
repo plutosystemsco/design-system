@@ -10,7 +10,7 @@
  * A1, in `app-shell.sr.ts`, hears the shell's toaster (026 D1).
  */
 import type { Page } from "@playwright/test";
-import { declared, test } from "./fixtures.ts";
+import { appears, declared, test } from "./fixtures.ts";
 import { B1, F1, L1, L2, L3, L4, U1 } from "./rules.ts";
 
 /** The toast's parts a test may hear (026 decision 20). */
@@ -182,7 +182,7 @@ test(
     await ready(page, "Delete project");
     await sr.after(async () => {
       await press(page);
-      await page.getByRole("alertdialog").waitFor();
+      await appears(page.getByRole("alertdialog"), "the alert dialog");
     }, "open");
     await page
       .getByRole("alertdialog")

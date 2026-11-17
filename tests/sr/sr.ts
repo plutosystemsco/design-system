@@ -23,6 +23,45 @@ import {
 /** Every example and view page sets this once it has hydrated. */
 export const READY = "main[data-view-ready], body[data-view-ready]";
 
+/**
+ * 022aa: how long a wait in the suite may take unless it says otherwise.
+ * A wait without a bound waited out the 5-minute test timeout, then 5 more
+ * in teardown (the fifth matrix run, §3.3).
+ */
+export const WAIT_MS = 10_000;
+
+type WaitState = "attached" | "detached" | "visible" | "hidden";
+
+/** Each page's `Sr`, so `appears()` can record on the test that owns the page. */
+const OWNERS = new WeakMap<Page, Sr>();
+
+/**
+ * 022aa: wait, with a bound, for `locator` to reach `state` ("visible" by
+ * default). On a timeout the test records a false fact, then fails as X0
+ * with what was waited for and where focus was (as `022x`'s sub-menu
+ * wait). Inside a window, the failure waits for the window to end, so its
+ * phrases are recorded first. Any error but a timeout is thrown on.
+ * Resolves whether it came.
+ */
+export function appears(
+  locator: Locator,
+  what: string,
+  options: { state?: WaitState; timeout?: number } = {},
+): Promise<boolean> {
+  const sr = OWNERS.get(locator.page());
+  if (sr) return sr.appears(locator, what, options);
+  const { state = "visible", timeout = WAIT_MS } = options;
+  return locator.waitFor({ state, timeout }).then(() => true);
+}
+
+/** The focused element, by tag, `data-slot` and text. Runs in the page. */
+function focusedElement(): string {
+  const a = document.activeElement;
+  if (!a || a === document.body) return "<body>";
+  const text = (a.textContent ?? "").replace(/\s+/g, " ").trim();
+  return `${a.tagName.toLowerCase()}[data-slot="${a.getAttribute("data-slot") ?? ""}"] "${text.length > 60 ? `${text.slice(0, 60)}…` : text}"`;
+}
+
 /** The reader `Sr` drives ("voiceover", "nvda", "orca" or "dry"), and whether the run is dry. */
 export type SrOptions = { reader: string; dry: boolean };
 
@@ -41,7 +80,44 @@ export class Sr {
      * reader as NVDA or as VoiceOver (the change review, finding 5).
      */
     readonly options: SrOptions,
-  ) {}
+  ) {
+    OWNERS.set(page, this);
+  }
+
+  /** Whether a window's action is running, and the waits that timed out in it. */
+  private inWindow = false;
+  private late: Fault[] = [];
+
+  /** `appears()`, on this test. */
+  async appears(
+    locator: Locator,
+    what: string,
+    {
+      state = "visible",
+      timeout = WAIT_MS,
+    }: { state?: WaitState; timeout?: number } = {},
+  ): Promise<boolean> {
+    const came = await locator.waitFor({ state, timeout }).then(
+      () => true,
+      (e: unknown) => {
+        if (e instanceof Error && e.name === "TimeoutError") return false;
+        throw e;
+      },
+    );
+    const bound = `${timeout / 1000} s`;
+    this.fact(`${what} is ${state} within ${bound}`, came);
+    if (came) return true;
+    const where = await this.page
+      .evaluate(focusedElement)
+      .catch(() => "(the page did not answer)");
+    const fault: Fault = {
+      rule: "X0",
+      message: `${what} was not ${state} within ${bound}; focus was on ${where}`,
+    };
+    if (this.inWindow) this.late.push(fault);
+    else await this.judge([fault]);
+    return false;
+  }
 
   /**
    * Open an example or view, wait for it, and move the reader into it.
@@ -57,7 +133,10 @@ export class Sr {
    */
   async open(path: string, ready = READY): Promise<void> {
     await this.page.goto(path);
-    await this.page.locator(ready).first().waitFor();
+    await this.appears(
+      this.page.locator(ready).first(),
+      `${path}'s ready mark`,
+    );
     await this.page.bringToFront();
     if (this.options.dry) return;
     const url = this.page.url();
@@ -117,6 +196,38 @@ export class Sr {
       if (left > 0) await this.page.waitForTimeout(left);
     };
     let phrases: string[];
+    this.inWindow = true;
+    try {
+      phrases = await this.capture(act, wait);
+    } catch (e) {
+      // The change review, finding 5: a wait that timed out before the
+      // action threw keeps its X0, attached, and the action's error is
+      // thrown on.
+      if (this.late.length) {
+        this.faults.push(...this.late.splice(0));
+        await this.info.attach("faults.json", {
+          body: JSON.stringify(this.faults, null, 2),
+          contentType: "application/json",
+        });
+      }
+      throw e;
+    } finally {
+      this.inWindow = false;
+    }
+    if (this.options.dry) phrases = [];
+    this.windows[name] = phrases;
+    await this.itemText(name);
+    // 022aa: a wait that timed out in the action fails once the window is recorded.
+    if (this.late.length) await this.judge(this.late.splice(0));
+    return phrases;
+  }
+
+  /** One window's captures, by reader (`listen`). */
+  private async capture(
+    act: (() => Promise<unknown>) | undefined,
+    wait: () => Promise<void>,
+  ): Promise<string[]> {
+    let phrases: string[];
     if (this.options.reader === "nvda") {
       await this.reader.capture(
         async () => {
@@ -137,9 +248,6 @@ export class Sr {
           ? joinCaptures(action, rest)
           : [...action, ...rest];
     }
-    if (this.options.dry) phrases = [];
-    this.windows[name] = phrases;
-    await this.itemText(name);
     return phrases;
   }
 

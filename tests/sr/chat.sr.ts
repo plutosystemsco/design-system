@@ -5,7 +5,7 @@
  * last reply's heading, which is spoken (F1).
  */
 import type { Page } from "@playwright/test";
-import { declared, test } from "./fixtures.ts";
+import { appears, declared, test } from "./fixtures.ts";
 import { F1, L1 } from "./rules.ts";
 
 const PATH = "/view/chat/";
@@ -39,7 +39,7 @@ test(
     await draft(page, sr);
     await sr.after(async () => {
       await page.keyboard.press("Enter");
-      await latest(page).waitFor({ timeout: 10_000 });
+      await appears(latest(page), "the reply");
     }, "reply");
     await sr.after(() => latest(page).focus(), "focus latest");
     const after = await sr.after(() => page.keyboard.press("Enter"));

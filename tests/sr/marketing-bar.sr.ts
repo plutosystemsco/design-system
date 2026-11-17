@@ -10,7 +10,7 @@
  * tests hear `sheet` as well (patch 6 reaches the O2 test through it).
  */
 import type { Page } from "@playwright/test";
-import { declared, test, type Sr } from "./fixtures.ts";
+import { appears, declared, test, type Sr } from "./fixtures.ts";
 import { F1, O1, O2, O3 } from "./rules.ts";
 
 const PATH = "/view/compositions/marketing-bar/";
@@ -32,7 +32,10 @@ async function ready(page: Page, sr: Sr): Promise<void> {
 /** From the focused trigger: the key alone, then the panel by its slot. */
 async function open(page: Page): Promise<void> {
   await page.keyboard.press("Enter");
-  await page.locator('[data-slot="sheet-content"]').waitFor();
+  await appears(
+    page.locator('[data-slot="sheet-content"]'),
+    "the menu's sheet",
+  );
 }
 
 test(
