@@ -1,7 +1,7 @@
 # Review of 022v and 022w — the copy button's one "Copied", and the search count that stays
 
 - **Date:** 2026-11-17
-- **Status:** in review
+- **Status:** dispositioned; both land
 - **Reviewer:** a reviewer; not the author
 - **Reviewed:** the uncommitted diff in the worktree `lane-i-run5`, on `71cb067` (`git diff` and the two untracked specifications): [022v](../specifications/022v-code-blocks-copied-is-said-once.md) and [022w](../specifications/022w-the-search-fields-count-clears-only-on-a-keystroke.md), with [the fifth matrix run](../research/2026-11-17-the-fifth-matrix-run.md) §3.3, §3.5 and §7, `004` decision 8 and criteria 4 and 6, and `022r`.
 - **Re-ran:** each item on a fresh `bun run build`, served with `E2E_PREBUILT=1` on a port of its own (`E2E_PORT=4391`), Playwright's browsers from `/opt/pw-browsers`.
@@ -168,3 +168,36 @@
 - **022w:** Lands. Finding 2's one-line fix is recommended in this change, with its check seen failing first; if it is deferred, it becomes a roadmap row, not a limit. Finding 7 is a write-in; finding 8 a note.
 
 ## Disposition
+
+By the reviewer, 2026-11-17, on the builder's fixes, in the same worktree. The builder fixed findings 1 to 8; the reviewer re-checked each and wrote none of them. Finding 9 asked for no change.
+
+The container restarted during the re-check. Before going on, every file in the change set was compared with `git show 18c3cca:<path>`, the builder's fixed set: all 16 matched, and no revert was half done. Before and after every probe below, the SHA-256 of `git diff` plus the untracked files (the review aside) was `ef235b7e…`, and of `git status --porcelain` `0e97c4b2…`. Each reverted file was restored from `18c3cca` and the site rebuilt.
+
+1. **Fixed.** Both copy tests install the clock at 2026-11-17T10:00:00Z, and pause it 600,000 ms ahead before Enter. C4 also pins `data-copied` at 1,999 ms and its removal at 2,000 ms. READ: `code.spec.ts` and `keyboard.spec.ts`.
+   - **Seen failing, EXECUTED:** `code-block-copy-button.svelte` put back to `71cb067`, then a rebuild. Both tests failed in `chromium-light` and `webkit-light`, **4 of 4**, at the name (`code.spec.ts:487`, `keyboard.spec.ts:1153`): Expected "Copy code", Received "Copied". The file was restored from `18c3cca` and the site rebuilt.
+   - **Under load, EXECUTED:** both tests, both projects, `--repeat-each=25`, 4 workers, run twice, with three and then five busy-loop processes beside them. The load average was about 15, then 23. Result: **200 of 200 passed**, with no `pauseAt` error. Before the fix, the same run failed 3 of 100 at about 22.
+2. **Fixed.** `clear()` sets `said = ""`, with the comment "The query is gone, so its count goes too." Clear and Escape both call it. READ. Test 29 asserts an empty status after Clear's 2,000 ms, and after Escape once "3 results" is there.
+   - **Seen failing, EXECUTED:** the fixed item without that one line, then a rebuild. Test 29 failed in both projects at the Clear assertion (`search-field.spec.ts:363`): Expected "", Received "3 results". The other 22 passed, 29b among them. The Escape assertion comes after it and was not reached here; the builder ran both as soft assertions and saw both fail (READ, `022w`'s landing notes). Escape reaches the same line through `clear()`. The file was restored from `18c3cca` and the site rebuilt.
+   - The refined-`results` case stays under "Not settled", as a fact, not a limit: no test or run has faulted it. That is acceptable for a case that predates `022r`.
+3. **Written in, but the row is not there yet.** `022v`'s "Not settled" says the tokens page's fix "is queued as a roadmap row … in lane S". READ: no such row is in `context/roadmap.md`, in this worktree or in the main checkout. Edits here go only to this review, so the row belongs to whoever lands the context with this batch. It does not block `022v`: the tokens page is a site page, not this item.
+4. **Fixed.** The page says "so “Copied” comes from the status alone". The changelog says "the status beside it says "Copied", the one place it is said". READ.
+5. **Fixed.** `022v`'s thumbnails note names `component.svelte`, through `command.svelte` and `snippet.svelte`. READ.
+6. **Fixed.** `022v` no longer claims the catalogue's figures as the change's. READ. EXECUTED: `bun run cost --only code-block,search-field --sizes-only` says "every figure is fresh". `report.json` (`54592910…`) was unchanged by the run. `code-block` JS is 25,573 B. `search-field` JS is 13,393 B, one byte more than before finding 2's line.
+7. **Fixed.** `022w`'s landing notes open with the ruling: who ruled, when, what, and why. Its fix 1 points there. The pointer in `022r` is left to the design lead, as before. READ.
+8. **Fixed.** 29b's comment says the first count's empty write is the page's own, from hydration. READ.
+9. No change asked.
+
+EXECUTED by the reviewer after the fixes, on a fresh build of `18c3cca`'s set:
+
+- `code.spec.ts` and `search-field.spec.ts`, `chromium-light` and `webkit-light` → **110 passed**. `search-field.spec.ts` again, `--repeat-each=2` → **48 passed**.
+- `keyboard.spec.ts`, the code-block fixture test and the copy tests, both projects → **6 passed**.
+- The dry speech run, `SR_DRY=1`, `chromium` and `webkit`, `code-block.sr.ts` and `search-field.sr.ts` → **10 of 10 passed**.
+- `bun run check` → 0 errors, 0 warnings. `bun run lint` → clean. `bun scripts/lint-literals.ts` → 0 literals, 1 allowance. `registry.test.ts` and `thumbnails.test.ts` → 126 passed, 0 failed. All eleven mutation patches still apply.
+- Not re-run: the whole unit suite. Its only failures were the highlighter's timing budgets, and the fixes touch nothing they import.
+
+Not run, as before: Firefox, `webkit-dark`, and any reader. The next `matrix` run shows code-block's copy test, and S1 and S2, in every pair. That is where "Copied" said once, and a count held until the field changes, are first heard.
+
+Closing verdict:
+
+- **022v:** Lands. Finding 1 is fixed and proven under load. Finding 3's roadmap row is still to write, with the context.
+- **022w:** Lands. Finding 2 is fixed, and its check was seen failing first.
