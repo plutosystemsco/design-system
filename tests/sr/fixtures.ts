@@ -141,8 +141,13 @@ export const test = screenReaderTest.extend<{ ledger: void; sr: Sr }>({
     (info) => ({ reader: READER, browser: info.project.name }),
     [...LEDGER, ...MUTATION_LINES],
   ),
-  sr: async ({ page, screenReader }, use, info) => {
-    const sr = new Sr(page, screenReader, info, { reader: READER, dry: DRY });
+  // 022ad: a restart of VoiceOver inside `open()` starts it as this fixture did.
+  sr: async ({ page, screenReader, screenReaderStartOptions }, use, info) => {
+    const sr = new Sr(page, screenReader, info, {
+      reader: READER,
+      dry: DRY,
+      start: screenReaderStartOptions,
+    });
     await use(sr);
     await info.attach("phrases.json", {
       body: JSON.stringify(
