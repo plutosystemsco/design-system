@@ -1,0 +1,2589 @@
+{
+  "at": "2026-11-17T15:22:10.316Z",
+  "kuiperBuild": "2026-11-16T23:34:24.926Z",
+  "rows": [
+    {
+      "site": "radix",
+      "kind": "home",
+      "url": "https://www.radix-ui.com/",
+      "run": 0,
+      "dom": {
+        "docHeight": 900,
+        "type": {
+          "totalChars": 2888,
+          "sizes": {
+            "distinct": 9,
+            "cover95": 5,
+            "top": [
+              [
+                "14",
+                73.4
+              ],
+              [
+                "16",
+                6.7
+              ],
+              [
+                "20",
+                6.3
+              ],
+              [
+                "13.5",
+                4.7
+              ],
+              [
+                "24",
+                4.1
+              ],
+              [
+                "35",
+                1.5
+              ],
+              [
+                "12",
+                1.2
+              ],
+              [
+                "18",
+                1.2
+              ]
+            ]
+          },
+          "weights": {
+            "distinct": 3,
+            "cover95": 3,
+            "top": [
+              [
+                "400",
+                75.1
+              ],
+              [
+                "700",
+                17
+              ],
+              [
+                "500",
+                7.9
+              ]
+            ]
+          },
+          "lineHeights": {
+            "distinct": 10,
+            "cover95": 6,
+            "top": [
+              [
+                "20",
+                72.5
+              ],
+              [
+                "28",
+                6.3
+              ],
+              [
+                "22",
+                5.8
+              ],
+              [
+                "24",
+                5.6
+              ],
+              [
+                "30",
+                4.1
+              ],
+              [
+                "16",
+                2.2
+              ],
+              [
+                "40",
+                1.5
+              ],
+              [
+                "70",
+                0.9
+              ]
+            ]
+          },
+          "families": {
+            "distinct": 4,
+            "cover95": 3,
+            "top": [
+              [
+                "-apple-system",
+                83.8
+              ],
+              [
+                "untitledsans",
+                10.5
+              ],
+              [
+                "soehnemono",
+                4.7
+              ],
+              [
+                "adobetextpro",
+                0.9
+              ]
+            ]
+          },
+          "colors": {
+            "distinct": 13,
+            "cover95": 5,
+            "top": [
+              [
+                "rgba(0, 7, 20, 0.624)",
+                43.7
+              ],
+              [
+                "rgb(28, 32, 36)",
+                40.3
+              ],
+              [
+                "rgba(0, 43, 183, 0.773)",
+                6.5
+              ],
+              [
+                "rgb(255, 255, 255)",
+                3.2
+              ],
+              [
+                "rgb(101, 80, 185)",
+                1.6
+              ],
+              [
+                "rgb(203, 29, 99)",
+                1.1
+              ],
+              [
+                "rgba(196, 0, 6, 0.827)",
+                0.9
+              ],
+              [
+                "rgb(58, 91, 199)",
+                0.8
+              ]
+            ]
+          },
+          "styles": {
+            "distinct": 32,
+            "cover95": 20,
+            "top": [
+              [
+                "14|400|-apple-system|rgba(0, 7, 20, 0.624)",
+                36.8
+              ],
+              [
+                "14|400|-apple-system|rgb(28, 32, 36)",
+                19.6
+              ],
+              [
+                "14|700|-apple-system|rgb(28, 32, 36)",
+                5.7
+              ],
+              [
+                "20|400|untitledsans|rgba(0, 7, 20, 0.624)",
+                5.1
+              ],
+              [
+                "16|700|-apple-system|rgb(28, 32, 36)",
+                4.6
+              ],
+              [
+                "24|700|-apple-system|rgb(28, 32, 36)",
+                3.9
+              ],
+              [
+                "14|400|-apple-system|rgba(0, 43, 183, 0.773)",
+                3.5
+              ],
+              [
+                "14|400|untitledsans|rgba(0, 7, 20, 0.624)",
+                1.7
+              ]
+            ]
+          }
+        },
+        "prose": {
+          "chars": 2251,
+          "size": 14,
+          "sizeShare": 79.7,
+          "top": [
+            [
+              14,
+              79.7
+            ],
+            [
+              20,
+              8
+            ],
+            [
+              16,
+              7.2
+            ],
+            [
+              35,
+              1.9
+            ],
+            [
+              12,
+              1.6
+            ]
+          ],
+          "h1ToProse": 4.71
+        },
+        "styleSet": [
+          "14|400|-apple-system|rgba(0, 7, 20, 0.624)",
+          "14|400|-apple-system|rgb(28, 32, 36)",
+          "14|700|-apple-system|rgb(28, 32, 36)",
+          "20|400|untitledsans|rgba(0, 7, 20, 0.624)",
+          "16|700|-apple-system|rgb(28, 32, 36)",
+          "24|700|-apple-system|rgb(28, 32, 36)",
+          "14|400|-apple-system|rgba(0, 43, 183, 0.773)",
+          "14|400|untitledsans|rgba(0, 7, 20, 0.624)",
+          "13.5|400|soehnemono|rgb(101, 80, 185)",
+          "16|400|-apple-system|rgb(28, 32, 36)",
+          "14|500|-apple-system|rgb(255, 255, 255)",
+          "14|500|-apple-system|rgba(0, 43, 183, 0.773)",
+          "35|700|-apple-system|rgb(28, 32, 36)",
+          "13.5|400|soehnemono|rgb(28, 32, 36)",
+          "13.5|400|soehnemono|rgb(203, 29, 99)",
+          "14|400|untitledsans|rgb(255, 255, 255)",
+          "14|500|untitledsans|rgba(0, 43, 183, 0.773)",
+          "78|400|adobetextpro|rgb(28, 32, 36)",
+          "13.5|400|soehnemono|rgb(58, 91, 199)",
+          "20|700|-apple-system|rgb(28, 32, 36)"
+        ],
+        "spacing": {
+          "values": 716,
+          "distinct": 18,
+          "on4px": 73.5,
+          "on8px": 46.1,
+          "offGrid": [
+            [
+              6,
+              128
+            ],
+            [
+              2,
+              26
+            ],
+            [
+              1,
+              20
+            ],
+            [
+              10,
+              10
+            ],
+            [
+              0.5,
+              3
+            ],
+            [
+              78.4,
+              2
+            ],
+            [
+              18,
+              1
+            ]
+          ]
+        },
+        "leftEdges": {
+          "items": 82,
+          "distinct": 36,
+          "perItem": 0.44,
+          "singletonShare": 29.3,
+          "shared3": 8
+        },
+        "defects": {
+          "horizontalScroll": false,
+          "spills": 0,
+          "spillEx": [],
+          "truncated": 0,
+          "headings": 14,
+          "headingsWrapped": 1,
+          "headingWidows": 0,
+          "paras": 25,
+          "parasMulti": 5,
+          "labels": 56,
+          "labelWraps": 0,
+          "labelWrapEx": [],
+          "paraWidowShare": 20,
+          "medianCharsPerLine": 49
+        },
+        "media": {
+          "count": 1,
+          "foldShare": 100,
+          "pageShare": 100
+        },
+        "h1": {
+          "top": 0,
+          "left": 0,
+          "size": 66
+        }
+      },
+      "px": {
+        "colourfulness": 22.8,
+        "colours95": 35,
+        "dominantShare": 0.478,
+        "edgeDensity": 0.1,
+        "whitespace": 0.755,
+        "quadtreeLeaves": 5425,
+        "balance": 0.871,
+        "balanceLR": 0.795,
+        "balanceTB": 0.947,
+        "leftHeavy": false,
+        "topHeavy": true,
+        "symmetry": 0.247
+      }
+    },
+    {
+      "site": "radix",
+      "kind": "button",
+      "url": "https://www.radix-ui.com/themes/docs/components/button",
+      "run": 0,
+      "dom": {
+        "docHeight": 6491,
+        "type": {
+          "totalChars": 5310,
+          "sizes": {
+            "distinct": 9,
+            "cover95": 4,
+            "top": [
+              [
+                "13.5",
+                50.9
+              ],
+              [
+                "14",
+                21.6
+              ],
+              [
+                "16",
+                19.5
+              ],
+              [
+                "12.5",
+                3.2
+              ],
+              [
+                "18",
+                2.9
+              ],
+              [
+                "14.5",
+                1.1
+              ],
+              [
+                "24",
+                0.4
+              ],
+              [
+                "12",
+                0.2
+              ]
+            ]
+          },
+          "weights": {
+            "distinct": 3,
+            "cover95": 2,
+            "top": [
+              [
+                "400",
+                89.6
+              ],
+              [
+                "500",
+                10.1
+              ],
+              [
+                "700",
+                0.3
+              ]
+            ]
+          },
+          "lineHeights": {
+            "distinct": 8,
+            "cover95": 3,
+            "top": [
+              [
+                "22",
+                50.9
+              ],
+              [
+                "20",
+                23.4
+              ],
+              [
+                "24",
+                20.7
+              ],
+              [
+                "18",
+                2
+              ],
+              [
+                "26",
+                1.7
+              ],
+              [
+                "16",
+                0.7
+              ],
+              [
+                "30",
+                0.4
+              ],
+              [
+                "40",
+                0.1
+              ]
+            ]
+          },
+          "families": {
+            "distinct": 3,
+            "cover95": 3,
+            "top": [
+              [
+                "soehnemono",
+                55.3
+              ],
+              [
+                "untitledsans",
+                37.2
+              ],
+              [
+                "-apple-system",
+                7.5
+              ]
+            ]
+          },
+          "colors": {
+            "distinct": 12,
+            "cover95": 6,
+            "top": [
+              [
+                "rgb(28, 32, 36)",
+                50.1
+              ],
+              [
+                "rgb(58, 91, 199)",
+                14.8
+              ],
+              [
+                "rgb(203, 29, 99)",
+                11.4
+              ],
+              [
+                "rgba(0, 7, 20, 0.624)",
+                7.2
+              ],
+              [
+                "rgba(0, 43, 183, 0.773)",
+                6.9
+              ],
+              [
+                "rgb(31, 45, 92)",
+                6.3
+              ],
+              [
+                "rgb(255, 255, 255)",
+                1.5
+              ],
+              [
+                "rgba(0, 8, 48, 0.275)",
+                0.8
+              ]
+            ]
+          },
+          "styles": {
+            "distinct": 31,
+            "cover95": 17,
+            "top": [
+              [
+                "13.5|400|soehnemono|rgb(28, 32, 36)",
+                18.5
+              ],
+              [
+                "16|400|untitledsans|rgb(28, 32, 36)",
+                17.5
+              ],
+              [
+                "13.5|400|soehnemono|rgb(58, 91, 199)",
+                14.8
+              ],
+              [
+                "13.5|400|soehnemono|rgb(203, 29, 99)",
+                11.4
+              ],
+              [
+                "14|400|untitledsans|rgb(28, 32, 36)",
+                10.5
+              ],
+              [
+                "13.5|400|soehnemono|rgb(31, 45, 92)",
+                6.3
+              ],
+              [
+                "14|400|untitledsans|rgba(0, 7, 20, 0.624)",
+                2.7
+              ],
+              [
+                "12.5|400|soehnemono|rgba(0, 7, 20, 0.624)",
+                2.3
+              ]
+            ]
+          }
+        },
+        "prose": {
+          "chars": 1746,
+          "size": 16,
+          "sizeShare": 58.5,
+          "top": [
+            [
+              16,
+              58.5
+            ],
+            [
+              14,
+              36.4
+            ],
+            [
+              18,
+              5.1
+            ]
+          ],
+          "h1ToProse": 2.19
+        },
+        "styleSet": [
+          "13.5|400|soehnemono|rgb(28, 32, 36)",
+          "16|400|untitledsans|rgb(28, 32, 36)",
+          "13.5|400|soehnemono|rgb(58, 91, 199)",
+          "13.5|400|soehnemono|rgb(203, 29, 99)",
+          "14|400|untitledsans|rgb(28, 32, 36)",
+          "13.5|400|soehnemono|rgb(31, 45, 92)",
+          "14|400|untitledsans|rgba(0, 7, 20, 0.624)",
+          "12.5|400|soehnemono|rgba(0, 7, 20, 0.624)",
+          "14|500|-apple-system|rgba(0, 43, 183, 0.773)",
+          "16|400|untitledsans|rgba(0, 43, 183, 0.773)",
+          "18|400|untitledsans|rgba(0, 7, 20, 0.624)",
+          "14|500|-apple-system|rgb(255, 255, 255)",
+          "18|500|untitledsans|rgb(28, 32, 36)",
+          "14.5|400|soehnemono|rgba(0, 43, 183, 0.773)",
+          "14|500|untitledsans|rgb(28, 32, 36)",
+          "12.5|400|soehnemono|rgba(0, 43, 183, 0.773)",
+          "14|500|-apple-system|rgba(0, 8, 48, 0.275)"
+        ],
+        "spacing": {
+          "values": 1313,
+          "distinct": 19,
+          "on4px": 82.5,
+          "on8px": 45.3,
+          "offGrid": [
+            [
+              1,
+              136
+            ],
+            [
+              3.16,
+              34
+            ],
+            [
+              3.61,
+              18
+            ],
+            [
+              0.95,
+              17
+            ],
+            [
+              1.08,
+              9
+            ],
+            [
+              2,
+              8
+            ],
+            [
+              10,
+              8
+            ]
+          ]
+        },
+        "leftEdges": {
+          "items": 88,
+          "distinct": 34,
+          "perItem": 0.39,
+          "singletonShare": 27.3,
+          "shared3": 7
+        },
+        "defects": {
+          "horizontalScroll": false,
+          "spills": 0,
+          "spillEx": [],
+          "truncated": 0,
+          "headings": 18,
+          "headingsWrapped": 0,
+          "headingWidows": 0,
+          "paras": 20,
+          "parasMulti": 3,
+          "labels": 188,
+          "labelWraps": 9,
+          "labelWrapEx": [
+            "th: asChildProp description",
+            "th: variantProp description",
+            "th: colorProp description",
+            "th: radiusProp description",
+            "button: BookmarkBookmark",
+            "button: BookmarkBookmark"
+          ],
+          "paraWidowShare": 0,
+          "medianCharsPerLine": 80
+        },
+        "media": {
+          "count": 0,
+          "foldShare": 0,
+          "pageShare": 0
+        },
+        "h1": {
+          "top": 128,
+          "left": 428,
+          "size": 35
+        }
+      },
+      "px": {
+        "colourfulness": 10.5,
+        "colours95": 3,
+        "dominantShare": 0.893,
+        "edgeDensity": 0.067,
+        "whitespace": 0.841,
+        "quadtreeLeaves": 2971,
+        "balance": 0.78,
+        "balanceLR": 0.785,
+        "balanceTB": 0.775,
+        "leftHeavy": true,
+        "topHeavy": false,
+        "symmetry": 0.489
+      }
+    },
+    {
+      "site": "radix",
+      "kind": "t1",
+      "url": "https://www.radix-ui.com/themes/docs/components/checkbox",
+      "run": 0,
+      "dom": {
+        "docHeight": 5180,
+        "type": {
+          "totalChars": 4270,
+          "sizes": {
+            "distinct": 8,
+            "cover95": 4,
+            "top": [
+              [
+                "13.5",
+                54.7
+              ],
+              [
+                "14",
+                20.4
+              ],
+              [
+                "16",
+                16.3
+              ],
+              [
+                "18",
+                3.9
+              ],
+              [
+                "12.5",
+                2.5
+              ],
+              [
+                "14.5",
+                1.5
+              ],
+              [
+                "24",
+                0.5
+              ],
+              [
+                "35",
+                0.2
+              ]
+            ]
+          },
+          "weights": {
+            "distinct": 3,
+            "cover95": 1,
+            "top": [
+              [
+                "400",
+                96.1
+              ],
+              [
+                "500",
+                3.5
+              ],
+              [
+                "700",
+                0.4
+              ]
+            ]
+          },
+          "lineHeights": {
+            "distinct": 8,
+            "cover95": 4,
+            "top": [
+              [
+                "22",
+                54.7
+              ],
+              [
+                "20",
+                21.2
+              ],
+              [
+                "24",
+                17.9
+              ],
+              [
+                "18",
+                2.6
+              ],
+              [
+                "26",
+                2.3
+              ],
+              [
+                "16",
+                0.6
+              ],
+              [
+                "30",
+                0.5
+              ],
+              [
+                "40",
+                0.2
+              ]
+            ]
+          },
+          "families": {
+            "distinct": 3,
+            "cover95": 3,
+            "top": [
+              [
+                "soehnemono",
+                58.7
+              ],
+              [
+                "untitledsans",
+                35.6
+              ],
+              [
+                "-apple-system",
+                5.7
+              ]
+            ]
+          },
+          "colors": {
+            "distinct": 7,
+            "cover95": 6,
+            "top": [
+              [
+                "rgb(28, 32, 36)",
+                50.4
+              ],
+              [
+                "rgb(203, 29, 99)",
+                18.7
+              ],
+              [
+                "rgb(58, 91, 199)",
+                11.8
+              ],
+              [
+                "rgba(0, 7, 20, 0.624)",
+                7
+              ],
+              [
+                "rgb(31, 45, 92)",
+                7
+              ],
+              [
+                "rgba(0, 43, 183, 0.773)",
+                4.9
+              ],
+              [
+                "rgb(255, 255, 255)",
+                0.1
+              ]
+            ]
+          },
+          "styles": {
+            "distinct": 23,
+            "cover95": 14,
+            "top": [
+              [
+                "13.5|400|soehnemono|rgb(203, 29, 99)",
+                18.7
+              ],
+              [
+                "13.5|400|soehnemono|rgb(28, 32, 36)",
+                17.2
+              ],
+              [
+                "14|400|untitledsans|rgb(28, 32, 36)",
+                13.1
+              ],
+              [
+                "13.5|400|soehnemono|rgb(58, 91, 199)",
+                11.8
+              ],
+              [
+                "16|400|untitledsans|rgb(28, 32, 36)",
+                11.1
+              ],
+              [
+                "13.5|400|soehnemono|rgb(31, 45, 92)",
+                7
+              ],
+              [
+                "14|400|untitledsans|rgba(0, 7, 20, 0.624)",
+                3.6
+              ],
+              [
+                "16|400|-apple-system|rgb(28, 32, 36)",
+                2.8
+              ]
+            ]
+          }
+        },
+        "prose": {
+          "chars": 1282,
+          "size": 14,
+          "sizeShare": 49.6,
+          "top": [
+            [
+              14,
+              49.6
+            ],
+            [
+              16,
+              45.1
+            ],
+            [
+              18,
+              5.3
+            ]
+          ],
+          "h1ToProse": 2.5
+        },
+        "styleSet": [
+          "13.5|400|soehnemono|rgb(203, 29, 99)",
+          "13.5|400|soehnemono|rgb(28, 32, 36)",
+          "14|400|untitledsans|rgb(28, 32, 36)",
+          "13.5|400|soehnemono|rgb(58, 91, 199)",
+          "16|400|untitledsans|rgb(28, 32, 36)",
+          "13.5|400|soehnemono|rgb(31, 45, 92)",
+          "14|400|untitledsans|rgba(0, 7, 20, 0.624)",
+          "16|400|-apple-system|rgb(28, 32, 36)",
+          "16|400|untitledsans|rgba(0, 43, 183, 0.773)",
+          "12.5|400|soehnemono|rgba(0, 7, 20, 0.624)",
+          "14|400|-apple-system|rgb(28, 32, 36)",
+          "18|500|untitledsans|rgb(28, 32, 36)",
+          "14.5|400|soehnemono|rgba(0, 43, 183, 0.773)",
+          "18|400|untitledsans|rgba(0, 7, 20, 0.624)"
+        ],
+        "spacing": {
+          "values": 1008,
+          "distinct": 19,
+          "on4px": 83.5,
+          "on8px": 51.9,
+          "offGrid": [
+            [
+              1,
+              96
+            ],
+            [
+              3.16,
+              20
+            ],
+            [
+              3.61,
+              16
+            ],
+            [
+              0.95,
+              10
+            ],
+            [
+              2,
+              8
+            ],
+            [
+              10,
+              8
+            ],
+            [
+              1.08,
+              8
+            ]
+          ]
+        },
+        "leftEdges": {
+          "items": 81,
+          "distinct": 33,
+          "perItem": 0.41,
+          "singletonShare": 29.6,
+          "shared3": 7
+        },
+        "defects": {
+          "horizontalScroll": false,
+          "spills": 0,
+          "spillEx": [],
+          "truncated": 0,
+          "headings": 17,
+          "headingsWrapped": 0,
+          "headingWidows": 0,
+          "paras": 19,
+          "parasMulti": 0,
+          "labels": 136,
+          "labelWraps": 2,
+          "labelWrapEx": [
+            "th: variantProp description",
+            "th: colorProp description"
+          ],
+          "paraWidowShare": 0,
+          "medianCharsPerLine": null
+        },
+        "media": {
+          "count": 0,
+          "foldShare": 0,
+          "pageShare": 0
+        },
+        "h1": {
+          "top": 128,
+          "left": 428,
+          "size": 35
+        }
+      },
+      "px": {
+        "colourfulness": 8.2,
+        "colours95": 3,
+        "dominantShare": 0.864,
+        "edgeDensity": 0.066,
+        "whitespace": 0.84,
+        "quadtreeLeaves": 3067,
+        "balance": 0.767,
+        "balanceLR": 0.71,
+        "balanceTB": 0.825,
+        "leftHeavy": true,
+        "topHeavy": false,
+        "symmetry": 0.433
+      }
+    },
+    {
+      "site": "radix",
+      "kind": "t2",
+      "url": "https://www.radix-ui.com/themes/docs/components/tabs",
+      "run": 0,
+      "dom": {
+        "docHeight": 4706,
+        "type": {
+          "totalChars": 4598,
+          "sizes": {
+            "distinct": 9,
+            "cover95": 4,
+            "top": [
+              [
+                "13.5",
+                56.7
+              ],
+              [
+                "14",
+                22
+              ],
+              [
+                "16",
+                13.4
+              ],
+              [
+                "12.5",
+                3.6
+              ],
+              [
+                "18",
+                2.8
+              ],
+              [
+                "12",
+                0.5
+              ],
+              [
+                "24",
+                0.5
+              ],
+              [
+                "14.5",
+                0.5
+              ]
+            ]
+          },
+          "weights": {
+            "distinct": 3,
+            "cover95": 2,
+            "top": [
+              [
+                "400",
+                94.9
+              ],
+              [
+                "500",
+                4.5
+              ],
+              [
+                "700",
+                0.7
+              ]
+            ]
+          },
+          "lineHeights": {
+            "distinct": 8,
+            "cover95": 3,
+            "top": [
+              [
+                "22",
+                56.7
+              ],
+              [
+                "20",
+                23.9
+              ],
+              [
+                "24",
+                14.8
+              ],
+              [
+                "18",
+                1.5
+              ],
+              [
+                "26",
+                1.4
+              ],
+              [
+                "16",
+                1.1
+              ],
+              [
+                "30",
+                0.5
+              ],
+              [
+                "40",
+                0.1
+              ]
+            ]
+          },
+          "families": {
+            "distinct": 3,
+            "cover95": 3,
+            "top": [
+              [
+                "soehnemono",
+                60.7
+              ],
+              [
+                "untitledsans",
+                33.9
+              ],
+              [
+                "-apple-system",
+                5.3
+              ]
+            ]
+          },
+          "colors": {
+            "distinct": 7,
+            "cover95": 5,
+            "top": [
+              [
+                "rgb(28, 32, 36)",
+                45.9
+              ],
+              [
+                "rgb(58, 91, 199)",
+                23.9
+              ],
+              [
+                "rgba(0, 7, 20, 0.624)",
+                10.4
+              ],
+              [
+                "rgb(203, 29, 99)",
+                7.9
+              ],
+              [
+                "rgb(31, 45, 92)",
+                7.9
+              ],
+              [
+                "rgba(0, 43, 183, 0.773)",
+                3.8
+              ],
+              [
+                "rgb(255, 255, 255)",
+                0.1
+              ]
+            ]
+          },
+          "styles": {
+            "distinct": 24,
+            "cover95": 14,
+            "top": [
+              [
+                "13.5|400|soehnemono|rgb(58, 91, 199)",
+                23.9
+              ],
+              [
+                "13.5|400|soehnemono|rgb(28, 32, 36)",
+                17
+              ],
+              [
+                "14|400|untitledsans|rgb(28, 32, 36)",
+                12.1
+              ],
+              [
+                "16|400|untitledsans|rgb(28, 32, 36)",
+                11.1
+              ],
+              [
+                "13.5|400|soehnemono|rgb(203, 29, 99)",
+                7.9
+              ],
+              [
+                "13.5|400|soehnemono|rgb(31, 45, 92)",
+                7.9
+              ],
+              [
+                "14|400|untitledsans|rgba(0, 7, 20, 0.624)",
+                3.2
+              ],
+              [
+                "14|400|-apple-system|rgba(0, 7, 20, 0.624)",
+                3
+              ]
+            ]
+          }
+        },
+        "prose": {
+          "chars": 1348,
+          "size": 14,
+          "sizeShare": 49.3,
+          "top": [
+            [
+              14,
+              49.3
+            ],
+            [
+              16,
+              45.8
+            ],
+            [
+              18,
+              4.9
+            ]
+          ],
+          "h1ToProse": 2.5
+        },
+        "styleSet": [
+          "13.5|400|soehnemono|rgb(58, 91, 199)",
+          "13.5|400|soehnemono|rgb(28, 32, 36)",
+          "14|400|untitledsans|rgb(28, 32, 36)",
+          "16|400|untitledsans|rgb(28, 32, 36)",
+          "13.5|400|soehnemono|rgb(203, 29, 99)",
+          "13.5|400|soehnemono|rgb(31, 45, 92)",
+          "14|400|untitledsans|rgba(0, 7, 20, 0.624)",
+          "14|400|-apple-system|rgba(0, 7, 20, 0.624)",
+          "12.5|400|soehnemono|rgba(0, 7, 20, 0.624)",
+          "16|400|untitledsans|rgba(0, 43, 183, 0.773)",
+          "18|500|untitledsans|rgb(28, 32, 36)",
+          "14|500|-apple-system|rgb(28, 32, 36)",
+          "18|400|untitledsans|rgba(0, 7, 20, 0.624)",
+          "14|500|untitledsans|rgb(28, 32, 36)"
+        ],
+        "spacing": {
+          "values": 1181,
+          "distinct": 19,
+          "on4px": 84.9,
+          "on8px": 50.6,
+          "offGrid": [
+            [
+              1,
+              108
+            ],
+            [
+              3.16,
+              26
+            ],
+            [
+              2,
+              14
+            ],
+            [
+              0.95,
+              13
+            ],
+            [
+              10,
+              8
+            ],
+            [
+              3.61,
+              6
+            ],
+            [
+              1.08,
+              3
+            ]
+          ]
+        },
+        "leftEdges": {
+          "items": 77,
+          "distinct": 26,
+          "perItem": 0.34,
+          "singletonShare": 23.4,
+          "shared3": 8
+        },
+        "defects": {
+          "horizontalScroll": false,
+          "spills": 0,
+          "spillEx": [],
+          "truncated": 0,
+          "headings": 18,
+          "headingsWrapped": 0,
+          "headingWidows": 0,
+          "paras": 20,
+          "parasMulti": 1,
+          "labels": 165,
+          "labelWraps": 2,
+          "labelWrapEx": [
+            "th: asChildProp description",
+            "th: colorProp description"
+          ],
+          "paraWidowShare": 0,
+          "medianCharsPerLine": null
+        },
+        "media": {
+          "count": 0,
+          "foldShare": 0,
+          "pageShare": 0
+        },
+        "h1": {
+          "top": 128,
+          "left": 428,
+          "size": 35
+        }
+      },
+      "px": {
+        "colourfulness": 10.9,
+        "colours95": 2,
+        "dominantShare": 0.698,
+        "edgeDensity": 0.068,
+        "whitespace": 0.849,
+        "quadtreeLeaves": 3427,
+        "balance": 0.733,
+        "balanceLR": 0.544,
+        "balanceTB": 0.923,
+        "leftHeavy": true,
+        "topHeavy": true,
+        "symmetry": 0.447
+      }
+    },
+    {
+      "site": "radix",
+      "kind": "t3",
+      "url": "https://www.radix-ui.com/themes/docs/components/tooltip",
+      "run": 0,
+      "dom": {
+        "docHeight": 1204,
+        "type": {
+          "totalChars": 1239,
+          "sizes": {
+            "distinct": 7,
+            "cover95": 5,
+            "top": [
+              [
+                "14",
+                57.5
+              ],
+              [
+                "16",
+                15.5
+              ],
+              [
+                "18",
+                10
+              ],
+              [
+                "12.5",
+                8
+              ],
+              [
+                "13.5",
+                7.4
+              ],
+              [
+                "24",
+                1
+              ],
+              [
+                "35",
+                0.6
+              ]
+            ]
+          },
+          "weights": {
+            "distinct": 3,
+            "cover95": 2,
+            "top": [
+              [
+                "400",
+                92.1
+              ],
+              [
+                "500",
+                6.7
+              ],
+              [
+                "700",
+                1.2
+              ]
+            ]
+          },
+          "lineHeights": {
+            "distinct": 8,
+            "cover95": 5,
+            "top": [
+              [
+                "20",
+                59.4
+              ],
+              [
+                "24",
+                16.2
+              ],
+              [
+                "26",
+                9.3
+              ],
+              [
+                "22",
+                7.4
+              ],
+              [
+                "18",
+                3.9
+              ],
+              [
+                "16",
+                2.2
+              ],
+              [
+                "30",
+                1
+              ],
+              [
+                "40",
+                0.6
+              ]
+            ]
+          },
+          "families": {
+            "distinct": 2,
+            "cover95": 2,
+            "top": [
+              [
+                "untitledsans",
+                84.6
+              ],
+              [
+                "soehnemono",
+                15.4
+              ]
+            ]
+          },
+          "colors": {
+            "distinct": 7,
+            "cover95": 4,
+            "top": [
+              [
+                "rgb(28, 32, 36)",
+                61.7
+              ],
+              [
+                "rgba(0, 7, 20, 0.624)",
+                19.8
+              ],
+              [
+                "rgba(0, 43, 183, 0.773)",
+                12.1
+              ],
+              [
+                "rgb(58, 91, 199)",
+                3.4
+              ],
+              [
+                "rgb(31, 45, 92)",
+                1.5
+              ],
+              [
+                "rgb(203, 29, 99)",
+                1
+              ],
+              [
+                "rgb(255, 255, 255)",
+                0.5
+              ]
+            ]
+          },
+          "styles": {
+            "distinct": 18,
+            "cover95": 13,
+            "top": [
+              [
+                "14|400|untitledsans|rgb(28, 32, 36)",
+                45
+              ],
+              [
+                "16|400|untitledsans|rgba(0, 43, 183, 0.773)",
+                7.7
+              ],
+              [
+                "16|400|untitledsans|rgb(28, 32, 36)",
+                7.7
+              ],
+              [
+                "18|400|untitledsans|rgba(0, 7, 20, 0.624)",
+                7.3
+              ],
+              [
+                "14|400|untitledsans|rgba(0, 7, 20, 0.624)",
+                6.9
+              ],
+              [
+                "12.5|400|soehnemono|rgba(0, 7, 20, 0.624)",
+                5.6
+              ],
+              [
+                "14|500|untitledsans|rgb(28, 32, 36)",
+                3.9
+              ],
+              [
+                "13.5|400|soehnemono|rgb(58, 91, 199)",
+                3.4
+              ]
+            ]
+          }
+        },
+        "prose": {
+          "chars": 943,
+          "size": 14,
+          "sizeShare": 67.4,
+          "top": [
+            [
+              14,
+              67.4
+            ],
+            [
+              16,
+              20.4
+            ],
+            [
+              18,
+              12.2
+            ]
+          ],
+          "h1ToProse": 2.5
+        },
+        "styleSet": [
+          "14|400|untitledsans|rgb(28, 32, 36)",
+          "16|400|untitledsans|rgba(0, 43, 183, 0.773)",
+          "16|400|untitledsans|rgb(28, 32, 36)",
+          "18|400|untitledsans|rgba(0, 7, 20, 0.624)",
+          "14|400|untitledsans|rgba(0, 7, 20, 0.624)",
+          "12.5|400|soehnemono|rgba(0, 7, 20, 0.624)",
+          "14|500|untitledsans|rgb(28, 32, 36)",
+          "13.5|400|soehnemono|rgb(58, 91, 199)",
+          "12.5|400|soehnemono|rgba(0, 43, 183, 0.773)",
+          "18|400|untitledsans|rgba(0, 43, 183, 0.773)",
+          "13.5|400|soehnemono|rgb(28, 32, 36)",
+          "13.5|400|soehnemono|rgb(31, 45, 92)",
+          "14|700|untitledsans|rgb(28, 32, 36)"
+        ],
+        "spacing": {
+          "values": 768,
+          "distinct": 17,
+          "on4px": 82.9,
+          "on8px": 49.1,
+          "offGrid": [
+            [
+              1,
+              88
+            ],
+            [
+              3.16,
+              18
+            ],
+            [
+              0.95,
+              9
+            ],
+            [
+              2,
+              8
+            ],
+            [
+              10,
+              8
+            ]
+          ]
+        },
+        "leftEdges": {
+          "items": 70,
+          "distinct": 29,
+          "perItem": 0.41,
+          "singletonShare": 31.4,
+          "shared3": 6
+        },
+        "defects": {
+          "horizontalScroll": false,
+          "spills": 0,
+          "spillEx": [],
+          "truncated": 0,
+          "headings": 9,
+          "headingsWrapped": 0,
+          "headingWidows": 0,
+          "paras": 3,
+          "parasMulti": 2,
+          "labels": 108,
+          "labelWraps": 1,
+          "labelWrapEx": [
+            "th: content*Prop description"
+          ],
+          "paraWidowShare": 50,
+          "medianCharsPerLine": null
+        },
+        "media": {
+          "count": 0,
+          "foldShare": 0,
+          "pageShare": 0
+        },
+        "h1": {
+          "top": 128,
+          "left": 428,
+          "size": 35
+        }
+      },
+      "px": {
+        "colourfulness": 8.8,
+        "colours95": 2,
+        "dominantShare": 0.878,
+        "edgeDensity": 0.064,
+        "whitespace": 0.849,
+        "quadtreeLeaves": 2836,
+        "balance": 0.648,
+        "balanceLR": 0.521,
+        "balanceTB": 0.776,
+        "leftHeavy": true,
+        "topHeavy": false,
+        "symmetry": 0.496
+      }
+    },
+    {
+      "site": "radix",
+      "kind": "t4",
+      "url": "https://www.radix-ui.com/themes/docs/components/dialog",
+      "run": 0,
+      "dom": {
+        "docHeight": 5523,
+        "type": {
+          "totalChars": 5015,
+          "sizes": {
+            "distinct": 8,
+            "cover95": 4,
+            "top": [
+              [
+                "13.5",
+                53.4
+              ],
+              [
+                "16",
+                18.5
+              ],
+              [
+                "14",
+                18.2
+              ],
+              [
+                "12.5",
+                5
+              ],
+              [
+                "18",
+                2.7
+              ],
+              [
+                "14.5",
+                1.7
+              ],
+              [
+                "24",
+                0.4
+              ],
+              [
+                "35",
+                0.1
+              ]
+            ]
+          },
+          "weights": {
+            "distinct": 3,
+            "cover95": 1,
+            "top": [
+              [
+                "400",
+                95.8
+              ],
+              [
+                "500",
+                3.9
+              ],
+              [
+                "700",
+                0.3
+              ]
+            ]
+          },
+          "lineHeights": {
+            "distinct": 8,
+            "cover95": 4,
+            "top": [
+              [
+                "22",
+                53.4
+              ],
+              [
+                "20",
+                21.6
+              ],
+              [
+                "24",
+                19.9
+              ],
+              [
+                "18",
+                2.6
+              ],
+              [
+                "26",
+                1.3
+              ],
+              [
+                "16",
+                0.6
+              ],
+              [
+                "30",
+                0.4
+              ],
+              [
+                "40",
+                0.1
+              ]
+            ]
+          },
+          "families": {
+            "distinct": 3,
+            "cover95": 2,
+            "top": [
+              [
+                "soehnemono",
+                60.1
+              ],
+              [
+                "untitledsans",
+                39
+              ],
+              [
+                "-apple-system",
+                0.9
+              ]
+            ]
+          },
+          "colors": {
+            "distinct": 7,
+            "cover95": 5,
+            "top": [
+              [
+                "rgb(28, 32, 36)",
+                49.1
+              ],
+              [
+                "rgb(58, 91, 199)",
+                26.2
+              ],
+              [
+                "rgba(0, 7, 20, 0.624)",
+                9.5
+              ],
+              [
+                "rgba(0, 43, 183, 0.773)",
+                5.6
+              ],
+              [
+                "rgb(203, 29, 99)",
+                5
+              ],
+              [
+                "rgb(31, 45, 92)",
+                4.1
+              ],
+              [
+                "rgb(255, 255, 255)",
+                0.6
+              ]
+            ]
+          },
+          "styles": {
+            "distinct": 21,
+            "cover95": 12,
+            "top": [
+              [
+                "13.5|400|soehnemono|rgb(58, 91, 199)",
+                26.2
+              ],
+              [
+                "13.5|400|soehnemono|rgb(28, 32, 36)",
+                18.1
+              ],
+              [
+                "16|400|untitledsans|rgb(28, 32, 36)",
+                16.6
+              ],
+              [
+                "14|400|untitledsans|rgb(28, 32, 36)",
+                11.1
+              ],
+              [
+                "13.5|400|soehnemono|rgb(203, 29, 99)",
+                5
+              ],
+              [
+                "14|400|untitledsans|rgba(0, 7, 20, 0.624)",
+                4.8
+              ],
+              [
+                "13.5|400|soehnemono|rgb(31, 45, 92)",
+                4.1
+              ],
+              [
+                "12.5|400|soehnemono|rgba(0, 7, 20, 0.624)",
+                3.8
+              ]
+            ]
+          }
+        },
+        "prose": {
+          "chars": 1715,
+          "size": 16,
+          "sizeShare": 54,
+          "top": [
+            [
+              16,
+              54
+            ],
+            [
+              14,
+              42.1
+            ],
+            [
+              18,
+              3.9
+            ]
+          ],
+          "h1ToProse": 2.19
+        },
+        "styleSet": [
+          "13.5|400|soehnemono|rgb(58, 91, 199)",
+          "13.5|400|soehnemono|rgb(28, 32, 36)",
+          "16|400|untitledsans|rgb(28, 32, 36)",
+          "14|400|untitledsans|rgb(28, 32, 36)",
+          "13.5|400|soehnemono|rgb(203, 29, 99)",
+          "14|400|untitledsans|rgba(0, 7, 20, 0.624)",
+          "13.5|400|soehnemono|rgb(31, 45, 92)",
+          "12.5|400|soehnemono|rgba(0, 7, 20, 0.624)",
+          "16|400|untitledsans|rgba(0, 43, 183, 0.773)",
+          "14.5|400|soehnemono|rgba(0, 43, 183, 0.773)",
+          "18|500|untitledsans|rgb(28, 32, 36)",
+          "12.5|400|soehnemono|rgba(0, 43, 183, 0.773)"
+        ],
+        "spacing": {
+          "values": 1067,
+          "distinct": 19,
+          "on4px": 80.4,
+          "on8px": 47,
+          "offGrid": [
+            [
+              1,
+              100
+            ],
+            [
+              3.16,
+              44
+            ],
+            [
+              0.95,
+              22
+            ],
+            [
+              3.61,
+              18
+            ],
+            [
+              1.08,
+              9
+            ],
+            [
+              2,
+              8
+            ],
+            [
+              10,
+              8
+            ]
+          ]
+        },
+        "leftEdges": {
+          "items": 76,
+          "distinct": 26,
+          "perItem": 0.34,
+          "singletonShare": 22.4,
+          "shared3": 9
+        },
+        "defects": {
+          "horizontalScroll": false,
+          "spills": 0,
+          "spillEx": [],
+          "truncated": 0,
+          "headings": 18,
+          "headingsWrapped": 0,
+          "headingWidows": 0,
+          "paras": 22,
+          "parasMulti": 4,
+          "labels": 157,
+          "labelWraps": 1,
+          "labelWrapEx": [
+            "th: asChildProp description"
+          ],
+          "paraWidowShare": 0,
+          "medianCharsPerLine": 70
+        },
+        "media": {
+          "count": 0,
+          "foldShare": 0,
+          "pageShare": 0
+        },
+        "h1": {
+          "top": 128,
+          "left": 428,
+          "size": 35
+        }
+      },
+      "px": {
+        "colourfulness": 13,
+        "colours95": 2,
+        "dominantShare": 0.664,
+        "edgeDensity": 0.06,
+        "whitespace": 0.867,
+        "quadtreeLeaves": 3292,
+        "balance": 0.663,
+        "balanceLR": 0.476,
+        "balanceTB": 0.85,
+        "leftHeavy": true,
+        "topHeavy": true,
+        "symmetry": 0.329
+      }
+    },
+    {
+      "site": "radix",
+      "kind": "home",
+      "url": "https://www.radix-ui.com/",
+      "run": 1,
+      "dom": {
+        "docHeight": 900,
+        "type": {
+          "totalChars": 2888,
+          "sizes": {
+            "distinct": 9,
+            "cover95": 5,
+            "top": [
+              [
+                "14",
+                73.4
+              ],
+              [
+                "16",
+                6.7
+              ],
+              [
+                "20",
+                6.3
+              ],
+              [
+                "13.5",
+                4.7
+              ],
+              [
+                "24",
+                4.1
+              ],
+              [
+                "35",
+                1.5
+              ],
+              [
+                "12",
+                1.2
+              ],
+              [
+                "18",
+                1.2
+              ]
+            ]
+          },
+          "weights": {
+            "distinct": 3,
+            "cover95": 3,
+            "top": [
+              [
+                "400",
+                75.1
+              ],
+              [
+                "700",
+                17
+              ],
+              [
+                "500",
+                7.9
+              ]
+            ]
+          },
+          "lineHeights": {
+            "distinct": 10,
+            "cover95": 6,
+            "top": [
+              [
+                "20",
+                72.5
+              ],
+              [
+                "28",
+                6.3
+              ],
+              [
+                "22",
+                5.8
+              ],
+              [
+                "24",
+                5.6
+              ],
+              [
+                "30",
+                4.1
+              ],
+              [
+                "16",
+                2.2
+              ],
+              [
+                "40",
+                1.5
+              ],
+              [
+                "70",
+                0.9
+              ]
+            ]
+          },
+          "families": {
+            "distinct": 4,
+            "cover95": 3,
+            "top": [
+              [
+                "-apple-system",
+                83.8
+              ],
+              [
+                "untitledsans",
+                10.5
+              ],
+              [
+                "soehnemono",
+                4.7
+              ],
+              [
+                "adobetextpro",
+                0.9
+              ]
+            ]
+          },
+          "colors": {
+            "distinct": 13,
+            "cover95": 5,
+            "top": [
+              [
+                "rgba(0, 7, 20, 0.624)",
+                43.7
+              ],
+              [
+                "rgb(28, 32, 36)",
+                40.3
+              ],
+              [
+                "rgba(0, 43, 183, 0.773)",
+                6.5
+              ],
+              [
+                "rgb(255, 255, 255)",
+                3.2
+              ],
+              [
+                "rgb(101, 80, 185)",
+                1.6
+              ],
+              [
+                "rgb(203, 29, 99)",
+                1.1
+              ],
+              [
+                "rgba(196, 0, 6, 0.827)",
+                0.9
+              ],
+              [
+                "rgb(58, 91, 199)",
+                0.8
+              ]
+            ]
+          },
+          "styles": {
+            "distinct": 32,
+            "cover95": 20,
+            "top": [
+              [
+                "14|400|-apple-system|rgba(0, 7, 20, 0.624)",
+                36.8
+              ],
+              [
+                "14|400|-apple-system|rgb(28, 32, 36)",
+                19.6
+              ],
+              [
+                "14|700|-apple-system|rgb(28, 32, 36)",
+                5.7
+              ],
+              [
+                "20|400|untitledsans|rgba(0, 7, 20, 0.624)",
+                5.1
+              ],
+              [
+                "16|700|-apple-system|rgb(28, 32, 36)",
+                4.6
+              ],
+              [
+                "24|700|-apple-system|rgb(28, 32, 36)",
+                3.9
+              ],
+              [
+                "14|400|-apple-system|rgba(0, 43, 183, 0.773)",
+                3.5
+              ],
+              [
+                "14|400|untitledsans|rgba(0, 7, 20, 0.624)",
+                1.7
+              ]
+            ]
+          }
+        },
+        "prose": {
+          "chars": 2251,
+          "size": 14,
+          "sizeShare": 79.7,
+          "top": [
+            [
+              14,
+              79.7
+            ],
+            [
+              20,
+              8
+            ],
+            [
+              16,
+              7.2
+            ],
+            [
+              35,
+              1.9
+            ],
+            [
+              12,
+              1.6
+            ]
+          ],
+          "h1ToProse": 4.71
+        },
+        "styleSet": [
+          "14|400|-apple-system|rgba(0, 7, 20, 0.624)",
+          "14|400|-apple-system|rgb(28, 32, 36)",
+          "14|700|-apple-system|rgb(28, 32, 36)",
+          "20|400|untitledsans|rgba(0, 7, 20, 0.624)",
+          "16|700|-apple-system|rgb(28, 32, 36)",
+          "24|700|-apple-system|rgb(28, 32, 36)",
+          "14|400|-apple-system|rgba(0, 43, 183, 0.773)",
+          "14|400|untitledsans|rgba(0, 7, 20, 0.624)",
+          "13.5|400|soehnemono|rgb(101, 80, 185)",
+          "16|400|-apple-system|rgb(28, 32, 36)",
+          "14|500|-apple-system|rgb(255, 255, 255)",
+          "14|500|-apple-system|rgba(0, 43, 183, 0.773)",
+          "35|700|-apple-system|rgb(28, 32, 36)",
+          "13.5|400|soehnemono|rgb(28, 32, 36)",
+          "13.5|400|soehnemono|rgb(203, 29, 99)",
+          "14|400|untitledsans|rgb(255, 255, 255)",
+          "14|500|untitledsans|rgba(0, 43, 183, 0.773)",
+          "78|400|adobetextpro|rgb(28, 32, 36)",
+          "13.5|400|soehnemono|rgb(58, 91, 199)",
+          "20|700|-apple-system|rgb(28, 32, 36)"
+        ],
+        "spacing": {
+          "values": 716,
+          "distinct": 18,
+          "on4px": 73.5,
+          "on8px": 46.1,
+          "offGrid": [
+            [
+              6,
+              128
+            ],
+            [
+              2,
+              26
+            ],
+            [
+              1,
+              20
+            ],
+            [
+              10,
+              10
+            ],
+            [
+              0.5,
+              3
+            ],
+            [
+              78.4,
+              2
+            ],
+            [
+              18,
+              1
+            ]
+          ]
+        },
+        "leftEdges": {
+          "items": 82,
+          "distinct": 36,
+          "perItem": 0.44,
+          "singletonShare": 29.3,
+          "shared3": 8
+        },
+        "defects": {
+          "horizontalScroll": false,
+          "spills": 0,
+          "spillEx": [],
+          "truncated": 0,
+          "headings": 14,
+          "headingsWrapped": 1,
+          "headingWidows": 0,
+          "paras": 25,
+          "parasMulti": 5,
+          "labels": 56,
+          "labelWraps": 0,
+          "labelWrapEx": [],
+          "paraWidowShare": 20,
+          "medianCharsPerLine": 49
+        },
+        "media": {
+          "count": 1,
+          "foldShare": 100,
+          "pageShare": 100
+        },
+        "h1": {
+          "top": 0,
+          "left": 0,
+          "size": 66
+        }
+      },
+      "px": {
+        "colourfulness": 22.8,
+        "colours95": 35,
+        "dominantShare": 0.478,
+        "edgeDensity": 0.1,
+        "whitespace": 0.755,
+        "quadtreeLeaves": 5425,
+        "balance": 0.871,
+        "balanceLR": 0.795,
+        "balanceTB": 0.947,
+        "leftHeavy": false,
+        "topHeavy": true,
+        "symmetry": 0.247
+      }
+    },
+    {
+      "site": "radix",
+      "kind": "button",
+      "url": "https://www.radix-ui.com/themes/docs/components/button",
+      "run": 1,
+      "dom": {
+        "docHeight": 6491,
+        "type": {
+          "totalChars": 5310,
+          "sizes": {
+            "distinct": 9,
+            "cover95": 4,
+            "top": [
+              [
+                "13.5",
+                50.9
+              ],
+              [
+                "14",
+                21.6
+              ],
+              [
+                "16",
+                19.5
+              ],
+              [
+                "12.5",
+                3.2
+              ],
+              [
+                "18",
+                2.9
+              ],
+              [
+                "14.5",
+                1.1
+              ],
+              [
+                "24",
+                0.4
+              ],
+              [
+                "12",
+                0.2
+              ]
+            ]
+          },
+          "weights": {
+            "distinct": 3,
+            "cover95": 2,
+            "top": [
+              [
+                "400",
+                89.6
+              ],
+              [
+                "500",
+                10.1
+              ],
+              [
+                "700",
+                0.3
+              ]
+            ]
+          },
+          "lineHeights": {
+            "distinct": 8,
+            "cover95": 3,
+            "top": [
+              [
+                "22",
+                50.9
+              ],
+              [
+                "20",
+                23.4
+              ],
+              [
+                "24",
+                20.7
+              ],
+              [
+                "18",
+                2
+              ],
+              [
+                "26",
+                1.7
+              ],
+              [
+                "16",
+                0.7
+              ],
+              [
+                "30",
+                0.4
+              ],
+              [
+                "40",
+                0.1
+              ]
+            ]
+          },
+          "families": {
+            "distinct": 3,
+            "cover95": 3,
+            "top": [
+              [
+                "soehnemono",
+                55.3
+              ],
+              [
+                "untitledsans",
+                37.2
+              ],
+              [
+                "-apple-system",
+                7.5
+              ]
+            ]
+          },
+          "colors": {
+            "distinct": 12,
+            "cover95": 6,
+            "top": [
+              [
+                "rgb(28, 32, 36)",
+                50.1
+              ],
+              [
+                "rgb(58, 91, 199)",
+                14.8
+              ],
+              [
+                "rgb(203, 29, 99)",
+                11.4
+              ],
+              [
+                "rgba(0, 7, 20, 0.624)",
+                7.2
+              ],
+              [
+                "rgba(0, 43, 183, 0.773)",
+                6.9
+              ],
+              [
+                "rgb(31, 45, 92)",
+                6.3
+              ],
+              [
+                "rgb(255, 255, 255)",
+                1.5
+              ],
+              [
+                "rgba(0, 8, 48, 0.275)",
+                0.8
+              ]
+            ]
+          },
+          "styles": {
+            "distinct": 31,
+            "cover95": 17,
+            "top": [
+              [
+                "13.5|400|soehnemono|rgb(28, 32, 36)",
+                18.5
+              ],
+              [
+                "16|400|untitledsans|rgb(28, 32, 36)",
+                17.5
+              ],
+              [
+                "13.5|400|soehnemono|rgb(58, 91, 199)",
+                14.8
+              ],
+              [
+                "13.5|400|soehnemono|rgb(203, 29, 99)",
+                11.4
+              ],
+              [
+                "14|400|untitledsans|rgb(28, 32, 36)",
+                10.5
+              ],
+              [
+                "13.5|400|soehnemono|rgb(31, 45, 92)",
+                6.3
+              ],
+              [
+                "14|400|untitledsans|rgba(0, 7, 20, 0.624)",
+                2.7
+              ],
+              [
+                "12.5|400|soehnemono|rgba(0, 7, 20, 0.624)",
+                2.3
+              ]
+            ]
+          }
+        },
+        "prose": {
+          "chars": 1746,
+          "size": 16,
+          "sizeShare": 58.5,
+          "top": [
+            [
+              16,
+              58.5
+            ],
+            [
+              14,
+              36.4
+            ],
+            [
+              18,
+              5.1
+            ]
+          ],
+          "h1ToProse": 2.19
+        },
+        "styleSet": [
+          "13.5|400|soehnemono|rgb(28, 32, 36)",
+          "16|400|untitledsans|rgb(28, 32, 36)",
+          "13.5|400|soehnemono|rgb(58, 91, 199)",
+          "13.5|400|soehnemono|rgb(203, 29, 99)",
+          "14|400|untitledsans|rgb(28, 32, 36)",
+          "13.5|400|soehnemono|rgb(31, 45, 92)",
+          "14|400|untitledsans|rgba(0, 7, 20, 0.624)",
+          "12.5|400|soehnemono|rgba(0, 7, 20, 0.624)",
+          "14|500|-apple-system|rgba(0, 43, 183, 0.773)",
+          "16|400|untitledsans|rgba(0, 43, 183, 0.773)",
+          "18|400|untitledsans|rgba(0, 7, 20, 0.624)",
+          "14|500|-apple-system|rgb(255, 255, 255)",
+          "18|500|untitledsans|rgb(28, 32, 36)",
+          "14.5|400|soehnemono|rgba(0, 43, 183, 0.773)",
+          "14|500|untitledsans|rgb(28, 32, 36)",
+          "12.5|400|soehnemono|rgba(0, 43, 183, 0.773)",
+          "14|500|-apple-system|rgba(0, 8, 48, 0.275)"
+        ],
+        "spacing": {
+          "values": 1313,
+          "distinct": 19,
+          "on4px": 82.5,
+          "on8px": 45.3,
+          "offGrid": [
+            [
+              1,
+              136
+            ],
+            [
+              3.16,
+              34
+            ],
+            [
+              3.61,
+              18
+            ],
+            [
+              0.95,
+              17
+            ],
+            [
+              1.08,
+              9
+            ],
+            [
+              2,
+              8
+            ],
+            [
+              10,
+              8
+            ]
+          ]
+        },
+        "leftEdges": {
+          "items": 88,
+          "distinct": 34,
+          "perItem": 0.39,
+          "singletonShare": 27.3,
+          "shared3": 7
+        },
+        "defects": {
+          "horizontalScroll": false,
+          "spills": 0,
+          "spillEx": [],
+          "truncated": 0,
+          "headings": 18,
+          "headingsWrapped": 0,
+          "headingWidows": 0,
+          "paras": 20,
+          "parasMulti": 3,
+          "labels": 188,
+          "labelWraps": 9,
+          "labelWrapEx": [
+            "th: asChildProp description",
+            "th: variantProp description",
+            "th: colorProp description",
+            "th: radiusProp description",
+            "button: BookmarkBookmark",
+            "button: BookmarkBookmark"
+          ],
+          "paraWidowShare": 0,
+          "medianCharsPerLine": 80
+        },
+        "media": {
+          "count": 0,
+          "foldShare": 0,
+          "pageShare": 0
+        },
+        "h1": {
+          "top": 128,
+          "left": 428,
+          "size": 35
+        }
+      },
+      "px": {
+        "colourfulness": 10.5,
+        "colours95": 3,
+        "dominantShare": 0.893,
+        "edgeDensity": 0.067,
+        "whitespace": 0.841,
+        "quadtreeLeaves": 2971,
+        "balance": 0.78,
+        "balanceLR": 0.785,
+        "balanceTB": 0.775,
+        "leftHeavy": true,
+        "topHeavy": false,
+        "symmetry": 0.489
+      }
+    }
+  ]
+}

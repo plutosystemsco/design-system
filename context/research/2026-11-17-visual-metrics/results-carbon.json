@@ -1,0 +1,2408 @@
+{
+  "at": "2026-11-17T15:35:26.536Z",
+  "kuiperBuild": "2026-11-16T23:34:24.926Z",
+  "rows": [
+    {
+      "site": "carbon",
+      "kind": "home",
+      "url": "https://www.carbondesignsystem.com/",
+      "run": 0,
+      "dom": {
+        "docHeight": 4709,
+        "type": {
+          "totalChars": 1571,
+          "sizes": {
+            "distinct": 8,
+            "cover95": 7,
+            "top": [
+              [
+                "32",
+                41.1
+              ],
+              [
+                "14",
+                13.9
+              ],
+              [
+                "16",
+                11.8
+              ],
+              [
+                "48",
+                11.2
+              ],
+              [
+                "22",
+                8
+              ],
+              [
+                "64",
+                6.6
+              ],
+              [
+                "20",
+                6.4
+              ],
+              [
+                "94.5",
+                1.1
+              ]
+            ]
+          },
+          "weights": {
+            "distinct": 4,
+            "cover95": 4,
+            "top": [
+              [
+                "400",
+                70.2
+              ],
+              [
+                "300",
+                11.2
+              ],
+              [
+                "600",
+                10.9
+              ],
+              [
+                "200",
+                7.6
+              ]
+            ]
+          },
+          "lineHeights": {
+            "distinct": 10,
+            "cover95": 9,
+            "top": [
+              [
+                "40",
+                41.1
+              ],
+              [
+                "56",
+                11.2
+              ],
+              [
+                "18",
+                8.5
+              ],
+              [
+                "31",
+                8
+              ],
+              [
+                "68",
+                6.6
+              ],
+              [
+                "28",
+                6.4
+              ],
+              [
+                "22",
+                6.2
+              ],
+              [
+                "24",
+                5.5
+              ]
+            ]
+          },
+          "families": {
+            "distinct": 2,
+            "cover95": 2,
+            "top": [
+              [
+                "ibm plex sans",
+                92.4
+              ],
+              [
+                "ibm plex serif",
+                7.6
+              ]
+            ]
+          },
+          "colors": {
+            "distinct": 6,
+            "cover95": 5,
+            "top": [
+              [
+                "rgb(22, 22, 22)",
+                62.8
+              ],
+              [
+                "rgb(0, 45, 156)",
+                11.1
+              ],
+              [
+                "rgb(255, 255, 255)",
+                9.1
+              ],
+              [
+                "rgb(244, 244, 244)",
+                7.6
+              ],
+              [
+                "rgb(15, 98, 254)",
+                5.3
+              ],
+              [
+                "rgb(82, 82, 82)",
+                4.1
+              ]
+            ]
+          },
+          "styles": {
+            "distinct": 15,
+            "cover95": 11,
+            "top": [
+              [
+                "32|400|ibm plex sans|rgb(22, 22, 22)",
+                41.1
+              ],
+              [
+                "48|300|ibm plex sans|rgb(22, 22, 22)",
+                11.2
+              ],
+              [
+                "22|400|ibm plex sans|rgb(0, 45, 156)",
+                8
+              ],
+              [
+                "14|400|ibm plex sans|rgb(244, 244, 244)",
+                7.6
+              ],
+              [
+                "64|200|ibm plex serif|rgb(255, 255, 255)",
+                6.6
+              ],
+              [
+                "16|600|ibm plex sans|rgb(22, 22, 22)",
+                4.8
+              ],
+              [
+                "16|400|ibm plex sans|rgb(15, 98, 254)",
+                4.5
+              ],
+              [
+                "20|400|ibm plex sans|rgb(22, 22, 22)",
+                4.5
+              ]
+            ]
+          }
+        },
+        "prose": {
+          "chars": 1278,
+          "size": 32,
+          "sizeShare": 50.5,
+          "top": [
+            [
+              32,
+              50.5
+            ],
+            [
+              48,
+              13.8
+            ],
+            [
+              16,
+              9.9
+            ],
+            [
+              22,
+              9.9
+            ],
+            [
+              64,
+              8.1
+            ]
+          ],
+          "h1ToProse": 2.96
+        },
+        "styleSet": [
+          "32|400|ibm plex sans|rgb(22, 22, 22)",
+          "48|300|ibm plex sans|rgb(22, 22, 22)",
+          "22|400|ibm plex sans|rgb(0, 45, 156)",
+          "14|400|ibm plex sans|rgb(244, 244, 244)",
+          "64|200|ibm plex serif|rgb(255, 255, 255)",
+          "16|600|ibm plex sans|rgb(22, 22, 22)",
+          "16|400|ibm plex sans|rgb(15, 98, 254)",
+          "20|400|ibm plex sans|rgb(22, 22, 22)",
+          "14|600|ibm plex sans|rgb(82, 82, 82)",
+          "20|400|ibm plex sans|rgb(0, 45, 156)",
+          "16|400|ibm plex sans|rgb(255, 255, 255)"
+        ],
+        "spacing": {
+          "values": 174,
+          "distinct": 17,
+          "on4px": 79.9,
+          "on8px": 79.9,
+          "offGrid": [
+            [
+              1,
+              12
+            ],
+            [
+              37.65,
+              9
+            ],
+            [
+              2,
+              7
+            ],
+            [
+              637.17,
+              3
+            ],
+            [
+              14,
+              2
+            ],
+            [
+              15,
+              2
+            ]
+          ]
+        },
+        "leftEdges": {
+          "items": 43,
+          "distinct": 26,
+          "perItem": 0.6,
+          "singletonShare": 44.2,
+          "shared3": 4
+        },
+        "defects": {
+          "horizontalScroll": false,
+          "spills": 0,
+          "spillEx": [],
+          "truncated": 0,
+          "headings": 4,
+          "headingsWrapped": 1,
+          "headingWidows": 0,
+          "paras": 24,
+          "parasMulti": 12,
+          "labels": 25,
+          "labelWraps": 0,
+          "labelWrapEx": [],
+          "paraWidowShare": 16.7,
+          "medianCharsPerLine": 26
+        },
+        "media": {
+          "count": 6,
+          "foldShare": 100,
+          "pageShare": 100
+        },
+        "h1": {
+          "top": 102,
+          "left": 326,
+          "size": 94.608
+        }
+      },
+      "px": {
+        "colourfulness": 48.9,
+        "colours95": 5,
+        "dominantShare": 0.6,
+        "edgeDensity": 0.07,
+        "whitespace": 0.841,
+        "quadtreeLeaves": 4489,
+        "balance": 0.893,
+        "balanceLR": 0.829,
+        "balanceTB": 0.956,
+        "leftHeavy": true,
+        "topHeavy": true,
+        "symmetry": 0.288
+      }
+    },
+    {
+      "site": "carbon",
+      "kind": "button",
+      "url": "https://www.carbondesignsystem.com/building-blocks/core/components/button/guidelines",
+      "run": 0,
+      "dom": {
+        "docHeight": 47652,
+        "type": {
+          "totalChars": 31892,
+          "sizes": {
+            "distinct": 6,
+            "cover95": 2,
+            "top": [
+              [
+                "16",
+                67.6
+              ],
+              [
+                "14",
+                30.5
+              ],
+              [
+                "22",
+                1.3
+              ],
+              [
+                "32",
+                0.5
+              ],
+              [
+                "12",
+                0.1
+              ],
+              [
+                "53.5",
+                0
+              ]
+            ]
+          },
+          "weights": {
+            "distinct": 4,
+            "cover95": 1,
+            "top": [
+              [
+                "400",
+                95.4
+              ],
+              [
+                "600",
+                4.5
+              ],
+              [
+                "500",
+                0.1
+              ],
+              [
+                "300",
+                0
+              ]
+            ]
+          },
+          "lineHeights": {
+            "distinct": 10,
+            "cover95": 3,
+            "top": [
+              [
+                "24",
+                65.4
+              ],
+              [
+                "18",
+                28.4
+              ],
+              [
+                "20",
+                2
+              ],
+              [
+                "21",
+                1.9
+              ],
+              [
+                "31",
+                1.3
+              ],
+              [
+                "40",
+                0.5
+              ],
+              [
+                "22",
+                0.3
+              ],
+              [
+                "19",
+                0.1
+              ]
+            ]
+          },
+          "families": {
+            "distinct": 3,
+            "cover95": 1,
+            "top": [
+              [
+                "ibm plex sans",
+                99.9
+              ],
+              [
+                "ibm plex mono",
+                0.1
+              ],
+              [
+                "ibm plex serif",
+                0
+              ]
+            ]
+          },
+          "colors": {
+            "distinct": 5,
+            "cover95": 1,
+            "top": [
+              [
+                "rgb(22, 22, 22)",
+                95.3
+              ],
+              [
+                "rgb(82, 82, 82)",
+                2.2
+              ],
+              [
+                "rgb(15, 98, 254)",
+                2.1
+              ],
+              [
+                "rgb(244, 244, 244)",
+                0.4
+              ],
+              [
+                "rgb(0, 83, 154)",
+                0
+              ]
+            ]
+          },
+          "styles": {
+            "distinct": 17,
+            "cover95": 5,
+            "top": [
+              [
+                "16|400|ibm plex sans|rgb(22, 22, 22)",
+                62
+              ],
+              [
+                "14|400|ibm plex sans|rgb(22, 22, 22)",
+                27
+              ],
+              [
+                "16|600|ibm plex sans|rgb(22, 22, 22)",
+                3.6
+              ],
+              [
+                "16|400|ibm plex sans|rgb(15, 98, 254)",
+                1.9
+              ],
+              [
+                "14|400|ibm plex sans|rgb(82, 82, 82)",
+                1.8
+              ],
+              [
+                "22|400|ibm plex sans|rgb(22, 22, 22)",
+                1.3
+              ],
+              [
+                "14|600|ibm plex sans|rgb(22, 22, 22)",
+                0.7
+              ],
+              [
+                "32|400|ibm plex sans|rgb(22, 22, 22)",
+                0.5
+              ]
+            ]
+          }
+        },
+        "prose": {
+          "chars": 26347,
+          "size": 16,
+          "sizeShare": 78.2,
+          "top": [
+            [
+              16,
+              78.2
+            ],
+            [
+              14,
+              21.8
+            ]
+          ],
+          "h1ToProse": 3.35
+        },
+        "styleSet": [
+          "16|400|ibm plex sans|rgb(22, 22, 22)",
+          "14|400|ibm plex sans|rgb(22, 22, 22)",
+          "16|600|ibm plex sans|rgb(22, 22, 22)",
+          "16|400|ibm plex sans|rgb(15, 98, 254)",
+          "14|400|ibm plex sans|rgb(82, 82, 82)"
+        ],
+        "spacing": {
+          "values": 1696,
+          "distinct": 22,
+          "on4px": 91.9,
+          "on8px": 91.6,
+          "offGrid": [
+            [
+              246.58,
+              50
+            ],
+            [
+              7,
+              38
+            ],
+            [
+              1,
+              15
+            ],
+            [
+              2,
+              7
+            ],
+            [
+              15,
+              6
+            ],
+            [
+              13,
+              6
+            ],
+            [
+              0.5,
+              6
+            ],
+            [
+              37.65,
+              5
+            ]
+          ]
+        },
+        "leftEdges": {
+          "items": 58,
+          "distinct": 21,
+          "perItem": 0.36,
+          "singletonShare": 20.7,
+          "shared3": 6
+        },
+        "defects": {
+          "horizontalScroll": false,
+          "spills": 0,
+          "spillEx": [],
+          "truncated": 0,
+          "headings": 68,
+          "headingsWrapped": 0,
+          "headingWidows": 0,
+          "paras": 187,
+          "parasMulti": 78,
+          "labels": 144,
+          "labelWraps": 0,
+          "labelWrapEx": [],
+          "paraWidowShare": 16.7,
+          "medianCharsPerLine": 55
+        },
+        "media": {
+          "count": 53,
+          "foldShare": 0,
+          "pageShare": 16.1
+        },
+        "h1": {
+          "top": 136,
+          "left": 326,
+          "size": 53.6471
+        }
+      },
+      "px": {
+        "colourfulness": 8.5,
+        "colours95": 3,
+        "dominantShare": 0.76,
+        "edgeDensity": 0.058,
+        "whitespace": 0.872,
+        "quadtreeLeaves": 3106,
+        "balance": 0.465,
+        "balanceLR": 0.396,
+        "balanceTB": 0.533,
+        "leftHeavy": true,
+        "topHeavy": false,
+        "symmetry": 0.428
+      }
+    },
+    {
+      "site": "carbon",
+      "kind": "t1",
+      "url": "https://www.carbondesignsystem.com/building-blocks/core/components/checkbox/guidelines",
+      "run": 0,
+      "dom": {
+        "docHeight": 15051,
+        "type": {
+          "totalChars": 9192,
+          "sizes": {
+            "distinct": 6,
+            "cover95": 2,
+            "top": [
+              [
+                "16",
+                70.7
+              ],
+              [
+                "14",
+                24.7
+              ],
+              [
+                "22",
+                3.3
+              ],
+              [
+                "32",
+                0.9
+              ],
+              [
+                "12",
+                0.4
+              ],
+              [
+                "53.5",
+                0.1
+              ]
+            ]
+          },
+          "weights": {
+            "distinct": 4,
+            "cover95": 1,
+            "top": [
+              [
+                "400",
+                95.6
+              ],
+              [
+                "600",
+                3.9
+              ],
+              [
+                "500",
+                0.4
+              ],
+              [
+                "300",
+                0.1
+              ]
+            ]
+          },
+          "lineHeights": {
+            "distinct": 10,
+            "cover95": 4,
+            "top": [
+              [
+                "24",
+                68.1
+              ],
+              [
+                "18",
+                18.8
+              ],
+              [
+                "20",
+                5.4
+              ],
+              [
+                "31",
+                3.3
+              ],
+              [
+                "21",
+                2.2
+              ],
+              [
+                "40",
+                0.9
+              ],
+              [
+                "19",
+                0.5
+              ],
+              [
+                "16",
+                0.4
+              ]
+            ]
+          },
+          "families": {
+            "distinct": 3,
+            "cover95": 1,
+            "top": [
+              [
+                "ibm plex sans",
+                99.4
+              ],
+              [
+                "ibm plex mono",
+                0.5
+              ],
+              [
+                "ibm plex serif",
+                0.1
+              ]
+            ]
+          },
+          "colors": {
+            "distinct": 5,
+            "cover95": 2,
+            "top": [
+              [
+                "rgb(22, 22, 22)",
+                88.8
+              ],
+              [
+                "rgb(82, 82, 82)",
+                7
+              ],
+              [
+                "rgb(15, 98, 254)",
+                2.9
+              ],
+              [
+                "rgb(244, 244, 244)",
+                1.3
+              ],
+              [
+                "rgb(0, 83, 154)",
+                0.1
+              ]
+            ]
+          },
+          "styles": {
+            "distinct": 17,
+            "cover95": 7,
+            "top": [
+              [
+                "16|400|ibm plex sans|rgb(22, 22, 22)",
+                65.7
+              ],
+              [
+                "14|400|ibm plex sans|rgb(22, 22, 22)",
+                15
+              ],
+              [
+                "14|400|ibm plex sans|rgb(82, 82, 82)",
+                5.5
+              ],
+              [
+                "22|400|ibm plex sans|rgb(22, 22, 22)",
+                3.3
+              ],
+              [
+                "16|600|ibm plex sans|rgb(22, 22, 22)",
+                2.5
+              ],
+              [
+                "16|400|ibm plex sans|rgb(15, 98, 254)",
+                2.2
+              ],
+              [
+                "14|400|ibm plex sans|rgb(244, 244, 244)",
+                1.3
+              ],
+              [
+                "32|400|ibm plex sans|rgb(22, 22, 22)",
+                0.9
+              ]
+            ]
+          }
+        },
+        "prose": {
+          "chars": 7719,
+          "size": 16,
+          "sizeShare": 81.9,
+          "top": [
+            [
+              16,
+              81.9
+            ],
+            [
+              14,
+              18.1
+            ]
+          ],
+          "h1ToProse": 3.35
+        },
+        "styleSet": [
+          "16|400|ibm plex sans|rgb(22, 22, 22)",
+          "14|400|ibm plex sans|rgb(22, 22, 22)",
+          "14|400|ibm plex sans|rgb(82, 82, 82)",
+          "22|400|ibm plex sans|rgb(22, 22, 22)",
+          "16|600|ibm plex sans|rgb(22, 22, 22)",
+          "16|400|ibm plex sans|rgb(15, 98, 254)",
+          "14|400|ibm plex sans|rgb(244, 244, 244)"
+        ],
+        "spacing": {
+          "values": 736,
+          "distinct": 22,
+          "on4px": 89.3,
+          "on8px": 88.5,
+          "offGrid": [
+            [
+              7,
+              30
+            ],
+            [
+              1,
+              15
+            ],
+            [
+              2,
+              7
+            ],
+            [
+              0.5,
+              6
+            ],
+            [
+              37.65,
+              5
+            ],
+            [
+              15,
+              4
+            ],
+            [
+              13,
+              4
+            ],
+            [
+              246.58,
+              4
+            ]
+          ]
+        },
+        "leftEdges": {
+          "items": 58,
+          "distinct": 21,
+          "perItem": 0.36,
+          "singletonShare": 20.7,
+          "shared3": 6
+        },
+        "defects": {
+          "horizontalScroll": false,
+          "spills": 0,
+          "spillEx": [],
+          "truncated": 0,
+          "headings": 33,
+          "headingsWrapped": 0,
+          "headingWidows": 0,
+          "paras": 145,
+          "parasMulti": 58,
+          "labels": 104,
+          "labelWraps": 0,
+          "labelWrapEx": [],
+          "paraWidowShare": 27.6,
+          "medianCharsPerLine": 57
+        },
+        "media": {
+          "count": 18,
+          "foldShare": 0,
+          "pageShare": 15.6
+        },
+        "h1": {
+          "top": 136,
+          "left": 326,
+          "size": 53.6471
+        }
+      },
+      "px": {
+        "colourfulness": 9.5,
+        "colours95": 3,
+        "dominantShare": 0.759,
+        "edgeDensity": 0.057,
+        "whitespace": 0.873,
+        "quadtreeLeaves": 3061,
+        "balance": 0.486,
+        "balanceLR": 0.387,
+        "balanceTB": 0.585,
+        "leftHeavy": true,
+        "topHeavy": false,
+        "symmetry": 0.412
+      }
+    },
+    {
+      "site": "carbon",
+      "kind": "t2",
+      "url": "https://www.carbondesignsystem.com/building-blocks/core/components/tabs/guidelines",
+      "run": 0,
+      "dom": {
+        "docHeight": 27768,
+        "type": {
+          "totalChars": 18858,
+          "sizes": {
+            "distinct": 6,
+            "cover95": 2,
+            "top": [
+              [
+                "16",
+                73.5
+              ],
+              [
+                "14",
+                23.2
+              ],
+              [
+                "22",
+                2.5
+              ],
+              [
+                "32",
+                0.7
+              ],
+              [
+                "12",
+                0.2
+              ],
+              [
+                "53.5",
+                0
+              ]
+            ]
+          },
+          "weights": {
+            "distinct": 4,
+            "cover95": 1,
+            "top": [
+              [
+                "400",
+                95.3
+              ],
+              [
+                "600",
+                4.5
+              ],
+              [
+                "500",
+                0.2
+              ],
+              [
+                "300",
+                0
+              ]
+            ]
+          },
+          "lineHeights": {
+            "distinct": 10,
+            "cover95": 3,
+            "top": [
+              [
+                "24",
+                72.2
+              ],
+              [
+                "18",
+                19.9
+              ],
+              [
+                "20",
+                3.2
+              ],
+              [
+                "31",
+                2.5
+              ],
+              [
+                "21",
+                1
+              ],
+              [
+                "40",
+                0.7
+              ],
+              [
+                "16",
+                0.2
+              ],
+              [
+                "22",
+                0.2
+              ]
+            ]
+          },
+          "families": {
+            "distinct": 3,
+            "cover95": 1,
+            "top": [
+              [
+                "ibm plex sans",
+                99.9
+              ],
+              [
+                "ibm plex mono",
+                0.1
+              ],
+              [
+                "ibm plex serif",
+                0
+              ]
+            ]
+          },
+          "colors": {
+            "distinct": 5,
+            "cover95": 2,
+            "top": [
+              [
+                "rgb(22, 22, 22)",
+                94.3
+              ],
+              [
+                "rgb(82, 82, 82)",
+                3.7
+              ],
+              [
+                "rgb(15, 98, 254)",
+                1.4
+              ],
+              [
+                "rgb(244, 244, 244)",
+                0.6
+              ],
+              [
+                "rgb(0, 83, 154)",
+                0
+              ]
+            ]
+          },
+          "styles": {
+            "distinct": 17,
+            "cover95": 5,
+            "top": [
+              [
+                "16|400|ibm plex sans|rgb(22, 22, 22)",
+                69
+              ],
+              [
+                "14|400|ibm plex sans|rgb(22, 22, 22)",
+                17.8
+              ],
+              [
+                "16|600|ibm plex sans|rgb(22, 22, 22)",
+                3.3
+              ],
+              [
+                "14|400|ibm plex sans|rgb(82, 82, 82)",
+                2.9
+              ],
+              [
+                "22|400|ibm plex sans|rgb(22, 22, 22)",
+                2.5
+              ],
+              [
+                "16|400|ibm plex sans|rgb(15, 98, 254)",
+                1
+              ],
+              [
+                "14|600|ibm plex sans|rgb(22, 22, 22)",
+                0.9
+              ],
+              [
+                "32|400|ibm plex sans|rgb(22, 22, 22)",
+                0.7
+              ]
+            ]
+          }
+        },
+        "prose": {
+          "chars": 14876,
+          "size": 16,
+          "sizeShare": 90.4,
+          "top": [
+            [
+              16,
+              90.4
+            ],
+            [
+              14,
+              9.6
+            ]
+          ],
+          "h1ToProse": 3.35
+        },
+        "styleSet": [
+          "16|400|ibm plex sans|rgb(22, 22, 22)",
+          "14|400|ibm plex sans|rgb(22, 22, 22)",
+          "16|600|ibm plex sans|rgb(22, 22, 22)",
+          "14|400|ibm plex sans|rgb(82, 82, 82)",
+          "22|400|ibm plex sans|rgb(22, 22, 22)"
+        ],
+        "spacing": {
+          "values": 1203,
+          "distinct": 23,
+          "on4px": 93.9,
+          "on8px": 93.4,
+          "offGrid": [
+            [
+              7,
+              28
+            ],
+            [
+              1,
+              15
+            ],
+            [
+              2,
+              7
+            ],
+            [
+              0.5,
+              6
+            ],
+            [
+              37.65,
+              5
+            ],
+            [
+              14,
+              2
+            ],
+            [
+              15,
+              2
+            ],
+            [
+              33,
+              2
+            ]
+          ]
+        },
+        "leftEdges": {
+          "items": 64,
+          "distinct": 24,
+          "perItem": 0.38,
+          "singletonShare": 21.9,
+          "shared3": 6
+        },
+        "defects": {
+          "horizontalScroll": false,
+          "spills": 0,
+          "spillEx": [],
+          "truncated": 0,
+          "headings": 56,
+          "headingsWrapped": 0,
+          "headingWidows": 0,
+          "paras": 189,
+          "parasMulti": 63,
+          "labels": 118,
+          "labelWraps": 0,
+          "labelWrapEx": [],
+          "paraWidowShare": 23.8,
+          "medianCharsPerLine": 62
+        },
+        "media": {
+          "count": 29,
+          "foldShare": 0,
+          "pageShare": 17.7
+        },
+        "h1": {
+          "top": 136,
+          "left": 326,
+          "size": 53.6471
+        }
+      },
+      "px": {
+        "colourfulness": 6,
+        "colours95": 2,
+        "dominantShare": 0.78,
+        "edgeDensity": 0.047,
+        "whitespace": 0.894,
+        "quadtreeLeaves": 2536,
+        "balance": 0.615,
+        "balanceLR": 0.378,
+        "balanceTB": 0.852,
+        "leftHeavy": true,
+        "topHeavy": false,
+        "symmetry": 0.322
+      }
+    },
+    {
+      "site": "carbon",
+      "kind": "t3",
+      "url": "https://www.carbondesignsystem.com/building-blocks/core/components/tooltip/guidelines",
+      "run": 0,
+      "dom": {
+        "docHeight": 11562,
+        "type": {
+          "totalChars": 8673,
+          "sizes": {
+            "distinct": 6,
+            "cover95": 2,
+            "top": [
+              [
+                "16",
+                73.7
+              ],
+              [
+                "14",
+                21.7
+              ],
+              [
+                "22",
+                3.2
+              ],
+              [
+                "32",
+                0.8
+              ],
+              [
+                "12",
+                0.4
+              ],
+              [
+                "53.5",
+                0.1
+              ]
+            ]
+          },
+          "weights": {
+            "distinct": 4,
+            "cover95": 1,
+            "top": [
+              [
+                "400",
+                95.4
+              ],
+              [
+                "600",
+                4.1
+              ],
+              [
+                "500",
+                0.4
+              ],
+              [
+                "300",
+                0.1
+              ]
+            ]
+          },
+          "lineHeights": {
+            "distinct": 10,
+            "cover95": 4,
+            "top": [
+              [
+                "24",
+                72.1
+              ],
+              [
+                "18",
+                16
+              ],
+              [
+                "20",
+                5.7
+              ],
+              [
+                "31",
+                3.2
+              ],
+              [
+                "21",
+                1.3
+              ],
+              [
+                "40",
+                0.8
+              ],
+              [
+                "16",
+                0.4
+              ],
+              [
+                "22",
+                0.4
+              ]
+            ]
+          },
+          "families": {
+            "distinct": 3,
+            "cover95": 1,
+            "top": [
+              [
+                "ibm plex sans",
+                99.9
+              ],
+              [
+                "ibm plex serif",
+                0.1
+              ],
+              [
+                "ibm plex mono",
+                0.1
+              ]
+            ]
+          },
+          "colors": {
+            "distinct": 5,
+            "cover95": 2,
+            "top": [
+              [
+                "rgb(22, 22, 22)",
+                89.6
+              ],
+              [
+                "rgb(82, 82, 82)",
+                7.3
+              ],
+              [
+                "rgb(15, 98, 254)",
+                1.7
+              ],
+              [
+                "rgb(244, 244, 244)",
+                1.4
+              ],
+              [
+                "rgb(0, 83, 154)",
+                0.1
+              ]
+            ]
+          },
+          "styles": {
+            "distinct": 17,
+            "cover95": 7,
+            "top": [
+              [
+                "16|400|ibm plex sans|rgb(22, 22, 22)",
+                69.8
+              ],
+              [
+                "14|400|ibm plex sans|rgb(22, 22, 22)",
+                12.1
+              ],
+              [
+                "14|400|ibm plex sans|rgb(82, 82, 82)",
+                5.7
+              ],
+              [
+                "22|400|ibm plex sans|rgb(22, 22, 22)",
+                3.2
+              ],
+              [
+                "16|600|ibm plex sans|rgb(22, 22, 22)",
+                2.4
+              ],
+              [
+                "14|400|ibm plex sans|rgb(244, 244, 244)",
+                1.4
+              ],
+              [
+                "16|400|ibm plex sans|rgb(15, 98, 254)",
+                1.3
+              ],
+              [
+                "14|600|ibm plex sans|rgb(22, 22, 22)",
+                1
+              ]
+            ]
+          }
+        },
+        "prose": {
+          "chars": 7308,
+          "size": 16,
+          "sizeShare": 85.4,
+          "top": [
+            [
+              16,
+              85.4
+            ],
+            [
+              14,
+              14.6
+            ]
+          ],
+          "h1ToProse": 3.35
+        },
+        "styleSet": [
+          "16|400|ibm plex sans|rgb(22, 22, 22)",
+          "14|400|ibm plex sans|rgb(22, 22, 22)",
+          "14|400|ibm plex sans|rgb(82, 82, 82)",
+          "22|400|ibm plex sans|rgb(22, 22, 22)",
+          "16|600|ibm plex sans|rgb(22, 22, 22)",
+          "14|400|ibm plex sans|rgb(244, 244, 244)",
+          "16|400|ibm plex sans|rgb(15, 98, 254)"
+        ],
+        "spacing": {
+          "values": 626,
+          "distinct": 22,
+          "on4px": 89,
+          "on8px": 88,
+          "offGrid": [
+            [
+              7,
+              20
+            ],
+            [
+              1,
+              15
+            ],
+            [
+              2,
+              7
+            ],
+            [
+              0.5,
+              6
+            ],
+            [
+              37.65,
+              5
+            ],
+            [
+              15,
+              4
+            ],
+            [
+              13,
+              4
+            ],
+            [
+              385.88,
+              4
+            ]
+          ]
+        },
+        "leftEdges": {
+          "items": 58,
+          "distinct": 21,
+          "perItem": 0.36,
+          "singletonShare": 20.7,
+          "shared3": 6
+        },
+        "defects": {
+          "horizontalScroll": false,
+          "spills": 0,
+          "spillEx": [],
+          "truncated": 0,
+          "headings": 29,
+          "headingsWrapped": 0,
+          "headingWidows": 0,
+          "paras": 125,
+          "parasMulti": 46,
+          "labels": 93,
+          "labelWraps": 0,
+          "labelWrapEx": [],
+          "paraWidowShare": 15.2,
+          "medianCharsPerLine": 65
+        },
+        "media": {
+          "count": 12,
+          "foldShare": 0,
+          "pageShare": 12.7
+        },
+        "h1": {
+          "top": 136,
+          "left": 326,
+          "size": 53.6471
+        }
+      },
+      "px": {
+        "colourfulness": 8.6,
+        "colours95": 3,
+        "dominantShare": 0.765,
+        "edgeDensity": 0.062,
+        "whitespace": 0.864,
+        "quadtreeLeaves": 3316,
+        "balance": 0.428,
+        "balanceLR": 0.384,
+        "balanceTB": 0.473,
+        "leftHeavy": true,
+        "topHeavy": false,
+        "symmetry": 0.413
+      }
+    },
+    {
+      "site": "carbon",
+      "kind": "t4",
+      "url": "https://www.carbondesignsystem.com/building-blocks/core/components/modal/guidelines",
+      "run": 0,
+      "dom": {
+        "docHeight": 22341,
+        "type": {
+          "totalChars": 16335,
+          "sizes": {
+            "distinct": 6,
+            "cover95": 2,
+            "top": [
+              [
+                "16",
+                85.7
+              ],
+              [
+                "14",
+                10.7
+              ],
+              [
+                "22",
+                2.7
+              ],
+              [
+                "32",
+                0.6
+              ],
+              [
+                "12",
+                0.3
+              ],
+              [
+                "53.5",
+                0
+              ]
+            ]
+          },
+          "weights": {
+            "distinct": 4,
+            "cover95": 1,
+            "top": [
+              [
+                "400",
+                95.5
+              ],
+              [
+                "600",
+                4.2
+              ],
+              [
+                "500",
+                0.2
+              ],
+              [
+                "300",
+                0
+              ]
+            ]
+          },
+          "lineHeights": {
+            "distinct": 10,
+            "cover95": 4,
+            "top": [
+              [
+                "24",
+                84.4
+              ],
+              [
+                "18",
+                7.4
+              ],
+              [
+                "20",
+                3.1
+              ],
+              [
+                "31",
+                2.7
+              ],
+              [
+                "21",
+                1.1
+              ],
+              [
+                "40",
+                0.6
+              ],
+              [
+                "16",
+                0.3
+              ],
+              [
+                "22",
+                0.2
+              ]
+            ]
+          },
+          "families": {
+            "distinct": 3,
+            "cover95": 1,
+            "top": [
+              [
+                "ibm plex sans",
+                99.8
+              ],
+              [
+                "ibm plex mono",
+                0.2
+              ],
+              [
+                "ibm plex serif",
+                0
+              ]
+            ]
+          },
+          "colors": {
+            "distinct": 7,
+            "cover95": 2,
+            "top": [
+              [
+                "rgb(22, 22, 22)",
+                93.4
+              ],
+              [
+                "rgb(82, 82, 82)",
+                4
+              ],
+              [
+                "rgb(15, 98, 254)",
+                1.6
+              ],
+              [
+                "rgb(244, 244, 244)",
+                0.7
+              ],
+              [
+                "rgb(105, 41, 196)",
+                0.1
+              ],
+              [
+                "rgb(255, 255, 255)",
+                0.1
+              ],
+              [
+                "rgb(0, 83, 154)",
+                0
+              ]
+            ]
+          },
+          "styles": {
+            "distinct": 19,
+            "cover95": 5,
+            "top": [
+              [
+                "16|400|ibm plex sans|rgb(22, 22, 22)",
+                81.1
+              ],
+              [
+                "14|400|ibm plex sans|rgb(22, 22, 22)",
+                4.9
+              ],
+              [
+                "16|600|ibm plex sans|rgb(22, 22, 22)",
+                3.4
+              ],
+              [
+                "14|400|ibm plex sans|rgb(82, 82, 82)",
+                3.2
+              ],
+              [
+                "22|400|ibm plex sans|rgb(22, 22, 22)",
+                2.7
+              ],
+              [
+                "16|400|ibm plex sans|rgb(15, 98, 254)",
+                1.1
+              ],
+              [
+                "14|400|ibm plex sans|rgb(244, 244, 244)",
+                0.7
+              ],
+              [
+                "14|600|ibm plex sans|rgb(22, 22, 22)",
+                0.6
+              ]
+            ]
+          }
+        },
+        "prose": {
+          "chars": 13876,
+          "size": 16,
+          "sizeShare": 98.5,
+          "top": [
+            [
+              16,
+              98.5
+            ],
+            [
+              14,
+              1.5
+            ]
+          ],
+          "h1ToProse": 3.35
+        },
+        "styleSet": [
+          "16|400|ibm plex sans|rgb(22, 22, 22)",
+          "14|400|ibm plex sans|rgb(22, 22, 22)",
+          "16|600|ibm plex sans|rgb(22, 22, 22)",
+          "14|400|ibm plex sans|rgb(82, 82, 82)",
+          "22|400|ibm plex sans|rgb(22, 22, 22)"
+        ],
+        "spacing": {
+          "values": 841,
+          "distinct": 21,
+          "on4px": 91.3,
+          "on8px": 90.6,
+          "offGrid": [
+            [
+              7,
+              32
+            ],
+            [
+              1,
+              15
+            ],
+            [
+              2,
+              7
+            ],
+            [
+              0.5,
+              6
+            ],
+            [
+              37.65,
+              5
+            ],
+            [
+              14,
+              2
+            ],
+            [
+              15,
+              2
+            ],
+            [
+              33,
+              2
+            ]
+          ]
+        },
+        "leftEdges": {
+          "items": 65,
+          "distinct": 25,
+          "perItem": 0.38,
+          "singletonShare": 23.1,
+          "shared3": 6
+        },
+        "defects": {
+          "horizontalScroll": false,
+          "spills": 0,
+          "spillEx": [],
+          "truncated": 0,
+          "headings": 48,
+          "headingsWrapped": 0,
+          "headingWidows": 0,
+          "paras": 166,
+          "parasMulti": 79,
+          "labels": 114,
+          "labelWraps": 1,
+          "labelWrapEx": [
+            "a: maximum height"
+          ],
+          "paraWidowShare": 20.3,
+          "medianCharsPerLine": 60
+        },
+        "media": {
+          "count": 18,
+          "foldShare": 0,
+          "pageShare": 15.8
+        },
+        "h1": {
+          "top": 136,
+          "left": 326,
+          "size": 53.6471
+        }
+      },
+      "px": {
+        "colourfulness": 6.5,
+        "colours95": 2,
+        "dominantShare": 0.773,
+        "edgeDensity": 0.049,
+        "whitespace": 0.89,
+        "quadtreeLeaves": 2671,
+        "balance": 0.64,
+        "balanceLR": 0.369,
+        "balanceTB": 0.91,
+        "leftHeavy": true,
+        "topHeavy": false,
+        "symmetry": 0.317
+      }
+    },
+    {
+      "site": "carbon",
+      "kind": "home",
+      "url": "https://www.carbondesignsystem.com/",
+      "run": 1,
+      "dom": {
+        "docHeight": 4709,
+        "type": {
+          "totalChars": 1571,
+          "sizes": {
+            "distinct": 8,
+            "cover95": 7,
+            "top": [
+              [
+                "32",
+                41.1
+              ],
+              [
+                "14",
+                13.9
+              ],
+              [
+                "16",
+                11.8
+              ],
+              [
+                "48",
+                11.2
+              ],
+              [
+                "22",
+                8
+              ],
+              [
+                "64",
+                6.6
+              ],
+              [
+                "20",
+                6.4
+              ],
+              [
+                "94.5",
+                1.1
+              ]
+            ]
+          },
+          "weights": {
+            "distinct": 4,
+            "cover95": 4,
+            "top": [
+              [
+                "400",
+                70.2
+              ],
+              [
+                "300",
+                11.2
+              ],
+              [
+                "600",
+                10.9
+              ],
+              [
+                "200",
+                7.6
+              ]
+            ]
+          },
+          "lineHeights": {
+            "distinct": 10,
+            "cover95": 9,
+            "top": [
+              [
+                "40",
+                41.1
+              ],
+              [
+                "56",
+                11.2
+              ],
+              [
+                "18",
+                8.5
+              ],
+              [
+                "31",
+                8
+              ],
+              [
+                "68",
+                6.6
+              ],
+              [
+                "28",
+                6.4
+              ],
+              [
+                "22",
+                6.2
+              ],
+              [
+                "24",
+                5.5
+              ]
+            ]
+          },
+          "families": {
+            "distinct": 2,
+            "cover95": 2,
+            "top": [
+              [
+                "ibm plex sans",
+                92.4
+              ],
+              [
+                "ibm plex serif",
+                7.6
+              ]
+            ]
+          },
+          "colors": {
+            "distinct": 6,
+            "cover95": 5,
+            "top": [
+              [
+                "rgb(22, 22, 22)",
+                62.8
+              ],
+              [
+                "rgb(0, 45, 156)",
+                11.1
+              ],
+              [
+                "rgb(255, 255, 255)",
+                9.1
+              ],
+              [
+                "rgb(244, 244, 244)",
+                7.6
+              ],
+              [
+                "rgb(15, 98, 254)",
+                5.3
+              ],
+              [
+                "rgb(82, 82, 82)",
+                4.1
+              ]
+            ]
+          },
+          "styles": {
+            "distinct": 15,
+            "cover95": 11,
+            "top": [
+              [
+                "32|400|ibm plex sans|rgb(22, 22, 22)",
+                41.1
+              ],
+              [
+                "48|300|ibm plex sans|rgb(22, 22, 22)",
+                11.2
+              ],
+              [
+                "22|400|ibm plex sans|rgb(0, 45, 156)",
+                8
+              ],
+              [
+                "14|400|ibm plex sans|rgb(244, 244, 244)",
+                7.6
+              ],
+              [
+                "64|200|ibm plex serif|rgb(255, 255, 255)",
+                6.6
+              ],
+              [
+                "16|600|ibm plex sans|rgb(22, 22, 22)",
+                4.8
+              ],
+              [
+                "16|400|ibm plex sans|rgb(15, 98, 254)",
+                4.5
+              ],
+              [
+                "20|400|ibm plex sans|rgb(22, 22, 22)",
+                4.5
+              ]
+            ]
+          }
+        },
+        "prose": {
+          "chars": 1278,
+          "size": 32,
+          "sizeShare": 50.5,
+          "top": [
+            [
+              32,
+              50.5
+            ],
+            [
+              48,
+              13.8
+            ],
+            [
+              16,
+              9.9
+            ],
+            [
+              22,
+              9.9
+            ],
+            [
+              64,
+              8.1
+            ]
+          ],
+          "h1ToProse": 2.96
+        },
+        "styleSet": [
+          "32|400|ibm plex sans|rgb(22, 22, 22)",
+          "48|300|ibm plex sans|rgb(22, 22, 22)",
+          "22|400|ibm plex sans|rgb(0, 45, 156)",
+          "14|400|ibm plex sans|rgb(244, 244, 244)",
+          "64|200|ibm plex serif|rgb(255, 255, 255)",
+          "16|600|ibm plex sans|rgb(22, 22, 22)",
+          "16|400|ibm plex sans|rgb(15, 98, 254)",
+          "20|400|ibm plex sans|rgb(22, 22, 22)",
+          "14|600|ibm plex sans|rgb(82, 82, 82)",
+          "20|400|ibm plex sans|rgb(0, 45, 156)",
+          "16|400|ibm plex sans|rgb(255, 255, 255)"
+        ],
+        "spacing": {
+          "values": 174,
+          "distinct": 17,
+          "on4px": 79.9,
+          "on8px": 79.9,
+          "offGrid": [
+            [
+              1,
+              12
+            ],
+            [
+              37.65,
+              9
+            ],
+            [
+              2,
+              7
+            ],
+            [
+              637.17,
+              3
+            ],
+            [
+              14,
+              2
+            ],
+            [
+              15,
+              2
+            ]
+          ]
+        },
+        "leftEdges": {
+          "items": 43,
+          "distinct": 26,
+          "perItem": 0.6,
+          "singletonShare": 44.2,
+          "shared3": 4
+        },
+        "defects": {
+          "horizontalScroll": false,
+          "spills": 0,
+          "spillEx": [],
+          "truncated": 0,
+          "headings": 4,
+          "headingsWrapped": 1,
+          "headingWidows": 0,
+          "paras": 24,
+          "parasMulti": 12,
+          "labels": 25,
+          "labelWraps": 0,
+          "labelWrapEx": [],
+          "paraWidowShare": 16.7,
+          "medianCharsPerLine": 26
+        },
+        "media": {
+          "count": 6,
+          "foldShare": 100,
+          "pageShare": 100
+        },
+        "h1": {
+          "top": 102,
+          "left": 326,
+          "size": 94.608
+        }
+      },
+      "px": {
+        "colourfulness": 48.9,
+        "colours95": 5,
+        "dominantShare": 0.6,
+        "edgeDensity": 0.07,
+        "whitespace": 0.841,
+        "quadtreeLeaves": 4489,
+        "balance": 0.893,
+        "balanceLR": 0.829,
+        "balanceTB": 0.956,
+        "leftHeavy": true,
+        "topHeavy": true,
+        "symmetry": 0.288
+      }
+    },
+    {
+      "site": "carbon",
+      "kind": "button",
+      "url": "https://www.carbondesignsystem.com/building-blocks/core/components/button/guidelines",
+      "run": 1,
+      "dom": {
+        "docHeight": 47652,
+        "type": {
+          "totalChars": 31892,
+          "sizes": {
+            "distinct": 6,
+            "cover95": 2,
+            "top": [
+              [
+                "16",
+                67.6
+              ],
+              [
+                "14",
+                30.5
+              ],
+              [
+                "22",
+                1.3
+              ],
+              [
+                "32",
+                0.5
+              ],
+              [
+                "12",
+                0.1
+              ],
+              [
+                "53.5",
+                0
+              ]
+            ]
+          },
+          "weights": {
+            "distinct": 4,
+            "cover95": 1,
+            "top": [
+              [
+                "400",
+                95.4
+              ],
+              [
+                "600",
+                4.5
+              ],
+              [
+                "500",
+                0.1
+              ],
+              [
+                "300",
+                0
+              ]
+            ]
+          },
+          "lineHeights": {
+            "distinct": 10,
+            "cover95": 3,
+            "top": [
+              [
+                "24",
+                65.4
+              ],
+              [
+                "18",
+                28.4
+              ],
+              [
+                "20",
+                2
+              ],
+              [
+                "21",
+                1.9
+              ],
+              [
+                "31",
+                1.3
+              ],
+              [
+                "40",
+                0.5
+              ],
+              [
+                "22",
+                0.3
+              ],
+              [
+                "19",
+                0.1
+              ]
+            ]
+          },
+          "families": {
+            "distinct": 3,
+            "cover95": 1,
+            "top": [
+              [
+                "ibm plex sans",
+                99.9
+              ],
+              [
+                "ibm plex mono",
+                0.1
+              ],
+              [
+                "ibm plex serif",
+                0
+              ]
+            ]
+          },
+          "colors": {
+            "distinct": 5,
+            "cover95": 1,
+            "top": [
+              [
+                "rgb(22, 22, 22)",
+                95.3
+              ],
+              [
+                "rgb(82, 82, 82)",
+                2.2
+              ],
+              [
+                "rgb(15, 98, 254)",
+                2.1
+              ],
+              [
+                "rgb(244, 244, 244)",
+                0.4
+              ],
+              [
+                "rgb(0, 83, 154)",
+                0
+              ]
+            ]
+          },
+          "styles": {
+            "distinct": 17,
+            "cover95": 5,
+            "top": [
+              [
+                "16|400|ibm plex sans|rgb(22, 22, 22)",
+                62
+              ],
+              [
+                "14|400|ibm plex sans|rgb(22, 22, 22)",
+                27
+              ],
+              [
+                "16|600|ibm plex sans|rgb(22, 22, 22)",
+                3.6
+              ],
+              [
+                "16|400|ibm plex sans|rgb(15, 98, 254)",
+                1.9
+              ],
+              [
+                "14|400|ibm plex sans|rgb(82, 82, 82)",
+                1.8
+              ],
+              [
+                "22|400|ibm plex sans|rgb(22, 22, 22)",
+                1.3
+              ],
+              [
+                "14|600|ibm plex sans|rgb(22, 22, 22)",
+                0.7
+              ],
+              [
+                "32|400|ibm plex sans|rgb(22, 22, 22)",
+                0.5
+              ]
+            ]
+          }
+        },
+        "prose": {
+          "chars": 26347,
+          "size": 16,
+          "sizeShare": 78.2,
+          "top": [
+            [
+              16,
+              78.2
+            ],
+            [
+              14,
+              21.8
+            ]
+          ],
+          "h1ToProse": 3.35
+        },
+        "styleSet": [
+          "16|400|ibm plex sans|rgb(22, 22, 22)",
+          "14|400|ibm plex sans|rgb(22, 22, 22)",
+          "16|600|ibm plex sans|rgb(22, 22, 22)",
+          "16|400|ibm plex sans|rgb(15, 98, 254)",
+          "14|400|ibm plex sans|rgb(82, 82, 82)"
+        ],
+        "spacing": {
+          "values": 1696,
+          "distinct": 22,
+          "on4px": 91.9,
+          "on8px": 91.6,
+          "offGrid": [
+            [
+              246.58,
+              50
+            ],
+            [
+              7,
+              38
+            ],
+            [
+              1,
+              15
+            ],
+            [
+              2,
+              7
+            ],
+            [
+              15,
+              6
+            ],
+            [
+              13,
+              6
+            ],
+            [
+              0.5,
+              6
+            ],
+            [
+              37.65,
+              5
+            ]
+          ]
+        },
+        "leftEdges": {
+          "items": 58,
+          "distinct": 21,
+          "perItem": 0.36,
+          "singletonShare": 20.7,
+          "shared3": 6
+        },
+        "defects": {
+          "horizontalScroll": false,
+          "spills": 0,
+          "spillEx": [],
+          "truncated": 0,
+          "headings": 68,
+          "headingsWrapped": 0,
+          "headingWidows": 0,
+          "paras": 187,
+          "parasMulti": 78,
+          "labels": 144,
+          "labelWraps": 0,
+          "labelWrapEx": [],
+          "paraWidowShare": 16.7,
+          "medianCharsPerLine": 55
+        },
+        "media": {
+          "count": 53,
+          "foldShare": 0,
+          "pageShare": 16.1
+        },
+        "h1": {
+          "top": 136,
+          "left": 326,
+          "size": 53.6471
+        }
+      },
+      "px": {
+        "colourfulness": 8.5,
+        "colours95": 3,
+        "dominantShare": 0.76,
+        "edgeDensity": 0.058,
+        "whitespace": 0.872,
+        "quadtreeLeaves": 3106,
+        "balance": 0.465,
+        "balanceLR": 0.396,
+        "balanceTB": 0.533,
+        "leftHeavy": true,
+        "topHeavy": false,
+        "symmetry": 0.428
+      }
+    }
+  ]
+}

@@ -1,0 +1,2208 @@
+{
+  "at": "2026-11-17T15:19:40.075Z",
+  "kuiperBuild": "2026-11-16T23:34:24.926Z",
+  "rows": [
+    {
+      "site": "govuk",
+      "kind": "home",
+      "url": "https://design-system.service.gov.uk/",
+      "run": 0,
+      "dom": {
+        "docHeight": 3279,
+        "type": {
+          "totalChars": 2839,
+          "sizes": {
+            "distinct": 5,
+            "cover95": 3,
+            "top": [
+              [
+                "19",
+                82.7
+              ],
+              [
+                "24",
+                8.9
+              ],
+              [
+                "36",
+                5.7
+              ],
+              [
+                "48",
+                2.3
+              ],
+              [
+                "31",
+                0.5
+              ]
+            ]
+          },
+          "weights": {
+            "distinct": 2,
+            "cover95": 2,
+            "top": [
+              [
+                "400",
+                87.7
+              ],
+              [
+                "700",
+                12.3
+              ]
+            ]
+          },
+          "lineHeights": {
+            "distinct": 7,
+            "cover95": 4,
+            "top": [
+              [
+                "25",
+                80.7
+              ],
+              [
+                "30",
+                8.5
+              ],
+              [
+                "40",
+                5.7
+              ],
+              [
+                "50",
+                2.3
+              ],
+              [
+                "29",
+                2
+              ],
+              [
+                "31",
+                0.5
+              ],
+              [
+                "24",
+                0.4
+              ]
+            ]
+          },
+          "families": {
+            "distinct": 1,
+            "cover95": 1,
+            "top": [
+              [
+                "gds transport",
+                100
+              ]
+            ]
+          },
+          "colors": {
+            "distinct": 4,
+            "cover95": 3,
+            "top": [
+              [
+                "rgb(11, 12, 12)",
+                61
+              ],
+              [
+                "rgb(26, 101, 166)",
+                27.3
+              ],
+              [
+                "rgb(255, 255, 255)",
+                11.3
+              ],
+              [
+                "rgb(29, 112, 184)",
+                0.4
+              ]
+            ]
+          },
+          "styles": {
+            "distinct": 10,
+            "cover95": 6,
+            "top": [
+              [
+                "19|400|gds transport|rgb(11, 12, 12)",
+                53.4
+              ],
+              [
+                "19|400|gds transport|rgb(26, 101, 166)",
+                25.3
+              ],
+              [
+                "24|400|gds transport|rgb(255, 255, 255)",
+                6.6
+              ],
+              [
+                "36|700|gds transport|rgb(11, 12, 12)",
+                5.7
+              ],
+              [
+                "48|700|gds transport|rgb(255, 255, 255)",
+                2.3
+              ],
+              [
+                "19|400|gds transport|rgb(255, 255, 255)",
+                2
+              ],
+              [
+                "19|700|gds transport|rgb(26, 101, 166)",
+                2
+              ],
+              [
+                "24|700|gds transport|rgb(11, 12, 12)",
+                1.9
+              ]
+            ]
+          }
+        },
+        "prose": {
+          "chars": 2282,
+          "size": 19,
+          "sizeShare": 91.3,
+          "top": [
+            [
+              19,
+              91.3
+            ],
+            [
+              24,
+              8.7
+            ]
+          ],
+          "h1ToProse": 2.53
+        },
+        "styleSet": [
+          "19|400|gds transport|rgb(11, 12, 12)",
+          "19|400|gds transport|rgb(26, 101, 166)",
+          "24|400|gds transport|rgb(255, 255, 255)",
+          "36|700|gds transport|rgb(11, 12, 12)",
+          "48|700|gds transport|rgb(255, 255, 255)",
+          "19|400|gds transport|rgb(255, 255, 255)"
+        ],
+        "spacing": {
+          "values": 156,
+          "distinct": 16,
+          "on4px": 16,
+          "on8px": 3.8,
+          "offGrid": [
+            [
+              15,
+              64
+            ],
+            [
+              30,
+              19
+            ],
+            [
+              50,
+              14
+            ],
+            [
+              170,
+              12
+            ],
+            [
+              5,
+              8
+            ],
+            [
+              10,
+              5
+            ],
+            [
+              1,
+              4
+            ],
+            [
+              25,
+              3
+            ]
+          ]
+        },
+        "leftEdges": {
+          "items": 19,
+          "distinct": 11,
+          "perItem": 0.58,
+          "singletonShare": 52.6,
+          "shared3": 1
+        },
+        "defects": {
+          "horizontalScroll": false,
+          "spills": 0,
+          "spillEx": [],
+          "truncated": 0,
+          "headings": 12,
+          "headingsWrapped": 2,
+          "headingWidows": 0,
+          "paras": 32,
+          "parasMulti": 14,
+          "labels": 21,
+          "labelWraps": 0,
+          "labelWrapEx": [],
+          "paraWidowShare": 0,
+          "medianCharsPerLine": 62
+        },
+        "media": {
+          "count": 1,
+          "foldShare": 7.3,
+          "pageShare": 2
+        },
+        "h1": {
+          "top": 151,
+          "left": 170,
+          "size": 48
+        }
+      },
+      "px": {
+        "colourfulness": 89.4,
+        "colours95": 5,
+        "dominantShare": 0.492,
+        "edgeDensity": 0.101,
+        "whitespace": 0.785,
+        "quadtreeLeaves": 5569,
+        "balance": 0.499,
+        "balanceLR": 0.404,
+        "balanceTB": 0.593,
+        "leftHeavy": true,
+        "topHeavy": true,
+        "symmetry": 0.411
+      }
+    },
+    {
+      "site": "govuk",
+      "kind": "button",
+      "url": "https://design-system.service.gov.uk/components/button/",
+      "run": 0,
+      "dom": {
+        "docHeight": 7787,
+        "type": {
+          "totalChars": 7347,
+          "sizes": {
+            "distinct": 6,
+            "cover95": 2,
+            "top": [
+              [
+                "19",
+                83.5
+              ],
+              [
+                "16",
+                12.2
+              ],
+              [
+                "24",
+                2.6
+              ],
+              [
+                "36",
+                1.4
+              ],
+              [
+                "31",
+                0.2
+              ],
+              [
+                "48",
+                0.1
+              ]
+            ]
+          },
+          "weights": {
+            "distinct": 2,
+            "cover95": 1,
+            "top": [
+              [
+                "400",
+                95.5
+              ],
+              [
+                "700",
+                4.5
+              ]
+            ]
+          },
+          "lineHeights": {
+            "distinct": 8,
+            "cover95": 3,
+            "top": [
+              [
+                "25",
+                82.8
+              ],
+              [
+                "20",
+                12
+              ],
+              [
+                "30",
+                2.6
+              ],
+              [
+                "40",
+                1.4
+              ],
+              [
+                "29",
+                0.8
+              ],
+              [
+                "31",
+                0.2
+              ],
+              [
+                "normal",
+                0.1
+              ],
+              [
+                "50",
+                0.1
+              ]
+            ]
+          },
+          "families": {
+            "distinct": 2,
+            "cover95": 1,
+            "top": [
+              [
+                "gds transport",
+                97.9
+              ],
+              [
+                "ui-monospace",
+                2.1
+              ]
+            ]
+          },
+          "colors": {
+            "distinct": 4,
+            "cover95": 2,
+            "top": [
+              [
+                "rgb(11, 12, 12)",
+                77.9
+              ],
+              [
+                "rgb(26, 101, 166)",
+                19.8
+              ],
+              [
+                "rgb(209, 49, 24)",
+                2.1
+              ],
+              [
+                "rgb(255, 255, 255)",
+                0.2
+              ]
+            ]
+          },
+          "styles": {
+            "distinct": 11,
+            "cover95": 4,
+            "top": [
+              [
+                "19|400|gds transport|rgb(11, 12, 12)",
+                73.3
+              ],
+              [
+                "19|400|gds transport|rgb(26, 101, 166)",
+                10
+              ],
+              [
+                "16|400|gds transport|rgb(26, 101, 166)",
+                9.8
+              ],
+              [
+                "24|700|gds transport|rgb(11, 12, 12)",
+                2.6
+              ],
+              [
+                "16|400|ui-monospace|rgb(209, 49, 24)",
+                2.1
+              ],
+              [
+                "36|700|gds transport|rgb(11, 12, 12)",
+                1.4
+              ],
+              [
+                "19|700|gds transport|rgb(11, 12, 12)",
+                0.3
+              ],
+              [
+                "16|400|gds transport|rgb(11, 12, 12)",
+                0.2
+              ]
+            ]
+          }
+        },
+        "prose": {
+          "chars": 5461,
+          "size": 19,
+          "sizeShare": 94.3,
+          "top": [
+            [
+              19,
+              94.3
+            ],
+            [
+              16,
+              5.7
+            ]
+          ],
+          "h1ToProse": 2.53
+        },
+        "styleSet": [
+          "19|400|gds transport|rgb(11, 12, 12)",
+          "19|400|gds transport|rgb(26, 101, 166)",
+          "16|400|gds transport|rgb(26, 101, 166)",
+          "24|700|gds transport|rgb(11, 12, 12)"
+        ],
+        "spacing": {
+          "values": 603,
+          "distinct": 19,
+          "on4px": 29.9,
+          "on8px": 0.7,
+          "offGrid": [
+            [
+              5,
+              143
+            ],
+            [
+              2,
+              108
+            ],
+            [
+              10,
+              93
+            ],
+            [
+              30,
+              33
+            ],
+            [
+              15,
+              26
+            ],
+            [
+              170,
+              8
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              50,
+              3
+            ]
+          ]
+        },
+        "leftEdges": {
+          "items": 43,
+          "distinct": 14,
+          "perItem": 0.33,
+          "singletonShare": 23.3,
+          "shared3": 3
+        },
+        "defects": {
+          "horizontalScroll": false,
+          "spills": 0,
+          "spillEx": [],
+          "truncated": 0,
+          "headings": 15,
+          "headingsWrapped": 0,
+          "headingWidows": 0,
+          "paras": 131,
+          "parasMulti": 31,
+          "labels": 102,
+          "labelWraps": 0,
+          "labelWrapEx": [],
+          "paraWidowShare": 25.8,
+          "medianCharsPerLine": 46
+        },
+        "media": {
+          "count": 20,
+          "foldShare": 18.8,
+          "pageShare": 21.8
+        },
+        "h1": {
+          "top": 191,
+          "left": 460,
+          "size": 48
+        }
+      },
+      "px": {
+        "colourfulness": 36.8,
+        "colours95": 3,
+        "dominantShare": 0.84,
+        "edgeDensity": 0.072,
+        "whitespace": 0.833,
+        "quadtreeLeaves": 4138,
+        "balance": 0.674,
+        "balanceLR": 0.482,
+        "balanceTB": 0.866,
+        "leftHeavy": true,
+        "topHeavy": true,
+        "symmetry": 0.467
+      }
+    },
+    {
+      "site": "govuk",
+      "kind": "t1",
+      "url": "https://design-system.service.gov.uk/components/checkboxes/",
+      "run": 0,
+      "dom": {
+        "docHeight": 10633,
+        "type": {
+          "totalChars": 8563,
+          "sizes": {
+            "distinct": 6,
+            "cover95": 2,
+            "top": [
+              [
+                "19",
+                86.6
+              ],
+              [
+                "16",
+                8.9
+              ],
+              [
+                "24",
+                2.6
+              ],
+              [
+                "36",
+                1.6
+              ],
+              [
+                "31",
+                0.2
+              ],
+              [
+                "48",
+                0.1
+              ]
+            ]
+          },
+          "weights": {
+            "distinct": 2,
+            "cover95": 2,
+            "top": [
+              [
+                "400",
+                93
+              ],
+              [
+                "700",
+                7
+              ]
+            ]
+          },
+          "lineHeights": {
+            "distinct": 8,
+            "cover95": 3,
+            "top": [
+              [
+                "25",
+                85.9
+              ],
+              [
+                "20",
+                8.8
+              ],
+              [
+                "30",
+                2.6
+              ],
+              [
+                "40",
+                1.6
+              ],
+              [
+                "29",
+                0.7
+              ],
+              [
+                "31",
+                0.2
+              ],
+              [
+                "normal",
+                0.1
+              ],
+              [
+                "50",
+                0.1
+              ]
+            ]
+          },
+          "families": {
+            "distinct": 2,
+            "cover95": 1,
+            "top": [
+              [
+                "gds transport",
+                99.3
+              ],
+              [
+                "ui-monospace",
+                0.7
+              ]
+            ]
+          },
+          "colors": {
+            "distinct": 4,
+            "cover95": 2,
+            "top": [
+              [
+                "rgb(11, 12, 12)",
+                79.9
+              ],
+              [
+                "rgb(26, 101, 166)",
+                19.3
+              ],
+              [
+                "rgb(209, 49, 24)",
+                0.7
+              ],
+              [
+                "rgb(255, 255, 255)",
+                0.2
+              ]
+            ]
+          },
+          "styles": {
+            "distinct": 11,
+            "cover95": 5,
+            "top": [
+              [
+                "19|400|gds transport|rgb(11, 12, 12)",
+                72.9
+              ],
+              [
+                "19|400|gds transport|rgb(26, 101, 166)",
+                11.2
+              ],
+              [
+                "16|400|gds transport|rgb(26, 101, 166)",
+                8
+              ],
+              [
+                "24|700|gds transport|rgb(11, 12, 12)",
+                2.6
+              ],
+              [
+                "19|700|gds transport|rgb(11, 12, 12)",
+                2.5
+              ],
+              [
+                "36|700|gds transport|rgb(11, 12, 12)",
+                1.6
+              ],
+              [
+                "16|400|ui-monospace|rgb(209, 49, 24)",
+                0.7
+              ],
+              [
+                "16|400|gds transport|rgb(11, 12, 12)",
+                0.2
+              ]
+            ]
+          }
+        },
+        "prose": {
+          "chars": 6642,
+          "size": 19,
+          "sizeShare": 95.8,
+          "top": [
+            [
+              19,
+              95.8
+            ],
+            [
+              16,
+              4.2
+            ]
+          ],
+          "h1ToProse": 2.53
+        },
+        "styleSet": [
+          "19|400|gds transport|rgb(11, 12, 12)",
+          "19|400|gds transport|rgb(26, 101, 166)",
+          "16|400|gds transport|rgb(26, 101, 166)",
+          "24|700|gds transport|rgb(11, 12, 12)",
+          "19|700|gds transport|rgb(11, 12, 12)"
+        ],
+        "spacing": {
+          "values": 576,
+          "distinct": 19,
+          "on4px": 29.9,
+          "on8px": 0.7,
+          "offGrid": [
+            [
+              5,
+              134
+            ],
+            [
+              2,
+              92
+            ],
+            [
+              10,
+              88
+            ],
+            [
+              30,
+              36
+            ],
+            [
+              15,
+              34
+            ],
+            [
+              170,
+              8
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              50,
+              3
+            ]
+          ]
+        },
+        "leftEdges": {
+          "items": 39,
+          "distinct": 14,
+          "perItem": 0.36,
+          "singletonShare": 28.2,
+          "shared3": 2
+        },
+        "defects": {
+          "horizontalScroll": false,
+          "spills": 0,
+          "spillEx": [],
+          "truncated": 0,
+          "headings": 19,
+          "headingsWrapped": 0,
+          "headingWidows": 0,
+          "paras": 128,
+          "parasMulti": 36,
+          "labels": 95,
+          "labelWraps": 0,
+          "labelWrapEx": [],
+          "paraWidowShare": 16.7,
+          "medianCharsPerLine": 65
+        },
+        "media": {
+          "count": 18,
+          "foldShare": 44,
+          "pageShare": 37.1
+        },
+        "h1": {
+          "top": 191,
+          "left": 460,
+          "size": 48
+        }
+      },
+      "px": {
+        "colourfulness": 35.9,
+        "colours95": 3,
+        "dominantShare": 0.842,
+        "edgeDensity": 0.072,
+        "whitespace": 0.836,
+        "quadtreeLeaves": 4288,
+        "balance": 0.575,
+        "balanceLR": 0.498,
+        "balanceTB": 0.653,
+        "leftHeavy": true,
+        "topHeavy": true,
+        "symmetry": 0.471
+      }
+    },
+    {
+      "site": "govuk",
+      "kind": "t2",
+      "url": "https://design-system.service.gov.uk/components/tabs/",
+      "run": 0,
+      "dom": {
+        "docHeight": 6297,
+        "type": {
+          "totalChars": 6625,
+          "sizes": {
+            "distinct": 6,
+            "cover95": 3,
+            "top": [
+              [
+                "19",
+                85.9
+              ],
+              [
+                "16",
+                8.1
+              ],
+              [
+                "24",
+                3
+              ],
+              [
+                "36",
+                2.7
+              ],
+              [
+                "31",
+                0.2
+              ],
+              [
+                "48",
+                0.1
+              ]
+            ]
+          },
+          "weights": {
+            "distinct": 2,
+            "cover95": 2,
+            "top": [
+              [
+                "400",
+                93.8
+              ],
+              [
+                "700",
+                6.2
+              ]
+            ]
+          },
+          "lineHeights": {
+            "distinct": 8,
+            "cover95": 3,
+            "top": [
+              [
+                "25",
+                85.1
+              ],
+              [
+                "20",
+                7.9
+              ],
+              [
+                "30",
+                3
+              ],
+              [
+                "40",
+                2.7
+              ],
+              [
+                "29",
+                0.9
+              ],
+              [
+                "31",
+                0.2
+              ],
+              [
+                "normal",
+                0.2
+              ],
+              [
+                "50",
+                0.1
+              ]
+            ]
+          },
+          "families": {
+            "distinct": 2,
+            "cover95": 1,
+            "top": [
+              [
+                "gds transport",
+                99.4
+              ],
+              [
+                "ui-monospace",
+                0.6
+              ]
+            ]
+          },
+          "colors": {
+            "distinct": 4,
+            "cover95": 2,
+            "top": [
+              [
+                "rgb(11, 12, 12)",
+                85.1
+              ],
+              [
+                "rgb(26, 101, 166)",
+                14.1
+              ],
+              [
+                "rgb(209, 49, 24)",
+                0.6
+              ],
+              [
+                "rgb(255, 255, 255)",
+                0.2
+              ]
+            ]
+          },
+          "styles": {
+            "distinct": 11,
+            "cover95": 4,
+            "top": [
+              [
+                "19|400|gds transport|rgb(11, 12, 12)",
+                78.8
+              ],
+              [
+                "16|400|gds transport|rgb(26, 101, 166)",
+                7.2
+              ],
+              [
+                "19|400|gds transport|rgb(26, 101, 166)",
+                6.8
+              ],
+              [
+                "24|700|gds transport|rgb(11, 12, 12)",
+                3
+              ],
+              [
+                "36|700|gds transport|rgb(11, 12, 12)",
+                2.7
+              ],
+              [
+                "16|400|ui-monospace|rgb(209, 49, 24)",
+                0.6
+              ],
+              [
+                "19|700|gds transport|rgb(11, 12, 12)",
+                0.3
+              ],
+              [
+                "16|400|gds transport|rgb(11, 12, 12)",
+                0.2
+              ]
+            ]
+          }
+        },
+        "prose": {
+          "chars": 5020,
+          "size": 19,
+          "sizeShare": 98.6,
+          "top": [
+            [
+              19,
+              98.6
+            ],
+            [
+              16,
+              1.4
+            ]
+          ],
+          "h1ToProse": 2.53
+        },
+        "styleSet": [
+          "19|400|gds transport|rgb(11, 12, 12)",
+          "16|400|gds transport|rgb(26, 101, 166)",
+          "19|400|gds transport|rgb(26, 101, 166)",
+          "24|700|gds transport|rgb(11, 12, 12)"
+        ],
+        "spacing": {
+          "values": 461,
+          "distinct": 19,
+          "on4px": 21,
+          "on8px": 0.9,
+          "offGrid": [
+            [
+              5,
+              154
+            ],
+            [
+              2,
+              86
+            ],
+            [
+              10,
+              59
+            ],
+            [
+              15,
+              26
+            ],
+            [
+              30,
+              19
+            ],
+            [
+              170,
+              8
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              50,
+              3
+            ]
+          ]
+        },
+        "leftEdges": {
+          "items": 38,
+          "distinct": 13,
+          "perItem": 0.34,
+          "singletonShare": 28.9,
+          "shared3": 2
+        },
+        "defects": {
+          "horizontalScroll": false,
+          "spills": 0,
+          "spillEx": [],
+          "truncated": 0,
+          "headings": 16,
+          "headingsWrapped": 1,
+          "headingWidows": 1,
+          "paras": 114,
+          "parasMulti": 29,
+          "labels": 77,
+          "labelWraps": 1,
+          "labelWrapEx": [
+            "a: Inclusive Components"
+          ],
+          "paraWidowShare": 24.1,
+          "medianCharsPerLine": 63
+        },
+        "media": {
+          "count": 4,
+          "foldShare": 60.1,
+          "pageShare": 17.2
+        },
+        "h1": {
+          "top": 191,
+          "left": 460,
+          "size": 48
+        }
+      },
+      "px": {
+        "colourfulness": 35.7,
+        "colours95": 3,
+        "dominantShare": 0.837,
+        "edgeDensity": 0.068,
+        "whitespace": 0.83,
+        "quadtreeLeaves": 3877,
+        "balance": 0.743,
+        "balanceLR": 0.671,
+        "balanceTB": 0.815,
+        "leftHeavy": true,
+        "topHeavy": true,
+        "symmetry": 0.46
+      }
+    },
+    {
+      "site": "govuk",
+      "kind": "t3",
+      "url": "https://design-system.service.gov.uk/components/details/",
+      "run": 0,
+      "dom": {
+        "docHeight": 3355,
+        "type": {
+          "totalChars": 3171,
+          "sizes": {
+            "distinct": 6,
+            "cover95": 3,
+            "top": [
+              [
+                "19",
+                76.4
+              ],
+              [
+                "16",
+                16.1
+              ],
+              [
+                "36",
+                5.8
+              ],
+              [
+                "24",
+                1
+              ],
+              [
+                "31",
+                0.4
+              ],
+              [
+                "48",
+                0.2
+              ]
+            ]
+          },
+          "weights": {
+            "distinct": 2,
+            "cover95": 2,
+            "top": [
+              [
+                "400",
+                92.1
+              ],
+              [
+                "700",
+                7.9
+              ]
+            ]
+          },
+          "lineHeights": {
+            "distinct": 8,
+            "cover95": 3,
+            "top": [
+              [
+                "25",
+                74.6
+              ],
+              [
+                "20",
+                15.8
+              ],
+              [
+                "40",
+                5.8
+              ],
+              [
+                "29",
+                1.8
+              ],
+              [
+                "30",
+                1
+              ],
+              [
+                "31",
+                0.4
+              ],
+              [
+                "normal",
+                0.3
+              ],
+              [
+                "50",
+                0.2
+              ]
+            ]
+          },
+          "families": {
+            "distinct": 2,
+            "cover95": 1,
+            "top": [
+              [
+                "gds transport",
+                99.5
+              ],
+              [
+                "ui-monospace",
+                0.5
+              ]
+            ]
+          },
+          "colors": {
+            "distinct": 4,
+            "cover95": 2,
+            "top": [
+              [
+                "rgb(11, 12, 12)",
+                65.2
+              ],
+              [
+                "rgb(26, 101, 166)",
+                34
+              ],
+              [
+                "rgb(209, 49, 24)",
+                0.5
+              ],
+              [
+                "rgb(255, 255, 255)",
+                0.4
+              ]
+            ]
+          },
+          "styles": {
+            "distinct": 11,
+            "cover95": 4,
+            "top": [
+              [
+                "19|400|gds transport|rgb(11, 12, 12)",
+                57
+              ],
+              [
+                "19|400|gds transport|rgb(26, 101, 166)",
+                18.7
+              ],
+              [
+                "16|400|gds transport|rgb(26, 101, 166)",
+                15
+              ],
+              [
+                "36|700|gds transport|rgb(11, 12, 12)",
+                5.8
+              ],
+              [
+                "24|700|gds transport|rgb(11, 12, 12)",
+                1
+              ],
+              [
+                "19|700|gds transport|rgb(11, 12, 12)",
+                0.7
+              ],
+              [
+                "16|400|ui-monospace|rgb(209, 49, 24)",
+                0.5
+              ],
+              [
+                "16|400|gds transport|rgb(11, 12, 12)",
+                0.4
+              ]
+            ]
+          }
+        },
+        "prose": {
+          "chars": 1806,
+          "size": 19,
+          "sizeShare": 96.1,
+          "top": [
+            [
+              19,
+              96.1
+            ],
+            [
+              16,
+              3.9
+            ]
+          ],
+          "h1ToProse": 2.53
+        },
+        "styleSet": [
+          "19|400|gds transport|rgb(11, 12, 12)",
+          "19|400|gds transport|rgb(26, 101, 166)",
+          "16|400|gds transport|rgb(26, 101, 166)",
+          "36|700|gds transport|rgb(11, 12, 12)"
+        ],
+        "spacing": {
+          "values": 393,
+          "distinct": 19,
+          "on4px": 15.8,
+          "on8px": 1,
+          "offGrid": [
+            [
+              5,
+              130
+            ],
+            [
+              2,
+              82
+            ],
+            [
+              10,
+              54
+            ],
+            [
+              15,
+              26
+            ],
+            [
+              30,
+              19
+            ],
+            [
+              170,
+              8
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              50,
+              3
+            ]
+          ]
+        },
+        "leftEdges": {
+          "items": 41,
+          "distinct": 14,
+          "perItem": 0.34,
+          "singletonShare": 26.8,
+          "shared3": 2
+        },
+        "defects": {
+          "horizontalScroll": false,
+          "spills": 0,
+          "spillEx": [],
+          "truncated": 0,
+          "headings": 10,
+          "headingsWrapped": 1,
+          "headingWidows": 0,
+          "paras": 79,
+          "parasMulti": 14,
+          "labels": 74,
+          "labelWraps": 0,
+          "labelWrapEx": [],
+          "paraWidowShare": 28.6,
+          "medianCharsPerLine": 81
+        },
+        "media": {
+          "count": 4,
+          "foldShare": 17,
+          "pageShare": 9.1
+        },
+        "h1": {
+          "top": 191,
+          "left": 460,
+          "size": 48
+        }
+      },
+      "px": {
+        "colourfulness": 36,
+        "colours95": 3,
+        "dominantShare": 0.841,
+        "edgeDensity": 0.076,
+        "whitespace": 0.829,
+        "quadtreeLeaves": 4420,
+        "balance": 0.729,
+        "balanceLR": 0.537,
+        "balanceTB": 0.922,
+        "leftHeavy": true,
+        "topHeavy": true,
+        "symmetry": 0.506
+      }
+    },
+    {
+      "site": "govuk",
+      "kind": "t4",
+      "url": "https://design-system.service.gov.uk/components/error-summary/",
+      "run": 0,
+      "dom": {
+        "docHeight": 6652,
+        "type": {
+          "totalChars": 3841,
+          "sizes": {
+            "distinct": 6,
+            "cover95": 2,
+            "top": [
+              [
+                "19",
+                77.8
+              ],
+              [
+                "16",
+                17.3
+              ],
+              [
+                "24",
+                2.2
+              ],
+              [
+                "36",
+                2.1
+              ],
+              [
+                "31",
+                0.3
+              ],
+              [
+                "48",
+                0.3
+              ]
+            ]
+          },
+          "weights": {
+            "distinct": 2,
+            "cover95": 2,
+            "top": [
+              [
+                "400",
+                94.5
+              ],
+              [
+                "700",
+                5.5
+              ]
+            ]
+          },
+          "lineHeights": {
+            "distinct": 8,
+            "cover95": 3,
+            "top": [
+              [
+                "25",
+                76.3
+              ],
+              [
+                "20",
+                17
+              ],
+              [
+                "30",
+                2.2
+              ],
+              [
+                "40",
+                2.1
+              ],
+              [
+                "29",
+                1.5
+              ],
+              [
+                "31",
+                0.3
+              ],
+              [
+                "50",
+                0.3
+              ],
+              [
+                "normal",
+                0.3
+              ]
+            ]
+          },
+          "families": {
+            "distinct": 2,
+            "cover95": 1,
+            "top": [
+              [
+                "gds transport",
+                98.8
+              ],
+              [
+                "ui-monospace",
+                1.2
+              ]
+            ]
+          },
+          "colors": {
+            "distinct": 4,
+            "cover95": 2,
+            "top": [
+              [
+                "rgb(11, 12, 12)",
+                69.5
+              ],
+              [
+                "rgb(26, 101, 166)",
+                29
+              ],
+              [
+                "rgb(209, 49, 24)",
+                1.2
+              ],
+              [
+                "rgb(255, 255, 255)",
+                0.3
+              ]
+            ]
+          },
+          "styles": {
+            "distinct": 11,
+            "cover95": 5,
+            "top": [
+              [
+                "19|400|gds transport|rgb(11, 12, 12)",
+                63.9
+              ],
+              [
+                "16|400|gds transport|rgb(26, 101, 166)",
+                15.4
+              ],
+              [
+                "19|400|gds transport|rgb(26, 101, 166)",
+                13.3
+              ],
+              [
+                "24|700|gds transport|rgb(11, 12, 12)",
+                2.2
+              ],
+              [
+                "36|700|gds transport|rgb(11, 12, 12)",
+                2.1
+              ],
+              [
+                "16|400|ui-monospace|rgb(209, 49, 24)",
+                1.2
+              ],
+              [
+                "19|700|gds transport|rgb(11, 12, 12)",
+                0.6
+              ],
+              [
+                "16|400|gds transport|rgb(11, 12, 12)",
+                0.4
+              ]
+            ]
+          }
+        },
+        "prose": {
+          "chars": 2344,
+          "size": 19,
+          "sizeShare": 91.9,
+          "top": [
+            [
+              19,
+              91.9
+            ],
+            [
+              16,
+              8.1
+            ]
+          ],
+          "h1ToProse": 2.53
+        },
+        "styleSet": [
+          "19|400|gds transport|rgb(11, 12, 12)",
+          "16|400|gds transport|rgb(26, 101, 166)",
+          "19|400|gds transport|rgb(26, 101, 166)",
+          "24|700|gds transport|rgb(11, 12, 12)",
+          "36|700|gds transport|rgb(11, 12, 12)"
+        ],
+        "spacing": {
+          "values": 466,
+          "distinct": 19,
+          "on4px": 22.5,
+          "on8px": 0.9,
+          "offGrid": [
+            [
+              5,
+              134
+            ],
+            [
+              2,
+              90
+            ],
+            [
+              10,
+              68
+            ],
+            [
+              15,
+              26
+            ],
+            [
+              30,
+              23
+            ],
+            [
+              170,
+              8
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              50,
+              3
+            ]
+          ]
+        },
+        "leftEdges": {
+          "items": 40,
+          "distinct": 14,
+          "perItem": 0.35,
+          "singletonShare": 27.5,
+          "shared3": 2
+        },
+        "defects": {
+          "horizontalScroll": false,
+          "spills": 0,
+          "spillEx": [],
+          "truncated": 0,
+          "headings": 8,
+          "headingsWrapped": 0,
+          "headingWidows": 0,
+          "paras": 91,
+          "parasMulti": 14,
+          "labels": 84,
+          "labelWraps": 1,
+          "labelWrapEx": [
+            "a: Error message component"
+          ],
+          "paraWidowShare": 28.6,
+          "medianCharsPerLine": 47
+        },
+        "media": {
+          "count": 12,
+          "foldShare": 36.3,
+          "pageShare": 52.3
+        },
+        "h1": {
+          "top": 191,
+          "left": 460,
+          "size": 48
+        }
+      },
+      "px": {
+        "colourfulness": 39.8,
+        "colours95": 3,
+        "dominantShare": 0.835,
+        "edgeDensity": 0.079,
+        "whitespace": 0.827,
+        "quadtreeLeaves": 4921,
+        "balance": 0.626,
+        "balanceLR": 0.569,
+        "balanceTB": 0.684,
+        "leftHeavy": true,
+        "topHeavy": true,
+        "symmetry": 0.52
+      }
+    },
+    {
+      "site": "govuk",
+      "kind": "home",
+      "url": "https://design-system.service.gov.uk/",
+      "run": 1,
+      "dom": {
+        "docHeight": 3279,
+        "type": {
+          "totalChars": 2839,
+          "sizes": {
+            "distinct": 5,
+            "cover95": 3,
+            "top": [
+              [
+                "19",
+                82.7
+              ],
+              [
+                "24",
+                8.9
+              ],
+              [
+                "36",
+                5.7
+              ],
+              [
+                "48",
+                2.3
+              ],
+              [
+                "31",
+                0.5
+              ]
+            ]
+          },
+          "weights": {
+            "distinct": 2,
+            "cover95": 2,
+            "top": [
+              [
+                "400",
+                87.7
+              ],
+              [
+                "700",
+                12.3
+              ]
+            ]
+          },
+          "lineHeights": {
+            "distinct": 7,
+            "cover95": 4,
+            "top": [
+              [
+                "25",
+                80.7
+              ],
+              [
+                "30",
+                8.5
+              ],
+              [
+                "40",
+                5.7
+              ],
+              [
+                "50",
+                2.3
+              ],
+              [
+                "29",
+                2
+              ],
+              [
+                "31",
+                0.5
+              ],
+              [
+                "24",
+                0.4
+              ]
+            ]
+          },
+          "families": {
+            "distinct": 1,
+            "cover95": 1,
+            "top": [
+              [
+                "gds transport",
+                100
+              ]
+            ]
+          },
+          "colors": {
+            "distinct": 4,
+            "cover95": 3,
+            "top": [
+              [
+                "rgb(11, 12, 12)",
+                61
+              ],
+              [
+                "rgb(26, 101, 166)",
+                27.3
+              ],
+              [
+                "rgb(255, 255, 255)",
+                11.3
+              ],
+              [
+                "rgb(29, 112, 184)",
+                0.4
+              ]
+            ]
+          },
+          "styles": {
+            "distinct": 10,
+            "cover95": 6,
+            "top": [
+              [
+                "19|400|gds transport|rgb(11, 12, 12)",
+                53.4
+              ],
+              [
+                "19|400|gds transport|rgb(26, 101, 166)",
+                25.3
+              ],
+              [
+                "24|400|gds transport|rgb(255, 255, 255)",
+                6.6
+              ],
+              [
+                "36|700|gds transport|rgb(11, 12, 12)",
+                5.7
+              ],
+              [
+                "48|700|gds transport|rgb(255, 255, 255)",
+                2.3
+              ],
+              [
+                "19|400|gds transport|rgb(255, 255, 255)",
+                2
+              ],
+              [
+                "19|700|gds transport|rgb(26, 101, 166)",
+                2
+              ],
+              [
+                "24|700|gds transport|rgb(11, 12, 12)",
+                1.9
+              ]
+            ]
+          }
+        },
+        "prose": {
+          "chars": 2282,
+          "size": 19,
+          "sizeShare": 91.3,
+          "top": [
+            [
+              19,
+              91.3
+            ],
+            [
+              24,
+              8.7
+            ]
+          ],
+          "h1ToProse": 2.53
+        },
+        "styleSet": [
+          "19|400|gds transport|rgb(11, 12, 12)",
+          "19|400|gds transport|rgb(26, 101, 166)",
+          "24|400|gds transport|rgb(255, 255, 255)",
+          "36|700|gds transport|rgb(11, 12, 12)",
+          "48|700|gds transport|rgb(255, 255, 255)",
+          "19|400|gds transport|rgb(255, 255, 255)"
+        ],
+        "spacing": {
+          "values": 156,
+          "distinct": 16,
+          "on4px": 16,
+          "on8px": 3.8,
+          "offGrid": [
+            [
+              15,
+              64
+            ],
+            [
+              30,
+              19
+            ],
+            [
+              50,
+              14
+            ],
+            [
+              170,
+              12
+            ],
+            [
+              5,
+              8
+            ],
+            [
+              10,
+              5
+            ],
+            [
+              1,
+              4
+            ],
+            [
+              25,
+              3
+            ]
+          ]
+        },
+        "leftEdges": {
+          "items": 19,
+          "distinct": 11,
+          "perItem": 0.58,
+          "singletonShare": 52.6,
+          "shared3": 1
+        },
+        "defects": {
+          "horizontalScroll": false,
+          "spills": 0,
+          "spillEx": [],
+          "truncated": 0,
+          "headings": 12,
+          "headingsWrapped": 2,
+          "headingWidows": 0,
+          "paras": 32,
+          "parasMulti": 14,
+          "labels": 21,
+          "labelWraps": 0,
+          "labelWrapEx": [],
+          "paraWidowShare": 0,
+          "medianCharsPerLine": 62
+        },
+        "media": {
+          "count": 1,
+          "foldShare": 7.3,
+          "pageShare": 2
+        },
+        "h1": {
+          "top": 151,
+          "left": 170,
+          "size": 48
+        }
+      },
+      "px": {
+        "colourfulness": 89.4,
+        "colours95": 5,
+        "dominantShare": 0.492,
+        "edgeDensity": 0.101,
+        "whitespace": 0.785,
+        "quadtreeLeaves": 5569,
+        "balance": 0.499,
+        "balanceLR": 0.404,
+        "balanceTB": 0.593,
+        "leftHeavy": true,
+        "topHeavy": true,
+        "symmetry": 0.411
+      }
+    },
+    {
+      "site": "govuk",
+      "kind": "button",
+      "url": "https://design-system.service.gov.uk/components/button/",
+      "run": 1,
+      "dom": {
+        "docHeight": 7787,
+        "type": {
+          "totalChars": 7347,
+          "sizes": {
+            "distinct": 6,
+            "cover95": 2,
+            "top": [
+              [
+                "19",
+                83.5
+              ],
+              [
+                "16",
+                12.2
+              ],
+              [
+                "24",
+                2.6
+              ],
+              [
+                "36",
+                1.4
+              ],
+              [
+                "31",
+                0.2
+              ],
+              [
+                "48",
+                0.1
+              ]
+            ]
+          },
+          "weights": {
+            "distinct": 2,
+            "cover95": 1,
+            "top": [
+              [
+                "400",
+                95.5
+              ],
+              [
+                "700",
+                4.5
+              ]
+            ]
+          },
+          "lineHeights": {
+            "distinct": 8,
+            "cover95": 3,
+            "top": [
+              [
+                "25",
+                82.8
+              ],
+              [
+                "20",
+                12
+              ],
+              [
+                "30",
+                2.6
+              ],
+              [
+                "40",
+                1.4
+              ],
+              [
+                "29",
+                0.8
+              ],
+              [
+                "31",
+                0.2
+              ],
+              [
+                "normal",
+                0.1
+              ],
+              [
+                "50",
+                0.1
+              ]
+            ]
+          },
+          "families": {
+            "distinct": 2,
+            "cover95": 1,
+            "top": [
+              [
+                "gds transport",
+                97.9
+              ],
+              [
+                "ui-monospace",
+                2.1
+              ]
+            ]
+          },
+          "colors": {
+            "distinct": 4,
+            "cover95": 2,
+            "top": [
+              [
+                "rgb(11, 12, 12)",
+                77.9
+              ],
+              [
+                "rgb(26, 101, 166)",
+                19.8
+              ],
+              [
+                "rgb(209, 49, 24)",
+                2.1
+              ],
+              [
+                "rgb(255, 255, 255)",
+                0.2
+              ]
+            ]
+          },
+          "styles": {
+            "distinct": 11,
+            "cover95": 4,
+            "top": [
+              [
+                "19|400|gds transport|rgb(11, 12, 12)",
+                73.3
+              ],
+              [
+                "19|400|gds transport|rgb(26, 101, 166)",
+                10
+              ],
+              [
+                "16|400|gds transport|rgb(26, 101, 166)",
+                9.8
+              ],
+              [
+                "24|700|gds transport|rgb(11, 12, 12)",
+                2.6
+              ],
+              [
+                "16|400|ui-monospace|rgb(209, 49, 24)",
+                2.1
+              ],
+              [
+                "36|700|gds transport|rgb(11, 12, 12)",
+                1.4
+              ],
+              [
+                "19|700|gds transport|rgb(11, 12, 12)",
+                0.3
+              ],
+              [
+                "16|400|gds transport|rgb(11, 12, 12)",
+                0.2
+              ]
+            ]
+          }
+        },
+        "prose": {
+          "chars": 5461,
+          "size": 19,
+          "sizeShare": 94.3,
+          "top": [
+            [
+              19,
+              94.3
+            ],
+            [
+              16,
+              5.7
+            ]
+          ],
+          "h1ToProse": 2.53
+        },
+        "styleSet": [
+          "19|400|gds transport|rgb(11, 12, 12)",
+          "19|400|gds transport|rgb(26, 101, 166)",
+          "16|400|gds transport|rgb(26, 101, 166)",
+          "24|700|gds transport|rgb(11, 12, 12)"
+        ],
+        "spacing": {
+          "values": 603,
+          "distinct": 19,
+          "on4px": 29.9,
+          "on8px": 0.7,
+          "offGrid": [
+            [
+              5,
+              143
+            ],
+            [
+              2,
+              108
+            ],
+            [
+              10,
+              93
+            ],
+            [
+              30,
+              33
+            ],
+            [
+              15,
+              26
+            ],
+            [
+              170,
+              8
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              50,
+              3
+            ]
+          ]
+        },
+        "leftEdges": {
+          "items": 43,
+          "distinct": 14,
+          "perItem": 0.33,
+          "singletonShare": 23.3,
+          "shared3": 3
+        },
+        "defects": {
+          "horizontalScroll": false,
+          "spills": 0,
+          "spillEx": [],
+          "truncated": 0,
+          "headings": 15,
+          "headingsWrapped": 0,
+          "headingWidows": 0,
+          "paras": 131,
+          "parasMulti": 31,
+          "labels": 102,
+          "labelWraps": 0,
+          "labelWrapEx": [],
+          "paraWidowShare": 25.8,
+          "medianCharsPerLine": 46
+        },
+        "media": {
+          "count": 20,
+          "foldShare": 18.8,
+          "pageShare": 21.8
+        },
+        "h1": {
+          "top": 191,
+          "left": 460,
+          "size": 48
+        }
+      },
+      "px": {
+        "colourfulness": 36.8,
+        "colours95": 3,
+        "dominantShare": 0.84,
+        "edgeDensity": 0.072,
+        "whitespace": 0.833,
+        "quadtreeLeaves": 4138,
+        "balance": 0.674,
+        "balanceLR": 0.482,
+        "balanceTB": 0.866,
+        "leftHeavy": true,
+        "topHeavy": true,
+        "symmetry": 0.467
+      }
+    }
+  ]
+}

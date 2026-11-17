@@ -1,0 +1,2508 @@
+{
+  "at": "2026-11-17T15:19:37.995Z",
+  "kuiperBuild": "2026-11-16T23:34:24.926Z",
+  "rows": [
+    {
+      "site": "kuiper",
+      "kind": "home",
+      "url": "http://localhost:38947/",
+      "run": 0,
+      "dom": {
+        "docHeight": 2814,
+        "type": {
+          "totalChars": 1767,
+          "sizes": {
+            "distinct": 8,
+            "cover95": 5,
+            "top": [
+              [
+                "13.5",
+                45.1
+              ],
+              [
+                "16",
+                33.5
+              ],
+              [
+                "20",
+                8.6
+              ],
+              [
+                "12",
+                6.3
+              ],
+              [
+                "28",
+                2.3
+              ],
+              [
+                "23",
+                1.8
+              ],
+              [
+                "56",
+                1.5
+              ],
+              [
+                "160",
+                0.9
+              ]
+            ]
+          },
+          "weights": {
+            "distinct": 4,
+            "cover95": 2,
+            "top": [
+              [
+                "400",
+                87.4
+              ],
+              [
+                "600",
+                8
+              ],
+              [
+                "500",
+                4
+              ],
+              [
+                "700",
+                0.6
+              ]
+            ]
+          },
+          "lineHeights": {
+            "distinct": 9,
+            "cover95": 6,
+            "top": [
+              [
+                "22",
+                45.1
+              ],
+              [
+                "24",
+                33.5
+              ],
+              [
+                "30",
+                6.5
+              ],
+              [
+                "18",
+                6.3
+              ],
+              [
+                "34",
+                2.3
+              ],
+              [
+                "26",
+                2.2
+              ],
+              [
+                "25",
+                1.8
+              ],
+              [
+                "59",
+                1.5
+              ]
+            ]
+          },
+          "families": {
+            "distinct": 3,
+            "cover95": 3,
+            "top": [
+              [
+                "geist variable",
+                64.7
+              ],
+              [
+                "jetbrains mono variable",
+                26.7
+              ],
+              [
+                "ibm plex sans variable",
+                8.6
+              ]
+            ]
+          },
+          "colors": {
+            "distinct": 5,
+            "cover95": 3,
+            "top": [
+              [
+                "rgb(11, 15, 23)",
+                46.7
+              ],
+              [
+                "rgb(80, 86, 97)",
+                34.4
+              ],
+              [
+                "rgb(37, 41, 47)",
+                14.5
+              ],
+              [
+                "rgb(255, 255, 255)",
+                4
+              ],
+              [
+                "rgb(51, 80, 203)",
+                0.5
+              ]
+            ]
+          },
+          "styles": {
+            "distinct": 20,
+            "cover95": 14,
+            "top": [
+              [
+                "16|400|geist variable|rgb(80, 86, 97)",
+                19.9
+              ],
+              [
+                "13.5|400|geist variable|rgb(11, 15, 23)",
+                18.4
+              ],
+              [
+                "13.5|400|jetbrains mono variable|rgb(37, 41, 47)",
+                14.1
+              ],
+              [
+                "16|400|geist variable|rgb(11, 15, 23)",
+                13.6
+              ],
+              [
+                "20|400|geist variable|rgb(80, 86, 97)",
+                6.5
+              ],
+              [
+                "13.5|400|jetbrains mono variable|rgb(11, 15, 23)",
+                5.8
+              ],
+              [
+                "12|400|jetbrains mono variable|rgb(80, 86, 97)",
+                3.7
+              ],
+              [
+                "13.5|400|geist variable|rgb(255, 255, 255)",
+                2.5
+              ]
+            ]
+          }
+        },
+        "prose": {
+          "chars": 922,
+          "size": 16,
+          "sizeShare": 64.2,
+          "top": [
+            [
+              16,
+              64.2
+            ],
+            [
+              13.5,
+              20.1
+            ],
+            [
+              20,
+              12.4
+            ],
+            [
+              23,
+              3.4
+            ]
+          ],
+          "h1ToProse": 10
+        },
+        "styleSet": [
+          "16|400|geist variable|rgb(80, 86, 97)",
+          "13.5|400|geist variable|rgb(11, 15, 23)",
+          "13.5|400|jetbrains mono variable|rgb(37, 41, 47)",
+          "16|400|geist variable|rgb(11, 15, 23)",
+          "20|400|geist variable|rgb(80, 86, 97)",
+          "13.5|400|jetbrains mono variable|rgb(11, 15, 23)",
+          "12|400|jetbrains mono variable|rgb(80, 86, 97)",
+          "13.5|400|geist variable|rgb(255, 255, 255)",
+          "12|500|jetbrains mono variable|rgb(80, 86, 97)",
+          "20|600|ibm plex sans variable|rgb(11, 15, 23)",
+          "13.5|400|geist variable|rgb(80, 86, 97)",
+          "13.5|500|geist variable|rgb(11, 15, 23)",
+          "28|600|ibm plex sans variable|rgb(11, 15, 23)",
+          "23|600|ibm plex sans variable|rgb(255, 255, 255)"
+        ],
+        "spacing": {
+          "values": 249,
+          "distinct": 22,
+          "on4px": 89.6,
+          "on8px": 38.2,
+          "offGrid": [
+            [
+              1,
+              12
+            ],
+            [
+              2.8,
+              4
+            ],
+            [
+              1.95,
+              4
+            ],
+            [
+              6,
+              2
+            ],
+            [
+              50.88,
+              2
+            ],
+            [
+              435.67,
+              1
+            ],
+            [
+              20.32,
+              1
+            ]
+          ]
+        },
+        "leftEdges": {
+          "items": 22,
+          "distinct": 16,
+          "perItem": 0.73,
+          "singletonShare": 54.5,
+          "shared3": 1
+        },
+        "defects": {
+          "horizontalScroll": false,
+          "spills": 0,
+          "spillEx": [],
+          "truncated": 0,
+          "headings": 14,
+          "headingsWrapped": 1,
+          "headingWidows": 1,
+          "paras": 87,
+          "parasMulti": 10,
+          "labels": 80,
+          "labelWraps": 1,
+          "labelWrapEx": [
+            "a: Components 82 parts"
+          ],
+          "paraWidowShare": 10,
+          "medianCharsPerLine": 55
+        },
+        "media": {
+          "count": 0,
+          "foldShare": 0,
+          "pageShare": 0
+        },
+        "h1": {
+          "top": 136,
+          "left": 136,
+          "size": 160
+        }
+      },
+      "px": {
+        "colourfulness": 52.7,
+        "colours95": 8,
+        "dominantShare": 0.774,
+        "edgeDensity": 0.058,
+        "whitespace": 0.838,
+        "quadtreeLeaves": 4345,
+        "balance": 0.475,
+        "balanceLR": 0.492,
+        "balanceTB": 0.459,
+        "leftHeavy": true,
+        "topHeavy": true,
+        "symmetry": 0.363
+      }
+    },
+    {
+      "site": "kuiper",
+      "kind": "button",
+      "url": "http://localhost:38947/components/button/",
+      "run": 0,
+      "dom": {
+        "docHeight": 7907,
+        "type": {
+          "totalChars": 9573,
+          "sizes": {
+            "distinct": 6,
+            "cover95": 2,
+            "top": [
+              [
+                "13.5",
+                80.3
+              ],
+              [
+                "16",
+                16.7
+              ],
+              [
+                "12",
+                2
+              ],
+              [
+                "28",
+                0.7
+              ],
+              [
+                "20",
+                0.3
+              ],
+              [
+                "56",
+                0.1
+              ]
+            ]
+          },
+          "weights": {
+            "distinct": 4,
+            "cover95": 2,
+            "top": [
+              [
+                "400",
+                91.4
+              ],
+              [
+                "500",
+                7
+              ],
+              [
+                "600",
+                1.5
+              ],
+              [
+                "700",
+                0.1
+              ]
+            ]
+          },
+          "lineHeights": {
+            "distinct": 6,
+            "cover95": 3,
+            "top": [
+              [
+                "22",
+                80.3
+              ],
+              [
+                "24",
+                12.9
+              ],
+              [
+                "26",
+                4
+              ],
+              [
+                "18",
+                2
+              ],
+              [
+                "34",
+                0.7
+              ],
+              [
+                "59",
+                0.1
+              ]
+            ]
+          },
+          "families": {
+            "distinct": 3,
+            "cover95": 2,
+            "top": [
+              [
+                "geist variable",
+                51.3
+              ],
+              [
+                "jetbrains mono variable",
+                47.6
+              ],
+              [
+                "ibm plex sans variable",
+                1
+              ]
+            ]
+          },
+          "colors": {
+            "distinct": 13,
+            "cover95": 7,
+            "top": [
+              [
+                "rgb(11, 15, 23)",
+                29.5
+              ],
+              [
+                "rgb(80, 86, 97)",
+                22.9
+              ],
+              [
+                "rgb(37, 41, 47)",
+                16.7
+              ],
+              [
+                "rgb(0, 113, 80)",
+                11.6
+              ],
+              [
+                "rgb(36, 59, 122)",
+                8.1
+              ],
+              [
+                "rgb(146, 47, 110)",
+                5.1
+              ],
+              [
+                "rgb(112, 50, 185)",
+                3.6
+              ],
+              [
+                "rgb(255, 255, 255)",
+                1.2
+              ]
+            ]
+          },
+          "styles": {
+            "distinct": 34,
+            "cover95": 15,
+            "top": [
+              [
+                "13.5|400|geist variable|rgb(80, 86, 97)",
+                18.1
+              ],
+              [
+                "13.5|400|jetbrains mono variable|rgb(37, 41, 47)",
+                15.7
+              ],
+              [
+                "13.5|400|geist variable|rgb(11, 15, 23)",
+                12.6
+              ],
+              [
+                "16|400|geist variable|rgb(11, 15, 23)",
+                12.1
+              ],
+              [
+                "13.5|400|jetbrains mono variable|rgb(0, 113, 80)",
+                11.6
+              ],
+              [
+                "13.5|400|jetbrains mono variable|rgb(36, 59, 122)",
+                8.1
+              ],
+              [
+                "13.5|400|jetbrains mono variable|rgb(146, 47, 110)",
+                5.1
+              ],
+              [
+                "13.5|400|jetbrains mono variable|rgb(112, 50, 185)",
+                3.6
+              ]
+            ]
+          }
+        },
+        "prose": {
+          "chars": 2408,
+          "size": 16,
+          "sizeShare": 54.6,
+          "top": [
+            [
+              16,
+              54.6
+            ],
+            [
+              13.5,
+              45.4
+            ]
+          ],
+          "h1ToProse": 3.5
+        },
+        "styleSet": [
+          "13.5|400|geist variable|rgb(80, 86, 97)",
+          "13.5|400|jetbrains mono variable|rgb(37, 41, 47)",
+          "13.5|400|geist variable|rgb(11, 15, 23)",
+          "16|400|geist variable|rgb(11, 15, 23)",
+          "13.5|400|jetbrains mono variable|rgb(0, 113, 80)",
+          "13.5|400|jetbrains mono variable|rgb(36, 59, 122)",
+          "13.5|400|jetbrains mono variable|rgb(146, 47, 110)",
+          "13.5|400|jetbrains mono variable|rgb(112, 50, 185)",
+          "13.5|500|geist variable|rgb(11, 15, 23)",
+          "16|400|geist variable|rgb(80, 86, 97)",
+          "13.5|500|geist variable|rgb(80, 86, 97)",
+          "16|500|geist variable|rgb(255, 255, 255)",
+          "16|400|jetbrains mono variable|rgb(37, 41, 47)",
+          "13.5|400|jetbrains mono variable|rgb(11, 15, 23)",
+          "12|500|geist variable|rgb(80, 86, 97)"
+        ],
+        "spacing": {
+          "values": 1920,
+          "distinct": 25,
+          "on4px": 89.1,
+          "on8px": 56.4,
+          "offGrid": [
+            [
+              6,
+              168
+            ],
+            [
+              1,
+              28
+            ],
+            [
+              2.8,
+              4
+            ],
+            [
+              1.95,
+              4
+            ],
+            [
+              435.67,
+              1
+            ],
+            [
+              10,
+              1
+            ],
+            [
+              439,
+              1
+            ],
+            [
+              450,
+              1
+            ]
+          ]
+        },
+        "leftEdges": {
+          "items": 78,
+          "distinct": 30,
+          "perItem": 0.38,
+          "singletonShare": 24.4,
+          "shared3": 7
+        },
+        "defects": {
+          "horizontalScroll": false,
+          "spills": 0,
+          "spillEx": [],
+          "truncated": 0,
+          "headings": 22,
+          "headingsWrapped": 0,
+          "headingWidows": 0,
+          "paras": 188,
+          "parasMulti": 16,
+          "labels": 272,
+          "labelWraps": 0,
+          "labelWrapEx": [],
+          "paraWidowShare": 18.8,
+          "medianCharsPerLine": 71
+        },
+        "media": {
+          "count": 0,
+          "foldShare": 0,
+          "pageShare": 0
+        },
+        "h1": {
+          "top": 132,
+          "left": 392,
+          "size": 56
+        }
+      },
+      "px": {
+        "colourfulness": 26.1,
+        "colours95": 7,
+        "dominantShare": 0.834,
+        "edgeDensity": 0.067,
+        "whitespace": 0.83,
+        "quadtreeLeaves": 3700,
+        "balance": 0.417,
+        "balanceLR": 0.372,
+        "balanceTB": 0.461,
+        "leftHeavy": true,
+        "topHeavy": true,
+        "symmetry": 0.429
+      }
+    },
+    {
+      "site": "kuiper",
+      "kind": "t1",
+      "url": "http://localhost:38947/components/checkbox/",
+      "run": 0,
+      "dom": {
+        "docHeight": 5186,
+        "type": {
+          "totalChars": 5853,
+          "sizes": {
+            "distinct": 6,
+            "cover95": 2,
+            "top": [
+              [
+                "13.5",
+                78.2
+              ],
+              [
+                "16",
+                16.9
+              ],
+              [
+                "12",
+                3.2
+              ],
+              [
+                "28",
+                1.1
+              ],
+              [
+                "20",
+                0.4
+              ],
+              [
+                "56",
+                0.1
+              ]
+            ]
+          },
+          "weights": {
+            "distinct": 4,
+            "cover95": 2,
+            "top": [
+              [
+                "400",
+                89
+              ],
+              [
+                "500",
+                8.6
+              ],
+              [
+                "600",
+                2.2
+              ],
+              [
+                "700",
+                0.2
+              ]
+            ]
+          },
+          "lineHeights": {
+            "distinct": 6,
+            "cover95": 3,
+            "top": [
+              [
+                "22",
+                78.2
+              ],
+              [
+                "24",
+                13.1
+              ],
+              [
+                "26",
+                4.2
+              ],
+              [
+                "18",
+                3.2
+              ],
+              [
+                "34",
+                1.1
+              ],
+              [
+                "59",
+                0.1
+              ]
+            ]
+          },
+          "families": {
+            "distinct": 3,
+            "cover95": 2,
+            "top": [
+              [
+                "geist variable",
+                61.7
+              ],
+              [
+                "jetbrains mono variable",
+                36.6
+              ],
+              [
+                "ibm plex sans variable",
+                1.7
+              ]
+            ]
+          },
+          "colors": {
+            "distinct": 11,
+            "cover95": 6,
+            "top": [
+              [
+                "rgb(11, 15, 23)",
+                36.1
+              ],
+              [
+                "rgb(80, 86, 97)",
+                29.8
+              ],
+              [
+                "rgb(37, 41, 47)",
+                11.9
+              ],
+              [
+                "rgb(36, 59, 122)",
+                9.3
+              ],
+              [
+                "rgb(0, 113, 80)",
+                6.5
+              ],
+              [
+                "rgb(146, 47, 110)",
+                3.5
+              ],
+              [
+                "rgb(112, 50, 185)",
+                1.9
+              ],
+              [
+                "rgb(193, 30, 49)",
+                0.5
+              ]
+            ]
+          },
+          "styles": {
+            "distinct": 29,
+            "cover95": 15,
+            "top": [
+              [
+                "13.5|400|geist variable|rgb(80, 86, 97)",
+                23.5
+              ],
+              [
+                "13.5|400|geist variable|rgb(11, 15, 23)",
+                15.4
+              ],
+              [
+                "16|400|geist variable|rgb(11, 15, 23)",
+                12.4
+              ],
+              [
+                "13.5|400|jetbrains mono variable|rgb(37, 41, 47)",
+                11.1
+              ],
+              [
+                "13.5|400|jetbrains mono variable|rgb(36, 59, 122)",
+                9.3
+              ],
+              [
+                "13.5|400|jetbrains mono variable|rgb(0, 113, 80)",
+                6.5
+              ],
+              [
+                "13.5|400|jetbrains mono variable|rgb(146, 47, 110)",
+                3.5
+              ],
+              [
+                "13.5|500|geist variable|rgb(11, 15, 23)",
+                2.3
+              ]
+            ]
+          }
+        },
+        "prose": {
+          "chars": 1546,
+          "size": 16,
+          "sizeShare": 51.7,
+          "top": [
+            [
+              16,
+              51.7
+            ],
+            [
+              13.5,
+              48.3
+            ]
+          ],
+          "h1ToProse": 3.5
+        },
+        "styleSet": [
+          "13.5|400|geist variable|rgb(80, 86, 97)",
+          "13.5|400|geist variable|rgb(11, 15, 23)",
+          "16|400|geist variable|rgb(11, 15, 23)",
+          "13.5|400|jetbrains mono variable|rgb(37, 41, 47)",
+          "13.5|400|jetbrains mono variable|rgb(36, 59, 122)",
+          "13.5|400|jetbrains mono variable|rgb(0, 113, 80)",
+          "13.5|400|jetbrains mono variable|rgb(146, 47, 110)",
+          "13.5|500|geist variable|rgb(11, 15, 23)",
+          "16|500|geist variable|rgb(11, 15, 23)",
+          "13.5|400|jetbrains mono variable|rgb(112, 50, 185)",
+          "13.5|500|geist variable|rgb(80, 86, 97)",
+          "13.5|400|jetbrains mono variable|rgb(11, 15, 23)",
+          "12|500|geist variable|rgb(80, 86, 97)",
+          "16|400|geist variable|rgb(80, 86, 97)",
+          "12|400|jetbrains mono variable|rgb(80, 86, 97)"
+        ],
+        "spacing": {
+          "values": 1207,
+          "distinct": 24,
+          "on4px": 83,
+          "on8px": 44.1,
+          "offGrid": [
+            [
+              6,
+              168
+            ],
+            [
+              1,
+              24
+            ],
+            [
+              2.8,
+              4
+            ],
+            [
+              1.95,
+              4
+            ],
+            [
+              435.67,
+              1
+            ],
+            [
+              10,
+              1
+            ],
+            [
+              439,
+              1
+            ],
+            [
+              450,
+              1
+            ]
+          ]
+        },
+        "leftEdges": {
+          "items": 76,
+          "distinct": 27,
+          "perItem": 0.36,
+          "singletonShare": 27.6,
+          "shared3": 5
+        },
+        "defects": {
+          "horizontalScroll": false,
+          "spills": 0,
+          "spillEx": [],
+          "truncated": 0,
+          "headings": 21,
+          "headingsWrapped": 0,
+          "headingWidows": 0,
+          "paras": 158,
+          "parasMulti": 13,
+          "labels": 195,
+          "labelWraps": 1,
+          "labelWrapEx": [
+            "code: HTMLElement | null"
+          ],
+          "paraWidowShare": 23.1,
+          "medianCharsPerLine": 72
+        },
+        "media": {
+          "count": 0,
+          "foldShare": 0,
+          "pageShare": 0
+        },
+        "h1": {
+          "top": 132,
+          "left": 392,
+          "size": 56
+        }
+      },
+      "px": {
+        "colourfulness": 9.8,
+        "colours95": 5,
+        "dominantShare": 0.744,
+        "edgeDensity": 0.068,
+        "whitespace": 0.833,
+        "quadtreeLeaves": 3310,
+        "balance": 0.526,
+        "balanceLR": 0.437,
+        "balanceTB": 0.614,
+        "leftHeavy": true,
+        "topHeavy": true,
+        "symmetry": 0.512
+      }
+    },
+    {
+      "site": "kuiper",
+      "kind": "t2",
+      "url": "http://localhost:38947/components/tabs/",
+      "run": 0,
+      "dom": {
+        "docHeight": 6467,
+        "type": {
+          "totalChars": 7118,
+          "sizes": {
+            "distinct": 6,
+            "cover95": 2,
+            "top": [
+              [
+                "13.5",
+                82
+              ],
+              [
+                "16",
+                13.9
+              ],
+              [
+                "12",
+                2.7
+              ],
+              [
+                "28",
+                0.9
+              ],
+              [
+                "20",
+                0.4
+              ],
+              [
+                "56",
+                0.1
+              ]
+            ]
+          },
+          "weights": {
+            "distinct": 4,
+            "cover95": 2,
+            "top": [
+              [
+                "400",
+                89.9
+              ],
+              [
+                "500",
+                7.7
+              ],
+              [
+                "600",
+                2.3
+              ],
+              [
+                "700",
+                0.1
+              ]
+            ]
+          },
+          "lineHeights": {
+            "distinct": 6,
+            "cover95": 3,
+            "top": [
+              [
+                "22",
+                82
+              ],
+              [
+                "24",
+                12.1
+              ],
+              [
+                "18",
+                2.7
+              ],
+              [
+                "26",
+                2.2
+              ],
+              [
+                "34",
+                0.9
+              ],
+              [
+                "59",
+                0.1
+              ]
+            ]
+          },
+          "families": {
+            "distinct": 3,
+            "cover95": 2,
+            "top": [
+              [
+                "geist variable",
+                55.7
+              ],
+              [
+                "jetbrains mono variable",
+                42.9
+              ],
+              [
+                "ibm plex sans variable",
+                1.3
+              ]
+            ]
+          },
+          "colors": {
+            "distinct": 10,
+            "cover95": 6,
+            "top": [
+              [
+                "rgb(11, 15, 23)",
+                34.5
+              ],
+              [
+                "rgb(80, 86, 97)",
+                27.2
+              ],
+              [
+                "rgb(37, 41, 47)",
+                16.4
+              ],
+              [
+                "rgb(36, 59, 122)",
+                9.4
+              ],
+              [
+                "rgb(0, 113, 80)",
+                6.9
+              ],
+              [
+                "rgb(146, 47, 110)",
+                2.8
+              ],
+              [
+                "rgb(112, 50, 185)",
+                2.1
+              ],
+              [
+                "rgb(51, 80, 203)",
+                0.5
+              ]
+            ]
+          },
+          "styles": {
+            "distinct": 27,
+            "cover95": 14,
+            "top": [
+              [
+                "13.5|400|geist variable|rgb(80, 86, 97)",
+                19.9
+              ],
+              [
+                "13.5|400|jetbrains mono variable|rgb(37, 41, 47)",
+                15.8
+              ],
+              [
+                "13.5|400|geist variable|rgb(11, 15, 23)",
+                15
+              ],
+              [
+                "16|400|geist variable|rgb(11, 15, 23)",
+                11.7
+              ],
+              [
+                "13.5|400|jetbrains mono variable|rgb(36, 59, 122)",
+                9.4
+              ],
+              [
+                "13.5|400|jetbrains mono variable|rgb(0, 113, 80)",
+                6.9
+              ],
+              [
+                "13.5|500|geist variable|rgb(80, 86, 97)",
+                3.3
+              ],
+              [
+                "13.5|400|jetbrains mono variable|rgb(11, 15, 23)",
+                2.9
+              ]
+            ]
+          }
+        },
+        "prose": {
+          "chars": 1942,
+          "size": 13.5,
+          "sizeShare": 52.4,
+          "top": [
+            [
+              13.5,
+              52.4
+            ],
+            [
+              16,
+              47.6
+            ]
+          ],
+          "h1ToProse": 4.15
+        },
+        "styleSet": [
+          "13.5|400|geist variable|rgb(80, 86, 97)",
+          "13.5|400|jetbrains mono variable|rgb(37, 41, 47)",
+          "13.5|400|geist variable|rgb(11, 15, 23)",
+          "16|400|geist variable|rgb(11, 15, 23)",
+          "13.5|400|jetbrains mono variable|rgb(36, 59, 122)",
+          "13.5|400|jetbrains mono variable|rgb(0, 113, 80)",
+          "13.5|500|geist variable|rgb(80, 86, 97)",
+          "13.5|400|jetbrains mono variable|rgb(11, 15, 23)",
+          "13.5|400|jetbrains mono variable|rgb(146, 47, 110)",
+          "13.5|500|geist variable|rgb(11, 15, 23)",
+          "13.5|400|jetbrains mono variable|rgb(112, 50, 185)",
+          "16|400|geist variable|rgb(80, 86, 97)",
+          "12|500|geist variable|rgb(80, 86, 97)",
+          "12|400|jetbrains mono variable|rgb(80, 86, 97)"
+        ],
+        "spacing": {
+          "values": 1454,
+          "distinct": 24,
+          "on4px": 85.9,
+          "on8px": 43.7,
+          "offGrid": [
+            [
+              6,
+              168
+            ],
+            [
+              1,
+              24
+            ],
+            [
+              2.8,
+              4
+            ],
+            [
+              1.95,
+              4
+            ],
+            [
+              435.67,
+              1
+            ],
+            [
+              10,
+              1
+            ],
+            [
+              439,
+              1
+            ],
+            [
+              450,
+              1
+            ]
+          ]
+        },
+        "leftEdges": {
+          "items": 78,
+          "distinct": 27,
+          "perItem": 0.35,
+          "singletonShare": 23.1,
+          "shared3": 7
+        },
+        "defects": {
+          "horizontalScroll": false,
+          "spills": 0,
+          "spillEx": [],
+          "truncated": 0,
+          "headings": 21,
+          "headingsWrapped": 0,
+          "headingWidows": 0,
+          "paras": 161,
+          "parasMulti": 12,
+          "labels": 238,
+          "labelWraps": 5,
+          "labelWrapEx": [
+            "code: HTMLElement | null",
+            "code: HTMLElement | null",
+            "code: HTMLElement | null",
+            "code: \"default\" | \"line\"",
+            "code: HTMLElement | null"
+          ],
+          "paraWidowShare": 33.3,
+          "medianCharsPerLine": 71
+        },
+        "media": {
+          "count": 0,
+          "foldShare": 0,
+          "pageShare": 0
+        },
+        "h1": {
+          "top": 132,
+          "left": 392,
+          "size": 56
+        }
+      },
+      "px": {
+        "colourfulness": 8.4,
+        "colours95": 5,
+        "dominantShare": 0.818,
+        "edgeDensity": 0.058,
+        "whitespace": 0.848,
+        "quadtreeLeaves": 2758,
+        "balance": 0.461,
+        "balanceLR": 0.431,
+        "balanceTB": 0.492,
+        "leftHeavy": true,
+        "topHeavy": true,
+        "symmetry": 0.487
+      }
+    },
+    {
+      "site": "kuiper",
+      "kind": "t3",
+      "url": "http://localhost:38947/components/tooltip/",
+      "run": 0,
+      "dom": {
+        "docHeight": 6787,
+        "type": {
+          "totalChars": 7274,
+          "sizes": {
+            "distinct": 6,
+            "cover95": 2,
+            "top": [
+              [
+                "13.5",
+                84.6
+              ],
+              [
+                "16",
+                11.1
+              ],
+              [
+                "12",
+                3
+              ],
+              [
+                "28",
+                0.9
+              ],
+              [
+                "20",
+                0.4
+              ],
+              [
+                "56",
+                0.1
+              ]
+            ]
+          },
+          "weights": {
+            "distinct": 4,
+            "cover95": 2,
+            "top": [
+              [
+                "400",
+                91.3
+              ],
+              [
+                "500",
+                6.1
+              ],
+              [
+                "600",
+                2.5
+              ],
+              [
+                "700",
+                0.1
+              ]
+            ]
+          },
+          "lineHeights": {
+            "distinct": 6,
+            "cover95": 3,
+            "top": [
+              [
+                "22",
+                84.6
+              ],
+              [
+                "24",
+                9.3
+              ],
+              [
+                "18",
+                3
+              ],
+              [
+                "26",
+                2.1
+              ],
+              [
+                "34",
+                0.9
+              ],
+              [
+                "59",
+                0.1
+              ]
+            ]
+          },
+          "families": {
+            "distinct": 3,
+            "cover95": 2,
+            "top": [
+              [
+                "geist variable",
+                59.4
+              ],
+              [
+                "jetbrains mono variable",
+                39.2
+              ],
+              [
+                "ibm plex sans variable",
+                1.4
+              ]
+            ]
+          },
+          "colors": {
+            "distinct": 12,
+            "cover95": 6,
+            "top": [
+              [
+                "rgb(11, 15, 23)",
+                39.2
+              ],
+              [
+                "rgb(80, 86, 97)",
+                27.2
+              ],
+              [
+                "rgb(37, 41, 47)",
+                13.7
+              ],
+              [
+                "rgb(36, 59, 122)",
+                7.8
+              ],
+              [
+                "rgb(0, 113, 80)",
+                5.2
+              ],
+              [
+                "rgb(112, 50, 185)",
+                3
+              ],
+              [
+                "rgb(146, 47, 110)",
+                1.7
+              ],
+              [
+                "rgb(99, 105, 114)",
+                1
+              ]
+            ]
+          },
+          "styles": {
+            "distinct": 31,
+            "cover95": 16,
+            "top": [
+              [
+                "13.5|400|geist variable|rgb(11, 15, 23)",
+                22.3
+              ],
+              [
+                "13.5|400|geist variable|rgb(80, 86, 97)",
+                20.7
+              ],
+              [
+                "13.5|400|jetbrains mono variable|rgb(37, 41, 47)",
+                12.9
+              ],
+              [
+                "16|400|geist variable|rgb(11, 15, 23)",
+                8.6
+              ],
+              [
+                "13.5|400|jetbrains mono variable|rgb(36, 59, 122)",
+                7.8
+              ],
+              [
+                "13.5|400|jetbrains mono variable|rgb(0, 113, 80)",
+                5.2
+              ],
+              [
+                "13.5|400|jetbrains mono variable|rgb(11, 15, 23)",
+                4
+              ],
+              [
+                "13.5|400|jetbrains mono variable|rgb(112, 50, 185)",
+                3
+              ]
+            ]
+          }
+        },
+        "prose": {
+          "chars": 1753,
+          "size": 13.5,
+          "sizeShare": 56.7,
+          "top": [
+            [
+              13.5,
+              56.7
+            ],
+            [
+              16,
+              41.8
+            ],
+            [
+              12,
+              1.5
+            ]
+          ],
+          "h1ToProse": 4.15
+        },
+        "styleSet": [
+          "13.5|400|geist variable|rgb(11, 15, 23)",
+          "13.5|400|geist variable|rgb(80, 86, 97)",
+          "13.5|400|jetbrains mono variable|rgb(37, 41, 47)",
+          "16|400|geist variable|rgb(11, 15, 23)",
+          "13.5|400|jetbrains mono variable|rgb(36, 59, 122)",
+          "13.5|400|jetbrains mono variable|rgb(0, 113, 80)",
+          "13.5|400|jetbrains mono variable|rgb(11, 15, 23)",
+          "13.5|400|jetbrains mono variable|rgb(112, 50, 185)",
+          "13.5|500|geist variable|rgb(80, 86, 97)",
+          "13.5|500|geist variable|rgb(11, 15, 23)",
+          "13.5|400|jetbrains mono variable|rgb(146, 47, 110)",
+          "16|400|geist variable|rgb(80, 86, 97)",
+          "12|500|geist variable|rgb(80, 86, 97)",
+          "13.5|400|jetbrains mono variable|rgb(99, 105, 114)",
+          "12|400|jetbrains mono variable|rgb(80, 86, 97)",
+          "13.5|600|jetbrains mono variable|rgb(11, 15, 23)"
+        ],
+        "spacing": {
+          "values": 1461,
+          "distinct": 24,
+          "on4px": 86,
+          "on8px": 46.1,
+          "offGrid": [
+            [
+              6,
+              168
+            ],
+            [
+              1,
+              24
+            ],
+            [
+              2.8,
+              4
+            ],
+            [
+              1.95,
+              4
+            ],
+            [
+              435.67,
+              1
+            ],
+            [
+              10,
+              1
+            ],
+            [
+              439,
+              1
+            ],
+            [
+              450,
+              1
+            ]
+          ]
+        },
+        "leftEdges": {
+          "items": 74,
+          "distinct": 29,
+          "perItem": 0.39,
+          "singletonShare": 29.7,
+          "shared3": 5
+        },
+        "defects": {
+          "horizontalScroll": false,
+          "spills": 0,
+          "spillEx": [],
+          "truncated": 0,
+          "headings": 21,
+          "headingsWrapped": 0,
+          "headingWidows": 0,
+          "paras": 160,
+          "parasMulti": 11,
+          "labels": 217,
+          "labelWraps": 1,
+          "labelWrapEx": [
+            "code: HTMLElement | null"
+          ],
+          "paraWidowShare": 0,
+          "medianCharsPerLine": 71
+        },
+        "media": {
+          "count": 0,
+          "foldShare": 0,
+          "pageShare": 0
+        },
+        "h1": {
+          "top": 132,
+          "left": 392,
+          "size": 56
+        }
+      },
+      "px": {
+        "colourfulness": 10.1,
+        "colours95": 5,
+        "dominantShare": 0.751,
+        "edgeDensity": 0.069,
+        "whitespace": 0.828,
+        "quadtreeLeaves": 3355,
+        "balance": 0.46,
+        "balanceLR": 0.392,
+        "balanceTB": 0.528,
+        "leftHeavy": true,
+        "topHeavy": true,
+        "symmetry": 0.478
+      }
+    },
+    {
+      "site": "kuiper",
+      "kind": "t4",
+      "url": "http://localhost:38947/components/dialog/",
+      "run": 0,
+      "dom": {
+        "docHeight": 8729,
+        "type": {
+          "totalChars": 9760,
+          "sizes": {
+            "distinct": 6,
+            "cover95": 2,
+            "top": [
+              [
+                "13.5",
+                80.1
+              ],
+              [
+                "16",
+                17
+              ],
+              [
+                "12",
+                1.9
+              ],
+              [
+                "28",
+                0.7
+              ],
+              [
+                "20",
+                0.3
+              ],
+              [
+                "56",
+                0.1
+              ]
+            ]
+          },
+          "weights": {
+            "distinct": 4,
+            "cover95": 2,
+            "top": [
+              [
+                "400",
+                91.8
+              ],
+              [
+                "500",
+                5.5
+              ],
+              [
+                "600",
+                2.4
+              ],
+              [
+                "700",
+                0.3
+              ]
+            ]
+          },
+          "lineHeights": {
+            "distinct": 6,
+            "cover95": 2,
+            "top": [
+              [
+                "22",
+                80.1
+              ],
+              [
+                "24",
+                15.7
+              ],
+              [
+                "18",
+                1.9
+              ],
+              [
+                "26",
+                1.5
+              ],
+              [
+                "34",
+                0.7
+              ],
+              [
+                "59",
+                0.1
+              ]
+            ]
+          },
+          "families": {
+            "distinct": 3,
+            "cover95": 2,
+            "top": [
+              [
+                "geist variable",
+                55.9
+              ],
+              [
+                "jetbrains mono variable",
+                43.1
+              ],
+              [
+                "ibm plex sans variable",
+                1
+              ]
+            ]
+          },
+          "colors": {
+            "distinct": 12,
+            "cover95": 5,
+            "top": [
+              [
+                "rgb(11, 15, 23)",
+                41.7
+              ],
+              [
+                "rgb(80, 86, 97)",
+                22.7
+              ],
+              [
+                "rgb(37, 41, 47)",
+                17.7
+              ],
+              [
+                "rgb(36, 59, 122)",
+                6.8
+              ],
+              [
+                "rgb(0, 113, 80)",
+                6.4
+              ],
+              [
+                "rgb(112, 50, 185)",
+                1.7
+              ],
+              [
+                "rgb(51, 80, 203)",
+                1.4
+              ],
+              [
+                "rgb(146, 47, 110)",
+                1.3
+              ]
+            ]
+          },
+          "styles": {
+            "distinct": 30,
+            "cover95": 14,
+            "top": [
+              [
+                "13.5|400|geist variable|rgb(11, 15, 23)",
+                17.8
+              ],
+              [
+                "13.5|400|geist variable|rgb(80, 86, 97)",
+                16.8
+              ],
+              [
+                "13.5|400|jetbrains mono variable|rgb(37, 41, 47)",
+                16.6
+              ],
+              [
+                "16|400|geist variable|rgb(11, 15, 23)",
+                14.3
+              ],
+              [
+                "13.5|400|jetbrains mono variable|rgb(36, 59, 122)",
+                6.8
+              ],
+              [
+                "13.5|400|jetbrains mono variable|rgb(0, 113, 80)",
+                6.4
+              ],
+              [
+                "13.5|400|jetbrains mono variable|rgb(11, 15, 23)",
+                5.4
+              ],
+              [
+                "13.5|500|geist variable|rgb(80, 86, 97)",
+                2.7
+              ]
+            ]
+          }
+        },
+        "prose": {
+          "chars": 2892,
+          "size": 16,
+          "sizeShare": 53.5,
+          "top": [
+            [
+              16,
+              53.5
+            ],
+            [
+              13.5,
+              46.5
+            ]
+          ],
+          "h1ToProse": 3.5
+        },
+        "styleSet": [
+          "13.5|400|geist variable|rgb(11, 15, 23)",
+          "13.5|400|geist variable|rgb(80, 86, 97)",
+          "13.5|400|jetbrains mono variable|rgb(37, 41, 47)",
+          "16|400|geist variable|rgb(11, 15, 23)",
+          "13.5|400|jetbrains mono variable|rgb(36, 59, 122)",
+          "13.5|400|jetbrains mono variable|rgb(0, 113, 80)",
+          "13.5|400|jetbrains mono variable|rgb(11, 15, 23)",
+          "13.5|500|geist variable|rgb(80, 86, 97)",
+          "13.5|400|jetbrains mono variable|rgb(112, 50, 185)",
+          "13.5|500|geist variable|rgb(11, 15, 23)",
+          "13.5|400|jetbrains mono variable|rgb(51, 80, 203)",
+          "13.5|400|jetbrains mono variable|rgb(146, 47, 110)",
+          "16|400|geist variable|rgb(80, 86, 97)",
+          "13.5|600|jetbrains mono variable|rgb(11, 15, 23)"
+        ],
+        "spacing": {
+          "values": 1815,
+          "distinct": 23,
+          "on4px": 89,
+          "on8px": 43.9,
+          "offGrid": [
+            [
+              6,
+              168
+            ],
+            [
+              1,
+              20
+            ],
+            [
+              2.8,
+              4
+            ],
+            [
+              1.95,
+              4
+            ],
+            [
+              435.67,
+              1
+            ],
+            [
+              10,
+              1
+            ],
+            [
+              439,
+              1
+            ],
+            [
+              433,
+              1
+            ]
+          ]
+        },
+        "leftEdges": {
+          "items": 76,
+          "distinct": 28,
+          "perItem": 0.37,
+          "singletonShare": 28.9,
+          "shared3": 5
+        },
+        "defects": {
+          "horizontalScroll": false,
+          "spills": 0,
+          "spillEx": [],
+          "truncated": 0,
+          "headings": 20,
+          "headingsWrapped": 0,
+          "headingWidows": 0,
+          "paras": 170,
+          "parasMulti": 17,
+          "labels": 295,
+          "labelWraps": 7,
+          "labelWrapEx": [
+            "code: HTMLElement | null",
+            "code: HTMLElement | null",
+            "code: HTMLElement | null",
+            "code: HTMLElement | null",
+            "code: HTMLElement | null",
+            "code: HTMLElement | null"
+          ],
+          "paraWidowShare": 17.6,
+          "medianCharsPerLine": 71
+        },
+        "media": {
+          "count": 0,
+          "foldShare": 0,
+          "pageShare": 0
+        },
+        "h1": {
+          "top": 132,
+          "left": 392,
+          "size": 56
+        }
+      },
+      "px": {
+        "colourfulness": 10.4,
+        "colours95": 6,
+        "dominantShare": 0.742,
+        "edgeDensity": 0.077,
+        "whitespace": 0.813,
+        "quadtreeLeaves": 3610,
+        "balance": 0.559,
+        "balanceLR": 0.429,
+        "balanceTB": 0.689,
+        "leftHeavy": true,
+        "topHeavy": true,
+        "symmetry": 0.524
+      }
+    },
+    {
+      "site": "kuiper",
+      "kind": "home",
+      "url": "http://localhost:38947/",
+      "run": 1,
+      "dom": {
+        "docHeight": 2814,
+        "type": {
+          "totalChars": 1767,
+          "sizes": {
+            "distinct": 8,
+            "cover95": 5,
+            "top": [
+              [
+                "13.5",
+                45.1
+              ],
+              [
+                "16",
+                33.5
+              ],
+              [
+                "20",
+                8.6
+              ],
+              [
+                "12",
+                6.3
+              ],
+              [
+                "28",
+                2.3
+              ],
+              [
+                "23",
+                1.8
+              ],
+              [
+                "56",
+                1.5
+              ],
+              [
+                "160",
+                0.9
+              ]
+            ]
+          },
+          "weights": {
+            "distinct": 4,
+            "cover95": 2,
+            "top": [
+              [
+                "400",
+                87.4
+              ],
+              [
+                "600",
+                8
+              ],
+              [
+                "500",
+                4
+              ],
+              [
+                "700",
+                0.6
+              ]
+            ]
+          },
+          "lineHeights": {
+            "distinct": 9,
+            "cover95": 6,
+            "top": [
+              [
+                "22",
+                45.1
+              ],
+              [
+                "24",
+                33.5
+              ],
+              [
+                "30",
+                6.5
+              ],
+              [
+                "18",
+                6.3
+              ],
+              [
+                "34",
+                2.3
+              ],
+              [
+                "26",
+                2.2
+              ],
+              [
+                "25",
+                1.8
+              ],
+              [
+                "59",
+                1.5
+              ]
+            ]
+          },
+          "families": {
+            "distinct": 3,
+            "cover95": 3,
+            "top": [
+              [
+                "geist variable",
+                64.7
+              ],
+              [
+                "jetbrains mono variable",
+                26.7
+              ],
+              [
+                "ibm plex sans variable",
+                8.6
+              ]
+            ]
+          },
+          "colors": {
+            "distinct": 5,
+            "cover95": 3,
+            "top": [
+              [
+                "rgb(11, 15, 23)",
+                46.7
+              ],
+              [
+                "rgb(80, 86, 97)",
+                34.4
+              ],
+              [
+                "rgb(37, 41, 47)",
+                14.5
+              ],
+              [
+                "rgb(255, 255, 255)",
+                4
+              ],
+              [
+                "rgb(51, 80, 203)",
+                0.5
+              ]
+            ]
+          },
+          "styles": {
+            "distinct": 20,
+            "cover95": 14,
+            "top": [
+              [
+                "16|400|geist variable|rgb(80, 86, 97)",
+                19.9
+              ],
+              [
+                "13.5|400|geist variable|rgb(11, 15, 23)",
+                18.4
+              ],
+              [
+                "13.5|400|jetbrains mono variable|rgb(37, 41, 47)",
+                14.1
+              ],
+              [
+                "16|400|geist variable|rgb(11, 15, 23)",
+                13.6
+              ],
+              [
+                "20|400|geist variable|rgb(80, 86, 97)",
+                6.5
+              ],
+              [
+                "13.5|400|jetbrains mono variable|rgb(11, 15, 23)",
+                5.8
+              ],
+              [
+                "12|400|jetbrains mono variable|rgb(80, 86, 97)",
+                3.7
+              ],
+              [
+                "13.5|400|geist variable|rgb(255, 255, 255)",
+                2.5
+              ]
+            ]
+          }
+        },
+        "prose": {
+          "chars": 922,
+          "size": 16,
+          "sizeShare": 64.2,
+          "top": [
+            [
+              16,
+              64.2
+            ],
+            [
+              13.5,
+              20.1
+            ],
+            [
+              20,
+              12.4
+            ],
+            [
+              23,
+              3.4
+            ]
+          ],
+          "h1ToProse": 10
+        },
+        "styleSet": [
+          "16|400|geist variable|rgb(80, 86, 97)",
+          "13.5|400|geist variable|rgb(11, 15, 23)",
+          "13.5|400|jetbrains mono variable|rgb(37, 41, 47)",
+          "16|400|geist variable|rgb(11, 15, 23)",
+          "20|400|geist variable|rgb(80, 86, 97)",
+          "13.5|400|jetbrains mono variable|rgb(11, 15, 23)",
+          "12|400|jetbrains mono variable|rgb(80, 86, 97)",
+          "13.5|400|geist variable|rgb(255, 255, 255)",
+          "12|500|jetbrains mono variable|rgb(80, 86, 97)",
+          "20|600|ibm plex sans variable|rgb(11, 15, 23)",
+          "13.5|400|geist variable|rgb(80, 86, 97)",
+          "13.5|500|geist variable|rgb(11, 15, 23)",
+          "28|600|ibm plex sans variable|rgb(11, 15, 23)",
+          "23|600|ibm plex sans variable|rgb(255, 255, 255)"
+        ],
+        "spacing": {
+          "values": 249,
+          "distinct": 22,
+          "on4px": 89.6,
+          "on8px": 38.2,
+          "offGrid": [
+            [
+              1,
+              12
+            ],
+            [
+              2.8,
+              4
+            ],
+            [
+              1.95,
+              4
+            ],
+            [
+              6,
+              2
+            ],
+            [
+              50.88,
+              2
+            ],
+            [
+              435.67,
+              1
+            ],
+            [
+              20.32,
+              1
+            ]
+          ]
+        },
+        "leftEdges": {
+          "items": 22,
+          "distinct": 16,
+          "perItem": 0.73,
+          "singletonShare": 54.5,
+          "shared3": 1
+        },
+        "defects": {
+          "horizontalScroll": false,
+          "spills": 0,
+          "spillEx": [],
+          "truncated": 0,
+          "headings": 14,
+          "headingsWrapped": 1,
+          "headingWidows": 1,
+          "paras": 87,
+          "parasMulti": 10,
+          "labels": 80,
+          "labelWraps": 1,
+          "labelWrapEx": [
+            "a: Components 82 parts"
+          ],
+          "paraWidowShare": 10,
+          "medianCharsPerLine": 55
+        },
+        "media": {
+          "count": 0,
+          "foldShare": 0,
+          "pageShare": 0
+        },
+        "h1": {
+          "top": 136,
+          "left": 136,
+          "size": 160
+        }
+      },
+      "px": {
+        "colourfulness": 52.7,
+        "colours95": 8,
+        "dominantShare": 0.774,
+        "edgeDensity": 0.058,
+        "whitespace": 0.838,
+        "quadtreeLeaves": 4345,
+        "balance": 0.475,
+        "balanceLR": 0.492,
+        "balanceTB": 0.459,
+        "leftHeavy": true,
+        "topHeavy": true,
+        "symmetry": 0.363
+      }
+    },
+    {
+      "site": "kuiper",
+      "kind": "button",
+      "url": "http://localhost:38947/components/button/",
+      "run": 1,
+      "dom": {
+        "docHeight": 7907,
+        "type": {
+          "totalChars": 9573,
+          "sizes": {
+            "distinct": 6,
+            "cover95": 2,
+            "top": [
+              [
+                "13.5",
+                80.3
+              ],
+              [
+                "16",
+                16.7
+              ],
+              [
+                "12",
+                2
+              ],
+              [
+                "28",
+                0.7
+              ],
+              [
+                "20",
+                0.3
+              ],
+              [
+                "56",
+                0.1
+              ]
+            ]
+          },
+          "weights": {
+            "distinct": 4,
+            "cover95": 2,
+            "top": [
+              [
+                "400",
+                91.4
+              ],
+              [
+                "500",
+                7
+              ],
+              [
+                "600",
+                1.5
+              ],
+              [
+                "700",
+                0.1
+              ]
+            ]
+          },
+          "lineHeights": {
+            "distinct": 6,
+            "cover95": 3,
+            "top": [
+              [
+                "22",
+                80.3
+              ],
+              [
+                "24",
+                12.9
+              ],
+              [
+                "26",
+                4
+              ],
+              [
+                "18",
+                2
+              ],
+              [
+                "34",
+                0.7
+              ],
+              [
+                "59",
+                0.1
+              ]
+            ]
+          },
+          "families": {
+            "distinct": 3,
+            "cover95": 2,
+            "top": [
+              [
+                "geist variable",
+                51.3
+              ],
+              [
+                "jetbrains mono variable",
+                47.6
+              ],
+              [
+                "ibm plex sans variable",
+                1
+              ]
+            ]
+          },
+          "colors": {
+            "distinct": 13,
+            "cover95": 7,
+            "top": [
+              [
+                "rgb(11, 15, 23)",
+                29.5
+              ],
+              [
+                "rgb(80, 86, 97)",
+                22.9
+              ],
+              [
+                "rgb(37, 41, 47)",
+                16.7
+              ],
+              [
+                "rgb(0, 113, 80)",
+                11.6
+              ],
+              [
+                "rgb(36, 59, 122)",
+                8.1
+              ],
+              [
+                "rgb(146, 47, 110)",
+                5.1
+              ],
+              [
+                "rgb(112, 50, 185)",
+                3.6
+              ],
+              [
+                "rgb(255, 255, 255)",
+                1.2
+              ]
+            ]
+          },
+          "styles": {
+            "distinct": 34,
+            "cover95": 15,
+            "top": [
+              [
+                "13.5|400|geist variable|rgb(80, 86, 97)",
+                18.1
+              ],
+              [
+                "13.5|400|jetbrains mono variable|rgb(37, 41, 47)",
+                15.7
+              ],
+              [
+                "13.5|400|geist variable|rgb(11, 15, 23)",
+                12.6
+              ],
+              [
+                "16|400|geist variable|rgb(11, 15, 23)",
+                12.1
+              ],
+              [
+                "13.5|400|jetbrains mono variable|rgb(0, 113, 80)",
+                11.6
+              ],
+              [
+                "13.5|400|jetbrains mono variable|rgb(36, 59, 122)",
+                8.1
+              ],
+              [
+                "13.5|400|jetbrains mono variable|rgb(146, 47, 110)",
+                5.1
+              ],
+              [
+                "13.5|400|jetbrains mono variable|rgb(112, 50, 185)",
+                3.6
+              ]
+            ]
+          }
+        },
+        "prose": {
+          "chars": 2408,
+          "size": 16,
+          "sizeShare": 54.6,
+          "top": [
+            [
+              16,
+              54.6
+            ],
+            [
+              13.5,
+              45.4
+            ]
+          ],
+          "h1ToProse": 3.5
+        },
+        "styleSet": [
+          "13.5|400|geist variable|rgb(80, 86, 97)",
+          "13.5|400|jetbrains mono variable|rgb(37, 41, 47)",
+          "13.5|400|geist variable|rgb(11, 15, 23)",
+          "16|400|geist variable|rgb(11, 15, 23)",
+          "13.5|400|jetbrains mono variable|rgb(0, 113, 80)",
+          "13.5|400|jetbrains mono variable|rgb(36, 59, 122)",
+          "13.5|400|jetbrains mono variable|rgb(146, 47, 110)",
+          "13.5|400|jetbrains mono variable|rgb(112, 50, 185)",
+          "13.5|500|geist variable|rgb(11, 15, 23)",
+          "16|400|geist variable|rgb(80, 86, 97)",
+          "13.5|500|geist variable|rgb(80, 86, 97)",
+          "16|500|geist variable|rgb(255, 255, 255)",
+          "16|400|jetbrains mono variable|rgb(37, 41, 47)",
+          "13.5|400|jetbrains mono variable|rgb(11, 15, 23)",
+          "12|500|geist variable|rgb(80, 86, 97)"
+        ],
+        "spacing": {
+          "values": 1920,
+          "distinct": 25,
+          "on4px": 89.1,
+          "on8px": 56.4,
+          "offGrid": [
+            [
+              6,
+              168
+            ],
+            [
+              1,
+              28
+            ],
+            [
+              2.8,
+              4
+            ],
+            [
+              1.95,
+              4
+            ],
+            [
+              435.67,
+              1
+            ],
+            [
+              10,
+              1
+            ],
+            [
+              439,
+              1
+            ],
+            [
+              450,
+              1
+            ]
+          ]
+        },
+        "leftEdges": {
+          "items": 78,
+          "distinct": 30,
+          "perItem": 0.38,
+          "singletonShare": 24.4,
+          "shared3": 7
+        },
+        "defects": {
+          "horizontalScroll": false,
+          "spills": 0,
+          "spillEx": [],
+          "truncated": 0,
+          "headings": 22,
+          "headingsWrapped": 0,
+          "headingWidows": 0,
+          "paras": 188,
+          "parasMulti": 16,
+          "labels": 272,
+          "labelWraps": 0,
+          "labelWrapEx": [],
+          "paraWidowShare": 18.8,
+          "medianCharsPerLine": 71
+        },
+        "media": {
+          "count": 0,
+          "foldShare": 0,
+          "pageShare": 0
+        },
+        "h1": {
+          "top": 132,
+          "left": 392,
+          "size": 56
+        }
+      },
+      "px": {
+        "colourfulness": 26.1,
+        "colours95": 7,
+        "dominantShare": 0.834,
+        "edgeDensity": 0.067,
+        "whitespace": 0.83,
+        "quadtreeLeaves": 3700,
+        "balance": 0.417,
+        "balanceLR": 0.372,
+        "balanceTB": 0.461,
+        "leftHeavy": true,
+        "topHeavy": true,
+        "symmetry": 0.429
+      }
+    }
+  ]
+}
