@@ -215,6 +215,19 @@ jobs:
             sudo -n sqlite3 "$db" "SELECT client, service, auth_value, auth_reason, last_modified FROM access WHERE service IN ('kTCCServicePostEvent', 'kTCCServiceAccessibility') ORDER BY service, client;" || true
           done
           log show --last 15m --style compact --predicate 'subsystem == "com.apple.TCC"' | tail -n 200 || true
+      # 022y: under VoiceOver with WebKit the chart's walk ended in macOS's
+      # Quick Note window, inferred to be the bottom-right hot corner, which
+      # VoiceOver's pointer reached. Print the runner's corners, turn all
+      # four off (1, the "no action" System Settings writes), restart the
+      # Dock to read them, and print them again.
+      - run: |
+          defaults read com.apple.dock | grep wvous || true
+          defaults write com.apple.dock wvous-tl-corner -int 1
+          defaults write com.apple.dock wvous-tr-corner -int 1
+          defaults write com.apple.dock wvous-bl-corner -int 1
+          defaults write com.apple.dock wvous-br-corner -int 1
+          killall Dock || true
+          defaults read com.apple.dock | grep wvous || true
       - run: bun run sr:install
       - run: bun --bun playwright install ${{ matrix.browser }}
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
