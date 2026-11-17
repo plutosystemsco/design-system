@@ -349,3 +349,12 @@ Also: the fake-reader test's alert dialog is titled "Delete this project?", so `
 - Criteria 6 to 8 are CI: the next push run, the `mutate` dispatch, and the shard times and scorecard row.
 - Firefox, for the cover check and the dry run: CI's matrix runs it.
 - The benchmark scorecard re-run, which follows landing.
+
+### Criteria 6 to 8, read from runs 5 and 6 (2026-11-17)
+
+Runs 5 (`43974619830`, on `fd18383`) and 6 (`43974717942`, on `b01e754`) carry this change on identical code (`research/2026-11-17-the-fifth-matrix-run.md`, §§1–9).
+
+- **Criterion 6: not met.** None of the speech memo's 18 rule-or-harness rows fails for the memo's reason in either run (16 pass everywhere; the chart fails under VoiceOver for two new reasons, C2 reading the table and, in run 6, the WebKit walk stopping on "image"). Every VoiceOver window printed has its "item text" beside it. But `voiceover (chromium, 2)` hit its 40-minute deadline in both runs, with 9 tests not run, because the dropdown-menu sub-menu wait hung 3 × 10 minutes. `022x` bounds that wait.
+- **Criterion 7: not yet run.** No `mutate` dispatch has run since this landed. `022z` and `019b` set a window in which patches 4 and 7b are not provable; the first dispatch after `019b` records them.
+- **Criterion 8:** the shard times and per-pair counts are in the memo, §3 and §9.4: NVDA 11.5 to 18.1 minutes, VoiceOver 17.7 to 32.5 (run 5); run 6's VoiceOver jobs waited 43 to 88 minutes for macOS slots because two pushes a minute apart shared them. The scorecard row is the batch's that carries `022x`.
+

@@ -68,3 +68,8 @@ Built 2026-11-16 by a lane-I builder, in the worktree `lane-i-speech`, at `c5cdd
 
 - **No reader has heard a repeat after 750 ms of empty status.** The toast's NVDA repeat followed about 2 s. That 750 ms is enough is INFERRED; the next speech run's S2 shows it, in every pair. **If S2 still fails, the gap is what to tune, not `SPEECH_MS`:** for example, by holding the count back until the status has been empty for a set time, longer than the pause. That would be a ruling in these landing notes, as `026` and `027` tune their times.
 - `webkit-dark` and Firefox were not run here. Test 29b runs in every engine; the next `matrix` run shows them.
+
+### Superseded in part (2026-11-17)
+
+The design lead ruled, from run 5 (`research/2026-11-17-the-fifth-matrix-run.md`, §3.5): the 1,000 ms timed clear is dropped. VoiceOver in Chromium missed S1 and S2 with it. A count now stays until the next editing keystroke, Clear or Escape. `022w` carries the change and names this spec's superseded sentences.
+
