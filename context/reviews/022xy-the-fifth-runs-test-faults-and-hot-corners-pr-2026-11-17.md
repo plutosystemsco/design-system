@@ -10,7 +10,7 @@ Both rest on [the fifth matrix run](../research/2026-11-17-the-fifth-matrix-run.
 Terms. A _window_ is one named capture of phrases (`sr.after`). A _walk_ is a run of the reader's `next()` steps. _VO chr_ is VoiceOver with Chromium; _VO wk_ is VoiceOver with WebKit. A _hot corner_ is a screen corner that runs a macOS action when the pointer reaches it.
 
 - **Date:** 2026-11-17
-- **Status:** in review
+- **Status:** dispositioned 2026-11-17 (see Disposition). Both land: `022y` after the first re-check, `022x` after the second, which found finding 7 fixed.
 - **Reviewer:** a reviewer; not the author
 - **Reviewed:** the worktree `.claude/worktrees/lane-e-run5`, branch `lane-e-run5`, from `71cb067`, uncommitted.
   - `git diff`: 7 files. `.github/workflows/matrix.yml`, `tests/e2e/bar-glass.spec.ts`, `tests/sr/chart.sr.ts`, `tests/sr/dropdown-menu.sr.ts`, `tests/sr/rules.ts`, `tests/unit/sr-rules.test.ts`, `tests/unit/workflow.test.ts`.
@@ -214,5 +214,115 @@ INFERRED: what is still not seen is *why* the transition started about 200 ms la
 - **`022x`: lands once finding 1 is fixed.** (a), (b) and (c) each do what the memo asked, and each check was seen failing first. Finding 1 is a short change to one test: without it, the next run's one chance to see why VO chr's sub-menu does not open loses half its evidence. Findings 2 and 3 are one-line guards with unit cases, and belong in the same pass. Finding 5 is optional.
 - **`022y`: lands.** The step is in the right job, in the right place, and comes before VoiceOver starts. Finding 4 is a one-line change and a read-back, worth taking before the next run, because the step's effect can only be seen there.
 
+That was the verdict on the first build. The verdicts after the rebuild close the Disposition.
+
 ## Disposition
 
+The builder fixed findings 1 to 5 in the same worktree, and added one change of its own: the hover read in (c) is now polled for up to 5 s. This re-check reads the rebuilt diff and both specifications' "after the change review" notes. Note 6 is not done; the design lead queues it, which is right for a note out of scope.
+
+**State.**
+
+- Before and after this re-check:
+  - `git diff | sha256sum` → `b3b37b49…62374`;
+  - `git status --porcelain | sha256sum` → `c3ef9137…c846d`, 10 entries, this review among them;
+  - the specifications: `57376ff0…` (`022x`) and `b21c4791…` (`022y`).
+- Every file a probe changed was copied to the scratchpad first and copied back. `sha256sum -c` passed for `rules.ts`, `dropdown-menu.sr.ts`, `bar-glass.spec.ts` and `matrix.yml`. The probe file in `tests/sr/` was deleted. Only this file was edited.
+
+**Re-ran.** EXECUTED, `E2E_PREBUILT=1 E2E_PORT=4252`, at load averages of 1 to 7.
+
+- `sr-rules.test.ts` and `workflow.test.ts` → **92 pass**.
+- With the *first build's* `rules.ts` → **3 fail**: two and three leading silent steps, and fewer than three entries.
+- With the first build's `matrix.yml` → **1 fail**, the `022y` test.
+- My edge probe from the first review, on the rebuilt `rules.ts`:
+  - one, two and three leading `""` now pass C1, and C2 still faults a tooltip text before the header;
+  - empty phrases in the middle still pass;
+  - `[]`, `[FIGURE]` and `[FIGURE, CAPTION]` each give "C2: no header to bound the walk".
+- **(a), the probe.** Focus left on "Profile", `SR_DRY=1`, `chromium`, JSON reporter. It **failed in 10.9 s**.
+  - `phrases.json`'s windows: `focus`, `open`, `parent`, `sub-menu`.
+  - `faults.json`: one X0, "the sub-menu did not open within 10 s of ArrowRight; focus before it was on div[data-slot="dropdown-menu-item"] "Profile Shift Cmd P", and after the wait on div[data-slot="dropdown-menu-item"] "Profile Shift Cmd P"".
+  - The dry run's failure lists the two facts that do not hold.
+- **(c), as built, `webkit-light`, 20 repeats each:** `/` at 1440 → **20 passed**; `/` at 390 → **20 passed**.
+- **(c), stand-ins, `/` at 1440, `webkit-light`, no retries:**
+  - **E.** The toggle's `:hover` background forced to alpha 0.5 → **3 of 3 failed** after 5 s, "hovering Dark theme", `rgba(233, 229, 219, 0.5)`.
+  - **F.** `hover()` replaced by `scrollIntoViewIfNeeded()` → **3 of 3 failed**, "pluto, Kuiper Design System is hovered" (finding 5's guard).
+  - **A.** The hover *lost* right after `transitionsDone` (the mouse moved off the toggle), as built with the poll → **5 of 5 passed**.
+  - **B.** The same, with the first build's single read → **2 of 5 failed**, at `rgba(233, 229, 219, 0.99)` and `0.996`: a fade-*out*, read as it starts.
+  - **C.** The same lost hover, with a poll that holds `:hover` and the read together → **5 of 5 failed**.
+  - **D.** C's combined poll with no lost hover → **5 of 5 passed**.
+- **(c), a hunt for the cause.** A scratch WebKit script at 390, 40 page loads, six busy loops beside it. After the same wait as the test, it read the toggle every 25 ms for 500 ms, with listeners for pointer and transition events. **0 of 40** showed a late fade, a lost `:hover`, or any event after the wait.
+- **The gate, for what the rebuild touched:**
+  - `bun run check` → 0 errors;
+  - `bun run lint` → clean;
+  - the dry run of `dropdown-menu.sr.ts` and `chart.sr.ts` → 4 of 4 in `chromium` and in `webkit`;
+  - `bar-glass.spec.ts`, `chromium-light` and `webkit-light` → **54 passed, 8 skipped**;
+  - VoiceOver `--list --shard=k/5` → 19, 17, 19, 16, 16.
+
+**The findings.**
+
+1. **Fixed.** The timeout is caught inside the action (`.then(() => true, () => false)`), so the window ends and is recorded. Then a false fact and an X0 through `judge()` name focus before and after. EXECUTED above.
+   - A note, not a condition: the catch takes any error as "did not open", a crashed page included. Rethrowing anything but a `TimeoutError` would keep the message true. Optional.
+2. **Fixed.** Each phrase's start is taken before it is appended. EXECUTED: failing first, then passing.
+3. **Fixed.** Fewer than three entries is X0. EXECUTED: failing first, then passing.
+4. **Fixed.** `022y` writes `-int 1` and reads the corners again after `killall Dock`. Its Terms and the unit test say the same. EXECUTED: failing first, then passing.
+5. **Fixed, and then weakened by the polled read** (finding 7). EXECUTED: stand-in F fails at the guard.
+6. **Not done; queued by the design lead.** Out of scope, as the first review said.
+
+**The polled read: is it the right fix, or does it hide a defect?**
+
+- **A poll is the right shape.** The check judges *states*: a control at rest, and a control hovered (019a decision 3, "at rest or on hover"). A colour fade from clear to solid passes through every alpha between them, by its nature. A frame of that fade is not a state the decision is about. So waiting for the fade to end is what the check means, and a fixed wait only moves the threshold. A real defect, a hover state that stays translucent, still fails, with its value (stand-in E).
+- **As built, it does hide one defect: a hover lost after the wait.**
+  - Stand-in A: the toggle loses `:hover` after `transitionsDone`. The poll waits out the fade-*out* and passes on a clear control that is no longer hovered: the silent pass that finding 5 closed. The first build's single read caught it 2 of 5 times (B).
+  - CI's residual value, `rgba(233, 229, 219, 0.886)`, fits both stories: near the end of a fade-in, or early in a fade-out (B read 0.99 and 0.996 at the start of one). INFERRED: the builder's "a fade that started after `transitionsDone` looked" is one of two readings, and a lost hover is the other. The poll passes either way. So it may be absorbing exactly the case nobody has explained.
+- **Should the cause be found first?** Not as a condition of landing. About 300 runs have not repeated it: the builder's 220, my 40 probe loads and my 40 test repeats. More hunting here is unlikely to pay. But the poll should not erase the signal. Each time the first read is translucent, the test should say so, so CI's report keeps collecting the cases the poll forgives.
+
+7. **Medium (new, the polled read): the poll accepts a read in which the control is no longer hovered** (`bar-glass.spec.ts`, the second `expect.poll`).
+   - Evidence: stand-ins A to D above.
+   - Fix:
+     - poll the hover and the read together, so a pass is a read of the hover state. Stand-in C's form: the polled value is `"not hovered"` when `control.matches(":hover")` is false, followed by `translucent(page)`'s list, and it must equal `[]`, with the same message and 5 s timeout. EXECUTED: it fails a lost hover 5 of 5 (C) and passes the real test 5 of 5 (D);
+     - recommended in the same pass: when the first read is not `[]`, add a test annotation with that first value and the running animations' targets and properties, and keep polling. The test still passes on a late fade, and the report says it happened, so the cause can be found from CI's own runs;
+     - in the landing notes, record both readings of 0.886, not only the late fade.
+
+**Verdicts after the rebuild.**
+
+- **`022x`: lands once finding 7 is fixed.**
+  - Findings 1, 2, 3 and 5 are fixed and verified, each seen failing first.
+  - (a) bounds the hang, the teardown's included, and now keeps the window's evidence. (b) reads the right speech, with no silent-step or short-order holes.
+  - (c) is right in shape. Its poll must also hold the hover, or it can pass a control nobody is hovering. That is a one-expression change, with stand-ins A and C as its check. The annotation is recommended, not required.
+- **`022y`: lands.** Finding 4 is fixed and verified. The step writes the value System Settings writes, and the next run's log shows the corners before and after.
+
+**The second re-check, of finding 7 and finding 1's note.** It reads only those two changes and the landing note on 0.886.
+
+- **State.** Before and after:
+  - `git diff | sha256sum` → `33bf1986…74436f`;
+  - `git status --porcelain | sha256sum` → `c3ef9137…c846d`.
+  - Each probed file was copied to the scratchpad first and copied back; `sha256sum -c` passed for `bar-glass.spec.ts` and `dropdown-menu.sr.ts`.
+  - The probe files in `tests/sr/` were deleted. Only this file was edited.
+- **What changed.**
+  - `bar-glass.spec.ts`: one polled function, `hovered`. It returns `["not hovered"]` when the control does not match `:hover`, and `translucent(page)` when it does. It must equal `[]` within 5 s. A non-empty first read adds a "022x: a translucent first read" annotation, holding the value and the panel's running animations (`running()`, by target, property and current time).
+  - `dropdown-menu.sr.ts`: the catch returns `false` only for an `Error` named `TimeoutError`, and throws anything else on.
+  - `022x`'s landing notes give both readings of 0.886.
+- **Re-ran.** EXECUTED, `webkit-light`, `/` at 1440, no retries, JSON reporter.
+  - **A, my lost-hover probe.** The mouse moves off the toggle right after `transitionsDone` → **5 of 5 failed**, "hovering Dark theme". Each was annotated `["not hovered"]`, with the toggle's `background-color` fade-out running at 22 to 37 ms. In the first re-check this probe passed 5 of 5.
+  - **As built:** **20 of 20 passed**, with no annotation.
+  - **A late fade-in.** The toggle's background was forced clear for 400 ms after `transitionsDone`, then released, so a fade-in starts just before the read → **5 of 5 passed**. Three were annotated, at alpha 0.004 to 0.01, with the toggle's fade at 34 to 39 ms.
+  - **E, a hover state that stays translucent** (alpha 0.5) → **3 of 3 failed** after 5 s, with that value, annotated.
+  - **Finding 1's note, (a).**
+    - The probe with focus left on "Profile" → **failed in 10.8 s** as the X0, with the `sub-menu` window in `phrases.json`.
+    - A stand-in with a malformed selector, a non-timeout error → **failed in 0.9 s**, with Playwright's own "Unexpected token … while parsing css selector" thrown on. Before, it would have been "did not open".
+
+8. **Low (new, optional): a fade read at its very first frame passes as "clear"** (`bar-glass.spec.ts`, `hovered`).
+   - EXECUTED: in the late fade-in stand-in, 2 of the 5 passes had no annotation. INFERRED: their first read came before the fade had moved, at alpha 0. `translucent()` counts alpha 0 as clear, so the poll passed at once, before the hover's end state existed.
+   - That is the same in every version of this test, and it needs a fade that starts between `transitionsDone` and the read. It cannot fail a good control. Rarely, it could pass a bad one, if the hover state were translucent and its fade restarted in that window.
+   - The comment's "a pass is a read of the hovered control, settled" is not quite true: nothing checks "settled".
+   - Fix (optional): have `hovered` also return `"still fading"` while a finite transition runs on a descendant (`transitionsDone`'s filter), or drop "settled" from the comment.
+
+**Closing verdicts.**
+
+- **`022x`: lands.**
+  - Findings 1, 2, 3, 5 and 7 are fixed and verified, each against a stand-in that fails without the fix. Finding 1's note is taken.
+  - The polled read is now what the check means: the hovered control's state, within 5 s. A lost hover fails, a lasting translucent hover fails with its value, and a late fade passes with a record in CI's report.
+  - Finding 8 is optional. Note 6 is the design lead's to queue.
+- **`022y`: lands**, as at the first re-check.
+
+
+- **Finding 8, by the design lead (2026-11-17):** taken the simpler way: the test comment no longer calls a pass "settled", and names the alpha-0 first read. The poll is unchanged; the gap is as old as the test.

@@ -100,7 +100,11 @@ test(
         .waitFor({ timeout: 10_000 })
         .then(
           () => true,
-          () => false,
+          // The re-check's note: only a timeout means "did not open".
+          (e: unknown) => {
+            if (e instanceof Error && e.name === "TimeoutError") return false;
+            throw e;
+          },
         );
     }, "sub-menu");
     if (!opened) {
