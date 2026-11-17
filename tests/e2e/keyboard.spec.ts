@@ -1597,9 +1597,14 @@ test("the 8 viewer toolbars hold 69 stops", () => {
 test.describe("017: the token page by keyboard", () => {
   test.use({ permissions: clipboard });
 
-  test("criterion 4: Tab reaches the first 3 copy buttons in order, and Enter on the first says Copied", async ({
+  test("criterion 4: Tab reaches the first 3 copy buttons in order, and Enter on the first says Copied, once", async ({
     page,
   }) => {
+    // 017a: the page's clock, installed at a fixed time and paused far ahead
+    // before Enter, stands still while the name is read, so the 2 s reset
+    // cannot pass the assertion by accident (as in 022v).
+    const t0 = new Date("2026-11-17T10:00:00Z");
+    await page.clock.install({ time: t0 });
     await open(page, "/foundations/tokens/");
     const buttons = page.locator('[data-slot="token-copy"]');
     const names = await buttons.evaluateAll((els) =>
@@ -1617,9 +1622,21 @@ test.describe("017: the token page by keyboard", () => {
       await page.keyboard.press("Tab");
       expect((await focused(page))?.name).toBe(name);
     }
-    await buttons.first().focus();
+    const first = buttons.first();
+    const status = first.locator("xpath=..").getByRole("status");
+    // The path's geometry, not the svg's markup, which carries Svelte's
+    // hydration comments and differs on any re-render (017a's review).
+    const icon = () => first.locator("svg path").first().getAttribute("d");
+    const before = await icon();
+    await page.clock.pauseAt(new Date(t0.getTime() + 600_000));
+    await first.focus();
     await page.keyboard.press("Enter");
-    await expect(buttons.first()).toHaveAttribute("aria-label", "Copied");
+    await expect(status).toHaveText("Copied");
+    // 017a: "Copied" is said once, by the status. The focused button's name
+    // stays "Copy --background", so NVDA does not read "Copied" twice. The
+    // check icon still shows.
+    await expect(first).toHaveAccessibleName("Copy --background");
+    expect(await icon()).not.toBe(before);
     expect(await readClipboard(page)).toBe("--background");
   });
 });
