@@ -3,7 +3,7 @@
 Reviews [`specifications/020d-0-12-0-was-never-released.md`](../specifications/020d-0-12-0-was-never-released.md) before it is built. Its research is [`research/2026-11-17-0-12-0-was-never-released.md`](../research/2026-11-17-0-12-0-was-never-released.md). This reviewer wrote neither (constitution §5).
 
 - **Date:** 2026-11-17
-- **Status:** in review
+- **Status:** dispositioned; fit to build (re-checked 2026-11-17)
 - **Reviewer:** a reviewer; not the author
 - **Reviewed:** the specification as drafted (199 lines) and the memo (166 lines), both untracked, on `release/0.13.0` at `b01e754`. Checked against:
   - `AGENTS.md`, the constitution, `roadmap.md` §2 ("Lanes"), the owner's L2 answer (`research/2026-11-17-structural-review.md:168`, `:322`);
@@ -144,3 +144,38 @@ Does not land yet. Finding 1: the fold's repeated heads leave the retargeted tes
 
 ## Disposition
 
+Re-checked by this reviewer, 2026-11-17, against the revised specification (347 lines) and the memo's new §10. The design lead revised both and maps each finding in the specification's "Review" section. Only this file was written. Every figure below was read or run at `71cb067`, with `lane-i-run5`'s `CHANGELOG.md` as it now stands.
+
+Figures re-taken:
+- 26 bullets in the 0.13.0 entry and 18 in the 0.12.0 entry. `## 0.13.0` is at line 5 and `## 0.12.0` at line 36. EXECUTED.
+- Eight single-head bullets in the first part also head a second-part bullet. That is seven heads: `kuiper-theme` twice, then `highlighter`, `app-shell`, `use-highlighted-code`, `code-editor`, `code-block` and `error-summary`. The doc-comment bullet names 61 items, and 14 of them head a second-part bullet. These are exactly decision 3's lists. EXECUTED.
+- `git grep` of the open-ended slice pattern finds 16 matches in 3 files. Six of them end at `\n## 0.12.0`. EXECUTED.
+- The guard's grep finds 284 lines. EXECUTED.
+- `lane-i-run5` adds no `0.12` line. The `022x`, `022y` and `022z` specifications name no changelog and no 0.12.0. READ.
+
+1. **Fixed.** The two whole parts, split at one line, let each test keep what it held.
+   - Decision 7's table has 16 rows. They cover all 11 slicing readers and both `entry("0.12.0")` calls (`:1476`, `:1497`), plus the releases' order. Each says which part it reads. Tests from `013` to `019` keep their counts and positions: `:2028`'s `kbd` + 1 and + 2 hold inside `second`. 019's "11 names" reads `019`'s own `error-summary` bullet.
+   - The pointers add one sentence to the end of a first-part bullet. No test of a first-part bullet anchors on its end. The one `$` anchor, `:2065`, is on a second-part bullet, which keeps its words. READ.
+   - `022t`'s test still passes with "nothing to change for it", and its "blocks bullet at + 1" check holds, since a pointer adds no line. READ.
+   - T16 holds the pointers. The memo's §10 is labelled clearly as the base that will land.
+   - Write-in: decision 7 says every test that reads an entry by text uses the helper. `registry.test.ts:1441`'s regex `entry()` serves 13 calls for 0.11.0 down to 0.1.0, and the guard does not ban it. It already fails loudly (`expect(match).not.toBeNull()`). Either the build points it at `releaseEntry`, or the sentence says that `entry()` stays for the older entries. The builder chooses, and records it in the landing notes.
+2. **Fixed.** The new step 2 is the `grep` for the twelve names, and the replacement, before step 3 deletes the lines. That order matches what the probe showed: the app's own class compiles until the lines go. T10 holds the command, `--code-text`, and the order.
+   - The end-to-end smoke case is fairly declined. It was optional, and the probe already proved the need. But the recorded reason is not quite right. `roadmap.md` §2 puts `tests/smoke/` in no lane. Lane E names the Playwright config, `scripts/a11y/`, CI and the bench and cost scripts. The case would extend `tests/smoke/upgrade.test.ts`'s "follows" app on the existing `kit3` fixture, so it needs no new fixture app.
+   - Write-in: the "Review" section's reason reads "deferred: optional, and a smoke case of about five minutes; the probe and T10 hold the step". It stays noted for `030`'s re-base sweep. This does not block the build.
+3. **Fixed.**
+   - Depends on: the batch lands, and every count is re-taken there (criterion 11).
+   - Six slices are named, `022t`'s `:2589` among them.
+   - T15 has a line diff at build and a heads fixture, held as an ordered subsequence. A body edit under a kept head is the line diff's job, not the fixture's. The change review checks that diff against `git show`, and that division is sound.
+   - The guard's slice check closes the open-ended `indexOf` in `tests/`. Its pattern does not catch `lastIndexOf`, `split("\n## ")` or `search(/^## /m)`, and no test uses those today. The check targets the form that passed vacuously, and is enough.
+   - Lane S is the design lead's ruling. The token metadata rides along only while no lane-T build runs, so the build confirms that at start.
+   - Criterion 4 diffs from the landed base.
+4. **Fixed.** T10 bans "0.12.0's notes", and requires "0.12.0 was never released" and `#v0-13-0` in `WHO[1]`.
+5. **Fixed.** Fourth of seven.
+6. **Fixed.** T4 anchors on "`add kuiper-theme highlighter`". Decision 4's paragraph says "first rename" before it.
+7. **Fixed.** The `shikiTheme.name` row keeps its name cell, so `upgrade.spec.ts`'s five constants hold. Its value names `codeTheme`. The code items go on the second line, without `-o`, and T10 checks the first line.
+8. **Fixed.** Decision 13: check for the local tag before the push, then push by name, never `--tags`.
+9. **Fixed.** Decisions 7 and 9, and the memo's §7 and §10.
+10. **Fixed.** Criterion 9: 12 → 11 releases and 9 → 8 versioned registries, with no row moving.
+11. **Fixed.** The converse check asserts tags first, with one message. The guard counts per file, in `0-12-0-allowed.json`, in `pluto-allowed.json`'s shape.
+
+Closing verdict: **fit to build**, once the batch lands. The two write-ins (finding 1's `entry()` sentence, and finding 2's recorded reason) are wording for the design lead and the builder. Neither changes a decision or a criterion.

@@ -1,6 +1,6 @@
 # 020d — 0.12.0 was never released
 
-- **Status:** revised after its spec review; waits for its re-check. The review ([`reviews/020d-0-12-0-was-never-released-spec-2026-11-17.md`](../reviews/020d-0-12-0-was-never-released-spec-2026-11-17.md)) said "does not land yet", with 1 High, 2 Medium and 8 Low findings. "Review", below, maps each finding to its fix.
+- **Status:** fit to build once the batch lands (the spec review's re-check, 2026-11-17; its two wording notes written in by the design lead). The review ([`reviews/020d-0-12-0-was-never-released-spec-2026-11-17.md`](../reviews/020d-0-12-0-was-never-released-spec-2026-11-17.md)) said "does not land yet", with 1 High, 2 Medium and 8 Low findings. "Review", below, maps each finding to its fix.
 - **Date:** 2026-11-17
 - **Author:** the design lead
 - **Kind:** specification. Not a small change: it touches more than one item or page (the changelog, the upgrade guide, `static/`, the token files, one item's comment and a dozen tests). It changes no item's interface, and adds no token and no dependency.
@@ -90,7 +90,7 @@ Today the guide tells that app to apply "0.12.0's notes" first. Those notes inst
      - `releaseEntry(log, version)` returns the text from `## <version>` to the next `\n## `. It throws, naming the heading, if either is missing.
      - `foldedParts(log)` returns `{ first, second }`: the 0.13.0 entry, split at the "Also since 0.11.0" line. It throws if that line is missing, or appears more than once.
 
-     Every test that reads the changelog's entries by text uses one of them. The guard (decision 11) bans the open-ended `indexOf` slice anywhere else in `tests/`.
+     Every test that reads the 0.13.0 or the folded 0.12.0 entry by text uses one of them; `registry.test.ts`'s older regex `entry()` helper, for 0.11.0 and before, stays, since it already fails loudly on a missing heading (the re-check's note). The guard (decision 11) bans the open-ended `indexOf` slice anywhere else in `tests/`.
    - **What each reader reads.** At the base there are 16 heading `indexOf` calls in 11 readers (§10), plus `entry("0.12.0")`:
 
      | Test, at the base | Spec | Reads | Its counts, after |
@@ -313,7 +313,7 @@ The spec review, 2026-11-17: [`reviews/020d-0-12-0-was-never-released-spec-2026-
    - Pointers: the eight first-part bullets whose head also heads a second-part bullet, and the doc-comment bullet, end with "See also" or "Of these". `022t`'s "nothing to change" reads "nothing to change for it". The second part's "(see `pluto-theme`)" reads "(see the code-map `kuiper-theme` bullet)".
    - Decision 7's table names each retargeted test and the part it reads. That includes `registry.test.ts:1473`, `:1496` and `:2028`, and 019's "11 names". T3 and T16 hold the split and the pointers.
 2. **Medium: the guide deletes the stale lines before it says to replace an app's own uses.** Fixed. Decision 8's new step 2 is the `grep` and the replacement, before step 3's deletion. T10 checks its command and its order.
-   - Not taken: the optional smoke case that walks the section end to end. The review's own probe showed the loss, and T10 holds the step's text and order. A smoke case would put a new fixture app into the harness, and that is a lane-E change of its own. It is noted for `030`'s re-base sweep.
+   - Not taken: the optional smoke case that walks the section end to end. The review's own probe showed the loss, and T10 holds the step's text and order. A smoke case would extend the existing upgrade smoke test on the `kit3` fixture (`tests/smoke/`, in no lane); it is left to a later change because the probe already proved the need and T10 holds the step (the re-check's note corrects the earlier reason). It is noted for `030`'s re-base sweep.
 3. **Medium: drawn on `b01e754`, with three builds landing first.** Fixed.
    - The spec is drawn on `71cb067` plus `lane-i-run5`'s changelog. It builds after the batch lands, re-reads that base and re-takes its counts (Depends on, Build order step 1, criterion 11).
    - There are six slices, `022t`'s at `registry.test.ts:2589` among them.
