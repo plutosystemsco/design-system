@@ -24,14 +24,26 @@ function git(args: string): string | undefined {
   }
 }
 
-// The footer's commit: a CI build's variable, else the short hash. With
-// neither, the version name is left to SvelteKit's default, a timestamp,
-// which the footer reads as "no commit" (all digits): no row, no word. The
-// commit's own date, so a rebuild of one commit is byte-identical; it reaches
-// the client bundle as import.meta.env.VITE_BUILT_AT.
-const name =
-  process.env.WORKERS_CI_COMMIT_SHA?.slice(0, 7) ??
-  git("rev-parse --short HEAD");
+/**
+ * 024i: the commit's name. Its first 7 characters, or more until one is a
+ * letter, so the name is never all digits, which the footer reads as "no
+ * commit". The full hash at worst.
+ */
+function commitName(sha: string | undefined): string | undefined {
+  if (!sha) return undefined;
+  let n = 7;
+  while (n < sha.length && /^\d+$/.test(sha.slice(0, n))) n++;
+  return sha.slice(0, n);
+}
+
+// The footer's commit: a CI build's variable, else the hash. With neither,
+// the version name is left to SvelteKit's default, a timestamp, which the
+// footer reads as "no commit" (all digits): no row, no word. The commit's own
+// date, so a rebuild of one commit is byte-identical; it reaches the client
+// bundle as import.meta.env.VITE_BUILT_AT.
+const name = commitName(
+  process.env.WORKERS_CI_COMMIT_SHA ?? git("rev-parse HEAD"),
+);
 const builtAt = git("log -1 --format=%cI");
 if (builtAt) process.env.VITE_BUILT_AT = builtAt;
 

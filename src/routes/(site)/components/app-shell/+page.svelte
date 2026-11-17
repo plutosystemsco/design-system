@@ -149,8 +149,16 @@ function git(args: string): string | undefined {
   }
 }
 
-const name =
-  process.env.WORKERS_CI_COMMIT_SHA?.slice(0, 7) ?? git("rev-parse --short HEAD");
+// The first 7 characters, or more until one is a letter: the layout reads
+// an all-digit name as no commit.
+function commitName(sha: string | undefined): string | undefined {
+  if (!sha) return undefined;
+  let n = 7;
+  while (n < sha.length && /^\\d+$/.test(sha.slice(0, n))) n++;
+  return sha.slice(0, n);
+}
+
+const name = commitName(process.env.WORKERS_CI_COMMIT_SHA ?? git("rev-parse HEAD"));
 const builtAt = git("log -1 --format=%cI");
 if (builtAt) process.env.VITE_BUILT_AT = builtAt;
 
@@ -160,12 +168,16 @@ export default defineConfig({
   ],
 });`}</code
         ></pre>
-      The layout reads<code>version</code> from <code>$app/env</code>
+      The layout reads
+      <code>version</code> from <code>$app/env</code>
       (SvelteKit 3's module; SvelteKit 2.70 carries it too) and shows it only when
       it is not all digits: without git and without the host's variable the name is
       SvelteKit's default, a timestamp, and the footer shows no commit row and no
-      built row. <code>VITE_BUILT_AT</code> is the commit's own date, so a rebuild
-      of one commit is byte-identical.
+      built row. So <code>commitName</code> takes a hash's first 7 characters,
+      or more until one is a letter: a commit such as <code>6482736</code> is
+      named
+      <code>648273658d</code>, not hidden. <code>VITE_BUILT_AT</code> is the commit's
+      own date, so a rebuild of one commit is byte-identical.
     </li>
     <li>
       With <code>STICKY</code> set, or with a sidebar, whose header is always
