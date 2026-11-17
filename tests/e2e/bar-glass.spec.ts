@@ -247,6 +247,60 @@ function translucent(page: Page) {
 }
 
 /**
+ * 022x (c): every finite animation on what `translucent` reads, the
+ * panel's descendants, has finished: a hover's colour fade (the toggle's is
+ * 200 ms) and the fade of the control it left. 250 ms after a hover is
+ * enough on an idle machine; on a loaded runner the toggle's background was
+ * read mid-fade, at an alpha of 0.173 (the fifth matrix run, §2).
+ * Animations that start while it waits are waited for too. The panel's own
+ * hover sheen, on its `::after` (600 ms), is not read, so not waited for.
+ */
+function transitionsDone(page: Page) {
+  return page
+    .locator(PANEL)
+    .first()
+    .evaluate(async (panel) => {
+      for (;;) {
+        const running = panel.getAnimations({ subtree: true }).filter((a) => {
+          const effect = a.effect as KeyframeEffect | null;
+          return (
+            a.playState === "running" &&
+            !!effect?.target &&
+            effect.target !== panel &&
+            !effect.pseudoElement &&
+            effect.getComputedTiming().iterations !== Infinity
+          );
+        });
+        if (running.length === 0) return;
+        await Promise.all(running.map((a) => a.finished.catch(() => null)));
+      }
+    });
+}
+
+/** 022x (c): the panel's running animations, by target and property, for an annotation. */
+function running(page: Page) {
+  return page
+    .locator(PANEL)
+    .first()
+    .evaluate((panel) =>
+      panel
+        .getAnimations({ subtree: true })
+        .filter((a) => a.playState === "running")
+        .map((a) => {
+          const effect = a.effect as KeyframeEffect | null;
+          const el = effect?.target as Element | null | undefined;
+          const name =
+            el?.getAttribute("data-slot") ?? el?.tagName.toLowerCase() ?? "?";
+          const property =
+            (a as CSSTransition).transitionProperty ??
+            (a as CSSAnimation).animationName ??
+            "";
+          return `${name}${effect?.pseudoElement ?? ""} ${property} at ${Math.round(Number(a.currentTime))} ms`;
+        }),
+    );
+}
+
+/**
  * 019a decision 3 (the owner, 2026-11-15): only a layer above other content
  * is translucent. Everything inside the bar sits on the bar's level, so no
  * descendant lets the colour behind it show through, at rest or on hover.
@@ -294,11 +348,41 @@ test.describe("nothing inside the bar is translucent", () => {
         for (const control of await controls.all()) {
           if (!(await control.isVisible())) continue;
           await control.hover();
-          await page.waitForTimeout(250);
           const label =
             (await control.getAttribute("aria-label")) ??
             (await control.innerText()).trim();
-          expect(await translucent(page), `hovering ${label}`).toEqual([]);
+          // The change review's finding 5: the hover took, so the read is
+          // of the hover state, not a clear rest that passes unseen.
+          await expect
+            .poll(() => control.evaluate((el) => el.matches(":hover")), {
+              message: `${label} is hovered`,
+            })
+            .toBe(true);
+          await page.waitForTimeout(250);
+          await transitionsDone(page);
+          // 022x (c), after the change review: once in about 200 loaded
+          // runs here, the toggle still read mid-way after `transitionsDone`
+          // (alpha 0.886, at 390): the end of a late fade-in, or the start
+          // of a fade-out after a lost hover. So the read is polled, and
+          // (the re-check's finding 7) the hover with it: a pass is a read
+          // of the hovered control with no translucent fill (a read taken
+          // before a fade has moved, at alpha 0, counts as clear: the
+          // re-check's finding 8). A hover state that stays
+          // translucent, or a hover lost, fails after 5 s. A translucent
+          // first read is annotated, so CI's report keeps each case.
+          const hovered = async () =>
+            (await control.evaluate((el) => el.matches(":hover")))
+              ? await translucent(page)
+              : ["not hovered"];
+          const first = await hovered();
+          if (first.length > 0)
+            test.info().annotations.push({
+              type: "022x: a translucent first read",
+              description: `hovering ${label}: ${JSON.stringify(first)}; running: ${JSON.stringify(await running(page))}`,
+            });
+          await expect
+            .poll(hovered, { message: `hovering ${label}`, timeout: 5_000 })
+            .toEqual([]);
         }
       });
 });

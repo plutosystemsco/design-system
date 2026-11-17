@@ -576,9 +576,98 @@ describe("C1, C2: the chart", () => {
       "table, Visitors by month",
       "Month",
     ];
-    expect(ids(C2(steps, ["Desktop 186"], true))).toEqual(["C2"]);
-    expect(ids(C2(steps, ["Mobile 80"], true))).toEqual([]);
-    expect(ids(C2(steps, ["Mobile 80"], false))).toEqual(["X0"]);
+    expect(ids(C2(steps, ["Desktop 186"], order))).toEqual(["C2"]);
+    expect(ids(C2(steps, ["Mobile 80"], order))).toEqual([]);
+    const outOfOrder = [steps[2]!, steps[0]!, steps[1]!, steps[3]!];
+    expect(ids(C2(outOfOrder, ["Mobile 80"], order))).toEqual(["X0"]);
+  });
+
+  // 022x (b): run 5, VoiceOver with Chromium (the fifth matrix run, §3.2).
+  // The two cells' phrases, their step numbers, and the walk's order (the
+  // name, the 14 ticks, "Show as table", then "Day") are as the log reads;
+  // the other steps are shaped to fit.
+  const FIGURE = "Visitors per weekday, last week";
+  const chart = [FIGURE, "Show as table", "Day"];
+  const TOOLTIPS = [412, 538, 497, 561, 433, 188, 164].map(
+    (v) => `Visitors ${v}`,
+  );
+  const ticks = [
+    ...["0", "100", "200", "300", "400", "500", "600"],
+    ...["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+  ];
+  const run5 = [
+    FIGURE,
+    ...ticks,
+    "Show as table",
+    "Day column 1 of 2",
+    "Visitors column 2 of 2",
+    "end of row",
+    "row 2 of 8",
+    "Day Mon column 1 of 2",
+    "Visitors 412 column 2 of 2",
+    "Day Tue column 1 of 2",
+    "Visitors 538 column 2 of 2",
+    "Day Wed column 1 of 2",
+  ];
+  test("022x: run 5's VO chr walk, 25 steps, its cells at steps 22 and 24", () => {
+    expect(run5).toHaveLength(25);
+    expect(run5[21]).toBe("Visitors 412 column 2 of 2");
+    expect(run5[23]).toBe("Visitors 538 column 2 of 2");
+    expect(ids(C1(run5, chart))).toEqual([]);
+  });
+  test("022x: C2 reads only the steps before the first header; the table's cells are not the tooltip", () => {
+    expect(C2(run5, TOOLTIPS, chart)).toEqual([]);
+  });
+  test("022x: a tooltip text before the first header still fails", () => {
+    const hovered = [run5[0]!, "Visitors 412", ...run5.slice(1)];
+    expect(C2(hovered, TOOLTIPS, chart)).toEqual([
+      {
+        rule: "C2",
+        message: `the pointer tooltip's "Visitors 412" was spoken`,
+      },
+    ]);
+  });
+  test("022x: the boundary is the header C1 found in order, not an earlier phrase that holds it", () => {
+    // "Day" is inside "weekday", in the figure's name: the boundary must be
+    // the header after the caption, or this tooltip text would go unread.
+    const hovered = [...run5.slice(0, 15), "Visitors 188", ...run5.slice(15)];
+    expect(ids(C2(hovered, TOOLTIPS, chart))).toEqual(["C2"]);
+  });
+  test("022x: within the header's own phrase, only the speech before the header is read", () => {
+    const joined = [
+      FIGURE,
+      "Show as table",
+      "Visitors 164 Day column 1 of 2 Visitors 412",
+    ];
+    expect(C2(joined, TOOLTIPS, chart)).toEqual([
+      {
+        rule: "C2",
+        message: `the pointer tooltip's "Visitors 164" was spoken`,
+      },
+    ]);
+  });
+  // The change review's finding 2: guidepup logs "" for a step that spoke
+  // nothing, and the walk's log is kept raw.
+  for (const silent of [1, 2, 3])
+    test(`022x: ${silent} silent step(s) at the walk's start move no position`, () => {
+      const walk = [...Array<string>(silent).fill(""), ...run5];
+      expect(ids(C1(walk, chart))).toEqual([]);
+      expect(C2(walk, TOOLTIPS, chart)).toEqual([]);
+      const hovered = [...walk.slice(0, silent + 1), "Visitors 412"];
+      expect(
+        ids(C2([...hovered, ...walk.slice(silent + 1)], TOOLTIPS, chart)),
+      ).toEqual(["C2"]);
+    });
+  // The change review's finding 3: no header, no boundary.
+  test("022x: C2 with fewer than three entries in its order is X0", () => {
+    const walk = [FIGURE, "Visitors 164", "Show as table", "Day"];
+    expect(C2(walk, TOOLTIPS, [])).toEqual([
+      { rule: "X0", message: "C2: no header to bound the walk" },
+    ]);
+    expect(C2(walk, TOOLTIPS, [FIGURE])).toEqual([
+      { rule: "X0", message: "C2: no header to bound the walk" },
+    ]);
+    expect(ids(C2(walk, TOOLTIPS, [FIGURE, "Show as table"]))).toEqual(["X0"]);
   });
 });
 

@@ -506,6 +506,47 @@ export function T2(dom: {
 }
 
 /**
+ * Where each of `inOrder` is spoken whole in `steps`, in that order: its
+ * position in the steps' normalised speech, joined by one space, and its
+ * phrase. Spoken whole is within one phrase, or two adjacent ones. On the
+ * first that is not, its index in `inOrder`.
+ */
+function inOrderAt(
+  steps: string[],
+  inOrder: string[],
+): { found: { at: number; phrase: number }[] } | { missing: number } {
+  // The log as one string, each phrase's start known, so "in that order"
+  // compares positions in speech, not phrase numbers.
+  const n = steps.map(normalise);
+  const starts: number[] = [];
+  let joined = "";
+  // Each start is taken before its phrase is appended: after the space,
+  // if one goes in. The change review's finding 2: silent steps ("") at the
+  // start add no space, so they move no position.
+  for (const p of n) {
+    starts.push(joined.length + (joined ? 1 : 0));
+    joined += (joined ? " " : "") + p;
+  }
+  const phraseAt = (pos: number) => {
+    let i = 0;
+    while (i + 1 < starts.length && starts[i + 1]! <= pos) i++;
+    return i;
+  };
+  const found: { at: number; phrase: number }[] = [];
+  let from = 0;
+  for (const [k, text] of inOrder.entries()) {
+    const want = normalise(text);
+    let at = joined.indexOf(want, from);
+    while (at >= 0 && phraseAt(at + want.length - 1) - phraseAt(at) > 1)
+      at = joined.indexOf(want, at + 1);
+    if (!want || at < 0) return { missing: k };
+    found.push({ at: at - starts[phraseAt(at)]!, phrase: phraseAt(at) });
+    from = at + want.length;
+  }
+  return { found };
+}
+
+/**
  * C1. The chart: within the steps, the figure's name, the table's caption
  * and its first column header are spoken whole, in that order. 022q
  * decision 6: the walk takes 25 steps, room for the name, `004`'s fourteen
@@ -513,47 +554,42 @@ export function T2(dom: {
  */
 export function C1(steps: string[], inOrder: string[]): Fault[] {
   if (!nonEmpty(steps)) return x0("C1: the steps are empty");
-  // The log as one string, each phrase's start known, so "in that order"
-  // compares positions in speech, not phrase numbers.
-  const n = steps.map(normalise);
-  const starts: number[] = [];
-  let joined = "";
-  for (const p of n) {
-    starts.push(joined.length);
-    joined += (joined ? " " : "") + p;
-    if (starts.length > 1) starts[starts.length - 1]! += 1;
-  }
-  const phraseAt = (pos: number) => {
-    let i = 0;
-    while (i + 1 < starts.length && starts[i + 1]! <= pos) i++;
-    return i;
-  };
-  let from = 0;
-  for (const text of inOrder) {
-    const want = normalise(text);
-    let at = joined.indexOf(want, from);
-    // Spoken whole: within one phrase, or two adjacent ones.
-    while (at >= 0 && phraseAt(at + want.length - 1) - phraseAt(at) > 1)
-      at = joined.indexOf(want, at + 1);
-    if (!want || at < 0)
-      return fault(
-        "C1",
-        `"${text}" was not spoken whole${from ? " after the one before it" : ""}`,
-      );
-    from = at + want.length;
-  }
+  const r = inOrderAt(steps, inOrder);
+  if ("missing" in r)
+    return fault(
+      "C1",
+      `"${inOrder[r.missing]}" was not spoken whole${r.missing ? " after the one before it" : ""}`,
+    );
   return [];
 }
 
-/** C2. None of the chart's tooltip texts is spoken in those steps, while C1 holds. */
+/**
+ * C2. None of the chart's tooltip texts is spoken before the table, while
+ * C1 holds. `inOrder` is C1's: the figure's name, the caption, and the
+ * first header last. Fewer than three entries is X0: no header bounds it.
+ *
+ * 022x (b): the walk reads only the speech before that header, where C1
+ * found it in order. 25 steps reach the table's cells, and VoiceOver reads
+ * a cell with its column header, "Visitors 412 column 2 of 2": the
+ * tooltip's words, but the table's speech (the fifth matrix run, §3.2).
+ */
 export function C2(
   steps: string[],
   tooltipTexts: string[],
-  c1Held: boolean,
+  inOrder: string[],
 ): Fault[] {
-  if (!c1Held) return x0("C2: C1 does not hold");
+  // The change review's finding 3: the boundary is the last entry, the
+  // first header; with fewer than three there is none.
+  if (inOrder.length < 3) return x0("C2: no header to bound the walk");
+  const r = nonEmpty(steps) ? inOrderAt(steps, inOrder) : { missing: 0 };
+  if ("missing" in r) return x0("C2: C1 does not hold");
+  const header = r.found[r.found.length - 1]!;
+  const before = [
+    ...steps.slice(0, header.phrase),
+    normalise(steps[header.phrase]!).slice(0, header.at),
+  ];
   return tooltipTexts
-    .filter((t) => spokenWhole(steps, t))
+    .filter((t) => spokenWhole(before, t))
     .map((t) => ({
       rule: "C2" as const,
       message: `the pointer tooltip's "${t}" was spoken`,
