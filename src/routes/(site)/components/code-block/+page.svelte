@@ -53,11 +53,12 @@
       a visible label in the header or beside it, such as “Error output”.
     </li>
     <li>
-      The copy button is 32 px, named “Copy code”, then “Copied” for two
-      seconds, which a status region beside it announces. When the browser
-      refuses the write, the region says “Could not copy” and the name stays
-      “Copy code”, so the button can be tried again. An icon passed to the title
-      is decoration: give it <code>aria-hidden="true"</code>.
+      The copy button is 32 px and named “Copy code”. After a copy it shows a
+      check for two seconds, and a status region beside it says “Copied”. The
+      name stays “Copy code”, so “Copied” comes from the status alone. When the
+      browser refuses the write, the region says “Could not copy”, and the
+      button can be tried again. An icon passed to the title is decoration: give
+      it <code>aria-hidden="true"</code>.
     </li>
     <li>
       Highlight colours are the fourteen text roles of <code>--code-*</code>.

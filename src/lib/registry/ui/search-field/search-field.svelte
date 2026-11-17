@@ -67,21 +67,17 @@
   let paused = $state(false);
   let said = $state("");
   let timer: ReturnType<typeof setTimeout> | undefined;
-  let hush: ReturnType<typeof setTimeout> | undefined;
   let pause = 0;
   let spoken = true;
   let clearing = false;
 
-  /** How long a count stays in the status, in ms: the toast's time. */
-  const SPEECH_MS = 1000;
-
-  // One text written twice is not spoken twice. So the status is emptied a
-  // second after its count, as the toast empties its announcer, or at the
-  // next keystroke if that comes first. It is then empty for the whole
-  // pause before the next count, so the same count is a change (022r).
+  // One text written twice is not spoken twice. So each keystroke empties
+  // the status, and it stays empty for the whole pause before the next
+  // count, so the same count is a change (022r). No timer empties a count:
+  // it stays until the field next changes, for a reader that comes to it
+  // late.
   function restart() {
     clearTimeout(timer);
-    clearTimeout(hush);
     said = "";
     pause += 1;
     paused = false;
@@ -96,14 +92,9 @@
     if (resultsFor !== undefined && resultsFor !== value) return;
     spoken = true;
     said = count;
-    clearTimeout(hush);
-    hush = setTimeout(() => (said = ""), SPEECH_MS);
   });
 
-  onDestroy(() => {
-    clearTimeout(timer);
-    clearTimeout(hush);
-  });
+  onDestroy(() => clearTimeout(timer));
 
   /** Empties the field: the DOM first, then `value`, then the app hears it. */
   function clear(input: HTMLInputElement | null) {
@@ -112,6 +103,8 @@
     pause += 1;
     paused = false;
     spoken = true;
+    // The query is gone, so its count goes too.
+    said = "";
     input.value = "";
     value = "";
     clearing = true;
@@ -159,8 +152,8 @@
   is text, is a Tab stop, and returns focus to the input. Escape clears a
   filled, editable field and stops there; otherwise it passes on. A hidden
   status, present from the first render, speaks the result count once
-  typing pauses, for what is typed now. It is emptied a second later, or at
-  the next keystroke, so the same count is heard again (022r). WebKit's own
+  typing pauses, for what is typed now. The next keystroke, Clear or Escape
+  empties it, so the same count is heard again (022r). WebKit's own
   cancel button is hidden with display: none: Linux WebKit draws it as a
   mask that appearance: none leaves in place (022n).
 -->

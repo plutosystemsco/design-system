@@ -1130,19 +1130,27 @@ test.describe("behaviours", () => {
   test.describe("with the clipboard granted", () => {
     test.use({ permissions: clipboard });
 
-    test("Enter on the copy button sets the status text to Copied and the button's name", async ({
+    test("Enter on the copy button sets the status text to Copied, and the button keeps its name", async ({
       page,
     }) => {
+      // The page's clock, paused before Enter at a time far ahead, stands
+      // still while the name is read, so the 2 s reset cannot pass the
+      // assertion by accident.
+      const t0 = new Date("2026-11-17T10:00:00Z");
+      await page.clock.install({ time: t0 });
       await open(page, componentPath("code-block"));
-      // Located by its slot: its name changes on success.
       const button = fixture(page).locator(
         '[data-slot="code-block-copy-button"]',
       );
       await expect(button).toHaveAccessibleName("Copy code");
+      await page.clock.pauseAt(new Date(t0.getTime() + 600_000));
       await button.focus();
       await page.keyboard.press("Enter");
-      await expect(button).toHaveAccessibleName("Copied");
       await expect(fixture(page).getByRole("status")).toHaveText("Copied");
+      // 022v: "Copied" is said once, by the status. The focused button's
+      // name stays "Copy code", so NVDA does not read "Copied" twice.
+      await expect(button).toHaveAttribute("data-copied", "true");
+      await expect(button).toHaveAccessibleName("Copy code");
     });
   });
 
