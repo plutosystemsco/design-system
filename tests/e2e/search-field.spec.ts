@@ -352,12 +352,15 @@ test.describe(
         await run(page, 17);
         await expect(status(page)).toHaveText("3 results");
         expect((await said(page)).slice(first)).toEqual(["", "3 results"]);
-        // 022r: the status is emptied a second after its count, and that
-        // empty write says nothing. What must not be written is a count.
+        // 022r: a keystroke empties the status, and that empty write says
+        // nothing. What must not be written is a count.
         const before = (await counts(page)).length;
         await clear(page).click();
         await run(page, 2000);
         expect((await counts(page)).slice(before)).toEqual([]);
+        // 022w: Clear empties the status too, so no count for a query that
+        // is gone stays in it.
+        await expect(status(page)).toHaveText("");
 
         // The review's finding 5: Escape within the pause cancels the
         // pending count, so nothing is written.
@@ -368,11 +371,21 @@ test.describe(
         await expect(box).toHaveValue("");
         await run(page, 2000);
         expect((await counts(page)).slice(before)).toEqual([]);
+
+        // 022w: Escape after a count empties the status, as Clear does.
+        await page.keyboard.type("des");
+        await run(page, 750);
+        await run(page, 17);
+        await expect(status(page)).toHaveText("3 results");
+        await page.keyboard.press("Escape");
+        await expect(box).toHaveValue("");
+        await run(page, 2000);
+        await expect(status(page)).toHaveText("");
       },
     );
 
     test(
-      "29b. a repeated count follows an empty status that lasts the pause (022r)",
+      "29b. every count follows an empty status that lasts the pause, and stays until the next keystroke (022r, 022w)",
       tag("live"),
       async ({ page }, info) => {
         await clocked(page, info, "filter");
@@ -382,35 +395,51 @@ test.describe(
         await run(page, 750);
         await run(page, 17);
         await expect(status(page)).toHaveText("3 results");
-        // The next letter at once, while the first count is still there:
-        // its count is the same, so only an empty status between the two
-        // makes the second a change a reader hears.
+        // 022w: left alone, the count stays. No timer empties it, so a
+        // reader that comes to it late still finds it.
+        const settled = (await writes(page)).length;
+        await run(page, 5000);
+        await expect(status(page)).toHaveText("3 results");
+        expect(
+          (await writes(page)).slice(settled),
+          "nothing is written while no key is pressed",
+        ).toEqual([]);
+        // The next letter empties the status at once. Its count is the
+        // same, so only the empty status between the two makes the second
+        // a change a reader hears.
         await page.keyboard.type("i");
+        await expect(status(page)).toHaveText("");
         await run(page, 750);
         await run(page, 17);
         await expect(status(page)).toHaveText("3 results");
+        // And again at once, before the count has been there a second:
+        // "designe" is in one project's name.
+        await page.keyboard.type("gn");
+        await run(page, 200);
+        await page.keyboard.type("e");
+        await run(page, 750);
+        await run(page, 17);
+        await expect(status(page)).toHaveText("1 result");
+        await run(page, 5000);
+        await expect(status(page)).toHaveText("1 result");
         const log = await writes(page);
-        const at = log.findLastIndex((w) => w.text === "3 results");
-        expect(log.filter((w) => w.text === "3 results")).toHaveLength(2);
-        const repeat = log[at]!;
-        const empty = log[at - 1]!;
-        expect(empty.text, "the status is emptied before the repeat").toBe("");
         expect(
-          repeat.t - empty.t,
-          "the status stays empty for the whole pause before the repeat",
-        ).toBeGreaterThanOrEqual(750);
-        // Left alone, the count stays for a second, as a toast's message
-        // stays in its announcer, and then the status is emptied.
-        await run(page, 1000 - 17 - 1);
-        await expect(status(page)).toHaveText("3 results");
-        await run(page, 1);
-        await expect(status(page)).toHaveText("");
-        const last = (await writes(page)).at(-1)!;
-        expect(last.text).toBe("");
-        expect(
-          last.t - repeat.t,
-          "the count is there for a second",
-        ).toBeGreaterThanOrEqual(1000);
+          log.map((w) => w.text),
+          "each count is written once, after an empty status",
+        ).toEqual(["", "3 results", "", "3 results", "", "1 result"]);
+        // The first count's empty write is the page's own, from hydration,
+        // so its gap holds trivially; the other two are the keystrokes'.
+        for (const [i, w] of log.entries()) {
+          if (!w.text) continue;
+          const empty = log[i - 1]!;
+          expect(empty.text, `the status is emptied before "${w.text}"`).toBe(
+            "",
+          );
+          expect(
+            w.t - empty.t,
+            `the status stays empty for the whole pause before "${w.text}"`,
+          ).toBeGreaterThanOrEqual(750);
+        }
       },
     );
 
