@@ -13,10 +13,14 @@
  * 022q decision 6: 25 steps, room for the name, `004`'s fourteen tick
  * labels (a layerchart figure exposes its ticks and nothing else), the
  * caption and a header. 25 VoiceOver steps take 4.2 to 5.8 minutes, past
- * the suite's 5-minute timeout, so this file's test has its own 7-minute
- * timeout and runs once, with no retry: an exception to 022 decision 10,
- * which keeps shard 1 inside its 40-minute deadline. A failed C1 is read
- * from its phrases, which the walk records whole.
+ * the suite's 5-minute timeout, so this file's test has its own timeout
+ * and runs once, with no retry: an exception to 022 decision 10, which
+ * keeps shard 1 inside its 40-minute deadline. A failed C1 is read from its
+ * phrases, which the walk records whole.
+ *
+ * 022ad amends decision 6's 7 minutes to 8: a recovered restart of
+ * VoiceOver in `open()` costs about 85 s before the walk begins, and the
+ * walk's 5.8 must still fit. Shard 1 ran 29.5 of its 40 minutes in run 7.
  *
  * The example's table has no `<caption>`: its disclosure's summary, "Show
  * as table", names it, so that is the caption the rule reads. The
@@ -25,7 +29,7 @@
 import { declared, test } from "./fixtures.ts";
 import { C1, C2 } from "./rules.ts";
 
-test.describe.configure({ retries: 0, timeout: 7 * 60_000 });
+test.describe.configure({ retries: 0, timeout: 8 * 60_000 });
 
 const STEPS = 25;
 

@@ -30,6 +30,79 @@ export const READY = "main[data-view-ready], body[data-view-ready]";
  */
 export const WAIT_MS = 10_000;
 
+/**
+ * 022ad: how long guidepup's `navigateToWebContent()` may take, and how
+ * long a restart of VoiceOver may take. The helper's VoiceOver path opens
+ * the Item Chooser in a loop with no bound
+ * (`@guidepup/playwright/lib/navigateVoiceOverToWebContent.js`, `openItemChooser`),
+ * so a chooser that never says "Item Chooser" spins until the test times
+ * out. Teardown's `stop()` then makes the loop's next call throw "VoiceOver
+ * not running" (runs 5, 6 and 7: each attempt 5.1 or 7.1 minutes).
+ */
+export const HELPER_MS = 60_000;
+export const RESTART_MS = 60_000;
+/**
+ * 022ad, the change review's finding 1: how long reading guidepup's logs
+ * after a stall may take. Its client waits for the action in flight first.
+ */
+export const LOG_MS = 5_000;
+/** How many of the stall's last distinct phrases `open: stalled` keeps. */
+const STALL_PHRASES = 10;
+
+/** The last `n` distinct entries of `list`, each at its last place. */
+function lastDistinct(list: readonly string[], n: number): string[] {
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (let i = list.length - 1; i >= 0 && out.length < n; i--) {
+    const entry = list[i] ?? "";
+    if (!entry || seen.has(entry)) continue;
+    seen.add(entry);
+    out.unshift(entry);
+  }
+  return out;
+}
+
+/** guidepup's `ERR_VOICE_OVER_NOT_RUNNING` (`macOS/errors.js`), not exported. */
+const NOT_RUNNING = "VoiceOver not running";
+
+/** How one bounded call ended: in time, or with why it did not. */
+type Ended = { ok: true } | { ok: false; why: string };
+
+/**
+ * Race `run` against `ms`. Resolves `{ ok: true }` if it ends in time; a
+ * stall, or an error `late` accepts, as why; any other error is thrown on.
+ * The losing promise keeps a handler, so a later rejection is not unhandled.
+ */
+async function bounded(
+  run: Promise<unknown>,
+  ms: number,
+  late: (e: unknown, s: string) => string | null = () => null,
+): Promise<Ended> {
+  const t0 = Date.now();
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  try {
+    return await Promise.race([
+      run.then(
+        (): Ended => ({ ok: true }),
+        (e: unknown): Ended => {
+          const why = late(e, `${((Date.now() - t0) / 1000).toFixed(1)} s`);
+          if (why === null) throw e;
+          return { ok: false, why };
+        },
+      ),
+      new Promise<Ended>((resolve) => {
+        timer = setTimeout(
+          () =>
+            resolve({ ok: false, why: `did not end within ${ms / 1000} s` }),
+          ms,
+        );
+      }),
+    ]);
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 type WaitState = "attached" | "detached" | "visible" | "hidden";
 
 /** Each page's `Sr`, so `appears()` can record on the test that owns the page. */
@@ -62,8 +135,21 @@ function focusedElement(): string {
   return `${a.tagName.toLowerCase()}[data-slot="${a.getAttribute("data-slot") ?? ""}"] "${text.length > 60 ? `${text.slice(0, 60)}…` : text}"`;
 }
 
-/** The reader `Sr` drives ("voiceover", "nvda", "orca" or "dry"), and whether the run is dry. */
-export type SrOptions = { reader: string; dry: boolean };
+/**
+ * The reader `Sr` drives ("voiceover", "nvda", "orca" or "dry"), and whether
+ * the run is dry. 022ad: `start` is the fixture's `screenReaderStartOptions`,
+ * which a restart of VoiceOver passes again (without it, no restart);
+ * `helperMs`, `restartMs` and `logMs` replace `HELPER_MS`, `RESTART_MS`
+ * and `LOG_MS`, for a unit test.
+ */
+export type SrOptions = {
+  reader: string;
+  dry: boolean;
+  start?: Parameters<ScreenReaderPlaywright["start"]>[0];
+  helperMs?: number;
+  restartMs?: number;
+  logMs?: number;
+};
 
 /** The windows of one test, its sentinel, and its judgement. */
 export class Sr {
@@ -130,6 +216,11 @@ export class Sr {
    * page's first tab stop: a test that then `focus()`es that same element
    * hears an empty focus window, so it blurs first (tooltip T2). A dry run
    * calls no helper and lays no cover, so the check never fires there.
+   *
+   * 022ad: the helper is bounded (`toWebContent()`). One that stalls, or
+   * throws "VoiceOver not running", fails as X0 naming it, within
+   * `HELPER_MS`, not at the test's timeout. Under VoiceOver it is first
+   * retried once after a restart of VoiceOver.
    */
   async open(path: string, ready = READY): Promise<void> {
     await this.page.goto(path);
@@ -142,25 +233,145 @@ export class Sr {
     const url = this.page.url();
     await this.page.evaluate(layCover);
     let hit = false;
+    let stalled: string | null;
     try {
-      await this.reader.navigateToWebContent();
+      stalled = await this.toWebContent();
     } finally {
       // A page the click took away has no cover to lift.
       hit = await this.page.evaluate(liftCover).catch(() => false);
     }
     const faults: Fault[] = [];
+    if (stalled) faults.push({ rule: "X0", message: stalled });
     if (this.page.url() !== url)
       faults.push({
         rule: "X0",
         message: `open: navigateToWebContent() moved the page from ${url} to ${this.page.url()}`,
       });
-    if (this.options.reader === "nvda" && !hit)
+    if (this.options.reader === "nvda" && !hit && !stalled)
       faults.push({
         rule: "X0",
         message:
           "open: the cover took no click, so navigateToWebContent()'s click may have reached the page",
       });
     if (faults.length) await this.judge(faults);
+  }
+
+  /**
+   * 022ad: guidepup's helper, bounded by `HELPER_MS`. Resolves null once it
+   * ends, or the X0's message if it does not. A stall and a throw of "VoiceOver
+   * not running" count as not ending; any other error is thrown on, as before.
+   *
+   * Under VoiceOver, with the fixture's start options, a helper that does
+   * not end gets one restart: `stop()`, whose stopping flag makes the
+   * stalled loop's next guidepup call throw, so the loop ends (and removes
+   * its marker) before `start()`; then the helper once more, bounded again.
+   * The restart is `RESTART_MS`-bounded.
+   *
+   * The change review's finding 1: before `stop()` drops guidepup's logs,
+   * what VoiceOver said in the stall (its last distinct phrases, and their
+   * item text) is kept as the window `open: stalled`, and its last phrase
+   * goes in the X0. The restart is recorded as the window `open: restart`;
+   * both sit beside the others in `phrases.json`. The `[sr]` line in the log
+   * names the outcome and times the stall, the restart and the second helper.
+   */
+  private async toWebContent(): Promise<string | null> {
+    const ms = this.options.helperMs ?? HELPER_MS;
+    const secs = (t0: number) => `${((Date.now() - t0) / 1000).toFixed(1)} s`;
+    const once = () => {
+      const run = this.reader.navigateToWebContent();
+      const settled = run.then(
+        () => undefined,
+        () => undefined,
+      );
+      const ended = bounded(run, ms, (e, s) =>
+        e instanceof Error && e.message === NOT_RUNNING
+          ? `threw "${NOT_RUNNING}" after ${s}`
+          : null,
+      );
+      return { ended, settled };
+    };
+    let t0 = Date.now();
+    const first = once();
+    const one = await first.ended;
+    if (one.ok) return null;
+    const times = [`stall ${secs(t0)}`];
+    const stalled = `open: navigateToWebContent() ${one.why}`;
+    if (this.options.reader !== "voiceover" || !this.options.start)
+      return stalled;
+    const said = await this.stallEvidence();
+    const report = (outcome: string) => {
+      const note = `${outcome} (${times.join(", ")})`;
+      this.windows["open: restart"] = [note];
+      console.log(`[sr] ${this.info.title}: ${note}`);
+    };
+    t0 = Date.now();
+    const restart = await bounded(
+      this.restart(first.settled),
+      this.options.restartMs ?? RESTART_MS,
+      (e) => `failed: ${e instanceof Error ? e.message : String(e)}`,
+    );
+    times.push(`restart ${secs(t0)}`);
+    if (!restart.ok) {
+      const x0 = `${stalled}; VoiceOver's restart ${restart.why}${said}`;
+      report(x0);
+      return x0;
+    }
+    t0 = Date.now();
+    const two = await once().ended;
+    times.push(`helper again ${secs(t0)}`);
+    if (two.ok) {
+      report(
+        `${stalled}; VoiceOver was restarted, and the helper ended${said}`,
+      );
+      return null;
+    }
+    const x0 = `${stalled}, and again after VoiceOver was restarted: ${two.why}${said}`;
+    report(x0);
+    return x0;
+  }
+
+  /**
+   * 022ad, finding 1: what VoiceOver said while the helper stalled, read
+   * before `stop()` drops it, each log bounded by `LOG_MS`. Records the
+   * window `open: stalled` and its item text; returns the X0's clause.
+   */
+  private async stallEvidence(): Promise<string> {
+    const ms = this.options.logMs ?? LOG_MS;
+    const read = async (
+      log: () => Promise<string[]>,
+    ): Promise<string[] | string> => {
+      let got: string[] = [];
+      const ended = await bounded(
+        log().then((l) => {
+          got = [...l];
+        }),
+        ms,
+        (e) => `failed: ${e instanceof Error ? e.message : String(e)}`,
+      );
+      return ended.ok ? lastDistinct(got, STALL_PHRASES) : ended.why;
+    };
+    const phrases = await read(() => this.reader.spokenPhraseLog());
+    const items = await read(() => this.reader.itemTextLog());
+    this.windows["open: stalled"] = Array.isArray(phrases) ? phrases : [];
+    this.windows["open: stalled: item text"] = Array.isArray(items)
+      ? items
+      : [];
+    if (!Array.isArray(phrases))
+      return `; guidepup's spoken-phrase log ${phrases}`;
+    const last = phrases.at(-1);
+    return last === undefined
+      ? "; VoiceOver said nothing in the stall"
+      : `; VoiceOver last said ${JSON.stringify(last)} in the stall`;
+  }
+
+  /** 022ad: stop VoiceOver, let the stalled helper end, and start it again. */
+  private async restart(settled: Promise<void>): Promise<void> {
+    // guidepup's own flag, not the process, says "not running": nothing to stop.
+    await this.reader.stop().catch((e: unknown) => {
+      if (!(e instanceof Error && e.message === NOT_RUNNING)) throw e;
+    });
+    await settled;
+    await this.reader.start(this.options.start);
   }
 
   /**
