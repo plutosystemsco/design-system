@@ -1,6 +1,6 @@
 # 032b — ESLint
 
-- **Status:** revised after its spec review; waits for its re-check. The review ([`reviews/032b-eslint-spec-2026-11-17.md`](../reviews/032b-eslint-spec-2026-11-17.md)) said "not yet fit to build", with 2 Medium and 8 Low findings. Each is answered under "Review". Not built.
+- **Status:** fit to build once the `v0.13.0` tag and `032a` have landed (the spec review's re-check, 2026-11-17). Two builder notes from the re-check: the item disable-comment test lists the five file-and-rule pairs, not a count; and its comparison config matches decision 4's Svelte block, `.svelte.js` files and `extraFileExtensions` included. The review ([`reviews/032b-eslint-spec-2026-11-17.md`](../reviews/032b-eslint-spec-2026-11-17.md)) said "not yet fit to build", with 2 Medium and 8 Low findings. Each is answered under "Review". Not built.
 - **Date:** 2026-11-17
 - **Author:** a spec author, for the design lead
 - **Kind:** a specification in lane E. It adds a tool and four pinned development dependencies, so it is not a small change (constitution §5). It changes no item's interface, adds no token, and names no package in any item. Its fix commit touches eight items' source (lane I, and one comment in lane T's `theme` item) and seven site files (lane S), each by a line or two (decisions 14 and 15).
