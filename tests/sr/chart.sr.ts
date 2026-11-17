@@ -6,7 +6,9 @@
  * C1: from the element before the figure, within 25 `next()` steps, the
  * figure's name, the table's caption and its first column header are
  * spoken whole, in that order. C2: none of the tooltip's texts (the series
- * label with its value, as the tooltip formats it) is spoken in those steps.
+ * label with its value, as the tooltip formats it) is spoken in those steps
+ * before the first header (022x: the table's cells, which VoiceOver reads
+ * with their column header, say the same words).
  *
  * 022q decision 6: 25 steps, room for the name, `004`'s fourteen tick
  * labels (a layerchart figure exposes its ticks and nothing else), the
@@ -68,7 +70,7 @@ test(
       page.locator('[data-testid="chart-bars"] [data-slot="card-description"]'),
     );
     const steps = await sr.steps(STEPS);
-    const c1 = C1(steps, [FIGURE, CAPTION, FIRST_HEADER]);
-    await sr.judge(c1, C2(steps, TOOLTIPS, c1.length === 0));
+    const order = [FIGURE, CAPTION, FIRST_HEADER];
+    await sr.judge(C1(steps, order), C2(steps, TOOLTIPS, order));
   },
 );

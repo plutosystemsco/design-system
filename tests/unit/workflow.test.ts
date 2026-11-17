@@ -283,6 +283,37 @@ describe("022 test 3: matrix.yml", () => {
     ]);
   });
 
+  test("022y: before the tests, voiceover prints the Dock's hot corners, turns all four off, and restarts the Dock", () => {
+    const vo = steps(wf.jobs.voiceover!);
+    const at = vo.findIndex((x) =>
+      (x.run ?? "").includes("defaults read com.apple.dock"),
+    );
+    expect(at).toBeGreaterThanOrEqual(0);
+    const s = vo[at]!;
+    expect(s.if).toBeUndefined();
+    const lines = s
+      .run!.split("\n")
+      .map((l) => l.trim())
+      .filter(Boolean);
+    expect(lines).toEqual([
+      "defaults read com.apple.dock | grep wvous || true",
+      "defaults write com.apple.dock wvous-tl-corner -int 0",
+      "defaults write com.apple.dock wvous-tr-corner -int 0",
+      "defaults write com.apple.dock wvous-bl-corner -int 0",
+      "defaults write com.apple.dock wvous-br-corner -int 0",
+      "killall Dock || true",
+    ]);
+    const test = vo.findIndex((x) => (x.run ?? "").includes("test:sr"));
+    expect(at).toBeLessThan(test);
+    // Not between the set-up and its failure() step (022l), nor in the
+    // fetch, hash, set-up run (022i).
+    const setup = vo.findIndex((x) => x.run?.startsWith("bun run sr:setup"));
+    expect(at).toBeGreaterThan(setup + 1);
+    expect(runs(wf.jobs.nvda!).some((x) => x.includes("com.apple.dock"))).toBe(
+      false,
+    );
+  });
+
   test("022l: in CI the screen-reader suite reports to blob and list", () => {
     const text = readFileSync("playwright.sr.config.ts", "utf8");
     expect(text).toContain('reporter: CI ? [["blob"], ["list"]] : "list"');

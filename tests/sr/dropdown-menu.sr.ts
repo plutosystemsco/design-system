@@ -59,9 +59,36 @@ test(
       await page.keyboard.press("End");
       await page.keyboard.press("ArrowUp");
     }, "parent");
+    // 022x (a): ArrowRight opens the sub-menu only from its trigger. Record
+    // that the trigger has focus, and bound the wait, so a sub-menu that
+    // does not open fails in 10 s and says why, not at the test's timeout
+    // (the fifth matrix run, §3.3: 10 minutes an attempt under VO chr).
+    const was = await page.evaluate(() => {
+      const el = document.activeElement;
+      return {
+        slot: el?.getAttribute("data-slot") ?? "",
+        text: (el?.textContent ?? "").trim(),
+      };
+    });
+    const onParent = sr.fact(
+      `focus on the parent item "${PARENT}" before ArrowRight`,
+      was.slot === "dropdown-menu-sub-trigger",
+    );
     await sr.after(async () => {
       await page.keyboard.press("ArrowRight");
-      await page.locator('[data-slot="dropdown-menu-sub-content"]').waitFor();
+      await page
+        .locator('[data-slot="dropdown-menu-sub-content"]')
+        .waitFor({ timeout: 10_000 })
+        .catch((e: unknown) => {
+          throw new Error(
+            `the sub-menu did not open within 10 s of ArrowRight; ${
+              onParent
+                ? `focus was on the parent item "${PARENT}"`
+                : `focus was not on the parent item "${PARENT}" but on [data-slot="${was.slot}"] "${was.text}"`
+            }`,
+            { cause: e },
+          );
+        });
     }, "sub-menu");
     const after = await sr.after(() => page.keyboard.press("Escape"), "escape");
     // Read focus without waiting on the parent item: if Escape closed the

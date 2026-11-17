@@ -247,6 +247,37 @@ function translucent(page: Page) {
 }
 
 /**
+ * 022x (c): every finite animation on what `translucent` reads, the
+ * panel's descendants, has finished: a hover's colour fade (the toggle's is
+ * 200 ms) and the fade of the control it left. 250 ms after a hover is
+ * enough on an idle machine; on a loaded runner the toggle's background was
+ * read mid-fade, at an alpha of 0.173 (the fifth matrix run, §2).
+ * Animations that start while it waits are waited for too. The panel's own
+ * hover sheen, on its `::after` (600 ms), is not read, so not waited for.
+ */
+function transitionsDone(page: Page) {
+  return page
+    .locator(PANEL)
+    .first()
+    .evaluate(async (panel) => {
+      for (;;) {
+        const running = panel.getAnimations({ subtree: true }).filter((a) => {
+          const effect = a.effect as KeyframeEffect | null;
+          return (
+            a.playState === "running" &&
+            !!effect?.target &&
+            effect.target !== panel &&
+            !effect.pseudoElement &&
+            effect.getComputedTiming().iterations !== Infinity
+          );
+        });
+        if (running.length === 0) return;
+        await Promise.all(running.map((a) => a.finished.catch(() => null)));
+      }
+    });
+}
+
+/**
  * 019a decision 3 (the owner, 2026-11-15): only a layer above other content
  * is translucent. Everything inside the bar sits on the bar's level, so no
  * descendant lets the colour behind it show through, at rest or on hover.
@@ -295,6 +326,7 @@ test.describe("nothing inside the bar is translucent", () => {
           if (!(await control.isVisible())) continue;
           await control.hover();
           await page.waitForTimeout(250);
+          await transitionsDone(page);
           const label =
             (await control.getAttribute("aria-label")) ??
             (await control.innerText()).trim();
