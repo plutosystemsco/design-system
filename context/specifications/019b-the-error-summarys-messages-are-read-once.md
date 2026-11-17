@@ -1,6 +1,6 @@
 # 019b — The error summary's messages are read once
 
-- **Status:** revised after its spec review; waits for its re-check. The review (`reviews/019b-the-error-summarys-messages-are-read-once-spec-2026-11-17.md`) raised 3 Medium and 4 Low findings; each is answered under "Review".
+- **Status:** fit to build (the spec review's re-check, 2026-11-17; its write-in under criterion 11 made by the design lead); builds after one `matrix` push run with `022t` and `022z` and without it. The review (`reviews/019b-the-error-summarys-messages-are-read-once-spec-2026-11-17.md`) raised 3 Medium and 4 Low findings; each is answered under "Review".
 - **Date:** 2026-11-17
 - **Author:** the design lead
 - **Kind:** specification, lane I. A change to one item's rendered markup, `error-summary`: its links leave the list. An interface change, since an app's class or test that targets the list must change (decision 6). Three blocks install the item (`sign-in`, `sign-up`, `settings`) and change with it, with no change to their own source. No prop, token or dependency changes. A specification, not a small change: it changes an interface, and the owner is asked about the count (open question 2).
@@ -166,6 +166,8 @@ Every check is written before the code. **Seen failing** means run on `022t`'s i
     | sign-in: an empty submit | pass | **pass** | **pass** | **pass** |
     | sign-up: an empty submit | pass | **pass** | **pass** | **pass** |
     | the three link tests (error-summary, settings, sign-in) | pass | pass | pass | pass |
+
+    "Pass" in the table is this outcome, not the test's CI verdict: a title fault under L3 keeps that test red in CI while this criterion holds, and is the lane-I finding named below (the spec review's re-check, write-in).
 
     - **Seen failing:** the run named under "Depends on", with `022z` and without this change, in which the four tests fail L3 for their messages under VO chr (`022z` criterion 5), and under NVDA with Firefox as in run 5.
     - The second submit's row is `022t` criterion 14's outcome too. "Reaches", and "a pair that does not reach it is not a pass", are `022t` criterion 14's. The landing notes name each pair's result and the run id.

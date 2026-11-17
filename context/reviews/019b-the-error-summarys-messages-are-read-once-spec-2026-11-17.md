@@ -3,7 +3,7 @@
 Reviews [`specifications/019b-the-error-summarys-messages-are-read-once.md`](../specifications/019b-the-error-summarys-messages-are-read-once.md) before it is built. Its research is [the error summary's list, read twice](../research/2026-11-17-the-error-summary-list-double-read.md) (*the memo*) and [the fifth matrix run](../research/2026-11-17-the-fifth-matrix-run.md) (*run 5's memo*), §3.3 and §7 with the owner's answer. This reviewer wrote neither the specification nor its research (constitution §5).
 
 - **Date:** 2026-11-17
-- **Status:** in review
+- **Status:** dispositioned; fit to build (see the re-check's closing verdict)
 - **Reviewer:** a reviewer; not the author
 - **Reviewed:** the specification as drafted (192 lines, untracked), with its Open questions answered (1 (a), 2 (a), 3 (a)). Checked against:
   - the item as `022t` builds it, in `.claude/worktrees/lane-i-attempt/` (`release/0.13.0` plus `022t`, at `71cb067`; read, not edited): `error-summary.svelte`, the item's page, both examples, the five components, `/view/error-summary-attempt/`;
@@ -107,3 +107,22 @@ Does not land yet: findings 1 to 3 (Medium). Criterion 11 does not name the titl
 
 ## Disposition
 
+The specification was revised on 2026-11-17 to answer all seven findings, with a "Review" section that maps each to its fix. This re-check reads the revision (212 lines, untracked) against each finding and against the revised `022z`. Nothing in the repository or the worktree was written but this file. Nothing new was run in a browser: the readings below are READ against the revision, and against the EXECUTED probes above. `022z`'s revised rule was re-run in the scratch folder for its own re-check, and its results bear on finding 1.
+
+**A correction to this review.** "Reviewed" says the Open questions are answered (1 (a), 2 (a), 3 (a)). They are, at the top of that section; the revision keeps the answers and widens question 3 to cover a title fault. Nothing in the findings rested on them being open.
+
+**Each finding:**
+
+1. **Closed.** Criterion 11 now judges L1 for the title and every message, and L3 for every message. It names the title's risk in advance with its real cause, the alert and the focus move of `019` decision 1, and quotes this review's EXECUTED shape. A title fault is a lane-I finding with its phrase, opens research, and changes no markup by guess. A VO wk double is read only as "the list was not the cause in Chromium's tree". Open question 3 (a) covers a title fault too. EXECUTED, `022z`'s revised prototype: the alert-and-focus shape still faults the title, so the risk stands as stated.
+2. **Closed.** "Depends on" drops "or in the same push" and requires one `matrix` push run with `022t` and `022z` and without this change, as criterion 11's seen-failing. It matches `022z` decision 4 and criterion 5. Decision 9 states the window for both sets, in the same words as `022z` decision 5, and records 4 and 7b as provable again after landing. The order `022t`, `022z`, that run, then `019b` is right.
+3. **Closed.** Criterion 4 is self-relative: each link's width equals a `Range` over its own text, ± 0.5 px, and is less than the links box's width. EXECUTED above: equal to 0.01 px in Chromium and WebKit, and 322 against 132.05 px without `justify-items-start`. The base figures are a record only.
+4. **Closed.** Criterion 3 runs on `/example/error-summary/keyboard/` and finds the links by DOM node inside the fixture.
+5. **Closed.** Decision 1 names option 6's advantage and the grep; decision 9 names the header sentence's offset and the EXECUTED `git apply --check`.
+6. **Closed.** The bullet claims one reading for NVDA and names "VoiceOver with Chrome" for the double. Decisions 6 and 7 say how the bullet and the page change with criterion 11's VoiceOver result.
+7. **Closed.** Decision 10 and Scope name `error-summary.json` in the two `static/` folders, and keep four for the cost sizes and the thumbnails' hashes.
+
+**One write-in, not blocking.** Criterion 11's table says "pass" for every cell, but its outcome leaves the title's L3 out. A title fault would leave that test failing in CI, and its row failing in the release check, while criterion 11 holds. Open question 3 (a) says so in effect ("leave the row failing until it passes"). A sentence under the table saying "pass" means the rules named, and that a title fault keeps the test red, would stop a reader taking the table for green.
+
+## Closing verdict
+
+Fit to build. All seven findings are closed. EXECUTED: the markup removes the wrapper in Chromium's tree, keeps axe and the raw-HTML check clean, looks pixel-identical in both engines down to 320 px, and leaves patches 4 and 7b applying. It builds after the `matrix` push run that carries `022t` and `022z` and not this change.

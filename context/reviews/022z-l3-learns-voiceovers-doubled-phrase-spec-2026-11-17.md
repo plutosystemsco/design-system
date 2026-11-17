@@ -3,7 +3,7 @@
 Reviews [`specifications/022z-l3-learns-voiceovers-doubled-phrase.md`](../specifications/022z-l3-learns-voiceovers-doubled-phrase.md) before it is built. Its research is [the fifth matrix run](../research/2026-11-17-the-fifth-matrix-run.md) (*run 5's memo*), §3.3 and §7 with the owner's answer, and [the error summary's list, read twice](../research/2026-11-17-the-error-summary-list-double-read.md) (*the list memo*). This reviewer wrote neither the specification nor its research (constitution §5).
 
 - **Date:** 2026-11-17
-- **Status:** in review
+- **Status:** dispositioned; fit to build (see the re-check's closing verdict)
 - **Reviewer:** a reviewer; not the author
 - **Reviewed:** the specification as drafted (177 lines, untracked), on `release/0.13.0` at `b01e754`. Checked against:
   - `tests/sr/rules.ts` (`normalise`, `heldTwice`, `L3`, `joinCaptures`) and `tests/unit/sr-rules.test.ts`;
@@ -97,3 +97,30 @@ Does not land yet: findings 1 to 3 (Medium). The minimum departs from the ruling
 
 ## Disposition
 
+The specification was revised on 2026-11-17 to answer all seven findings, with a "Review" section that maps each to its fix. The design lead ruled on finding 1: the minimum is dropped. This re-check reads the revision (192 lines, untracked) against each finding, on `release/0.13.0` at `b01e754`. Nothing in the repository was written but this file.
+
+**Re-ran,** in the session's scratch folder, with Bun 1.4.4. EXECUTED:
+
+- A second prototype, built to the revised Design: a word character is a Unicode letter, a digit or a hyphen; `heldTwice` faults on two non-overlapping whole-word places of any forms, with no separator and no minimum; L3's adjacent case uses a whole-word `holdsWhole`, and `holds` stays for U1.
+- `sr-rules.test.ts` against it: **56 pass, 1 fail**. The fail is `L3(["Copied Copied"], "Copied")` → `[]`, the one expectation the Design turns to `["L3"]`. The writer's figure holds.
+- Criteria 1 and 2's 14 cases: today's copy **6 fail, 8 pass**, the 6 being criterion 1's; the prototype **14 pass**.
+- Criterion 2's mutations: the whole-word test removed fails 3 (both "unsaved" cases and the "Reenter"/"Re-enter" guard); the overlap mutation fails "go back go" alone. `sr-rules.test.ts` stays at 56 under each.
+- **My own sweep of the quoted phrases.** Every straight- or curly-quoted string in *the speech memo*, *run 4's memo* and *run 5's memo* was taken by line, alone and with the other quotes on its line: 263 windows. Judged for the suite's 13 L3 messages wherever L1 holds: 43 cells. **Two cells change, both one verdict:** VO chr's error-summary phrase, for "Enter a project name", alone and with its neighbour, from pass to L3. No phrase of a passing test gains a fault. The writer counted 261 windows and 41 cells; the extraction differs by two windows, and the result is the same.
+- My first, hand-built probe (43 windows): the same single change.
+- Adversarial shapes: code-block's "Copied Copied" and "Copied button Copied" now fault, as NVDA's "Copied. Copied" does; "Saved", "2 unsaved changes" in adjacent entries no longer faults; the alert-and-focus title shape faults, as decision 4 now says it may.
+
+**Each finding:**
+
+1. **Closed.** The ruling is recorded in the header and in decision 2. The minimum is gone from the Design, criterion 1 adds "Copied Copied" and "3 results 3 results" as faults, and the minimum's mutation leaves criterion 2. Both readers are now judged by one condition. The cost is named in decision 4: code-block may newly fail under VoiceOver, for its known item fault. That is watched, recorded and not part of done, which is right.
+2. **Closed.** Decision 5 states one window for patches 4 and 7b, with the reason (one witness), and how a `main` dispatch in it is read. `expected.json` and `notProvable` stay untouched. Criterion 6 holds the record. Patch 7 under VoiceOver is now conditional on the unpatched test passing there, which is correct with the minimum gone.
+3. **Closed.** Criterion 5 is one outcome: VO chr's four tests fail L3 "within phrase" for each message, read from the job log. A failing test prints its phrases there (READ, *run 5's memo* §3.3), so no artifact is needed for it. A miss is a finding, with the Status set to wait. VO wk is recorded, not required, and the owner downloads its `phrases.json`. `019b` drops "or in the same push" and depends on this run.
+4. **Closed.** Decision 4 states the title as expected not to fault, INFERRED, and rules a title fault a lane-I finding that does not count against criterion 5. Decision 3 and criterion 2 label the quote as cut, and from the second-submit test's first window.
+5. **Closed.** Decision 5 describes 7b as one alert on the root.
+6. **Closed.** The whole-word test applies to both L3 cases, and a hyphen is a word character. EXECUTED above. No L3 message in the suite starts or ends with a hyphen (READ, the `.sr.ts` files).
+7. **Closed.** Decision 1's reason for allowing a gap no longer leans on NVDA. Criterion 2 names the overlap mutation. Criterion 3 lists `sr-items.test.ts`.
+
+**One write-in, not blocking.** Criterion 2's "Reenter"/"Re-enter" guard proves the whole-word test, but not the hyphen in it: dropping only the hyphen from the word characters fails just the "Re-enter" half. The landing notes can record that third mutation beside the two named.
+
+## Closing verdict
+
+Fit to build. All seven findings are closed. EXECUTED: the rule catches VoiceOver's quoted double, judges both readers by one condition, and adds no fault to any quoted phrase of a passing test. Its one changed unit expectation is the intended one.

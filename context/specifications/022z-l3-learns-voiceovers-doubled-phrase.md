@@ -1,6 +1,6 @@
 # 022z — L3 learns VoiceOver's doubled phrase
 
-- **Status:** revised after its spec review; waits for its re-check. The review (`reviews/022z-l3-learns-voiceovers-doubled-phrase-spec-2026-11-17.md`) raised 3 Medium and 4 Low findings; each is answered under "Review".
+- **Status:** fit to build (the spec review's re-check, 2026-11-17); builds in lane E once `022x` lands, since both edit `tests/sr/rules.ts`. The re-check's write-in for the landing notes: a third mutation, dropping only the hyphen from a word, fails the "Re-enter" guard alone. The review (`reviews/022z-l3-learns-voiceovers-doubled-phrase-spec-2026-11-17.md`) raised 3 Medium and 4 Low findings; each is answered under "Review".
 - **Date:** 2026-11-17
 - **Author:** the design lead
 - **Kind:** specification, lane E. A change to one screen-reader rule, L3, in `tests/sr/rules.ts`, and to its unit tests. No item, token, dependency, test file or workflow changes. A specification, not a small change, because it amends a rule `022q` decided (decision 7, "L3 within one entry"), and the owner chose the change from options.
