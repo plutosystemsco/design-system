@@ -13,7 +13,7 @@
  * announcer, `toast:polite`, a part of a dependency of `app-shell`.
  */
 import type { Page } from "@playwright/test";
-import { declared, test } from "./fixtures.ts";
+import { appears, declared, test } from "./fixtures.ts";
 import { F1, L1, L3, O1, O2, O3 } from "./rules.ts";
 
 const PATH = "/view/app-shell/";
@@ -30,7 +30,7 @@ async function narrow(page: Page, sr: import("./fixtures.ts").Sr) {
 
 const pressToOpen = async (page: Page) => {
   await page.keyboard.press("Enter");
-  await page.getByRole("dialog").waitFor();
+  await appears(page.getByRole("dialog"), "the navigation dialog");
 };
 
 test(

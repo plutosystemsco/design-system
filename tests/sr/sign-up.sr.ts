@@ -7,7 +7,7 @@
  * The summary's test hears `error-summary`, not `alert` (decision 15).
  */
 import type { Page } from "@playwright/test";
-import { declared, test } from "./fixtures.ts";
+import { appears, declared, test } from "./fixtures.ts";
 import { F1, L1, L3 } from "./rules.ts";
 
 const PATH = "/view/sign-up/";
@@ -47,7 +47,7 @@ test(
     // The step's own field, not its heading's focus, says the step arrived.
     const after = await sr.after(async () => {
       await page.keyboard.press("Enter");
-      await page.locator("#sign-up-code").waitFor();
+      await appears(page.locator("#sign-up-code"), "the code step's field");
     });
     await sr.focused(
       page.getByRole("heading", { level: 1, name: "Check your email" }),
@@ -64,7 +64,7 @@ test(
     await details(page, sr);
     await sr.after(async () => {
       await page.keyboard.press("Enter");
-      await page.locator("#sign-up-code").waitFor();
+      await appears(page.locator("#sign-up-code"), "the code step's field");
     }, "step");
     await sr.after(
       () => page.getByRole("button", { name: "Send a new code" }).focus(),

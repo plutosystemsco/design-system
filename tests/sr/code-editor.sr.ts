@@ -5,7 +5,7 @@
  * focused, and the editor's name is spoken (F1).
  */
 import type { Page } from "@playwright/test";
-import { declared, test } from "./fixtures.ts";
+import { appears, declared, test } from "./fixtures.ts";
 import { F1 } from "./rules.ts";
 
 const PATH = "/example/code-editor/keyboard/";
@@ -21,7 +21,7 @@ test(
   declared("code-editor", ["F1"]),
   async ({ page, sr }) => {
     await sr.open(PATH);
-    await content(page).waitFor();
+    await appears(content(page), "the editor's content");
     await page
       .getByTestId("keyboard-fixture")
       .getByRole("button", { name: "Before" })

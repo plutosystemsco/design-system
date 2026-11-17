@@ -4,7 +4,7 @@
  * witness: the sheet no longer modal); O3 Escape returns to the trigger.
  */
 import type { Page } from "@playwright/test";
-import { declared, test } from "./fixtures.ts";
+import { appears, declared, test } from "./fixtures.ts";
 import { O1, O2, O3 } from "./rules.ts";
 
 const PATH = "/example/sheet/keyboard/";
@@ -17,7 +17,7 @@ const trigger = (page: Page) =>
 /** From the focused trigger: the key alone, then the panel by its slot. */
 async function open(page: Page): Promise<void> {
   await page.keyboard.press("Enter");
-  await page.locator('[data-slot="sheet-content"]').waitFor();
+  await appears(page.locator('[data-slot="sheet-content"]'), "the sheet");
 }
 
 test(

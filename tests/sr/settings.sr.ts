@@ -9,7 +9,7 @@
  * confirm's tests hear `alert-dialog`, which renders it.
  */
 import type { Page } from "@playwright/test";
-import { declared, test } from "./fixtures.ts";
+import { appears, declared, test } from "./fixtures.ts";
 import { F1, L1, L3, O1, O2, O3 } from "./rules.ts";
 
 const PATH = "/view/settings/";
@@ -36,7 +36,7 @@ async function openConfirm(page: Page, sr: import("./fixtures.ts").Sr) {
 
 const pressToOpen = async (page: Page) => {
   await page.keyboard.press("Enter");
-  await page.getByRole("alertdialog").waitFor();
+  await appears(page.getByRole("alertdialog"), "the alert dialog");
 };
 
 test(
@@ -59,7 +59,7 @@ test(
     await sr.open(PATH);
     await emptyName(page, sr);
     await sr.after(() => page.keyboard.press("Enter"), "insertion");
-    await summary(page).waitFor();
+    await appears(summary(page), "the error summary");
     await sr.after(
       () => summary(page).getByRole("link", { name: ERROR }).focus(),
       "link",

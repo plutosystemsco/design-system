@@ -17,6 +17,8 @@ const CI = !!process.env.CI;
 export default defineConfig({
   testDir: "tests/e2e",
   fullyParallel: true,
+  // 032c: a committed `.only` fails a CI run, never narrows it.
+  forbidOnly: CI,
   // 022 decision 18: a flaky browser test fails the run in CI.
   retries: CI ? 1 : 0,
   failOnFlakyTests: CI,

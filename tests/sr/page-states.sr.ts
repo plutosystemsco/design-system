@@ -6,7 +6,7 @@
  * runs inside a window: guidepup runs one command at a time, and a window
  * is itself a capture.
  */
-import { READY, declared, test } from "./fixtures.ts";
+import { appears, READY, declared, test } from "./fixtures.ts";
 import { L1 } from "./rules.ts";
 
 test(
@@ -16,7 +16,10 @@ test(
     await sr.open("/view/page-states/");
     const after = await sr.after(async () => {
       await page.goto("/view/page-states/loading/");
-      await page.locator(READY).first().waitFor();
+      await appears(
+        page.locator(READY).first(),
+        "the loading view's ready mark",
+      );
     });
     await sr.judge(L1(after, "Loading projects"));
   },

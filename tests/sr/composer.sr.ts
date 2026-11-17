@@ -5,7 +5,7 @@
  * 700 ms, then streams for 4 s.
  */
 import type { Page } from "@playwright/test";
-import { declared, test } from "./fixtures.ts";
+import { appears, declared, test } from "./fixtures.ts";
 import { F1, L1, L2 } from "./rules.ts";
 
 const PATH = "/example/composer/keyboard/";
@@ -37,9 +37,10 @@ test(
     await textbox(page).focus();
     await page.keyboard.type("Estimate pi");
     await page.keyboard.press("Enter");
-    await fixture(page)
-      .locator('[data-slot="composer"][data-status="streaming"]')
-      .waitFor();
+    await appears(
+      fixture(page).locator('[data-slot="composer"][data-status="streaming"]'),
+      "the composer, streaming",
+    );
     await button(page).focus();
     const after = await sr.after(() => page.keyboard.press("Enter"));
     await sr.focused(textbox(page));

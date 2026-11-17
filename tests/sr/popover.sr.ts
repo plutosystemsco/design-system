@@ -8,7 +8,7 @@
  * No wait depends on where focus lands; O3 reads it.
  */
 import type { Page } from "@playwright/test";
-import { declared, test } from "./fixtures.ts";
+import { appears, declared, test } from "./fixtures.ts";
 import { O1, O3 } from "./rules.ts";
 
 const PATH = "/example/popover/keyboard/";
@@ -19,7 +19,7 @@ const trigger = (page: Page) =>
 
 async function open(page: Page): Promise<void> {
   await page.keyboard.press("Enter");
-  await page.locator('[data-slot="popover-content"]').waitFor();
+  await appears(page.locator('[data-slot="popover-content"]'), "the popover");
 }
 
 test(
