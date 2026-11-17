@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-17T15:11:05.697Z",
+  "at": "2026-11-17T15:19:40.075Z",
   "kuiperBuild": "2026-11-16T23:34:24.926Z",
   "rows": [
     {
@@ -156,6 +156,22 @@
             ]
           }
         },
+        "prose": {
+          "chars": 2282,
+          "size": 19,
+          "sizeShare": 91.3,
+          "top": [
+            [
+              19,
+              91.3
+            ],
+            [
+              24,
+              8.7
+            ]
+          ],
+          "h1ToProse": 2.53
+        },
         "styleSet": [
           "19|400|gds transport|rgb(11, 12, 12)",
           "19|400|gds transport|rgb(26, 101, 166)",
@@ -246,6 +262,10 @@
         "whitespace": 0.785,
         "quadtreeLeaves": 5569,
         "balance": 0.499,
+        "balanceLR": 0.404,
+        "balanceTB": 0.593,
+        "leftHeavy": true,
+        "topHeavy": true,
         "symmetry": 0.411
       }
     },
@@ -415,6 +435,22 @@
             ]
           }
         },
+        "prose": {
+          "chars": 5461,
+          "size": 19,
+          "sizeShare": 94.3,
+          "top": [
+            [
+              19,
+              94.3
+            ],
+            [
+              16,
+              5.7
+            ]
+          ],
+          "h1ToProse": 2.53
+        },
         "styleSet": [
           "19|400|gds transport|rgb(11, 12, 12)",
           "19|400|gds transport|rgb(26, 101, 166)",
@@ -503,6 +539,10 @@
         "whitespace": 0.833,
         "quadtreeLeaves": 4138,
         "balance": 0.674,
+        "balanceLR": 0.482,
+        "balanceTB": 0.866,
+        "leftHeavy": true,
+        "topHeavy": true,
         "symmetry": 0.467
       }
     },
@@ -672,6 +712,22 @@
             ]
           }
         },
+        "prose": {
+          "chars": 6642,
+          "size": 19,
+          "sizeShare": 95.8,
+          "top": [
+            [
+              19,
+              95.8
+            ],
+            [
+              16,
+              4.2
+            ]
+          ],
+          "h1ToProse": 2.53
+        },
         "styleSet": [
           "19|400|gds transport|rgb(11, 12, 12)",
           "19|400|gds transport|rgb(26, 101, 166)",
@@ -761,6 +817,10 @@
         "whitespace": 0.836,
         "quadtreeLeaves": 4288,
         "balance": 0.575,
+        "balanceLR": 0.498,
+        "balanceTB": 0.653,
+        "leftHeavy": true,
+        "topHeavy": true,
         "symmetry": 0.471
       }
     },
@@ -930,6 +990,22 @@
             ]
           }
         },
+        "prose": {
+          "chars": 5020,
+          "size": 19,
+          "sizeShare": 98.6,
+          "top": [
+            [
+              19,
+              98.6
+            ],
+            [
+              16,
+              1.4
+            ]
+          ],
+          "h1ToProse": 2.53
+        },
         "styleSet": [
           "19|400|gds transport|rgb(11, 12, 12)",
           "16|400|gds transport|rgb(26, 101, 166)",
@@ -1020,6 +1096,10 @@
         "whitespace": 0.83,
         "quadtreeLeaves": 3877,
         "balance": 0.743,
+        "balanceLR": 0.671,
+        "balanceTB": 0.815,
+        "leftHeavy": true,
+        "topHeavy": true,
         "symmetry": 0.46
       }
     },
@@ -1189,6 +1269,22 @@
             ]
           }
         },
+        "prose": {
+          "chars": 1806,
+          "size": 19,
+          "sizeShare": 96.1,
+          "top": [
+            [
+              19,
+              96.1
+            ],
+            [
+              16,
+              3.9
+            ]
+          ],
+          "h1ToProse": 2.53
+        },
         "styleSet": [
           "19|400|gds transport|rgb(11, 12, 12)",
           "19|400|gds transport|rgb(26, 101, 166)",
@@ -1277,6 +1373,10 @@
         "whitespace": 0.829,
         "quadtreeLeaves": 4420,
         "balance": 0.729,
+        "balanceLR": 0.537,
+        "balanceTB": 0.922,
+        "leftHeavy": true,
+        "topHeavy": true,
         "symmetry": 0.506
       }
     },
@@ -1446,6 +1546,22 @@
             ]
           }
         },
+        "prose": {
+          "chars": 2344,
+          "size": 19,
+          "sizeShare": 91.9,
+          "top": [
+            [
+              19,
+              91.9
+            ],
+            [
+              16,
+              8.1
+            ]
+          ],
+          "h1ToProse": 2.53
+        },
         "styleSet": [
           "19|400|gds transport|rgb(11, 12, 12)",
           "16|400|gds transport|rgb(26, 101, 166)",
@@ -1537,6 +1653,10 @@
         "whitespace": 0.827,
         "quadtreeLeaves": 4921,
         "balance": 0.626,
+        "balanceLR": 0.569,
+        "balanceTB": 0.684,
+        "leftHeavy": true,
+        "topHeavy": true,
         "symmetry": 0.52
       }
     },
@@ -1694,6 +1814,22 @@
             ]
           }
         },
+        "prose": {
+          "chars": 2282,
+          "size": 19,
+          "sizeShare": 91.3,
+          "top": [
+            [
+              19,
+              91.3
+            ],
+            [
+              24,
+              8.7
+            ]
+          ],
+          "h1ToProse": 2.53
+        },
         "styleSet": [
           "19|400|gds transport|rgb(11, 12, 12)",
           "19|400|gds transport|rgb(26, 101, 166)",
@@ -1784,6 +1920,10 @@
         "whitespace": 0.785,
         "quadtreeLeaves": 5569,
         "balance": 0.499,
+        "balanceLR": 0.404,
+        "balanceTB": 0.593,
+        "leftHeavy": true,
+        "topHeavy": true,
         "symmetry": 0.411
       }
     },
@@ -1953,6 +2093,22 @@
             ]
           }
         },
+        "prose": {
+          "chars": 5461,
+          "size": 19,
+          "sizeShare": 94.3,
+          "top": [
+            [
+              19,
+              94.3
+            ],
+            [
+              16,
+              5.7
+            ]
+          ],
+          "h1ToProse": 2.53
+        },
         "styleSet": [
           "19|400|gds transport|rgb(11, 12, 12)",
           "19|400|gds transport|rgb(26, 101, 166)",
@@ -2041,6 +2197,10 @@
         "whitespace": 0.833,
         "quadtreeLeaves": 4138,
         "balance": 0.674,
+        "balanceLR": 0.482,
+        "balanceTB": 0.866,
+        "leftHeavy": true,
+        "topHeavy": true,
         "symmetry": 0.467
       }
     }

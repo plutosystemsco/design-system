@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-17T15:11:49.902Z",
+  "at": "2026-11-17T15:20:11.873Z",
   "kuiperBuild": "2026-11-16T23:34:24.926Z",
   "rows": [
     {
@@ -180,6 +180,22 @@
             ]
           }
         },
+        "prose": {
+          "chars": 425,
+          "size": 16,
+          "sizeShare": 93.4,
+          "top": [
+            [
+              16,
+              93.4
+            ],
+            [
+              22,
+              6.6
+            ]
+          ],
+          "h1ToProse": 3.5
+        },
         "styleSet": [
           "16|400|mona sans|rgb(88, 99, 91)",
           "16|500|mona sans|rgb(0, 85, 213)",
@@ -258,6 +274,10 @@
         "whitespace": 0.821,
         "quadtreeLeaves": 3013,
         "balance": 0.727,
+        "balanceLR": 0.537,
+        "balanceTB": 0.916,
+        "leftHeavy": false,
+        "topHeavy": true,
         "symmetry": 0.334
       }
     },
@@ -471,6 +491,30 @@
             ]
           }
         },
+        "prose": {
+          "chars": 1909,
+          "size": 16,
+          "sizeShare": 94,
+          "top": [
+            [
+              16,
+              94
+            ],
+            [
+              18,
+              2.8
+            ],
+            [
+              14,
+              2.7
+            ],
+            [
+              12,
+              0.5
+            ]
+          ],
+          "h1ToProse": 2.5
+        },
         "styleSet": [
           "16|400|mona sans vf|rgb(31, 35, 40)",
           "16|400|mona sans|rgb(31, 35, 40)",
@@ -575,6 +619,10 @@
         "whitespace": 0.849,
         "quadtreeLeaves": 2755,
         "balance": 0.557,
+        "balanceLR": 0.61,
+        "balanceTB": 0.504,
+        "leftHeavy": true,
+        "topHeavy": true,
         "symmetry": 0.314
       }
     },
@@ -784,6 +832,30 @@
             ]
           }
         },
+        "prose": {
+          "chars": 1041,
+          "size": 16,
+          "sizeShare": 85.9,
+          "top": [
+            [
+              16,
+              85.9
+            ],
+            [
+              18,
+              6
+            ],
+            [
+              14,
+              5.6
+            ],
+            [
+              12,
+              2.6
+            ]
+          ],
+          "h1ToProse": 2.5
+        },
         "styleSet": [
           "16|400|mona sans|rgb(31, 35, 40)",
           "16|400|mona sans vf|rgb(31, 35, 40)",
@@ -888,6 +960,10 @@
         "whitespace": 0.782,
         "quadtreeLeaves": 4468,
         "balance": 0.631,
+        "balanceLR": 0.553,
+        "balanceTB": 0.71,
+        "leftHeavy": true,
+        "topHeavy": false,
         "symmetry": 0.476
       }
     },
@@ -1097,6 +1173,30 @@
             ]
           }
         },
+        "prose": {
+          "chars": 1169,
+          "size": 16,
+          "sizeShare": 88.2,
+          "top": [
+            [
+              16,
+              88.2
+            ],
+            [
+              18,
+              6.6
+            ],
+            [
+              14,
+              4.4
+            ],
+            [
+              12,
+              0.9
+            ]
+          ],
+          "h1ToProse": 2.5
+        },
         "styleSet": [
           "16|400|mona sans vf|rgb(31, 35, 40)",
           "16|400|mona sans|rgb(31, 35, 40)",
@@ -1200,6 +1300,10 @@
         "whitespace": 0.828,
         "quadtreeLeaves": 3358,
         "balance": 0.577,
+        "balanceLR": 0.468,
+        "balanceTB": 0.687,
+        "leftHeavy": true,
+        "topHeavy": true,
         "symmetry": 0.41
       }
     },
@@ -1413,6 +1517,30 @@
             ]
           }
         },
+        "prose": {
+          "chars": 909,
+          "size": 16,
+          "sizeShare": 82,
+          "top": [
+            [
+              16,
+              82
+            ],
+            [
+              18,
+              11.3
+            ],
+            [
+              14,
+              5.6
+            ],
+            [
+              12,
+              1.1
+            ]
+          ],
+          "h1ToProse": 2.5
+        },
         "styleSet": [
           "16|400|mona sans|rgb(31, 35, 40)",
           "16|400|mona sans vf|rgb(31, 35, 40)",
@@ -1516,6 +1644,10 @@
         "whitespace": 0.824,
         "quadtreeLeaves": 3277,
         "balance": 0.659,
+        "balanceLR": 0.486,
+        "balanceTB": 0.832,
+        "leftHeavy": true,
+        "topHeavy": true,
         "symmetry": 0.444
       }
     },
@@ -1729,6 +1861,30 @@
             ]
           }
         },
+        "prose": {
+          "chars": 1019,
+          "size": 16,
+          "sizeShare": 82.1,
+          "top": [
+            [
+              16,
+              82.1
+            ],
+            [
+              18,
+              11.9
+            ],
+            [
+              14,
+              5
+            ],
+            [
+              12,
+              1
+            ]
+          ],
+          "h1ToProse": 2.5
+        },
         "styleSet": [
           "16|400|mona sans vf|rgb(31, 35, 40)",
           "16|400|mona sans|rgb(31, 35, 40)",
@@ -1830,6 +1986,10 @@
         "whitespace": 0.844,
         "quadtreeLeaves": 2941,
         "balance": 0.55,
+        "balanceLR": 0.599,
+        "balanceTB": 0.501,
+        "leftHeavy": true,
+        "topHeavy": true,
         "symmetry": 0.359
       }
     },
@@ -2011,6 +2171,22 @@
             ]
           }
         },
+        "prose": {
+          "chars": 425,
+          "size": 16,
+          "sizeShare": 93.4,
+          "top": [
+            [
+              16,
+              93.4
+            ],
+            [
+              22,
+              6.6
+            ]
+          ],
+          "h1ToProse": 3.5
+        },
         "styleSet": [
           "16|400|mona sans|rgb(88, 99, 91)",
           "16|500|mona sans|rgb(0, 85, 213)",
@@ -2089,6 +2265,10 @@
         "whitespace": 0.821,
         "quadtreeLeaves": 3013,
         "balance": 0.727,
+        "balanceLR": 0.537,
+        "balanceTB": 0.916,
+        "leftHeavy": false,
+        "topHeavy": true,
         "symmetry": 0.334
       }
     },
@@ -2302,6 +2482,30 @@
             ]
           }
         },
+        "prose": {
+          "chars": 1909,
+          "size": 16,
+          "sizeShare": 94,
+          "top": [
+            [
+              16,
+              94
+            ],
+            [
+              18,
+              2.8
+            ],
+            [
+              14,
+              2.7
+            ],
+            [
+              12,
+              0.5
+            ]
+          ],
+          "h1ToProse": 2.5
+        },
         "styleSet": [
           "16|400|mona sans vf|rgb(31, 35, 40)",
           "16|400|mona sans|rgb(31, 35, 40)",
@@ -2406,6 +2610,10 @@
         "whitespace": 0.849,
         "quadtreeLeaves": 2755,
         "balance": 0.557,
+        "balanceLR": 0.61,
+        "balanceTB": 0.504,
+        "leftHeavy": true,
+        "topHeavy": true,
         "symmetry": 0.314
       }
     }

@@ -3,13 +3,14 @@
  * Measures candidate "visual polish" metrics on Kuiper's built site and on
  * reference design-system sites. Our own code; nothing is copied.
  *
- *   bun context/research/2026-11-17-visual-metrics/measure.ts [--only kuiper,carbon] [--runs 2]
+ *   bun context/research/2026-11-17-visual-metrics/measure.ts [--only kuiper,primer] [--runs 2]
  *
  * Chromium, 1440 x 900, deviceScaleFactor 1, light scheme, reduced motion.
  * Each page: load, wait for the network to settle, scroll to the bottom and
  * back (to wake lazy content), hide consent banners (never accept them),
  * then read DOM metrics over the whole page and pixel metrics over the first
- * screen (a viewport screenshot). Output: results.json and shots/*.png
+ * screen (a viewport screenshot). Output: results.json (or
+ * results-<ids>.json with --only) and shots/<site>-<home|button>.png
  * beside this file.
  */
 import { chromium, type Page } from "playwright";
@@ -64,6 +65,14 @@ const SITES: Site[] = [
     button: "https://m3.material.io/components/buttons/overview",
     template: ["checkbox", "tabs", "tooltips", "dialogs"].map(
       (s) => `https://m3.material.io/components/${s}/overview`,
+    ),
+  },
+  {
+    id: "radix",
+    home: "https://www.radix-ui.com/themes",
+    button: "https://www.radix-ui.com/themes/docs/components/button",
+    template: ["checkbox", "tabs", "tooltip", "dialog"].map(
+      (s) => `https://www.radix-ui.com/themes/docs/components/${s}`,
     ),
   },
   {
@@ -183,6 +192,24 @@ function domMetrics() {
     families: tally((r) => r.family),
     colors: tally((r) => r.color),
     styles: tally((r) => `${r.size}|${r.weight}|${r.family}|${r.color}`),
+  };
+  // Prose only: text outside code, tables, navigation, page chrome and controls.
+  const prose = runs.filter(
+    (r) => !r.el.closest("pre,code,table,nav,header,footer,aside,[role=navigation],button,label,kbd,h1,h2,h3,h4,h5,h6"),
+  );
+  const proseChars = prose.reduce((a, r) => a + r.chars, 0);
+  const proseSizes = new Map<number, number>();
+  for (const r of prose) proseSizes.set(r.size, (proseSizes.get(r.size) ?? 0) + r.chars);
+  const proseTop = [...proseSizes.entries()].sort((a, b) => b[1] - a[1]);
+  const proseSize = proseTop.length ? proseTop[0][0] : null;
+  const h1el = document.querySelector("h1");
+  const h1size = h1el ? parseFloat(getComputedStyle(h1el).fontSize) : null;
+  const proseInfo = {
+    chars: proseChars,
+    size: proseSize,
+    sizeShare: proseTop.length ? Math.round((1000 * proseTop[0][1]) / proseChars) / 10 : null,
+    top: proseTop.slice(0, 5).map(([k, c]) => [k, Math.round((1000 * c) / proseChars) / 10]),
+    h1ToProse: h1size && proseSize ? Math.round((100 * h1size) / proseSize) / 100 : null,
   };
   const styleSet = (() => {
     const t = type.styles;
@@ -430,6 +457,7 @@ function domMetrics() {
   return {
     docHeight: docH,
     type,
+    prose: proseInfo,
     styleSet,
     spacing,
     leftEdges,
@@ -553,6 +581,10 @@ async function pixelMetrics(dataUrl: string) {
     whitespace: r3(flat / (cw * ch)),
     quadtreeLeaves: leaves,
     balance: r3(balance),
+    balanceLR: r3(1 - bmv),
+    balanceTB: r3(1 - bmh),
+    leftHeavy: wl > wr,
+    topHeavy: wt > wb,
     symmetry: r3(mirrored / Math.max(1, occ)),
   };
 }
@@ -601,6 +633,10 @@ await scratch.setContent("<!doctype html><body></body>");
 
 async function measure(site: string, kind: string, url: string, run: number) {
   const page = await ctx.newPage();
+  // Carbon cannot be measured from this session: its CSS, scripts and fonts
+  // sit on cdn.carbondesignsystem.com and 1.www.s81c.com, and its examples on
+  // react.carbondesignsystem.com, none of which the network allows. Its pages
+  // render unstyled, so its rows are dropped from the memo's tables.
   try {
     await page.goto(resolve(url), { waitUntil: "load", timeout: 90_000 });
     await settle(page);
@@ -615,7 +651,8 @@ async function measure(site: string, kind: string, url: string, run: number) {
     await hideConsent(page);
     const dom = await page.evaluate(domMetrics);
     const shot = await page.screenshot({ type: "png" });
-    if (run === 0) writeFileSync(path.join(SHOTS, `${site}-${kind}.png`), shot);
+    if (run === 0 && !kind.startsWith("t"))
+      writeFileSync(path.join(SHOTS, `${site}-${kind}.png`), shot);
     const px = await scratch.evaluate(pixelMetrics, `data:image/png;base64,${shot.toString("base64")}`);
     return { site, kind, url: page.url(), run, dom, px };
   } catch (e) {
