@@ -411,7 +411,7 @@ describe("the lint itself", () => {
     ).toEqual([]);
   });
 
-  // 014 decision 9: one pattern for 0.12.0, written once for 014's names and 013's.
+  // 014 decision 9: one pattern for 0.13.0, written once for 014's names and 013's.
   test("L19's pattern is 014 decision 9's, exactly, and names its rule on the 3 new samples", () => {
     expect(SYNTAX_COLOUR.source).toBe(
       "syntax-(?:orange|amber|purple|teal|cyan|violet|blue|navy|green|yellow|plum|red|grey|ink|ground|active-line)\\b",

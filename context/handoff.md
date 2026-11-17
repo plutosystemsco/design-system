@@ -34,7 +34,7 @@ The scorecard's rows 1–14 read 37 (32 at `020`), row 15 reads 2. Button is abo
 - **The release check, from `022`** (the design lead's ruling, 2026-11-15). The full check, `bun scripts/site/release-check.ts`, also needs an empty fault ledger and a green `matrix` push run of HEAD, so it exits 1 until push B's run and the small changes `022a` to `022f`. **A landing gate runs `bun scripts/site/release-check.ts --before-ci`**, which skips those two, names them, and exits 0 when the rest pass. The tag uses the full check.
 - **`022`, the test matrix,** is merged (`7edf047`). It waits for **push B**: the first `matrix` run on GitHub, then the owner's mutation dispatch. Agents never push. The ledger holds 2 lines, both `022f`'s; `022a` and `022e` have landed.
 
-The order to the tag: `019`'s fixes, its commit, the owner's listen, then the local `v0.12.0` tag.
+0.12.0 was never released (the owner, 2026-11-17; `020d`). The next tag is `v0.13.0`.
 
 - **Rulings made under the overnight delegation, for the owner to confirm or reverse:**
   - `031` Q1: the 25 high-contrast swatches approved as derived (three light swatches darkened for `sunken`).

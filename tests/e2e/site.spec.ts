@@ -543,10 +543,12 @@ test.describe("018 criterion 7: Updated", () => {
   }) => {
     for (const [name, anchor] of [
       // 020: the theme and tooltip changed in 0.13.0. 023's doc-comment
-      // bullets name button, card and name-strip in 0.13.0 too, so kbd and
-      // label stand for an older change and an item that never changed.
+      // bullets name button, card and name-strip in 0.13.0 too. 020d test 14:
+      // the 0.13.0 entry holds every change since 0.11.0, so meter, which
+      // arrived in 0.4.0, and label stand for an older release and an item
+      // that never changed.
       ["kuiper-theme", "#v0-13-0"],
-      ["kbd", "#v0-12-0"],
+      ["meter", "#v0-4-0"],
       ["tooltip", "#v0-13-0"],
       ["label", "#v0-2-0"],
       ["name-strip", "#v0-13-0"],
@@ -558,8 +560,10 @@ test.describe("018 criterion 7: Updated", () => {
       );
     }
     await open(page, "/changelog/");
-    for (const a of ["v0-13-0", "v0-12-0", "v0-11-0", "v0-2-0"])
+    for (const a of ["v0-13-0", "v0-11-0", "v0-4-0", "v0-2-0"])
       await expect(page.locator(`#${a}`)).toHaveCount(1);
+    // 020d decision 12: no anchor for a release that never happened.
+    await expect(page.locator("#v0-12-0")).toHaveCount(0);
   });
 });
 

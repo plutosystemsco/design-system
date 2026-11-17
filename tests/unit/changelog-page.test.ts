@@ -25,7 +25,7 @@ describe("020: links in the changelog's prose", () => {
 
   test("a site path, an anchor and an https URL are links", () => {
     expect(hrefs("[a](/changelog/)")).toEqual(["/changelog/"]);
-    expect(hrefs("[a](#v0-12-0)")).toEqual(["#v0-12-0"]);
+    expect(hrefs("[a](#v0-13-0)")).toEqual(["#v0-13-0"]);
     expect(hrefs("[a](https://example.com/x)")).toEqual([
       "https://example.com/x",
     ]);
@@ -145,18 +145,20 @@ describe("018: a changelog to scan", () => {
         expect(r.date).toEqual({ text: "Unreleased", datetime: null });
       }
     }
-    // 020 opens 0.13.0, unreleased until its tag, above 0.12.0 and 0.11.0.
+    // 020 opens 0.13.0, unreleased until its tag, above 0.11.0.
     expect(view.releases[0].date).toEqual({
       text: "Unreleased",
       datetime: null,
     });
+    expect(view.releases[1].version).toBe("0.11.0");
     expect(view.releases[1].date).toEqual({
-      text: "2026-11-15",
-      datetime: "2026-11-15",
-    });
-    expect(view.releases[2].date).toEqual({
       text: "2026-11-07",
       datetime: "2026-11-07",
+    });
+    expect(view.releases[2].version).toBe("0.8.0");
+    expect(view.releases[2].date).toEqual({
+      text: "2026-11-01",
+      datetime: "2026-11-01",
     });
     // The page sets the version in the heading and the date in a <time>.
     expect(SVELTE).toMatch(/<h2[^>]*>\s*\{release\.version\}\s*<\/h2>/);

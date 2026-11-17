@@ -38,7 +38,8 @@ export type UpgradeSection = {
 /** 1. Who this is for. */
 export const WHO = [
   "An app that installed from this registry before 0.13.0.",
-  "Coming from 0.11.0, as most apps are: first apply 0.12.0's notes in the [changelog](/changelog/#v0-12-0), then this page. For every name here, the path from 0.11.0 is the path from 0.12.0: the field's keys, the head script and the four keyframes did not change between them.",
+  // 020d decision 8: the only earlier release an app can be on is 0.11.0.
+  "Coming from 0.11.0, as every app is: 0.12.0 was never released. This page is the whole path from 0.11.0, and the changelog's [0.13.0 entry](/changelog/#v0-13-0) lists every change.",
 ];
 
 /**
@@ -63,12 +64,13 @@ export const SECTIONS: readonly UpgradeSection[] = [
     renames: RENAMES,
     steps: [
       {
-        text: "**Before you update anything, rename your own uses of the four keyframes:** `pluto-enter` to `kuiper-enter`, `pluto-exit` to `kuiper-exit`, `pluto-mark-dock` to `kuiper-mark-dock` and `pluto-mark-fade` to `kuiper-mark-fade`. Look in `app.css`, in components' `<style>` blocks, in inline `style` attributes, in `animation-name` declarations and in scripts. The old names leave your built CSS the moment the theme updates, and nothing warns you. This finds them. Matches inside the theme's block in `app.css` (its four `@keyframes pluto-…` rules, `--animate-enter`, `--animate-exit` and the lockup's `animation`) are the theme's own: the update in step 2 rewrites them, and step 4 deletes what is left.",
-        command: "grep -rn -e pluto-enter -e pluto-exit -e pluto-mark- src",
+        text: "**Before you update anything, rename your own uses of the four keyframes:** `pluto-enter` to `kuiper-enter`, `pluto-exit` to `kuiper-exit`, `pluto-mark-dock` to `kuiper-mark-dock` and `pluto-mark-fade` to `kuiper-mark-fade`. Look in `app.css`, in components' `<style>` blocks, in inline `style` attributes, in `animation-name` declarations and in scripts. The old names leave your built CSS the moment the theme updates, and nothing warns you. This finds them. Matches inside the theme's block in `app.css` (its four `@keyframes pluto-…` rules, `--animate-enter`, `--animate-exit` and the lockup's `animation`) are the theme's own: the update in step 2 rewrites them, and step 4 deletes what is left. If you have a class of your own named `scrollbar-code`, rename it too: the theme now defines one, and its rule would apply to your elements. The command finds it as well.",
+        command:
+          "grep -rn -e pluto-enter -e pluto-exit -e pluto-mark- -e scrollbar-code src",
         language: "bash",
       },
       {
-        text: "Update the theme with `add kuiper-theme`. Then update only the parts your app has: `theme` if it has it, and `field` with the field controls it uses (`input`, `textarea`, `checkbox`, `switch`, `native-select`, `input-otp`, `input-group`, `radio-group`). `ls src/lib/components/ui` lists the parts you have. The second line is an example for an app with `field` and `input`; name yours instead. `-o` lets the theme update `app.css` without asking; left off the parts, the command asks before it overwrites each file you have, since an update replaces your own edits to them. Update `field` before your own control that imports `FIELD_CONTEXT_KEY` or `FIELD_SET_CONTEXT_KEY`.",
+        text: "Update the theme with `add kuiper-theme`. Then, on the second line, update only the parts your app has: `theme` if it has it, and `field` with the field controls it uses (`input`, `textarea`, `checkbox`, `switch`, `native-select`, `input-otp`, `input-group`, `radio-group`). If your app has any of the code items, `highlighter`, `use-highlighted-code`, `code-block`, `code-editor` and `code-languages`, or `kbd` or `error-summary`, name those on the same line too: the theme updated alone paints code half in the old palette and half in the new. Name only what you have, since an `add` installs an item your app lacks. `ls src/lib/components/ui` lists the parts you have. The second line is an example for an app with `field` and `input`; name yours instead. `-o` lets the theme update `app.css` without asking; left off the second line, the command asks before it overwrites each file you have, since an update replaces your own edits to them. Update `field` before your own control that imports `FIELD_CONTEXT_KEY` or `FIELD_SET_CONTEXT_KEY`.",
         command: `${addCommand("kuiper-theme")} -o\n${addCommand("field input")}`,
         language: "bash",
       },
@@ -85,6 +87,48 @@ export const SECTIONS: readonly UpgradeSection[] = [
       },
       {
         text: "If a tool reads the token file from `main`, read `tokens/kuiper.tokens.json`. A URL at a release tag keeps the old path.",
+      },
+    ],
+  },
+  // 020d decision 8: the interface changes an app on 0.11.0 has not seen, from
+  // 013, 014, 016, 019 and 019a. Its steps follow the update in 020's step
+  // 2, each in the changelog's words, and each deletion follows its grep.
+  {
+    spec: "013",
+    id: "from-0-11-0",
+    title: "From 0.11.0: code, the yellow and the sticky bar",
+    summary:
+      "Since 0.11.0, code is highlighted by tree-sitter and coloured in the Tombaugh palette, on a white ground in light mode; twelve code variables are removed, and the code items' exports change. The brand's yellow is yellower. Every letter spacing is the font's default. The sticky bar's scroll padding is a default your own value wins over. `kbd` sits on the code ground, and `error-summary`'s alert moves inside it. Who sees it: every app coming from 0.11.0. Nothing is renamed with an alias. The update itself is step 2 above; these steps follow it.",
+    renames: [],
+    steps: [
+      {
+        text: "Install the highlighter's packages: `highlighter` now depends on `web-tree-sitter` and 19 grammar packages.",
+        command: "bun install",
+        language: "bash",
+      },
+      {
+        text: "**Before step 3 deletes them, find and replace your own uses of the twelve removed names:** `--code-foreground`, `--code-escape`, `--code-builtin`, `--code-tag`, `--code-property`, `--code-decorator`, `--code-self`, `--code-invalid`, `--syntax-amber`, `--syntax-purple`, `--syntax-teal` and `--syntax-cyan`. That covers their `text-code-*`, `--color-` and `syntax-*` forms, and a `var()` of any of them. Until step 3 they still compile, in their old colours; once their lines are gone, a use not replaced leaves your built CSS, and nothing warns you. This finds them. Matches inside the theme's own block in `app.css` are the lines step 3 deletes. Replace `--code-foreground` with `--code-text`. Give each other use one of the roles that are left: the changelog's code-map `kuiper-theme` bullet lists them.",
+        command:
+          "grep -rn -e code-foreground -e code-escape -e code-builtin -e code-tag -e code-property -e code-decorator -e code-self -e code-invalid -e syntax-amber -e syntax-purple -e syntax-teal -e syntax-cyan src",
+        language: "bash",
+      },
+      {
+        text: "Delete the stale lines from `app.css`: the twelve variables in `:root` and in `.dark`, the `--color-` form of each in `@theme inline`, and the CLI's derived `--code-…: var(--code-…)` line for each removed `--code-*` name. The CLI never deletes a variable the new theme lacks.",
+      },
+      {
+        text: "Delete the old unlayered `html:has([data-sticky-bar]) { scroll-padding-top: var(--size-bar); }` rule from your stylesheet: the CLI does not remove it, and while it stays it overrides your own value. With a sticky header of your own, set `scroll-padding-top` on `html` to its height.",
+      },
+      {
+        text: 'Replace the removed and renamed exports. From `code-editor`: in place of `codeHighlight`, add `codeHighlighting(language)` for the editor\'s language; in place of `pythonLanguageConfigured`, use `pythonLanguage` from `@codemirror/lang-python` with `codeHighlighting("python")`; drop `pythonRoles`. From `highlighter`: `codeTheme` is now `shikiTheme`, and `tokenClasses` is now `roleClasses`.',
+      },
+      {
+        text: '`error-summary`: `role="alert"` moved from the root to a new inner element. Code or tests that found the alert on the root, or expected `getByRole("alert")` to be the focused element, look for `[data-slot="error-summary-content"]`. A class on the root that targeted its children targets that element.',
+      },
+      {
+        text: '`kbd`: a key now sits on the code ground, and its text can be selected. Pass `class="bg-muted"` to keep the old ground, and `class="select-none"` to keep a key unselectable.',
+      },
+      {
+        text: "If your app sets a strict Content Security Policy, add `'wasm-unsafe-eval'` to its `script-src`: the highlighter runs tree-sitter as WebAssembly.",
       },
     ],
   },
@@ -138,13 +182,16 @@ export const UNTIL = {
 /** 5. What did not change. */
 export const UNCHANGED = {
   names:
-    "Every CSS variable, class, utility, prop, slot and export name. The brand: Pluto Systems, its mark and the lockup. The site's address.",
+    "Every CSS variable, class, utility, prop, slot and export name the sections above do not name. The brand: Pluto Systems, its mark and the lockup. The site's address.",
   /** 020 decision 18: the exported constants that keep their names and change their values. */
   values: [
     ["THEME_KEY", "`kuiper-theme`"],
     ["THEME_SCRIPT", "the head script, which carries the old key over"],
     ["FIELD_CONTEXT_KEY", "`kuiper:field`"],
     ["FIELD_SET_CONTEXT_KEY", "`kuiper:field-set`"],
-    ["shikiTheme.name", "`kuiper-code`"],
+    [
+      "shikiTheme.name",
+      '`kuiper-code`. In 0.11.0 the export was `codeTheme`; "From 0.11.0", step 5, renames it.',
+    ],
   ] as const,
 };

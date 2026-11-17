@@ -1,0 +1,53 @@
+{
+  "note": "020d decision 11: every line left in the tree that names the release that was never made, by file. Two checks, each named by its pattern. The first scans the tree as git sees it, less context/, the released snapshots static/v0.4.0/ to static/v0.11.0/, scripts/rename-kuiper.ts and bun.lock. The second scans tests/ for a changelog slice by indexOf, which runs to the file's end when its end heading is gone. Each count is a file's count of matching lines, so a line that moves within its file changes nothing; a new match fails the test.",
+  "entries": [
+    {
+      "files": "CHANGELOG.md",
+      "pattern": "0\\.12\\.0|v0\\.12\\.0|v0-12-0",
+      "count": 1,
+      "reason": "The fold sentence that opens the 0.13.0 entry (020d decision 2)."
+    },
+    {
+      "files": "src/lib/site/upgrade/0.13.0.ts",
+      "pattern": "0\\.12\\.0|v0\\.12\\.0|v0-12-0",
+      "count": 1,
+      "reason": "The guide's WHO[1], which says it was never released (020d decision 8)."
+    },
+    {
+      "files": "tests/unit/registry.test.ts",
+      "pattern": "0\\.12\\.0|v0\\.12\\.0|v0-12-0",
+      "count": 7,
+      "reason": "Absence assertions: no heading, no registry path, and the fold sentence (020d tests 1 and 2)."
+    },
+    {
+      "files": "tests/unit/generated.test.ts",
+      "pattern": "0\\.12\\.0|v0\\.12\\.0|v0-12-0",
+      "count": 3,
+      "reason": "Absence assertion: the never-published snapshot does not exist (020d test 5)."
+    },
+    {
+      "files": "tests/unit/never-released.test.ts",
+      "pattern": "0\\.12\\.0|v0\\.12\\.0|v0-12-0",
+      "count": 12,
+      "reason": "The guard itself, and its tests of the tokens, the guide, the helper and the fold heads (020d tests 7, 8, 10, 11 and 15)."
+    },
+    {
+      "files": "tests/e2e/site.spec.ts",
+      "pattern": "0\\.12\\.0|v0\\.12\\.0|v0-12-0",
+      "count": 1,
+      "reason": "Absence assertion: the changelog page has no anchor for it (020d test 14, decision 12)."
+    },
+    {
+      "files": "tests/fixtures/0-12-0-allowed.json",
+      "pattern": "0\\.12\\.0|v0\\.12\\.0|v0-12-0",
+      "count": 7,
+      "reason": "This fixture: each entry of the first check names its pattern."
+    },
+    {
+      "files": "tests/helpers/changelog.ts",
+      "pattern": "indexOf\\(\\s*[\"'`](\\\\n)?## ",
+      "count": 2,
+      "reason": "The one changelog slice by indexOf, which throws when a heading is missing, and the comment that names the form it replaces (020d decision 7)."
+    }
+  ]
+}

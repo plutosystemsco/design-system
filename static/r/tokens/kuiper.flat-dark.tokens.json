@@ -1434,7 +1434,7 @@
       "$extensions": {
         "co.plutosystems.kuiper": {
           "cssVariable": "--code-text",
-          "since": "0.12.0"
+          "since": "0.13.0"
         }
       }
     },
@@ -1522,7 +1522,7 @@
       "$extensions": {
         "co.plutosystems.kuiper": {
           "cssVariable": "--code-meta",
-          "since": "0.12.0"
+          "since": "0.13.0"
         }
       }
     },
@@ -1533,7 +1533,7 @@
       "$extensions": {
         "co.plutosystems.kuiper": {
           "cssVariable": "--code-special",
-          "since": "0.12.0"
+          "since": "0.13.0"
         }
       }
     },
@@ -2019,7 +2019,7 @@
       "$extensions": {
         "co.plutosystems.kuiper": {
           "cssVariable": "--caution-text",
-          "since": "0.12.0"
+          "since": "0.13.0"
         }
       }
     },
@@ -2137,7 +2137,7 @@
       "$extensions": {
         "co.plutosystems.kuiper": {
           "cssVariable": "--syntax-violet",
-          "since": "0.12.0"
+          "since": "0.13.0"
         }
       }
     },
@@ -2148,7 +2148,7 @@
       "$extensions": {
         "co.plutosystems.kuiper": {
           "cssVariable": "--syntax-blue",
-          "since": "0.12.0"
+          "since": "0.13.0"
         }
       }
     },
@@ -2159,7 +2159,7 @@
       "$extensions": {
         "co.plutosystems.kuiper": {
           "cssVariable": "--syntax-navy",
-          "since": "0.12.0"
+          "since": "0.13.0"
         }
       }
     },
@@ -2170,7 +2170,7 @@
       "$extensions": {
         "co.plutosystems.kuiper": {
           "cssVariable": "--syntax-green",
-          "since": "0.12.0"
+          "since": "0.13.0"
         }
       }
     },
@@ -2181,7 +2181,7 @@
       "$extensions": {
         "co.plutosystems.kuiper": {
           "cssVariable": "--syntax-yellow",
-          "since": "0.12.0"
+          "since": "0.13.0"
         }
       }
     },
@@ -2203,7 +2203,7 @@
       "$extensions": {
         "co.plutosystems.kuiper": {
           "cssVariable": "--syntax-plum",
-          "since": "0.12.0"
+          "since": "0.13.0"
         }
       }
     },
@@ -2214,7 +2214,7 @@
       "$extensions": {
         "co.plutosystems.kuiper": {
           "cssVariable": "--syntax-red",
-          "since": "0.12.0"
+          "since": "0.13.0"
         }
       }
     },
@@ -2225,7 +2225,7 @@
       "$extensions": {
         "co.plutosystems.kuiper": {
           "cssVariable": "--syntax-grey",
-          "since": "0.12.0"
+          "since": "0.13.0"
         }
       }
     },
@@ -2236,7 +2236,7 @@
       "$extensions": {
         "co.plutosystems.kuiper": {
           "cssVariable": "--syntax-ink",
-          "since": "0.12.0"
+          "since": "0.13.0"
         }
       }
     },
@@ -2247,7 +2247,7 @@
       "$extensions": {
         "co.plutosystems.kuiper": {
           "cssVariable": "--syntax-ground",
-          "since": "0.12.0"
+          "since": "0.13.0"
         }
       }
     },
@@ -2258,7 +2258,7 @@
       "$extensions": {
         "co.plutosystems.kuiper": {
           "cssVariable": "--syntax-active-line",
-          "since": "0.12.0"
+          "since": "0.13.0"
         }
       }
     }
