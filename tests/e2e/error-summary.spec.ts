@@ -17,7 +17,6 @@ import type {
   Page,
 } from "@playwright/test";
 import { expect, test } from "../test.ts";
-import { onlyIn } from "./engines.ts";
 import { componentPath, open, openView } from "./pages.ts";
 
 const PAGE = componentPath("error-summary");
@@ -161,13 +160,16 @@ test.describe("019: the error summary", () => {
     await expect(icon).toHaveCount(1);
     await expect(icon).toHaveAttribute("aria-hidden", "true");
     expect(await content.locator("svg").count()).toBe(0);
-    // 019b criterion 2: the links sit straight in the alert, with no list.
     await expect(root).toMatchAriaSnapshot(`
       - alert:
         - heading "There is a problem" [level=2]
-        - link "Enter a project name"
-        - link "Enter the owner's email address"
-        - link "Choose who can see the project"
+        - list:
+          - listitem:
+            - link "Enter a project name"
+          - listitem:
+            - link "Enter the owner's email address"
+          - listitem:
+            - link "Choose who can see the project"
     `);
   });
 
@@ -728,179 +730,5 @@ test.describe("022t: the error summary speaks again on an unchanged submit", () 
     expect(seen.sameRoot, "the same root").toBe(true);
     expect(seen.oldConnected, "the old content node is connected").toBe(false);
     await expect(root.locator(CONTENT)).toHaveAttribute("role", "alert");
-  });
-});
-
-/**
- * 019b: the error summary's messages are read once. Criteria 1, 3 and 4.
- * Criterion 2 is 019 criterion 1's snapshot, above; criteria 5 and 6 are
- * 019's raw-HTML and axe tests, unchanged. Each runs on the keyboard
- * example's own view after an empty submit.
- */
-const LINKS_BOX = '[data-slot="error-summary-links"]';
-
-test.describe("019b: the error summary's messages are read once", () => {
-  // Criterion 1.
-  test("1. no list: the summary holds 0 ul, 0 li, no list or listitem role; the links box holds exactly the 3 links, in order", async ({
-    page,
-  }) => {
-    await openView(page, EXAMPLE);
-    await submitEmpty(page);
-    const root = summary(page);
-    await expect(root.locator("ul")).toHaveCount(0);
-    await expect(root.locator("li")).toHaveCount(0);
-    await expect(root.getByRole("list")).toHaveCount(0);
-    await expect(root.getByRole("listitem")).toHaveCount(0);
-    const box = root.locator(LINKS_BOX);
-    await expect(box).toHaveCount(1);
-    const children = await box.evaluate((el) =>
-      [...el.children].map((c) => ({
-        tag: c.tagName.toLowerCase(),
-        text: c.textContent?.trim(),
-      })),
-    );
-    expect(children).toEqual(LINKS.map((l) => ({ tag: "a", text: l.text })));
-  });
-
-  // Criterion 3.
-  test("3. in Chromium's tree, each link's nearest ancestor that is not ignored is the alert", async ({
-    page,
-  }) => {
-    onlyIn("chromium", "CDP: Accessibility.getFullAXTree");
-    await openView(page, EXAMPLE);
-    await submitEmpty(page);
-    const cdp = await page.context().newCDPSession(page);
-    // The links by their DOM nodes, not their names: the component page's
-    // specimens share two of the names (the spec review).
-    const { root } = (await cdp.send("DOM.getDocument", { depth: -1 })) as {
-      root: { nodeId: number };
-    };
-    const { nodeIds } = (await cdp.send("DOM.querySelectorAll", {
-      nodeId: root.nodeId,
-      selector:
-        '[data-testid="keyboard-fixture"] [data-slot="error-summary"] a',
-    })) as { nodeIds: number[] };
-    expect(nodeIds).toHaveLength(3);
-    const backend: number[] = [];
-    for (const nodeId of nodeIds) {
-      const { node } = (await cdp.send("DOM.describeNode", { nodeId })) as {
-        node: { backendNodeId: number };
-      };
-      backend.push(node.backendNodeId);
-    }
-    const { nodes } = (await cdp.send("Accessibility.getFullAXTree")) as {
-      nodes: {
-        nodeId: string;
-        ignored: boolean;
-        role?: { value: string };
-        name?: { value: string };
-        parentId?: string;
-        backendDOMNodeId?: number;
-      }[];
-    };
-    const byId = new Map(nodes.map((n) => [n.nodeId, n]));
-    const nearest = backend.map((id) => {
-      const link = nodes.find((n) => n.backendDOMNodeId === id && !n.ignored);
-      let up = link?.parentId ? byId.get(link.parentId) : undefined;
-      while (up?.ignored) up = up.parentId ? byId.get(up.parentId) : undefined;
-      return {
-        link: `${link?.role?.value} ${link?.name?.value}`,
-        parent: up?.role?.value,
-      };
-    });
-    expect(nearest).toEqual(
-      LINKS.map((l) => ({ link: `link ${l.text}`, parent: "alert" })),
-    );
-  });
-
-  // Criterion 4: a guard, passing before and after.
-  for (const size of SIZES)
-    test(`4. at ${size.width}: each link is as wide as a Range over its own text, ± 0.5 px, and narrower than the links box`, async ({
-      page,
-    }) => {
-      await page.setViewportSize(size);
-      await openView(page, EXAMPLE);
-      await submitEmpty(page);
-      const widths = await summary(page)
-        .locator("a")
-        .evaluateAll(
-          (links, sel) =>
-            links.map((a) => {
-              const range = document.createRange();
-              range.selectNodeContents(a);
-              const box = a.closest(sel);
-              return {
-                text: a.textContent?.trim(),
-                link: a.getBoundingClientRect().width,
-                range: range.getBoundingClientRect().width,
-                box: box?.getBoundingClientRect().width ?? 0,
-              };
-            }),
-          LINKS_BOX,
-        );
-      console.log(
-        `019b criterion 4 at ${size.width}: ${JSON.stringify(widths)}`,
-      );
-      expect(widths).toHaveLength(3);
-      for (const w of widths) {
-        expect(Math.abs(w.link - w.range), w.text).toBeLessThanOrEqual(0.5);
-        expect(w.link, w.text).toBeLessThan(w.box);
-      }
-    });
-});
-
-/**
- * 019d: a long error message wraps at 320 px (WCAG 1.4.10, Reflow). On the
- * keyboard example, after an empty submit, the first link and the title are
- * given one unbreakable 64-letter word each, as an app's message might hold
- * (a pasted token, an address). The page must not scroll sideways, and
- * neither text may leave the summary's box.
- */
-const UNBREAKABLE = "Unbreakable".repeat(6).slice(0, 64);
-
-test.describe("019d: a long error message wraps at 320 px", () => {
-  test("1. at 320: a link and a title holding one 64-letter word wrap inside the summary, and the page does not scroll sideways", async ({
-    page,
-  }) => {
-    await page.setViewportSize({ width: 320, height: 700 });
-    await openView(page, EXAMPLE);
-    await submitEmpty(page);
-    const root = summary(page);
-    await root.evaluate((el, word) => {
-      el.querySelector("a")!.textContent = word;
-      el.querySelector('[data-slot="error-summary-title"]')!.textContent = word;
-    }, UNBREAKABLE);
-    const got = await root.evaluate((el) => {
-      const box = el.getBoundingClientRect();
-      const style = getComputedStyle(el);
-      const inner = {
-        left: box.left + parseFloat(style.borderLeftWidth),
-        right: box.right - parseFloat(style.borderRightWidth),
-      };
-      const text = (node: Element) => {
-        const range = document.createRange();
-        range.selectNodeContents(node);
-        const r = range.getBoundingClientRect();
-        return { left: r.left, right: r.right };
-      };
-      return {
-        page: document.documentElement.scrollWidth,
-        viewport: document.documentElement.clientWidth,
-        box: { left: box.left, right: box.right },
-        inner,
-        overflow: el.scrollWidth - el.clientWidth,
-        link: text(el.querySelector("a")!),
-        title: text(el.querySelector('[data-slot="error-summary-title"]')!),
-      };
-    });
-    const note = `019d at 320: ${JSON.stringify(got)}`;
-    console.log(note);
-    expect(got.page, note).toBeLessThanOrEqual(got.viewport);
-    expect(got.box.right, note).toBeLessThanOrEqual(got.viewport + 0.5);
-    expect(got.overflow, note).toBeLessThanOrEqual(0);
-    for (const t of [got.link, got.title]) {
-      expect(t.left, note).toBeGreaterThanOrEqual(got.inner.left - 0.5);
-      expect(t.right, note).toBeLessThanOrEqual(got.inner.right + 0.5);
-    }
   });
 });

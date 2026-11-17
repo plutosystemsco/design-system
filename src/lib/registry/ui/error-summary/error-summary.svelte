@@ -136,9 +136,6 @@
   focus here itself. The form raises attempt on each failed submit, and each
   new value renders the content anew, so an unchanged submit is announced
   again.
-  The links are not in a list, so a reader reads each message once.
-  A long word in the title, the message or a link wraps anywhere, so the
-  summary never makes the page scroll sideways at 320 px.
 -->
 {#if errors.length > 0 || message}
   <Alert
@@ -169,19 +166,18 @@
             <p>{message}</p>
           {/if}
           {#if errors.length > 0}
-            <div
-              data-slot="error-summary-links"
-              class="grid justify-items-start gap-1"
-            >
+            <ul class="grid gap-1">
               {#each errors as error (error.id)}
-                <a
-                  href="#{error.id}"
-                  class="inline-flex min-h-6 items-center underline underline-offset-4"
-                  onclick={(event) => focusField(event, error.id)}
-                  >{error.message}</a
-                >
+                <li>
+                  <a
+                    href="#{error.id}"
+                    class="inline-flex min-h-6 items-center underline underline-offset-4"
+                    onclick={(event) => focusField(event, error.id)}
+                    >{error.message}</a
+                  >
+                </li>
               {/each}
-            </div>
+            </ul>
           {/if}
         </div>
       </div>

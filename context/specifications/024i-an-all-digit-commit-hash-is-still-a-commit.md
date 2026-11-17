@@ -1,6 +1,6 @@
 # 024i — An all-digit commit hash is still a commit
 
-- **Status:** built; waits for its change review. Lanes S (`vite.config.ts`) and I (the app-shell page).
+- **Status:** built and reviewed (lands); re-applied alone 2026-11-17, without `019d` ("Re-applied alone", under Landing notes). Lanes S (`vite.config.ts`) and I (the app-shell page).
 - **Date:** 2026-11-17
 - **Author:** a lane-I builder
 - **Kind:** small change (`context/README.md`: a fix with no interface change, no new token or dependency). It changes no shipped item. It touches the site's `vite.config.ts` and the lines the app-shell page tells an app to copy, which are one fix in two copies. No research memo of its own and no spec review. Its check is seen failing first, and the built change is reviewed by someone who did not write it (constitution §5).
@@ -64,5 +64,20 @@ Built 2026-11-17 by a lane-I builder, in the worktree `lane-i-run8`, at `db8fb65
 
 ### The change review (2026-11-17, written in by the design lead)
 
-`reviews/019d-024i-the-long-message-and-the-digit-hash-pr-2026-11-17.md`: lands. Finding 3, ruled: a small change, though it touches `vite.config.ts` and the app-shell page. One helper in two copies, byte-identical, with no item, prop or registry file changed; the rule's "one item or one page" is read as one behaviour in one place an app copies from, and lane S's build that ran at the same time touched neither file. Notes 6 and 7 stand as facts: a name of 30-odd leading digits overflows the footer at 320 (about one commit in 1.3 million), and an empty `WORKERS_CI_COMMIT_SHA` still gives no name. The page's missing space before `version` is fixed (note 8).
+`reviews/019d-024i-the-long-message-and-the-digit-hash-pr-2026-11-17.md`: lands. Finding 3, ruled: a small change, though it touches `vite.config.ts` and the app-shell page. One helper in two copies, byte-identical, with no item, prop or registry file changed; the rule's "one item or one page" is read as one behaviour in one place an app copies from, and lane S's build that ran at the same time touched neither file. Notes 6 and 7 stand as facts: a name of 30-odd leading digits overflows the footer at 320 (about one commit in 1.3 million), and an empty `WORKERS_CI_COMMIT_SHA` still gives no name. The page's missing space before `version` is fixed (note 8): in `c51b65b` it was not, since Prettier joins "reads" to the `<code>`; the re-application puts `<code>version</code>` on the next line, so the space is a line break.
 
+### Re-applied alone, 2026-11-17
+
+- **Why.** `c51b65b` landed `019d` and `024i` together. `019d` styled `019b`'s links box, and `019e` reverts `019b` to the list markup (the design lead's ruling, [the eighth matrix run](../research/2026-11-17-the-eighth-matrix-run.md) §11, option (a)). **`019d` is held back, to be rebuilt on the list markup.** `024i` touches no error-summary file, so it is re-applied alone.
+- **What was taken from `c51b65b`:** `vite.config.ts`'s `commitName`; the app-shell page's snippet and sentence; `tests/unit/commit-name.test.ts`; this specification; the shared change review; the sentence in `app-shell`'s changelog bullet, before its pointer. The code, the test and the sentence are `c51b65b`'s, byte for byte, but the page's space (note 8, above).
+- **What was left out, all `019d`'s:** the item's `wrap-anywhere`, its e2e test, its specification, its changelog sentence, the regenerated patches 4 and 7b, the error-summary page's "own row" line, and the ledgers' moves. The roadmap's two rows are the design lead's to update.
+- **Built** by the lane-I builder in `.claude/worktrees/integrate` (branch `integrate-run8`), on `019e`. "Built after `019d` in the same worktree", above, describes the first build; its gate is now this one.
+- **Seen failing first, again (EXECUTED):** `commit-name.test.ts` on the old lines of both copies: 8 of 13 fail, the same four per copy, as before. On the new lines: 13 of 13.
+- **A3 on an all-digit hash (EXECUTED):** a build with `WORKERS_CI_COMMIT_SHA` set to `6482736`'s full hash: `version.json` reads `"648273658d"`, and A3 passes in `chromium-light` and `webkit-light`, 2 of 2. A normal build reads `"258e5c7"`, `019e`'s commit.
+- **The ledgers:** `bun run build` changes nothing in `static/`; `bun run cost --sizes-only` says "every figure is fresh"; `thumbnails.ts --hash-only` rewrites the manifest with no change.
+- **The gate, on `019e` and this together (EXECUTED):**
+  - `bun run check`: 0 errors, 0 warnings, 2,437 files. `bun run lint`: clean. `bun scripts/lint-literals.ts`: 0 literals, 1 allowance.
+  - `bun test ./tests/unit`: 2,000 pass, 0 fail, 70 files. The highlighter's streaming test, alone: 10 pass, best p95 4.05 ms.
+  - `mutations.test.ts`: 29 pass; patches 4 and 7b apply to the list-era item. `release-check.ts --before-ci`: exit 0.
+  - `chromium-light` and `webkit-light`: `error-summary.spec.ts` and `blocks.spec.ts`, 162 pass, A3 among them; axe and keyboard, the error-summary tests, 12 pass.
+  - The dry runs (`SR_DRY=1`), `chromium` and `webkit`: error-summary, sign-in, sign-up, settings and app-shell, 40 pass.

@@ -1,6 +1,6 @@
 # 019b — The error summary's messages are read once
 
-- **Status:** built; waits for its change review. Built 2026-11-17 on `6482736` (`release/0.13.0`, `7ec5488`, with `022t` and `022z`, plus `020d`), in the `lane-i-019b` worktree, after run 7 ([44014551614](https://github.com/plutosystemsco/design-system/actions/runs/44014551614)), its required run. Fit to build after the spec review's re-check (2026-11-17; its write-in under criterion 11 made by the design lead). The review (`reviews/019b-the-error-summarys-messages-are-read-once-spec-2026-11-17.md`) raised 3 Medium and 4 Low findings; each is answered under "Review".
+- **Status:** reverted 2026-11-17 by `019e` ("Reverted, 2026-11-17", under Landing notes). Landed as `331dd9d`. Built 2026-11-17 on `6482736` (`release/0.13.0`, `7ec5488`, with `022t` and `022z`, plus `020d`), in the `lane-i-019b` worktree, after run 7 ([44014551614](https://github.com/plutosystemsco/design-system/actions/runs/44014551614)), its required run. Fit to build after the spec review's re-check (2026-11-17; its write-in under criterion 11 made by the design lead). The review (`reviews/019b-the-error-summarys-messages-are-read-once-spec-2026-11-17.md`) raised 3 Medium and 4 Low findings; each is answered under "Review".
 - **Date:** 2026-11-17
 - **Author:** the design lead
 - **Kind:** specification, lane I. A change to one item's rendered markup, `error-summary`: its links leave the list. An interface change, since an app's class or test that targets the list must change (decision 6). Three blocks install the item (`sign-in`, `sign-up`, `settings`) and change with it, with no change to their own source. No prop, token or dependency changes. A specification, not a small change: it changes an interface, and the owner is asked about the count (open question 2).
@@ -312,3 +312,14 @@ At 1440 and at 390, the same on the base and the built change:
 - **Criterion 12:** the change review's `bun run cost --only error-summary`.
 - **Criterion 13:** the design lead's checkpoint, on the keyboard example in both themes at both sizes.
 - **Criterion 14:** the scorecard, re-run after landing.
+
+### Reverted, 2026-11-17
+
+- **The run-8 evidence** ([the eighth matrix run](../research/2026-11-17-the-eighth-matrix-run.md), run [44078599146](https://github.com/plutosystemsco/design-system/actions/runs/44078599146), a `matrix` push of `db8fb65`, the first with this change). Criterion 11 is not met (§2.1).
+  - **NVDA, both browsers,** the five summary tests, 3 of 3 each: the title is never spoken, and each message is said three times, twice in the alert's text and once as its link (§2.2). N-chr passed all five in run 7, on the list; it fails all five now.
+  - **VO chr** doubles each message as before. Its phrase is run 7's, word for word, so the list was not the cause there (§2.3). *The memo*'s §2 inference was wrong.
+  - **VO wk** passed, as in run 7 (§2.4).
+  - So decisions 6 and 7's "each message is read once" is refuted for NVDA. Open question 3 (a)'s reason, "NVDA with Firefox reads once whatever VoiceOver does", is refuted too (§2.6).
+  - `022t` criterion 14 is not met in this run either (§3). The re-announcement works in all four pairs; the summary's content fails.
+- **The ruling.** The design lead, under the owner's delegation, chose *run 8's memo* §11 option (a): revert to the list markup now. It returns to run 7's state, with evidence: N-chr passes, NVDA speaks the title in both browsers, and N-ff's list double returns. Research then finds markup that every reader reads once. The markup is not changed again by guess.
+- **`019e`** ([`019e-the-error-summarys-list-returns.md`](./019e-the-error-summarys-list-returns.md)), a small change in lane I, is the revert. The item, its page, the bullet and the tests return to their `6482736` content; `022t`'s `{#key attempt}` stays. This specification and its reviews stay as the record. "Waiting on others", above, is closed by it: criterion 11 was judged by run 8, and decisions 6 and 7's amendments are moot, since the bullet and the sentence are gone.

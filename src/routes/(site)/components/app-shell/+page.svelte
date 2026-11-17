@@ -168,7 +168,8 @@ export default defineConfig({
   ],
 });`}</code
         ></pre>
-      The layout reads<code>version</code> from <code>$app/env</code>
+      The layout reads
+      <code>version</code> from <code>$app/env</code>
       (SvelteKit 3's module; SvelteKit 2.70 carries it too) and shows it only when
       it is not all digits: without git and without the host's variable the name is
       SvelteKit's default, a timestamp, and the footer shows no commit row and no

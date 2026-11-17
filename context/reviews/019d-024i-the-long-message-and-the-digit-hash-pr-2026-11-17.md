@@ -132,3 +132,5 @@ Findings 5 to 8 are records for the landing notes, and one optional space.
 
 By the design lead, 2026-11-17. `019d`: findings 1 and 2 written in (the page's "Your part" line, the spec's claim qualified, the roadmap row). `024i`: finding 3 ruled a small change, in its landing notes. Notes 4 and 8 fixed; 5, 6 and 7 recorded. **Closing verdicts: both land.**
 
+**Afterwards, 2026-11-17.** `c51b65b` landed both. `019e` then reverted `019b` to the list markup (the design lead's ruling, [the eighth matrix run](../research/2026-11-17-the-eighth-matrix-run.md) §11, option (a)). `019d` styled `019b`'s links box, so it was held back, to be rebuilt on the list markup; its findings 1, 2 and 5 go with it. `024i` was re-applied alone, on `019e`, with note 8's space made to hold under Prettier (`024i`'s landing notes, "Re-applied alone"). This review's `019d` verdict and figures describe the box-markup build, and do not stand for the rebuild.
+
